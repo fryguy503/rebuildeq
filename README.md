@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 EQEmu
 ===
 
@@ -51,3 +52,7 @@ Contact
 - [EQEmulator Forums](http://www.eqemulator.org/forums)
 - [EQEmulator Wiki](http://wiki.eqemulator.org/i?M=Wiki)
 
+=======
+# rebuildeq
+Rebuild Everquest
+>>>>>>> Initial commit
