@@ -10,7 +10,7 @@ addons:
     - liblua5.1-0-dev
     - zlib1g-dev
 script:
-  - cmake -G "Unix Makefiles" -DEQEMU_BUILD_TESTS=ON -DEQEMU_ENABLE_BOTS=ON
+  - cmake -G "Unix Makefiles" -DEQEMU_BUILD_TESTS=ON -DEQEMU_ENABLE_BOTS=OFF
   - make -j8
   - ./bin/tests
 branches:
@@ -18,7 +18,5 @@ branches:
     - master
     - stable
 notifications:
-  email: false
-  irc:
-    channels: "irc.eqemulator.net#eqemucoders"
+  email: true
 os: linux
