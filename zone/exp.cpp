@@ -350,27 +350,29 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 	}
 
 	if ((set_exp + set_aaxp) > (m_pp.exp+m_pp.expAA)) {
+		i = set_exp - m_pp.exp;
 		if (isrezzexp) {
 			//this->Message_StringID(MT_Experience, REZ_REGAIN);
-			Message(15, "You regain %i experience from resurrection.", set_exp);
+			Message(15, "You regain %i experience from resurrection.", i);
 		}
 		else {
 			if(membercount > 1) {
-				Message(15, "You have gained %i party experience!", set_exp);
+				Message(15, "You have gained %i party experience!", i);
 				//this->Message_StringID(MT_Experience, GAIN_GROUPXP);
 			}
 			else if(IsRaidGrouped()) {
 				//Message_StringID(MT_Experience, GAIN_RAIDEXP);
-				Message(15, "You have gained %i raid experience!", set_exp);
+				Message(15, "You have gained %i raid experience!", i);
 			}
 			else {
 				//this->Message_StringID(MT_Experience, GAIN_XP);
-				Message(15, "You have gained %i experience!", set_exp);
+				Message(15, "You have gained %i experience!", i);
 			}
 		}
 	}
 	else if((set_exp + set_aaxp) < (m_pp.exp+m_pp.expAA)){ //only loss message if you lose exp, no message if you gained/lost nothing.
-		Message(15, "You have lost experience.");
+		i = set_exp - m_pp.exp;
+		Message(15, "You have lost %i experience.", i);
 	}
 
 	//check_level represents the level we should be when we have
