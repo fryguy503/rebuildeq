@@ -32,13 +32,13 @@
 
 	<!-- Chatserver (channels) information.  Defaults shown -->
 	<chatserver>
-		<host>channels.eqemulator.net</host>
+		<host>localhost</host>
 		<port>7778</port>
 	</chatserver>
 
 	<!-- Mailserver (in-game mail) information.  Defaults shown -->
 	<mailserver>
-		<host>channels.eqemulator.net</host>
+		<host>localhost</host>
 		<port>7778</port>
 	</mailserver>
 
@@ -55,7 +55,7 @@
 		<port>3306</port>
 		<username>root</username>
 		<password>root</password>
-		<db>eqemu</db>
+		<db>peq</db>
 	</database>
 
 	<qsdatabase>
@@ -63,7 +63,7 @@
 		<port>3306</port>
 		<username>root</username>
 		<password>root</password>
-		<db>eqemu</db>
+		<db>peq</db>
 	</qsdatabase>
 
 	<!-- Launcher Configuration -->
@@ -83,7 +83,7 @@
 	</files>
 	<!-- Directory locations.  Defaults shown -->
 	<directories>
-		<!-- <maps>Maps</maps> -->
+		<maps>maps</maps>
 		<!-- <quests>quests</quests> -->
 		<!-- <plugins>plugins</plugins> -->
 	</directories>
