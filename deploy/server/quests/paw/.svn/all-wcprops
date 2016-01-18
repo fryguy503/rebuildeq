@@ -1,0 +1,95 @@
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/1617/trunk/quests/paw
+END
+#Retharg.lua
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/1616/trunk/quests/paw/%23Retharg.lua
+END
+#a_gnoll_prisoner.lua
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/1616/trunk/quests/paw/%23a_gnoll_prisoner.lua
+END
+a_fire_elemental_raider.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1617/trunk/quests/paw/a_fire_elemental_raider.lua
+END
+a_water_elemental_wavecrasher.lua
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/1617/trunk/quests/paw/a_water_elemental_wavecrasher.lua
+END
+a_fire_elemental_blazemaster.lua
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/1617/trunk/quests/paw/a_fire_elemental_blazemaster.lua
+END
+#Windlord_Brizoris.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1616/trunk/quests/paw/%23Windlord_Brizoris.lua
+END
+#Blazemaster_Arnab.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1616/trunk/quests/paw/%23Blazemaster_Arnab.lua
+END
+a_water_elemental_invader.lua
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/1617/trunk/quests/paw/a_water_elemental_invader.lua
+END
+#Tidemaster_Aquinius.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1616/trunk/quests/paw/%23Tidemaster_Aquinius.lua
+END
+an_earth_elemental_intruder.lua
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/1617/trunk/quests/paw/an_earth_elemental_intruder.lua
+END
+#Gillamina_Garstobidokis.lua
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/1616/trunk/quests/paw/%23Gillamina_Garstobidokis.lua
+END
+an_earth_elemental_rockshaper.lua
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/1617/trunk/quests/paw/an_earth_elemental_rockshaper.lua
+END
+#Earthmaster_Grundag.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1616/trunk/quests/paw/%23Earthmaster_Grundag.lua
+END
+an_air_elemental_breeze_lord.lua
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/1617/trunk/quests/paw/an_air_elemental_breeze_lord.lua
+END
+an_air_elemental_infiltrator.lua
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/1617/trunk/quests/paw/an_air_elemental_infiltrator.lua
+END

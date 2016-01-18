@@ -1,0 +1,545 @@
+K 25
+svn:wc:ra_dav:version-url
+V 44
+/svn/!svn/ver/1736/trunk/quests/freeporteast
+END
+382238.lua
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/1322/trunk/quests/freeporteast/382238.lua
+END
+Exterminator_Qalantir.lua
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/1312/trunk/quests/freeporteast/Exterminator_Qalantir.lua
+END
+Caskin_Marsheart.lua
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/1575/trunk/quests/freeporteast/Caskin_Marsheart.lua
+END
+Sir_Artanis.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1356/trunk/quests/freeporteast/Sir_Artanis.lua
+END
+Linadian.lua
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/1313/trunk/quests/freeporteast/Linadian.lua
+END
+Guard_Jup.lua
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/1312/trunk/quests/freeporteast/Guard_Jup.lua
+END
+Jerra_Renlock.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Jerra_Renlock.lua
+END
+Soulbinder_Grunson.lua
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Soulbinder_Grunson.lua
+END
+Felisity_Starbright.lua
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/1301/trunk/quests/freeporteast/Felisity_Starbright.lua
+END
+Brutol_Rhaksen.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1575/trunk/quests/freeporteast/Brutol_Rhaksen.lua
+END
+Miocaei_Herlsas.lua
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/1419/trunk/quests/freeporteast/Miocaei_Herlsas.lua
+END
+Larn_Brugal.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Larn_Brugal.lua
+END
+Heneva_Jexsped.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1575/trunk/quests/freeporteast/Heneva_Jexsped.lua
+END
+player.lua
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/1325/trunk/quests/freeporteast/player.lua
+END
+Sten_Harnak.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Sten_Harnak.lua
+END
+Saxarivza_Zaxun.lua
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/1736/trunk/quests/freeporteast/Saxarivza_Zaxun.lua
+END
+Krazen_Loosh.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1309/trunk/quests/freeporteast/Krazen_Loosh.lua
+END
+Lunce_Nasin.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Lunce_Nasin.lua
+END
+Gartrog_Smitehammer.lua
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/1562/trunk/quests/freeporteast/Gartrog_Smitehammer.lua
+END
+Tykar_Renlin.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1327/trunk/quests/freeporteast/Tykar_Renlin.lua
+END
+Saxarivza_Zexus.lua
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/1736/trunk/quests/freeporteast/Saxarivza_Zexus.lua
+END
+Sir_Lucan_D-Lere.lua
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/1598/trunk/quests/freeporteast/Sir_Lucan_D-Lere.lua
+END
+Ikthar_Fireheart.lua
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Ikthar_Fireheart.lua
+END
+Zhem_Xecia.lua
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/1329/trunk/quests/freeporteast/Zhem_Xecia.lua
+END
+Brina_Foxtripper.lua
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Brina_Foxtripper.lua
+END
+Xelha_Nevagon.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1327/trunk/quests/freeporteast/Xelha_Nevagon.lua
+END
+Bronto_Thudfoot.lua
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/1322/trunk/quests/freeporteast/Bronto_Thudfoot.lua
+END
+Jheron_Felkis.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Jheron_Felkis.lua
+END
+Driana_Poxsbourne.lua
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/1312/trunk/quests/freeporteast/Driana_Poxsbourne.lua
+END
+Captain_Hazran.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Captain_Hazran.lua
+END
+Tovan_Tenlah.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Tovan_Tenlah.lua
+END
+Palatos_Kynarn.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1327/trunk/quests/freeporteast/Palatos_Kynarn.lua
+END
+Joshua.lua
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/1312/trunk/quests/freeporteast/Joshua.lua
+END
+Guard_Alayle.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1309/trunk/quests/freeporteast/Guard_Alayle.lua
+END
+Elisi_Nasin.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1575/trunk/quests/freeporteast/Elisi_Nasin.lua
+END
+Brena_Donyld.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Brena_Donyld.lua
+END
+Innkeep_Rastle.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Innkeep_Rastle.lua
+END
+Talym_Shoontar.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1356/trunk/quests/freeporteast/Talym_Shoontar.lua
+END
+Innkeep_Paggie.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Innkeep_Paggie.lua
+END
+Venox_Tarkog.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1575/trunk/quests/freeporteast/Venox_Tarkog.lua
+END
+Opal_Darkbriar.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1575/trunk/quests/freeporteast/Opal_Darkbriar.lua
+END
+Lenka_Stoutheart.lua
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/1326/trunk/quests/freeporteast/Lenka_Stoutheart.lua
+END
+Cain_Darkmoore.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1575/trunk/quests/freeporteast/Cain_Darkmoore.lua
+END
+Gregor_Nasin.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1322/trunk/quests/freeporteast/Gregor_Nasin.lua
+END
+Vesagar_Nekio.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1327/trunk/quests/freeporteast/Vesagar_Nekio.lua
+END
+Grendig.lua
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/1322/trunk/quests/freeporteast/Grendig.lua
+END
+Ton_Twostring.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1562/trunk/quests/freeporteast/Ton_Twostring.lua
+END
+Jyle_Windshot.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1312/trunk/quests/freeporteast/Jyle_Windshot.lua
+END
+Zenita_D-Rin.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1329/trunk/quests/freeporteast/Zenita_D-Rin.lua
+END
+Kargek_Redblade.lua
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Kargek_Redblade.lua
+END
+Marv_Orilis.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Marv_Orilis.lua
+END
+Nashia_Lanseb.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Nashia_Lanseb.lua
+END
+Joffin_Sinclay.pl
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1092/trunk/quests/freeporteast/Joffin_Sinclay.pl
+END
+Nesin_Tapper.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Nesin_Tapper.lua
+END
+Exterminator_Larkey.lua
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/1322/trunk/quests/freeporteast/Exterminator_Larkey.lua
+END
+#Translocator_Setikan.lua
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/1322/trunk/quests/freeporteast/%23Translocator_Setikan.lua
+END
+Verona_Rankin.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1327/trunk/quests/freeporteast/Verona_Rankin.lua
+END
+Pietro_Zarn.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1575/trunk/quests/freeporteast/Pietro_Zarn.lua
+END
+Imxil_Tbrow.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Imxil_Tbrow.lua
+END
+Plagus_Ladeson.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Plagus_Ladeson.lua
+END
+Branis_Noolright.lua
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/1322/trunk/quests/freeporteast/Branis_Noolright.lua
+END
+Toxdil.lua
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/1321/trunk/quests/freeporteast/Toxdil.lua
+END
+Cartographer_Piri.lua
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/1322/trunk/quests/freeporteast/Cartographer_Piri.lua
+END
+Gunex_Eklar.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Gunex_Eklar.lua
+END
+Wenden_Blackhammer.lua
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/1327/trunk/quests/freeporteast/Wenden_Blackhammer.lua
+END
+Toala_Nehron.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Toala_Nehron.lua
+END
+Gren_Frikniller.lua
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/1562/trunk/quests/freeporteast/Gren_Frikniller.lua
+END
+Lythe_Songbird.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1313/trunk/quests/freeporteast/Lythe_Songbird.lua
+END
+Guard_Bribbely.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1322/trunk/quests/freeporteast/Guard_Bribbely.lua
+END
+Giz_Dinree.lua
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/1322/trunk/quests/freeporteast/Giz_Dinree.lua
+END
+Fabian.lua
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/1322/trunk/quests/freeporteast/Fabian.lua
+END
+Groflah_Steadirt.lua
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/1322/trunk/quests/freeporteast/Groflah_Steadirt.lua
+END
+Nexvok_Thirod.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1575/trunk/quests/freeporteast/Nexvok_Thirod.lua
+END
+Tohsan_Hallard.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1327/trunk/quests/freeporteast/Tohsan_Hallard.lua
+END
+Netuk_Phenzon.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Netuk_Phenzon.lua
+END
+Beur_Tenlah.lua
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Beur_Tenlah.lua
+END
+Konious_Eranon.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1575/trunk/quests/freeporteast/Konious_Eranon.lua
+END
+Quan_Nektogo.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1327/trunk/quests/freeporteast/Quan_Nektogo.lua
+END
+Harkin_Duskfoot.lua
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Harkin_Duskfoot.lua
+END
+peasant_woman.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1357/trunk/quests/freeporteast/peasant_woman.lua
+END
+Raltur_Caliskon.lua
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Raltur_Caliskon.lua
+END
+Lozani.lua
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Lozani.lua
+END
+Nestral_TGaza.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Nestral_TGaza.lua
+END
+Jasmine_Yiur.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1325/trunk/quests/freeporteast/Jasmine_Yiur.lua
+END
+Rolfic_Gohar.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1327/trunk/quests/freeporteast/Rolfic_Gohar.lua
+END
+Armorer_Dellin.lua
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/1312/trunk/quests/freeporteast/Armorer_Dellin.lua
+END
+Olunea_Miltin.lua
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/1327/trunk/quests/freeporteast/Olunea_Miltin.lua
+END
+a_prisoner.lua
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/1312/trunk/quests/freeporteast/a_prisoner.lua
+END
+Trithalis_Leredar.lua
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/1321/trunk/quests/freeporteast/Trithalis_Leredar.lua
+END
+Marus_Kemson.lua
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/1547/trunk/quests/freeporteast/Marus_Kemson.lua
+END
