@@ -35,3 +35,8 @@ Build_64/
 build_64/
 log/
 logs/
+deploy/server/queryserv
+deploy/server/shared_memory
+deploy/server/ucs
+deploy/server/world
+deploy/server/zone
