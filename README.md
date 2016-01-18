@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 EQEmu
 ===
 
@@ -56,3 +57,7 @@ Contact
 # rebuildeq
 Rebuild Everquest
 >>>>>>> Initial commit
+=======
+# rebuildeq
+Rebuild Everquest
+>>>>>>> af7bbd743617af4d128e4ab5d019b95b3fd6dc87

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Object files
 *.o
 *.obj
@@ -13,6 +14,8 @@
 *.so.*
 *.dylib
 =======
+=======
+>>>>>>> af7bbd743617af4d128e4ab5d019b95b3fd6dc87
 # Compiled Object files
 *.slo
 *.lo
@@ -36,12 +39,16 @@
 *.la
 *.a
 *.lib
+<<<<<<< HEAD
 >>>>>>> Initial commit
+=======
+>>>>>>> af7bbd743617af4d128e4ab5d019b95b3fd6dc87
 
 # Executables
 *.exe
 *.out
 *.app
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 # CMake
@@ -64,3 +71,5 @@ log/
 logs/
 =======
 >>>>>>> Initial commit
+=======
+>>>>>>> af7bbd743617af4d128e4ab5d019b95b3fd6dc87
