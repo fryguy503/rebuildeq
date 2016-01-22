@@ -54,6 +54,7 @@ function updatePoints(skillHandle, change) {
 	var points = parseInt(skillHandle.attr("data-points"));
 	var max = parseInt(skillHandle.attr("data-max"));
 	var charLevel = parseInt($("span.charLevel").text());
+	console.log("Update points");
 	if(change > 0) {
 		if (points < max && treeTotal >= 5 * thisLevel && charLevel < 72) {
 			++points;
@@ -120,7 +121,7 @@ function updateStats() {
 	$("span.totalPoints").each(function(index) {
 		total += parseInt($(this).text());
 	});
-	$("span.charLevel").html(5+total);
+	//$("span.charLevel").html(5+total);
 	var descriptions = "";
 	$("div.skill").each(function(index) {
 		var p = parseInt($(this).attr("data-points"));
@@ -128,11 +129,10 @@ function updateStats() {
 			descriptions += "<div class='skillText'>" + $(this).children("div.description").html().replace("<h2>","<strong>").replace("</h2>", " " + p + ":</strong><div class='descriptionText'>") + "</div></div>";
 		}
 	});
-	$("div.descriptionContainer").html(descriptions);
-	var url = window.location.href.split("#")[0] + "#" + getHash();
-	$("a.permalink").attr("href",url);
-	$("a.permalink").html(url);
-	window.location.replace(url);
+	console.log(getHash());
+//	$("div.descriptionContainer").html(descriptions);
+	//getHash();
+	//window.location.replace(url);
 }
 
 function loadHash(hash) {

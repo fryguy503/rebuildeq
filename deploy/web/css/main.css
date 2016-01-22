@@ -136,7 +136,7 @@ body.choicePage .wrapper {
 	line-height: 21px;
 	bottom: 0; right: 0;
 	padding: 0 2px;
-	background: url("icons/points_overlay.png") transparent;
+	background: url("../img/icons/points_overlay.png") transparent;
 	color: white;
 }
 .skill.partial .points { color: #F80; }
@@ -275,8 +275,8 @@ a.unavailable:hover { text-decoration: none; }
 img.portrait {
 	position: absolute;
 	position: fixed;
-	height: 95%;
+	/*height: 95%;*/
 	left: 0;
-	bottom: 0;
+	/*bottom: 0;*/
 	z-index: 0;
 }
