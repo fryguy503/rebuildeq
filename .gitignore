@@ -2,6 +2,7 @@
 *.o
 *.obj
 *.svn
+.svn/
 
 # Libraries
 *.lib
