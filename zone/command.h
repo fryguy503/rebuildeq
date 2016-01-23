@@ -61,7 +61,7 @@ void command_beard(Client *c, const Seperator *sep);
 void command_beardcolor(Client *c, const Seperator *sep);
 void command_bind(Client* c, const Seperator *sep);
 void command_builds(Client *c, const Seperator *sep);
-
+void command_buff(Client *c, const Seperator *sep);
 #ifdef BUGTRACK
 void command_bug(Client *c, const Seperator *sep);
 #endif
@@ -95,6 +95,7 @@ void command_emoteview(Client* c, const Seperator *sep);
 void command_enablerecipe(Client *c, const Seperator *sep);
 void command_equipitem(Client *c, const Seperator *sep);
 void command_face(Client *c, const Seperator *sep);
+void command_faq(Client *c, const Seperator *sep);
 void command_findaliases(Client *c, const Seperator *sep);
 void command_findnpctype(Client *c, const Seperator *sep);
 void command_findspell(Client *c, const Seperator *sep);
@@ -235,6 +236,7 @@ void command_repop(Client *c, const Seperator *sep);
 void command_repopclose(Client *c, const Seperator *sep);
 void command_resetaa(Client* c,const Seperator *sep);
 void command_resetaa_timer(Client *c, const Seperator *sep);
+void command_rez(Client* c, const Seperator *sep);
 void command_revoke(Client *c, const Seperator *sep);
 void command_rules(Client *c, const Seperator *sep);
 void command_save(Client *c, const Seperator *sep);
@@ -285,6 +287,7 @@ void command_suspend(Client *c, const Seperator *sep);
 void command_synctod(Client *c, const Seperator *sep);
 void command_task(Client *c, const Seperator *sep);
 void command_tattoo(Client *c, const Seperator *sep);
+void command_teleport(Client *c, const Seperator *sep);
 void command_tempname(Client *c, const Seperator *sep);
 void command_testspawn(Client *c, const Seperator *sep);
 void command_testspawnkill(Client *c, const Seperator *sep);

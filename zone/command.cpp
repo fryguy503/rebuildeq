@@ -165,7 +165,8 @@ int command_init(void)
 #ifdef BOTS
 		command_add("bot", "- Type \"#bot help\" to the see the list of available commands for bots.", 0, command_bot) ||
 #endif
-		command_add("builds", "Get a list of every build in game", 0, command_builds) ||
+		command_add("builds", "- Get a list of every build in game", 0, command_builds) ||
+		command_add("buff", "- Pay platinum to receive buffs", 0, command_buff) ||
 		command_add("camerashake",  "Shakes the camera on everyone's screen globally.",  80, command_camerashake) ||
 		command_add("castspell", "[spellid] - Cast a spell", 50, command_castspell) ||
 		command_add("chat", "[channel num] [message] - Send a channel message to all zones", 200, command_chat) ||
@@ -328,6 +329,7 @@ int command_init(void)
 		command_add("repopclose", "[distance in units] Repops only NPC's nearby for fast development purposes", 100, command_repopclose) ||
 		command_add("resetaa", "- Resets a Player's AA in their profile and refunds spent AA's to unspent, may disconnect player.", 200, command_resetaa) ||
 		command_add("resetaa_timer", "Command to reset AA cooldown timers.", 200, command_resetaa_timer) ||
+		command_add("rez", "- Pay platinum to summon and ressurect corpses in your current zone", 0, command_rez) ||
 		command_add("revoke", "[charname] [1/0] - Makes charname unable to talk on OOC", 200, command_revoke) ||
 		command_add("rules", "(subcommand) - Manage server rules", 250, command_rules) ||
 		command_add("save", "- Force your player or player corpse target to be saved to the database", 50, command_save) ||
@@ -375,6 +377,7 @@ int command_init(void)
 		command_add("task", "(subcommand) - Task system commands",  150, command_task) ||
 		command_add("tattoo", "- Change the tattoo of your target (Drakkin Only)", 80, command_tattoo) ||
 		command_add("tempname", "[newname] - Temporarily renames your target. Leave name blank to restore the original name.", 100, command_tempname) ||
+		command_add("teleport", "- Pay platinum to teleport to a location", 0, command_teleport) ||
 		command_add("texture", "[texture] [helmtexture] - Change your or your target's appearance, use 255 to show equipment", 10, command_texture) ||
 		command_add("time", "[HH] [MM] - Set EQ time", 90, command_time) ||
 		command_add("timers", "- Display persistent timers for target", 200, command_timers) ||
@@ -3986,6 +3989,52 @@ void command_faq(Client *c, const Seperator *sep) {
 	c->Message(0, "How do I access unique skills? /say #builds");
 	c->Message(0, "Is boxing allowed? No. Contact GMs for multiple people on same IP.");
 	c->Message(0, "Is MacroQuest or other assisting tools allowed? No.");
+}
+
+void command_teleport(Client *c, const Seperator *sep) {
+	//	// goto function
+	//	c->MovePC(zone->GetZoneID(), zone->GetInstanceID(), c->GetTarget()->GetX(), c->GetTarget()->GetY(), c->GetTarget()->GetZ(), c->GetTarget()->GetHeading());
+	c->Message(0, "Frequently Asked Questions:");
+	c->Message(0, "Do I need custom files for this server? No");
+	c->Message(0, "How do I access unique skills? /say #builds");
+	c->Message(0, "Is boxing allowed? No. Contact GMs for multiple people on same IP.");
+	c->Message(0, "Is MacroQuest or other assisting tools allowed? No.");
+}
+
+void command_buff(Client *c, const Seperator *sep) {
+	if (c->GetAggroCount() > 0) {
+		c->Message(0, "This command does not work while in combat.");
+		return;
+	}
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
+		uint64 cost = c->GetLevel * 15 * 1000;
+		if (!c->HasMoney(cost)) {
+			c->Message(0, "Not enough platinum to receive buffs.");
+			return;
+		}
+		if (!c->TakeMoneyFromPP(cost)) {
+			char *hacker_str = nullptr;
+			MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
+			database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+			safe_delete_array(hacker_str);
+			return;
+		}
+
+		c->SpellFinished(412, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[412].ResistDiff);
+		c->SpellFinished(278, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[278].ResistDiff);
+		c->SpellFinished(145, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
+		c->SpellFinished(1693, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[1693].ResistDiff);
+		c->SpellFinished(423, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[423].ResistDiff);
+		c->Message(0, "You paid %u platinum for buffs.", (c->GetLevel * 15));
+		return;
+	}
+	else {
+		c->Message(0, "At level %u, it will cost you %u platinum to receive buffs. [%s]", c->GetLevel(), (c->GetLevel * 15), c->CreateSayLink("#buff confirm", "Confirm").c_str());
+	}
+}
+
+void command_rez(Client *c, const Seperator *sep) {
+	c->Message(0, "Ressurect is not yet available.");
 }
 
 void command_depop(Client *c, const Seperator *sep)
