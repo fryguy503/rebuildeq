@@ -194,14 +194,15 @@ int command_init(void)
 		command_add("enablerecipe",  "[recipe_id] - Enables a recipe using the recipe id.",  80, command_enablerecipe) ||
 		command_add("equipitem", "[slotid(0-21)] - Equip the item on your cursor into the specified slot", 50, command_equipitem) ||
 		command_add("face", "- Change the face of your target", 80, command_face) ||
-		command_add("findaliases", "[search term]- Searches for available command aliases, by alias or command", 0, command_findaliases) ||
+		command_add("faq", "- Read the server FAQs", 0, command_faq) ||
+		command_add("findaliases", "[search term]- Searches for available command aliases, by alias or command", 20, command_findaliases) ||
 		command_add("findnpctype", "[search criteria] - Search database NPC types", 100, command_findnpctype) ||
 		command_add("findspell", "[searchstring] - Search for a spell", 50, command_findspell) ||
 		command_add("findzone", "[search criteria] - Search database zones", 100, command_findzone) ||
 		command_add("fixmob", "[race|gender|texture|helm|face|hair|haircolor|beard|beardcolor|heritage|tattoo|detail] [next|prev] - Manipulate appearance of your target", 80, command_fixmob) ||
-		command_add("flag", "[status] [acctname] - Refresh your admin status, or set an account's admin status if arguments provided", 0, command_flag) ||
+		command_add("flag", "[status] [acctname] - Refresh your admin status, or set an account's admin status if arguments provided", 20, command_flag) ||
 		command_add("flagedit", "- Edit zone flags on your target", 100, command_flagedit) ||
-		command_add("flags", "- displays the flags of you or your target", 0, command_flags) ||
+		command_add("flags", "- displays the flags of you or your target", 20, command_flags) ||
 		command_add("flymode", "[0/1/2] - Set your or your player target's flymode to off/on/levitate", 50, command_flymode) ||
 		command_add("fov", "- Check wether you're behind or in your target's field of view", 80, command_fov) ||
 		command_add("freeze", "- Freeze your target", 80, command_freeze) ||
@@ -218,24 +219,24 @@ int command_init(void)
 		command_add("goto", "[x] [y] [z] - Teleport to the provided coordinates or to your target", 10, command_goto) ||
 		command_add("grid", "[add/delete] [grid_num] [wandertype] [pausetype] - Create/delete a wandering grid", 170, command_grid) ||
 		command_add("guild", "- Guild manipulation commands. Use argument help for more info.", 10, command_guild) ||
-		command_add("guildapprove", "[guildapproveid] - Approve a guild with specified ID (guild creator receives the id)", 0, command_guildapprove) ||
-		command_add("guildcreate", "[guildname] - Creates an approval setup for guild name specified", 0, command_guildcreate) ||
-		command_add("guildlist", "[guildapproveid] - Lists character names who have approved the guild specified by the approve id", 0, command_guildlist) ||
+		command_add("guildapprove", "[guildapproveid] - Approve a guild with specified ID (guild creator receives the id)", 20, command_guildapprove) ||
+		command_add("guildcreate", "[guildname] - Creates an approval setup for guild name specified", 20, command_guildcreate) ||
+		command_add("guildlist", "[guildapproveid] - Lists character names who have approved the guild specified by the approve id", 20, command_guildlist) ||
 		command_add("hair", "- Change the hair style of your target", 80, command_hair) ||
 		command_add("haircolor", "- Change the hair color of your target", 80, command_haircolor) ||
 		command_add("haste", "[percentage] - Set your haste percentage", 100, command_haste) ||
 		command_add("hatelist", " - Display hate list for target.",  80, command_hatelist) ||
 		command_add("heal", "- Completely heal your target", 10, command_heal) ||
 		command_add("helm", "- Change the helm of your target", 80, command_helm) ||
-		command_add("help", "[search term] - List available commands and their description, specify partial command as argument to search", 0, command_help) ||
+		command_add("help", "[search term] - List available commands and their description, specify partial command as argument to search", 20, command_help) ||
 		command_add("heritage", "- Change the heritage of your target (Drakkin Only)", 80, command_heritage) ||
 		command_add("heromodel",  "[hero model] [slot] - Full set of Hero's Forge Armor appearance. If slot is set, sends exact model just to slot.",  200, command_heromodel) ||
 		command_add("hideme", "[on/off] - Hide yourself from spawn lists.", 80, command_hideme) ||
 		command_add("hotfix", "[hotfix_name] - Reloads shared memory into a hotfix, equiv to load_shared_memory followed by apply_shared_memory", 250, command_hotfix) ||
-		command_add("hp", "- Refresh your HP bar from the server.", 0, command_hp) ||
+		command_add("hp", "- Refresh your HP bar from the server.", 20, command_hp) ||
 		command_add("incstat", "- Increases or Decreases a client's stats permanently.", 200, command_incstat) ||
 		command_add("instance", "- Modify Instances", 200, command_instance) ||
-		command_add("interrogateinv", "- use [help] argument for available options", 0, command_interrogateinv) ||
+		command_add("interrogateinv", "- use [help] argument for available options", 20, command_interrogateinv) ||
 		command_add("interrupt", "[message id] [color] - Interrupt your casting. Arguments are optional.", 50, command_interrupt) ||
 		command_add("invsnapshot", "- Takes an inventory snapshot of your current target", 80, command_invsnapshot) ||
 		command_add("invul", "[on/off] - Turn player target's or your invulnerable flag on or off", 80, command_invul) ||
@@ -250,7 +251,7 @@ int command_init(void)
 		command_add("listnpcs", "[name/range] - Search NPCs", 20, command_listnpcs) ||
 		command_add("listpetition", "- List petitions", 50, command_listpetition) ||
 		command_add("load_shared_memory", "[shared_memory_name] - Reloads shared memory and uses the input as output", 250, command_load_shared_memory) ||
-		command_add("loc", "- Print out your or your target's current location and heading", 0, command_loc) ||
+		command_add("loc", "- Print out your or your target's current location and heading", 20, command_loc) ||
 		command_add("lock", "- Lock the worldserver", 150, command_lock) ||
 		command_add("logs",  "Manage anything to do with logs",  250, command_logs) ||
 		command_add("logtest",  "Performs log performance testing.",  250, command_logtest) ||
@@ -263,7 +264,7 @@ int command_init(void)
 		command_add("modifynpcstat", "- Modifys a NPC's stats", 150, command_modifynpcstat) ||
 		command_add("motd", "[new motd] - Set message of the day", 150, command_motd) ||
 		command_add("movechar", "[charname] [zonename] - Move charname to zonename", 50, command_movechar) ||
-		command_add("myskills", "- Show details about your current skill levels", 0, command_myskills) ||
+		command_add("myskills", "- Show details about your current skill levels", 20, command_myskills) ||
 		command_add("mysqltest", "Akkadius MySQL Bench Test", 250, command_mysqltest) ||
 		command_add("mysql", "Mysql CLI, see 'help' for options.", 250, command_mysql) ||
 		command_add("mystats", "- Show details about you or your pet", 50, command_mystats) ||
@@ -292,12 +293,12 @@ int command_init(void)
 
 		command_add("path", "- view and edit pathing", 200, command_path) ||
 		command_add("peekinv", "[worn/inv/cursor/trib/bank/trade/world/all] - Print out contents of your player target's inventory", 100, command_peekinv) ||
-		command_add("peqzone", "[zonename] - Go to specified zone, if you have > 75% health", 0, command_peqzone) ||
+		command_add("peqzone", "[zonename] - Go to specified zone, if you have > 75% health", 20, command_peqzone) ||
 		command_add("permaclass", "[classnum] - Change your or your player target's class (target is disconnected)", 80, command_permaclass) ||
 		command_add("permagender", "[gendernum] - Change your or your player target's gender (zone to take effect)", 80, command_permagender) ||
 		command_add("permarace", "[racenum] - Change your or your player target's race (zone to take effect)", 80, command_permarace) ||
 		command_add("petitioninfo", "[petition number] - Get info about a petition", 20, command_petitioninfo) ||
-		command_add("pf", "- Display additional mob coordinate and wandering data", 0, command_pf) ||
+		command_add("pf", "- Display additional mob coordinate and wandering data", 20, command_pf) ||
 		command_add("picklock",  "Analog for ldon pick lock for the newer clients since we still don't have it working.",  0, command_picklock) ||
 
 #ifdef EQPROFILE
@@ -309,7 +310,7 @@ int command_init(void)
 		command_add("qglobal", "[on/off/view] - Toggles qglobal functionality on an NPC", 100, command_qglobal) ||
 		command_add("questerrors", "Shows quest errors.", 100, command_questerrors) ||
 		command_add("race", "[racenum] - Change your or your target's race. Use racenum 0 to return to normal", 50, command_race) ||
-		command_add("raidloot", "LEADER|GROUPLEADER|SELECTED|ALL - Sets your raid loot settings if you have permission to do so.", 0, command_raidloot) ||
+		command_add("raidloot", "LEADER|GROUPLEADER|SELECTED|ALL - Sets your raid loot settings if you have permission to do so.", 20, command_raidloot) ||
 		command_add("randomfeatures", "- Temporarily randomizes the Facial Features of your target", 80, command_randomfeatures) ||
 		command_add("refreshgroup", "- Refreshes Group.",  0, command_refreshgroup) ||
 		command_add("reloadaa", "Reloads AA data", 200, command_reloadaa) ||
@@ -335,7 +336,7 @@ int command_init(void)
 		command_add("sendzonespawns", "- Refresh spawn list for all clients in zone", 150, command_sendzonespawns) ||
 		command_add("sensetrap",  "Analog for ldon sense trap for the newer clients since we still don't have it working.",  0, command_sensetrap) ||
 		command_add("serverinfo", "- Get OS info about server host", 200, command_serverinfo) ||
-		command_add("serverrules", "- Read this server's rules", 0, command_serverrules) ||
+		command_add("serverrules", "- Read this server's rules", 20, command_serverrules) ||
 		command_add("setaapts", "[value] - Set your or your player target's available AA points", 100, command_setaapts) ||
 		command_add("setaaxp", "[value] - Set your or your player target's AA experience", 100, command_setaaxp) ||
 		command_add("setadventurepoints", "- Set your or your player target's available adventure points", 150, command_set_adventure_points) ||
@@ -382,7 +383,7 @@ int command_init(void)
 		command_add("titlesuffix", "[text] [1 = create title table row] - Set your or your player target's title suffix", 50, command_titlesuffix) ||
 		command_add("traindisc", "[level] - Trains all the disciplines usable by the target, up to level specified. (may freeze client for a few seconds)", 150, command_traindisc) ||
 		command_add("tune",  "Calculate ideal statical values related to combat.",  100, command_tune) ||
-		command_add("undyeme", "- Remove dye from all of your armor slots", 0, command_undyeme) ||
+		command_add("undyeme", "- Remove dye from all of your armor slots", 20, command_undyeme) ||
 		command_add("unfreeze", "- Unfreeze your target", 80, command_unfreeze) ||
 		command_add("unlock", "- Unlock the worldserver", 150, command_unlock) ||
 		command_add("unscribespell", "[spellid] - Unscribe specified spell from your target's spell book.", 180, command_unscribespell) ||
@@ -390,7 +391,7 @@ int command_init(void)
 		command_add("untraindisc", "[spellid] - Untrain specified discipline from your target.", 180, command_untraindisc) ||
 		command_add("untraindiscs", "- Untrains all disciplines from your target.", 180, command_untraindiscs) ||
 		command_add("uptime", "[zone server id] - Get uptime of worldserver, or zone server if argument provided", 10, command_uptime) ||
-		command_add("version", "- Display current version of EQEmu server", 0, command_version) ||
+		command_add("version", "- Display current version of EQEmu server", 20, command_version) ||
 		command_add("viewnpctype", "[npctype id] - Show info about an npctype", 100, command_viewnpctype) ||
 		command_add("viewpetition", "[petition number] - View a petition", 20, command_viewpetition) ||
 		command_add("wc", "[wear slot] [material] - Sends an OP_WearChange for your target", 200, command_wc) ||
@@ -3976,6 +3977,15 @@ void command_builds(Client *c, const Seperator *sep)
 		c->Message(0, "This command is not available at this time.");
 		break;
 	}
+}
+
+
+void command_faq(Client *c, const Seperator *sep) {
+	c->Message(0, "Frequently Asked Questions:");
+	c->Message(0, "Do I need custom files for this server? No");
+	c->Message(0, "How do I access unique skills? /say #builds");
+	c->Message(0, "Is boxing allowed? No. Contact for multiple people on same IP.");
+	c->Message(0, "Is MacroQuest or other assisting tools allowed? No.");
 }
 
 void command_depop(Client *c, const Seperator *sep)
