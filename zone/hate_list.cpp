@@ -185,6 +185,37 @@ void HateList::AddEntToHateList(Mob *in_entity, int32 in_hate, int32 in_damage, 
 	if (in_entity->IsClient() && in_entity->CastToClient()->IsDead())
 		return;
 
+
+	//This causes group and raid members to also aggro when an entity is placed on a hate list.
+	if (in_entity->IsClient()) {		
+		if (in_entity->IsGrouped()) {
+			auto group = in_entity->GetGroup();
+			for (int i = 0; i < 6; ++i) {
+				if (group->members[i] &&  //target grouped
+					in_entity != group->members[i] && //not me
+					in_entity->GetZoneID() == group->members[i]->GetZoneID() //in same zone
+					) {
+					this->AddEntToHateList(group->members[i], 0, 0, false);
+				}
+			}
+		}
+		else if (in_entity->IsRaidGrouped()) {
+			auto raid = in_entity->GetRaid();
+			uint32 gid = raid->GetGroup(in_entity->CastToClient());
+			if (gid < 12) {
+				for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+					if (raid->members[i].member &&  //is raid member
+						raid->members[i].GroupNumber == gid && //in group
+						raid->members[i].member->CastToMob() != in_entity->CastToMob() && //is not same as aggro player
+						raid->members[i].member->CastToMob()->GetZoneID() == in_entity->GetZoneID() //in same zone as aggro player
+						) {
+						this->AddEntToHateList(raid->members[i].member, 0, 0, false);
+					}
+				}
+			}
+		}
+	}
+
 	struct_HateList *entity = Find(in_entity);
 	if (entity)
 	{
