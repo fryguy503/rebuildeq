@@ -3994,11 +3994,181 @@ void command_faq(Client *c, const Seperator *sep) {
 void command_teleport(Client *c, const Seperator *sep) {
 	//	// goto function
 	//	c->MovePC(zone->GetZoneID(), zone->GetInstanceID(), c->GetTarget()->GetX(), c->GetTarget()->GetY(), c->GetTarget()->GetZ(), c->GetTarget()->GetHeading());
-	c->Message(0, "Frequently Asked Questions:");
-	c->Message(0, "Do I need custom files for this server? No");
-	c->Message(0, "How do I access unique skills? /say #builds");
-	c->Message(0, "Is boxing allowed? No. Contact GMs for multiple people on same IP.");
-	c->Message(0, "Is MacroQuest or other assisting tools allowed? No.");
+	if (c->GetAggroCount() > 0) {
+		c->Message(0, "This command does not work while in combat.");
+		return;
+	}
+	uint64 cost = (c->GetLevel() * 15);
+	uint64 levelMin = 10;
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "gfaydark") == 0) {
+		if (c->GetLevel() >= levelMin) {
+			uint64 cost = c->GetLevel() * 100 * 1000;
+			if (!c->HasMoney(cost)) {
+				c->Message(0, "Not enough platinum to teleport.");
+				return;
+			}
+			if (!c->TakeMoneyFromPP(cost)) {
+				char *hacker_str = nullptr;
+				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
+				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+				safe_delete_array(hacker_str);
+				return;
+			}
+
+			c->Message(0, "You paid %u platinum to teleport to gfaydark.", (c->GetLevel * 15));
+		}
+		else {
+			c->Message(0, "You are being teleported to and bound at gfaydark for free due to being below level %u.", levelMin);
+		}
+		c->MovePC(54, -411, -2023, -0.28, 47.8, (uint8)'\000', ZoneSolicited);
+		return;
+	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "tox") == 0) {
+		if (c->GetLevel() >= levelMin) {
+			uint64 cost = c->GetLevel() * 100 * 1000;
+			if (!c->HasMoney(cost)) {
+				c->Message(0, "Not enough platinum to teleport.");
+				return;
+			}
+			if (!c->TakeMoneyFromPP(cost)) {
+				char *hacker_str = nullptr;
+				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
+				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+				safe_delete_array(hacker_str);
+				return;
+			}
+
+			c->Message(0, "You paid %u platinum to teleport to tox.", (c->GetLevel * 15));
+		}
+		else {
+			c->Message(0, "You are being teleported to and bound at tox for free due to being below level %u.", levelMin);
+		}
+		c->MovePC(38, -912.10, -1517.81, -37.71, 58.2, (uint8)'\000', ZoneSolicited);
+		return;
+	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "ecommons") == 0) {
+		if (c->GetLevel() >= levelMin) {
+			c->Message(0, "You are too high to teleport to ecommons.");
+			return;
+		}
+		else {
+			c->Message(0, "You are being teleported to and bound at ecommons for free due to being below level %u.", levelMin);
+		}
+		c->MovePC(22, -73.06, -1787.51, -3.13, 51.8, (uint8)'\000', ZoneSolicited);
+		return;
+	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "sro") == 0) {
+		if (c->GetLevel() >= levelMin) {
+			uint64 cost = c->GetLevel() * 100 * 1000;
+			if (!c->HasMoney(cost)) {
+				c->Message(0, "Not enough platinum to teleport.");
+				return;
+			}
+			if (!c->TakeMoneyFromPP(cost)) {
+				char *hacker_str = nullptr;
+				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
+				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+				safe_delete_array(hacker_str);
+				return;
+			}
+
+			c->Message(0, "You paid %u platinum to teleport to sro.", (c->GetLevel * 15));
+		}
+		else {
+			c->Message(0, "You are too low to teleport to sro.");
+			return;
+		}
+		c->MovePC(35, -411, 123.79, -1043.44, 8.83, (uint8)'\000', ZoneSolicited);
+		return;
+	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "commons") == 0) {
+		if (c->GetLevel() >= levelMin) {
+			uint64 cost = c->GetLevel() * 100 * 1000;
+			if (!c->HasMoney(cost)) {
+				c->Message(0, "Not enough platinum to teleport.");
+				return;
+			}
+			if (!c->TakeMoneyFromPP(cost)) {
+				char *hacker_str = nullptr;
+				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
+				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+				safe_delete_array(hacker_str);
+				return;
+			}
+
+			c->Message(0, "You paid %u platinum to teleport to commons.", (c->GetLevel * 15));
+		}
+		else {
+			c->Message(0, "You are too low to teleport to commons.");
+			return;
+		}
+		c->MovePC(21, 1839.84, 0.15, -15.61, 61.0, (uint8)'\000', ZoneSolicited);
+		return;
+	}
+	else if (sep->arg[1] && strcasecmp(sep->arg[1], "northkarana") == 0) {
+		if (c->GetLevel() >= levelMin) {
+			uint64 cost = c->GetLevel() * 100 * 1000;
+			if (!c->HasMoney(cost)) {
+				c->Message(0, "Not enough platinum to teleport.");
+				return;
+			}
+			if (!c->TakeMoneyFromPP(cost)) {
+				char *hacker_str = nullptr;
+				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
+				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+				safe_delete_array(hacker_str);
+				return;
+			}
+
+			c->Message(0, "You paid %u platinum to teleport to northkarana.", (c->GetLevel * 15));
+		}
+		else {
+			c->Message(0, "You are too low to teleport to northkarana.");
+			return;
+		}
+		c->MovePC(12, 1205.91, -3685.44, -8.56, 126.6, (uint8)'\000', ZoneSolicited);
+		return;
+	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "dreadlands") == 0) {
+		 if (c->GetLevel() >= levelMin) {
+			 uint64 cost = c->GetLevel() * 100 * 1000;
+			 if (!c->HasMoney(cost)) {
+				 c->Message(0, "Not enough platinum to teleport.");
+				 return;
+			 }
+			 if (!c->TakeMoneyFromPP(cost)) {
+				 char *hacker_str = nullptr;
+				 MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
+				 database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+				 safe_delete_array(hacker_str);
+				 return;
+			 }
+
+			 c->Message(0, "You paid %u platinum to teleport to dreadlands.", (c->GetLevel * 15));
+		 }
+		 else {
+			 c->Message(0, "You are too low to teleport to dreadlands.");
+			 return;
+		 }
+		 c->MovePC(86, -411, 123.79, -1043.44, 8.83, (uint8)'\000', ZoneSolicited);
+		 return;
+	 }
+	else {
+		if (c->GetLevel() < levelMin) {
+			c->Message(0, "Since you are below level %u, you may teleport and be bound for free to [%s], [%s], or [%s].", 
+				levelMin, 
+				c->CreateSayLink("#teleport ecommons", "ecommons").c_str(),
+				c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str(), 
+				c->CreateSayLink("#teleport tox", "tox").c_str()
+				);
+			return;
+		}
+		c->Message(0, "At level %u, it will cost %u platinum to teleport to [%s], [%s], [%s], [%s], or [%s].", 
+			c->GetLevel(), 
+			(c->GetLevel * 100), 
+			c->CreateSayLink("#teleport commons", "commons").c_str(),
+			c->CreateSayLink("#teleport dreadlands", "dreadlands").c_str(),
+			c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str(), 
+			c->CreateSayLink("#teleport northkarana", "northkarana").c_str(),
+			c->CreateSayLink("#teleport sro", "sro").c_str(), 			
+			c->CreateSayLink("#teleport tox", "tox").c_str()			
+			);
+	}
 }
 
 void command_buff(Client *c, const Seperator *sep) {
@@ -4007,7 +4177,7 @@ void command_buff(Client *c, const Seperator *sep) {
 		return;
 	}
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
-		uint64 cost = c->GetLevel * 15 * 1000;
+		uint64 cost = c->GetLevel() * 15 * 1000;
 		if (!c->HasMoney(cost)) {
 			c->Message(0, "Not enough platinum to receive buffs.");
 			return;
@@ -4025,7 +4195,7 @@ void command_buff(Client *c, const Seperator *sep) {
 		c->SpellFinished(145, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
 		c->SpellFinished(1693, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[1693].ResistDiff);
 		c->SpellFinished(423, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[423].ResistDiff);
-		c->Message(0, "You paid %u platinum for buffs.", (c->GetLevel * 15));
+		c->Message(0, "You paid %u platinum for buffs.", (c->GetLevel() * 15));
 		return;
 	}
 	else {
