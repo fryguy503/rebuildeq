@@ -147,7 +147,7 @@ int command_init(void)
 	commandaliases.clear();
 	
 	if (
-		command_add("acceptrules", "[acceptrules] - Accept the EQEmu Agreement", 0, command_acceptrules) ||
+		command_add("acceptrules", "[acceptrules] - Accept the EQEmu Agreement", 150, command_acceptrules) ||
 		command_add("advnpcspawn", "[maketype|makegroup|addgroupentry|addgroupspawn][removegroupspawn|movespawn|editgroupbox|cleargroupbox]", 150, command_advnpcspawn) ||
 		command_add("aggro", "(range) [-v] - Display aggro information for all mobs 'range' distance from your target. -v is verbose faction info.", 80, command_aggro) ||
 		command_add("aggrozone", "[aggro] - Aggro every mob in the zone with X aggro. Default is 0. Not recommend if you're not invulnerable.", 100, command_aggrozone) ||
@@ -165,7 +165,7 @@ int command_init(void)
 #ifdef BOTS
 		command_add("bot", "- Type \"#bot help\" to the see the list of available commands for bots.", 0, command_bot) ||
 #endif
-
+		command_add("builds", "Get a list of every build in game", 0, command_builds);
 		command_add("camerashake",  "Shakes the camera on everyone's screen globally.",  80, command_camerashake) ||
 		command_add("castspell", "[spellid] - Cast a spell", 50, command_castspell) ||
 		command_add("chat", "[channel num] [message] - Send a channel message to all zones", 200, command_chat) ||
@@ -3868,6 +3868,12 @@ void command_bind(Client *c, const Seperator *sep)
 			c->Message(0, "Error: target not a Player");
 	} else
 		c->SetBindPoint();
+}
+
+//List all available builds
+void command_builds(Client *c, const Seperator *sep)
+{
+	c->Message(0, "Builds are available at this point?");
 }
 
 void command_depop(Client *c, const Seperator *sep)
