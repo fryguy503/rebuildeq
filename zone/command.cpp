@@ -3984,7 +3984,7 @@ void command_faq(Client *c, const Seperator *sep) {
 	c->Message(0, "Frequently Asked Questions:");
 	c->Message(0, "Do I need custom files for this server? No");
 	c->Message(0, "How do I access unique skills? /say #builds");
-	c->Message(0, "Is boxing allowed? No. Contact for multiple people on same IP.");
+	c->Message(0, "Is boxing allowed? No. Contact GMs for multiple people on same IP.");
 	c->Message(0, "Is MacroQuest or other assisting tools allowed? No.");
 }
 
