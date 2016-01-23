@@ -372,7 +372,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 	}
 	else if((set_exp + set_aaxp) < (m_pp.exp+m_pp.expAA)){ //only loss message if you lose exp, no message if you gained/lost nothing.
 		i = set_exp - m_pp.exp;
-		Message(15, "You have lost %i experience.", i);
+		Message(15, "You have lost %i experience.", (-i));
 	}
 
 	//check_level represents the level we should be when we have
