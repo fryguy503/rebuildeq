@@ -165,7 +165,7 @@ int command_init(void)
 #ifdef BOTS
 		command_add("bot", "- Type \"#bot help\" to the see the list of available commands for bots.", 0, command_bot) ||
 #endif
-		command_add("builds", "Get a list of every build in game", 0, command_builds);
+		command_add("builds", "Get a list of every build in game", 0, command_builds) ||
 		command_add("camerashake",  "Shakes the camera on everyone's screen globally.",  80, command_camerashake) ||
 		command_add("castspell", "[spellid] - Cast a spell", 50, command_castspell) ||
 		command_add("chat", "[channel num] [message] - Send a channel message to all zones", 200, command_chat) ||
