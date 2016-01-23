@@ -4015,7 +4015,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			c->Message(0, "You paid %u platinum to teleport to gfaydark.", (c->GetLevel * 15));
+			c->Message(0, "You paid %u platinum to teleport to gfaydark.", (c->GetLevel()* 15));
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to gfaydark for free due to being below level %u.", levelMin);
@@ -4038,7 +4038,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			c->Message(0, "You paid %u platinum to teleport to tox.", (c->GetLevel * 15));
+			c->Message(0, "You paid %u platinum to teleport to tox.", (c->GetLevel()* 15));
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to tox for free due to being below level %u.", levelMin);
@@ -4072,7 +4072,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			c->Message(0, "You paid %u platinum to teleport to sro.", (c->GetLevel * 15));
+			c->Message(0, "You paid %u platinum to teleport to sro.", (c->GetLevel()* 15));
 		}
 		else {
 			c->Message(0, "You are too low to teleport to sro.");
@@ -4095,7 +4095,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			c->Message(0, "You paid %u platinum to teleport to commons.", (c->GetLevel * 15));
+			c->Message(0, "You paid %u platinum to teleport to commons.", (c->GetLevel()* 15));
 		}
 		else {
 			c->Message(0, "You are too low to teleport to commons.");
@@ -4119,7 +4119,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			c->Message(0, "You paid %u platinum to teleport to northkarana.", (c->GetLevel * 15));
+			c->Message(0, "You paid %u platinum to teleport to northkarana.", (c->GetLevel()* 15));
 		}
 		else {
 			c->Message(0, "You are too low to teleport to northkarana.");
@@ -4142,7 +4142,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				 return;
 			 }
 
-			 c->Message(0, "You paid %u platinum to teleport to dreadlands.", (c->GetLevel * 15));
+			 c->Message(0, "You paid %u platinum to teleport to dreadlands.", (c->GetLevel()* 15));
 		 }
 		 else {
 			 c->Message(0, "You are too low to teleport to dreadlands.");
@@ -4163,7 +4163,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 		}
 		c->Message(0, "At level %u, it will cost %u platinum to teleport to [%s], [%s], [%s], [%s], or [%s].", 
 			c->GetLevel(), 
-			(c->GetLevel * 100), 
+			(c->GetLevel()* 100), 
 			c->CreateSayLink("#teleport commons", "commons").c_str(),
 			c->CreateSayLink("#teleport dreadlands", "dreadlands").c_str(),
 			c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str(), 
@@ -4202,7 +4202,7 @@ void command_buff(Client *c, const Seperator *sep) {
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %u platinum to receive buffs. [%s]", c->GetLevel(), (c->GetLevel * 15), c->CreateSayLink("#buff confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %u platinum to receive buffs. [%s]", c->GetLevel(), (c->GetLevel() * 15), c->CreateSayLink("#buff confirm", "Confirm").c_str());
 	}
 }
 
@@ -4259,7 +4259,7 @@ void command_rez(Client *c, const Seperator *sep) {
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %u platinum to summon and resurrect a corpse in this zone. [%s]", c->GetLevel(), (c->GetLevel * 200), c->CreateSayLink("#buff confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %u platinum to summon and resurrect a corpse in this zone. [%s]", c->GetLevel(), (c->GetLevel() * 200), c->CreateSayLink("#buff confirm", "Confirm").c_str());
 	}
 }
 
