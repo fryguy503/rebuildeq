@@ -185,7 +185,7 @@ void HateList::AddEntToHateList(Mob *in_entity, int32 in_hate, int32 in_damage, 
 	if (in_entity->IsClient() && in_entity->CastToClient()->IsDead())
 		return;
 
-
+/*
 	//This causes group and raid members to also aggro when an entity is placed on a hate list.
 	if (in_entity->IsClient()) {		
 		if (in_entity->IsGrouped()) {
@@ -215,7 +215,7 @@ void HateList::AddEntToHateList(Mob *in_entity, int32 in_hate, int32 in_damage, 
 			}
 		}
 	}
-
+*/
 	struct_HateList *entity = Find(in_entity);
 	if (entity)
 	{
