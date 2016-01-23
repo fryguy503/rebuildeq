@@ -1300,6 +1300,10 @@ public:
 
 	void SendHPUpdateMarquee();
 
+	//Shin: Added for saylink generation
+	std::string CreateSayLink(const char* message, const char* name);
+
+
 protected:
 	friend class Mob;
 	void CalcItemBonuses(StatBonuses* newbon);

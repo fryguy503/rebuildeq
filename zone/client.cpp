@@ -8684,6 +8684,51 @@ void Client::SendHPUpdateMarquee(){
 	this->SendMarqueeMessage(15, 510, 0, 3000, 3000, health_update_notification);
 }
 
+
+//Shin: Create a saylink
+std::string Client::CreateSayLink(const char* message, const char* name) {
+	int sayid = 0;
+	int sz = strlen(message);
+	char *escaped_string = new char[sz * 2];
+	database.DoEscapeString(escaped_string, message, sz);
+	std::string query = StringFormat("SELECT `id` FROM `saylink` WHERE `phrase` = '%s'", escaped_string);
+	auto results = database.QueryDatabase(query);
+	if (results.Success()) {
+		if (results.RowCount() >= 1) {
+			for (auto row = results.begin(); row != results.end(); ++row)
+				sayid = atoi(row[0]);
+		}
+		else {
+			std::string insert_query = StringFormat("INSERT INTO `saylink` (`phrase`) VALUES ('%s')", escaped_string);
+			results = database.QueryDatabase(insert_query);
+			if (!results.Success()) {
+				Log.Out(Logs::General, Logs::Error, "Error in saylink phrase queries", results.ErrorMessage().c_str());
+			}
+			else {
+				results = database.QueryDatabase(query);
+				if (results.Success()) {
+					if (results.RowCount() >= 1)
+						for (auto row = results.begin(); row != results.end(); ++row)
+							sayid = atoi(row[0]);
+				}
+				else
+					Log.Out(Logs::General, Logs::Error, "Error in saylink phrase queries", results.ErrorMessage().c_str());
+			}
+		}
+	}
+	safe_delete_array(escaped_string);
+
+	Client::TextLink linker;
+	linker.SetLinkType(linker.linkItemData);
+	linker.SetProxyItemID(SAYLINK_ITEM_ID);
+	linker.SetProxyAugment1ID(sayid);
+	linker.SetProxyText(name);
+
+	auto say_link = linker.GenerateLink();
+	return say_link;
+}
+
+
 uint32 Client::GetMoney(uint8 type, uint8 subtype) {
 	uint32 value = 0;
 	switch (type) {
