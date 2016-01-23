@@ -4207,7 +4207,60 @@ void command_buff(Client *c, const Seperator *sep) {
 }
 
 void command_rez(Client *c, const Seperator *sep) {
-	c->Message(0, "Ressurect is not yet available.");
+	if (c->GetAggroCount() > 0) {
+		c->Message(0, "This command does not work while in combat.");
+		return;
+	}
+	Corpse *corpse = entity_list.GetCorpseByOwner(c);
+	if (!corpse) {
+		c->Message_StringID(4, CORPSE_CANT_SENSE);
+		return;
+	}
+
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
+		uint64 cost = c->GetLevel() * 200 * 1000;
+		if (!c->HasMoney(cost)) {
+			c->Message(0, "Not enough platinum to summon and resurrect a corpse in zone.");
+			return;
+		}
+		if (!c->TakeMoneyFromPP(cost)) {
+			char *hacker_str = nullptr;
+			MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
+			database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+			safe_delete_array(hacker_str);
+			return;
+		}
+
+		corpse->Summon(c, false, false);
+		if (!corpse->IsRezzed()) {
+			// Mark the corpse as rezzed in the database, just in case the corpse has buried, or the zone the
+			// corpse is in has shutdown since the rez spell was cast.
+			database.MarkCorpseAsRezzed(corpse->GetCorpseDBID());
+			c->BuffFadeNonPersistDeath(); //strip buffs
+
+			int SpellEffectDescNum = GetSpellEffectDescNum(1524); //Reviviscence
+			// Rez spells with Rez effects have this DescNum (first is Titanium, second is 6.2 Client)
+			if ((SpellEffectDescNum == 82) || (SpellEffectDescNum == 39067)) {
+				c->SetMana(0);
+				c->SetHP(c->GetMaxHP() / 5);
+				c->SpellOnTarget(756, c->CastToMob()); // Rezz effects
+			}			
+
+			if (spells[1524].base[0] < 100 && spells[1524].base[0] > 0 && corpse->GetRezExp() > 0)
+			{				
+				c->SetEXP(((int)(c->GetEXP() + ((float)((corpse->GetRezExp() / 100) * spells[1524].base[0])))),
+					c->GetAAXP(), true);
+			}
+
+			//Was sending the packet back to initiate client zone...
+			entity_list.RefreshClientXTargets(c);
+		}
+		c->Message(0, "You paid %u platinum to summon and resurrect a corpse in this zone.", (c->GetLevel() * 200));
+		return;
+	}
+	else {
+		c->Message(0, "At level %u, it will cost you %u platinum to summon and resurrect a corpse in this zone. [%s]", c->GetLevel(), (c->GetLevel * 200), c->CreateSayLink("#buff confirm", "Confirm").c_str());
+	}
 }
 
 void command_depop(Client *c, const Seperator *sep)
