@@ -4264,7 +4264,7 @@ void command_rez(Client *c, const Seperator *sep) {
 
 
 void command_report(Client *c, const Seperator *sep) {
-	if (!sep->arg[1]) {
+	if (!sep->arg[1] || (strlen(sep->arg[1]) == 0)) {
 		c->Message(0, "To report something to the GMs:");
 		c->Message(0, "/say #report Your report message here");
 		return;
