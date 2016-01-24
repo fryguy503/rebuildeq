@@ -1128,6 +1128,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, uint16 slot,
 
 				// handle the components for traditional casters
 				else {
+					/*
 					if(c->GetInv().HasItem(component, component_count, invWhereWorn|invWherePersonal) == -1) // item not found
 					{
 						if (!missingreags)
@@ -1147,6 +1148,9 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, uint16 slot,
 							Log.Out(Logs::Detail, Logs::Spells, "Spell %d: Canceled. Missing required reagent %s (%d)", spell_id, TempItemName, component);
 						}
 					}
+					*/
+					//Commented out missingreags
+					missingreags = false;
 				} // end bard/not bard ifs
 			} // end reagent loop
 
@@ -1160,6 +1164,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, uint16 slot,
 			}
 			else if (!bard_song_mode)
 			{
+				/*
 				int noexpend;
 				for(int t_count = 0; t_count < 4; t_count++) {
 					component = spells[spell_id].components[t_count];
@@ -1184,6 +1189,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, uint16 slot,
 					}
 				}
 				} // end missingreags/consumption
+				*/
 			} // end `focus did not help us`
 	} // end IsClient() for reagents
 
