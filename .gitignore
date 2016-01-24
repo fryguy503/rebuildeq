@@ -2,6 +2,7 @@ bin/
 deploy/server/eqemu_config.xml
 deploy/server/*.lock
 deploy/server/eqcleanup-linux64
+deploy/server/eqemu_update.pl
 
 # Object files
 *.o
