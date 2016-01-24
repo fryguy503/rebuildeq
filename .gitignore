@@ -1,4 +1,5 @@
 bin/
+deploy/server/eqemu_config.xml
 
 # Object files
 *.o
