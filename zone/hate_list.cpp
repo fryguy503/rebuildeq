@@ -234,7 +234,7 @@ void HateList::AddEntToHateList(Mob *in_entity, int32 in_hate, int32 in_damage, 
 						raid->members[i].member->CastToMob()->GetZoneID() == in_entity->GetZoneID() && //in same zone as aggro player
 						!raid->members[i].member->IsDead() //and not dead
 						) {
-						group->members[i]->CastToClient()->Message(0, "You're being added to a hate list via raid!");
+						raid->members[i].member->CastToClient()->Message(0, "You're being added to a hate list via raid!");
 						//Find raid member on hate list
 						struct_HateList *entity = Find(raid->members[i].member->CastToMob());
 						if (entity)
