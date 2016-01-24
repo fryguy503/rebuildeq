@@ -4057,6 +4057,17 @@ void command_teleport(Client *c, const Seperator *sep) {
 		}
 		c->MovePC(22, -73.06, -1787.51, -3.13, 51.8, (uint8)'\000', ZoneSolicited);
 		return;
+	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "fieldofbone") == 0) {
+		if (c->GetLevel() >= levelMin) {
+			c->Message(0, "You are too high to teleport to fieldofbone.");
+			return;
+		}
+		else {
+			c->Message(0, "You are being teleported and bound to fieldofbone for free due to being below level %u.", levelMin);
+			c->SetBindPoint(78, 0, glm::vec3(2395.95, -2216.75, 30.63));
+		}
+		c->MovePC(78, 2395.95, -2216.75, 30.63, 227.6, (uint8)'\000', ZoneSolicited);
+		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "sro") == 0) {
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoney(cost)) {
@@ -4149,11 +4160,12 @@ void command_teleport(Client *c, const Seperator *sep) {
 	 }
 	else {
 		if (c->GetLevel() < levelMin) {
-			c->Message(0, "Since you are below level %u, you may teleport and be bound for free to [%s], [%s], or [%s].", 
+			c->Message(0, "Since you are below level %u, you may teleport and be bound for free to [%s], [%s], [%s], or [%s].", 
 				levelMin, 
 				c->CreateSayLink("#teleport ecommons", "ecommons").c_str(),
 				c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str(), 
 				c->CreateSayLink("#teleport tox", "tox").c_str()
+				c->CreateSayLink("#teleport fieldofbone", "fieldofbone").c_str()
 				);
 			return;
 		}
