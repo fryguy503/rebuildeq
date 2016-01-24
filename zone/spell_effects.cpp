@@ -1348,6 +1348,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_Illusion:
 			{
+				//All illusions won't work, unless I SAY they work, for now.
+				break;
 #ifdef SPELL_EFFECT_SPAM
 				snprintf(effect_desc, _EDLEN, "Illusion: race %d", effect_value);
 #endif
@@ -1438,6 +1440,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_IllusionCopy:
 			{
+				//All illusions won't work, unless I SAY they work, for now.
+				break;
+
 #ifdef SPELL_EFFECT_SPAM
 				snprintf(effect_desc, _EDLEN, "Illusion Copy");
 #endif
@@ -3784,6 +3789,9 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 			case SE_IllusionCopy:
 			case SE_Illusion:
 			{
+				//All illusions won't work, unless I SAY they work, for now.
+				break;
+
 				SendIllusionPacket(0, GetBaseGender());
 				if(GetRace() == OGRE){
 					SendAppearancePacket(AT_Size, 9);
