@@ -194,14 +194,14 @@ void HateList::AddEntToHateList(Mob *in_entity, int32 in_hate, int32 in_damage, 
 			for (int i = 0; i < 6; ++i) {
 				if (group->members[i] &&  //target grouped
 					group->members[i]->IsClient() && //Is a client
-					in_entity != group->members[i] && //not me
+					in_entity->GetID() != group->members[i]->GetID() && //not me
 					in_entity->GetZoneID() == group->members[i]->GetZoneID() && //in same zone
 					!group->members[i]->CastToClient()->IsDead() //and not dead
 					) {
 					
 					//Find group member on hate list
 					struct_HateList *entity = Find(group->members[i]);
-					if (!entity)
+					if (entity)
 					{
 						entity->hatelist_damage += 0;
 						entity->stored_hate_amount += 0;
@@ -231,7 +231,7 @@ void HateList::AddEntToHateList(Mob *in_entity, int32 in_hate, int32 in_damage, 
 						) {
 						//Find raid member on hate list
 						struct_HateList *entity = Find(raid->members[i].member->CastToMob());
-						if (!entity)
+						if (entity)
 						{
 							entity->hatelist_damage += 0;
 							entity->stored_hate_amount += 0;
