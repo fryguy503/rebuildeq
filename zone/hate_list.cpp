@@ -187,34 +187,70 @@ void HateList::AddEntToHateList(Mob *in_entity, int32 in_hate, int32 in_damage, 
 
 	
 	//This causes group and raid members to also aggro when an entity is placed on a hate list.
-	if (in_entity->IsClient() && !in_entity->CastToClient()->IsDead()) {
-		if (in_entity->IsGrouped()) {
-			auto group = in_entity->GetGroup();
+	if (in_entity->IsClient() && !in_entity->CastToClient()->IsDead()) { //if a player and not dead
+		if (in_entity->IsGrouped()) { //if in a group
+
+			auto group = in_entity->GetGroup(); //iterate group
 			for (int i = 0; i < 6; ++i) {
 				if (group->members[i] &&  //target grouped
+					group->members[i]->IsClient() && //Is a client
 					in_entity != group->members[i] && //not me
-					in_entity->GetZoneID() == group->members[i]->GetZoneID() //in same zone
+					in_entity->GetZoneID() == group->members[i]->GetZoneID() && //in same zone
+					!group->members[i]->CastToClient()->IsDead() //and not dead
 					) {
-					AddEntToHateList(group->members[i], 0, 0, false, true);
+					
+					//Find group member on hate list
+					struct_HateList *entity = Find(group->members[i]);
+					if (!entity)
+					{
+						entity->hatelist_damage += 0;
+						entity->stored_hate_amount += 0;
+						entity->is_entity_frenzy = false;
+					} else {
+						entity = new struct_HateList;
+						entity->entity_on_hatelist = group->members[i];
+						entity->hatelist_damage = 0;
+						entity->stored_hate_amount = 0;
+						entity->is_entity_frenzy = false;
+						list.push_back(entity);
+						parse->EventNPC(EVENT_HATE_LIST, hate_owner->CastToNPC(), group->members[i], "1", 0);
+					}
 				}
 			}
-		}
-		/*else if (in_entity->IsRaidGrouped()) {
+		} else if (in_entity->IsRaidGrouped()) {
 			auto raid = in_entity->GetRaid();
 			uint32 gid = raid->GetGroup(in_entity->CastToClient());
 			if (gid < 12) {
 				for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
 					if (raid->members[i].member &&  //is raid member
 						raid->members[i].GroupNumber == gid && //in group
-						raid->members[i].member->CastToMob() != in_entity->CastToMob() && //is not same as aggro player
-						raid->members[i].member->CastToMob()->GetZoneID() == in_entity->GetZoneID() //in same zone as aggro player
+						raid->members[i]->IsClient() && //Is a client
+						raid->members[i].member != in_entity && //not me
+						raid->members[i].member->CastToMob()->GetZoneID() == in_entity->GetZoneID() && //in same zone as aggro player
+						!raid->members[i]->IsDead() //and not dead
 						) {
-						this->AddEntToHateList(raid->members[i].member, 0, 0, false);
+						//Find raid member on hate list
+						struct_HateList *entity = Find(raid->members[i]);
+						if (!entity)
+						{
+							entity->hatelist_damage += 0;
+							entity->stored_hate_amount += 0;
+							entity->is_entity_frenzy = false;
+						}
+						else {
+							entity = new struct_HateList;
+							entity->entity_on_hatelist = raid->members[i];
+							entity->hatelist_damage = 0;
+							entity->stored_hate_amount = 0;
+							entity->is_entity_frenzy = false;
+							list.push_back(entity);
+							parse->EventNPC(EVENT_HATE_LIST, hate_owner->CastToNPC(), raid->members[i], "1", 0);
+						}
 					}
 				}
 			}
 		}
-		*/
+		
 	}
 	
 
