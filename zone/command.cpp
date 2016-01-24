@@ -3998,11 +3998,11 @@ void command_teleport(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
-	uint64 cost = (c->GetLevel() * 15);
+	uint64 mod = 100;
 	uint64 levelMin = 10;
+	uint64 cost = c->GetLevel() * mod * 1000;
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "gfaydark") == 0) {
 		if (c->GetLevel() >= levelMin) {
-			uint64 cost = c->GetLevel() * 100 * 1000;
 			if (!c->HasMoney(cost)) {
 				c->Message(0, "Not enough platinum to teleport.");
 				return;
@@ -4015,7 +4015,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			c->Message(0, "You paid %u platinum to teleport to gfaydark.", (c->GetLevel()* 15));
+			c->Message(0, "You paid %u platinum to teleport to gfaydark.", (c->GetLevel() * 15));
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to gfaydark for free due to being below level %u.", levelMin);
@@ -4025,7 +4025,6 @@ void command_teleport(Client *c, const Seperator *sep) {
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "tox") == 0) {
 		if (c->GetLevel() >= levelMin) {
-			uint64 cost = c->GetLevel() * 100 * 1000;
 			if (!c->HasMoney(cost)) {
 				c->Message(0, "Not enough platinum to teleport.");
 				return;
@@ -4038,7 +4037,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			c->Message(0, "You paid %u platinum to teleport to tox.", (c->GetLevel()* 15));
+			c->Message(0, "You paid %u platinum to teleport to tox.", (c->GetLevel() * 15));
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to tox for free due to being below level %u.", levelMin);
@@ -4059,7 +4058,6 @@ void command_teleport(Client *c, const Seperator *sep) {
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "sro") == 0) {
 		if (c->GetLevel() >= levelMin) {
-			uint64 cost = c->GetLevel() * 100 * 1000;
 			if (!c->HasMoney(cost)) {
 				c->Message(0, "Not enough platinum to teleport.");
 				return;
@@ -4072,7 +4070,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			c->Message(0, "You paid %u platinum to teleport to sro.", (c->GetLevel()* 15));
+			c->Message(0, "You paid %u platinum to teleport to sro.", (c->GetLevel() * 15));
 		}
 		else {
 			c->Message(0, "You are too low to teleport to sro.");
@@ -4082,7 +4080,6 @@ void command_teleport(Client *c, const Seperator *sep) {
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "commons") == 0) {
 		if (c->GetLevel() >= levelMin) {
-			uint64 cost = c->GetLevel() * 100 * 1000;
 			if (!c->HasMoney(cost)) {
 				c->Message(0, "Not enough platinum to teleport.");
 				return;
@@ -4095,7 +4092,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			c->Message(0, "You paid %u platinum to teleport to commons.", (c->GetLevel()* 15));
+			c->Message(0, "You paid %u platinum to teleport to commons.", (c->GetLevel() * 15));
 		}
 		else {
 			c->Message(0, "You are too low to teleport to commons.");
@@ -4106,7 +4103,6 @@ void command_teleport(Client *c, const Seperator *sep) {
 	}
 	else if (sep->arg[1] && strcasecmp(sep->arg[1], "northkarana") == 0) {
 		if (c->GetLevel() >= levelMin) {
-			uint64 cost = c->GetLevel() * 100 * 1000;
 			if (!c->HasMoney(cost)) {
 				c->Message(0, "Not enough platinum to teleport.");
 				return;
@@ -4119,7 +4115,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			c->Message(0, "You paid %u platinum to teleport to northkarana.", (c->GetLevel()* 15));
+			c->Message(0, "You paid %u platinum to teleport to northkarana.", (c->GetLevel() * 15));
 		}
 		else {
 			c->Message(0, "You are too low to teleport to northkarana.");
@@ -4129,7 +4125,6 @@ void command_teleport(Client *c, const Seperator *sep) {
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "dreadlands") == 0) {
 		 if (c->GetLevel() >= levelMin) {
-			 uint64 cost = c->GetLevel() * 100 * 1000;
 			 if (!c->HasMoney(cost)) {
 				 c->Message(0, "Not enough platinum to teleport.");
 				 return;
@@ -4142,7 +4137,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				 return;
 			 }
 
-			 c->Message(0, "You paid %u platinum to teleport to dreadlands.", (c->GetLevel()* 15));
+			 c->Message(0, "You paid %u platinum to teleport to dreadlands.", (c->GetLevel() * 15));
 		 }
 		 else {
 			 c->Message(0, "You are too low to teleport to dreadlands.");
@@ -4163,7 +4158,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 		}
 		c->Message(0, "At level %u, it will cost %u platinum to teleport to [%s], [%s], [%s], [%s], or [%s].", 
 			c->GetLevel(), 
-			(c->GetLevel()* 100), 
+			(c->GetLevel() * mod), 
 			c->CreateSayLink("#teleport commons", "commons").c_str(),
 			c->CreateSayLink("#teleport dreadlands", "dreadlands").c_str(),
 			c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str(), 
@@ -4179,8 +4174,9 @@ void command_buff(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
+	uint64 mod = 15;
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
-		uint64 cost = c->GetLevel() * 15 * 1000;
+		uint64 cost = c->GetLevel() * mod * 1000;
 		if (!c->HasMoney(cost)) {
 			c->Message(0, "Not enough platinum to receive buffs.");
 			return;
@@ -4198,11 +4194,11 @@ void command_buff(Client *c, const Seperator *sep) {
 		c->SpellFinished(145, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
 		c->SpellFinished(1693, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[1693].ResistDiff);
 		c->SpellFinished(423, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[423].ResistDiff);
-		c->Message(0, "You paid %u platinum for buffs.", (c->GetLevel() * 15));
+		c->Message(0, "You paid %u platinum for buffs.", (c->GetLevel() * mod));
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %u platinum to receive buffs. [%s]", c->GetLevel(), (c->GetLevel() * 15), c->CreateSayLink("#buff confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %u platinum to receive buffs. [%s]", c->GetLevel(), (c->GetLevel() * mod), c->CreateSayLink("#buff confirm", "Confirm").c_str());
 	}
 }
 
@@ -4216,9 +4212,9 @@ void command_rez(Client *c, const Seperator *sep) {
 		c->Message_StringID(4, CORPSE_CANT_SENSE);
 		return;
 	}
-
-	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
-		uint64 cost = c->GetLevel() * 200 * 1000;
+	uint64 mod = 200;
+	uint64 cost = c->GetLevel() * 200 * 1000;
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {		
 		if (!c->HasMoney(cost)) {
 			c->Message(0, "Not enough platinum to summon and resurrect a corpse in zone.");
 			return;
@@ -4255,11 +4251,11 @@ void command_rez(Client *c, const Seperator *sep) {
 			//Was sending the packet back to initiate client zone...
 			entity_list.RefreshClientXTargets(c);
 		}
-		c->Message(0, "You paid %u platinum to summon and resurrect a corpse in this zone.", (c->GetLevel() * 200));
+		c->Message(0, "You paid %u platinum to summon and resurrect a corpse in this zone.", (c->GetLevel() * mod));
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %u platinum to summon and resurrect a corpse in this zone. [%s]", c->GetLevel(), (c->GetLevel() * 200), c->CreateSayLink("#buff confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %u platinum to summon and resurrect a corpse in this zone. [%s]", c->GetLevel(), (c->GetLevel() * mod), c->CreateSayLink("#rez confirm", "Confirm").c_str());
 	}
 }
 
