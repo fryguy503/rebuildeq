@@ -123,7 +123,7 @@ bool LoginServer::Process() {
 				{
 					if((status == 0 || status < 100) && (status != -2 || status != -1))
 						utwrs->response = 0;
-					if(status >= 100)
+					if(status >= 5)
 						utwrs->response = 1;
 				}
 				else {
