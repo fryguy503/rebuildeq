@@ -189,16 +189,21 @@ void HateList::AddEntToHateList(Mob *in_entity, int32 in_hate, int32 in_damage, 
 	//This causes group and raid members to also aggro when an entity is placed on a hate list.
 	if (in_entity->IsClient() && !in_entity->CastToClient()->IsDead()) { //if a player and not dead
 		if (in_entity->IsGrouped()) { //if in a group
-
+			in_entity->CastToClient()->Message(0, "You triggered a hate system!");
 			auto group = in_entity->GetGroup(); //iterate group
 			for (int i = 0; i < 6; ++i) {
+				if (group->members[i] &&  //target grouped
+					group->members[i]->IsClient()) {
+					group->members[i]->CastToClient()->Message(0, "You're a candidate!");
+				}
+
 				if (group->members[i] &&  //target grouped
 					group->members[i]->IsClient() && //Is a client
 					in_entity->GetID() != group->members[i]->GetID() && //not me
 					in_entity->GetZoneID() == group->members[i]->GetZoneID() && //in same zone
 					!group->members[i]->CastToClient()->IsDead() //and not dead
 					) {
-					
+					group->members[i]->CastToClient()->Message(0, "You're being added to a hate list via group!");
 					//Find group member on hate list
 					struct_HateList *entity = Find(group->members[i]);
 					if (entity)
@@ -229,6 +234,7 @@ void HateList::AddEntToHateList(Mob *in_entity, int32 in_hate, int32 in_damage, 
 						raid->members[i].member->CastToMob()->GetZoneID() == in_entity->GetZoneID() && //in same zone as aggro player
 						!raid->members[i].member->IsDead() //and not dead
 						) {
+						group->members[i]->CastToClient()->Message(0, "You're being added to a hate list via raid!");
 						//Find raid member on hate list
 						struct_HateList *entity = Find(raid->members[i].member->CastToMob());
 						if (entity)
