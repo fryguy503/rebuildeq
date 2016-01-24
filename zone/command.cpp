@@ -325,6 +325,7 @@ int command_init(void)
 		command_add("reloadtitles", "- Reload player titles from the database",  150, command_reloadtitles) ||
 		command_add("reloadworld", "[0|1] - Clear quest cache (0 - no repop, 1 - repop)", 255, command_reloadworld) ||
 		command_add("reloadzps", "- Reload zone points from database", 150, command_reloadzps) ||
+		command_add("report", "- Report an issue with the server", 0, command_report) ||
 		command_add("repop", "[delay] - Repop the zone with optional delay", 100, command_repop) ||
 		command_add("repopclose", "[distance in units] Repops only NPC's nearby for fast development purposes", 100, command_repopclose) ||
 		command_add("resetaa", "- Resets a Player's AA in their profile and refunds spent AA's to unspent, may disconnect player.", 200, command_resetaa) ||
@@ -4259,6 +4260,35 @@ void command_rez(Client *c, const Seperator *sep) {
 	else {
 		c->Message(0, "At level %u, it will cost you %u platinum to summon and resurrect a corpse in this zone. [%s]", c->GetLevel(), (c->GetLevel() * mod), c->CreateSayLink("#rez confirm", "Confirm").c_str());
 	}
+}
+
+
+void command_report(Client *c, const Seperator *sep) {
+	if (!sep->arg[1]) {
+		c->Message(0, "To report something on the server:");
+		c->Message(0, "/say #report Your report message here");
+		return;
+	}
+	
+	std::string query = StringFormat("INSERT INTO report "
+		"(name, account_id, character_id, zoneid, x, y, z, message)"
+		"VALUES (\"%s\",  %u, %u, %u, %f, %f, %f, \"%s\")",
+		c->GetName(),
+		c->AccountID(),
+		c->CharacterID(),
+		c->GetZoneID(),
+		c->GetX(),
+		c->GetY(),
+		c->GetZ(),
+		sep->argplus[1], 512);
+	auto results = database.QueryDatabase(query);
+	if (!results.Success()) {
+		c->Message(0, "Failed to create a report:");
+		c->Message(13, results.ErrorMessage().c_str());
+		return;
+	}
+
+	c->Message(0, "Your report (#%i) has been submitted.", results.LastInsertedID());
 }
 
 void command_depop(Client *c, const Seperator *sep)
