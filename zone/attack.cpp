@@ -2353,7 +2353,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 							raid->members[i].GroupNumber == gid && //in group
 							raid->members[i].member->IsClient() && //Is a client
 							raid->members[i].member != other && //not me
-							raid->members[i].member->CastToMob()->GetZoneID() == in_entity->GetZoneID() && //in same zone as aggro player
+							raid->members[i].member->CastToMob()->GetZoneID() == other->GetZoneID() && //in same zone as aggro player
 							!raid->members[i].member->IsDead() //and not dead
 							) {
 							raid->members[i].member->CastToClient()->Message(0, "You're being added to a hate list via raid!");
