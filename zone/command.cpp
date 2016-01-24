@@ -4189,11 +4189,12 @@ void command_buff(Client *c, const Seperator *sep) {
 			return;
 		}
 
-		c->SpellFinished(412, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[412].ResistDiff);
-		c->SpellFinished(278, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[278].ResistDiff);
-		c->SpellFinished(145, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
-		c->SpellFinished(1693, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[1693].ResistDiff);
-		c->SpellFinished(423, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[423].ResistDiff);
+		c->SpellFinished(412, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[412].ResistDiff);
+		c->SpellFinished(278, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[278].ResistDiff);
+		c->SpellFinished(145, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
+		c->SpellFinished(1693, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[1693].ResistDiff);
+		c->SpellFinished(423, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[423].ResistDiff);
+
 		c->Message(0, "You paid %u platinum for buffs.", (c->GetLevel() * mod));
 		return;
 	}
