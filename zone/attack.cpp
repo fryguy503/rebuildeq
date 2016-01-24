@@ -2311,6 +2311,69 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 	Mob* targetmob = this->GetTarget();
 
 	if(other){
+
+		//This causes group and raid members to also aggro when an entity is placed on a hate list.
+		if (other->IsClient() && !other->CastToClient()->IsDead()) { //if a player and not dead
+			if (other->IsGrouped()) { //if in a group
+				other->CastToClient()->Message(0, "You triggered a hate system!");
+				auto group = other->GetGroup(); //iterate group
+				for (int i = 0; i < 6; ++i) {
+					if (group->members[i] &&  //target grouped
+						group->members[i]->IsClient()) {
+						group->members[i]->CastToClient()->Message(0, "You're a candidate!");
+					}
+
+					if (group->members[i] &&  //target grouped
+						group->members[i]->IsClient() && //Is a client
+						other->GetID() != group->members[i]->GetID() && //not me
+						other->GetZoneID() == group->members[i]->GetZoneID() && //in same zone
+						!group->members[i]->CastToClient()->IsDead() //and not dead
+						) {
+						group->members[i]->CastToClient()->Message(0, "You're being added to a hate list via group!");
+						//Find group member on hate list
+
+						bool on_hatelist = CheckAggro(group->members[i]);
+						AddRampage(group->members[i]);
+
+						if (!on_hatelist) {
+							hate_list.AddEntToHateList(group->members[i], 50, 0, bFrenzy, !iBuffTic); //Just toss 50, 100 is default on initial aggro.
+							group->members[i]->CastToClient()->AddAutoXTarget(this);
+						}
+						
+
+					}
+				}
+			}
+			else if (other->IsRaidGrouped()) {
+				auto raid = other->GetRaid();
+				uint32 gid = raid->GetGroup(other->CastToClient());
+				if (gid < 12) {
+					for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+						if (raid->members[i].member &&  //is raid member
+							raid->members[i].GroupNumber == gid && //in group
+							raid->members[i].member->IsClient() && //Is a client
+							raid->members[i].member != other && //not me
+							raid->members[i].member->CastToMob()->GetZoneID() == in_entity->GetZoneID() && //in same zone as aggro player
+							!raid->members[i].member->IsDead() //and not dead
+							) {
+							raid->members[i].member->CastToClient()->Message(0, "You're being added to a hate list via raid!");
+							//Find raid member on hate list
+							bool on_hatelist = CheckAggro((raid->members[i].member);
+							AddRampage(raid->members[i].member);
+
+							if (!on_hatelist) {
+								hate_list.AddEntToHateList(raid->members[i].member, 50, 0, bFrenzy, !iBuffTic); //Just toss 50, 100 is default on initial aggro.
+								raid->members[i].member->CastToClient()->AddAutoXTarget(this);
+							}
+						}
+					}
+				}
+			}
+
+		}
+
+
+
 		bool on_hatelist = CheckAggro(other);
 		AddRampage(other);
 		if (on_hatelist) { // odd reason, if you're not on the hate list, subtlety etc don't apply!
