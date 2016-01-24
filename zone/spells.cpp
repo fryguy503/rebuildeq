@@ -1188,9 +1188,10 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, uint16 slot,
 						}
 					}
 				}
-				} // end missingreags/consumption
 				*/
-			} // end `focus did not help us`
+			} // end missingreags/consumption
+				
+		} // end `focus did not help us`
 	} // end IsClient() for reagents
 
 	// this is common to both bard and non bard
