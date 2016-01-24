@@ -4014,7 +4014,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				safe_delete_array(hacker_str);
 				return;
 			}
-
+			c->SendMoneyUpdate();
 			c->Message(0, "You paid %u platinum to teleport to gfaydark.", (c->GetLevel() * 15));
 		}
 		else {
@@ -4036,7 +4036,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				safe_delete_array(hacker_str);
 				return;
 			}
-
+			c->SendMoneyUpdate();
 			c->Message(0, "You paid %u platinum to teleport to tox.", (c->GetLevel() * 15));
 		}
 		else {
@@ -4091,7 +4091,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				safe_delete_array(hacker_str);
 				return;
 			}
-
+			c->SendMoneyUpdate();
 			c->Message(0, "You paid %u platinum to teleport to commons.", (c->GetLevel() * 15));
 		}
 		else {
@@ -4114,7 +4114,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				safe_delete_array(hacker_str);
 				return;
 			}
-
+			c->SendMoneyUpdate();
 			c->Message(0, "You paid %u platinum to teleport to northkarana.", (c->GetLevel() * 15));
 		}
 		else {
@@ -4136,7 +4136,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				 safe_delete_array(hacker_str);
 				 return;
 			 }
-
+			 c->SendMoneyUpdate();
 			 c->Message(0, "You paid %u platinum to teleport to dreadlands.", (c->GetLevel() * 15));
 		 }
 		 else {
@@ -4188,7 +4188,7 @@ void command_buff(Client *c, const Seperator *sep) {
 			safe_delete_array(hacker_str);
 			return;
 		}
-
+		c->SendMoneyUpdate();
 		c->SpellFinished(412, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[412].ResistDiff);
 		c->SpellFinished(278, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[278].ResistDiff);
 		c->SpellFinished(145, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
@@ -4227,6 +4227,7 @@ void command_rez(Client *c, const Seperator *sep) {
 			safe_delete_array(hacker_str);
 			return;
 		}
+		c->SendMoneyUpdate();
 
 		corpse->Summon(c, false, false);
 		if (!corpse->IsRezzed()) {
