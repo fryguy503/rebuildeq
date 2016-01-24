@@ -622,6 +622,50 @@ void Client::SetLevel(uint8 set_level, bool command)
 		SetHP(CalcMaxHP()); // Why not, lets give them a free heal
 	}
 
+	uint16 book_slot, curspell, spellCount, abilityCount;
+	//Scribe New Spells and Disciplines
+	for (curspell = 0, book_slot = this->GetNextAvailableSpellBookSlot(), spellCount = 0; curspell < SPDAT_RECORDS && book_slot < MAX_PP_SPELLBOOK; curspell++, book_slot = this->GetNextAvailableSpellBookSlot(book_slot))
+	{
+		if (
+				spells[curspell].classes[WARRIOR] != 0 && // check if spell exists
+				spells[curspell].classes[this->GetPP().class_ - 1] <= set_level &&	//maximum level
+				spells[curspell].classes[this->GetPP().class_ - 1] >= 1 &&	//minimum level
+				spells[curspell].skill != 52
+			) {
+
+			if (book_slot == -1) {	//no more book slots
+				this->Message(13, "Unable to scribe spell %s (%u) to spellbook: no more spell book slots available.", spells[curspell].name, curspell);
+				break;
+			}
+			if (!IsDiscipline(curspell) && !this->HasSpellScribed(curspell)) {	//isn't a discipline & we don't already have it scribed
+				this->ScribeSpell(curspell, book_slot);
+				spellCount++;
+			}
+			if (IsDiscipline(curspell)) {
+				//we may want to come up with a function like Client::GetNextAvailableSpellBookSlot() to help speed this up a little
+				for (int r = 0; r < MAX_PP_DISCIPLINES; r++) {
+					if (this->GetPP().disciplines.values[r] == curspell) { //Already learned
+						break;
+					}
+					else if (this->GetPP().disciplines.values[r] == 0) {
+						this->GetPP().disciplines.values[r] = curspell;
+						database.SaveCharacterDisc(this->CharacterID(), r, curspell);
+						this->SendDisciplineUpdate();
+						abilityCount++;	//success counter
+						break;
+					}	//if we get to this point, there's already a discipline in this slot, so we continue onto the next slot
+				}
+			}
+		}
+	}
+
+	if (spellCount > 0) {
+		this->Message(0, "You have learned %u new spells!", spellCount);
+	}
+	if (abilityCount > 0) {
+		this->Message(0, "You have learned %u new disciplines!", abilityCount);
+	}
+	
 	DoTributeUpdate();
 	SendHPUpdate();
 	SetMana(CalcMaxMana());
