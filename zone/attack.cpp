@@ -2358,7 +2358,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 							) {
 							raid->members[i].member->CastToClient()->Message(0, "You're being added to a hate list via raid!");
 							//Find raid member on hate list
-							bool on_hatelist = CheckAggro((raid->members[i].member);
+							bool on_hatelist = CheckAggro(raid->members[i].member);
 							AddRampage(raid->members[i].member);
 
 							if (!on_hatelist) {
