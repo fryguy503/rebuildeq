@@ -4164,7 +4164,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				levelMin, 
 				c->CreateSayLink("#teleport ecommons", "ecommons").c_str(),
 				c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str(), 
-				c->CreateSayLink("#teleport tox", "tox").c_str()
+				c->CreateSayLink("#teleport tox", "tox").c_str(),
 				c->CreateSayLink("#teleport fieldofbone", "fieldofbone").c_str()
 				);
 			return;
