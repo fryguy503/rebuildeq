@@ -16,7 +16,7 @@
 
 			<div class="row">
 				<form class="well bs-component">
-				 <p class="text-center">To learn more about this server, watch.</p>
+				 <p class="text-center">Detailed video goes here</p>
 					<div class="form-group">
 						<iframe style="display:block; margin: 0 auto;" width="560" height="315" src="https://www.youtube.com/embed/oh2rwUvnNxQ" frameborder="0" allowfullscreen></iframe>
 					</div>
