@@ -8,7 +8,7 @@
       <meta itemprop="name" content="RebuildEQ">
       <meta itemprop="description" content="Rebuild EQ - A private Everquest server">
       <meta property="og:url" content="http://rebuildeq.com">
-      <meta property="og:image" content="http://rebuildeq.com/images/logo.jpg">
+      <meta property="og:image" content="http://rebuildeq.com/images/logo.png">
       <meta property="og:site_name" content="RebuildEQ.com">
       <meta property="og:description" content="ebuild EQ is an Everquest Private Server Project based on classic Everquest with many twists.">
       <meta name="description" content="ebuild EQ is an Everquest Private Server Project based on classic Everquest with many twists.">
