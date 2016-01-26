@@ -13,10 +13,10 @@
 
     <div class="collapse navbar-collapse" id="nav-header">
       <ul class="nav navbar-nav">
-        <li><a href="/item"><span class="glyphicon glyphicon-leaf"></span> Item</a></li>
-        <li><a href="/npc"><span class="glyphicon glyphicon-knight"></span> NPC</a></li>
-        <li><a href="/player"><span class="glyphicon glyphicon-user"></span> Player</a></li>
-        <li><a href="/zone"><span class="glyphicon glyphicon-globe"></span> Zone</a></li>
+        <li><a href="/item"><span class="glyphicon glyphicon-info-sign"></span> About</a></li>
+        <li><a href="/npc"><span class="glyphicon glyphicon-tasks"></span> Builds</a></li>
+        <li><a href="/player"><span class="glyphicon glyphicon-user"></span> Forum</a></li>
+        <li><a href="/zone"><span class="glyphicon glyphicon-bullhorn"></span> Updates</a></li>
         
       </ul>
       <form class="navbar-form navbar-left" action="/player/search" role="search" method="GET">

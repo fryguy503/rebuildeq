@@ -15,7 +15,7 @@
 	      </div>
 	    </div>
 
-		<img unselectable="on" class="portrait" src="/images/builds/portrait/5.gif" style="left: 30%;margin-left: -30%;">
+		<img unselectable="on" class="portrait" src="/images/monograms/5.gif" style="left: 30%;margin-left: -30%;">
 		<div class="treeCollection">
 		<div class="treewrapper green">
 			<div class="bglayer gray"></div>
@@ -80,7 +80,7 @@
 				<div class="totalPoints">
 					<span class="totalPoints">0</span>
 				</div>
-				<legend>Gunlust</legend>
+				<legend>Bloodreaver</legend>
 			</div>
 		</div>
 
@@ -147,7 +147,7 @@
 				<div class="column3 totalPoints">
 					<span class="totalPoints">0</span>
 				</div>
-				<legend>Rampage</legend>
+				<legend>Defiler</legend>
 			</div>
 		</div>
 
@@ -214,7 +214,7 @@
 				<div class="column3 totalPoints">
 					<span class="totalPoints">0</span>
 				</div>
-				<legend>Brawn</legend>
+				<legend>Revenant</legend>
 			</div>
 		</div>
 		</div>

@@ -13,7 +13,7 @@
       <meta property="og:description" content="Bootsnipp is an element gallery for web designers and web developers, anybody who is using Bootstrap will find this website essential in their craft.">
       <meta name="description" content="Bootsnipp is an element gallery for web designers and web developers, anybody who is using Bootstrap will find this website essential in their craft.">
       <meta name="author" content="Maks Surguy, @msurguy">
-    <title>{$site->title} | ShinShop</title>
+    <title>{$site->title} | RebuildEQ</title>
     <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.gif">
     <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-72x72-precomposed.gif">
     <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-114x114-precomposed.gif">
