@@ -9,17 +9,12 @@
 		<div class="row">
 	      <div class="col-md-12">
 	        <ul class="breadcrumb">
-	          <li><a href="/item">Item</a></li>
-	          <li class="active">Editor</li>
+	          <li><a href="/item">Builds</a></li>
+	          <li class="active">Shadow Knight</li>
 	        </ul>
 	      </div>
 	    </div>
 
-
-
-		<div class="header">
-			<h3>Level <span class="charLevel">5</span> Shadow Knight</h3>
-		</div>
 		<img unselectable="on" class="portrait" src="/images/builds/portrait/5.gif" style="left: 30%;margin-left: -30%;">
 		<div class="treeCollection">
 		<div class="treewrapper green">
