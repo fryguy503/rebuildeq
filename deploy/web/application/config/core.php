@@ -12,10 +12,10 @@ return array
 
 	//Site related info
 	'site' => array(
-		'name' => 'ShinShop',
+		'name' => 'RebuildEQ',
 		'title' => 'Index',
-		'image' => '/images/blog/xackpack.png',
-		'description' => 'Shin Shop Tools',
-		'keywords' => 'everquest, tool, editor',
+		'image' => '/images/rebuildeq.png',
+		'description' => 'Rebuild EQ - Rebuilt',
+		'keywords' => 'everquest, project, eqemu, eq builds',
 	),
 );
