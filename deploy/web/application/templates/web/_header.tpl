@@ -13,11 +13,11 @@
 
     <div class="collapse navbar-collapse" id="nav-header">
       <ul class="nav navbar-nav">
-        <li><a href="/item"><span class="glyphicon glyphicon-info-sign"></span> About</a></li>
-        <li><a href="/npc"><span class="glyphicon glyphicon-tasks"></span> Builds</a></li>
-        <li><a href="/player"><span class="glyphicon glyphicon-user"></span> Forum</a></li>
-        <li><a href="/zone"><span class="glyphicon glyphicon-bullhorn"></span> Updates</a></li>
-        <li><a href="/zone"><span class="glyphicon glyphicon-apple{*usd*}"></span> Donate</a></li>
+        <li><a href="/about"><span class="glyphicon glyphicon-info-sign"></span> About</a></li>
+        <li><a href="/builds"><span class="glyphicon glyphicon-tasks"></span> Builds</a></li>
+        <li><a href="/chat"><span class="glyphicon glyphicon-user"></span> Chat</a></li>
+        <li><a href="/updates"><span class="glyphicon glyphicon-bullhorn"></span> Updates</a></li>
+        <li><a href="/donate"><span class="glyphicon glyphicon-apple{*usd*}"></span> Donate</a></li>
       </ul>
      
       <ul class="nav navbar-nav navbar-right">

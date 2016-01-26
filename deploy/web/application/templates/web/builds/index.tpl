@@ -9,7 +9,7 @@
 		<div class="row">
 	      <div class="col-md-12">
 	        <ul class="breadcrumb">
-	          <li><a href="/item">Builds</a></li>
+	          <li><a href="/builds">Builds</a></li>
 	          <li class="active">Shadow Knight</li>
 	        </ul>
 	      </div>
