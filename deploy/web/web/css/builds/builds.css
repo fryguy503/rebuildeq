@@ -1,9 +1,9 @@
 html,body { height: 100%; margin: 0; padding: 0; }
 html {overflow-y: scroll;}
 body {
-	background: #333 url("/images/builds/bg/background.jpg") no-repeat fixed center center;
+	/*background: #333 url("/images/builds/bg/background.jpg") no-repeat fixed center center;*/
 	background-size: cover;
-	color: #eee;
+	/*color: #eee;*/
 	/*font: 15pt/17pt Homenaje, Impact, sans-serif;*/
 	cursor: default;
 	text-align: center;
@@ -151,7 +151,7 @@ div.totalPoints {
 legend, span.totalPoints {
 	text-transform: uppercase;
 	font-weight: bold;
-	font-size: 22pt;
+	font-size: 15pt;
 	color: white;
 	text-shadow: black 0 0 4px;
 	position: absolute;
