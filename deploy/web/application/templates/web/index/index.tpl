@@ -4,7 +4,7 @@
 	<div class="row" style="margin-top:60px;">
 	  	<div class="col-md-8 col-md-offset-2">
 	  		<div class="row">
-				<form class="well bs-component" action="/player/search" method="GET">
+				<form class="well bs-component">
 					<div class="form-group">
 			          <p class="text-center">
 			          <label class="control-label">Rebuilt Everquest</label><br>
@@ -18,7 +18,7 @@
 			</div>
 
 			<div class="row">
-				<form class="well bs-component" action="/player/search" method="GET">
+				<form class="well bs-component">
 					<div class="form-group">
 						<iframe style="display:block; margin: 0 auto;" width="560" height="315" src="https://www.youtube.com/embed/oh2rwUvnNxQ" frameborder="0" allowfullscreen></iframe>
 					</div>
@@ -26,12 +26,13 @@
 			</div>
 
 			<div class="row">
-				<form class="well bs-component" action="/player/search" method="GET">
+				<form class="well bs-component">
 					<div class="form-group">
 			          <p class="text-center">
 			           <label class="control-label">Rebuild EQ is an Everquest Private Server Project based on classic Everquest with many twists.</label>
 
 			          <ul> 
+			          <li>Unique <a href="/builds">builds</a> to custom craft your Everquest experience</li>
 			          <li>Learn spells and skills on level</li>
 			          <li>Unlock AAs through quests</li>
 			          <li>Reimagined classic content</li>
@@ -40,9 +41,7 @@
 			        </div>
 			     </form>
 			 </div>
-			<div class="row">
-				
-			</div>
+			
 		</div>
 	</div>
   </div>
