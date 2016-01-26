@@ -9,7 +9,7 @@
 					<p>
 			          <label class="control-label">Interested in donating?</label><br>
 			          
-			         Aww, you shouldn't have! There is no donation system up currently, however we have a personal philosophy that donations only cause rewards that are aesthetic.<br>
+			         Aww, you shouldn't have! There is no donation system up currently, however we have a philosophy that donations only should reward in aesthetic ways.<br>
 
 			         <div class="text-center"> Email me at rebuildeq [at] gmail or PM Xackery on discord if you're interested in showing your support.</div>
 			          </p>
