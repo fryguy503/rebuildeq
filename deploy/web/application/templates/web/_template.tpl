@@ -2,23 +2,24 @@
   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta property="og:title" content="HTML Snippets for Twitter Boostrap framework : Bootsnipp.com">
+      <meta property="og:title" content="Rebuild EQ - An Everquest Private Server With Custom Builds">
       <meta property="og:type" content="website">
-      <meta property="twitter:account_id" content="786331568">
-      <meta itemprop="name" content="Bootsnipp">
-      <meta itemprop="description" content="Free HTML snippets for Bootstrap HTML CSS JS Framework">
-      <meta property="og:url" content="http://bootsnipp.com">
-      <meta property="og:image" content="http://bootsnipp.com/img/logo.jpg">
-      <meta property="og:site_name" content="Bootsnipp.com">
-      <meta property="og:description" content="Bootsnipp is an element gallery for web designers and web developers, anybody who is using Bootstrap will find this website essential in their craft.">
-      <meta name="description" content="Bootsnipp is an element gallery for web designers and web developers, anybody who is using Bootstrap will find this website essential in their craft.">
-      <meta name="author" content="Maks Surguy, @msurguy">
+      <meta property="twitter:account_id" content="4777423195">
+      <meta itemprop="name" content="RebuildEQ">
+      <meta itemprop="description" content="Rebuild EQ - A private Everquest server">
+      <meta property="og:url" content="http://rebuildeq.com">
+      <meta property="og:image" content="http://rebuildeq.com/images/logo.jpg">
+      <meta property="og:site_name" content="RebuildEQ.com">
+      <meta property="og:description" content="ebuild EQ is an Everquest Private Server Project based on classic Everquest with many twists.">
+      <meta name="description" content="ebuild EQ is an Everquest Private Server Project based on classic Everquest with many twists.">
+      <meta name="author" content="Shin Noir, @rebuildeq">
     <title>{$site->title} | RebuildEQ</title>
+    {*
     <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.gif">
     <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-72x72-precomposed.gif">
     <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-114x114-precomposed.gif">
     <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-144x144-precomposed.gif">
-
+    *}
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
