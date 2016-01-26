@@ -5,14 +5,12 @@
   <div class="container">
 
 	<div class="row" style="margin-top:60px;">
-	 
+
 		<div class="row">
-	      <div class="col-md-12">
-	        <ul class="breadcrumb">
-	          <li><a href="/builds">Builds</a></li>
-	          <li class="active">Shadow Knight</li>
-	        </ul>
-	      </div>
+	        	<ul class="breadcrumb">
+	          		<li><a href="/builds">Builds</a></li>
+	          		<li class="active">Shadow Knight</li>
+	        	</ul>
 	    </div>
 
 	    <div class="row">
@@ -26,7 +24,9 @@
 		    </form>
 		</div>
 
-
+  <div class="row">
+			<form class="well bs-component">
+				<div class="form-group">
 		<img unselectable="on" class="portrait" src="/images/monograms/5.gif" style="left: 30%;margin-left: -30%;">
 		<div class="treeCollection">
 		<div class="treewrapper green">
@@ -235,5 +235,7 @@
 
 	</div>
   </div>
-    
+ </div>
+		    </form>
+		</div>
 {*include file="../_footer.tpl"*}

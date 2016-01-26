@@ -6,13 +6,13 @@
 	  		<div class="row">
 				<form class="well bs-component" action="/player/search" method="GET">
 					<div class="form-group">
-			          <label class="control-label">Account Manager</label>
-			          <div class="input-group">
-			            <input type="text" class="form-control" name="q" placeholder="{if !empty($q)}{$q}{/if}">
-			            <span class="input-group-btn">
-			              <button class="btn btn-default" type="button">Search</button>
-			            </span>
-			          </div>
+					<p>
+			          <label class="control-label">Interested in donating?</label><br>
+			          
+			         Aww, you shouldn't have! There is no donation system up currently, however we have a personal philosophy that donations only cause rewards that are aesthetic.<br>
+
+			         <div class="text-center"> Email me at rebuildeq [at] gmail or PM Xackery on discord if you're interested in showing your support.</div>
+			          </p>
 			        </div>
 			     </form>
 			 </div>
