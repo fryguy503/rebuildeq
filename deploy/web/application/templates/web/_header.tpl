@@ -17,14 +17,9 @@
         <li><a href="/npc"><span class="glyphicon glyphicon-tasks"></span> Builds</a></li>
         <li><a href="/player"><span class="glyphicon glyphicon-user"></span> Forum</a></li>
         <li><a href="/zone"><span class="glyphicon glyphicon-bullhorn"></span> Updates</a></li>
-        
+        <li><a href="/zone"><span class="glyphicon glyphicon-apple{*usd*}"></span> Donate</a></li>
       </ul>
-      <form class="navbar-form navbar-left" action="/player/search" role="search" method="GET">
-        <div class="form-group">
-          <input type="text" class="form-control" name="q" placeholder="Search">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>
+     
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#">Guest <i class="glyphicon glyphicon-off"></i></a></li>
       </ul>
