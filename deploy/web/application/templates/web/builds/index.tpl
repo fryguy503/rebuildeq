@@ -15,6 +15,18 @@
 	      </div>
 	    </div>
 
+	    <div class="row">
+			<form class="well bs-component">
+				<div class="form-group">
+				<p>
+		          <label class="control-label">This is still a work in progress.</label><br>
+		         Please note this area is still being worked on. Come back later to see the builds as they evolve.
+		          </p>
+		        </div>
+		    </form>
+		</div>
+
+
 		<img unselectable="on" class="portrait" src="/images/monograms/5.gif" style="left: 30%;margin-left: -30%;">
 		<div class="treeCollection">
 		<div class="treewrapper green">
