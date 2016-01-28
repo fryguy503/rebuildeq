@@ -55,7 +55,7 @@
 				</div>
 				<div class="tier" data-level="2" data-invested="0" data-total="0">
 					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-4.png">
-						<div class="description"><h2>Voice of Fear</h2>Fear line causes <em data-base="+6">+10</em>% additional hate<span class="perLevel"> per level</span>.</div>
+						<div class="description"><h2>Voice of Fear</h2>Voices causes <em data-base="+6">+10</em>% additional hate<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-5.png">
