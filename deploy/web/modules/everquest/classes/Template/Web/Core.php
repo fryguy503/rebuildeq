@@ -38,6 +38,7 @@ class Template_Web_Core extends Controller_Template {
 		$this->template->page = "index";
 		$this->template->site = (object)$this->config['site'];
 		$this->template->domain = Kohana_Cookie::$domain;
+		
 		if (!empty($userToken)) {
 
 			$this->template->userToken = $userToken;

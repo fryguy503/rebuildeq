@@ -10,7 +10,7 @@
       <meta property="og:url" content="http://rebuildeq.com">
       <meta property="og:image" content="http://rebuildeq.com/images/logo.png">
       <meta property="og:site_name" content="RebuildEQ.com">
-      <meta property="og:description" content="ebuild EQ is an Everquest Private Server Project based on classic Everquest with many twists.">
+      <meta property="og:description" content="{$site->description}">
       <meta name="description" content="ebuild EQ is an Everquest Private Server Project based on classic Everquest with many twists.">
       <meta name="author" content="Shin Noir, @rebuildeq">
     <title>{$site->title} | RebuildEQ</title>
