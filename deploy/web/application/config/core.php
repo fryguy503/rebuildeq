@@ -14,7 +14,7 @@ return array
 	'site' => array(
 		'name' => 'RebuildEQ',
 		'title' => 'Index',
-		'image' => '/images/rebuildeq.png',
+		'image' => 'http://rebuildeq.com/images/logo.png',
 		'description' => 'Rebuild EQ is an Everquest Private Server Project based on classic Everquest with many twists',
 		'keywords' => 'everquest, project, eqemu, eq builds',
 	),

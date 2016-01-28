@@ -2,16 +2,16 @@
   	<meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta property="og:title" content="Rebuild EQ - An Everquest Private Server With Custom Builds">
+      <meta property="og:title" content="{$site->title}">
       <meta property="og:type" content="website">
       <meta property="twitter:account_id" content="4777423195">
       <meta itemprop="name" content="RebuildEQ">
       <meta itemprop="description" content="Rebuild EQ - A private Everquest server">
       <meta property="og:url" content="http://rebuildeq.com">
-      <meta property="og:image" content="http://rebuildeq.com/images/logo.png">
+      <meta property="og:image" content="{$site->image}">
       <meta property="og:site_name" content="RebuildEQ.com">
       <meta property="og:description" content="{$site->description}">
-      <meta name="description" content="ebuild EQ is an Everquest Private Server Project based on classic Everquest with many twists.">
+      <meta name="description" content="{$site->description}">
       <meta name="author" content="Shin Noir, @rebuildeq">
     <title>{$site->title} | RebuildEQ</title>
     {*
