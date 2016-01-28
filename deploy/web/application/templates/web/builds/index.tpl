@@ -97,11 +97,7 @@
 						<div class="description"><h2>Banshee's Mirror</h2>Improves Damage Mitigation by <em data-base="+35">+3.5</em>% for <em data-base="+60">30</em> seconds <span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
-				</div>
-				<div class="tier" data-level="6" data-invested="0" data-total="0">
-					
-					
-				</div>
+				</div>				
 				<div class="totalPoints">
 					<span class="totalPoints">0</span>
 				</div>
@@ -114,59 +110,68 @@
 			<div class="bglayer color" style="height: 80px;"></div>
 			<div class="tree">
 				<div class="tier" data-level="0" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-rampage-0.png">
-						<div class="description"><h2>Inconceivable</h2>Up to <em data-base="10">10</em>% chance<span class="perLevel"> per level</span> for shots not to consume ammo depending on how low your health and shields are.</div>
+					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-0.png">
+						<div class="description"><h2>Festering Spear</h2>Improve spears by <em data-base="+5">+5</em>%<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: visible;">0/10</div>
 					</div>
-					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-rampage-1.png">
-						<div class="description"><h2>Filled to the Brim</h2><em data-base="+5">+5</em>% Magazine Capacity and <em data-base="+3">+3</em>% Ammunition Capacity<span class="perLevel"> per level</span> for all weapon types.</div>
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-1.png">
+						<div class="description"><h2>Festering Wounds</h2>Improves DoT damage by <em data-base="+2">+2</em>%<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: visible;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="1" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-rampage-2.png">
-						<div class="description"><h2>All in the Reflexes</h2><em data-base="+5">+5</em>% Reload Speed and <em data-base="+4">+4</em>% Melee Damage<span class="perLevel"> per level</span>.</div>
+					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-2.png">
+						<div class="description"><h2>Shroud of Anger</h2>All attack modifiers are improved by <em data-base="+2.5">+2.5</em>%<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
-					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-rampage-3.png">
-						<div class="description"><h2>Last Longer</h2><em data-base="+3">+3</em> seconds Gunzerking duration<span class="perLevel"> per level</span>.</div>
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-3.png">
+						<div class="description"><h2>Rotten Core</h2>Increases attack by <em data-base="+4">+4</em>% for a short duration each time a target dies nearby with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="2" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-rampage-4.png">
-						<div class="description"><h2>I'm Ready Already</h2><em data-base="+5">+5</em>% Gunzerking Cooldown Rate.</div>
+					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-4.png">
+						<div class="description"><h2>Lingering Pain</h2>All direct damage spells have a <em data-base="+2">+2</em>% chance to cause bonus damage over time<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
-					<div class="skill" data-points="0" data-max="1"><img src="/images/builds/icons/gunzerker-rampage-5.png">
-						<div class="description"><h2>Steady as She Goes</h2><em data-base="+80">+80</em>% Recoil Reduction and <em data-base="30">30</em>% chance to improve Accuracy on hit when Gunzerking.</div>
-						<div class="points" style="visibility: hidden;">0/1</div>
-					</div>
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-rampage-6.png">
-						<div class="description"><h2>5 Shots or 6</h2>Grants a <em data-base="5">5</em>% chance<span class="perLevel"> per level</span> to add an extra round of ammunition when firing instead of expending ammunition.</div>
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-5.png">
+						<div class="description"><h2>Blood Oath</h2>Increases damage by <em data-base="+5">+5</em>%, while decreasing healing effects by -<em data-base="5">5</em>%, AC by -<em data-base="5">5</em>, and all resistances by -<em data-base="10">10</em>.<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
+					
 				</div>
 				<div class="tier" data-level="3" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-rampage-7.png">
-						<div class="description"><h2>Yippie Ki Yay</h2>Increases the duration of Gunzerking by <em data-base="+0.6">+0.6</em> seconds<span class="perLevel"> per level</span> every time an enemy is killed while Gunzerking.</div>
+					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-6.png">
+						<div class="description"><h2>Cold Flesh</h2>Lowers hatred by <em data-base="100">100</em> when attacked by an enemy<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
-					<div class="skill" data-points="0" data-max="1"><img src="/images/builds/icons/gunzerker-rampage-8.png">
-						<div class="description"><h2>Double Your Fun</h2>Throwing a grenade while Gunzerking throws two grenades instead of one. The second grenade doesn't cost ammo.</div>
-						<div class="points" style="visibility: hidden;">0/1</div>
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-7.png">
+						<div class="description"><h2>Gift of Urash</h2>Increases all skill modifiers by <em data-base="+2.5">+2.5</em>%, stacks up to <em data-base="1">1</em> times<span class="perLevel"> per level</span>.</div>
+						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="4" data-invested="0" data-total="0">
-					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-rampage-9.png">
-						<div class="description"><h2>Get Some</h2>Shooting an enemy decreases Gunzerking cooldown by <em data-base="-0.6">--0.6</em> seconds<span class="perLevel"> per level</span>. Has a cooldown of 3 seconds.</div>
+					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
+						<div class="description"><h2>Undying Hatred</h2>Upon feigning, creates a shadow image that continues fighting for <em data-base="5">5</em> seconds<span class="perLevel"> per level</span>.</div>
+						<div class="points" style="visibility: hidden;">0/10</div>
+					</div>
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
+						<div class="description"><h2>No Remorse</h2>Improves chance of proc effects by <em data-base="+2">+2</em>%<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="5" data-invested="0" data-total="0">
-					<div class="skill push1" data-points="0" data-max="1"><img src="/images/builds/icons/gunzerker-rampage-10.png">
-						<div class="description"><h2>Keep Firing</h2>While Gunzerking, you gain up to <em data-base="+88">+88</em>% Fire Rate and <em data-base="+25">+25</em>% Reload Speed depending on how long you hold down the trigger.</div>
+					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
+						<div class="description"><h2>Unholy Focus</h2>Causes all direct damage spells to be <em data-base="+5">+5</em>% more unresistable<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/1</div>
+					</div>
+					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
+						<div class="description"><h2>Reaper of Souls</h2>Grants an empowered pet that backstabs and causes <em data-base="+5">+5</em>% melee vampirism returning <em data-base="+2">+2</em>% of damage as healing to it's owner<span class="perLevel"> per level</span>.</div>
+						<div class="points" style="visibility: hidden;">0/10</div>
+					</div>
+					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
+						<div class="description"><h2>Touch of Death</h2>Causes a harm touch on target, damage is improved based on stacks of Gift of Urash by <em data-base="+10">+20</em>% damage<span class="perLevel"> per level</span>.</div>
+						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="column3 totalPoints">
