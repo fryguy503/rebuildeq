@@ -187,58 +187,63 @@
 			<div class="tree" unselectable="on">
 				<div class="tier" data-level="0" data-invested="0" data-total="0">
 					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-0.png">
-						<div class="description"><h2>Hard to Kill</h2><span><em data-base="+4">+4</em>% Maximum Health and regenerate <em data-base="+0.1">+0.1</em>% of your Maximum Health per second<span class="perLevel"> per level</span>.</span></div>
+						<div class="description"><h2>Embrace Death</h2><span>Feign Death heals you for <em data-base="+1">+1</em>% total health<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: visible;">0/10</div>
 					</div>
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-1.png">
-						<div class="description"><h2>Incite</h2><span>Taking damage gives <em data-base="+6">+6</em>% Movement Speed and <em data-base="+5">+5</em>% Reload Speed<span class="perLevel"> per level</span> for a few seconds.</span></div>
+						<div class="description"><h2>Darkness</h2><span>All darkness spells now decreation an additional <em data-base="+2">+2</em>% movement speed<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: visible;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="1" data-invested="0" data-total="0">
 					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-2.png">
-						<div class="description"><h2>Asbestos</h2><span><em data-base="-8">--8</em>% Negative Status Effect Duration<span class="perLevel"> per level</span>.</span></div>
+						<div class="description"><h2>Siphon Soul</h2><span>Siphon strength now grants group bonuses damage by <em data-base="+1">1</em>%<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-3.png">
-						<div class="description"><h2>I'm the Juggernaut</h2><span>Kill Skill. Killing an enemy gives <em data-base="+4">+4</em>% Damage Reduction for a short time.</span></div>
+						<div class="description"><h2>Empathetic Soul</h2><span>Improves Dark Empathy by granting an additional <em data-base="+20">+20</em> hitpoints healed and <em data-base="+0.5">+0.5</em>% max mana <span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="2" data-invested="0" data-total="0">
 					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-4.png">
-						<div class="description"><h2>Ain't Got Time To Bleed</h2><span>While Gunzerking you regenerate up to <em data-base="+0.8">+0.8</em>% of your Maximum Health per second<span class="perLevel"> per level</span> depending on how low your health is.</span></div>
+						<div class="description"><h2>Reanimation</h2><span>Casts a new pet instantly, with a <em data-base="10">10</em> second reuse timer<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
-					<div class="skill" data-points="0" data-max="1"><img src="/images/builds/icons/gunzerker-brawn-5.png">
-						<div class="description"><h2>Fistful of Hurt</h2><span>Melee Override. Throw a heavy punch dealing massive damage and knockback. Has a cooldown of 15 seconds.</span></div>
-						<div class="points" style="visibility: hidden;">0/1</div>
-					</div>
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-6.png">
-						<div class="description"><h2>All Out of Bubblegum</h2><span><em data-base="+7">+7</em>% Fire Rate<span class="perLevel"> per level</span> when shield is depleted.</span></div>
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-6.png">
+						<div class="description"><h2>Death Whisper</h2><span>Target has a <em data-base="10">10</em>% chance to be silenced for <em data-base="2">2</em> seconds<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="3" data-invested="0" data-total="0">
 					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-7.png">
-						<div class="description"><h2>Bus That Can't Slow Down</h2><span><em data-base="+10">+10</em>% Movement Speed<span class="perLevel"> per level</span> while Gunzerking.</span></div>
+						<div class="description"><h2>Embrace Shadow</h2><span>Each time you feign death, grants a <em data-base="10">10</em>% chance<span class="perLevel"> per level</span> to instantly be invisible to both living and undead creatures.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-8.png">
-						<div class="description"><h2>Just Got Real</h2><span>Up to <em data-base="+8">+8</em>% Gun Damage<span class="perLevel"> per level</span> depending on how low your health is.</span></div>
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-8.png">
+						<div class="description"><h2>Crippling Pain</h2><span>Shroud of Pain causes target to deal <em data-base="0.5">0.5</em>% less maximum damage<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="4" data-invested="0" data-total="0">
-					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-9.png">
-						<div class="description"><h2>Sexual Tyrannosaurus</h2><span>Taking damage gives <em data-base="+0.4">+0.4</em>% Health Regeneration<span class="perLevel"> per level</span> for 5 seconds. This effect does not stack.</span></div>
+					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-9.png">
+						<div class="description"><h2>Nightmare</h2><span>Fear now causes target to freeze in panic and lasta an additional <em data-base="2">2</em> seconds<span class="perLevel"> per level</span>.</span></div>
+						<div class="points" style="visibility: hidden;">0/10</div>
+					</div>
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-10.png">
+						<div class="description"><h2>One With Death</h2><span>Improves mana regeneration by <em data-base="5">5</em> while feigning death. Grants a <em data-base="1">1</em>% chance for a burst of <em data-base="50">50</em> mana when casting feign death.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="5" data-invested="0" data-total="0">
-					<div class="skill push1" data-points="0" data-max="1"><img src="/images/builds/icons/gunzerker-brawn-10.png">
-						<div class="description"><h2>Come At Me, Bro</h2><span>While Gunzerking, you can press [Action Skill] to taunt your enemies into attacking you. You instantly heal to Full Health and gain massive damage reduction for a few seconds.</span></div>
-						<div class="points" style="visibility: hidden;">0/1</div>
+					
+					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-9.png">
+						<div class="description"><h2>Mini Minion</h2><span>Causes your pet to summon a pet and attack target with a <em data-base="1">1</em>% chance <span class="perLevel"> per level</span> the target will not bring allies.</span></div>
+						<div class="points" style="visibility: hidden;">0/10</div>
+					</div>
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-10.png">
+						<div class="description"><h2>Cry of the Banshee</h2><span>Causes all nearby targets to be mesmerized for <em data-base="5">5</em> while feigning death. Grants a <em data-base="1">1</em>% chance for a burst of <em data-base="1">1</em> seconds, then forget all aggressions</span></div>
+						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="column3 totalPoints">
