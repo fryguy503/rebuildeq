@@ -35,7 +35,7 @@
 			<div class="tree">
 				<div class="tier" data-level="0" data-invested="0" data-total="0">
 					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-0.png">
-						<div class="description"><h2>Soul Link</h2>Improves lifetap damage by <em data-base="+1">+1</em>%<span class="perLevel"> per level</span>.</div>
+						<div class="description"><h2>Soul Link</h2>Improves lifetap damage by <em data-base="+2">+2</em>% and a <em data-base="+0.5">+0.5</em>% chance to critical heal<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: visible;">0/10</div>
 					</div>
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-1.png">
@@ -111,7 +111,7 @@
 			<div class="tree">
 				<div class="tier" data-level="0" data-invested="0" data-total="0">
 					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-0.png">
-						<div class="description"><h2>Festering Spear</h2>Improve spears by <em data-base="+5">+5</em>%<span class="perLevel"> per level</span>.</div>
+						<div class="description"><h2>Festering Spear</h2>Improve spears by <em data-base="+5">+5</em>% and a <em data-base="+0.5">+0.5</em>% chance to critical blast<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: visible;">0/10</div>
 					</div>
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-1.png">
@@ -187,7 +187,7 @@
 			<div class="tree" unselectable="on">
 				<div class="tier" data-level="0" data-invested="0" data-total="0">
 					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-0.png">
-						<div class="description"><h2>Embrace Death</h2><span>Feign Death heals you for <em data-base="+1">+1</em>% total health<span class="perLevel"> per level</span>.</span></div>
+						<div class="description"><h2>Embrace Death</h2><span>Grants you the ability to use Feign Death, as well as causes the ability to heal you for <em data-base="+1">+1</em>% maximum health on use<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: visible;">0/10</div>
 					</div>
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-1.png">
