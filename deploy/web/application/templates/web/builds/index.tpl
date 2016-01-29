@@ -89,19 +89,17 @@
 					*}
 				</div>
 				<div class="tier" data-level="4" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
 						<div class="description"><h2>Banshee's Mirror</h2>Improves Damage Mitigation by <em data-base="+35">+3.5</em>% for <em data-base="+60">30</em> seconds <span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
+					
+				</div>
+				<div class="tier" data-level="5" data-invested="0" data-total="0">
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
 						<div class="description"><h2>Aura of Vampirism</h2>Grants the entire group <em data-base="+2">+2</em>% spell vampirism and <em data-base="+5">+5</em>% melee vampirism<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
-				</div>
-				<div class="tier" data-level="5" data-invested="0" data-total="0">
-
-					
-					
 				</div>				
 				<div class="totalPoints">
 					<span class="totalPoints">0</span>
