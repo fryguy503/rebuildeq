@@ -5,7 +5,7 @@ class Controller_Web_Updates extends Template_Web_Core {
 
 	public function before() {
 		parent::before();
-		$this->template->site->title = "Updates";
+		$this->template->site->title = "Updates for RebuildEQ";
 		$this->template->site->description = "Check out RebuildEQ's twitter account for updates.";
 	}
 
