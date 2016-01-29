@@ -44,17 +44,17 @@
 					</div>
 				</div>
 				<div class="tier" data-level="1" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-2.png">
+					{*<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-2.png">
 						<div class="description"><h2>Shroud of Death</h2>Shroud of Pain grants an additional <em data-base="+5">+5</em> AC to group<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
-					</div>
+					</div>*}
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-3.png">
 						<div class="description"><h2>Hungering Aura</h2>Improves lifetaps by <em data-base="+3">+3</em>% healing for each enemy attacking you with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="2" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-4.png">
+					{*<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-4.png">
 						<div class="description"><h2>Voice of Fear</h2>Voices causes <em data-base="+6">+10</em>% additional hate<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
@@ -62,41 +62,46 @@
 						<div class="description"><h2>Scarab Skin</h2>Improves melee mitigation by <em data-base="+3">+3</em>%<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
-					
-				</div>
-				<div class="tier" data-level="3" data-invested="0" data-total="0">
+
 					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-6.png">
 						<div class="description"><h2>Ichor Flesh</h2>Causes guard spells to last for an additional <em data-base="+100">+200</em> hitpoints<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
-					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-7.png">
+					*}
+					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-7.png">
 						<div class="description"><h2>Deathbringer</h2>Improves pet by increasing level by <em data-base="+3">+3</em>, HP by <em data-base="+100">+100</em>, and AC by <em data-base="+20">+20</em><span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
-				</div>
-				<div class="tier" data-level="4" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
-						<div class="description"><h2>Zevfeer's Feast</h2>Improves Zevfeer's Bite to give an additional <em data-base="+50">+50</em>% health and an additional <em data-base="+50">+50</em> mana<span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/10</div>
-					</div>
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
-						<div class="description"><h2>Sworn Enemy</h2>Causes intense hatred of target, where any damage dealt causes an additional <em data-base="+200">+200</em> hate<span class="perLevel"> per level</span>.</div>
+						<div class="description push1"><h2>Zevfeer's Feast</h2>Improves Zevfeer's Bite to give an additional <em data-base="+50">+50</em>% health and an additional <em data-base="+50">+50</em> mana<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
-				<div class="tier" data-level="5" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
+				<div class="tier" data-level="3" data-invested="0" data-total="0">
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
+						<div class="description"><h2>Sworn Enemy</h2>Causes intense hatred of target, where any spell damage dealt causes an additional <em data-base="+200">+200</em> hate<span class="perLevel"> per level</span>.</div>
+						<div class="points" style="visibility: hidden;">0/10</div>
+					</div>
+					{*<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
 						<div class="description"><h2>Relentless</h2>Causes heal over times effects on self to last <em data-base="+1">+1</em> tick<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/1</div>
 					</div>
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
-						<div class="description"><h2>Aura of Vampirism</h2>Grants the entire group <em data-base="+2">+2</em>% spell vampirism and <em data-base="+5">+5</em>% melee vampirism<span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/10</div>
-					</div>
+					*}
+				</div>
+				<div class="tier" data-level="4" data-invested="0" data-total="0">
 					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
 						<div class="description"><h2>Banshee's Mirror</h2>Improves Damage Mitigation by <em data-base="+35">+3.5</em>% for <em data-base="+60">30</em> seconds <span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
+						<div class="description"><h2>Aura of Vampirism</h2>Grants the entire group <em data-base="+2">+2</em>% spell vampirism and <em data-base="+5">+5</em>% melee vampirism<span class="perLevel"> per level</span>.</div>
+						<div class="points" style="visibility: hidden;">0/10</div>
+					</div>
+				</div>
+				<div class="tier" data-level="5" data-invested="0" data-total="0">
+
+					
+					
 				</div>				
 				<div class="totalPoints">
 					<span class="totalPoints">0</span>
