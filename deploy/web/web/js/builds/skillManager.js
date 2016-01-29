@@ -53,11 +53,11 @@ function updatePoints(skillHandle, change) {
 	var treeTotal = parseInt(tree.find("span.totalPoints").text());
 	var points = parseInt(skillHandle.attr("data-points"));
 	var max = parseInt(skillHandle.attr("data-max"));
-	charLevel = 0;
-	//var charLevel = parseInt($("span.charLevel").text());
+	//charLevel = 0;
+	var charLevel = parseInt($("span.charLevel").text());
 	console.log("Update points");
 	if(change > 0) {
-		if (points < max && treeTotal >= 5 * thisLevel && charLevel < 72) {
+		if (points < max && treeTotal >= 5 * thisLevel && charLevel < 60) {
 			++points;
 		}
 	} else {
@@ -97,7 +97,7 @@ function updateTree(treeHandle) {
 			$(this).children("div.points").html(
 				p + "/" + m
 			);
-			$(this).children("div.points").css("visibility", (totalPoints < 5 * tierLevel) ? "hidden" : "visible");
+			$(this).children("div.points").css("visibility", (totalPoints < 10 * tierLevel) ? "hidden" : "visible");
 			$(this).removeClass("partial full");
 			if (p != 0) {
 				$(this).addClass(p < m ? "partial" : "full");
@@ -114,7 +114,7 @@ function updateTree(treeHandle) {
 		$(this).attr("data-total", tierTotal);
 	});
 	$(treeHandle).find("span.totalPoints").html(totalPoints);
-	$(treeHandle).parent().children(".color").height(Math.min(80 + totalPoints * 59.0 / 5 + (totalPoints > 25 ? 21 : 0), 396));
+	$(treeHandle).parent().children(".color").height(Math.min(80 + totalPoints * 40 / 8 + (totalPoints > 50 ? 21 : 0), 396));
 }
 
 function updateStats() {
@@ -122,7 +122,7 @@ function updateStats() {
 	$("span.totalPoints").each(function(index) {
 		total += parseInt($(this).text());
 	});
-	//$("span.charLevel").html(5+total);
+	$("span.charLevel").html(total);
 	var descriptions = "";
 	$("div.skill").each(function(index) {
 		var p = parseInt($(this).attr("data-points"));

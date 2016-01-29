@@ -18,7 +18,7 @@
 				<div class="form-group">
 				<p>
 		          <label class="control-label">This is still a work in progress.</label><br>
-		         Please note this area is still being worked on. Come back later to see the builds as they evolve.
+		         Required Level To Obtain: <span class="charLevel">1</span>
 		          </p>
 		        </div>
 		    </form>
