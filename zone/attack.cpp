@@ -2313,23 +2313,20 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 	if(other){
 
 		//This causes group and raid members to also aggro when an entity is placed on a hate list.
-		if (other->IsClient() && !other->CastToClient()->IsDead()) { //if a player and not dead
+		if (other->IsClient() && !other->CastToClient()->IsDead() && this->GetHPRatio() > 0.97) { //if a player and not dead
 			if (other->IsGrouped()) { //if in a group
+				
 				other->CastToClient()->Message(0, "You triggered a hate system!");
 				auto group = other->GetGroup(); //iterate group
 				for (int i = 0; i < 6; ++i) {
-					if (group->members[i] &&  //target grouped
-						group->members[i]->IsClient()) {
-						group->members[i]->CastToClient()->Message(0, "You're a candidate!");
-					}
-
+					
 					if (group->members[i] &&  //target grouped
 						group->members[i]->IsClient() && //Is a client
 						other->GetID() != group->members[i]->GetID() && //not me
 						other->GetZoneID() == group->members[i]->GetZoneID() && //in same zone
 						!group->members[i]->CastToClient()->IsDead() //and not dead
 						) {
-						group->members[i]->CastToClient()->Message(0, "You're being added to a hate list via group!");
+						//group->members[i]->CastToClient()->Message(0, "You're being added to a hate list via group!");
 						//Find group member on hate list
 
 						bool on_hatelist = CheckAggro(group->members[i]);
