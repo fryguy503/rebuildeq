@@ -118,7 +118,7 @@ public:
 	inline const char* CreateSessionHash() {
 		std::string hash;
 		for (int i = 0; i < 32; i++) {
-			hash += char(this->random.Int(0, 255));
+			hash += (char)(this->random.Int(0, 255));
 		}
 		return hash.c_str();
 	}
