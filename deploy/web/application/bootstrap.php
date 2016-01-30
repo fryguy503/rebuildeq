@@ -157,6 +157,12 @@ Route::set('rest', 'rest(/<controller>(/<action>(/<id>(/<field>))))')
         'controller' => 'index',
         'action'     => 'index',
     ));
+Route::set('builds', 'builds(/<id>(/<sort>))')
+	->defaults(array(
+		'directory' => 'Web',
+		'controller' => 'Builds',
+		'action'     => 'index',
+	));
 
 Route::set('default', '(<controller>(/<action>(/<id>(/<sort>))))')
 	->defaults(array(
