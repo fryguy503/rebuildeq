@@ -157,18 +157,10 @@ Route::set('rest', 'rest(/<controller>(/<action>(/<id>(/<field>))))')
         'controller' => 'index',
         'action'     => 'index',
     ));
-
-    Route::set('restbuilds', 'rest/builds(/<class>(/<id>))')
-	->defaults(array(
-		'directory' => 'Rest',
-		'controller' => 'builds',
-		'action'     => 'index',
-	));
-
-Route::set('builds', 'builds(/<class>(/<id>))')
+Route::set('builds', 'builds(/<class>(/<session>))')
 	->defaults(array(
 		'directory' => 'Web',
-		'controller' => 'builds',
+		'controller' => 'Builds',
 		'action'     => 'index',
 	));
 
@@ -178,7 +170,6 @@ Route::set('default', '(<controller>(/<action>(/<id>(/<sort>))))')
 		'controller' => 'index',
 		'action'     => 'index',
 	));
-	
 Kohana_Cookie::$salt = md5('¬˙ƒl˙ˆ¬ß˙ƒˆhwo8o˙høßˆƒ˙ø'); 
 Kohana_Cookie::$expiration = 1209600; // 14 days
 Kohana_Cookie::$domain = (empty($_SERVER["HTTP_HOST"])) ? "eqemu.lc" : $_SERVER["HTTP_HOST"];
