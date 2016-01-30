@@ -127,7 +127,7 @@ Kohana::init(array(
 /**
  * Attach the file write to logging. Multiple writers are supported.
  */
-//Kohana::$log->attach(new Log_File(APPPATH.'logs'));
+Kohana::$log->attach(new Log_File(APPPATH.'logs'));
 
 /**
  * Attach a file reader to config. Multiple readers are supported.
@@ -157,10 +157,18 @@ Route::set('rest', 'rest(/<controller>(/<action>(/<id>(/<field>))))')
         'controller' => 'index',
         'action'     => 'index',
     ));
-Route::set('builds', 'builds(/<id>(/<sort>))')
+
+    Route::set('restbuilds', 'rest/builds(/<class>(/<id>))')
+	->defaults(array(
+		'directory' => 'Rest',
+		'controller' => 'builds',
+		'action'     => 'index',
+	));
+
+Route::set('builds', 'builds(/<class>(/<id>))')
 	->defaults(array(
 		'directory' => 'Web',
-		'controller' => 'Builds',
+		'controller' => 'builds',
 		'action'     => 'index',
 	));
 
@@ -170,6 +178,7 @@ Route::set('default', '(<controller>(/<action>(/<id>(/<sort>))))')
 		'controller' => 'index',
 		'action'     => 'index',
 	));
+	
 Kohana_Cookie::$salt = md5('¬˙ƒl˙ˆ¬ß˙ƒˆhwo8o˙høßˆƒ˙ø'); 
 Kohana_Cookie::$expiration = 1209600; // 14 days
 Kohana_Cookie::$domain = (empty($_SERVER["HTTP_HOST"])) ? "eqemu.lc" : $_SERVER["HTTP_HOST"];
