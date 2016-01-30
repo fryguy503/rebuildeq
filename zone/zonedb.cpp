@@ -1731,7 +1731,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		m_epp->perAA,
 		m_epp->expended_aa,
 		EscapeString(m_epp->session).c_str(),
-		m_epp->session_timeout,
+		((m_epp->session_timeout == 0) ? time(nullptr) : m_epp->session_timeout == 0),
 		EscapeString(m_epp->build).c_str(),
 		m_epp->last_invsnapshot_time
 	);
