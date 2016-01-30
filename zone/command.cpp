@@ -3878,9 +3878,12 @@ void command_bind(Client *c, const Seperator *sep)
 //List all available builds
 void command_builds(Client *c, const Seperator *sep)
 {
+	
 	const char *windowTitle = "Builds";
 	std::string windowText;
-	windowText = "Test<br><a href='http://rebuildeq.com/builds?session=123'>Build Link</a><br>End?";
+	std::string hash;	
+	hash = zone->CreateSessionHash();
+	windowText = "Test<br><a href='http://rebuildeq.com/builds?session="+hash+"'>Build Link</a><br>End?";
 	c->SendPopupToClient(windowTitle, windowText.c_str());
 	return;
 	switch (c->GetClass()) {

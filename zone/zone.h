@@ -114,6 +114,15 @@ public:
 
 	inline const uint32& GetMaxClients() { return pMaxClients; }
 
+	//Creates a unique session hash using zone->random.Int
+	inline const char* CreateSessionHash() {
+		std::string hash;
+		for (int i = 0; i < 32; i++) {
+			hash += char(this->random.Int(0, 255));
+		}
+		return hash.c_str();
+	}
+
 	//new AA
 	void LoadAlternateAdvancement();
 	AA::Ability *GetAlternateAdvancementAbility(int id);
