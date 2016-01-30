@@ -1307,6 +1307,8 @@ public:
 	//Shin: Session generation
 	void SetSession(const char* hash, uint32 timeout);
 
+	uint32 GetBuildRank(uint8 classid, uint32 rankid);
+
 protected:
 	friend class Mob;
 	void CalcItemBonuses(StatBonuses* newbon);

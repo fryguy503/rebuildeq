@@ -8823,5 +8823,16 @@ void Client::SetSession(const char* hash, uint32 timeout) {
 		Message(13, results.ErrorMessage().c_str());
 		return;
 	}
+}
 
+uint32 Client::GetBuildRank(uint8 classid, uint32 rankid) {
+
+	if (GetClass() != classid) {
+		return 0;
+	}
+
+	if (sizeof(m_epp.build) < rankid) {
+		return 0;
+	}
+	return atoi((char*)m_epp.build[rankid]);
 }
