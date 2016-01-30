@@ -3877,8 +3877,7 @@ void command_bind(Client *c, const Seperator *sep)
 
 //List all available builds
 void command_builds(Client *c, const Seperator *sep)
-{
-	
+{	
 	const char *windowTitle = "Builds";
 	std::string windowText;
 	std::string hash;	
@@ -4008,6 +4007,11 @@ void command_teleport(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
+	if (c->GetHPRatio() < 1) {
+		c->Message(0, "This command does not work until full health.");
+		return;
+	}
+
 	uint64 mod = 100;
 	uint64 levelMin = 10;
 	uint64 cost = c->GetLevel() * mod * 1000;
@@ -4168,32 +4172,44 @@ void command_teleport(Client *c, const Seperator *sep) {
 		 return;
 	 }
 	else {
+		
 		if (c->GetLevel() < levelMin) {
-			c->Message(0, "Since you are below level %u, you may teleport and be bound for free to [%s], [%s], [%s], or [%s].", 
-				levelMin, 
+			
+			c->Message(0, "Until level %u, you may teleport and be bound for free to:", levelMin);
+			c->Message(0, "[%s], [%s]",
 				c->CreateSayLink("#teleport ecommons", "ecommons").c_str(),
-				c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str(), 
+				c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str()
+			);
+			c->Message(0, "[%s], [%s]",
 				c->CreateSayLink("#teleport tox", "tox").c_str(),
 				c->CreateSayLink("#teleport fieldofbone", "fieldofbone").c_str()
-				);
+			);
 			return;
 		}
-		c->Message(0, "At level %u, it will cost %u platinum to teleport to [%s], [%s], [%s], [%s], [$s], or [%s].", 
+		c->Message(0, "At level %u, it will cost %u platinum to teleport to:",
 			c->GetLevel(), 
-			(c->GetLevel() * mod), 
+			(c->GetLevel() * mod)					
+		);
+		c->Message(0, "[%s], [%s], [%s]",
 			c->CreateSayLink("#teleport commons", "commons").c_str(),
 			c->CreateSayLink("#teleport dreadlands", "dreadlands").c_str(),
-			c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str(), 
+			c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str()
+		);
+		c->Message(0, "[%s], [$s], [%s]",
 			c->CreateSayLink("#teleport northkarana", "northkarana").c_str(),
-			c->CreateSayLink("#teleport sro", "sro").c_str(), 			
-			c->CreateSayLink("#teleport tox", "tox").c_str()			
-			);
+			c->CreateSayLink("#teleport sro", "sro").c_str(),
+			c->CreateSayLink("#teleport tox", "tox").c_str()
+		);
 	}
 }
 
 void command_buff(Client *c, const Seperator *sep) {
 	if (c->GetAggroCount() > 0) {
 		c->Message(0, "This command does not work while in combat.");
+		return;
+	}
+	if (c->GetHPRatio() < 1) {
+		c->Message(0, "This command does not work until full health.");
 		return;
 	}
 	uint64 mod = 15;
@@ -4230,6 +4246,7 @@ void command_rez(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
+	
 	Corpse *corpse = entity_list.GetCorpseByOwner(c);
 	if (!corpse) {
 		c->Message_StringID(4, CORPSE_CANT_SENSE);
