@@ -3894,7 +3894,6 @@ void command_builds(Client *c, const Seperator *sep)
 		return;
 	}
 
-	//c->Message(13, query.c_str());
 	windowText = "Your build options may be found below<br>LINK?<a href=\"http://rebuildeq.com/builds/"+hash+"/\">Build Link</a>End";
 	c->SendPopupToClient(windowTitle, windowText.c_str());
 	return;
