@@ -622,10 +622,16 @@ void Client::SetLevel(uint8 set_level, bool command)
 		SetHP(CalcMaxHP()); // Why not, lets give them a free heal
 	}
 
-	uint16 book_slot, curspell, spellCount, abilityCount;
+	uint16 book_slot, curspell;
+	uint16 abilityCount = 0;
+	uint16 spellCount = 0;
 	//Scribe New Spells and Disciplines
 	for (curspell = 0, book_slot = this->GetNextAvailableSpellBookSlot(), spellCount = 0; curspell < SPDAT_RECORDS && book_slot < MAX_PP_SPELLBOOK; curspell++, book_slot = this->GetNextAvailableSpellBookSlot(book_slot))
 	{
+		if (lu->level_old >= level) {
+			break;
+		}
+
 		if (
 				spells[curspell].classes[WARRIOR] != 0 && // check if spell exists
 				spells[curspell].classes[this->GetPP().class_ - 1] <= set_level &&	//maximum level
@@ -689,12 +695,15 @@ void Client::SetLevel(uint8 set_level, bool command)
 		}
 	}
 
-	if (spellCount > 0) {
-		this->Message(0, "You have learned %u new spells!", spellCount);
+	if (lu->level_old >= level) {
+		if (spellCount > 0) {
+			this->Message(0, "You have learned %u new spells!", spellCount);
+		}
+		if (abilityCount > 0) {
+			this->Message(0, "You have learned %u new disciplines!", abilityCount);
+		}
 	}
-	if (abilityCount > 0) {
-		this->Message(0, "You have learned %u new disciplines!", abilityCount);
-	}
+	
 	
 	DoTributeUpdate();
 	SendHPUpdate();
