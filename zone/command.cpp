@@ -4178,7 +4178,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				);
 			return;
 		}
-		c->Message(0, "At level %u, it will cost %u platinum to teleport to [%s], [%s], [%s], [%s], or [%s].", 
+		c->Message(0, "At level %u, it will cost %u platinum to teleport to [%s], [%s], [%s], [%s], [$s], or [%s].", 
 			c->GetLevel(), 
 			(c->GetLevel() * mod), 
 			c->CreateSayLink("#teleport commons", "commons").c_str(),
