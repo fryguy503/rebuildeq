@@ -41,8 +41,6 @@ Build_32/
 build_32/
 Build_64/
 build_64/
-log/
-logs/
 deploy/server/queryserv
 deploy/server/shared_memory
 deploy/server/ucs
