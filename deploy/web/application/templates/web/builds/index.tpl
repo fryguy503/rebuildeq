@@ -123,10 +123,10 @@
 					</div>
 				</div>
 				<div class="tier" data-level="1" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-2.png">
+					{*<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-2.png">
 						<div class="description"><h2>Shroud of Anger</h2>All attack modifiers are improved by <em data-base="+2.5">+2.5</em>%<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
-					</div>
+					</div>*}					
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-3.png">
 						<div class="description"><h2>Rotten Core</h2>Increases attack by <em data-base="+4">+4</em>% for a short duration each time a target dies nearby with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
@@ -144,35 +144,35 @@
 					
 				</div>
 				<div class="tier" data-level="3" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-6.png">
+					{*<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-6.png">
 						<div class="description"><h2>Cold Flesh</h2>Lowers hatred by <em data-base="100">100</em> when attacked by an enemy<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
-					</div>
+					</div>*}					
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-7.png">
 						<div class="description"><h2>Gift of Urash</h2>Increases all skill modifiers by <em data-base="+2.5">+2.5</em>%, stacks up to <em data-base="1">1</em> times<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="4" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
+					{*<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
 						<div class="description"><h2>Undying Hatred</h2>Upon feigning, creates a shadow image that continues fighting for <em data-base="5">5</em> seconds<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
 						<div class="description"><h2>No Remorse</h2>Improves chance of proc effects by <em data-base="+2">+2</em>%<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
-					</div>
-				</div>
-				<div class="tier" data-level="5" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
+					</div>*}
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
 						<div class="description"><h2>Unholy Focus</h2>Causes all direct damage spells to be <em data-base="+5">+5</em>% more unresistable<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/1</div>
 					</div>
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
+				</div>
+				<div class="tier" data-level="5" data-invested="0" data-total="0">					
+					{*<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
 						<div class="description"><h2>Reaper of Souls</h2>Grants an empowered pet that backstabs and causes <em data-base="+5">+5</em>% melee vampirism returning <em data-base="+2">+2</em>% of damage as healing to it's owner<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
-					</div>
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
+					</div>*}
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
 						<div class="description"><h2>Touch of Death</h2>Causes a harm touch on target, damage is improved based on stacks of Gift of Urash by <em data-base="+10">+20</em>% damage<span class="perLevel"> per level</span>.</div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
@@ -199,30 +199,30 @@
 					</div>
 				</div>
 				<div class="tier" data-level="1" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-2.png">
+					{*<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-2.png">
 						<div class="description"><h2>Siphon Soul</h2><span>Siphon strength now grants group bonuses damage by <em data-base="+1">1</em>%<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
-					</div>
+					</div>*}
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-3.png">
 						<div class="description"><h2>Empathetic Soul</h2><span>Improves Dark Empathy by granting an additional <em data-base="+20">+20</em> hitpoints healed and <em data-base="+0.5">+0.5</em>% max mana <span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="2" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-4.png">
+					{*<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-4.png">
 						<div class="description"><h2>Reanimation</h2><span>Casts a new pet instantly, with a <em data-base="10">10</em> second reuse timer<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-6.png">
 						<div class="description"><h2>Death Whisper</h2><span>Target has a <em data-base="10">10</em>% chance to be silenced for <em data-base="2">2</em> seconds<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
-					</div>
-				</div>
-				<div class="tier" data-level="3" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-7.png">
+					</div>*}
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-7.png">
 						<div class="description"><h2>Embrace Shadow</h2><span>Each time you feign death, grants a <em data-base="10">10</em>% chance<span class="perLevel"> per level</span> to instantly be invisible to both living and undead creatures.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
+				</div>
+				<div class="tier" data-level="3" data-invested="0" data-total="0">
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-8.png">
 						<div class="description"><h2>Crippling Pain</h2><span>Shroud of Pain causes target to deal <em data-base="0.5">0.5</em>% less maximum damage<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
@@ -233,17 +233,17 @@
 						<div class="description"><h2>Nightmare</h2><span>Fear now causes target to freeze in panic and lasta an additional <em data-base="2">2</em> seconds<span class="perLevel"> per level</span>.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
+					{*
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-10.png">
 						<div class="description"><h2>One With Death</h2><span>Improves mana regeneration by <em data-base="5">5</em> while feigning death. Grants a <em data-base="1">1</em>% chance for a burst of <em data-base="50">50</em> mana when casting feign death.</span></div>
+						<div class="points" style="visibility: hidden;">0/10</div>
+					</div>*}
+					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-9.png">
+						<div class="description"><h2>Mini Minion</h2><span>Causes your pet to summon a pet and attack target with a <em data-base="1">1</em>% chance <span class="perLevel"> per level</span> the target will not bring allies.</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
 					</div>
 				</div>
 				<div class="tier" data-level="5" data-invested="0" data-total="0">
-					
-					<div class="skill" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-9.png">
-						<div class="description"><h2>Mini Minion</h2><span>Causes your pet to summon a pet and attack target with a <em data-base="1">1</em>% chance <span class="perLevel"> per level</span> the target will not bring allies.</span></div>
-						<div class="points" style="visibility: hidden;">0/10</div>
-					</div>
 					<div class="skill push1" data-points="0" data-max="10"><img src="/images/builds/icons/gunzerker-brawn-10.png">
 						<div class="description"><h2>Cry of the Banshee</h2><span>Causes all nearby targets to be mesmerized for <em data-base="5">5</em> while feigning death. Grants a <em data-base="1">1</em>% chance for a burst of <em data-base="1">1</em> seconds, then forget all aggressions</span></div>
 						<div class="points" style="visibility: hidden;">0/10</div>
