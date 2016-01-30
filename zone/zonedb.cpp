@@ -888,6 +888,9 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`e_aa_effects`,			"
 		"`e_percent_to_aa`,			"
 		"`e_expended_aa_spent`,		"
+		"`session`,					"
+		"`session_timeout`,			"
+		"`build`,					"				
 		"`e_last_invsnapshot`		"
 		"FROM                       "
 		"character_data             "
@@ -985,6 +988,9 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		m_epp->aa_effects = atoi(row[r]); r++;									 // "`e_aa_effects`,			"
 		m_epp->perAA = atoi(row[r]); r++;										 // "`e_percent_to_aa`,			"
 		m_epp->expended_aa = atoi(row[r]); r++;									 // "`e_expended_aa_spent`,		"
+		/*strcpy(m_epp->session, row[r]);*/ r++;									 // "`session`,					"
+		/*m_epp->session_timeout = atoi(row[r]);*/ r++;								 // "`session_timeout`,			"
+		strcpy(m_epp->build, row[r]);  r++;										 // "`build`,				    "
 		m_epp->last_invsnapshot_time = atoi(row[r]); r++;						 // "`e_last_invsnapshot`		"
 		m_epp->next_invsnapshot_time = m_epp->last_invsnapshot_time + (RuleI(Character, InvSnapshotMinIntervalM) * 60);
 	}
@@ -1527,6 +1533,9 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" e_aa_effects,				 "
 		" e_percent_to_aa,			 "
 		" e_expended_aa_spent,		 "
+		" session,		             "
+		" session_timeout,			 "
+		" build,					 "
 		" e_last_invsnapshot		 "
 		")							 "
 		"VALUES ("
@@ -1623,6 +1632,9 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"%u,"  // e_aa_effects
 		"%u,"  // e_percent_to_aa
 		"%u,"  // e_expended_aa_spent
+		"'%s',"  // session
+		"FROM_UNIXTIME(%u),"  // session_timeout
+		"'%s',"  // build
 		"%u"   // e_last_invsnapshot
 		")",
 		character_id,					  // " id,                        "
@@ -1718,6 +1730,9 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		m_epp->aa_effects,
 		m_epp->perAA,
 		m_epp->expended_aa,
+		EscapeString(m_epp->session).c_str(),
+		m_epp->session_timeout,
+		EscapeString(m_epp->build).c_str(),
 		m_epp->last_invsnapshot_time
 	);
 	auto results = database.QueryDatabase(query);

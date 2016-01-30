@@ -667,6 +667,8 @@ public:
 	uint32 GetMoney(uint8 type, uint8 subtype);
 	int GetAccountAge();
 
+	
+
 	bool IsDiscovered(uint32 itemid);
 	void DiscoverItem(uint32 itemid);
 
@@ -1302,7 +1304,8 @@ public:
 
 	//Shin: Added for saylink generation
 	std::string CreateSayLink(const char* message, const char* name);
-
+	//Shin: Session generation
+	void SetSession(const char* hash, uint32 timeout);
 
 protected:
 	friend class Mob;
@@ -1625,6 +1628,8 @@ private:
 
 	void InterrogateInventory_(bool errorcheck, Client* requester, int16 head, int16 index, const ItemInst* inst, const ItemInst* parent, bool log, bool silent, bool &error, int depth);
 	bool InterrogateInventory_error(int16 head, int16 index, const ItemInst* inst, const ItemInst* parent, int depth);
+
+	
 };
 
 #endif

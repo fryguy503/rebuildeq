@@ -3884,16 +3884,10 @@ void command_builds(Client *c, const Seperator *sep)
 
 	//Create Session Hash
 	hash = zone->CreateSessionHash();
-
-	std::string query = StringFormat("UPDATE character_data SET session = '%s', session_timeout = DATE_ADD(NOW(), INTERVAL 10 MINUTE) WHERE id = '%u'",
-		hash.c_str(), c->CharacterID());
-	auto results = database.QueryDatabase(query);
-	if (!results.Success()) {
-		c->Message(13, "Update failed! MySQL gave the following error:");
-		c->Message(13, results.ErrorMessage().c_str());
-		return;
-	}
-
+	uint32 timeout = time(nullptr) + 600; //10 minutes
+	//set session data
+	c->SetSession(hash.c_str(), timeout);
+	
 	windowText = "Your build options may be found below<br>LINK?<a href=\"http://rebuildeq.com/builds/"+hash+"/\">Build Link</a>End";
 	c->SendPopupToClient(windowTitle, windowText.c_str());
 	return;

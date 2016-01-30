@@ -8808,3 +8808,20 @@ uint32 Client::GetMoney(uint8 type, uint8 subtype) {
 int Client::GetAccountAge() {
 	return (time(nullptr) - GetAccountCreation());
 }
+
+void Client::SetSession(const char* hash, uint32 timeout) {
+	strn0cpy(m_epp.session, hash, sizeof(m_epp.session));
+
+	m_epp.session_timeout = timeout;
+	//inject into character_data
+	std::string query = StringFormat("UPDATE character_data SET session = '%s', session_timeout = FROM_UNIXTIME(%u) WHERE id = '%u'",
+		hash, timeout, CharacterID());
+	auto results = database.QueryDatabase(query);
+
+	if (!results.Success()) {
+		Message(13, "Update failed! MySQL gave the following error:");
+		Message(13, results.ErrorMessage().c_str());
+		return;
+	}
+
+}
