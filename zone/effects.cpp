@@ -64,6 +64,12 @@ int32 Mob::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 		chance += itembonuses.CriticalSpellChance + spellbonuses.CriticalSpellChance + aabonuses.CriticalSpellChance;
 		chance += itembonuses.FrenziedDevastation + spellbonuses.FrenziedDevastation + aabonuses.FrenziedDevastation;
 
+
+	//Shin: Added crit chance based on Festering Spear build spec
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR) > 0) {
+		chance = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR);	
+	}
+
 	//Crtical Hit Calculation pathway
 	if (chance > 0 || (IsClient() && GetClass() == WIZARD && GetLevel() >= RuleI(Spells, WizCritLevel))) {
 
