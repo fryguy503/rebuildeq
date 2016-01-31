@@ -667,6 +667,7 @@ public:
 	uint32 GetMoney(uint8 type, uint8 subtype);
 	int GetAccountAge();
 
+
 	
 
 	bool IsDiscovered(uint32 itemid);
@@ -1305,7 +1306,7 @@ public:
 	//Shin: Added for saylink generation
 	std::string CreateSayLink(const char* message, const char* name);
 	//Shin: Session generation
-	void SetSession(const char* hash, uint32 timeout);
+	const char * GetSession();
 
 	uint32 GetBuildRank(uint8 classid, uint32 rankid);
 

@@ -8809,20 +8809,24 @@ int Client::GetAccountAge() {
 	return (time(nullptr) - GetAccountCreation());
 }
 
-void Client::SetSession(const char* hash, uint32 timeout) {
-	strn0cpy(m_epp.session, hash, sizeof(m_epp.session));
+//Get session grabs a previous session or creates a new one, generating a timeout (or refreshing it) based on time since last call
+const char* Client::GetSession() {
+	
+	if (m_epp.session_timeout < time(nullptr)) { //Session expired
+		std::string hash = zone->CreateSessionHash(); //Generate new hash
+		strn0cpy(m_epp.session, hash.c_str(), sizeof(m_epp.session)); //copy to session
+	}
+	m_epp.session_timeout = time(nullptr) + 600; //add 10 minutes from now
 
-	m_epp.session_timeout = timeout;
 	//inject into character_data
 	std::string query = StringFormat("UPDATE character_data SET session = '%s', session_timeout = FROM_UNIXTIME(%u) WHERE id = '%u'",
-		hash, timeout, CharacterID());
+		m_epp.session, m_epp.session_timeout, CharacterID());
 	auto results = database.QueryDatabase(query);
-
 	if (!results.Success()) {
 		Message(13, "Update failed! MySQL gave the following error:");
-		Message(13, results.ErrorMessage().c_str());
-		return;
+		Message(13, results.ErrorMessage().c_str());		
 	}
+	return m_epp.session;
 }
 
 uint32 Client::GetBuildRank(uint8 classid, uint32 rankid) {
