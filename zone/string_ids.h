@@ -436,5 +436,64 @@
 #define OTHER_HIT_DOT				13327	//%1 has taken %2 damage from %3 by %4.
 #define GENERIC_MISS				15041	//%1 missed %2
 
+
+#define RB_SK_SOULLINK 0
+//1
+#define RB_SK_GOUGINGSKIN 2
+//3
+#define RB_SK_HUNGERINGAURA 4
+//5
+#define RB_SK_DEATHBRINGER 6
+//7
+#define RB_SK_ZEVFEERSFEAST 8
+//9
+#define RB_SK_SWORNENEMY 10
+//11
+//12
+#define RB_SK_BANSHEESMIRROR 13
+//14
+//15
+#define RB_SK_AURAOFVAMPIRISM 16
+//17
+//--Tier 2--
+#define RB_SK_FESTERINGSPEAR 18
+//19
+#define RB_SK_FESTERINGWOUND 20
+//21
+#define RB_SK_ROTTENCORE 22
+//23
+#define RB_SK_LINGERINGPAIN 24
+//25
+#define RB_SK_BLOODOATH 26
+//27
+#define RB_SK_GIFTOFURASH 28
+//29
+//30
+#define RB_SK_UNHOLYFOCUS 31
+//32
+//33
+#define RB_SK_TOUCHOFDEATH 34
+//35
+//Tier --3--
+#define RB_SK_EMBRACEDEATH 36
+//37
+#define RB_SK_DARKNESS 38
+//39
+#define RB_SK_EMPATHETICSOUL 40
+//41
+#define RB_SK_EMBRACESHADOW 42
+//43
+#define RB_SK_CRIPPLINGPAIN 44
+//45
+#define RB_SK_NIGHTMARE 46
+//47
+//48
+#define RB_SK_MINIMINION 49
+//50
+//51
+#define RB_SK_CRYOFTHEBANSHEE 52
+//53
+
+
 #endif
 

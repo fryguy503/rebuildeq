@@ -3158,8 +3158,16 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 		if(attacker) {
 			// if spell is lifetap add hp to the caster
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell( spell_id )) {
-				int healed = damage;
+				//Shin: If a lifetap and SK and have points into Soul Link
+				if (attacker && attacker->IsClient()) { // && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK) > 0) {
+					//uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK);
+					attacker->CastToClient()->Message(0, "%i", damage);
+					damage += int32((float)damage * 0.04 * (float)5);
+					attacker->CastToClient()->Message(0, "%i", damage);
+				}
 
+				int healed = damage;
+				
 				healed = attacker->GetActSpellHealing(spell_id, healed);
 				Log.Out(Logs::Detail, Logs::Combat, "Applying lifetap heal of %d to %s", healed, attacker->GetName());
 				attacker->HealDamage(healed);
