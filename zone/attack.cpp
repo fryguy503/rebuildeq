@@ -3166,17 +3166,20 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 	if(damage > 0) {
 		//if there is some damage being done and theres an attacker involved
 		if(attacker) {
+
+			uint32 rank;
+
 			// if spell is lifetap add hp to the caster
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell( spell_id )) {
 				//Shin: If a lifetap and SK and have points into Soul Link
 				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK) > 0) {
-					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK);
+					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK);
 					attacker->CastToClient()->Message(MT_NonMelee, "Soul Link %u added %i bonus damage.", rank, int32((float)damage * 0.04 * (float)rank));
 					damage += int32((float)damage * 0.04 * (float)rank);
 				}
 
 				int healed = damage;
-
+				//Shin: Hungering Aura check
 				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_HUNGERINGAURA) > 0) {
 					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_HUNGERINGAURA);
 					int healBonus = int32((float)healed * 0.06 * (float)((attacker->CastToClient()->GetAggroCount() > rank) ? rank : attacker->CastToClient()->GetAggroCount()));
@@ -3192,6 +3195,16 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				//we used to do a message to the client, but its gone now.
 				// emote goes with every one ... even npcs
 				entity_list.MessageClose(this, true, 300, MT_Emote, "%s beams a smile at %s", attacker->GetCleanName(), this->GetCleanName() );
+			}
+
+			//Shin: Festering Spear
+			if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR) > 0) {
+				rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR) > 0);
+				if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
+					int festerDmg = int32((float)damage * 0.1 * (float)rank);
+					attacker->CastToClient()->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
+					damage += festerDmg;
+				}
 			}
 		}	//end `if there is some damage being done and theres anattacker person involved`
 
