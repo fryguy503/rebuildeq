@@ -227,7 +227,7 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 
 	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGWOUND) > 0) {
 		extra_dmg = int32((float)value * 0.04 * (float)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGWOUND));
-		value -= extra_dmg;
+		value += extra_dmg;
 	}
 
 	if (IsNPC() && CastToNPC()->GetSpellScale())
