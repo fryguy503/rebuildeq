@@ -3199,7 +3199,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 			//Shin: Festering Spear
 			if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR) > 0) {
-				rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR) > 0);
+				rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR);
 				if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
 					int festerDmg = int32((float)damage * 0.1 * (float)rank);
 					attacker->CastToClient()->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
@@ -3283,6 +3283,14 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 		//fade mez if we are mezzed
 		if (IsMezzed() && attacker) {
+
+			//Pet is attacking a mezzed target, cancel it.
+			if (attacker->IsNPC() && attacker->IsPet()) {				
+				attacker->Say_StringID(MT_PetResponse, PET_CALMING);
+				attacker->WipeHateList();
+				attacker->SetTarget(nullptr);
+			}
+
 			Log.Out(Logs::Detail, Logs::Combat, "Breaking mez due to attack.");
 			entity_list.MessageClose_StringID(this, true, 100, MT_WornOff,
 					HAS_BEEN_AWAKENED, GetCleanName(), attacker->GetCleanName());
