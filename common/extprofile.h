@@ -58,7 +58,7 @@ struct ExtendedProfile_Struct {
 	uint32				next_invsnapshot_time; /* Used */
 	char				session[32];
 	uint32				session_timeout;
-	char				build[51];
+	char				build[53];
 };
 
 #pragma pack()
