@@ -890,7 +890,7 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`e_expended_aa_spent`,		"
 		"`session`,					"
 		"`session_timeout`,			"
-		"`build`,					"				
+		"`build_data`,					"				
 		"`e_last_invsnapshot`		"
 		"FROM                       "
 		"character_data             "
@@ -988,8 +988,8 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		m_epp->aa_effects = atoi(row[r]); r++;									 // "`e_aa_effects`,			"
 		m_epp->perAA = atoi(row[r]); r++;										 // "`e_percent_to_aa`,			"
 		m_epp->expended_aa = atoi(row[r]); r++;									 // "`e_expended_aa_spent`,		"
-		/*strcpy(m_epp->session, row[r]);*/ r++;									 // "`session`,					"
-		/*m_epp->session_timeout = atoi(row[r]);*/ r++;								 // "`session_timeout`,			"
+		strcpy(m_epp->session, row[r]); r++;									 // "`session`,					"
+		m_epp->session_timeout = atoi(row[r]); r++;								 // "`session_timeout`,			"
 		strcpy(m_epp->build, row[r]);  r++;										 // "`build`,				    "
 		m_epp->last_invsnapshot_time = atoi(row[r]); r++;						 // "`e_last_invsnapshot`		"
 		m_epp->next_invsnapshot_time = m_epp->last_invsnapshot_time + (RuleI(Character, InvSnapshotMinIntervalM) * 60);
@@ -1437,6 +1437,10 @@ bool ZoneDatabase::SaveCharacterInventorySnapshot(uint32 character_id){
 }
 
 bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, PlayerProfile_Struct* pp, ExtendedProfile_Struct* m_epp){
+	
+	//char buildbuffer[36];
+	//DoEscapeString(buildbuffer, m_epp->build, strlen(m_epp->build));
+
 	clock_t t = std::clock(); /* Function timer start */
 	std::string query = StringFormat(
 		"REPLACE INTO `character_data` ("
@@ -1535,7 +1539,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" e_expended_aa_spent,		 "
 		" session,		             "
 		" session_timeout,			 "
-		" build,					 "
+		" build_data,					 "
 		" e_last_invsnapshot		 "
 		")							 "
 		"VALUES ("
@@ -1731,10 +1735,12 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		m_epp->perAA,
 		m_epp->expended_aa,
 		EscapeString(m_epp->session).c_str(),
-		((m_epp->session_timeout == 0) ? time(nullptr) : m_epp->session_timeout),
+		1454274245, //((m_epp->session_timeout == 0) ? time(nullptr) : m_epp->session_timeout),
 		EscapeString(m_epp->build).c_str(),
 		m_epp->last_invsnapshot_time
 	);
+	Log.Out(Logs::General, Logs::Zone_Server);
+
 	auto results = database.QueryDatabase(query);
 	Log.Out(Logs::General, Logs::None, "ZoneDatabase::SaveCharacterData %i, done... Took %f seconds", character_id, ((float)(std::clock() - t)) / CLOCKS_PER_SEC);
 	return true;
