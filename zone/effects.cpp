@@ -67,7 +67,9 @@ int32 Mob::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 
 	//Shin: Added crit chance based on Festering Spear build spec
 	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR) > 0) {
-		chance = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR);	
+		if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
+			chance = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR);
+		}
 	}
 
 	//Crtical Hit Calculation pathway
@@ -220,6 +222,11 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 				extra_dmg /= duration;
 		}
 
+		value -= extra_dmg;
+	}
+
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGWOUND) > 0) {
+		extra_dmg = int32((float)value * 0.04 * (float)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGWOUND));
 		value -= extra_dmg;
 	}
 
