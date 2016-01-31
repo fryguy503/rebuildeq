@@ -3169,15 +3169,23 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			// if spell is lifetap add hp to the caster
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell( spell_id )) {
 				//Shin: If a lifetap and SK and have points into Soul Link
-				if (attacker && attacker->IsClient()) { // && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK) > 0) {
+				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK) > 0) {
 					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK);
 					attacker->CastToClient()->Message(MT_NonMelee, "Soul Link %u added %i bonus damage.", rank, int32((float)damage * 0.04 * (float)rank));
 					damage += int32((float)damage * 0.04 * (float)rank);
 				}
 
 				int healed = damage;
-				
+
+				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_HUNGERINGAURA) > 0) {
+					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_HUNGERINGAURA);
+					int healBonus = int32((float)healed * 0.06 * (float)((attacker->CastToClient()->GetAggroCount() > rank) ? rank : attacker->CastToClient()->GetAggroCount()));
+					attacker->CastToClient()->Message(MT_NonMelee, "Hungering Aura %u with %i enemies added %i bonus healing.", rank, attacker->CastToClient()->GetAggroCount(), healBonus);
+					healed += healBonus;
+				}
+
 				healed = attacker->GetActSpellHealing(spell_id, healed);
+
 				Log.Out(Logs::Detail, Logs::Combat, "Applying lifetap heal of %d to %s", healed, attacker->GetName());
 				attacker->HealDamage(healed);
 
