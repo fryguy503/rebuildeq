@@ -1439,7 +1439,11 @@ bool ZoneDatabase::SaveCharacterInventorySnapshot(uint32 character_id){
 bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, PlayerProfile_Struct* pp, ExtendedProfile_Struct* m_epp){
 	
 	//char buildbuffer[36];
-	//DoEscapeString(buildbuffer, m_epp->build, strlen(m_epp->build));
+	//DoEscapeString(buildbuffer, m_epp->build, strlen(m_epp->build));	
+	uint32 sessionTimeout = m_epp->session_timeout;
+	if (sessionTimeout == 0) {
+		sessionTimeout = 1454274245;
+	}
 
 	clock_t t = std::clock(); /* Function timer start */
 	std::string query = StringFormat(
@@ -1735,11 +1739,11 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		m_epp->perAA,
 		m_epp->expended_aa,
 		EscapeString(m_epp->session).c_str(),
-		1454274245, //((m_epp->session_timeout == 0) ? time(nullptr) : m_epp->session_timeout),
+		sessionTimeout,
 		EscapeString(m_epp->build).c_str(),
 		m_epp->last_invsnapshot_time
 	);
-	Log.Out(Logs::General, Logs::Zone_Server);
+	//Log.Out(Logs::General, Logs::Zone_Server);
 
 	auto results = database.QueryDatabase(query);
 	Log.Out(Logs::General, Logs::None, "ZoneDatabase::SaveCharacterData %i, done... Took %f seconds", character_id, ((float)(std::clock() - t)) / CLOCKS_PER_SEC);
