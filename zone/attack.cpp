@@ -3160,9 +3160,9 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell( spell_id )) {
 				//Shin: If a lifetap and SK and have points into Soul Link
 				if (attacker && attacker->IsClient()) { // && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK) > 0) {
-					//uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK);
+					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK);
 					attacker->CastToClient()->Message(0, "%i", damage);
-					damage += int32((float)damage * 0.04 * (float)5);
+					damage += int32((float)damage * 0.04 * (float)rank);
 					attacker->CastToClient()->Message(0, "%i", damage);
 				}
 
