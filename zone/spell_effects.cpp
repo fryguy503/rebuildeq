@@ -1593,8 +1593,17 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						CastToClient()->SetFeigned(false);
 						entity_list.MessageClose_StringID(this, false, 200, 10, STRING_FEIGNFAILED, GetName());
 						}
-					else
+					else {
 						CastToClient()->SetFeigned(true);
+						//Shin: Embrace Death Perk
+						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACEDEATH) > 0) {
+							uint32 healAmount = GetMaxHP()* (0.02 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACEDEATH));
+							if (healAmount < 0 || healAmount > 50000) {
+								healAmount = 1;
+							}
+							HealDamage(healAmount);				
+						}
+					}
 				}
 				break;
 			}
