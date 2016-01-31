@@ -8826,13 +8826,21 @@ void Client::SetSession(const char* hash, uint32 timeout) {
 }
 
 uint32 Client::GetBuildRank(uint8 classid, uint32 rankid) {
+	//ignore classes not applicable
 	if (GetClass() != classid) {
 		return 0;
 	}
 
+	//ignore invalid build structs
 	if (sizeof(m_epp.build) < rankid) {
 		return 0;
 	}
+
 	char n = m_epp.build[rankid];
-	return (uint32(n - '0'));
+
+	//max rank is 5, minimum is 0
+	if ((uint32(n - '0')) <= 5 && (uint32(n - '0')) > 0) {
+		return (uint32(n - '0'));
+	}
+	return 0;
 }
