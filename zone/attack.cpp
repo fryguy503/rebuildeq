@@ -3134,6 +3134,19 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 	if( spell_id != SPELL_UNKNOWN || attacker == nullptr )
 		avoidable = false;
 
+	if (IsMezzed() && attacker) {
+		//Pet is attacking a mezzed target, cancel it.
+		if (attacker->IsNPC() && attacker->IsPet()) {
+
+			attacker->WipeHateList();
+			if (attacker->GetTarget() != nullptr) {
+				attacker->SetTarget(nullptr);
+				attacker->Say_StringID(MT_PetResponse, PET_CALMING);
+			}
+			return;
+		}
+	}
+
 	// only apply DS if physical damage (no spell damage)
 	// damage shield calls this function with spell_id set, so its unavoidable
 	if (attacker && damage > 0 && spell_id == SPELL_UNKNOWN && skill_used != SkillArchery && skill_used != SkillThrowing) {
@@ -3283,13 +3296,6 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 		//fade mez if we are mezzed
 		if (IsMezzed() && attacker) {
-
-			//Pet is attacking a mezzed target, cancel it.
-			if (attacker->IsNPC() && attacker->IsPet()) {				
-				attacker->Say_StringID(MT_PetResponse, PET_CALMING);
-				attacker->WipeHateList();
-				attacker->SetTarget(nullptr);
-			}
 
 			Log.Out(Logs::Detail, Logs::Combat, "Breaking mez due to attack.");
 			entity_list.MessageClose_StringID(this, true, 100, MT_WornOff,
