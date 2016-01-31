@@ -3385,13 +3385,24 @@ int Mob::GetSnaredAmount()
 			continue;
 
 		for(int j = 0; j < EFFECT_COUNT; j++)
-		{
+		{			
 			if (spells[buffs[i].spellid].effectid[j] == SE_MovementSpeed)
 			{
 				int val = CalcSpellEffectValue_formula(spells[buffs[i].spellid].formula[j], spells[buffs[i].spellid].base[j], spells[buffs[i].spellid].max[j], buffs[i].casterlevel, buffs[i].spellid);
 				//int effect = CalcSpellEffectValue(buffs[i].spellid, spells[buffs[i].spellid].effectid[j], buffs[i].casterlevel);
+				
+				//Shin: Do mega snare if it's SK build
+				if (buffs[i].client && buffs[i].casterid != 0) 
+				{
+					Client* curClient = entity_list.GetClientByID(buffs[i].casterid);
+					if (curClient && curClient->GetBuildRank(SHADOWKNIGHT, RB_SK_DARKNESS) > 0) 
+					{
+						val += int(val * 0.04 * curClient->GetBuildRank(SHADOWKNIGHT, RB_SK_DARKNESS));
+					}
+				}
+
 				if (val < 0 && std::abs(val) > worst_snare)
-					worst_snare = std::abs(val);
+					worst_snare = std::abs(val);				
 			}
 		}
 	}
