@@ -13,18 +13,39 @@
 	        	</ul>
 	    </div>
 
+	     <div class="row">
+			<form class="well bs-component">
+				<div class="form-group">
+					<a class="classactive" href="/builds/bard"><img class="classicon" src="/images/classicons/brd.png"/></a>
+					<a href="/builds/cleric"><img class="classicon" src="/images/classicons/clr.png"/></a>
+					<a href="/builds/druid"><img class="classicon" src="/images/classicons/dru.png"/></a>
+					<a href="/builds/enchanter"><img class="classicon" src="/images/classicons/enc.png"/></a>
+					<a href="/builds/magician"><img class="classicon" src="/images/classicons/mag.png"/></a>
+					<a href="/builds/monk"><img class="classicon" src="/images/classicons/mnk.png"/></a>
+					<a href="/builds/necromancer"><img class="classicon" src="/images/classicons/nec.png"/></a>
+					<a href="/builds/paladin"><img class="classicon" src="/images/classicons/pal.png"/></a>
+					<a href="/builds/ranger"><img class="classicon" src="/images/classicons/rng.png"/></a>
+					<a href="/builds/rogue"><img class="classicon" src="/images/classicons/rog.png"/></a>
+					<a href="/builds/shadowknight"><img class="classicon" src="/images/classicons/shd.png"/></a>
+					<a href="/builds/shaman"><img class="classicon" src="/images/classicons/shm.png"/></a>
+					<a href="/builds/warrior"><img class="classicon" src="/images/classicons/war.png"/></a>
+					<a href="/builds/wizard"><img class="classicon" src="/images/classicons/wiz.png"/></a>
+		        </div>
+		    </form>
+		</div>
+
 	    <div class="row">
 			<form class="well bs-component">
 				<div class="form-group">
 				<p>
-		          <label class="control-label">This is still a work in progress.</label><br>
+		          <label class="control-label">{$classDescription}</label><br>
 		         Required Level To Obtain: <span class="charLevel">1</span>
 		          </p>
 		        </div>
 		    </form>
 		</div>
 
-  <div class="row">
+  		<div class="row">
 			<form class="well bs-component">
 				<div class="form-group">
 		<img unselectable="on" class="portrait" src="/images/monograms/5.gif" style="left: 30%;margin-left: -30%;">

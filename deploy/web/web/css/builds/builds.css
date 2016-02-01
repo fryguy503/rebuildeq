@@ -281,3 +281,13 @@ img.portrait {
 	/*bottom: 0;*/
 	z-index: 0;
 }
+
+
+.classicon {
+  padding: 0px 2px 2px 0px;
+  
+}
+.classactive {
+  	 background: url('/images/classicons/clsborder.png') no-repeat center;
+  	 width:48px;
+}
