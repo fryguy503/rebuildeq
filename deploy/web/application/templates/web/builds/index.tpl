@@ -55,14 +55,33 @@
 			<div class="bglayer color" style="height: 80px;"></div>
 			<div class="tree">
 				<div class="tier" data-level="0" data-invested="0" data-total="0">
-					<div class="skill" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-0.png">
-						<div class="description"><h2>Soul Link</h2>Improves lifetap damage by <em data-base="+4">+4</em>% and a <em data-base="+1">+1</em>% chance to critical heal<span class="perLevel"> per level</span>.</div>
+					{$push = ""}
+					{$id = 0}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-0" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
 						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
-					<div class="skill push1" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-1.png">
-						<div class="description"><h2>Gouging Skin</h2>When attacked, causes a <em data-base="+6">+6</em> point damage shield and <em data-base="+20">+20</em> hate<span class="perLevel"> per level</span>.</div>
+					{else}{$push = "push1"}
+					{/if}
+					
+					{$id = 1}
+					{$push = ""}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-0" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
 						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
+					{else}{$push = "push1"}
+					{/if}
+
+					{$id = 2}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-0" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
+					</div>
+					{/if}
 				</div>
 				<div class="tier" data-level="1" data-invested="0" data-total="0">
 					{*<div class="skill" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-2.png">

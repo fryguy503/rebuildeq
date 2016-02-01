@@ -14,6 +14,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 	public function action_index() {
 		$class =  strtolower($this->request->param('class'));
 		$styles = array();
+		$skills = array();
 		switch ($class) {
 			case "bard":
 			$fullName = "Bard";
@@ -128,8 +129,21 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[0] = "Bloodreaver";
 			$styles[1] = "Defiler";
 			$styles[2] = "Revenant";
+			$newSkill = new stdClass();
+			$newSkill->title = "Soul Link";
+			$newSkill->desc = 'Improves lifetap damage by <em data-base="+4">+4</em>% and a <em data-base="+1">+1</em>% chance to critical heal<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[0] = $newSkill;
+			//1
+			$newSkill = new stdClass();
+			$newSkill->title = "Gouging Skin";
+			$newSkill->desc = 'When attacked, causes a <em data-base="+6">+6</em> point damage shield and <em data-base="+20">+20</em> hate<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[2] = $newSkill;
+
 			break;
-		}	
+		}
+		$this->template->skills = $skills;
 		$this->template->styles = $styles;
 		$this->template->site->image = "http://rebuildeq.com/images/monograms/".$this->template->monogram.".gif";
 		$this->template->site->title = $fullName;
@@ -137,5 +151,4 @@ class Controller_Web_Builds extends Template_Web_Core {
 		$this->template->classDescription = $desc;
 		$this->template->site->description = $desc;
 	}
-
 }

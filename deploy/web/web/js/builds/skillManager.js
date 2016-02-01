@@ -146,9 +146,13 @@ function loadHash(hash) {
 
 function getHash() {
 	var hash = "";
-	$("div.skill").each(function(index) {
-		hash += $(this).attr("data-points");
-	});
+	for (var i = 0; i < 53; i++) {
+		if ($("#skill-"+i).length) {
+			hash += $("#skill-"+i).attr("data-points");
+		} else {
+			hash += "0";
+		}
+	}
 	return hash;
 }
 
