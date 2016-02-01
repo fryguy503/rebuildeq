@@ -8,7 +8,6 @@ class Controller_Web_Builds extends Template_Web_Core {
 		parent::before();
 		$this->template->site->title = "Shadow Knight Build";
 		$this->template->site->description = "Shadow Knight Custom Build For RebuildEQ";
-		$this->template->site->image = "http://rebuildeq.com/images/monograms/5.gif";
 		
 	}
 
@@ -132,9 +131,11 @@ class Controller_Web_Builds extends Template_Web_Core {
 			break;
 		}	
 		$this->template->styles = $styles;
+		$this->template->site->image = "http://rebuildeq.com/images/monograms/".$this->template->monogram.".gif";
 		$this->template->site->title = $fullName;
 		$this->template->fullName = $fullName;
 		$this->template->classDescription = $desc;
+		$this->template->site->description = $desc;
 	}
 
 }
