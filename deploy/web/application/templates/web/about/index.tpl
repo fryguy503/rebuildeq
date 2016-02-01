@@ -28,12 +28,14 @@
 					<div class="form-group">
 			          <p class="text-center">
 			           <label class="control-label">Server features</label>
-
 			          <ul> 
-			          <li>Enhanced classic gameplay, with convienent commands such as #rez, #teleport, and #buff - They're expensive, but handy as a last resort.</li>
-			          <li>Learn spells and skills on level</li>
-			          <li>Unlock AAs through quests</li>
-			          <li>Discover new ways to craft</li>
+				          <li>Enhanced classic gameplay, with convienent commands such as #rez, #teleport, and #buff - They're expensive, but handy as a last resort.</li>
+				          <li>Learn spells, disciplines and skills on level up</li>
+				          <li>There are no AAs. However, you can unlock certain AAs through quests</li>
+				          <li>One person per IP (No boxing)</li>
+				          <li>No Macroquest usage allowed</li>
+				          <li>Discover new ways to craft</li>
+				          <li>New materials to discover in the late game (Bottle of Experience, Elunium)</li>
 			          </ul>
 			          </p>
 			        </div>
