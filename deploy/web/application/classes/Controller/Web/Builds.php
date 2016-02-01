@@ -200,6 +200,124 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
 			$skills[16] = $newSkill;
 			//17
+			// TIER 2
+			//18
+			$newSkill = new stdClass();
+			$newSkill->title = "Festering Spear";
+			$newSkill->desc = 'Improve spears by <em data-base="+10">+10</em>% and a <em data-base="+1">+1</em>% chance to critical blast<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
+			$skills[18] = $newSkill;
+			//19
+			//20
+			$newSkill = new stdClass();
+			$newSkill->title = "Festering Wound";
+			$newSkill->desc = 'Improves DoT damage by <em data-base="+4">+4</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
+			$skills[20] = $newSkill;
+			//21
+			//22
+			$newSkill = new stdClass();
+			$newSkill->title = "Rotten Core";
+			$newSkill->desc = 'Increases attack by <em data-base="+8">+8</em>% for a short duration each time a target dies nearby with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
+			$skills[22] = $newSkill;
+			//23
+			//24
+			$newSkill = new stdClass();
+			$newSkill->title = "Lingering Pain";
+			$newSkill->desc = 'All direct damage spells have a <em data-base="+4">+4</em>% chance to cause bonus damage over time<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$skills[24] = $newSkill;
+			//25
+			//26
+			$newSkill = new stdClass();
+			$newSkill->title = "Blood Oath";
+			$newSkill->desc = 'Increases damage by <em data-base="+10">+10</em>%, while decreasing healing effects by -<em data-base="10">10</em>%, AC by -<em data-base="10">10</em>, and all resistances by -<em data-base="20">20</em>.<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[26] = $newSkill;					
+			//27
+			//28
+			$newSkill = new stdClass();
+			$newSkill->title = "Gift of Urash";
+			$newSkill->desc = 'Increases all skill modifiers by <em data-base="+5">+5</em>%, stacks up to <em data-base="1">1</em> times<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
+			$skills[28] = $newSkill;
+			//29
+			//30
+			//31
+			$newSkill = new stdClass();
+			$newSkill->title = "Unholy Focus";
+			$newSkill->desc = 'Causes all direct damage spells to be <em data-base="+10">+10</em>% more unresistable<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
+			$skills[31] = $newSkill;
+			//32
+			//33
+			//34
+			$newSkill = new stdClass();
+			$newSkill->title = "Bash of Death";
+			$newSkill->desc = 'Causes a harm touch chance when bashing a target, damage is improved based on stacks of Gift of Urash by <em data-base="+20">+20</em>% damage<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
+			$skills[34] = $newSkill;
+			//35
+			// TIER 3
+			//36
+			$newSkill = new stdClass();
+			$newSkill->title = "Embrace Death";
+			$newSkill->desc = 'Grants you the ability to use Feign Death, as well as causes the ability to heal you for <em data-base="+2">+2</em>% maximum health on use<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[36] = $newSkill;
+			//37
+			//38
+			$newSkill = new stdClass();
+			$newSkill->title = "Darkness";
+			$newSkill->desc = 'All darkness spells now decreation an additional <em data-base="+4">+4</em>% movement speed<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
+			$skills[38] = $newSkill;
+			//39
+			//40
+			$newSkill = new stdClass();
+			$newSkill->title = "Empathetic Soul";
+			$newSkill->desc = 'Improves Dark Empathy by granting an additional <em data-base="+40">+40</em> hitpoints healed and <em data-base="+0.5">+0.5</em>% max mana <span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
+			$skills[40] = $newSkill;
+			//41
+			//42
+			//43
+			$newSkill = new stdClass();
+			$newSkill->title = "Embrace Shadow";
+			$newSkill->desc = 'Each time you feign death, grants a <em data-base="20">20</em>% chance<span class="perLevel"> per level</span> to instantly be invisible to both living and undead creatures.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$skills[43] = $newSkill;
+			//44
+			//45
+			//46
+			$newSkill = new stdClass();
+			$newSkill->title = "Crippling Pain";
+			$newSkill->desc = 'Shroud of Pain causes target to deal <em data-base="1">1</em>% less maximum damage<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[46] = $newSkill;					
+			//47
+			//48
+			$newSkill = new stdClass();
+			$newSkill->title = "Nightmare";
+			$newSkill->desc = 'Fear now causes target to freeze in panic and lasta an additional <em data-base="4">4</em> seconds<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
+			$skills[48] = $newSkill;					
+			//49
+			//50
+			$newSkill = new stdClass();
+			$newSkill->title = "Mini Minion";
+			$newSkill->desc = 'Causes your pet to summon a pet and attack target with a <em data-base="2">2</em>% chance <span class="perLevel"> per level</span> the target will not bring allies.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
+			$skills[50] = $newSkill;
+			//51
+			//52
+			$newSkill = new stdClass();
+			$newSkill->title = "Cry of the Banshee";
+			$newSkill->desc = 'Causes all nearby targets to be mesmerized for <em data-base="10">10</em> while feigning death. Grants a <em data-base="2">2</em>% chance for a burst of <em data-base="2">2</em> seconds, then forget all aggressions.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-7.png";
+			$skills[52] = $newSkill;
+			//53		
 			break;
 		}
 		$this->template->skills = $skills;
