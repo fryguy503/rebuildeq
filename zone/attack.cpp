@@ -3176,11 +3176,12 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			AddToHateList(attacker, 0, damage, true, false, iBuffTic, spell_id);
 	}
 
+	uint32 rank;
+
 	if(damage > 0) {
 		//if there is some damage being done and theres an attacker involved
 		if(attacker) {
 
-			uint32 rank;
 
 			// if spell is lifetap add hp to the caster
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell( spell_id )) {
@@ -3219,7 +3220,19 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 					damage += festerDmg;
 				}
 			}
+
+			
 		}	//end `if there is some damage being done and theres anattacker person involved`
+		
+		//Shin: Empathetic Soul
+		if (spell_id == 3650 && IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMPATHETICSOUL) > 0) {
+			rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMPATHETICSOUL);
+			int empDamage = 40 * rank;
+			attacker->CastToClient()->Message(MT_NonMelee, "Empathetic Soul %u added %i bonus damage.", rank, empDamage);
+			damage += empDamage;
+
+
+		}
 
 		Mob *pet = GetPet();
 		if (pet && !pet->IsFamiliar() && !pet->GetSpecialAbility(IMMUNE_AGGRO) && !pet->IsEngaged() && attacker && attacker != this && !attacker->IsCorpse())

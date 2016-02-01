@@ -280,6 +280,23 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 	// Instant Heals
 	if(spells[spell_id].buffduration < 1) {
 
+		//Shin: Empathetic Soul
+		if (spell_id == 357 && IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMPATHETICSOUL) > 0) {			
+			int empDamage = 40 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMPATHETICSOUL);
+			value += empDamage;
+
+			//Do mana conversion
+			int manaAmount = (target->GetMaxMana() * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMPATHETICSOUL));
+			if (GetMana() > manaAmount) { //If I have enough mana
+				SetMana((GetMana() - manaAmount)); //Take it from my bar
+				CastToClient()->Message(MT_NonMelee, "You have transferred %i mana to %s", manaAmount, target->GetCleanName());
+				target->SetMana((target->GetMana() + manaAmount)); //Give it to target
+				if (target->IsClient()) {
+					CastToClient()->Message(MT_NonMelee, "%s transferred %i mana to you.", target->GetCleanName(), manaAmount);
+				}
+			}
+		}
+
 		chance += itembonuses.CriticalHealChance + spellbonuses.CriticalHealChance + aabonuses.CriticalHealChance;
 
 		chance += target->GetFocusIncoming(focusFcHealPctCritIncoming, SE_FcHealPctCritIncoming, this, spell_id);
