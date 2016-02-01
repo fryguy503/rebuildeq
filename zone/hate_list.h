@@ -64,7 +64,7 @@ public:
 	void SetHateOwner(Mob *new_hate_owner) { hate_owner = new_hate_owner; }
 	void SpellCast(Mob *caster, uint32 spell_id, float range, Mob *ae_center = nullptr);
 	void WipeHateList();
-
+	void OnDeathTrigger();
 
 protected:
 	struct_HateList* Find(Mob *ent);

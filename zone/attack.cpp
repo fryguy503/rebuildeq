@@ -1879,6 +1879,9 @@ void NPC::Damage(Mob* other, int32 damage, uint16 spell_id, SkillUseTypes attack
 bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, SkillUseTypes attack_skill) {
 	Log.Out(Logs::Detail, Logs::Combat, "Fatal blow dealt by %s with %d damage, spell %d, skill %d", killer_mob->GetName(), damage, spell, attack_skill);
 
+	//Shin: On death, see if anyone is on hate list that causes a trigger on death
+	hate_list.OnDeathTrigger();
+	
 	Mob *oos = nullptr;
 	if(killer_mob) {
 		oos = killer_mob->GetOwnerOrSelf();
@@ -3180,8 +3183,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 	if(damage > 0) {
 		//if there is some damage being done and theres an attacker involved
-		if(attacker) {
-
+		if(attacker) {			
 
 			// if spell is lifetap add hp to the caster
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell( spell_id )) {
@@ -3221,6 +3223,27 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				}
 			}
 
+			//Shin: Rotten Core
+			if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE) > 0) {
+				
+				rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE);
+				uint32 counters = 0;
+				if (attacker->FindBuff(700)) {
+					Buffs_Struct *buffs = attacker->GetBuffs();
+					for (int buffCount = 0; buffCount <= BUFF_COUNT; buffCount++) {
+						if (buffs[buffCount].spellid != 700)
+							continue;
+						counters = buffs[buffCount].counters;
+						break;
+					}
+				}
+				if (counters > 0) {
+					int coreDmg = int32(damage * 0.08 * counters);
+					attacker->CastToClient()->Message(MT_NonMelee, "Rotten Core %u added %i bonus damage.", rank, coreDmg);
+					damage += coreDmg;
+				}
+			}
+
 			
 		}	//end `if there is some damage being done and theres anattacker person involved`
 		
@@ -3230,9 +3253,9 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			int empDamage = 40 * rank;
 			attacker->CastToClient()->Message(MT_NonMelee, "Empathetic Soul %u added %i bonus damage.", rank, empDamage);
 			damage += empDamage;
-
-
 		}
+
+		
 
 		Mob *pet = GetPet();
 		if (pet && !pet->IsFamiliar() && !pet->GetSpecialAbility(IMMUNE_AGGRO) && !pet->IsEngaged() && attacker && attacker != this && !attacker->IsCorpse())

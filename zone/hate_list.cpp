@@ -21,6 +21,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #include "groups.h"
 #include "mob.h"
 #include "raids.h"
+#include "string_ids.h"
 
 #include "../common/rulesys.h"
 
@@ -77,6 +78,7 @@ void HateList::WipeHateList()
 
 	}
 }
+
 
 bool HateList::IsEntOnHateList(Mob *mob)
 {
@@ -609,5 +611,48 @@ void HateList::SpellCast(Mob *caster, uint32 spell_id, float range, Mob* ae_cent
 			caster->SpellOnTarget(spell_id, cur);
 		}
 		iter++;
+	}
+}
+
+//When a death happens, this trigger causes entities on the hate list a trigger
+void HateList::OnDeathTrigger()
+{
+	std::list<uint32> id_list;
+	float dist_targ = 0;
+	auto iterator = list.begin();
+	while (iterator != list.end())
+	{
+		struct_HateList *h = (*iterator);
+		Mob *mobHated = h->entity_on_hatelist;
+		uint32 rank;
+		if (mobHated->IsClient()) {
+			if (mobHated->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE) > 0) {
+				
+				rank = mobHated->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE);
+				uint32 counters = 0;
+				if (mobHated->FindBuff(700)) {
+					Buffs_Struct *buffs = mobHated->GetBuffs();
+					for (int buffCount = 0; buffCount <= BUFF_COUNT; buffCount++) {
+						if (buffs[buffCount].spellid != 700)
+							continue;
+						buffs[buffCount].counters++;
+						if (buffs[buffCount].counters > rank) {
+							buffs[buffCount].counters = rank;
+						} else {
+							mobHated->Message(MT_NonMelee, "Rotten Core %u increased to power level %u.", rank, counters);
+						}
+					
+						buffs[buffCount].ticsremaining = 3;
+						counters = buffs[buffCount].counters;
+						break;
+					}
+				} else {
+					mobHated->AddBuff(mobHated, 700, 3);
+					counters = 1;
+					mobHated->Message(MT_NonMelee, "Rotten Core %u increased to power level %u.", rank, counters);
+				}				
+			}
+		}
+		++iterator;
 	}
 }
