@@ -9,14 +9,14 @@
 		<div class="row">
 	        	<ul class="breadcrumb">
 	          		<li><a href="/builds">Builds</a></li>
-	          		<li class="active">Shadow Knight</li>
+	          		<li class="active">{$fullName}</li>
 	        	</ul>
 	    </div>
 
 	     <div class="row">
 			<form class="well bs-component">
 				<div class="form-group">
-					<a class="classactive" href="/builds/bard"><img class="classicon" src="/images/classicons/brd.png"/></a>
+					<a href="/builds/bard"><img class="classicon" src="/images/classicons/brd.png"/></a>
 					<a href="/builds/cleric"><img class="classicon" src="/images/classicons/clr.png"/></a>
 					<a href="/builds/druid"><img class="classicon" src="/images/classicons/dru.png"/></a>
 					<a href="/builds/enchanter"><img class="classicon" src="/images/classicons/enc.png"/></a>
@@ -48,7 +48,7 @@
   		<div class="row">
 			<form class="well bs-component">
 				<div class="form-group">
-		<img unselectable="on" class="portrait" src="/images/monograms/5.gif" style="left: 30%;margin-left: -30%;">
+		<img unselectable="on" class="portrait" src="/images/monograms/{$monogram}.gif" style="left: 30%;margin-left: -30%;">
 		<div class="treeCollection">
 		<div class="treewrapper green">
 			<div class="bglayer gray"></div>
