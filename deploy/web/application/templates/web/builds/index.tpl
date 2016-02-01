@@ -125,7 +125,7 @@
 				<div class="totalPoints">
 					<span class="totalPoints">0</span>
 				</div>
-				<legend>Bloodreaver</legend>
+				<legend>{$styles[0]}</legend>
 			</div>
 		</div>
 
@@ -201,7 +201,7 @@
 				<div class="column3 totalPoints">
 					<span class="totalPoints">0</span>
 				</div>
-				<legend>Defiler</legend>
+				<legend>{$styles[1]}</legend>
 			</div>
 		</div>
 
@@ -273,7 +273,7 @@
 				<div class="column3 totalPoints">
 					<span class="totalPoints">0</span>
 				</div>
-				<legend>Revenant</legend>
+				<legend>{$styles[2]}</legend>
 			</div>
 		</div>
 		</div>
