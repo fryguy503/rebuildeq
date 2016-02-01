@@ -740,7 +740,8 @@ void Client::SetLevel(uint8 set_level, bool command)
 		if (GetSkill(SkillIntimidation) == 0) {
 			if (
 				(GetClass() == BARD && GetLevel() >= 25) ||
-				(GetClass() == MONK && GetLevel() >= 18)
+				(GetClass() == MONK && GetLevel() >= 18) ||
+				(GetClass() == MONK && GetLevel() >= 22)
 				) {
 				SetSkill((SkillUseTypes)SkillIntimidation, 1);
 			}
