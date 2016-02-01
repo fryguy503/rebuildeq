@@ -707,6 +707,7 @@ void Client::SetLevel(uint8 set_level, bool command)
 				(GetClass() == DRUID && GetLevel() >= 15) ||
 				(GetClass() == ENCHANTER && GetLevel() >= 22) ||
 				(GetClass() == MAGICIAN && GetLevel() >= 22) ||
+				(GetClass() == NECROMANCER && GetLevel() >= 22) ||
 				) {
 				SetSkill((SkillUseTypes)SkillDodge, 1);
 			}			
@@ -720,7 +721,8 @@ void Client::SetLevel(uint8 set_level, bool command)
 		}
 		if (GetSkill(SkillIntimidation) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 26)
+				(GetClass() == BARD && GetLevel() >= 26) ||
+				(GetClass() == MONK && GetLevel() >= 18)
 				) {
 				SetSkill((SkillUseTypes)SkillIntimidation, 1);
 			}
@@ -746,6 +748,7 @@ void Client::SetLevel(uint8 set_level, bool command)
 				(GetClass() == DRUID && GetLevel() >= 8) ||
 				(GetClass() == ENCHANTER && GetLevel() >= 4) ||
 				(GetClass() == MAGICIAN && GetLevel() >= 4) ||
+				(GetClass() == NECROMANCER && GetLevel() >= 4) ||
 				) {
 				SetSkill((SkillUseTypes)SkillMeditate, 1);
 			}
@@ -767,7 +770,8 @@ void Client::SetLevel(uint8 set_level, bool command)
 		}
 		if (GetSkill(SkillSneak) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 17)
+				(GetClass() == BARD && GetLevel() >= 17) ||
+				(GetClass() == MONK && GetLevel() >= 8)
 				) {
 				SetSkill((SkillUseTypes)SkillSneak, 1);
 			}
@@ -781,7 +785,8 @@ void Client::SetLevel(uint8 set_level, bool command)
 		}
 		if (GetSkill(SkillSafeFall) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 24)
+				(GetClass() == BARD && GetLevel() >= 24) ||
+				(GetClass() == MONK && GetLevel() >= 3)
 				) {
 				SetSkill((SkillUseTypes)SkillSafeFall, 1);
 			}
@@ -815,6 +820,42 @@ void Client::SetLevel(uint8 set_level, bool command)
 				SetSkill((SkillUseTypes)SkillPickLock, 1);
 			}
 		}
+		if (GetSkill(SkillDisarm) == 0) {
+			if (
+				(GetClass() == MONK && GetLevel() >= 27)
+				) {
+				SetSkill((SkillUseTypes)SkillDisarm, 1);
+			}
+		}
+		if (GetSkill(SkillBlock) == 0) {
+			if (
+				(GetClass() == MONK && GetLevel() >= 12)
+				) {
+				SetSkill((SkillUseTypes)SkillBlock, 1);
+			}
+		}
+		if (GetSkill(SkillDoubleAttack) == 0) {
+			if (
+				(GetClass() == MONK && GetLevel() >= 15)
+				) {
+				SetSkill((SkillUseTypes)SkillDoubleAttack, 1);
+			}
+		}
+		if (GetSkill(SkillRiposte) == 0) {
+			if (
+				(GetClass() == MONK && GetLevel() >= 35)
+				) {
+				SetSkill((SkillUseTypes)SkillRiposte, 1);
+			}
+		}
+		if (GetSkill(SkillFeignDeath) == 0) {
+			if (
+				(GetClass() == MONK && GetLevel() >= 1)
+				(GetClass() == SHADOWKNIGHT && GetLevel() >= 1)
+				) {
+				SetSkill((SkillUseTypes)SkillFeignDeath, 1);
+			}
+		}
 
 		//Bard Specific
 		if (GetSkill(SkillPercussionInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
@@ -834,6 +875,23 @@ void Client::SetLevel(uint8 set_level, bool command)
 		if (GetSkill(SkillRoundKick) == 0 && GetClass() == MONK && GetLevel() >= 5) {
 			SetSkill((SkillUseTypes)SkillRoundKick, 1);
 		}
+		if (GetSkill(SkillTigerClaw) == 0 && GetClass() == MONK && GetLevel() >= 10) {
+			SetSkill((SkillUseTypes)SkillTigerClaw, 1);
+		}
+		if (GetSkill(SkillEagleStrike) == 0 && GetClass() == MONK && GetLevel() >= 20) {
+			SetSkill((SkillUseTypes)SkillEagleStrike, 1);
+		}
+		if (GetSkill(SkillDragonPunch) == 0 && GetRace() != IKSAR && GetClass() == MONK && GetLevel() >= 25) {
+			SetSkill((SkillUseTypes)SkillDragonPunch, 1);
+		}
+		if (GetSkill(SkillTailRake) == 0 && GetRace() == IKSAR && GetClass() == MONK && GetLevel() >= 25) {
+			SetSkill((SkillUseTypes)SkillTailRake, 1);
+		}
+		if (GetSkill(SkillFlyingKick) == 0 && GetClass() == MONK && GetLevel() >= 30) {
+			SetSkill((SkillUseTypes)SkillFlyingKick, 1);
+		}
+		
+
 
 		if (spellCount > 0) {
 			Message(0, "You have learned %u new spells!", spellCount);
