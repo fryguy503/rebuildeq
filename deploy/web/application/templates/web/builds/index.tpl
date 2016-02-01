@@ -58,88 +58,176 @@
 					{$push = ""}
 					{$id = 0}
 					{if !empty($skills[$id])}
-					<div class="skill {$push}" data-points="0" id="skill-0" data-max="5"><img src="{$skills[$id]->image}">
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
 						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
 						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
+					{$push = ""}
 					{else}{$push = "push1"}
 					{/if}
 					
 					{$id = 1}
-					{$push = ""}
 					{if !empty($skills[$id])}
-					<div class="skill {$push}" data-points="0" id="skill-0" data-max="5"><img src="{$skills[$id]->image}">
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
 						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
 						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
+					{$push = ""}
 					{else}{$push = "push1"}
 					{/if}
 
 					{$id = 2}
 					{if !empty($skills[$id])}
-					<div class="skill {$push}" data-points="0" id="skill-0" data-max="5"><img src="{$skills[$id]->image}">
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
 						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
 						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
 					{/if}
 				</div>
 				<div class="tier" data-level="1" data-invested="0" data-total="0">
-					{*<div class="skill" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-2.png">
-						<div class="description"><h2>Shroud of Death</h2>Shroud of Pain grants an additional <em data-base="+10">+10</em> AC to group<span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/5</div>
-					</div>*}
-					<div class="skill push1" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-3.png">
-						<div class="description"><h2>Hungering Aura</h2>Improves lifetaps by <em data-base="+6">+6</em>% healing for each enemy attacking you with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/5</div>
+					{$push = ""}
+					{$id = 3}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
+					{$push = ""}
+					{else}{$push = "push1"}					
+					{/if}
+					{$id = 4}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
+					</div>
+					{$push = ""}
+					{else}{$push = "push1"}	
+					{/if}
+					{$id = 5}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
+					</div>
+					{$push = ""}
+					{else}{$push = "push1"}
+					{/if}
 				</div>
 				<div class="tier" data-level="2" data-invested="0" data-total="0">
-					{*<div class="skill" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-4.png">
-						<div class="description"><h2>Voice of Fear</h2>Voices causes <em data-base="+20">+20</em>% additional hate<span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/5</div>
+					{$push = ""}
+					{$id = 6}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
-					<div class="skill push1" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-5.png">
-						<div class="description"><h2>Scarab Skin</h2>Improves melee mitigation by <em data-base="+6">+6</em>%<span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/5</div>
+					{$push = ""}
+					{else}{$push = "push1"}
+					{/if}
+					{$id = 7}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
-
-					<div class="skill" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-6.png">
-						<div class="description"><h2>Ichor Flesh</h2>Causes guard spells to last for an additional <em data-base="+100">+200</em> hitpoints<span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/5</div>
+					{$push = ""}
+					{else}{$push = "push1"}
+					{/if}
+					{$id = 8}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
-					*}
-					<div class="skill" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-7.png">
-						<div class="description"><h2>Deathbringer</h2>Improves pet by increasing level by <em data-base="+6">+6</em>, HP by <em data-base="+200">+200</em>, and AC by <em data-base="+40">+40</em><span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/5</div>
-					</div>
-					<div class="skill push1" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
-						<div class="description push1"><h2>Zevfeer's Feast</h2>Improves Zevfeer's Bite to give an additional <em data-base="+100">+100</em>% health and an additional <em data-base="+100">+100</em> mana<span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/5</div>
-					</div>
+					{$push = ""}
+					{else}{$push = "push1"}
+					{/if}					
 				</div>
 				<div class="tier" data-level="3" data-invested="0" data-total="0">
-					<div class="skill push1" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
-						<div class="description"><h2>Sworn Enemy</h2>Causes intense hatred of target, where any spell damage dealt causes an additional <em data-base="+400">+400</em> hate<span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/5</div>
+					{$push = ""}
+					{$id = 9}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
-					{*<div class="skill push1" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
-						<div class="description"><h2>Relentless</h2>Causes heal over times effects on self to last <em data-base="+2">+2</em> tick<span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/1</div>
+					{$push = ""}
+					{else}{$push = "push1"}
+					{/if}
+					{$id = 10}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
-					*}
+					{else}{$push = "push1"}
+					{/if}
+					{$id = 11}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
+					</div>
+					{$push = ""}
+					{/if}	
 				</div>
 				<div class="tier" data-level="4" data-invested="0" data-total="0">
-					<div class="skill push1" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-9.png">
-						<div class="description"><h2>Banshee's Mirror</h2>Improves Damage Mitigation by <em data-base="+6">+6</em>% for <em data-base="+30">30</em> seconds <span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/5</div>
+					{$push = ""}
+					{$id = 12}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
-					
+					{$push = ""}
+					{else}{$push = "push1"}
+					{/if}
+					{$id = 13}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
+					</div>
+					{$push = ""}
+					{else}{$push = "push1"}
+					{/if}
+					{$id = 14}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
+					</div>
+					{$push = ""}
+					{/if}
 				</div>
 				<div class="tier" data-level="5" data-invested="0" data-total="0">
-					<div class="skill push1" data-points="0" data-max="5"><img src="/images/builds/icons/gunzerker-gunlust-10.png">
-						<div class="description"><h2>Aura of Vampirism</h2>Grants the entire group <em data-base="+4">+4</em>% spell vampirism and <em data-base="+10">+10</em>% melee vampirism<span class="perLevel"> per level</span>.</div>
-						<div class="points" style="visibility: hidden;">0/5</div>
+					{$push = ""}
+					{$id = 15}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
 					</div>
+					{$push = ""}
+					{else}{$push = "push1"}
+					{/if}
+					{$id = 16}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
+					</div>
+					{$push = ""}
+					{else}{$push = "push1"}
+					{/if}
+					{$id = 17}
+					{if !empty($skills[$id])}
+					<div class="skill {$push}" data-points="0" id="skill-{$id}" data-max="5"><img src="{$skills[$id]->image}">
+						<div class="description"><h2>{$skills[$id]->title}</h2>{$skills[$id]->desc}</div>
+						<div class="points" style="visibility: visible;">0/5</div>
+					</div>
+					{/if}					
 				</div>				
 				<div class="totalPoints">
 					<span class="totalPoints">0</span>

@@ -16,6 +16,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 		$styles = array();
 		$skills = array();
 		switch ($class) {
+			//==================BARD======================
 			case "bard":
 			$fullName = "Bard";
 			$this->template->monogram = 8;
@@ -24,6 +25,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Swordsinger";
 			$styles[2] = "Maestro";
 			break;
+			//==================CLERIC======================
 			case "cleric":
 			$fullName = "Cleric";
 			$this->template->monogram = 2;
@@ -32,6 +34,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Bishop";
 			$styles[2] = "Archon";
 			break;
+			//==================DRUID======================
 			case "druid":
 			$fullName = "Druid";
 			$this->template->monogram = 6;
@@ -40,6 +43,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Warden";
 			$styles[2] = "Hierophant";
 			break;
+			//==================ENCHANTER======================
 			case "enchanter":
 			$fullName = "Enchanter";
 			$this->template->monogram = 14;
@@ -48,6 +52,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Entrancer";
 			$styles[2] = "Beguiler";
 			break;
+			//==================MAGICIAN======================
 			case "magician":
 			$fullName = "Magician";
 			$this->template->monogram = 13;
@@ -56,6 +61,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Elementalist";
 			$styles[2] = "Geomancer";
 			break;
+			//==================MONK======================
 			case "monk":
 			$fullName = "Monk";
 			$this->template->monogram = 7;
@@ -64,6 +70,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Transcendant";
 			$styles[2] = "Ashenhand";
 			break;
+			//==================NECROMANCER======================
 			case "necromancer":
 			$fullName = "Necromancer";
 			$this->template->monogram = 11;
@@ -72,6 +79,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Lich";
 			$styles[2] = "Warlock";
 			break;
+			//==================PALADIN======================
 			case "paladin":
 			$this->template->monogram = 3;
 			$fullName = "Paladin";
@@ -80,6 +88,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Knight";
 			$styles[2] = "Crusader";
 			break;
+			//==================RANGER======================
 			case "ranger":
 			$fullName = "Ranger";
 			$this->template->monogram = 4;
@@ -88,6 +97,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Hunter";
 			$styles[2] = "Plainswalker";
 			break;
+			//==================ROGUE======================
 			case "rogue":
 			$fullName = "Rogue";
 			$this->template->monogram = 9;
@@ -96,7 +106,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Deceiver";
 			$styles[2] = "Bandit";
 			break;
-			
+			//==================SHAMAN======================
 			case "shaman":
 			$fullName = "Shaman";
 			$this->template->monogram = 10;
@@ -105,6 +115,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Oracle";
 			$styles[2] = "Elder";
 			break;
+			//==================WARRIOR======================
 			case "warrior":
 			$fullName = "Warrior";
 			$this->template->monogram = 1;
@@ -113,6 +124,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Brawler";
 			$styles[2] = "Champion";
 			break;
+			//==================WIZARD======================
 			case "wizard":
 			$fullName = "Wizard";
 			$this->template->monogram = 12;
@@ -121,6 +133,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[1] = "Channeler";
 			$styles[2] = "Sage";
 			break;
+			//==================SHADOWKNIGHT======================
 			case "shadowknight":
 			default:
 			$fullName = "Shadow Knight";
@@ -129,18 +142,64 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[0] = "Bloodreaver";
 			$styles[1] = "Defiler";
 			$styles[2] = "Revenant";
+			//0
 			$newSkill = new stdClass();
 			$newSkill->title = "Soul Link";
 			$newSkill->desc = 'Improves lifetap damage by <em data-base="+4">+4</em>% and a <em data-base="+1">+1</em>% chance to critical heal<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[0] = $newSkill;
 			//1
+			//2
 			$newSkill = new stdClass();
 			$newSkill->title = "Gouging Skin";
 			$newSkill->desc = 'When attacked, causes a <em data-base="+6">+6</em> point damage shield and <em data-base="+20">+20</em> hate<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[2] = $newSkill;
-
+			//3
+			//4
+			$newSkill = new stdClass();
+			$newSkill->title = "Hungering Aura";
+			$newSkill->desc = 'Improves lifetaps by <em data-base="+6">+6</em>% healing for each enemy attacking you with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$skills[4] = $newSkill;
+			//5
+			//6
+			$newSkill = new stdClass();
+			$newSkill->title = "Deathbringer";
+			$newSkill->desc = 'Improves pet by increasing level by <em data-base="+6">+6</em>, HP by <em data-base="+200">+200</em>, and AC by <em data-base="+40">+40</em><span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-7.png";	
+			$skills[6] = $newSkill;
+			//7
+			//8
+			$newSkill = new stdClass();
+			$newSkill->title = "Zevfeer's Feast";
+			$newSkill->desc = 'Improves Zevfeer\'s Bite to give an additional <em data-base="+100">+100</em>% health and an additional <em data-base="+100">+100</em> mana<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-9.png";	
+			$skills[8] = $newSkill;
+			//9
+			//10
+			$newSkill = new stdClass();
+			$newSkill->title = "Sworn Enemy";
+			$newSkill->desc = 'Causes intense hatred of target, where any spell damage dealt causes an additional <em data-base="+400">+400</em> hate<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-10.png";	
+			$skills[10] = $newSkill;
+			//11
+			//12
+			//13
+			$newSkill = new stdClass();
+			$newSkill->title = "Banshee's Mirror";
+			$newSkill->desc = 'Improves Damage Mitigation by <em data-base="+6">+6</em>% for <em data-base="+30">30</em> seconds <span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
+			$skills[13] = $newSkill;
+			//14
+			//15
+			//16
+			$newSkill = new stdClass();
+			$newSkill->title = "Aura of Vampirism";
+			$newSkill->desc = 'Grants the entire group <em data-base="+4">+4</em>% spell vampirism and <em data-base="+10">+10</em>% melee vampirism<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
+			$skills[16] = $newSkill;
+			//17
 			break;
 		}
 		$this->template->skills = $skills;
