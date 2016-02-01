@@ -631,7 +631,7 @@ void Client::SetLevel(uint8 set_level, bool command)
 		if (lu->level_old >= level) {
 			break;
 		}
-
+	
 		if (
 				spells[curspell].classes[WARRIOR] != 0 && // check if spell exists
 				spells[curspell].classes[this->GetPP().class_ - 1] <= set_level &&	//maximum level
@@ -695,12 +695,139 @@ void Client::SetLevel(uint8 set_level, bool command)
 		}
 	}
 
+
 	if (lu->level_old >= level) {
+		//Skill logic
+		//if (GetSkill(Skill1HBlunt) == 0) SetSkill((SkillUseTypes)Skill1HBlunt, 1);
+		if (GetSkill(SkillDodge) == 0) {
+			if (
+				(GetClass() == WIZARD && GetLevel() >= 22) ||
+				(GetClass() == BARD && GetLevel() >= 10)
+				) {
+				SetSkill((SkillUseTypes)SkillDodge, 1);
+			}			
+		}
+		if (GetSkill(SkillDualWield) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 17)
+				) {
+				SetSkill((SkillUseTypes)SkillDualWield, 1);
+			}
+		}
+		if (GetSkill(SkillIntimidation) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 26)
+				) {
+				SetSkill((SkillUseTypes)SkillIntimidation, 1);
+			}
+		}
+		if (GetSkill(SkillParry) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 53)
+				) {
+				SetSkill((SkillUseTypes)SkillParry, 1);
+			}
+		}
+		if (GetSkill(SkillRiposte) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 58)
+				) {
+				SetSkill((SkillUseTypes)SkillRiposte, 1);
+			}
+		}
+		if (GetSkill(SkillMeditate) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 10) ||
+				(GetClass() == CLERIC && GetLevel() >= 8)
+				) {
+				SetSkill((SkillUseTypes)SkillMeditate, 1);
+			}
+		}
+		if (GetSkill(SkillChanneling) == 0) {
+			if (
+				(GetClass() == CLERIC && GetLevel() >= 4)
+				) {
+				SetSkill((SkillUseTypes)SkillChanneling, 1);
+			}
+		}
+		if (GetSkill(SkillForage) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 12)
+				) {
+				SetSkill((SkillUseTypes)SkillForage, 1);
+			}
+		}
+		if (GetSkill(SkillSneak) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 17)
+				) {
+				SetSkill((SkillUseTypes)SkillSneak, 1);
+			}
+		}
+		if (GetSkill(SkillSenseTraps) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 20)
+				) {
+				SetSkill((SkillUseTypes)SkillSenseTraps, 1);
+			}
+		}
+		if (GetSkill(SkillSafeFall) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 24)
+				) {
+				SetSkill((SkillUseTypes)SkillSafeFall, 1);
+			}
+		}
+		if (GetSkill(SkillHide) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 25)
+				) {
+				SetSkill((SkillUseTypes)SkillHide, 1);
+			}
+		}
+		if (GetSkill(SkillDisarmTraps) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 30)
+				) {
+				SetSkill((SkillUseTypes)SkillDisarmTraps, 1);
+			}
+		}
+		if (GetSkill(SkillTracking) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 35)
+				) {
+				SetSkill((SkillUseTypes)SkillTracking, 1);
+			}
+		}
+		if (GetSkill(SkillPickLock) == 0) {
+			if (
+				(GetClass() == BARD && GetLevel() >= 40)
+				) {
+				SetSkill((SkillUseTypes)SkillPickLock, 1);
+			}
+		}
+
+		//Bard Specific
+		if (GetSkill(SkillPercussionInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
+			SetSkill((SkillUseTypes)SkillPercussionInstruments, 1);
+		}
+		if (GetSkill(SkillStringedInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
+			SetSkill((SkillUseTypes)SkillStringedInstruments, 1);			
+		}
+		if (GetSkill(SkillBrassInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
+			SetSkill((SkillUseTypes)SkillBrassInstruments, 1);
+		}
+		if (GetSkill(SkillWindInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
+			SetSkill((SkillUseTypes)SkillWindInstruments, 1);
+		}
+		
+		
+
 		if (spellCount > 0) {
-			this->Message(0, "You have learned %u new spells!", spellCount);
+			Message(0, "You have learned %u new spells!", spellCount);
 		}
 		if (abilityCount > 0) {
-			this->Message(0, "You have learned %u new disciplines!", abilityCount);
+			Message(0, "You have learned %u new disciplines!", abilityCount);
 		}
 	}
 	
