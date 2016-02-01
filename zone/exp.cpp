@@ -702,7 +702,9 @@ void Client::SetLevel(uint8 set_level, bool command)
 		if (GetSkill(SkillDodge) == 0) {
 			if (
 				(GetClass() == WIZARD && GetLevel() >= 22) ||
-				(GetClass() == BARD && GetLevel() >= 10)
+				(GetClass() == BARD && GetLevel() >= 10) ||
+				(GetClass() == CLERIC && GetLevel() >= 15) ||
+				(GetClass() == DRUID && GetLevel() >= 15)
 				) {
 				SetSkill((SkillUseTypes)SkillDodge, 1);
 			}			
@@ -738,7 +740,8 @@ void Client::SetLevel(uint8 set_level, bool command)
 		if (GetSkill(SkillMeditate) == 0) {
 			if (
 				(GetClass() == BARD && GetLevel() >= 10) ||
-				(GetClass() == CLERIC && GetLevel() >= 8)
+				(GetClass() == CLERIC && GetLevel() >= 8) ||
+				(GetClass() == DRUID && GetLevel() >= 8)
 				) {
 				SetSkill((SkillUseTypes)SkillMeditate, 1);
 			}
@@ -752,7 +755,8 @@ void Client::SetLevel(uint8 set_level, bool command)
 		}
 		if (GetSkill(SkillForage) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 12)
+				(GetClass() == BARD && GetLevel() >= 12) ||
+				(GetClass() == DRUID && GetLevel() >= 5)
 				) {
 				SetSkill((SkillUseTypes)SkillForage, 1);
 			}
@@ -795,6 +799,7 @@ void Client::SetLevel(uint8 set_level, bool command)
 		if (GetSkill(SkillTracking) == 0) {
 			if (
 				(GetClass() == BARD && GetLevel() >= 35)
+				(GetClass() == DRUID && GetLevel() >= 20)
 				) {
 				SetSkill((SkillUseTypes)SkillTracking, 1);
 			}
