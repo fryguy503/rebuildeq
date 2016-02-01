@@ -704,7 +704,9 @@ void Client::SetLevel(uint8 set_level, bool command)
 				(GetClass() == WIZARD && GetLevel() >= 22) ||
 				(GetClass() == BARD && GetLevel() >= 10) ||
 				(GetClass() == CLERIC && GetLevel() >= 15) ||
-				(GetClass() == DRUID && GetLevel() >= 15)
+				(GetClass() == DRUID && GetLevel() >= 15) ||
+				(GetClass() == ENCHANTER && GetLevel() >= 22) ||
+				(GetClass() == MAGICIAN && GetLevel() >= 22) ||
 				) {
 				SetSkill((SkillUseTypes)SkillDodge, 1);
 			}			
@@ -741,7 +743,9 @@ void Client::SetLevel(uint8 set_level, bool command)
 			if (
 				(GetClass() == BARD && GetLevel() >= 10) ||
 				(GetClass() == CLERIC && GetLevel() >= 8) ||
-				(GetClass() == DRUID && GetLevel() >= 8)
+				(GetClass() == DRUID && GetLevel() >= 8) ||
+				(GetClass() == ENCHANTER && GetLevel() >= 4) ||
+				(GetClass() == MAGICIAN && GetLevel() >= 4) ||
 				) {
 				SetSkill((SkillUseTypes)SkillMeditate, 1);
 			}
@@ -826,7 +830,10 @@ void Client::SetLevel(uint8 set_level, bool command)
 			SetSkill((SkillUseTypes)SkillWindInstruments, 1);
 		}
 		
-		
+		//Monk Specific
+		if (GetSkill(SkillRoundKick) == 0 && GetClass() == MONK && GetLevel() >= 5) {
+			SetSkill((SkillUseTypes)SkillRoundKick, 1);
+		}
 
 		if (spellCount > 0) {
 			Message(0, "You have learned %u new spells!", spellCount);
