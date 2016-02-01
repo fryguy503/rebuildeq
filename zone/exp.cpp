@@ -708,20 +708,38 @@ void Client::SetLevel(uint8 set_level, bool command)
 				(GetClass() == ENCHANTER && GetLevel() >= 22) ||
 				(GetClass() == MAGICIAN && GetLevel() >= 22) ||
 				(GetClass() == NECROMANCER && GetLevel() >= 22) ||
+				(GetClass() == PALADIN && GetLevel() >= 10) ||
+				(GetClass() == SHADOWKNIGHT && GetLevel() >= 10) ||
+				(GetClass() == RANGER && GetLevel() >= 8) ||
+				(GetClass() == SHAMAN && GetLevel() >= 15) ||
+				(GetClass() == MONK && GetLevel() >= 1) ||
+				(GetClass() == ROGUE && GetLevel() >= 4) ||
+				(GetClass() == WARRIOR && GetLevel() >= 6)
 				) {
 				SetSkill((SkillUseTypes)SkillDodge, 1);
 			}			
 		}
 		if (GetSkill(SkillDualWield) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 17)
+				(GetClass() == BARD && GetLevel() >= 17) ||
+				(GetClass() == RANGER && GetLevel() >= 17) ||
+				(GetClass() == MONK && GetLevel() >= 1) || 
+				(GetClass() == WARRIOR && GetLevel() >= 13)
 				) {
 				SetSkill((SkillUseTypes)SkillDualWield, 1);
 			}
 		}
+
+		if (GetSkill(SkillKick) == 0) {
+			if (
+				(GetClass() == RANGER && GetLevel() >= 5)
+				) {
+				SetSkill((SkillUseTypes)SkillKick, 1);
+			}
+		}
 		if (GetSkill(SkillIntimidation) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 26) ||
+				(GetClass() == BARD && GetLevel() >= 25) ||
 				(GetClass() == MONK && GetLevel() >= 18)
 				) {
 				SetSkill((SkillUseTypes)SkillIntimidation, 1);
@@ -729,14 +747,25 @@ void Client::SetLevel(uint8 set_level, bool command)
 		}
 		if (GetSkill(SkillParry) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 53)
+				(GetClass() == BARD && GetLevel() >= 53) ||
+				(GetClass() == PALADIN && GetLevel() >= 17) ||
+				(GetClass() == SHADOWKNIGHT && GetLevel() >= 17) ||
+				(GetClass() == RANGER && GetLevel() >= 18) ||
+				(GetClass() == WARRIOR && GetLevel() >= 10) ||
+				(GetClass() == ROGUE && GetLevel() >= 12)
 				) {
 				SetSkill((SkillUseTypes)SkillParry, 1);
 			}
 		}
 		if (GetSkill(SkillRiposte) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 58)
+				(GetClass() == BARD && GetLevel() >= 58) ||
+				(GetClass() == WARRIOR && GetLevel() >= 25) ||
+				(GetClass() == ROGUE && GetLevel() >= 30) ||
+				(GetClass() == PALADIN && GetLevel() >= 30) ||
+				(GetClass() == SHADOWKNIGHT && GetLevel() >= 30) ||
+				(GetClass() == RANGER && GetLevel() >= 35) ||
+				(GetClass() == MONK && GetLevel() >= 35)
 				) {
 				SetSkill((SkillUseTypes)SkillRiposte, 1);
 			}
@@ -746,24 +775,43 @@ void Client::SetLevel(uint8 set_level, bool command)
 				(GetClass() == BARD && GetLevel() >= 10) ||
 				(GetClass() == CLERIC && GetLevel() >= 8) ||
 				(GetClass() == DRUID && GetLevel() >= 8) ||
+				(GetClass() == SHAMAN && GetLevel() >= 8) ||
 				(GetClass() == ENCHANTER && GetLevel() >= 4) ||
 				(GetClass() == MAGICIAN && GetLevel() >= 4) ||
 				(GetClass() == NECROMANCER && GetLevel() >= 4) ||
+				(GetClass() == WIZARD && GetLevel() >= 4) ||
+				(GetClass() == PALADIN && GetLevel() >= 12) ||
+				(GetClass() == RANGER && GetLevel() >= 12) ||
+				(GetClass() == SHADOWKNIGHT && GetLevel() >= 12)
 				) {
 				SetSkill((SkillUseTypes)SkillMeditate, 1);
 			}
 		}
 		if (GetSkill(SkillChanneling) == 0) {
 			if (
-				(GetClass() == CLERIC && GetLevel() >= 4)
+				(GetClass() == CLERIC && GetLevel() >= 4) ||
+				(GetClass() == DRUID && GetLevel() >= 4) ||
+				(GetClass() == SHAMAN && GetLevel() >= 4) ||
+				(GetClass() == RANGER && GetLevel() >= 9) ||
+				(GetClass() == PALADIN && GetLevel() >= 9) ||
+				(GetClass() == SHADOWKNIGHT && GetLevel() >= 9)
 				) {
 				SetSkill((SkillUseTypes)SkillChanneling, 1);
+			}
+		}
+		if (GetSkill(SkillBash) == 0) {
+			if (
+				(GetClass() == PALADIN && GetLevel() >= 6) ||
+				(GetClass() == SHADOWKNIGHT && GetLevel() >= 6)
+				) {
+				SetSkill((SkillUseTypes)SkillBash, 1);
 			}
 		}
 		if (GetSkill(SkillForage) == 0) {
 			if (
 				(GetClass() == BARD && GetLevel() >= 12) ||
-				(GetClass() == DRUID && GetLevel() >= 5)
+				(GetClass() == DRUID && GetLevel() >= 5) ||
+				(GetClass() == RANGER && GetLevel() >= 3)
 				) {
 				SetSkill((SkillUseTypes)SkillForage, 1);
 			}
@@ -771,14 +819,17 @@ void Client::SetLevel(uint8 set_level, bool command)
 		if (GetSkill(SkillSneak) == 0) {
 			if (
 				(GetClass() == BARD && GetLevel() >= 17) ||
-				(GetClass() == MONK && GetLevel() >= 8)
+				(GetClass() == MONK && GetLevel() >= 8) ||
+				(GetClass() == ROGUE && GetLevel() >= 1) ||
+				(GetClass() == RANGER && GetLevel() >= 10)
 				) {
 				SetSkill((SkillUseTypes)SkillSneak, 1);
 			}
 		}
 		if (GetSkill(SkillSenseTraps) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 20)
+				(GetClass() == BARD && GetLevel() >= 20) ||
+				(GetClass() == ROGUE && GetLevel() >= 10)
 				) {
 				SetSkill((SkillUseTypes)SkillSenseTraps, 1);
 			}
@@ -786,43 +837,55 @@ void Client::SetLevel(uint8 set_level, bool command)
 		if (GetSkill(SkillSafeFall) == 0) {
 			if (
 				(GetClass() == BARD && GetLevel() >= 24) ||
-				(GetClass() == MONK && GetLevel() >= 3)
+				(GetClass() == MONK && GetLevel() >= 3) ||
+				(GetClass() == ROGUE && GetLevel() >= 12)
 				) {
 				SetSkill((SkillUseTypes)SkillSafeFall, 1);
 			}
 		}
 		if (GetSkill(SkillHide) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 25)
+				(GetClass() == BARD && GetLevel() >= 25) ||
+				(GetClass() == ROGUE && GetLevel() >= 3) ||
+				(GetClass() == RANGER && GetLevel() >= 25) ||
+				(GetClass() == SHADOWKNIGHT && GetLevel() >= 35)
 				) {
 				SetSkill((SkillUseTypes)SkillHide, 1);
 			}
 		}
 		if (GetSkill(SkillDisarmTraps) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 30)
+				(GetClass() == BARD && GetLevel() >= 30) ||
+				(GetClass() == ROGUE && GetLevel() >= 21)
 				) {
 				SetSkill((SkillUseTypes)SkillDisarmTraps, 1);
 			}
 		}
 		if (GetSkill(SkillTracking) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 35)
-				(GetClass() == DRUID && GetLevel() >= 20)
+				(GetClass() == BARD && GetLevel() >= 35) ||
+				(GetClass() == DRUID && GetLevel() >= 20) ||
+				(GetClass() == RANGER && GetLevel() >= 1)
 				) {
 				SetSkill((SkillUseTypes)SkillTracking, 1);
 			}
 		}
 		if (GetSkill(SkillPickLock) == 0) {
 			if (
-				(GetClass() == BARD && GetLevel() >= 40)
+				(GetClass() == BARD && GetLevel() >= 40) ||
+				(GetClass() == ROGUE && GetLevel() >= 6)
 				) {
 				SetSkill((SkillUseTypes)SkillPickLock, 1);
 			}
 		}
 		if (GetSkill(SkillDisarm) == 0) {
 			if (
-				(GetClass() == MONK && GetLevel() >= 27)
+				(GetClass() == MONK && GetLevel() >= 27) ||
+				(GetClass() == ROGUE && GetLevel() >= 27) ||
+				(GetClass() == WARRIOR && GetLevel() >= 35) ||
+				(GetClass() == PALADIN && GetLevel() >= 40) ||
+				(GetClass() == RANGER && GetLevel() >= 35) ||
+				(GetClass() == SHADOWKNIGHT && GetLevel() >= 40)
 				) {
 				SetSkill((SkillUseTypes)SkillDisarm, 1);
 			}
@@ -836,21 +899,33 @@ void Client::SetLevel(uint8 set_level, bool command)
 		}
 		if (GetSkill(SkillDoubleAttack) == 0) {
 			if (
-				(GetClass() == MONK && GetLevel() >= 15)
+				(GetClass() == MONK && GetLevel() >= 15) ||
+				(GetClass() == WARRIOR && GetLevel() >= 15) ||
+				(GetClass() == ROGUE && GetLevel() >= 16) ||
+				(GetClass() == PALADIN && GetLevel() >= 20) ||
+				(GetClass() == SHADOWKNIGHT && GetLevel() >= 20) ||
+				(GetClass() == RANGER && GetLevel() >= 20)
 				) {
 				SetSkill((SkillUseTypes)SkillDoubleAttack, 1);
 			}
 		}
 		if (GetSkill(SkillRiposte) == 0) {
 			if (
-				(GetClass() == MONK && GetLevel() >= 35)
+				(GetClass() == MONK && GetLevel() >= 35) ||
+				(GetClass() == PALADIN && GetLevel() >= 30) ||
+				(GetClass() == SHADOWKNIGHT && GetLevel() >= 30) ||
+				(GetClass() == WARRIOR && GetLevel() >= 25) ||
+				(GetClass() == ROGUE && GetLevel() >= 30) ||
+				(GetClass() == MONK && GetLevel() >= 35) ||
+				(GetClass() == RANGER && GetLevel() >= 35) ||
+				(GetClass() == BARD && GetLevel() >= 58)
 				) {
 				SetSkill((SkillUseTypes)SkillRiposte, 1);
 			}
 		}
 		if (GetSkill(SkillFeignDeath) == 0) {
 			if (
-				(GetClass() == MONK && GetLevel() >= 1)
+				(GetClass() == MONK && GetLevel() >= 1) ||
 				(GetClass() == SHADOWKNIGHT && GetLevel() >= 1)
 				) {
 				SetSkill((SkillUseTypes)SkillFeignDeath, 1);
