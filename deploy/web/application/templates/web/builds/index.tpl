@@ -597,7 +597,9 @@
 		</div>
 
 
-
+		<script type="text/javascript">
+		var initialHash = "{$hash}";
+		</script>
 	</div>
   </div>
  </div>

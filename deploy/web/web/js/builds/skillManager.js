@@ -137,10 +137,20 @@ function updateStats() {
 }
 
 function loadHash(hash) {
-	var h = hash.replace("#","");
-	$("div.skill").each(function(index) {
-		$(this).attr("data-points", Math.min(h.charAt(index),parseInt($(this).attr("data-max"))));
-	});
+	hash = hash.toString()
+	if (typeof hash != 'string') {
+		console.log("Hash is not a string");
+		return
+	}
+	
+	hash = hash.replace("#","");
+
+	for (var i = 0; i < 53; i++) {
+		if ($("#skill-"+i).length && $("#skill-"+i).attr("data-points").length) {
+			console.log(i+":"+hash.charAt(i));
+			$("#skill-"+i).attr("data-points", Math.min(hash.charAt(i),parseInt($("#skill-"+i).attr("data-max"))));
+		}
+	}
 	updateStats();
 }
 
@@ -157,6 +167,8 @@ function getHash() {
 }
 
 $(document).ready(function () {
+
+	loadHash(initialHash);
 	$('div.skill').mousedown(handleMousedown);
 	$('div.skill').mouseup(handleMouseup);
 	$("div.treewrapper").bind("contextmenu", function() { return false; });
