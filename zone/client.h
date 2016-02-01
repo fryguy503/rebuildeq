@@ -1309,6 +1309,8 @@ public:
 	const char * GetSession();
 
 	uint32 GetBuildRank(uint8 classid, uint32 rankid);
+	uint8 GetRottenCoreCounters();
+	void AddRottenCoreCounter(uint8 amount);
 
 protected:
 	friend class Mob;

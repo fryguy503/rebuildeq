@@ -8848,3 +8848,22 @@ uint32 Client::GetBuildRank(uint8 classid, uint32 rankid) {
 	}
 	return 0;
 }
+
+uint8 Client::GetRottenCoreCounters() {
+	if (m_epp.rotten_core_timeout < time(nullptr)) {
+		m_epp.rotten_core = 0;
+	}
+	return m_epp.rotten_core;
+}
+
+void Client::AddRottenCoreCounter(uint8 amount) {
+
+	if (m_epp.rotten_core_timeout < time(nullptr)) {
+		m_epp.rotten_core = 0;
+	}
+	m_epp.rotten_core += amount;
+	m_epp.rotten_core_timeout = time(nullptr) + 18;
+	if (m_epp.rotten_core > GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE)) {
+		m_epp.rotten_core = GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE);
+	}
+}

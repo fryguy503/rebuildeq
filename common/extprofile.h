@@ -59,6 +59,8 @@ struct ExtendedProfile_Struct {
 	char				session[32];
 	uint32				session_timeout;
 	char				build[53];
+	uint8				rotten_core; //SK only skill, not saved, a temp buff
+	uint32				rotten_core_timeout; //SK only skill, timeout for temp buff
 };
 
 #pragma pack()
