@@ -15,7 +15,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 		$class =  strtolower($this->request->param('class'));
 		$styles = array();
-		$skills = array();
+		
 		
 
 		//Validate Session
@@ -167,6 +167,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$styles[0] = "Prophet";
 			$styles[1] = "Oracle";
 			$styles[2] = "Elder";
+			$skills = $this->get_skills($class);
 			break;
 			//==================WARRIOR======================
 			case "warrior":
@@ -189,12 +190,251 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//==================SHADOWKNIGHT======================
 			case "shadowknight":
 			default:
+			$class = "shadowknight";
 			$fullName = "Shadow Knight";
 			$this->template->monogram = 5;
 			$desc = "Shadow Knights are unholy knights.<br> Their 3 styles focus tanking by taking blood of their victims, dealing damage with spears and other abilities, or crowd control pulling.";
 			$styles[0] = "Bloodreaver";
 			$styles[1] = "Defiler";
 			$styles[2] = "Revenant";
+			$skills = $this->get_skills($class);
+			break;
+		}
+		$this->template->skills = $skills;
+		$this->template->styles = $styles;
+		$this->template->site->image = "http://rebuildeq.com/images/monograms/".$this->template->monogram.".gif";
+		$this->template->site->title = $fullName;
+		$this->template->fullName = $fullName;
+		$this->template->classDescription = $desc;
+		$this->template->site->description = $desc;
+	}
+
+	private function convert_class($class) {
+		if ($class == 1) return "warrior";
+		if ($class == 2) return "cleric";
+		if ($class == 3) return "paladin";
+		if ($class == 4) return "ranger";
+		if ($class == 5) return "shadowknight";
+		if ($class == 6) return "druid";
+		if ($class == 7) return "monk";
+		if ($class == 8) return "bard";
+		if ($class == 9) return "rogue";
+		if ($class == 10) return "shaman";
+		if ($class == 11) return "necromancer";
+		if ($class == 12) return "wizard";
+		if ($class == 13) return "magician";
+		if ($class == 14) return "enchanter";		
+		return "shadowknight";
+	}
+
+
+	private function get_skills($class) {
+
+		$skills = array();
+		switch($class) {
+
+			//==================SHAMAN======================
+			case "shaman":
+
+			//0
+			$newSkill = new stdClass();
+			$newSkill->title = "Spirit of Speed";
+			$newSkill->desc = 'Spirit of Wolf lasts <em data-base="20">20</em>% longer<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[0] = $newSkill;
+			//1
+			//2
+			$newSkill = new stdClass();
+			$newSkill->title = "Whispering Chant";
+			$newSkill->desc = 'Slows and heals now generate <em data-base="5">5</em>% less hate<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
+			$skills[2] = $newSkill;
+			//3
+			//4
+			$newSkill = new stdClass();
+			$newSkill->title = "Extended Haste";
+			$newSkill->desc = 'Improves Haste Spell duration by <em data-base="30">30</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";
+			$skills[4] = $newSkill;
+			//5
+			//6
+			$newSkill = new stdClass();
+			$newSkill->title = "Turgur's Echo";
+			$newSkill->desc = 'When a slow resists, gives a <em data-base="5">5</em>% chance it will still land<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[6] = $newSkill;			
+			//7
+			//8
+			/*$newSkill = new stdClass();
+			$newSkill->title = "Zevfeer's Feast";
+			$newSkill->desc = 'Improves Zevfeer\'s Bite to give an additional <em data-base="+100">+100</em>% health and an additional <em data-base="+100">+100</em> mana<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-9.png";	
+			$skills[8] = $newSkill;
+			//9
+			//10
+			$newSkill = new stdClass();
+			$newSkill->title = "Sworn Enemy";
+			$newSkill->desc = 'Causes intense hatred of target, where any spell damage dealt causes an additional <em data-base="+400">+400</em> hate<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-10.png";	
+			$skills[10] = $newSkill;
+			//11
+			//12
+			//13
+			$newSkill = new stdClass();
+			$newSkill->title = "Banshee's Mirror";
+			$newSkill->desc = 'Improves Damage Mitigation by <em data-base="+6">+6</em>% for <em data-base="+30">30</em> seconds <span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
+			$skills[13] = $newSkill;
+			//14
+			//15
+			//16
+			$newSkill = new stdClass();
+			$newSkill->title = "Aura of Vampirism";
+			$newSkill->desc = 'Grants the entire group <em data-base="+4">+4</em>% spell vampirism and <em data-base="+10">+10</em>% melee vampirism<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
+			$skills[16] = $newSkill;
+			*/
+			//17
+			// TIER 2
+			//18
+			$newSkill = new stdClass();
+			$newSkill->title = "Spiritual Healing";
+			$newSkill->desc = 'Heals recover an additional <em data-base="20">20</em>% health<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
+			$skills[18] = $newSkill;
+			//19
+			//20
+			$newSkill = new stdClass();
+			$newSkill->title = "Focus";
+			$newSkill->desc = 'Each rank causes Inner Fire and greater Focus-like spells to inherit statistic buff effects as well<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
+			$skills[20] = $newSkill;
+			//21
+			//22
+			$newSkill = new stdClass();
+			$newSkill->title = "Cannibalize";
+			$newSkill->desc = 'Cannibalize grants <em data-base="10">10</em>% additional conversion<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
+			$skills[22] = $newSkill;
+			//23
+			//24
+			$newSkill = new stdClass();
+			$newSkill->title = "Mending Cure";
+			$newSkill->desc = 'When a disease, poison, or curse is cured, a heal over time is applied to the target for <em data-base="6">6</em> seconds<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$skills[24] = $newSkill;
+			//25
+			//26
+			$newSkill = new stdClass();
+			$newSkill->title = "Blood Oath";
+			$newSkill->desc = 'Increases damage by <em data-base="+10">+10</em>%, while decreasing healing effects by -<em data-base="10">10</em>%, AC by -<em data-base="10">10</em>, and all resistances by -<em data-base="20">20</em>.<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[26] = $newSkill;					
+			//27
+			//28
+			/*$newSkill = new stdClass();
+			$newSkill->title = "Gift of Urash";
+			$newSkill->desc = 'Increases all skill modifiers by <em data-base="+5">+5</em>%, stacks up to <em data-base="1">1</em> times<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
+			$skills[28] = $newSkill;*/
+			//29
+			//30
+			//31
+			$newSkill = new stdClass();
+			$newSkill->title = "Reinforce Torpor";
+			$newSkill->desc = 'Reduces Torpor snare by <em data-base="20">20</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
+			$skills[31] = $newSkill;
+			//32
+			//33
+			//34
+			/*$newSkill = new stdClass();
+			$newSkill->title = "Bash of Death";
+			$newSkill->desc = 'Causes a harm touch chance when bashing a target, damage is improved based on stacks of Gift of Urash by <em data-base="+20">+20</em>% damage<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
+			$skills[34] = $newSkill;*/
+			//35
+			// TIER 3
+			//36
+			$newSkill = new stdClass();
+			$newSkill->title = "Fury";
+			$newSkill->desc = 'Fleeting Fury now grants a self-only proc line that deals <em data-base="50">50</em> damage<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[36] = $newSkill;
+			//37
+			//38
+			$newSkill = new stdClass();
+			$newSkill->title = "Poison";
+			$newSkill->desc = 'All poison based DoTs deal <em data-base="10">10</em>% more damage<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";
+			$skills[38] = $newSkill;
+			//39
+			//40
+			$newSkill = new stdClass();
+			$newSkill->title = "Companion";
+			$newSkill->desc = 'Summons a spiritual companion equal to your level with <em data-base="5">5</em>% statistic bonus<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
+			$skills[40] = $newSkill;
+			//41
+			//42
+			$newSkill = new stdClass();
+			$newSkill->title = "Reinforce";
+			$newSkill->desc = 'Statistic Buffs now grant non-stackable bonus procs with<em data-base="20">20</em>% power<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$skills[42] = $newSkill;
+			//43
+			/*$newSkill = new stdClass();
+			$newSkill->title = "Reinforce";
+			$newSkill->desc = 'Statistic Buffs now grant non-stackable bonus procs with<em data-base="20">20</em>% power<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$skills[43] = $newSkill;*/
+			//44
+			$newSkill = new stdClass();
+			$newSkill->title = "Form of the Bear";
+			$newSkill->desc = 'Form of the Bear grants <em data-base="2">2</em>% additional accuracy, attack, and double attack<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[44] = $newSkill;					
+			//45
+			//46
+			/*$newSkill = new stdClass();
+			$newSkill->title = "Form of the Bear";
+			$newSkill->desc = 'Form of the Bear grants <em data-base="2">2</em>% additional accuracy, attack, and double attack<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[46] = $newSkill;					*/
+			//47
+			//48
+			/*$newSkill = new stdClass();
+			$newSkill->title = "Nightmare";
+			$newSkill->desc = 'Fear now causes target to freeze in panic and lasta an additional <em data-base="4">4</em> seconds<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
+			$skills[48] = $newSkill;					
+			//49
+			//50
+			$newSkill = new stdClass();
+			$newSkill->title = "Mini Minion";
+			$newSkill->desc = 'Causes your pet to summon a pet and attack target with a <em data-base="2">2</em>% chance <span class="perLevel"> per level</span> the target will not bring allies.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
+			$skills[50] = $newSkill;*/
+			//51
+			//52
+			$newSkill = new stdClass();
+			$newSkill->title = "Avatar";
+			$newSkill->desc = 'Avatar grants a temporary buff allowing triple attack and a spirit strike proc when used on self with <em data-base="2">2</em> attacks<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-7.png";
+			$skills[52] = $newSkill;
+			//53
+			break;
+			//==================WARRIOR======================
+			case "warrior":
+
+			break;
+			//==================WIZARD======================
+			case "wizard":
+
+			break;
+			//==================SHADOWKNIGHT======================
+			case "shadowknight":
+			default:
 			//0
 			$newSkill = new stdClass();
 			$newSkill->title = "Soul Link";
@@ -370,34 +610,11 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill->desc = 'Causes all nearby targets to be mesmerized for <em data-base="10">10</em> while feigning death. Grants a <em data-base="2">2</em>% chance for a burst of <em data-base="2">2</em> seconds, then forget all aggressions.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-7.png";
 			$skills[52] = $newSkill;
-			//53		
+			//53
+		
 			break;
 		}
-		$this->template->skills = $skills;
-		$this->template->styles = $styles;
-		$this->template->site->image = "http://rebuildeq.com/images/monograms/".$this->template->monogram.".gif";
-		$this->template->site->title = $fullName;
-		$this->template->fullName = $fullName;
-		$this->template->classDescription = $desc;
-		$this->template->site->description = $desc;
-	}
-
-	private function convert_class($class) {
-		if ($class == 1) return "warrior";
-		if ($class == 2) return "cleric";
-		if ($class == 3) return "paladin";
-		if ($class == 4) return "ranger";
-		if ($class == 5) return "shadowknight";
-		if ($class == 6) return "druid";
-		if ($class == 7) return "monk";
-		if ($class == 8) return "bard";
-		if ($class == 9) return "rogue";
-		if ($class == 10) return "shaman";
-		if ($class == 11) return "necromancer";
-		if ($class == 12) return "wizard";
-		if ($class == 13) return "magician";
-		if ($class == 14) return "enchanter";		
-		return "shadowknight";
+		return $skills;
 	}
 }
 
