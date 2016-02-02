@@ -325,11 +325,11 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$skills[24] = $newSkill;
 			//25
 			//26
-			$newSkill = new stdClass();
+			/*$newSkill = new stdClass();
 			$newSkill->title = "Blood Oath";
 			$newSkill->desc = 'Increases damage by <em data-base="+10">+10</em>%, while decreasing healing effects by -<em data-base="10">10</em>%, AC by -<em data-base="10">10</em>, and all resistances by -<em data-base="20">20</em>.<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
-			$skills[26] = $newSkill;					
+			$skills[26] = $newSkill;					*/
 			//27
 			//28
 			/*$newSkill = new stdClass();
