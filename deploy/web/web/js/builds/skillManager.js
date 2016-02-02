@@ -74,6 +74,7 @@ function updatePoints(skillHandle, change) {
 	if (change == -1 && !isTest) { //ignore right clicks
 		return
 	}
+
 	if (typeof classLevel == 'number' && grandTotal >= classLevel) { //stop spending once they hit max
 		return;
 	}
@@ -102,18 +103,26 @@ function updatePoints(skillHandle, change) {
 			}
 		}
 	}
+	console.log(change+","+points+","+max);
 
-	if (!isTest) { //Request change to server
+	if (!isTest && points <= max) { //Request change to server
 		isLocked = true;
 		$.ajax({
 			type: "POST",
 			url: "/rest/builds/update",
 			data: "session="+session+"&buildIndex="+buildIndex,
 			success: function (result) {
-				console.log("Success:"+result);
-				skillHandle.attr("data-points", points);
-				updateTree(tree);
-				updateStats();
+				rest = JSON.parse(result);
+				if (rest.Status == 1) {
+					console.log("Success:"+result);
+					skillHandle.attr("data-points", points);
+					updateTree(tree);
+					updateStats();	
+				} else {
+					console.log("Failure:"+result);
+					console.log(rest.Message);
+				}
+				
 				isLocked = false;
 			},
 			error: function (result, status, xhr) {
