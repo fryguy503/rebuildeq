@@ -31,6 +31,13 @@ class Controller_Rest_Builds extends Template_Rest_Core {
 			$this->rest->Message = "Invalid Build Before Set";
 			return;
 		}
+
+		//Clean old build since it's malformed.
+		if ($build != $character->build_data) {
+			$data = array('build_data' => $build);
+			DB::update('character_data')->set($data)->where('session', "=", $session)->limit(1)->execute();
+		}
+
 		$newBuild = $build;
 		$newBuild[$buildIndex] = intval($newBuild[$buildIndex]) + 1;
 		$newBuild = Build::clean($newBuild);
@@ -44,7 +51,7 @@ class Controller_Rest_Builds extends Template_Rest_Core {
 		}
 
 		$data = array('build_data' => $newBuild);
-		$query = DB::update('character_data')->set($data)->where('session', "=", $session)->limit(1)->execute();
+		$query = DB::update('character_data')->set($data)->where('session', "=", $session)->where('build_data', '=', $build)->limit(1)->execute();		
 		$this->rest->Status = 1;
 		$this->rest->oldBuild = $build;
 		$this->rest->newBuild = $newBuild;
