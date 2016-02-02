@@ -8831,14 +8831,30 @@ const char* Client::GetSession() {
 
 void Client::RefreshBuild() {
 	//Check if session is active, if so, refresh
-	if (time(nullptr) <= m_epp.session_timeout) {		
+	if (time(nullptr) <= m_epp.session_timeout) {
+		std::string oldBuild = m_epp.build;
 		std::string query = StringFormat(
 			"SELECT `build_data` FROM character_data WHERE `id` = %i LIMIT 1", CharacterID());
 		auto results = database.QueryDatabase(query); int r = 0;
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			strcpy(m_epp.build, row[0]);
 		}
-		Message(0, m_epp.build);
+		
+		if (strcmp(oldBuild.c_str(), m_epp.build) != 0) {
+			for (uint32 i = 0; i < 53; i++) {
+				if (sizeof(m_epp.build) < i || sizeof(oldBuild.c_str()) < i) {
+					continue; //ignore lengths less than i
+				}
+				uint8 n = (uint8(m_epp.build[i] - '0'));
+				uint8 o = (uint8(oldBuild[i] - '0'));
+				if (n > 5 || n < 1 || o > 5 || o < 1) {
+					continue; //ignore bad fields
+				}
+				if (n > o) {
+					Message(0, "You have unlocked %u rank %u!", i, n);
+				}
+			}
+		}
 	}
 }
 

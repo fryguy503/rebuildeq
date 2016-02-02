@@ -528,7 +528,7 @@ bool Client::Process() {
 			DoEnduranceRegen();
 			BuffProcess();
 			DoStaminaUpdate();
-
+			RefreshBuild();
 			if(tribute_timer.Check()) {
 				ToggleTribute(true);	//re-activate the tribute.
 			}

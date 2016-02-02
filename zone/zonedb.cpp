@@ -1438,8 +1438,10 @@ bool ZoneDatabase::SaveCharacterInventorySnapshot(uint32 character_id){
 
 bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, PlayerProfile_Struct* pp, ExtendedProfile_Struct* m_epp){
 	
-	//char buildbuffer[36];
+	//char buildbuffer[53];
 	//DoEscapeString(buildbuffer, m_epp->build, strlen(m_epp->build));	
+	std::string buildbuffer = m_epp->build;
+	buildbuffer.erase(53);
 	uint32 sessionTimeout = m_epp->session_timeout;
 	if (sessionTimeout == 0) {
 		sessionTimeout = 1454274245;
@@ -1740,7 +1742,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		m_epp->expended_aa,
 		EscapeString(m_epp->session).c_str(),
 		sessionTimeout,
-		EscapeString(m_epp->build).c_str(),
+		EscapeString(buildbuffer).c_str(),
 		m_epp->last_invsnapshot_time
 	);
 	//Log.Out(Logs::General, Logs::Zone_Server);
