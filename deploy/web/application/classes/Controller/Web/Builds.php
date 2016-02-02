@@ -45,7 +45,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 						die("invalid!");
 					}
 					$this->template->hash = $build;
-					echo $build;
+					//echo $build;
 				}
 				//guildname invalid
 				$this->template->character = $character;
@@ -379,6 +379,21 @@ class Controller_Web_Builds extends Template_Web_Core {
 	}
 
 	private function convert_class($class) {
-		if ($class == 0) return "bard";
+		if ($class == 1) return "warrior";
+		if ($class == 2) return "cleric";
+		if ($class == 3) return "paladin";
+		if ($class == 4) return "ranger";
+		if ($class == 5) return "shadowknight";
+		if ($class == 6) return "druid";
+		if ($class == 7) return "monk";
+		if ($class == 8) return "bard";
+		if ($class == 9) return "rogue";
+		if ($class == 10) return "shaman";
+		if ($class == 11) return "necromancer";
+		if ($class == 12) return "wizard";
+		if ($class == 13) return "magician";
+		if ($class == 14) return "enchanter";		
+		return "shadowknight";
 	}
 }
+
