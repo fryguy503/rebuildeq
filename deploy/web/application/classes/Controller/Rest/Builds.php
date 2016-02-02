@@ -26,8 +26,9 @@ class Controller_Rest_Builds extends Template_Rest_Core {
 			return;
 		}
 		$build = $character->build_data;
+		$level = $character->level;
 		$build = Build::clean($build);
-		if (!Build::validate($build)) {
+		if (!Build::validate($build, $level)) {
 			$this->rest->Message = "Invalid Build Before Set";
 			return;
 		}
@@ -45,7 +46,7 @@ class Controller_Rest_Builds extends Template_Rest_Core {
 			$this->rest->Message = "Changes discarded, old and new builds are same.";
 			return;
 		}
-		if (!Build::validate($newBuild)) {
+		if (!Build::validate($newBuild, $level)) {
 			$this->rest->Message = "Invalid build request sent";
 			return;
 		}
@@ -57,15 +58,5 @@ class Controller_Rest_Builds extends Template_Rest_Core {
 		$this->rest->newBuild = $newBuild;
 		$this->rest->Message = "Success!";
 		return;
-	}
-
-	public function validate_build($character, $build) {
-		if (empty($build)) {
-			return false;
-		}
-		if (empty($character)) {
-			return false;
-		}
-		return true;
 	}
 }

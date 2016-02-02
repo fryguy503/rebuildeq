@@ -41,7 +41,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 				$class = $this->convert_class($tmpChar->class);
 				if (!empty($tmpChar->build_data)) {
 					$build = Build::clean($tmpChar->build_data);
-					if (!Build::validate($build)) {
+					if (!Build::validate($build, $tmpChar->level)) {
 						die("invalid!");
 					}
 					$this->template->hash = $build;

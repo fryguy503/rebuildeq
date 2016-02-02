@@ -16,14 +16,17 @@ class Build {
 		return $build;
 	}
 
-	public static function validate($build) {
+	public static function validate($build, $level) {
 		$tier1 = 0;
 		$tier2 = 0;
 		$tier3 = 0;
 		$tier4 = 0;
 		$tier5 = 0;
 		$tier6 = 0;
-
+		$level = intval($level);
+		if ($level > 60 || $level < 1) {
+			return false;
+		}
 		
 		//Validate For tier-reqs TOTALS
 		for ($i = 0; $i < 53; $i++) {
@@ -46,6 +49,9 @@ class Build {
 		else if ($tier3 >= 1 && ($tier2 < 5 || $tier1 < 5)) return false;
 		else if ($tier2 >= 1 && ($tier1 < 5)) return false;
 
+		if (($tier1+$tier2+$tier3+$tier4+$tier5+$tier6) > $level) { //Too many points spent
+			return false;
+		}
 
 		return true;
 	}
