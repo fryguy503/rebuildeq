@@ -1,6 +1,7 @@
 var mousedownbegin;
 var lastTouched;
 var touchtimer;
+var isLocked = false;
 
 function handleMousedown(event) {
 	event.preventDefault();
@@ -46,6 +47,9 @@ function checkLongTouch(fromTimer) {
 }
 
 function updatePoints(skillHandle, change) {
+	if (isLocked) {
+		return;
+	}
 	var tree = skillHandle.parent().parent();
 	var thisLevel = parseInt(skillHandle.parent().attr("data-level"));
 	var invested = parseInt(skillHandle.parent().attr("data-invested"));
@@ -98,10 +102,38 @@ function updatePoints(skillHandle, change) {
 			}
 		}
 	}
-	
-	skillHandle.attr("data-points", points);
-	updateTree(tree);
-	updateStats();
+
+	if (!isTest) { //Request change to server
+		isLocked = true;
+		$.ajax({
+			type: "POST",
+			url: "/rest/builds/update",
+			data: "session="+session+"&buildIndex="+buildIndex,
+			success: function (result) {
+				console.log("Success:"+result);
+				skillHandle.attr("data-points", points);
+				updateTree(tree);
+				updateStats();
+				isLocked = false;
+			},
+			error: function (result, status, xhr) {
+				console.log("Error:"+result);
+				isLocked = false;
+			},
+			timeout: function (result) {
+				console.log("Timeout:"+result);
+				isLocked = false;
+			},
+			complete: function (result) {
+				console.log("Complete:"+result)
+				isLocked = false;
+			}
+		});
+	} else {
+		skillHandle.attr("data-points", points);
+		updateTree(tree);
+		updateStats();
+	}
 }
 
 function updateTree(treeHandle) {
