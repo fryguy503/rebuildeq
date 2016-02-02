@@ -15,7 +15,19 @@ class Controller_Web_Builds extends Template_Web_Core {
 		$class =  strtolower($this->request->param('class'));
 		$styles = array();
 		$skills = array();
-		$this->template->hash = "0";
+		
+		$session = $this->request->param('session');
+
+		//Get session from DB
+		$build = $this->request->query('build');
+		if (empty($session) && !empty($build)) {
+			//ValidateHash
+			if (!Build::validate($build)) {
+				die("Invalid build");
+			}
+			$this->template->hash = $build;
+		}
+
 		switch ($class) {
 			//==================BARD======================
 			case "bard":

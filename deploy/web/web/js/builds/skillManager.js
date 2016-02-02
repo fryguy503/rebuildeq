@@ -137,13 +137,9 @@ function updateStats() {
 }
 
 function loadHash(hash) {
-	hash = hash.toString()
-	if (typeof hash != 'string') {
-		console.log("Hash is not a string");
-		return
-	}
-	
+	hash = hash.toString();
 	hash = hash.replace("#","");
+	console.log("Loading hash"+hash);
 
 	for (var i = 0; i < 53; i++) {
 		if ($("#skill-"+i).length && $("#skill-"+i).attr("data-points").length) {
@@ -166,15 +162,32 @@ function getHash() {
 	return hash;
 }
 
+function getHashFromParams() {
+
+    var hashParams = {};
+    var e,
+        a = /\+/g,  // Regex for replacing addition symbol with a space
+        r = /([^&;=]+)=?([^&;]*)/g,
+        d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
+        q = window.location.hash.substring(1);
+
+    while (e = r.exec(q))
+       hashParams[d(e[1])] = d(e[2]);
+   //console.log(hashParams->build);
+   //console.log(hashParams);
+    //return hashParams;
+}
+
 $(document).ready(function () {
 
-	loadHash(initialHash);
+	if (typeof initialHash == 'string' || typeof initialHash == 'number') {
+		loadHash(initialHash);
+	} else if (getHashFromParams()) {
+
+	}
 	$('div.skill').mousedown(handleMousedown);
 	$('div.skill').mouseup(handleMouseup);
 	$("div.treewrapper").bind("contextmenu", function() { return false; });
-	if (window.location.hash != "") {
-		loadHash(window.location.hash);
-	}
 
 	$("div.tree").each(function(index) {
 		updateTree($(this));

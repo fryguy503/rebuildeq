@@ -597,9 +597,11 @@
 		</div>
 
 
+		{if !empty($hash)}
 		<script type="text/javascript">
 		var initialHash = "{$hash}";
 		</script>
+		{/if}
 	</div>
   </div>
  </div>
