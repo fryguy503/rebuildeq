@@ -12,6 +12,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 	}
 
 	public function action_index() {
+
 		$class =  strtolower($this->request->param('class'));
 		$styles = array();
 		$skills = array();
@@ -19,19 +20,32 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 		//Validate Session
 		$session = $this->request->param('session');
-		if (!empty($session)) {
 
-			$tmpChar = DB::select('name, last_name, class, level, build_data')->from('character_data')->where('session', '=', $session)->as_object()->execute()->current();
-			if (!empty($tmpChar)) {
+		if (!empty($session)) {
+			//First see if session exists
+			$sessionObject = DB::select('session')->from('character_data')->where('session', '=', $session)->as_object()->execute()->current();
+			if (empty($sessionObject)) {
+				$this->template->errorMessage = "Invalid Session Provided. Go in game and type #builds to create a new session.";
+			}
+
+			$tmpChar = DB::select('name, last_name, class, level, build_data')->from('character_data')->where('session', '=', $session)->where('session_timeout', '>=', DB::expr('NOW()'))->limit(1)->as_object()->execute()->current();
+			if (empty($tmpChar)) {
+				$this->template->errorMessage = "Expired Session provided. Go in game and type #builds to create a new session.";
+			} else {
 				$character = new stdClass();
 				$character->name = $tmpChar->name;
 				if (!empty($tmpChar->last_name)) {
-					$character->name += " "+$tmpChar->last_name;
+					$character->name .= " ".$tmpChar->last_name;
 				}
-				$character->level = 5;//$tmpChar->level;
+				$character->level = $tmpChar->level;
 				$class = $this->convert_class($tmpChar->class);
-				if (!empty($tmpChar->build_date)) {
-					$this->template->hash = $tmpChar->build_date;
+				if (!empty($tmpChar->build_data)) {
+					$build = Build::clean($tmpChar->build_data);
+					if (!Build::validate($build)) {
+						die("invalid!");
+					}
+					$this->template->hash = $build;
+					echo $build;
 				}
 				//guildname invalid
 				$this->template->character = $character;
