@@ -1308,6 +1308,7 @@ public:
 	//Shin: Session generation
 	const char * GetSession();
 
+	void RefreshBuild();
 	uint32 GetBuildRank(uint8 classid, uint32 rankid);
 	uint8 GetRottenCoreCounters();
 	void AddRottenCoreCounter(uint8 amount);

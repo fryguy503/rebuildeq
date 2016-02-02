@@ -3878,6 +3878,7 @@ void command_bind(Client *c, const Seperator *sep)
 //List all available builds
 void command_builds(Client *c, const Seperator *sep)
 {
+	c->RefreshBuild();
 	const char *windowTitle = "Builds";
 	std::string windowText;
 	std::string hash = c->GetSession();	
