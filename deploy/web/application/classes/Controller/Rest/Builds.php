@@ -3,8 +3,9 @@
 class Controller_Rest_Builds extends Template_Rest_Core {
 
 	public function action_update() {
-		$buildIndex = $this->request->post('buildindex');
-		if (empty($buildIndex) || intval($buildIndex) > 53 || intval($buildIndex) < 1) {
+		$buildIndex = $this->request->post('buildIndex');
+		$this->rest->buildIndex = $buildIndex;
+		if (intval($buildIndex) > 53 || intval($buildIndex) < 0) {
 			$this->rest->Message = "Invalid buildIndex: ".intval($buildIndex);
 			return;
 		}
@@ -56,6 +57,7 @@ class Controller_Rest_Builds extends Template_Rest_Core {
 		$this->rest->Status = 1;
 		$this->rest->oldBuild = $build;
 		$this->rest->newBuild = $newBuild;
+		$this->rest->buildIndex = $buildIndex;
 		$this->rest->Message = "Success!";
 		return;
 	}

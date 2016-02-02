@@ -42,10 +42,14 @@ class Controller_Web_Builds extends Template_Web_Core {
 				if (!empty($tmpChar->build_data)) {
 					$build = Build::clean($tmpChar->build_data);
 					if (!Build::validate($build, $tmpChar->level)) {
-						die("invalid!");
+						$oldBuild = $build;						
+						$build = "00000000000000000000000000000000000000000000000000000";
+						$build = Build::clean($build);
+						//mail("rebuildeq@gmail.com", "Invalid Build for ".$tmpChar->name, "The build raw:".$tmpChar->build_data."\nOld Build: $oldBuild\nResetting it to:".$build);
+						$data = array('build_data' => $build);
+						DB::update('character_data')->set($data)->where('session', "=", $session)->limit(1)->execute();
 					}
 					$this->template->hash = $build;
-					//echo $build;
 				}
 				//guildname invalid
 				$this->template->character = $character;
@@ -63,7 +67,6 @@ class Controller_Web_Builds extends Template_Web_Core {
 			}
 			$this->template->hash = $build;
 		}
-
 
 		switch ($class) {
 			//==================BARD======================
