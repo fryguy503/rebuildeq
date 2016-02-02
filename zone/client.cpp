@@ -8829,6 +8829,19 @@ const char* Client::GetSession() {
 	return m_epp.session;
 }
 
+void Client::RefreshBuild() {
+	//Check if session is active, if so, refresh
+	if (time(nullptr) <= m_epp.session_timeout) {		
+		std::string query = StringFormat(
+			"SELECT `build_data` FROM character_data WHERE `id` = %i LIMIT 1", CharacterID());
+		auto results = database.QueryDatabase(query); int r = 0;
+		for (auto row = results.begin(); row != results.end(); ++row) {
+			strcpy(m_epp.build, row[0]);
+		}
+		Message(0, m_epp.build);
+	}
+}
+
 uint32 Client::GetBuildRank(uint8 classid, uint32 rankid) {
 	//ignore classes not applicable
 	if (GetClass() != classid) {
