@@ -49,6 +49,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 				}
 				//guildname invalid
 				$this->template->character = $character;
+				$this->template->session = $session;
 			}
 		}
 

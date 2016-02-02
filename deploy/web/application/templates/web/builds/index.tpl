@@ -630,12 +630,15 @@
 		<script type="text/javascript">
 		var classLevel = 60;
 		var isTest = true;
+		var session = "";
 		{if !empty($hash)}
 		var initialHash = "{$hash}";
+
 		{/if}
 		{if !empty($character)}
 		classLevel = {$character->level};
 		isTest = false;
+		session = "{$session}";
 		{/if}
 		</script>
 		
