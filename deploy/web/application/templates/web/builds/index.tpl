@@ -52,14 +52,12 @@
 				<div class="form-group">
 				<p>
 		          <label class="control-label">{$classDescription}</label><br>
-		         Required Level To Obtain: <span class="charLevel">1</span>
+		         Required Level To Obtain: <span class="charLevel">0</span>
 		          </p>
 		        </div>
 		    </form>
 		</div>
-
 		{else}
-
 		<div class="row">
 			<form class="well bs-component">
 				<div class="form-group">
