@@ -15,6 +15,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 		$class =  strtolower($this->request->param('class'));
 		$styles = array();
+		$skills = array();
 		
 		
 
