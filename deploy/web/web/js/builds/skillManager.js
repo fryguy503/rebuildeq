@@ -57,11 +57,20 @@ function updatePoints(skillHandle, change) {
 	grandTotal += parseInt($("#tree-2").find("span.totalPoints").text());
 	grandTotal += parseInt($("#tree-3").find("span.totalPoints").text());
 	var charLevel = parseInt($("span.charLevel").text());
+	var buildIndex = skillHandle.attr('id');
+	if (buildIndex.length < 6) {
+		console.log("Invalid build index");
+		return;		
+	}
+	buildIndex = parseInt(buildIndex.toString().substring(6));
+	if (buildIndex < 0 || buildIndex > 53) {
+		return;
+	}
+
 	if (change == -1 && !isTest) { //ignore right clicks
 		return
 	}
 	if (typeof classLevel == 'number' && grandTotal >= classLevel) { //stop spending once they hit max
-		console.log("Max spent");
 		return;
 	}
 
