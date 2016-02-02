@@ -4,6 +4,7 @@ class Build {
 
 	public static function validate($build) {
 		if (strlen($build) < 53) {
+			$build = str_pad($build, 53, "0");
 			return false;
 		}
 		$tier1 = 0;

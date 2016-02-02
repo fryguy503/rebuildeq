@@ -53,9 +53,20 @@ function updatePoints(skillHandle, change) {
 	var treeTotal = parseInt(tree.find("span.totalPoints").text());
 	var points = parseInt(skillHandle.attr("data-points"));
 	var max = parseInt(skillHandle.attr("data-max"));
-	//charLevel = 0;
+	var grandTotal = parseInt($("#tree-1").find("span.totalPoints").text());
+	grandTotal += parseInt($("#tree-2").find("span.totalPoints").text());
+	grandTotal += parseInt($("#tree-3").find("span.totalPoints").text());
 	var charLevel = parseInt($("span.charLevel").text());
-	console.log("Update points");
+	if (change == -1 && !isTest) { //ignore right clicks
+		return
+	}
+	if (typeof classLevel == 'number' && grandTotal >= classLevel) { //stop spending once they hit max
+		console.log("Max spent");
+		return;
+	}
+
+	$("span.charPointsLeft").text((classLevel - grandTotal));
+
 	if(change > 0) {
 		if (points < max && treeTotal >= 5 * thisLevel && charLevel < 60) {
 			++points;
@@ -78,6 +89,7 @@ function updatePoints(skillHandle, change) {
 			}
 		}
 	}
+	
 	skillHandle.attr("data-points", points);
 	updateTree(tree);
 	updateStats();
@@ -130,7 +142,13 @@ function updateStats() {
 			descriptions += "<div class='skillText'>" + $(this).children("div.description").html().replace("<h2>","<strong>").replace("</h2>", " " + p + ":</strong><div class='descriptionText'>") + "</div></div>";
 		}
 	});
-	console.log(getHash());
+	//console.log(getHash());
+
+	var grandTotal = parseInt($("#tree-1").find("span.totalPoints").text());
+	grandTotal += parseInt($("#tree-2").find("span.totalPoints").text());
+	grandTotal += parseInt($("#tree-3").find("span.totalPoints").text());
+	$("span.charPointsLeft").text((classLevel - grandTotal));
+
 //	$("div.descriptionContainer").html(descriptions);
 	//getHash();
 	//window.location.replace(url);

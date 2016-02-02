@@ -9,10 +9,12 @@
 		<div class="row">
 	        	<ul class="breadcrumb">
 	          		<li><a href="/builds">Builds</a></li>
-	          		<li class="active">{$fullName}</li>
+	          		{if empty($character)}<li class="active">{$fullName}</li>
+	          		{else}<li class="active">{$character->name}</li>
+	          		{/if}
 	        	</ul>
 	    </div>
-
+	    {if empty($character)}
 	     <div class="row">
 			<form class="well bs-component">
 				<div class="form-group">
@@ -45,6 +47,22 @@
 		    </form>
 		</div>
 
+		{else}
+
+		<div class="row">
+			<form class="well bs-component">
+				<div class="form-group">
+				<p>
+					<label class="control-label">{$character->level} {$fullName} {$character->name} {if !empty($character->guildName)}&lt;{$character->guildName}&gt;{/if}</label><br>
+					<span class="charPointsLeft">0</span> points left to spend.
+					<div style="display: none"><span class="charLevel">1</span></div>
+				</p>
+				</div>
+		    </form>
+		</div>
+
+		{/if}
+
   		<div class="row">
 			<form class="well bs-component">
 				<div class="form-group">
@@ -53,7 +71,7 @@
 		<div class="treewrapper green">
 			<div class="bglayer gray"></div>
 			<div class="bglayer color" style="height: 80px;"></div>
-			<div class="tree">
+			<div class="tree" id="tree-1">
 				<div class="tier" data-level="0" data-invested="0" data-total="0">
 					{$push = ""}
 					{$id = 0}
@@ -239,7 +257,7 @@
 		<div class="treewrapper blue">
 			<div class="bglayer gray"></div>
 			<div class="bglayer color" style="height: 80px;"></div>
-			<div class="tree">
+			<div class="tree" id="tree-2">
 				<div class="tier" data-level="0" data-invested="0" data-total="0">
 					{$push = ""}
 					{$id = 18}
@@ -419,7 +437,7 @@
 		<div class="treewrapper red">
 			<div class="bglayer gray"></div>
 			<div class="bglayer color" style="height: 80px;"></div>
-			<div class="tree" unselectable="on">
+			<div class="tree" id="tree-3" unselectable="on">
 				<div class="tier" data-level="0" data-invested="0" data-total="0">
 					{$push = ""}
 					{$id = 36}
@@ -597,11 +615,19 @@
 		</div>
 
 
-		{if !empty($hash)}
+		
 		<script type="text/javascript">
+		var classLevel = 60;
+		var isTest = true;
+		{if !empty($hash)}
 		var initialHash = "{$hash}";
-		</script>
 		{/if}
+		{if !empty($character)}
+		classLevel = {$character->level};
+		isTest = false;
+		{/if}
+		</script>
+		
 	</div>
   </div>
  </div>

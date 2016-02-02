@@ -16,17 +16,39 @@ class Controller_Web_Builds extends Template_Web_Core {
 		$styles = array();
 		$skills = array();
 		
-		$session = $this->request->param('session');
 
-		//Get session from DB
+		//Validate Session
+		$session = $this->request->param('session');
+		if (!empty($session)) {
+
+			$tmpChar = DB::select('name, last_name, class, level, build_data')->from('character_data')->where('session', '=', $session)->as_object()->execute()->current();
+			if (!empty($tmpChar)) {
+				$character = new stdClass();
+				$character->name = $tmpChar->name;
+				if (!empty($tmpChar->last_name)) {
+					$character->name += " "+$tmpChar->last_name;
+				}
+				$character->level = 5;//$tmpChar->level;
+				$class = $this->convert_class($tmpChar->class);
+				if (!empty($tmpChar->build_date)) {
+					$this->template->hash = $tmpChar->build_date;
+				}
+				//guildname invalid
+				$this->template->character = $character;
+			}
+		}
+
+
+		//Validate Build
 		$build = $this->request->query('build');
-		if (empty($session) && !empty($build)) {
+		if (empty($character) && !empty($build)) {
 			//ValidateHash
 			if (!Build::validate($build)) {
 				die("Invalid build");
 			}
 			$this->template->hash = $build;
 		}
+
 
 		switch ($class) {
 			//==================BARD======================
@@ -340,5 +362,9 @@ class Controller_Web_Builds extends Template_Web_Core {
 		$this->template->fullName = $fullName;
 		$this->template->classDescription = $desc;
 		$this->template->site->description = $desc;
+	}
+
+	private function convert_class($class) {
+		if ($class == 0) return "bard";
 	}
 }
