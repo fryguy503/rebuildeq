@@ -3877,11 +3877,13 @@ void command_bind(Client *c, const Seperator *sep)
 
 //List all available builds
 void command_builds(Client *c, const Seperator *sep)
-{	
+{
 	const char *windowTitle = "Builds";
 	std::string windowText;
-	std::string hash = c->GetSession();
-	windowText = "Your build options may be found below<br>LINK?<a href=\"http://rebuildeq.com/builds/"+hash+"/\">Build Link</a>End";
+	std::string hash = c->GetSession();	
+	windowText = "Your build options may be found below<br>LINK?<a href=\"http://rebuildeq.com/builds/";
+	windowText += GetEQClassName(c->GetClass());
+	windowText += + "/" + hash + "/\">Build Link</a>End";
 	c->SendPopupToClient(windowTitle, windowText.c_str());
 	return;
 }
