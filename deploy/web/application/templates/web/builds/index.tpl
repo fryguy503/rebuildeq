@@ -14,6 +14,17 @@
 	          		{/if}
 	        	</ul>
 	    </div>
+
+	    {if !empty($errorMessage)}
+ 		<div class="row">
+			<form class="well bs-component">
+				<div class="form-group">
+				<p>{$errorMessage}</p>
+		        </div>
+		    </form>
+		</div>
+	    {/if}
+
 	    {if empty($character)}
 	     <div class="row">
 			<form class="well bs-component">
