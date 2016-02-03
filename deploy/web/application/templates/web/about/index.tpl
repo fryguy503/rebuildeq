@@ -14,14 +14,14 @@
 			    </form>
 			</div>
 
-			{*<div class="row">
+			<div class="row">
 				<form class="well bs-component">
-				 <p class="text-center">Placeholder video</p>
+				 <p class="text-center">How builds work</p>
 					<div class="form-group">
-						<iframe style="display:block; margin: 0 auto;" width="560" height="315" src="https://www.youtube.com/embed/oh2rwUvnNxQ" frameborder="0" allowfullscreen></iframe>
+						<div class="text-center"><img src="/images/guide/build-guide.gif" border="1"></span>
 					</div>
 				</form>
-			</div>*}
+			</div>
 
 			<div class="row">
 				<form class="well bs-component">
