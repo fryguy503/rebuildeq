@@ -8839,37 +8839,50 @@ void Client::RefreshBuild() {
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			strcpy(m_epp.build, row[0]);
 		}
-		
+
 		if (strcmp(oldBuild.c_str(), m_epp.build) != 0) {
 			for (uint32 i = 0; i < 53; i++) {
-				if (sizeof(m_epp.build) < i || sizeof(oldBuild.c_str()) < i) {
-					continue; //ignore lengths less than i
-				}
+				//if (sizeof(m_epp.build) < i || sizeof(oldBuild.c_str()) < i) {
+				//	continue; //ignore lengths less than i
+				//}
+
 				uint8 n = (uint8(m_epp.build[i] - '0'));
 				uint8 o = (uint8(oldBuild[i] - '0'));
-				if (n > 5 || n < 1 || o > 5 || o < 1) {
+				//Message(0, "%u] %u => %u", i, o, n);
+				if (n > 5 || n < 1) {
 					continue; //ignore bad fields
 				}
 				if (n > o) {
-					Message(0, "You have unlocked %u rank %u!", i, n);
+					Message(270, "You have become better at %s! (%u)", GetBuildName(i), n);
 				}
 			}
 		}
 	}
 }
 
-uint32 Client::GetBuildRank(uint8 classid, uint32 rankid) {
+const char* Client::GetBuildName(uint32 id) {	
+	switch (this->GetClass()) {
+	case SHADOWKNIGHT:
+		if (id == 0) return "Soul Link";
+		else if (id == 2) return "Gouging Skin";
+		else if (id == 3) return "Hungering Aura";
+		break;
+	}
+	return "Unknown";
+}
+
+uint32 Client::GetBuildRank(uint8 classid, uint32 id) {
 	//ignore classes not applicable
 	if (GetClass() != classid) {
 		return 0;
 	}
 
 	//ignore invalid build structs
-	if (sizeof(m_epp.build) < rankid) {
+	if (sizeof(m_epp.build) < id) {
 		return 0;
 	}
 
-	char n = m_epp.build[rankid];
+	char n = m_epp.build[id];
 
 	//max rank is 5, minimum is 0
 	if ((uint32(n - '0')) <= 5 && (uint32(n - '0')) > 0) {

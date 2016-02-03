@@ -1309,6 +1309,7 @@ public:
 	const char * GetSession();
 
 	void RefreshBuild();
+	const char* GetBuildName(uint32 id);
 	uint32 GetBuildRank(uint8 classid, uint32 rankid);
 	uint8 GetRottenCoreCounters();
 	void AddRottenCoreCounter(uint8 amount);
