@@ -478,6 +478,9 @@ void Client::SendZoneInPackets()
 
 	//No idea why live sends this if even were not in a guild
 	SendGuildMOTD();
+	if (GetBuildUnspentPoints() > 0) {
+		Message(0, "You have unspent build points. Visit %s to spend them.", CreateSayLink("#builds", "builds").c_str());
+	}
 }
 
 void Client::SendLogoutPackets() {

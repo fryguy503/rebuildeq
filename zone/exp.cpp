@@ -975,6 +975,11 @@ void Client::SetLevel(uint8 set_level, bool command)
 		if (abilityCount > 0) {
 			Message(0, "You have learned %u new disciplines!", abilityCount);
 		}
+
+		//Build Stuff
+		if (GetBuildUnspentPoints() > 0) {
+			Message(0, "You have unspent build points. Visit %s to spend them.", CreateSayLink("#builds", "builds").c_str());
+		}
 	}
 	
 	
