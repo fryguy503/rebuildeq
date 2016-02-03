@@ -1308,8 +1308,11 @@ public:
 	//Shin: Session generation
 	const char * GetSession();
 
+	uint8 GetBuildUnspentPoints();
+
+	std::string GetBuildReport();
 	void RefreshBuild();
-	const char* GetBuildName(uint32 id);
+	std::string GetBuildName(uint32 id);
 	uint32 GetBuildRank(uint8 classid, uint32 rankid);
 	uint8 GetRottenCoreCounters();
 	void AddRottenCoreCounter(uint8 amount);

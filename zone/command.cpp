@@ -3880,11 +3880,19 @@ void command_builds(Client *c, const Seperator *sep)
 {
 	c->RefreshBuild();
 	const char *windowTitle = "Builds";
-	std::string windowText;
-	std::string hash = c->GetSession();	
-	windowText = "Your build options may be found below<br>LINK?<a href=\"http://rebuildeq.com/builds/";
-	windowText += GetEQClassName(c->GetClass());
-	windowText += + "/" + hash + "/\">Build Link</a>End";
+	uint8 unspent = c->GetBuildUnspentPoints();
+	std::string unspentMessage = "";
+	if (unspent > 0) {
+		unspentMessage = StringFormat("<c \"#FFDF00\">You have %u point%s available to spend.</c><br>", unspent, (unspent == 1) ? "" : "s");
+	}
+	
+	// align=\"center\"
+	std::string windowText = StringFormat("<table><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\>Click To Review Your Build</a></td></table>",
+		GetEQClassName(c->GetClass()),
+		c->GetSession()
+	);
+	windowText.append(unspentMessage);
+	windowText.append(c->GetBuildReport());
 	c->SendPopupToClient(windowTitle, windowText.c_str());
 	return;
 }

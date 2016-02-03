@@ -8829,6 +8829,36 @@ const char* Client::GetSession() {
 	return m_epp.session;
 }
 
+uint8 Client::GetBuildUnspentPoints() {
+	uint8 totalSpent = 0;
+	for (uint32 i = 0; i < 53; i++) {
+		uint8 points = (uint8(m_epp.build[i] - '0'));
+		if (points > 5 || points < 1) {
+			continue; //ignore bad fields
+		}
+		totalSpent += points;
+	}
+	if (totalSpent >= GetLevel()) {
+		return 0;
+	}
+	return (GetLevel() - totalSpent);
+}
+
+std::string Client::GetBuildReport() {
+
+	std::string report = "<c \"#004BFF\">";
+	for (uint32 i = 0; i < 53; i++) {
+		uint8 points = GetBuildRank(GetClass(), i);
+		if (points < 1) {
+			continue;
+		}
+		report.append(GetBuildName(i));
+		report.append(StringFormat("(%u)<br>", points));
+	}
+	report.append("</c>");
+	return report;
+}
+
 void Client::RefreshBuild() {
 	//Check if session is active, if so, refresh
 	if (time(nullptr) <= m_epp.session_timeout) {
@@ -8842,9 +8872,9 @@ void Client::RefreshBuild() {
 
 		if (strcmp(oldBuild.c_str(), m_epp.build) != 0) {
 			for (uint32 i = 0; i < 53; i++) {
-				//if (sizeof(m_epp.build) < i || sizeof(oldBuild.c_str()) < i) {
-				//	continue; //ignore lengths less than i
-				//}
+				if (sizeof(m_epp.build) < i || sizeof(oldBuild.c_str()) < i) {
+					continue; //ignore lengths less than i
+				}
 
 				uint8 n = (uint8(m_epp.build[i] - '0'));
 				uint8 o = (uint8(oldBuild[i] - '0'));
@@ -8860,7 +8890,7 @@ void Client::RefreshBuild() {
 	}
 }
 
-const char* Client::GetBuildName(uint32 id) {	
+std::string Client::GetBuildName(uint32 id) {	
 	switch (this->GetClass()) {
 	case SHADOWKNIGHT:
 		if (id == 0) return "Soul Link";
