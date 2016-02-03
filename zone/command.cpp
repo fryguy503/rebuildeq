@@ -3887,7 +3887,7 @@ void command_builds(Client *c, const Seperator *sep)
 	}
 	
 	// align=\"center\"
-	std::string windowText = StringFormat("<table><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\>Click To Review Your Build</a></td></table>",
+	std::string windowText = StringFormat("<table align=\"center\" width=\"100%\"><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\>Click To Review Your Build</a></td></tr></table>",
 		GetEQClassName(c->GetClass()),
 		c->GetSession()
 	);

@@ -8846,14 +8846,14 @@ uint8 Client::GetBuildUnspentPoints() {
 
 std::string Client::GetBuildReport() {
 
-	std::string report = "<c \"#004BFF\">";
+	std::string report = "----<br><c \"#1E90FF\">";
 	for (uint32 i = 0; i < 53; i++) {
 		uint8 points = GetBuildRank(GetClass(), i);
 		if (points < 1) {
 			continue;
 		}
 		report.append(GetBuildName(i));
-		report.append(StringFormat("(%u)<br>", points));
+		report.append(StringFormat(" (%u)<br>", points));
 	}
 	report.append("</c>");
 	return report;
@@ -8883,7 +8883,10 @@ void Client::RefreshBuild() {
 					continue; //ignore bad fields
 				}
 				if (n > o) {
-					Message(270, "You have become better at %s! (%u)", GetBuildName(i), n);
+					std::string message = "You have become better at ";
+					message.append(GetBuildName(i));
+					message.append(StringFormat("! (%u)", n));
+					Message(270, message.c_str());
 				}
 			}
 		}
