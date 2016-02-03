@@ -8896,17 +8896,6 @@ void Client::RefreshBuild() {
 	}
 }
 
-std::string Client::GetBuildName(uint32 id) {	
-	switch (this->GetClass()) {
-	case SHADOWKNIGHT:
-		if (id == 0) return "Soul Link";
-		else if (id == 2) return "Gouging Skin";
-		else if (id == 3) return "Hungering Aura";
-		break;
-	}
-	return "Unknown";
-}
-
 uint32 Client::GetBuildRank(uint8 classid, uint32 id) {
 	//ignore classes not applicable
 	if (GetClass() != classid) {
@@ -8944,4 +8933,68 @@ void Client::AddRottenCoreCounter(uint8 amount) {
 	if (m_epp.rotten_core > GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE)) {
 		m_epp.rotten_core = GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE);
 	}
+}
+
+
+std::string Client::GetBuildName(uint32 id) {
+	switch (this->GetClass()) {
+	case SHADOWKNIGHT:
+		if (id == 0) return "Soul Link";
+		//1
+		else if (id == 2) return "Gouging Skin";
+		//3
+		else if (id == 4) return "Hungering Aura";
+		//5
+		else if (id == 6) return "Deathbringer";
+		//7
+		else if (id == 8) return "Zevfeer's Feast";
+		//9
+		else if (id == 10) return "Sworn Enemy";
+		//11
+		//12
+		else if (id == 13) return "Banshee's Mirror";
+		//14
+		//15
+		else if (id == 16) return "Aura of Vampirism";
+		//17
+		else if (id == 18) return "Festering Spear";
+		//19
+		else if (id == 20) return "Festering Wound";
+		//21
+		else if (id == 22) return "Rotten Core";
+		//23
+		else if (id == 24) return "Lingering Pain";
+		//25
+		else if (id == 26) return "Blood Oath";
+		//27
+		else if (id == 28) return "Gift of Urash";
+		//29
+		//30
+		else if (id == 31) return "Unholy Focus";
+		//32
+		//33
+		else if (id == 34) return "Bash of Death";
+		//35
+		//tier3
+		else if (id == 36) return "Embrace Death";
+		//37
+		else if (id == 38) return "Darkness";
+		//39
+		else if (id == 40) return "Empathetic Soul";
+		//41
+		//42
+		else if (id == 43) return "Embrace Shadow";
+		//44
+		//45
+		else if (id == 46) return "Crippling Pain";
+		//47
+		else if (id == 48) return "Nightmare";
+		//49
+		else if (id == 50) return "Mini Minion";
+		//51
+		else if (id == 52) return "Cry of the Banshee";
+		//53
+		break;
+	}
+	return "Unknown";
 }
