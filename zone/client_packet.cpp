@@ -1768,12 +1768,17 @@ void Client::Handle_OP_AAAction(const EQApplicationPacket *app)
 		SendAlternateAdvancementStats();
 	}
 	else if (action->action == aaActionSetEXP) {
+		if (m_epp.perAA > 0) {
+			//Message_StringID(0, AA_OFF);
+			m_epp.perAA = 0;
+		}
+		/*
 		if (m_epp.perAA == 0)
 			Message_StringID(0, AA_ON);
 		m_epp.perAA = action->exp_value;
 		if (m_epp.perAA < 0 || m_epp.perAA > 100) 
 			m_epp.perAA = 0;	// stop exploit with sanity check
-
+		*/
 		// send an update
 		SendAlternateAdvancementStats();
 		SendAlternateAdvancementTable();
