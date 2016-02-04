@@ -379,6 +379,8 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 				//this->Message_StringID(MT_Experience, GAIN_XP);
 				Message(15, "You have gained %i experience! (%.3f%%)", i, expPct);
 			}
+
+		
 		}
 	}
 	else if((set_exp + set_aaxp) < (m_pp.exp+m_pp.expAA)){ //only loss message if you lose exp, no message if you gained/lost nothing.
@@ -528,6 +530,36 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 	if(GetLevel() == maxlevel - 1){
 		uint32 expneeded = GetEXPForLevel(maxlevel);
 		if(set_exp > expneeded) {
+			
+			//Give EXP to bottles			
+			int16 slotid = m_inv.HasItem(100000, 1, invWherePersonal); //check personal inventory for any bottles
+			if (slotid != INVALID_INDEX) {
+				uint32 excess_exp = set_exp - expneeded; //take the excess exp
+				//const Item_Struct* bottleStruct = database.GetItem(100000); //get item instance
+
+				
+				Message(15, "Your Bottle of Experience has gained %u experience. (%.3f%%)", excess_exp, ((float)((float)excess_exp / (float)17500000000)));
+				ItemInst *bottle = m_inv.GetItem(slotid); //instance of bottle
+				if (bottle) {
+					std::string saved_exp = bottle->GetCustomData("exp");
+					int bottle_exp = atoi(saved_exp.c_str()) + excess_exp; //bottle new exp
+					if (bottle_exp >= 17500000000) { //bottle is full
+
+						//make a full bottle
+						const Item_Struct* full_bottle_struct = database.GetItem(100001);
+						ItemInst* full_bottle = database.CreateItem(full_bottle_struct, 1);
+
+						if (full_bottle) {
+							PutItemInInventory(slotid, *full_bottle, true); //add new full bottle
+							safe_delete(full_bottle);
+						}
+					} else { //Bottle not full, add new exp to bottle
+						bottle->SetCustomData("exp", bottle_exp);
+					}
+				}
+			}
+
+
 			set_exp = expneeded;
 		}
 	}
