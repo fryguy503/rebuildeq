@@ -8875,9 +8875,9 @@ void Client::RefreshBuild() {
 
 		if (strcmp(oldBuild.c_str(), m_epp.build) != 0) {
 			for (uint32 i = 0; i < 53; i++) {
-				if (sizeof(m_epp.build) < i || sizeof(oldBuild.c_str()) < i) {
+				/*if (sizeof(m_epp.build) < i || sizeof(oldBuild.c_str()) < i) {
 					continue; //ignore lengths less than i
-				}
+				}*/
 
 				uint8 n = (uint8(m_epp.build[i] - '0'));
 				uint8 o = (uint8(oldBuild[i] - '0'));
@@ -8890,6 +8890,18 @@ void Client::RefreshBuild() {
 					message.append(GetBuildName(i));
 					message.append(StringFormat("! (%u)", n));
 					Message(270, message.c_str());
+				}
+				if (i == RB_SK_EMBRACEDEATH) {
+					Message(0, "%u %u", n, o);
+				}
+				if (GetClass() == SHADOWKNIGHT) {
+					if (i == RB_SK_EMBRACEDEATH && GetAA(1272) < 1) {
+						SetAA(1272, 1, 1);
+						SendAlternateAdvancementPoints();
+						SendAlternateAdvancementStats();
+						CalcBonuses();
+						Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");
+					}
 				}
 			}
 		}
@@ -8939,13 +8951,13 @@ void Client::AddRottenCoreCounter(uint8 amount) {
 std::string Client::GetBuildName(uint32 id) {
 	switch (this->GetClass()) {
 	case SHADOWKNIGHT:
-		if (id == 0) return "Soul Link";
+		if (id == RB_SK_SOULLINK) return "Soul Link";
 		//1
-		else if (id == 2) return "Gouging Skin";
+		else if (id == RB_SK_GOUGINGSKIN) return "Gouging Skin";
 		//3
-		else if (id == 4) return "Hungering Aura";
+		else if (id == RB_SK_HUNGERINGAURA) return "Hungering Aura";
 		//5
-		else if (id == 6) return "Deathbringer";
+		else if (id == RB_SK_DEATHBRINGER) return "Deathbringer";
 		//7
 		else if (id == 8) return "Zevfeer's Feast";
 		//9
