@@ -926,8 +926,7 @@ void Client::SetLevel(uint8 set_level, bool command)
 		}
 		if (GetSkill(SkillFeignDeath) == 0) {
 			if (
-				(GetClass() == MONK && GetLevel() >= 1) ||
-				(GetClass() == SHADOWKNIGHT && GetLevel() >= 1)
+				(GetClass() == MONK && GetLevel() >= 1)
 				) {
 				SetSkill((SkillUseTypes)SkillFeignDeath, 1);
 			}
