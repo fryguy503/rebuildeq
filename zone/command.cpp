@@ -147,6 +147,7 @@ int command_init(void)
 	commandaliases.clear();
 	
 	if (
+		command_add("giveaa", "[aaid] - Grant an AA", 150, command_giveaa) || 
 		command_add("acceptrules", "[acceptrules] - Accept the EQEmu Agreement", 150, command_acceptrules) ||
 		command_add("advnpcspawn", "[maketype|makegroup|addgroupentry|addgroupspawn][removegroupspawn|movespawn|editgroupbox|cleargroupbox]", 150, command_advnpcspawn) ||
 		command_add("aggro", "(range) [-v] - Display aggro information for all mobs 'range' distance from your target. -v is verbose faction info.", 80, command_aggro) ||
@@ -3895,6 +3896,23 @@ void command_builds(Client *c, const Seperator *sep)
 	windowText.append(c->GetBuildReport());
 	c->SendPopupToClient(windowTitle, windowText.c_str());
 	return;
+}
+
+//Grand AAs
+
+void command_giveaa(Client *c, const Seperator *sep)
+{
+	if (!sep->IsNumber(1)) {
+		c->Message(0, "Usage: #grantaa altid");
+		return;
+	}
+	int abilityid = atoi(sep->arg[1]);
+	if (abilityid == 0) {
+		c->Message(0, "Invalid ability ID");
+		return;
+	}
+	c->GrantAlternateAdvancementAbility(abilityid, 1, true);
+	c->Message(0, "Given.");	
 }
 
 

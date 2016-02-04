@@ -112,6 +112,7 @@ void command_gender(Client *c, const Seperator *sep);
 void command_getplayerburiedcorpsecount(Client *c, const Seperator *sep);
 void command_getvariable(Client *c, const Seperator *sep);
 void command_ginfo(Client *c, const Seperator *sep);
+void command_giveaa(Client *c, const Seperator *sep);
 void command_giveitem(Client *c, const Seperator *sep);
 void command_givemoney(Client *c, const Seperator *sep);
 void command_globalview(Client* c, const Seperator *sep);
