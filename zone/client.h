@@ -783,7 +783,7 @@ public:
 	void SetAAPoints(uint32 points) { m_pp.aapoints = points; SendAlternateAdvancementStats(); }
 	void AddAAPoints(uint32 points) { m_pp.aapoints += points; SendAlternateAdvancementStats(); }
 	int GetAAPoints() { return m_pp.aapoints; }
-	int GetSpentAA() { return m_pp.aapoints_spent; }
+	int GetSpentAA() { return 0; }
 
 	//old AA methods that we still use
 	void ResetAA();

@@ -555,7 +555,7 @@ bool Client::SaveAA() {
 		}
 	}
 
-	m_pp.aapoints_spent = spentpoints + m_epp.expended_aa;
+	m_pp.aapoints_spent = 0; //AA is always at 0 spent.
 
 	if(iquery.length() > 0) {
 		database.QueryDatabase(iquery);
