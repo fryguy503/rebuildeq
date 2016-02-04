@@ -2553,7 +2553,7 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 	if (this->IsClient() && this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_GOUGINGSKIN) > 0) {
 		
 		//This wonky code is because depending on item or spell ds, it stacks oddly.
-		DS += ((spell_ds) ? 1 : -1) *  3 * this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_GOUGINGSKIN);
+		DS += ((spell_ds) ? 1 : -1) *  4 * this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_GOUGINGSKIN);
 		if (attacker->IsNPC()) {
 			attacker->AddToHateList(this, uint32(10 * this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_GOUGINGSKIN)));
 		}

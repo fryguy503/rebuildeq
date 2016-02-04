@@ -446,7 +446,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//2
 			$newSkill = new stdClass();
 			$newSkill->title = "Gouging Skin";
-			$newSkill->desc = 'When attacked, causes a <em data-base="+6">+6</em> point damage shield and <em data-base="+20">+20</em> hate<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'When attacked, causes a <em data-base="+4">+4</em> point damage shield and <em data-base="+20">+20</em> hate<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[2] = $newSkill;
 			//3
