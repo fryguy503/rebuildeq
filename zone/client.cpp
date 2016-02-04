@@ -8895,13 +8895,19 @@ void Client::RefreshBuild() {
 					Message(0, "%u %u", n, o);
 				}
 				if (GetClass() == SHADOWKNIGHT) {
-					if (i == RB_SK_EMBRACEDEATH && GetAA(1272) < 1) {
-						SetAA(1272, 1, 1);
+					
+					if (i == RB_SK_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
+						SetAA(aaDeathPeace2, 1, 0); //aaDeathPeace2 = 1272 
 						SendAlternateAdvancementPoints();
 						SendAlternateAdvancementStats();
 						CalcBonuses();
-						Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");
+						Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");						
 					}
+					//const Item_Struct* item = database.GetItem(item_id);
+					//if (CheckLoreConflict(item)) {
+
+					//}
+
 				}
 			}
 		}

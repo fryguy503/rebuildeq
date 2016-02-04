@@ -3911,7 +3911,7 @@ void command_giveaa(Client *c, const Seperator *sep)
 		c->Message(0, "Invalid ability ID");
 		return;
 	}
-	if (!c->SetAA(abilityid, 1, 1)) {
+	if (!c->SetAA(abilityid, 1, 0)) {
 		c->Message(0, "Failed to set AA");
 	}
 	c->SendAlternateAdvancementPoints();
