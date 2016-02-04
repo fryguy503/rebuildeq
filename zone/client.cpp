@@ -8840,6 +8840,13 @@ uint8 Client::GetBuildUnspentPoints() {
 			continue; //ignore bad fields
 		}
 		totalSpent += points;
+
+		/*if (i == RB_SK_EMBRACEDEATH && GetClass() == SHADOWKNIGHT &&  GetAA(aaDeathPeace2) < 1) { //AA 428
+			SetAA(aaDeathPeace2, 1, 0); //aaDeathPeace2 = 1272 
+			SendAlternateAdvancementPoints();
+			SendAlternateAdvancementStats();
+			CalcBonuses();			
+		}*/
 	}
 	if (totalSpent >= GetLevel()) {
 		return 0;
@@ -8901,6 +8908,7 @@ void Client::RefreshBuild() {
 						SendAlternateAdvancementPoints();
 						SendAlternateAdvancementStats();
 						CalcBonuses();
+						SaveAA();
 						Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");						
 					}
 					//const Item_Struct* item = database.GetItem(item_id);
