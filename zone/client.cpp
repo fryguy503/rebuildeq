@@ -8898,9 +8898,7 @@ void Client::RefreshBuild() {
 					message.append(StringFormat("! (%u)", n));
 					Message(270, message.c_str());
 				}
-				if (i == RB_SK_EMBRACEDEATH) {
-					Message(0, "%u %u", n, o);
-				}
+				
 				if (GetClass() == SHADOWKNIGHT) {
 					
 					if (i == RB_SK_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428

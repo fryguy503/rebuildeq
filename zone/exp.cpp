@@ -360,7 +360,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 	if ((set_exp + set_aaxp) > (m_pp.exp+m_pp.expAA)) {
 		i = set_exp - m_pp.exp;
 		if (i > 0) {
-			expPct = (float)(((float)i / (float)GetEXPForLevel(GetLevel() + 1)) * (float)100);
+			expPct = (float)(((float)i / (float)GetEXPForLevel(GetLevel())) * (float)100);
 		}
 		if (isrezzexp) {
 			//this->Message_StringID(MT_Experience, REZ_REGAIN);
@@ -534,16 +534,15 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 			//Give EXP to bottles			
 			int16 slotid = m_inv.HasItem(100000, 1, invWherePersonal); //check personal inventory for any bottles
 			if (slotid != INVALID_INDEX) {
-				uint32 excess_exp = set_exp - expneeded; //take the excess exp
+				uint32 excess_exp = set_exp - expneeded; //excess exp from gaining
 				//const Item_Struct* bottleStruct = database.GetItem(100000); //get item instance
 
-				
-				Message(15, "Your Bottle of Experience has gained %u experience. (%.3f%%)", excess_exp, ((float)((float)excess_exp / (float)17500000000)));
-				ItemInst *bottle = m_inv.GetItem(slotid); //instance of bottle
+				ItemInst *bottle = m_inv.GetItem(slotid); //grab instance of bottle
 				if (bottle) {
-					std::string saved_exp = bottle->GetCustomData("exp");
+					std::string saved_exp = bottle->GetCustomData("exp"); //get previous exp
+					
 					int bottle_exp = atoi(saved_exp.c_str()) + excess_exp; //bottle new exp
-					if (bottle_exp >= 17500000000) { //bottle is full
+					if (bottle_exp >= 175000000) { //bottle is full
 
 						//make a full bottle
 						const Item_Struct* full_bottle_struct = database.GetItem(100001);
@@ -552,8 +551,11 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 						if (full_bottle) {
 							PutItemInInventory(slotid, *full_bottle, true); //add new full bottle
 							safe_delete(full_bottle);
+							Message(15, "You have filled a Bottle of Experience.");
 						}
+
 					} else { //Bottle not full, add new exp to bottle
+						Message(15, "Your Bottle of Experience has gained %u experience. (%.3f%%)", excess_exp, ((float)((float)excess_exp / (float)175000000)*(float)100));
 						bottle->SetCustomData("exp", bottle_exp);
 					}
 				}
