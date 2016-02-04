@@ -1469,9 +1469,9 @@ bool Mob::CanPurchaseAlternateAdvancementRank(AA::Rank *rank, bool check_price, 
 	}
 
 	//check level req
-	if(rank->level_req > GetLevel()) {
-		return false;
-	}
+	//if(rank->level_req > GetLevel()) {
+	//	return false;
+	//}
 
 	uint32 current_charges = 0;
 	auto points = GetAA(rank->id, &current_charges);
