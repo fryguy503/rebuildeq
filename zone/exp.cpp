@@ -349,30 +349,37 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 		}
 	}
 
+	float expPct = 0;
 	if ((set_exp + set_aaxp) > (m_pp.exp+m_pp.expAA)) {
 		i = set_exp - m_pp.exp;
+		if (i > 0) {
+			expPct = (float)(((float)i / (float)GetEXPForLevel(GetLevel() + 1)) * (float)100);
+		}
 		if (isrezzexp) {
 			//this->Message_StringID(MT_Experience, REZ_REGAIN);
-			Message(15, "You regain %i experience from resurrection.", i);
+			Message(15, "You regain %i experience from resurrection. (%.3f%%)", i,  expPct);
 		}
 		else {
 			if(membercount > 1) {
-				Message(15, "You have gained %i party experience!", i);
+				Message(15, "You have gained %i party experience! (%.3f%%)", i, expPct);
 				//this->Message_StringID(MT_Experience, GAIN_GROUPXP);
 			}
 			else if(IsRaidGrouped()) {
 				//Message_StringID(MT_Experience, GAIN_RAIDEXP);
-				Message(15, "You have gained %i raid experience!", i);
+				Message(15, "You have gained %i raid experience! (%.3f%%)", i, expPct);
 			}
 			else {
 				//this->Message_StringID(MT_Experience, GAIN_XP);
-				Message(15, "You have gained %i experience!", i);
+				Message(15, "You have gained %i experience! (%.3f%%)", i, expPct);
 			}
 		}
 	}
 	else if((set_exp + set_aaxp) < (m_pp.exp+m_pp.expAA)){ //only loss message if you lose exp, no message if you gained/lost nothing.
-		i = set_exp - m_pp.exp;
-		Message(15, "You have lost %i experience.", (-i));
+		i = m_pp.exp - set_exp;
+		if (i < 0) {
+			expPct = (float)(((float)(-i) / (float)GetEXPForLevel(GetLevel())) * (float)100);
+		}
+		Message(15, "You have lost %i experience. (%.3f%%)", i, expPct);
 	}
 
 	//check_level represents the level we should be when we have
