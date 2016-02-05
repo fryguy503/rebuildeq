@@ -3196,9 +3196,9 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 				int healed = damage;
 				//Shin: Hungering Aura check
-				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_HUNGERINGAURA) > 0) {
+				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_HUNGERINGAURA) > 0 && attacker->CastToClient()->GetAggroCount() > 0) {					
 					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_HUNGERINGAURA);
-					int healBonus = int32((float)healed * 0.06 * (float)((attacker->CastToClient()->GetAggroCount() > rank) ? rank : attacker->CastToClient()->GetAggroCount()));
+					int healBonus = int32((float)healed * 0.06 * (float)(attacker->CastToClient()->GetAggroCount() > rank) * attacker->CastToClient()->GetAggroCount());
 					attacker->CastToClient()->Message(MT_NonMelee, "Hungering Aura %u with %i enemies added %i bonus healing.", rank, attacker->CastToClient()->GetAggroCount(), healBonus);
 					healed += healBonus;
 				}
