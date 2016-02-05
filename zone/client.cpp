@@ -478,6 +478,9 @@ void Client::SendZoneInPackets()
 
 	//No idea why live sends this if even were not in a guild
 	SendGuildMOTD();
+	if (GetLevel() < 2 && GetBindZoneID() != 54 && GetBindZoneID() != 38 && GetBindZoneID() != 78 && GetBindZoneID() != 22) {
+		Message(0, "While less than level 10, you may wish to %s to a starting area.", CreateSayLink("#teleport", "#teleport").c_str());
+	}
 	if (GetBuildUnspentPoints() > 0) {
 		Message(0, "You have unspent build points. Visit %s to spend them.", CreateSayLink("#builds", "builds").c_str());
 	}
