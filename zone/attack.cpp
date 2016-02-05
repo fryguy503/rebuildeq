@@ -2319,7 +2319,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 		if (other->IsClient() && !other->CastToClient()->IsDead() && this->GetHPRatio() > 0.97) { //if a player and not dead
 			if (other->IsGrouped()) { //if in a group
 				
-				other->CastToClient()->Message(0, "You triggered a hate system!");
+				//other->CastToClient()->Message(0, "You triggered a hate system!");
 				auto group = other->GetGroup(); //iterate group
 				for (int i = 0; i < 6; ++i) {
 					
@@ -3213,15 +3213,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				entity_list.MessageClose(this, true, 300, MT_Emote, "%s beams a smile at %s", attacker->GetCleanName(), this->GetCleanName() );
 			}
 
-			//Shin: Festering Spear
-			if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR) > 0) {
-				rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR);
-				if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
-					int festerDmg = int32((float)damage * 0.1 * (float)rank);
-					attacker->CastToClient()->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
-					damage += festerDmg;
-				}
-			}
+			
 
 			//Shin: Rotten Core
 			if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE) > 0) {
