@@ -194,7 +194,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			case "shaman":
 			$build->fullName = "Shaman";
 			$build->monogram = 10;
-			$build->desc = "Shamans are one with spirits, specializing in buffing.<br> Their 3 styles focus on giving buffs among other utility bonuses, being a focused healer, or enchanting themselves to be more viable in melee.";
+			$build->desc = "Shamans are one with spirits. <br><font color='#41974D'>Prophet</font> specializes in healing<br> <font color='#2A87C7'>Oracle</font> focus on debuffs/DoTs/pet<br> <font color='#A93640'>Elder</font> excel at melee/procs";
 			$build->styles[0] = "Prophet";
 			$build->styles[1] = "Oracle";
 			$build->styles[2] = "Elder";
