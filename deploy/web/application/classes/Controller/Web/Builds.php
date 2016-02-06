@@ -356,97 +356,61 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[18] = $newSkill;
 			
-			/*$newSkill = new stdClass();
-			$newSkill->title = "Gift of Urash";
-			$newSkill->desc = 'Increases all skill modifiers by <em data-base="+5">+5</em>%, stacks up to <em data-base="1">1</em> times<span class="perLevel"> per level</span>.';
+			$newSkill = new stdClass();
+			$newSkill->title = "Spirit Call";
+			$newSkill->desc = 'Grants the Spirit Call AA, granted a new pet with <em data-base="10">10</em>% effectiveness<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
-			$skills[28] = $newSkill;*/
-			//29
-			//30
-			//31
+			$skills[20] = $newSkill;
+			
 			$newSkill = new stdClass();
-			$newSkill->title = "Reinforce Torpor";
-			$newSkill->desc = 'Reduces Torpor snare by <em data-base="20">20</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->title = "Virulent Paralysis";
+			$newSkill->desc = 'Grants the Virulent Paralysis AA, causing a target to be immobilized. Each rank increases duration by <em data-base="6">6</em> seconds <span class="perLevel"> per level</span>. At max rank, also knocks back target.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
-			$skills[31] = $newSkill;
-			//32
-			//33
-			//34
-			/*$newSkill = new stdClass();
-			$newSkill->title = "Bash of Death";
-			$newSkill->desc = 'Causes a harm touch chance when bashing a target, damage is improved based on stacks of Gift of Urash by <em data-base="+20">+20</em>% damage<span class="perLevel"> per level</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
-			$skills[34] = $newSkill;*/
-			//35
-			// TIER 3
-			//36
+			$skills[22] = $newSkill;
+			
 			$newSkill = new stdClass();
-			$newSkill->title = "Fury";
-			$newSkill->desc = 'Fleeting Fury now grants a self-only proc line that deals <em data-base="50">50</em> damage<span class="perLevel"> per level</span>.';
+			$newSkill->title = "Poison";
+			$newSkill->desc = 'All poison-based DoTs now deal <em data-base="5">5</em>% additional damage<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
+			$skills[24] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Extended Turgur";
+			$newSkill->desc = 'Increases duration of slow by <em data-base="5">5</em>% as well as penetrates magic defense by <em data-base="5">5</em>%<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
-			$skills[36] = $newSkill;
+			$skills[26] = $newSkill;
 			//37
 			//38
 			$newSkill = new stdClass();
-			$newSkill->title = "Poison";
-			$newSkill->desc = 'All poison based DoTs deal <em data-base="10">10</em>% more damage<span class="perLevel"> per level</span>.';
+			$newSkill->title = "Ancient Wrath";
+			$newSkill->desc = 'All direct damage spells now deal <em data-base="10">10</em>% more damage as well as <em data-base="1">1</em>% chance to critical hit<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";
-			$skills[38] = $newSkill;
-			//39
-			//40
+			$skills[28] = $newSkill;
+			
 			$newSkill = new stdClass();
-			$newSkill->title = "Companion";
-			$newSkill->desc = 'Summons a spiritual companion equal to your level with <em data-base="5">5</em>% statistic bonus<span class="perLevel"> per level</span>.';
+			$newSkill->title = "Turgur's Echo";
+			$newSkill->desc = 'When a slow-based spell is resisted, the spell will have a <em data-base="2">2</em>% chance to try again to land.<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
-			$skills[40] = $newSkill;
-			//41
-			//42
+			$skills[31] = $newSkill;
+			
 			$newSkill = new stdClass();
-			$newSkill->title = "Reinforce";
-			$newSkill->desc = 'Statistic Buffs now grant non-stackable bonus procs with<em data-base="20">20</em>% power<span class="perLevel"> per level</span>.';
+			$newSkill->title = "Spiritual Channeling";
+			$newSkill->desc = 'While this ability is active, all spells cost HP rather than mana. Cooldown of reuse is reduced by <em data-base="6">6</em>seconds<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
-			$skills[42] = $newSkill;
-			//43
-			/*$newSkill = new stdClass();
-			$newSkill->title = "Reinforce";
-			$newSkill->desc = 'Statistic Buffs now grant non-stackable bonus procs with<em data-base="20">20</em>% power<span class="perLevel"> per level</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
-			$skills[43] = $newSkill;*/
-			//44
+			$skills[34] = $newSkill;
+			
 			$newSkill = new stdClass();
-			$newSkill->title = "Form of the Bear";
-			$newSkill->desc = 'Form of the Bear grants <em data-base="2">2</em>% additional accuracy, attack, and double attack<span class="perLevel"> per level</span>.';
+			$newSkill->title = "Fury";
+			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma with <em data-base="20">20</em>% effectiveness<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
-			$skills[44] = $newSkill;					
-			//45
-			//46
-			/*$newSkill = new stdClass();
-			$newSkill->title = "Form of the Bear";
-			$newSkill->desc = 'Form of the Bear grants <em data-base="2">2</em>% additional accuracy, attack, and double attack<span class="perLevel"> per level</span>.';
+			$skills[36] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Rabid Bear";
+			$newSkill->desc = 'Grants the Rabid Bear AA, granting <em data-base="2">% attack speed and the tainted bite proc line with <em data-base="20">20</em>% effectiveness<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
-			$skills[46] = $newSkill;					*/
-			//47
-			//48
-			/*$newSkill = new stdClass();
-			$newSkill->title = "Nightmare";
-			$newSkill->desc = 'Fear now causes target to freeze in panic and lasta an additional <em data-base="4">4</em> seconds<span class="perLevel"> per level</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
-			$skills[48] = $newSkill;					
-			//49
-			//50
-			$newSkill = new stdClass();
-			$newSkill->title = "Mini Minion";
-			$newSkill->desc = 'Causes your pet to summon a pet and attack target with a <em data-base="2">2</em>% chance <span class="perLevel"> per level</span> the target will not bring allies.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
-			$skills[50] = $newSkill;*/
-			//51
-			//52
-			$newSkill = new stdClass();
-			$newSkill->title = "Avatar";
-			$newSkill->desc = 'Avatar grants a temporary buff allowing triple attack and a spirit strike proc when used on self with <em data-base="2">2</em> attacks<span class="perLevel"> per level</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-7.png";
-			$skills[52] = $newSkill;
-			//53
+			$skills[36] = $newSkill;
+
 			break;
 			//==================WARRIOR======================
 			case "warrior":
