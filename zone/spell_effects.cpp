@@ -240,7 +240,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							uint16 rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR);
 							if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
 								int festerDmg = (rank * caster->CastToClient()->GetLevel());
-								festerDmg += int32((float)dmg * 0.1 * (float)rank));
+								festerDmg += int32((float)dmg * 0.1 * (float)rank);
 								caster->CastToClient()->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
 								dmg += festerDmg;
 							}
