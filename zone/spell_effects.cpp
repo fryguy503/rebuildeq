@@ -3031,14 +3031,18 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					range = caster->GetAOERange(3409);
 					float range2 = range*range;
 					int mana_amount = (caster->GetMaxMana() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST));
-
+					if (mana_amount < 1) {
+						mana_amount = 5;
+					}
 					if (caster->IsGrouped()) {
+						
 						Group *caster_group = entity_list.GetGroupByMob(caster);
 						if (caster_group) {
 							for (int z = 0; z < MAX_GROUP_MEMBERS; z++) {
 								if (caster_group->members[z] == caster) {
-									HealDamage(dmg, caster);									
-									caster->SetMana(GetMana() + mana_amount);
+									caster->Message(0, "Group! %i %i", dmg, mana_amount);
+									HealDamage(dmg, caster, 3409);
+									caster->SetMana(caster->GetMana() + mana_amount);
 									if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
 										HealDamage(dmg, caster->GetPet());
 									}
@@ -3046,7 +3050,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								else if (caster_group->members[z] != nullptr) {
 									distance = DistanceSquared(caster->GetPosition(), caster_group->members[z]->GetPosition());
 									if (distance <= range2) {
-										HealDamage(dmg, caster_group->members[z]);
+										HealDamage(dmg, caster_group->members[z], 3409);
 										caster_group->members[z]->SetMana(GetMana() + mana_amount);
 										if (caster_group->members[z]->GetPet() && !caster_group->members[z]->GetPet()->IsCharmed()) {
 											HealDamage(dmg, caster_group->members[z]->GetPet());
@@ -3056,6 +3060,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 						}
 					} else if (caster->IsRaidGrouped()) {
+						
 						Raid *target_raid = entity_list.GetRaidByClient(caster->CastToClient());
 						uint32 gid = 0xFFFFFFFF;
 						if (target_raid) {
@@ -3065,19 +3070,20 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							
 								for (int x = 0; x < MAX_RAID_MEMBERS; x++) { //iterate raid
 									if (target_raid->members[x].member == caster) { //if member is the caster										
-										HealDamage(dmg, caster);
-										caster->SetMana(GetMana() + mana_amount);
+										HealDamage(dmg, caster, 3409);
+										caster->Message(0, "Raid! %i %i", dmg, mana_amount);
+										caster->SetMana(caster->GetMana() + mana_amount);
 										if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
-											HealDamage(dmg, caster->GetPet());
+											HealDamage(dmg, caster->GetPet(), 3409);
 										}
 									} else if (target_raid->members[x].member != nullptr) {
 										if (target_raid->members[x].GroupNumber == gid) { //in raid group id
 											distance = DistanceSquared(caster->GetPosition(), target_raid->members[x].member->GetPosition()); //get distance
 											if (distance <= range2) { //in distance
-												HealDamage(dmg, target_raid->members[x].member);
+												HealDamage(dmg, target_raid->members[x].member, 3409);
 												target_raid->members[x].member->SetMana(GetMana() + mana_amount);
 												if (target_raid->members[x].member->GetPet() && !target_raid->members[x].member->GetPet()->IsCharmed()) {
-													HealDamage(dmg, target_raid->members[x].member->GetPet());
+													HealDamage(dmg, target_raid->members[x].member->GetPet(), 3409);
 												}
 											}
 										}
@@ -3086,10 +3092,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}			
 						}
 					} else { //not grouped
-						HealDamage(dmg, caster);
+						caster->Message(0, "Lifesteal! %i %i", dmg, mana_amount);
+						HealDamage(dmg, caster, 3409);
+						caster->SetMana(caster->GetMana() + mana_amount);
 						if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
-							HealDamage(dmg, caster->GetPet());
-							caster->SetMana(GetMana() + mana_amount);
+							HealDamage(dmg, caster->GetPet(), 3409);
 						}
 					}
 				}
