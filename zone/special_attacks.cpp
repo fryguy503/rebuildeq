@@ -2121,7 +2121,16 @@ void Mob::Taunt(NPC* who, bool always_succeed, float chance_bonus) {
 		Message_StringID(MT_SpellFailure,FAILED_TAUNT);
 		return;
 	}
-
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SWORNENEMY) > 0) {
+		uint16 rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SWORNENEMY);
+		if (CastToClient()->GetEPP().sworn_enemy_timeout < time(nullptr)) {
+			CastToClient()->GetEPP().sworn_enemy_id = who->GetID();
+			CastToClient()->GetEPP().sworn_enemy_timeout = time(nullptr) + 18;
+			Message(270, "%s has been marked as your sworn enemy.", who->GetCleanName());						
+		} else if (CastToClient()->GetEPP().sworn_enemy_id == who->GetID()) { //Refresh timeout
+			CastToClient()->GetEPP().sworn_enemy_timeout = time(nullptr) + 18;
+		}
+	}
 	//All values used based on live parses after taunt was updated in 2006.
 	if ((hate_top && hate_top->GetHPRatio() >= 20) || hate_top == nullptr) {
 

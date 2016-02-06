@@ -497,7 +497,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//10
 			$newSkill = new stdClass();
 			$newSkill->title = "Sworn Enemy";
-			$newSkill->desc = 'Causes intense hatred of target, where any spell damage dealt causes an additional <em data-base="+400">+400</em> hate<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you use taunt, you mark a target as your sworn enemy. For the next 3 ticks, any spell damage dealt to target causes an additional <em data-base="100">100</em> hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-10.png";	
 			$skills[10] = $newSkill;
 			//11
