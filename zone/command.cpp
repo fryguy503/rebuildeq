@@ -3886,13 +3886,15 @@ void command_builds(Client *c, const Seperator *sep)
 	if (unspent > 0) {
 		unspentMessage = StringFormat("<c \"#FFDF00\">You have %u point%s available to spend.</c><br>", unspent, (unspent == 1) ? "" : "s");
 	}
-	
+
+
 	// align=\"center\"
-	std::string windowText = StringFormat("<table align=\"center\" width=\"100%\"><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\>Click To Review Your Build</a></td></tr></table>",
+	std::string windowText = StringFormat("<table align=\"center\" width=\"100%\"><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\">Click To Review Your Build</a></td></tr></table>",
 		GetEQClassName(c->GetClass()),
 		c->GetSession()
 	);
 	windowText.append(unspentMessage);
+	//if (GetClientVersionBit() & BIT_TitaniumAndEarlier) {	
 	windowText.append(c->GetBuildReport());
 	c->SendPopupToClient(windowTitle, windowText.c_str());
 	return;
