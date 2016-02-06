@@ -8996,54 +8996,54 @@ std::string Client::GetBuildName(uint32 id) {
 		//3
 		else if (id == RB_SK_HUNGERINGAURA) return "Hungering Aura";
 		//5
-		else if (id == RB_SK_DEATHBRINGER) return "Deathbringer";
+		else if (id == RB_SK_STEADFASTSERVANT) return "Steadfast Servant";
 		//7
-		else if (id == 8) return "Zevfeer's Feast";
+		else if (id == RB_SK_ZEVFEERSFEAST) return "Zevfeer's Feast";
 		//9
-		else if (id == 10) return "Sworn Enemy";
+		else if (id == RB_SK_SWORNENEMY) return "Sworn Enemy";
 		//11
 		//12
-		else if (id == 13) return "Banshee's Mirror";
+		else if (id == RB_SK_BANSHEESMIRROR) return "Banshee's Mirror";
 		//14
 		//15
-		else if (id == 16) return "Aura of Vampirism";
+		else if (id == RB_SK_AURAOFVAMPIRISM) return "Aura of Vampirism";
 		//17
-		else if (id == 18) return "Festering Spear";
+		else if (id == RB_SK_FESTERINGSPEAR) return "Festering Spear";
 		//19
-		else if (id == 20) return "Festering Wound";
+		else if (id == RB_SK_FESTERINGWOUND) return "Festering Wound";
 		//21
-		else if (id == 22) return "Rotten Core";
+		else if (id == RB_SK_ROTTENCORE) return "Rotten Core";
 		//23
-		else if (id == 24) return "Lingering Pain";
+		else if (id == RB_SK_LINGERINGPAIN) return "Lingering Pain";
 		//25
-		else if (id == 26) return "Blood Oath";
+		else if (id == RB_SK_BLOODOATH) return "Blood Oath";
 		//27
-		else if (id == 28) return "Gift of Urash";
+		else if (id == RB_SK_GIFTOFURASH) return "Gift of Urash";
 		//29
 		//30
-		else if (id == 31) return "Unholy Focus";
+		else if (id == RB_SK_UNHOLYFOCUS) return "Unholy Focus";
 		//32
 		//33
-		else if (id == 34) return "Bash of Death";
+		else if (id == RB_SK_BASHOFDEATH) return "Bash of Death";
 		//35
 		//tier3
-		else if (id == 36) return "Embrace Death";
+		else if (id == RB_SK_EMBRACEDEATH) return "Embrace Death";
 		//37
-		else if (id == 38) return "Darkness";
+		else if (id == RB_SK_DARKNESS) return "Darkness";
 		//39
-		else if (id == 40) return "Empathetic Soul";
+		else if (id == RB_SK_EMPATHETICSOUL) return "Empathetic Soul";
 		//41
 		//42
-		else if (id == 43) return "Embrace Shadow";
+		else if (id == RB_SK_EMBRACESHADOW) return "Embrace Shadow";
 		//44
 		//45
-		else if (id == 46) return "Crippling Pain";
+		else if (id == RB_SK_CRIPPLINGPAIN) return "Crippling Pain";
 		//47
-		else if (id == 48) return "Nightmare";
+		else if (id == RB_SK_NIGHTMARE) return "Nightmare";
 		//49
-		else if (id == 50) return "Mini Minion";
+		else if (id == RB_SK_SUSPENDEDMINION) return "Suspended Minion";
 		//51
-		else if (id == 52) return "Cry of the Banshee";
+		else if (id == RB_SK_CRYOFTHEBANSHEE) return "Cry of the Banshee";
 		//53
 		break;
 	}

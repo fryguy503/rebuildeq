@@ -472,7 +472,7 @@
 #define RB_SK_UNHOLYFOCUS 31
 //32
 //33
-#define RB_SK_TOUCHOFDEATH 34
+#define RB_SK_BASHOFDEATH 34
 //35
 //Tier --3--
 #define RB_SK_EMBRACEDEATH 36
