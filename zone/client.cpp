@@ -8973,12 +8973,9 @@ std::string Client::GetBuildClassName() {
 		if (points < 1) {
 			continue;
 		}
-		report.append(GetBuildName(i));
-		report.append(StringFormat(" (%u)<br>", points));
+		
 	}
-	report.append("</c>");
-	return report;
-}
+	return "";
 }
 
 std::string Client::GetBuildName(uint32 id) {

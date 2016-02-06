@@ -1124,16 +1124,51 @@ void Client::IncrementAlternateAdvancementRank(int rank_id) {
 
 void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	AA::Rank *rank = zone->GetAlternateAdvancementRank(rank_id);
-	if(!rank) {
+	if (!rank) {
 		return;
 	}
 
 	AA::Ability *ability = rank->base_ability;
-	if(!ability) {
+	if (!ability) {
 		return;
 	}
 
-	if(!IsValidSpell(rank->spell)) {
+	//Shin: set spell Id override
+	int spellid = rank->spell;
+	int manacost = -1;
+	int cooldown = 0;
+	if (rank_id == aaLeechTouch) {
+		if (GetLevel() < 15) { //lifetap
+			spellid = 341; 
+			manacost = 8;
+			cooldown = 4;
+		}
+		else if (GetLevel() < 29) { //lifespike
+			spellid = 502;
+			manacost = 13;
+			cooldown = 4;
+		} else if (GetLevel() < 51) { //lifedraw
+			spellid = 445;
+			manacost = 86;
+			cooldown = 4;
+		} else if (GetLevel() < 55) { //siphon life
+			spellid = 446;
+			manacost = 115;
+			cooldown = 4;
+		}
+		else if (GetLevel() < 60) { //spirit tap
+			spellid = 524;
+			manacost = 152;
+			cooldown = 4;
+		}
+		else { //drain soul
+			spellid = 447;
+			manacost = 248;
+			cooldown = 4;
+		}	
+	}
+
+	if(!IsValidSpell(spellid)) {
 		return;
 	}
 
@@ -1175,19 +1210,21 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	}
 
 	//calculate cooldown
-	int cooldown = rank->recast_time - GetAlternateAdvancementCooldownReduction(rank);
-	if(cooldown < 0) {
+	if (cooldown == 0) {
+		cooldown = rank->recast_time - GetAlternateAdvancementCooldownReduction(rank);		
+	}
+	if (cooldown < 0) {
 		cooldown = 0;
 	}
 
 	// Bards can cast instant cast AAs while they are casting another song
 	if(spells[rank->spell].cast_time == 0 && GetClass() == BARD && IsBardSong(casting_spell_id)) {
-		if(!SpellFinished(rank->spell, entity_list.GetMob(target_id), ALTERNATE_ABILITY_SPELL_SLOT, spells[rank->spell].mana, -1, spells[rank->spell].ResistDiff, false)) {
+		if(!SpellFinished(spellid, entity_list.GetMob(target_id), ALTERNATE_ABILITY_SPELL_SLOT, spells[rank->spell].mana, -1, spells[rank->spell].ResistDiff, false)) {
 			return;
 		}
 		ExpendAlternateAdvancementCharge(ability->id);
 	} else {
-		if(!CastSpell(rank->spell, target_id, ALTERNATE_ABILITY_SPELL_SLOT, -1, -1, 0, -1, rank->spell_type + pTimerAAStart, cooldown, nullptr, rank->id)) {
+		if(!CastSpell(spellid, target_id, ALTERNATE_ABILITY_SPELL_SLOT, -1, manacost, 0, -1, rank->spell_type + pTimerAAStart, cooldown, nullptr, rank->id)) {
 			return;
 		}
 	}
