@@ -3919,6 +3919,7 @@ void command_giveaa(Client *c, const Seperator *sep)
 	c->SendAlternateAdvancementPoints();
 	c->SendAlternateAdvancementStats();
 	c->CalcBonuses();
+	c->SaveAA();
 	
 	c->Message(270, "You have become better at %i! (1)", abilityid);
 }
