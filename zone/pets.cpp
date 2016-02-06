@@ -295,9 +295,9 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	//Shin: Pet buff system
 	if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_STEADFASTSERVANT) > 0) {
 		uint32 rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_STEADFASTSERVANT);
-		npc_type->max_hp *= (rank * 2 * CastToClient()->GetLevel()); //bonus HP
+		npc_type->max_hp += (npc_type->max_hp * 0.2 * rank); //bonus HP
 		npc_type->level = (CastToClient()->GetLevel() - (5 - rank));
-		npc_type->AC *= rank;
+		npc_type->AC += (npc_type->AC * 0.2 * rank);
 		npc_type->size = rank * (GetLevel() / 25); //1.04 to 7.4
 		if (npc_type->size > 7) npc_type->size = 7;
 		if (npc_type->size < 3) npc_type->size = 3;
