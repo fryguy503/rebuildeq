@@ -437,7 +437,7 @@
 #define GENERIC_MISS				15041	//%1 missed %2
 
 
-#define RB_SK_SOULLINK 0
+#define RB_SK_LEECHTOUCH 0
 //1
 #define RB_SK_GOUGINGSKIN 2
 //3
@@ -488,7 +488,7 @@
 #define RB_SK_NIGHTMARE 46
 //47
 //48
-#define RB_SK_MINIMINION 49
+#define RB_SK_CHATTERINGBONES 49
 //50
 //51
 #define RB_SK_CRYOFTHEBANSHEE 52

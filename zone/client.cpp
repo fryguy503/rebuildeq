@@ -8912,7 +8912,7 @@ void Client::RefreshBuild() {
 						SaveAA();
 						Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");						
 					}
-					if (i == RB_SK_LEECHTOUCH && GetAA(aaLeechTouch) < 1) { //AA 87
+					if ((i == RB_SK_LEECHTOUCH || i == RB_SK_HUNGERINGAURA ) && GetAA(aaLeechTouch) < 1) { //AA 87
 						SetAA(aaLeechTouch, 1, 0); //208 
 						SendAlternateAdvancementPoints();
 						SendAlternateAdvancementStats();

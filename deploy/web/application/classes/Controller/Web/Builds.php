@@ -623,8 +623,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//49
 			//50
 			$newSkill = new stdClass();
-			$newSkill->title = "Mini Minion";
-			$newSkill->desc = 'Causes your pet to summon a pet and attack target with a <em data-base="2">2</em>% chance <span class="perLevel"> per rank</span> the target will not bring allies.';
+			$newSkill->title = "Chattering Bones";
+			$newSkill->desc = 'Grants the Chattering Bones AA, summoning a swarm pet that attacks a target once with a <em data-base="2">2</em>% chance <span class="perLevel"> per rank</span> to single pull.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
 			$skills[50] = $newSkill;
 			//51
