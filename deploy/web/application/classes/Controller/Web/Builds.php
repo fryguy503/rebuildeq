@@ -490,7 +490,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//8
 			$newSkill = new stdClass();
 			$newSkill->title = "Zevfeer's Feast";
-			$newSkill->desc = 'Improves Zevfeer\'s Bite to give an additional <em data-base="+100">+100</em>% health and an additional <em data-base="+100">+100</em> mana<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Improves Siphon Strength and Abduct Strength to tap the target for HP and Mana for up to <em data-base="1">1</em>% your maximum health and mana<span class="perLevel"> per rank</span> to give it to group.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-9.png";	
 			$skills[8] = $newSkill;
 			//9

@@ -260,11 +260,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						break;
 
 					if(caster)
-						dmg = caster->GetActSpellHealing(spell_id, dmg, this);
-
-					if (spell_id == 3409 && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST) > 0) {
-						dmg += (dmg * 0.2 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST));
-					}
+						dmg = caster->GetActSpellHealing(spell_id, dmg, this);					
 
 					HealDamage(dmg, caster);
 				}
@@ -406,12 +402,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					if (buffslot >= 0)
 						break;
 
-					if (spell_id == 3409 && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST) > 0) {
-						SetMana(GetMana() + (effect_value * 0.2 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST)));
-					}
-					else {
-						SetMana(GetMana() + effect_value);						
-					}
+					
+					SetMana(GetMana() + effect_value);		
 					if (effect_value < 0)
 						TryTriggerOnValueAmount(false, true);
 				}
@@ -3024,6 +3016,83 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			case SE_SkillProc:
 			case SE_SkillProcSuccess:
 			{
+				if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST) > 0 && (spell_id == 343 || spell_id == 2575)) {
+					uint32 dmg;
+					int manaAmount;
+					if (spell_id == 343) { //siphon strength
+						dmg = (caster->GetMaxHP() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST));						
+						Damage(caster, dmg, spell_id, spell.skill, false, 0, false);
+					}
+					if (spell_id == 2575) { //abduct strength
+						dmg = (caster->GetMaxHP() * 0.01 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST));						
+						Damage(caster, dmg, spell_id, spell.skill, false, 0, false);
+					}
+					float range, distance;
+					range = caster->GetAOERange(3409);
+					float range2 = range*range;
+					int mana_amount = (caster->GetMaxMana() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST));
+
+					if (caster->IsGrouped()) {
+						Group *caster_group = entity_list.GetGroupByMob(caster);
+						if (caster_group) {
+							for (int z = 0; z < MAX_GROUP_MEMBERS; z++) {
+								if (caster_group->members[z] == caster) {
+									HealDamage(dmg, caster);									
+									caster->SetMana(GetMana() + mana_amount);
+									if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
+										HealDamage(dmg, caster->GetPet());
+									}
+								}
+								else if (caster_group->members[z] != nullptr) {
+									distance = DistanceSquared(caster->GetPosition(), caster_group->members[z]->GetPosition());
+									if (distance <= range2) {
+										HealDamage(dmg, caster_group->members[z]);
+										caster_group->members[z]->SetMana(GetMana() + mana_amount);
+										if (caster_group->members[z]->GetPet() && !caster_group->members[z]->GetPet()->IsCharmed()) {
+											HealDamage(dmg, caster_group->members[z]->GetPet());
+										}
+									}
+								}
+							}
+						}
+					} else if (caster->IsRaidGrouped()) {
+						Raid *target_raid = entity_list.GetRaidByClient(caster->CastToClient());
+						uint32 gid = 0xFFFFFFFF;
+						if (target_raid) {
+							gid = target_raid->GetGroup(caster->GetName());
+							if (gid < 12) { 
+								//Cast on raid
+							
+								for (int x = 0; x < MAX_RAID_MEMBERS; x++) { //iterate raid
+									if (target_raid->members[x].member == caster) { //if member is the caster										
+										HealDamage(dmg, caster);
+										caster->SetMana(GetMana() + mana_amount);
+										if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
+											HealDamage(dmg, caster->GetPet());
+										}
+									} else if (target_raid->members[x].member != nullptr) {
+										if (target_raid->members[x].GroupNumber == gid) { //in raid group id
+											distance = DistanceSquared(caster->GetPosition(), target_raid->members[x].member->GetPosition()); //get distance
+											if (distance <= range2) { //in distance
+												HealDamage(dmg, target_raid->members[x].member);
+												target_raid->members[x].member->SetMana(GetMana() + mana_amount);
+												if (target_raid->members[x].member->GetPet() && !target_raid->members[x].member->GetPet()->IsCharmed()) {
+													HealDamage(dmg, target_raid->members[x].member->GetPet());
+												}
+											}
+										}
+									}
+								}
+							}			
+						}
+					} else { //not grouped
+						HealDamage(dmg, caster);
+						if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
+							HealDamage(dmg, caster->GetPet());
+							caster->SetMana(GetMana() + mana_amount);
+						}
+					}
+				}
 				break;
 			}
 
