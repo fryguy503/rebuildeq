@@ -8893,7 +8893,7 @@ void Client::RefreshBuild() {
 				uint8 o = (uint8(oldBuild[i] - '0'));
 				//Message(0, "%u] %u => %u", i, o, n);
 				if (n > 5 || n < 1) {
-					continue; //ignore bad fields
+					continue; //ignore bad fields, or fields that are not trained
 				}
 				if (n > o) {
 					std::string message = "You have become better at ";
@@ -8919,6 +8919,15 @@ void Client::RefreshBuild() {
 						CalcBonuses();
 						SaveAA();
 						Message(15, "You have unlocked the AA \"Leech Touch\"! Find the hotkey in your Alternate Advancement Window.");
+					}
+
+					if (i == RB_SK_STEADFASTSERVANT && GetAA(aaSteadfastServant) < 1) {
+						SetAA(aaSteadfastServant, 1, 0);
+						SendAlternateAdvancementPoints();
+						SendAlternateAdvancementStats();
+						CalcBonuses();
+						SaveAA();
+						Message(15, "You have unlocked the AA \"Steadfast Servant\"! Find the hotkey in your Alternate Advancement Window.");
 					}
 
 					//const Item_Struct* item = database.GetItem(item_id);

@@ -1167,6 +1167,41 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			cooldown = 4;
 		}	
 	}
+	if (rank_id == aaSteadfastServant) {
+		if (GetLevel() < 14) { //leering corpse 7
+			spellid = 491;
+			manacost = 40;
+			cooldown = 16;
+		} else if (GetLevel() < 22) { //bone walk 14
+			spellid = 351;
+			manacost = 80;
+			cooldown = 16;
+		} else if (GetLevel() < 30) { //convoke shadow 22
+			spellid = 362;
+			manacost = 120;
+			cooldown = 16;
+		} else if (GetLevel() < 38) { //Restless Bones 30
+			spellid = 492;
+			manacost = 160;
+			cooldown = 16;
+		} else if (GetLevel() < 46) { //Aniamte Dead 38
+			spellid = 440;
+			manacost = 200;
+			cooldown = 16;
+		} else if (GetLevel() < 52) { //Summon Dead 46
+			spellid = 441;
+			manacost = 290;
+			cooldown = 16;
+		} else if (GetLevel() < 58) { //Malignant Dead 52
+			spellid = 442;
+			manacost = 390;
+			cooldown = 16;
+		} else { //Cackling Bones 58
+			spellid = 495;
+			manacost = 450;
+			cooldown = 16;
+		}		
+	}
 
 	if(!IsValidSpell(spellid)) {
 		return;
