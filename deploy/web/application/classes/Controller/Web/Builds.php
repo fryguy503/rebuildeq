@@ -244,7 +244,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//0
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Bash";
-			$newSkill->desc = 'Bash now has a chance to heal nearby group members for <em data-base="2">2</em>% of your maximum health<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Bash now has a chance to heal nearby group members for <em data-base="2">2</em>% of your maximum health<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[0] = $newSkill;
 			break;
@@ -252,21 +252,21 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//4
 			$newSkill = new stdClass();
 			$newSkill->title = "Harken the Gods";
-			$newSkill->desc = 'Yaulp now also grants <em data-base="5">5</em> accuracy, <em data-base="5">5</em> attack, and <em data-base="2">2</em> mana regen<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Yaulp now also grants <em data-base="5">5</em> accuracy, <em data-base="5">5</em> attack, and <em data-base="2">2</em> mana regen<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[4] = $newSkill;
 
 			//6
 			$newSkill = new stdClass();
 			$newSkill->title = "Blessing of Haste";
-			$newSkill->desc = 'All spell haste you cast is now <em data-base="5">5</em> accuracy, <em data-base="5">5</em> attack, and <em data-base="2">2</em> mana regen<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'All spell haste you cast is now <em data-base="5">5</em> accuracy, <em data-base="5">5</em> attack, and <em data-base="2">2</em> mana regen<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[6] = $newSkill;
 
 			//8
 			$newSkill = new stdClass();
 			$newSkill->title = "Hammer of Justice";
-			$newSkill->desc = 'Empowers the summoned hammer line with stronger versions<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Empowers the summoned hammer line with stronger versions<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[8] = $newSkill;
 			break;
@@ -301,14 +301,14 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//0
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit of Speed";
-			$newSkill->desc = 'Spirit of Wolf lasts <em data-base="20">20</em>% longer<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Spirit of Wolf lasts <em data-base="20">20</em>% longer<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[0] = $newSkill;
 			//1
 			//2
 			$newSkill = new stdClass();
 			$newSkill->title = "Purify Soul";
-			$newSkill->desc = 'Grants the Purify Soul AA, which cures target of disease, poison, as well as gives a <em data-base="10">10</em>% chance to apply a <em data-base="1">1</em>% max HP per tick regen<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Grants the Purify Soul AA, which cures target of disease, poison, as well as gives a <em data-base="10">10</em>% chance to apply a <em data-base="1">1</em>% max HP per tick regen<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";
 			$skills[2] = $newSkill;
 			//3
@@ -322,92 +322,92 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//6
 			$newSkill = new stdClass();
 			$newSkill->title = "Extended Haste";
-			$newSkill->desc = 'Improves attack speed spells used by the caster by increasing their duration by <em data-base="30">30</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Improves attack speed spells used by the caster by increasing their duration by <em data-base="30">30</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
 			$skills[6] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Healing";
-			$newSkill->desc = 'Heals recover an additional <em data-base="20">20</em>% health<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Heals recover an additional <em data-base="20">20</em>% health<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
 			$skills[8] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Covenant of Spirit";
-			$newSkill->desc = 'Grants the Covenent of Spirit AA, which imbues divine intervention on the target with a <em data-base="2">2</em>% chance to save<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Grants the Covenent of Spirit AA, which imbues divine intervention on the target with a <em data-base="2">2</em>% chance to save<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
 			$skills[10] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Reinforce Torpor";
-			$newSkill->desc = 'Reduces the negative effects of Torpor by <em data-base="20">20</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Reduces the negative effects of Torpor by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
 			$skills[13] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fateseeler's Boon";
-			$newSkill->desc = 'Grants a group buff that increases critical damage by 70% with all skills, chance to critical hit by 50% with all skills, as well as a 400 hitpoint per tick regen. Each rank reduces recast by<em data-base="30">30</em> seconds<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Grants a group buff that increases critical damage by 70% with all skills, chance to critical hit by 50% with all skills, as well as a 400 hitpoint per tick regen. Each rank reduces recast by<em data-base="30">30</em> seconds<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
 			$skills[16] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Cannibalize";
-			$newSkill->desc = 'Grants the Cannibalization AA, increasing effectiveness by <em data-base="10">10</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Grants the Cannibalization AA, increasing effectiveness by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[18] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit Call";
-			$newSkill->desc = 'Grants the Spirit Call AA, granted a new pet with <em data-base="10">10</em>% effectiveness<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Grants the Spirit Call AA, granted a new pet with <em data-base="10">10</em>% effectiveness<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
 			$skills[20] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Virulent Paralysis";
-			$newSkill->desc = 'Grants the Virulent Paralysis AA, causing a target to be immobilized. Each rank increases duration by <em data-base="6">6</em> seconds <span class="perLevel"> per level</span>. At max rank, also knocks back target.';
+			$newSkill->desc = 'Grants the Virulent Paralysis AA, causing a target to be immobilized. Each rank increases duration by <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>. At max rank, also knocks back target.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
 			$skills[22] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Poison";
-			$newSkill->desc = 'All poison-based DoTs now deal <em data-base="5">5</em>% additional damage<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'All poison-based DoTs now deal <em data-base="5">5</em>% additional damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
 			$skills[24] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Extended Turgur";
-			$newSkill->desc = 'Increases duration of slow by <em data-base="5">5</em>% as well as penetrates magic defense by <em data-base="5">5</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Increases duration of slow by <em data-base="5">5</em>% as well as penetrates magic defense by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[26] = $newSkill;
 			//37
 			//38
 			$newSkill = new stdClass();
 			$newSkill->title = "Ancient Wrath";
-			$newSkill->desc = 'All direct damage spells now deal <em data-base="10">10</em>% more damage as well as <em data-base="1">1</em>% chance to critical hit<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'All direct damage spells now deal <em data-base="10">10</em>% more damage as well as <em data-base="1">1</em>% chance to critical hit<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";
 			$skills[28] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Turgur's Echo";
-			$newSkill->desc = 'When a slow-based spell is resisted, the spell will have a <em data-base="2">2</em>% chance to try again to land.<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'When a slow-based spell is resisted, the spell will have a <em data-base="2">2</em>% chance to try again to land.<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
 			$skills[31] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Channeling";
-			$newSkill->desc = 'While this ability is active, all spells cost HP rather than mana. Cooldown of reuse is reduced by <em data-base="6">6</em>seconds<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'While this ability is active, all spells cost HP rather than mana. Cooldown of reuse is reduced by <em data-base="6">6</em>seconds<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
 			$skills[34] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fury";
-			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma with <em data-base="20">20</em>% effectiveness<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma with <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[36] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Rabid Bear";
-			$newSkill->desc = 'Grants the Rabid Bear AA, granting <em data-base="2">% attack speed and the tainted bite proc line with <em data-base="20">20</em>% effectiveness<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Grants the Rabid Bear AA, granting <em data-base="2">% attack speed and the tainted bite proc line with <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[36] = $newSkill;
 
@@ -426,42 +426,42 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//0
 			$newSkill = new stdClass();
 			$newSkill->title = "Soul Link";
-			$newSkill->desc = 'Improves lifetap damage by <em data-base="4">4</em>% and <em data-base="1">1</em>% chance to critical heal<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Improves lifetap damage by <em data-base="4">4</em>% and <em data-base="1">1</em>% chance to critical heal<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[0] = $newSkill;
 			//1
 			//2
 			$newSkill = new stdClass();
 			$newSkill->title = "Gouging Skin";
-			$newSkill->desc = 'When attacked, causes a <em data-base="+4">+4</em> point damage shield and <em data-base="+20">+20</em> hate<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'When attacked, causes a <em data-base="+4">+4</em> point damage shield and <em data-base="+20">+20</em> hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[2] = $newSkill;
 			//3
 			//4
 			$newSkill = new stdClass();
 			$newSkill->title = "Hungering Aura";
-			$newSkill->desc = 'Improves lifetaps by <em data-base="+6">+6</em>% healing for each enemy attacking you with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Improves lifetaps by <em data-base="+6">+6</em>% healing for each enemy attacking you with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
 			$skills[4] = $newSkill;
 			//5
 			//6
 			$newSkill = new stdClass();
 			$newSkill->title = "Deathbringer";
-			$newSkill->desc = 'Improves pet by increasing level by <em data-base="+6">+6</em>, HP by <em data-base="+200">+200</em>, and AC by <em data-base="+40">+40</em><span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Improves pet by increasing level by <em data-base="+6">+6</em>, HP by <em data-base="+200">+200</em>, and AC by <em data-base="+40">+40</em><span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-7.png";	
 			$skills[6] = $newSkill;
 			//7
 			//8
 			$newSkill = new stdClass();
 			$newSkill->title = "Zevfeer's Feast";
-			$newSkill->desc = 'Improves Zevfeer\'s Bite to give an additional <em data-base="+100">+100</em>% health and an additional <em data-base="+100">+100</em> mana<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Improves Zevfeer\'s Bite to give an additional <em data-base="+100">+100</em>% health and an additional <em data-base="+100">+100</em> mana<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-9.png";	
 			$skills[8] = $newSkill;
 			//9
 			//10
 			$newSkill = new stdClass();
 			$newSkill->title = "Sworn Enemy";
-			$newSkill->desc = 'Causes intense hatred of target, where any spell damage dealt causes an additional <em data-base="+400">+400</em> hate<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Causes intense hatred of target, where any spell damage dealt causes an additional <em data-base="+400">+400</em> hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-10.png";	
 			$skills[10] = $newSkill;
 			//11
@@ -469,7 +469,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//13
 			$newSkill = new stdClass();
 			$newSkill->title = "Banshee's Mirror";
-			$newSkill->desc = 'Improves Damage Mitigation by <em data-base="+6">+6</em>% for <em data-base="+30">30</em> seconds <span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Improves Damage Mitigation by <em data-base="+6">+6</em>% for <em data-base="+30">30</em> seconds <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
 			$skills[13] = $newSkill;
 			//14
@@ -477,7 +477,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//16
 			$newSkill = new stdClass();
 			$newSkill->title = "Aura of Vampirism";
-			$newSkill->desc = 'Grants the entire group <em data-base="+4">+4</em>% spell vampirism and <em data-base="+10">+10</em>% melee vampirism<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Grants the entire group <em data-base="+4">+4</em>% spell vampirism and <em data-base="+10">+10</em>% melee vampirism<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
 			$skills[16] = $newSkill;
 			//17
@@ -485,42 +485,42 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//18
 			$newSkill = new stdClass();
 			$newSkill->title = "Festering Spear";
-			$newSkill->desc = 'Improve spear type spells by<em data-base="20">20</em>% damage and <em data-base="+1">+1</em>% critical blast chance<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Improve spear type spells by (level * <em data-base="1">1</em>) bonus damage, <em data-base="10">10</em>% damage, and <em data-base="1">1</em>% critical blast chance <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";
 			$skills[18] = $newSkill;
 			//19
 			//20
 			$newSkill = new stdClass();
 			$newSkill->title = "Festering Wound";
-			$newSkill->desc = 'Improves DoT damage by <em data-base="+4">+4</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Improves DoT damage by <em data-base="+4">+4</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
 			$skills[20] = $newSkill;
 			//21
 			//22
 			$newSkill = new stdClass();
 			$newSkill->title = "Rotten Core";
-			$newSkill->desc = 'Increases attack by <em data-base="+8">+8</em>% for a short duration each time a target dies nearby with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Increases attack by <em data-base="+8">+8</em>% for a short duration each time a target dies nearby with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
 			$skills[22] = $newSkill;
 			//23
 			//24
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Pain";
-			$newSkill->desc = 'All direct damage spells have a <em data-base="+4">+4</em>% chance to cause bonus damage over time<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'All direct damage spells have a <em data-base="+4">+4</em>% chance to cause bonus damage over time<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
 			$skills[24] = $newSkill;
 			//25
 			//26
 			$newSkill = new stdClass();
 			$newSkill->title = "Blood Oath";
-			$newSkill->desc = 'Increases damage by <em data-base="+10">+10</em>%, while decreasing healing effects by -<em data-base="10">10</em>%, AC by -<em data-base="10">10</em>, and all resistances by -<em data-base="20">20</em>.<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Increases damage by <em data-base="+10">+10</em>%, while decreasing healing effects by -<em data-base="10">10</em>%, AC by -<em data-base="10">10</em>, and all resistances by -<em data-base="20">20</em>.<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[26] = $newSkill;					
 			//27
 			//28
 			$newSkill = new stdClass();
 			$newSkill->title = "Gift of Urash";
-			$newSkill->desc = 'Increases all skill modifiers by <em data-base="+5">+5</em>%, stacks up to <em data-base="1">1</em> times<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Increases all skill modifiers by <em data-base="+5">+5</em>%, stacks up to <em data-base="1">1</em> times<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
 			$skills[28] = $newSkill;
 			//29
@@ -528,7 +528,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//31
 			$newSkill = new stdClass();
 			$newSkill->title = "Unholy Focus";
-			$newSkill->desc = 'Causes all direct damage spells to be <em data-base="+10">+10</em>% more unresistable<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Causes all direct damage spells to be <em data-base="+10">+10</em>% more unresistable<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
 			$skills[31] = $newSkill;
 			//32
@@ -536,7 +536,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//34
 			$newSkill = new stdClass();
 			$newSkill->title = "Bash of Death";
-			$newSkill->desc = 'Causes a harm touch chance when bashing a target, damage is improved based on stacks of Gift of Urash by <em data-base="+20">+20</em>% damage<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Causes a harm touch chance when bashing a target, damage is improved based on stacks of Gift of Urash by <em data-base="+20">+20</em>% damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
 			$skills[34] = $newSkill;
 			//35
@@ -544,21 +544,21 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//36
 			$newSkill = new stdClass();
 			$newSkill->title = "Embrace Death";
-			$newSkill->desc = 'Grants you the ability to use Feign Death, as well as causes the ability to heal you for <em data-base="+2">+2</em>% maximum health on use<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Grants you the ability to use Feign Death, as well as causes the ability to heal you for <em data-base="+2">+2</em>% maximum health on use<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[36] = $newSkill;
 			//37
 			//38
 			$newSkill = new stdClass();
 			$newSkill->title = "Darkness";
-			$newSkill->desc = 'All darkness type spells slow movement for an additional <em data-base="4">4</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'All darkness type spells slow movement for an additional <em data-base="4">4</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
 			$skills[38] = $newSkill;
 			//39
 			//40
 			$newSkill = new stdClass();
 			$newSkill->title = "Empathetic Soul";
-			$newSkill->desc = 'Improves Dark Empathy by granting an additional <em data-base="+40">+40</em> hitpoints healed and <em data-base="+0.5">+0.5</em>% max mana <span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Improves Dark Empathy by granting an additional <em data-base="+40">+40</em> hitpoints healed and <em data-base="+0.5">+0.5</em>% max mana <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
 			$skills[40] = $newSkill;
 			//41
@@ -566,7 +566,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//43
 			$newSkill = new stdClass();
 			$newSkill->title = "Embrace Shadow";
-			$newSkill->desc = 'Each time you feign death, grants a <em data-base="20">20</em>% chance<span class="perLevel"> per level</span> to instantly be invisible to both living and undead creatures.';
+			$newSkill->desc = 'Each time you feign death, grants a <em data-base="20">20</em>% chance<span class="perLevel"> per rank</span> to instantly be invisible to both living and undead creatures.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
 			$skills[43] = $newSkill;
 			//44
@@ -574,21 +574,21 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//46
 			$newSkill = new stdClass();
 			$newSkill->title = "Crippling Pain";
-			$newSkill->desc = 'Shroud of Pain causes target to deal <em data-base="1">1</em>% less maximum damage<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Shroud of Pain causes target to deal <em data-base="1">1</em>% less maximum damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[46] = $newSkill;					
 			//47
 			//48
 			$newSkill = new stdClass();
 			$newSkill->title = "Nightmare";
-			$newSkill->desc = 'Fear now causes target to freeze in panic and lasta an additional <em data-base="4">4</em> seconds<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Fear now causes target to freeze in panic and lasta an additional <em data-base="4">4</em> seconds<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
 			$skills[48] = $newSkill;					
 			//49
 			//50
 			$newSkill = new stdClass();
 			$newSkill->title = "Mini Minion";
-			$newSkill->desc = 'Causes your pet to summon a pet and attack target with a <em data-base="2">2</em>% chance <span class="perLevel"> per level</span> the target will not bring allies.';
+			$newSkill->desc = 'Causes your pet to summon a pet and attack target with a <em data-base="2">2</em>% chance <span class="perLevel"> per rank</span> the target will not bring allies.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
 			$skills[50] = $newSkill;
 			//51
