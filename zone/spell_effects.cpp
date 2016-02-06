@@ -262,6 +262,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					if(caster)
 						dmg = caster->GetActSpellHealing(spell_id, dmg, this);
 
+					if (spell_id == 3409 && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST) > 0) {
+						dmg += (dmg * 0.2 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST));
+					}
+
 					HealDamage(dmg, caster);
 				}
 
@@ -376,6 +380,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_CurrentMana:
 			{
+
 				// Bards don't get mana from effects, good or bad.
 				if(GetClass() == BARD)
 					break;
@@ -396,14 +401,19 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				}
 				else {
 #ifdef SPELL_EFFECT_SPAM
-				snprintf(effect_desc, _EDLEN, "Current Mana: %+i", effect_value);
+					snprintf(effect_desc, _EDLEN, "Current Mana: %+i", effect_value);
 #endif
-				if (buffslot >= 0)
-					break;
+					if (buffslot >= 0)
+						break;
 
-				SetMana(GetMana() + effect_value);
-				if (effect_value < 0)
-					TryTriggerOnValueAmount(false, true);
+					if (spell_id == 3409 && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST) > 0) {
+						SetMana(GetMana() + (effect_value * 0.2 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST)));
+					}
+					else {
+						SetMana(GetMana() + effect_value);						
+					}
+					if (effect_value < 0)
+						TryTriggerOnValueAmount(false, true);
 				}
 
 				break;
