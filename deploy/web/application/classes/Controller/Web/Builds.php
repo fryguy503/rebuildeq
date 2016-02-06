@@ -482,8 +482,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//5
 			//6
 			$newSkill = new stdClass();
-			$newSkill->title = "Deathbringer";
-			$newSkill->desc = 'Improves pet by increasing level by <em data-base="+6">+6</em>, HP by <em data-base="+200">+200</em>, and AC by <em data-base="+40">+40</em><span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Steadfast Servant";
+			$newSkill->desc = 'Grants the Steadfast Servant, summoning a pet at <em data-base="20">20</em>% power<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-7.png";	
 			$skills[6] = $newSkill;
 			//7
@@ -623,8 +623,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//49
 			//50
 			$newSkill = new stdClass();
-			$newSkill->title = "Chattering Bones";
-			$newSkill->desc = 'Grants the Chattering Bones AA, summoning a swarm pet that attacks a target once with a <em data-base="2">2</em>% chance <span class="perLevel"> per rank</span> to single pull.';
+			$newSkill->title = "Suspended Minion";
+			$newSkill->desc = 'Grants the Suspended Minion AA, summoning a swarm pet that attacks a target once with a <em data-base="2">2</em>% chance <span class="perLevel"> per rank</span> to single pull.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
 			$skills[50] = $newSkill;
 			//51
