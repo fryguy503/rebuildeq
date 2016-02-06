@@ -307,62 +307,55 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//1
 			//2
 			$newSkill = new stdClass();
-			$newSkill->title = "Whispering Chant";
-			$newSkill->desc = 'Slows and heals now generate <em data-base="5">5</em>% less hate<span class="perLevel"> per level</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
+			$newSkill->title = "Purify Soul";
+			$newSkill->desc = 'Grants the Purify Soul AA, which cures target of disease, poison, as well as gives a <em data-base="10">10</em>% chance to apply a <em data-base="1">1</em>% max HP per tick regen<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";
 			$skills[2] = $newSkill;
 			//3
 			//4
 			$newSkill = new stdClass();
-			$newSkill->title = "Extended Haste";
-			$newSkill->desc = 'Improves Haste Spell duration by <em data-base="30">30</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->title = "Ancestral Aid";
+			$newSkill->desc = 'Grants the Ancestral Aid AA, which casts focus line buff scaled to your level.<br>Rank 1: +STR<br>Rank 2: +DEX<br>Rank 3: +AGI<br>Rank 4: +STA<br>Rank 5: +HP as well as targets group';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";
 			$skills[4] = $newSkill;
 			//5
 			//6
 			$newSkill = new stdClass();
-			$newSkill->title = "Turgur's Echo";
-			$newSkill->desc = 'When a slow resists, gives a <em data-base="5">5</em>% chance it will still land<span class="perLevel"> per level</span>.';
+			$newSkill->title = "Extended Haste";
+			$newSkill->desc = 'Improves attack speed spells used by the caster by increasing their duration by <em data-base="30">30</em>%<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
 			$skills[6] = $newSkill;
-			//17
-			// TIER 2
-			//18
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Healing";
 			$newSkill->desc = 'Heals recover an additional <em data-base="20">20</em>% health<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
-			$skills[18] = $newSkill;
-			//19
-			//20
+			$skills[8] = $newSkill;
+
 			$newSkill = new stdClass();
-			$newSkill->title = "Focus";
-			$newSkill->desc = 'Each rank causes Inner Fire and greater Focus-like spells to inherit statistic buff effects as well<span class="perLevel"> per level</span>.';
+			$newSkill->title = "Covenant of Spirit";
+			$newSkill->desc = 'Grants the Covenent of Spirit AA, which imbues divine intervention on the target with a <em data-base="2">2</em>% chance to save<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
-			$skills[20] = $newSkill;
-			//21
-			//22
+			$skills[10] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Reinforce Torpor";
+			$newSkill->desc = 'Reduces the negative effects of Torpor by <em data-base="20">20</em>%<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
+			$skills[13] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Fateseeler's Boon";
+			$newSkill->desc = 'Grants a group buff that increases critical damage by 70% with all skills, chance to critical hit by 50% with all skills, as well as a 400 hitpoint per tick regen. Each rank reduces recast by<em data-base="30">30</em> seconds<span class="perLevel"> per level</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$skills[16] = $newSkill;
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Cannibalize";
-			$newSkill->desc = 'Cannibalize grants <em data-base="10">10</em>% additional conversion<span class="perLevel"> per level</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
-			$skills[22] = $newSkill;
-			//23
-			//24
-			$newSkill = new stdClass();
-			$newSkill->title = "Mending Cure";
-			$newSkill->desc = 'When a disease, poison, or curse is cured, a heal over time is applied to the target for <em data-base="6">6</em> seconds<span class="perLevel"> per level</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
-			$skills[24] = $newSkill;
-			//25
-			//26
-			/*$newSkill = new stdClass();
-			$newSkill->title = "Blood Oath";
-			$newSkill->desc = 'Increases damage by <em data-base="+10">+10</em>%, while decreasing healing effects by -<em data-base="10">10</em>%, AC by -<em data-base="10">10</em>, and all resistances by -<em data-base="20">20</em>.<span class="perLevel"> per level</span>.';
+			$newSkill->desc = 'Grants the Cannibalization AA, increasing effectiveness by <em data-base="10">10</em>%<span class="perLevel"> per level</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
-			$skills[26] = $newSkill;					*/
-			//27
-			//28
+			$skills[18] = $newSkill;
+			
 			/*$newSkill = new stdClass();
 			$newSkill->title = "Gift of Urash";
 			$newSkill->desc = 'Increases all skill modifiers by <em data-base="+5">+5</em>%, stacks up to <em data-base="1">1</em> times<span class="perLevel"> per level</span>.';
