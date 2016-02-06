@@ -461,8 +461,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			default:
 			//0
 			$newSkill = new stdClass();
-			$newSkill->title = "Soul Link";
-			$newSkill->desc = 'Improves lifetap damage by <em data-base="4">4</em>% and <em data-base="1">1</em>% chance to critical heal<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Leech Touch";
+			$newSkill->desc = 'Grants the Leech Touch AA, improves lifetap damage by <em data-base="4">4</em>% and <em data-base="1">1</em>% chance to critical heal<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[0] = $newSkill;
 			//1

@@ -8912,6 +8912,15 @@ void Client::RefreshBuild() {
 						SaveAA();
 						Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");						
 					}
+					if (i == RB_SK_LEECHTOUCH && GetAA(aaLeechTouch) < 1) { //AA 87
+						SetAA(aaLeechTouch, 1, 0); //208 
+						SendAlternateAdvancementPoints();
+						SendAlternateAdvancementStats();
+						CalcBonuses();
+						SaveAA();
+						Message(15, "You have unlocked the AA \"Leech Touch\"! Find the hotkey in your Alternate Advancement Window.");
+					}
+
 					//const Item_Struct* item = database.GetItem(item_id);
 					//if (CheckLoreConflict(item)) {
 
@@ -8981,7 +8990,7 @@ std::string Client::GetBuildClassName() {
 std::string Client::GetBuildName(uint32 id) {
 	switch (this->GetClass()) {
 	case SHADOWKNIGHT:
-		if (id == RB_SK_SOULLINK) return "Soul Link";
+		if (id == RB_SK_LEECHTOUCH) return "Leech Touch";
 		//1
 		else if (id == RB_SK_GOUGINGSKIN) return "Gouging Skin";
 		//3

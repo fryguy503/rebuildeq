@@ -3188,9 +3188,9 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			// if spell is lifetap add hp to the caster
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell( spell_id )) {
 				//Shin: If a lifetap and SK and have points into Soul Link
-				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK) > 0) {
-					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SOULLINK);
-					attacker->CastToClient()->Message(MT_NonMelee, "Soul Link %u added %i bonus damage.", rank, int32((float)damage * 0.04 * (float)rank));
+				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_LEECHTOUCH) > 0) {
+					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_LEECHTOUCH);
+					attacker->CastToClient()->Message(MT_NonMelee, "Leech Touch %u added %i bonus damage.", rank, int32((float)damage * 0.04 * (float)rank));
 					damage += int32((float)damage * 0.04 * (float)rank);
 				}
 
