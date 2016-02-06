@@ -1317,6 +1317,8 @@ public:
 	uint8 GetRottenCoreCounters();
 	void AddRottenCoreCounter(uint8 amount);
 
+	std::string GetBuildClassName();
+
 protected:
 	friend class Mob;
 	void CalcItemBonuses(StatBonuses* newbon);

@@ -8962,6 +8962,24 @@ void Client::AddRottenCoreCounter(uint8 amount) {
 	}
 }
 
+std::string Client::GetBuildClassName() {
+
+	for (uint32 i = 0; i < 53; i++) {
+		//tier1 is 0-17
+		if (i < 17) {
+
+		}
+		uint8 points = GetBuildRank(GetClass(), i);
+		if (points < 1) {
+			continue;
+		}
+		report.append(GetBuildName(i));
+		report.append(StringFormat(" (%u)<br>", points));
+	}
+	report.append("</c>");
+	return report;
+}
+}
 
 std::string Client::GetBuildName(uint32 id) {
 	switch (this->GetClass()) {
