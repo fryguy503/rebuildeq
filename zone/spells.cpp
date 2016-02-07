@@ -1298,15 +1298,17 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, uint16 slot,
 	//
 	// at this point the spell has successfully been cast
 	//
-
+	
 	if (IsClient() && 
+		target &&
+		target != this &&
 		target->IsNPC() &&
 		CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SWORNENEMY) > 0 &&
-		CastToClient()->GetEPP().sworn_enemy_id > 0 &&
-		CastToClient()->GetEPP().sworn_enemy_timeout >= time(nullptr)) {
+		CastToClient()->IsSwornEnemyActive()) {
 			Message(270, "%s intensifies his hatred towards you.", target->GetCleanName());
 			target->AddToHateList(this, 100);
 	}
+	
 
 	if(IsClient()) {
 		char temp[64];

@@ -1313,6 +1313,7 @@ public:
 	std::string GetBuildReport();
 	void RefreshBuild();
 	std::string GetBuildName(uint32 id);
+	bool IsSwornEnemyActive();
 	uint32 GetBuildRank(uint8 classid, uint32 rankid);
 	uint8 GetRottenCoreCounters();
 	void AddRottenCoreCounter(uint8 amount);

@@ -9058,3 +9058,7 @@ std::string Client::GetBuildName(uint32 id) {
 	}
 	return "Unknown";
 }
+
+bool Client::IsSwornEnemyActive() {
+	return(m_epp.sworn_enemy_id > 0 && m_epp.sworn_enemy_timeout >= time(nullptr));
+}
