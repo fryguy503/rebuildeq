@@ -617,8 +617,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//48
 			$newSkill = new stdClass();
 			$newSkill->title = "Nightmare";
-			$newSkill->desc = 'Fear now causes target to freeze in panic and lasta an additional <em data-base="4">4</em> seconds<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
+			$newSkill->desc = 'Fear now causes target to freeze in panic for <em data-base="2">2</em>seconds<span class="perLevel"> per rank</span> before fleeing.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";
 			$skills[48] = $newSkill;					
 			//49
 			//50

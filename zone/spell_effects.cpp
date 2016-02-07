@@ -903,7 +903,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					{
 						CastToClient()->AI_Start();
 					}
-
+					if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_NIGHTMARE) > 0 && zone->random.Roll((int)caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_NIGHTMARE) * 4)) {
+						entity_list.MessageClose(this, true, 300, MT_Emote, "%s freezes in fear as nightmares of %s overwhelms them.", GetCleanName(), caster->GetCleanName());			
+						Stun((int)(2 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_NIGHTMARE)));
+					}
 					CalculateNewFearpoint();
 					if(currently_fleeing)
 					{
