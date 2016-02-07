@@ -235,14 +235,28 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 					//handles AAs and what not...
 					if(caster) {
+						uint16 rank;
 						//Shin: Festering Spear
-						if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR) > 0) {
-							uint16 rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR);
+						if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR) > 0) {
+							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR);
 							if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
 								int festerDmg = (rank * caster->CastToClient()->GetLevel());
 								festerDmg += int32((float)dmg * 0.1 * (float)rank);
 								caster->CastToClient()->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
 								dmg += festerDmg;
+							}
+						}
+						//Shin: Lingering Pain
+						if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_LINGERINGPAIN) > 0) {
+							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_LINGERINGPAIN);
+							if (zone->random.Roll((int)(rank))) { //chance
+								if (GetLevel() > 57) { //Ignite Blood
+									SpellFinished(6, this, buffslot, 0, -1, spells[6].ResistDiff, true, level_override);
+								} else if (GetLevel() > 36) { //boil blood
+									SpellFinished(451, this, buffslot, 0, -1, spells[451].ResistDiff, true, level_override);
+								} else if (GetLevel() > 20) { //heat blood
+									SpellFinished(360, this, buffslot, 0, -1, spells[360].ResistDiff, true, level_override);
+								}
 							}
 						}
 

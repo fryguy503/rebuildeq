@@ -542,8 +542,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//24
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Pain";
-			$newSkill->desc = 'All direct damage spells have a <em data-base="+4">+4</em>% chance to cause bonus damage over time<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$newSkill->desc = 'All direct damage spells have a <em data-base="1">1</em>%<span class="perLevel"> per rank</span> chance to cause bonus damage over time effects.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";
 			$skills[24] = $newSkill;
 			//25
 			//26
