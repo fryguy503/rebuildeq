@@ -549,7 +549,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//26
 			$newSkill = new stdClass();
 			$newSkill->title = "Blood Oath";
-			$newSkill->desc = 'Increases damage by <em data-base="+10">+10</em>%, while decreasing healing effects by -<em data-base="10">10</em>%, AC by -<em data-base="10">10</em>, and all resistances by -<em data-base="20">20</em>.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'If using a 2 handed weapon, increases damage by <em data-base="10">10</em>%, while causing negative effects of healing gets reduced by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[26] = $newSkill;					
 			//27

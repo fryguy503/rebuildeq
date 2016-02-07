@@ -3185,6 +3185,16 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 		//if there is some damage being done and theres an attacker involved
 		if(attacker) {			
 
+			if (attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BLOODOATH) > 0) {
+				if (attacker->CastToClient()->GetPrimarySkillValue() == ItemType2HSlash ||
+					attacker->CastToClient()->GetPrimarySkillValue() == ItemType2HBlunt
+					) {
+					int oath_damage = int32((float)damage * 0.1 * (float)rank);
+					attacker->CastToClient()->Message(MT_NonMelee, "Blood Oath %u added %i bonus damage.", rank, oath_damage);
+					damage += oath_damage;
+				}
+			}
+
 			// if spell is lifetap add hp to the caster
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell( spell_id )) {
 				//Shin: If a lifetap and SK and have points into Soul Link
@@ -3565,6 +3575,18 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 		acthealed = (maxhp - curhp);
 	else
 		acthealed = amount;
+
+	//Shin: Blood Oath reduces healing.
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BLOODOATH) > 0) {
+		if (CastToClient()->GetEPP().blood_oath_timeout >= time(nullptr) ||
+			CastToClient()->GetPrimarySkillValue() == ItemType2HSlash ||
+			CastToClient()->GetPrimarySkillValue() == ItemType2HBlunt
+			) {
+			int reduction = (uint32)((float)acthealed * 0.1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BLOODOATH));
+			Message(MT_NonMelee, "Blood Oath reduced healing received by %i.", reduction);
+			acthealed -= reduction;
+		}
+	}
 
 	if (acthealed > 100) {
 		if (caster) {

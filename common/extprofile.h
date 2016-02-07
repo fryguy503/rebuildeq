@@ -63,6 +63,7 @@ struct ExtendedProfile_Struct {
 	uint32				rotten_core_timeout; //SK only skill, timeout for temp buff
 	int sworn_enemy_timeout; //SK only skill, timeout for sworn enemy
 	uint16 sworn_enemy_id; //SK only skill, target of sworn enemy
+	int blood_oath_timeout; //SK only skill, timeout for blood oath effect cooldown
 };
 
 #pragma pack()
