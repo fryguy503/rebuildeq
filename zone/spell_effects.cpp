@@ -614,6 +614,17 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				snprintf(effect_desc, _EDLEN, "Invisibility");
 #endif
 				SetInvisible(spell.base[i]);
+				if (spell_id == 8223 && IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_CLOAKOFSHADOWS) > 0) {
+					if (caster->CastToClient()->GetAggroCount() > 0) {
+						if (zone->random.Roll((int)(5 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_CLOAKOFSHADOWS)))) {
+							caster->CastToClient()->Escape();
+							caster->Message(MT_NonMelee, "You successfuly evaded your enemies by stepping into the shadows.");
+						}
+						else {
+							caster->Message(MT_NonMelee, "You failed to evade your enemies by stepping into the shadows.");
+						}
+					}					
+				}
 				break;
 			}
 
@@ -3769,6 +3780,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 			if (buff.ticsremaining <= 3 && buff.ticsremaining > 1) {
 				Message_StringID(MT_Spells, INVIS_BEGIN_BREAK);
 			}
+			
 			break;
 		}
 		case SE_InterruptCasting: {

@@ -549,7 +549,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//26
 			$newSkill = new stdClass();
 			$newSkill->title = "Blood Oath";
-			$newSkill->desc = 'If using a 2 handed weapon, increases damage by <em data-base="10">10</em>%, while causing negative effects of healing gets reduced by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While using a 2 handed weapon, increases damage by <em data-base="10">10</em>%, while causing negative effects of healing gets reduced by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[26] = $newSkill;					
 			//27
@@ -580,7 +580,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//36
 			$newSkill = new stdClass();
 			$newSkill->title = "Embrace Death";
-			$newSkill->desc = 'Grants you the ability to use Feign Death, as well as causes the ability to heal you for <em data-base="+2">+2</em>% maximum health on use<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants you the Death Peace AA, giving the ability to feign death as well as heal you for <em data-base="+2">+2</em>% maximum health on use<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[36] = $newSkill;
 			//37
@@ -630,8 +630,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//51
 			//52
 			$newSkill = new stdClass();
-			$newSkill->title = "Cry of the Banshee";
-			$newSkill->desc = 'Causes all nearby targets to be mesmerized for <em data-base="10">10</em> while feigning death. Grants a <em data-base="2">2</em>% chance for a burst of <em data-base="2">2</em> seconds, then forget all aggressions.';
+			$newSkill->title = "Cloak of Shadows";
+			$newSkill->desc = 'Grants the Cloak of the Shadows AA, allowing you to step into the shadows, causing a <em data-base="5">5</em>% chance that all targets will forget your actions.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-7.png";
 			$skills[52] = $newSkill;
 			//53

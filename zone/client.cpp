@@ -8930,6 +8930,15 @@ void Client::RefreshBuild() {
 						Message(15, "You have unlocked the AA \"Steadfast Servant\"! Find the hotkey in your Alternate Advancement Window.");
 					}
 
+					if (i == RB_SK_CLOAKOFSHADOWS && GetAA(aaCloakofShadows) < 1) {
+						SetAA(aaCloakofShadows, 1, 0);
+						SendAlternateAdvancementPoints();
+						SendAlternateAdvancementStats();
+						CalcBonuses();
+						SaveAA();
+						Message(15, "You have unlocked the AA \"Cloak of Shadows\"! Find the hotkey in your Alternate Advancement Window.");
+					}
+
 					//const Item_Struct* item = database.GetItem(item_id);
 					//if (CheckLoreConflict(item)) {
 
@@ -9046,13 +9055,13 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_SK_EMBRACESHADOW) return "Embrace Shadow";
 		//44
 		//45
-		else if (id == RB_SK_SIPHONOFDEATH) return "Crippling Pain";
+		else if (id == RB_SK_SIPHONOFDEATH) return "Siphon of Death";
 		//47
 		else if (id == RB_SK_NIGHTMARE) return "Nightmare";
 		//49
 		else if (id == RB_SK_SUSPENDEDMINION) return "Suspended Minion";
 		//51
-		else if (id == RB_SK_CRYOFTHEBANSHEE) return "Cry of the Banshee";
+		else if (id == RB_SK_CLOAKOFSHADOWS) return "Cloak of Shadows";
 		//53
 		break;
 	}
