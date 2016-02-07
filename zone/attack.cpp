@@ -3381,6 +3381,12 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				}
 			}
 
+			if (attacker->IsClient() &&
+				attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BASHOFDEATH) > 0 &&
+				zone->random.Roll((int)attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BASHOFDEATH))) {
+				attacker->SpellFinished(13531, this); //Proc Harm Touch!
+			}
+
 			if (stun_chance && zone->random.Roll(stun_chance)) {
 				// Passed stun, try to resist now
 				int stun_resist = itembonuses.StunResist + spellbonuses.StunResist;

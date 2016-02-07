@@ -572,7 +572,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//34
 			$newSkill = new stdClass();
 			$newSkill->title = "Bash of Death";
-			$newSkill->desc = 'Causes a harm touch chance when bashing a target, damage is improved based on stacks of Gift of Urash by <em data-base="+20">+20</em>% damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you bash a target, there is a <em data-base="1">1</em>% chance to cast harm touch<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
 			$skills[34] = $newSkill;
 			//35
