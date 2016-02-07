@@ -1631,6 +1631,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 							HealDamage(healAmount);				
 						}
+						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACESHADOW) > 0) {
+							if (zone->random.Roll((int)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACESHADOW) * 20)) {
+								SpellFinished(522, this, USE_ITEM_SPELL_SLOT, 0, -1, spells[522].ResistDiff); //invis
+								SpellFinished(1420, this, USE_ITEM_SPELL_SLOT, 0, -1, spells[1420].ResistDiff); //ivu
+							}
+						}
 					}
 				}
 				break;
