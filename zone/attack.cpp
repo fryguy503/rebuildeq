@@ -3384,6 +3384,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			if (attacker->IsClient() &&
 				attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BASHOFDEATH) > 0 &&
 				zone->random.Roll((int)attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BASHOFDEATH))) {
+				attacker->Message(HIT_NON_MELEE, "%s is hit by a Bash of Death.", this->GetCleanName());
 				attacker->SpellFinished(13531, this); //Proc Harm Touch!
 			}
 
