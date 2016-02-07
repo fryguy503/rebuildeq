@@ -505,8 +505,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//13
 			$newSkill = new stdClass();
 			$newSkill->title = "Banshee's Mirror";
-			$newSkill->desc = 'Improves Damage Mitigation by <em data-base="+6">+6</em>% for <em data-base="+30">30</em> seconds <span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
+			$newSkill->desc = 'Banshee\s Aura now has a <em data="1">1</em>% chance to reduce <em data-base="3">3</em>% of damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";
 			$skills[13] = $newSkill;
 			//14
 			//15

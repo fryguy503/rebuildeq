@@ -3247,7 +3247,15 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			damage += empDamage;
 		}
 
-		
+		//Shin: Banshee's Mirror
+		if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BANSHEESMIRROR) > 0) {
+			rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BANSHEESMIRROR);
+			if (zone->random.Roll((int)rank)) {
+				int damage_reduction = (damage * 0.03 * rank);
+				damage -= damage_reduction;
+				Message(MT_NonMelee, "Banshee's Mirror %u reduced %i of incoming damage.", rank, damage_reduction);
+			}
+		}
 
 		Mob *pet = GetPet();
 		if (pet && !pet->IsFamiliar() && !pet->GetSpecialAbility(IMMUNE_AGGRO) && !pet->IsEngaged() && attacker && attacker != this && !attacker->IsCorpse())
