@@ -9046,7 +9046,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_SK_EMBRACESHADOW) return "Embrace Shadow";
 		//44
 		//45
-		else if (id == RB_SK_CRIPPLINGPAIN) return "Crippling Pain";
+		else if (id == RB_SK_SIPHONOFDEATH) return "Crippling Pain";
 		//47
 		else if (id == RB_SK_NIGHTMARE) return "Nightmare";
 		//49

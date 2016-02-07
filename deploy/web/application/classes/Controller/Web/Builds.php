@@ -609,8 +609,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//45
 			//46
 			$newSkill = new stdClass();
-			$newSkill->title = "Crippling Pain";
-			$newSkill->desc = 'Shroud of Pain causes target to deal <em data-base="1">1</em>% less maximum damage<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Siphon of Death";
+			$newSkill->desc = 'Scream of Death and Shroud of Death now also grant a mana tap for <em data-base="5">5</em>% of damage dealt<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[46] = $newSkill;					
 			//47

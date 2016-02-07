@@ -243,7 +243,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								int festerDmg = (rank * caster->CastToClient()->GetLevel());
 								festerDmg += int32((float)dmg * 0.1 * (float)rank);
 								caster->CastToClient()->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
-								dmg += festerDmg;
+								dmg -= festerDmg;
 							}
 						}
 						//Shin: Lingering Pain
@@ -258,6 +258,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									SpellFinished(360, this, buffslot, 0, -1, spells[360].ResistDiff, true, level_override);
 								}
 							}
+						}
+
+						if (caster->IsClient() && 
+							(spell_id == 2718 || spell_id == 1471) &&
+							caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SIPHONOFDEATH) > 0) {
+
+							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SIPHONOFDEATH);
+							int mana_amount = (int)(dmg * 0.05 * rank);
+							caster->Message(MT_NonMelee, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
+							caster->SetMana(GetMana() + mana_amount);
 						}
 
 						dmg = caster->GetActSpellDamage(spell_id, dmg, this);
@@ -1629,7 +1639,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							if (healAmount < 0 || healAmount > 50000) {
 								healAmount = 1;
 							}
-							HealDamage(healAmount);				
+							HealDamage(healAmount);
 						}
 						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACESHADOW) > 0) {
 							if (zone->random.Roll((int)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACESHADOW) * 20)) {
