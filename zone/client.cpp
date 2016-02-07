@@ -9059,7 +9059,7 @@ std::string Client::GetBuildName(uint32 id) {
 		//47
 		else if (id == RB_SK_NIGHTMARE) return "Nightmare";
 		//49
-		else if (id == RB_SK_SUSPENDEDMINION) return "Suspended Minion";
+		else if (id == RB_SK_MENTALRESISTANCE) return "Mental Resistance";
 		//51
 		else if (id == RB_SK_CLOAKOFSHADOWS) return "Cloak of Shadows";
 		//53

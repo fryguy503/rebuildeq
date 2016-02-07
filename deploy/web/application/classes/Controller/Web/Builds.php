@@ -623,8 +623,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//49
 			//50
 			$newSkill = new stdClass();
-			$newSkill->title = "Suspended Minion";
-			$newSkill->desc = 'Grants the Suspended Minion AA, summoning a swarm pet that attacks a target once with a <em data-base="2">2</em>% chance <span class="perLevel"> per rank</span> to single pull.';
+			$newSkill->title = "Mental Resistance";
+			$newSkill->desc = 'Gives a <em data-base="2">2</em>% chance to resist stun effects<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
 			$skills[50] = $newSkill;
 			//51
