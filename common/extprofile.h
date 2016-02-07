@@ -58,7 +58,7 @@ struct ExtendedProfile_Struct {
 	uint32				next_invsnapshot_time; /* Used */
 	char				session[32];
 	uint32				session_timeout;
-	char				build[53];
+	char				build[55];
 	uint8				rotten_core; //SK only skill, not saved, a temp buff
 	uint32				rotten_core_timeout; //SK only skill, timeout for temp buff
 	int sworn_enemy_timeout; //SK only skill, timeout for sworn enemy
