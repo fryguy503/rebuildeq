@@ -483,14 +483,14 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//6
 			$newSkill = new stdClass();
 			$newSkill->title = "Steadfast Servant";
-			$newSkill->desc = 'Grants the Steadfast Servant, summoning a pet at <em data-base="20">20</em>% power<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Steadfast Servant, summoning a pet at <em data-base="+20">+20</em>% power<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-steadfastservant.png";	
 			$skills[6] = $newSkill;
 			//7
 			//8
 			$newSkill = new stdClass();
 			$newSkill->title = "Zevfeer's Feast";
-			$newSkill->desc = 'Improves Siphon Strength and Abduct Strength to tap the target for HP and Mana for up to <em data-base="1">1</em>% your maximum health and mana<span class="perLevel"> per rank</span> to give it to group.';
+			$newSkill->desc = 'Improves Siphon Strength and Abduct Strength to tap the target for HP and Mana for up to <em data-base="+1">+1</em>% your maximum health and mana<span class="perLevel"> per rank</span> to give it to group.';
 			$newSkill->image = "/images/builds/icons/rb-sk-zevfeersfeast.png";	
 			$skills[8] = $newSkill;
 			//9
@@ -505,7 +505,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//13
 			$newSkill = new stdClass();
 			$newSkill->title = "Banshee's Mirror";
-			$newSkill->desc = 'Banshee\s Aura now has a <em data="1">1</em>% chance to reduce <em data-base="3">3</em>% of damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Banshee\'s Aura now has a <em data="+1">+1</em>% chance to reduce <em data-base="+3">+3</em>% of damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-bansheesmirror.png";
 			$skills[13] = $newSkill;
 			//14
@@ -514,7 +514,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill = new stdClass();
 			$newSkill->title = "Aura of Vampirism";
 			$newSkill->desc = 'Grants the entire group <em data-base="+4">+4</em>% spell vampirism and <em data-base="+10">+10</em>% melee vampirism<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
+			$newSkill->image = "/images/builds/icons/rb-sk-auraofvampirism.png";	
 			$skills[16] = $newSkill;
 			//17
 			// TIER 2
@@ -543,7 +543,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Pain";
 			$newSkill->desc = 'All direct damage spells have a <em data-base="1">1</em>%<span class="perLevel"> per rank</span> chance to cause bonus damage over time effects.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";
+			$newSkill->image = "/images/builds/icons/rb-sk-lingeringpain.png";
 			$skills[24] = $newSkill;
 			//25
 			//26
