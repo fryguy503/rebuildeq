@@ -223,7 +223,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$class = "shadowknight";
 			$build->fullName = "Shadow Knight";
 			$build->monogram = 5;
-			$build->desc = "Shadow Knights are unholy knights.<br> Their 3 styles focus tanking by taking blood of their victims, dealing damage with spears and other abilities, or crowd control pulling.";
+			
+			$build->desc = "Shadow Knights are fighters with necromancer powers.<br><font color='#41974D'>Bloodreaver</font> specializes in tanking and lifetaps.<br> <font color='#2A87C7'>Defiler</font> focus on dealing damage.<br> <font color='#A93640'>Revenant</font> excel at pulling.";
 			$build->styles[0] = "Bloodreaver";
 			$build->styles[1] = "Defiler";
 			$build->styles[2] = "Revenant";
