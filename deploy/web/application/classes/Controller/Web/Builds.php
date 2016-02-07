@@ -564,7 +564,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//31
 			$newSkill = new stdClass();
 			$newSkill->title = "Unholy Focus";
-			$newSkill->desc = 'Causes all direct damage spells to be <em data-base="+10">+10</em>% more unresistable<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Improves all direct damage spells to penetrate <em data-base="10">10</em>% spell resists<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
 			$skills[31] = $newSkill;
 			//32

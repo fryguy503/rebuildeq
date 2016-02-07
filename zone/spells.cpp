@@ -1914,6 +1914,11 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 	//EQApplicationPacket *outapp = nullptr;
 	Mob *ae_center = nullptr;
 
+	//Shin: resist adjust penetration for Unholy Focus
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_UNHOLYFOCUS) > 0) {
+		resist_adjust -= (resist_adjust * 0.1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_UNHOLYFOCUS));
+	}
+
 	if(!IsValidSpell(spell_id))
 		return false;
 
