@@ -1625,6 +1625,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						//Shin: Embrace Death Perk
 						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACEDEATH) > 0) {
 							uint32 healAmount = GetMaxHP()* (0.02 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACEDEATH));
+							Message(MT_NonMelee, "Embrace Death has healed you for %i.", healAmount);
 							if (healAmount < 0 || healAmount > 50000) {
 								healAmount = 1;
 							}
