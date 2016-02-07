@@ -556,7 +556,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//28
 			$newSkill = new stdClass();
 			$newSkill->title = "Gift of Urash";
-			$newSkill->desc = 'Increases all skill modifiers by <em data-base="+5">+5</em>%, stacks up to <em data-base="1">1</em> times<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases all skill damage by <em data-base="+5">+5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
 			$skills[28] = $newSkill;
 			//29

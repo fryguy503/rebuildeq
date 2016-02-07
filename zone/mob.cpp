@@ -4724,6 +4724,9 @@ int16 Mob::GetSkillDmgAmt(uint16 skill)
 {
 	int skill_dmg = 0;
 
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_GIFTOFURASH) > 0) {
+		skill_dmg += (int)(skill_dmg * 0.05 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_GIFTOFURASH));
+	}
 	// All skill dmg(only spells do this) + Skill specific
 	skill_dmg += spellbonuses.SkillDamageAmount[HIGHEST_SKILL+1] + itembonuses.SkillDamageAmount[HIGHEST_SKILL+1] + aabonuses.SkillDamageAmount[HIGHEST_SKILL+1]
 				+ itembonuses.SkillDamageAmount[skill] + spellbonuses.SkillDamageAmount[skill] + aabonuses.SkillDamageAmount[skill];
