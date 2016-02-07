@@ -1,6 +1,6 @@
 
 <nav class="navbar navbar-fixed-top navbar-bootsnipp animate">
-  <div class="container-fluid" {*style="background-color: #00AFF0"*}>
+  <div class="container-fluid" style="background-color: #222222">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
         <span class="sr-only">Toggle navigation</span>
