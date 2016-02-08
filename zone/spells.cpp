@@ -2666,6 +2666,10 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 	formula = spells[spell_id].buffdurationformula;
 	duration = spells[spell_id].buffduration;
 
+	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED) > 0) {
+		duration += (int)(duration * 0.2 * caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED));
+	}
+
 	int castlevel = caster->GetCasterLevel(spell_id);
 	if(caster_level_override > 0)
 		castlevel = caster_level_override;
