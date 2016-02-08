@@ -2121,8 +2121,8 @@ void Mob::Taunt(NPC* who, bool always_succeed, float chance_bonus) {
 		Message_StringID(MT_SpellFailure,FAILED_TAUNT);
 		return;
 	}
-	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SWORNENEMY) > 0) {
-		uint16 rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SWORNENEMY);
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SWORNENEMY) > 0) {
+		uint16 rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SWORNENEMY);
 		if (CastToClient()->GetEPP().sworn_enemy_timeout < time(nullptr)) {
 			CastToClient()->GetEPP().sworn_enemy_id = who->GetID();
 			CastToClient()->GetEPP().sworn_enemy_timeout = time(nullptr) + 18;

@@ -3395,9 +3395,9 @@ int Mob::GetSnaredAmount()
 				if (buffs[i].client && buffs[i].casterid != 0) 
 				{
 					Client* curClient = entity_list.GetClientByID(buffs[i].casterid);
-					if (curClient && curClient->GetBuildRank(SHADOWKNIGHT, RB_SK_DARKNESS) > 0) 
+					if (curClient && curClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_DARKNESS) > 0) 
 					{
-						val += int(val * 0.04 * curClient->GetBuildRank(SHADOWKNIGHT, RB_SK_DARKNESS));
+						val += int(val * 0.04 * curClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_DARKNESS));
 					}
 				}
 
@@ -4724,8 +4724,8 @@ int16 Mob::GetSkillDmgAmt(uint16 skill)
 {
 	int skill_dmg = 0;
 
-	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_GIFTOFURASH) > 0) {
-		skill_dmg += (int)(skill_dmg * 0.05 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_GIFTOFURASH));
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_GIFTOFURASH) > 0) {
+		skill_dmg += (int)(skill_dmg * 0.05 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_GIFTOFURASH));
 	}
 	// All skill dmg(only spells do this) + Skill specific
 	skill_dmg += spellbonuses.SkillDamageAmount[HIGHEST_SKILL+1] + itembonuses.SkillDamageAmount[HIGHEST_SKILL+1] + aabonuses.SkillDamageAmount[HIGHEST_SKILL+1]

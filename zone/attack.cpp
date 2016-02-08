@@ -2550,12 +2550,12 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 		spellid = 2166;
 	}
 
-	if (this->IsClient() && this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_GOUGINGSKIN) > 0) {
+	if (this->IsClient() && this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_GOUGINGSKIN) > 0) {
 		
 		//This wonky code is because depending on item or spell ds, it stacks oddly.
-		DS += ((spell_ds) ? 1 : -1) *  4 * this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_GOUGINGSKIN);
+		DS += ((spell_ds) ? 1 : -1) *  4 * this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_GOUGINGSKIN);
 		if (attacker->IsNPC()) {
-			attacker->AddToHateList(this, uint32(10 * this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_GOUGINGSKIN)));
+			attacker->AddToHateList(this, uint32(10 * this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_GOUGINGSKIN)));
 		}
 	}
 
@@ -3185,7 +3185,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 		//if there is some damage being done and theres an attacker involved
 		if(attacker) {			
 
-			if (attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BLOODOATH) > 0) {
+			if (attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH) > 0) {
 				if (attacker->CastToClient()->GetPrimarySkillValue() == ItemType2HSlash ||
 					attacker->CastToClient()->GetPrimarySkillValue() == ItemType2HBlunt
 					) {
@@ -3198,16 +3198,16 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			// if spell is lifetap add hp to the caster
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell( spell_id )) {
 				//Shin: If a lifetap and SK and have points into Soul Link
-				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_LEECHTOUCH) > 0) {
-					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_LEECHTOUCH);
+				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) > 0) {
+					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
 					attacker->CastToClient()->Message(MT_NonMelee, "Leech Touch %u added %i bonus damage.", rank, int32((float)damage * 0.04 * (float)rank));
 					damage += int32((float)damage * 0.04 * (float)rank);
 				}
 
 				int healed = damage;
 				//Shin: Hungering Aura check
-				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_HUNGERINGAURA) > 0 && attacker->CastToClient()->GetAggroCount() > 0) {					
-					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_HUNGERINGAURA);
+				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA) > 0 && attacker->CastToClient()->GetAggroCount() > 0) {					
+					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA);
 					int healBonus = int32((float)healed * 0.06 * (float)(attacker->CastToClient()->GetAggroCount() > rank) * attacker->CastToClient()->GetAggroCount());
 					attacker->CastToClient()->Message(MT_NonMelee, "Hungering Aura %u with %i enemies added %i bonus healing.", rank, attacker->CastToClient()->GetAggroCount(), healBonus);
 					healed += healBonus;
@@ -3226,9 +3226,9 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			
 
 			//Shin: Rotten Core
-			if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE) > 0) {
+			if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE) > 0) {
 				
-				rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE);
+				rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
 				uint32 counters = 0;
 				if (attacker->FindBuff(700)) {
 					Buffs_Struct *buffs = attacker->GetBuffs();
@@ -3250,16 +3250,16 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 		}	//end `if there is some damage being done and theres anattacker person involved`
 		
 		//Shin: Empathetic Soul
-		if (spell_id == 3650 && IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMPATHETICSOUL) > 0) {
-			rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMPATHETICSOUL);
+		if (spell_id == 3650 && IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMPATHETICSOUL) > 0) {
+			rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMPATHETICSOUL);
 			int empDamage = 40 * rank;
 			attacker->CastToClient()->Message(MT_NonMelee, "Empathetic Soul %u added %i bonus damage.", rank, empDamage);
 			damage += empDamage;
 		}
 
 		//Shin: Banshee's Mirror
-		if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BANSHEESMIRROR) > 0) {
-			rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BANSHEESMIRROR);
+		if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BANSHEESMIRROR) > 0) {
+			rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BANSHEESMIRROR);
 			if (zone->random.Roll((int)rank)) {
 				int damage_reduction = (damage * 0.03 * rank);
 				damage -= damage_reduction;
@@ -3382,8 +3382,8 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			}
 
 			if (attacker->IsClient() &&
-				attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BASHOFDEATH) > 0 &&
-				zone->random.Roll((int)attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BASHOFDEATH))) {
+				attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH) > 0 &&
+				zone->random.Roll((int)attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH))) {
 				attacker->Message(HIT_NON_MELEE, "%s is hit by a Bash of Death.", this->GetCleanName());
 				attacker->SpellFinished(13531, this); //Proc Harm Touch!
 			}
@@ -3584,12 +3584,12 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 		acthealed = amount;
 
 	//Shin: Blood Oath reduces healing.
-	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BLOODOATH) > 0) {
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH) > 0) {
 		if (CastToClient()->GetEPP().blood_oath_timeout >= time(nullptr) ||
 			CastToClient()->GetPrimarySkillValue() == ItemType2HSlash ||
 			CastToClient()->GetPrimarySkillValue() == ItemType2HBlunt
 			) {
-			int reduction = (uint32)((float)acthealed * 0.1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_BLOODOATH));
+			int reduction = (uint32)((float)acthealed * 0.1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH));
 			Message(MT_NonMelee, "Blood Oath reduced healing received by %i.", reduction);
 			acthealed -= reduction;
 		}

@@ -293,8 +293,8 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	int16 MaxHP = aabonuses.PetMaxHP + itembonuses.PetMaxHP + spellbonuses.PetMaxHP;
 	
 	//Shin: Pet buff system
-	if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_STEADFASTSERVANT) > 0) {
-		uint32 rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_STEADFASTSERVANT);
+	if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) > 0) {
+		uint32 rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT);
 		npc_type->max_hp += (npc_type->max_hp * 0.2 * rank); //bonus HP
 		npc_type->level = (CastToClient()->GetLevel() - (5 - rank));
 		npc_type->AC += (npc_type->AC * 0.2 * rank);

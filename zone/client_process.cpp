@@ -529,7 +529,7 @@ bool Client::Process() {
 			BuffProcess();
 			DoStaminaUpdate();
 			RefreshBuild();
-			if (GetBuildRank(SHADOWKNIGHT, RB_SK_BLOODOATH) > 0) {
+			if (GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH) > 0) {
 				if (GetPrimarySkillValue() == ItemType2HSlash || GetPrimarySkillValue() == ItemType2HBlunt) {
 					m_epp.blood_oath_timeout = time(nullptr) + 18;
 				}

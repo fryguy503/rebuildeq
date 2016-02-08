@@ -66,9 +66,9 @@ int32 Mob::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 
 
 	//Shin: Added crit chance based on Festering Spear build spec
-	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR) > 0) {
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR) > 0) {
 		if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
-			chance = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR);
+			chance = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
 		}
 	}
 
@@ -225,8 +225,8 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 		value -= extra_dmg;
 	}
 
-	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGWOUND) > 0) {
-		extra_dmg = int32((float)value * 0.04 * (float)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGWOUND));
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND) > 0) {
+		extra_dmg = int32((float)value * 0.04 * (float)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND));
 		value += extra_dmg;
 	}
 
@@ -281,12 +281,12 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 	if(spells[spell_id].buffduration < 1) {
 
 		//Shin: Empathetic Soul
-		if (spell_id == 357 && IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMPATHETICSOUL) > 0) {			
-			int empDamage = 40 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMPATHETICSOUL);
+		if (spell_id == 357 && IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMPATHETICSOUL) > 0) {			
+			int empDamage = 40 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMPATHETICSOUL);
 			value += empDamage;
 
 			//Do mana conversion
-			int manaAmount = (target->GetMaxMana() * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMPATHETICSOUL));
+			int manaAmount = (target->GetMaxMana() * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMPATHETICSOUL));
 			if (GetMana() > manaAmount) { //If I have enough mana
 				SetMana((GetMana() - manaAmount)); //Take it from my bar
 				CastToClient()->Message(MT_NonMelee, "You have transferred %i mana to %s", manaAmount, target->GetCleanName());
@@ -307,8 +307,8 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 		if (spells[spell_id].override_crit_chance > 0 && chance > spells[spell_id].override_crit_chance)
 			chance = spells[spell_id].override_crit_chance;
 
-		if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_LEECHTOUCH) > 0) {
-			chance += 1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_LEECHTOUCH);
+		if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) > 0) {
+			chance += 1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
 		}
 
 		if(chance && (zone->random.Roll(chance))) {

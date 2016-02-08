@@ -1303,7 +1303,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, uint16 slot,
 		target &&
 		target != this &&
 		target->IsNPC() &&
-		CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SWORNENEMY) > 0 &&
+		CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SWORNENEMY) > 0 &&
 		CastToClient()->IsSwornEnemyActive()) {
 			Message(270, "%s intensifies his hatred towards you.", target->GetCleanName());
 			target->AddToHateList(this, 100);
@@ -1917,8 +1917,8 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 	Mob *ae_center = nullptr;
 
 	//Shin: resist adjust penetration for Unholy Focus
-	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_UNHOLYFOCUS) > 0) {
-		resist_adjust -= (resist_adjust * 0.1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_UNHOLYFOCUS));
+	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS) > 0) {
+		resist_adjust -= (resist_adjust * 0.1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS));
 	}
 
 	if(!IsValidSpell(spell_id))

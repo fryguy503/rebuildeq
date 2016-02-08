@@ -8904,7 +8904,7 @@ void Client::RefreshBuild() {
 				
 				if (GetClass() == SHADOWKNIGHT) {
 					
-					if (i == RB_SK_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
+					if (i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
 						SetAA(aaDeathPeace2, 1, 0); //aaDeathPeace2 = 1272 
 						SendAlternateAdvancementPoints();
 						SendAlternateAdvancementStats();
@@ -8912,7 +8912,7 @@ void Client::RefreshBuild() {
 						SaveAA();
 						Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");						
 					}
-					if ((i == RB_SK_LEECHTOUCH || i == RB_SK_HUNGERINGAURA ) && GetAA(aaLeechTouch) < 1) { //AA 87
+					if ((i == RB_SHD_LEECHTOUCH || i == RB_SHD_HUNGERINGAURA ) && GetAA(aaLeechTouch) < 1) { //AA 87
 						SetAA(aaLeechTouch, 1, 0); //208 
 						SendAlternateAdvancementPoints();
 						SendAlternateAdvancementStats();
@@ -8921,7 +8921,7 @@ void Client::RefreshBuild() {
 						Message(15, "You have unlocked the AA \"Leech Touch\"! Find the hotkey in your Alternate Advancement Window.");
 					}
 
-					if (i == RB_SK_STEADFASTSERVANT && GetAA(aaSteadfastServant) < 1) {
+					if (i == RB_SHD_STEADFASTSERVANT && GetAA(aaSteadfastServant) < 1) {
 						SetAA(aaSteadfastServant, 1, 0);
 						SendAlternateAdvancementPoints();
 						SendAlternateAdvancementStats();
@@ -8930,7 +8930,7 @@ void Client::RefreshBuild() {
 						Message(15, "You have unlocked the AA \"Steadfast Servant\"! Find the hotkey in your Alternate Advancement Window.");
 					}
 
-					if (i == RB_SK_CLOAKOFSHADOWS && GetAA(aaCloakofShadows) < 1) {
+					if (i == RB_SHD_CLOAKOFSHADOWS && GetAA(aaCloakofShadows) < 1) {
 						SetAA(aaCloakofShadows, 1, 0);
 						SendAlternateAdvancementPoints();
 						SendAlternateAdvancementStats();
@@ -8984,8 +8984,8 @@ void Client::AddRottenCoreCounter(uint8 amount) {
 	}
 	m_epp.rotten_core += amount;
 	m_epp.rotten_core_timeout = time(nullptr) + 18;
-	if (m_epp.rotten_core > GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE)) {
-		m_epp.rotten_core = GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE);
+	if (m_epp.rotten_core > GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE)) {
+		m_epp.rotten_core = GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
 	}
 }
 
@@ -9008,60 +9008,60 @@ std::string Client::GetBuildClassName() {
 std::string Client::GetBuildName(uint32 id) {
 	switch (this->GetClass()) {
 	case SHADOWKNIGHT:
-		if (id == RB_SK_LEECHTOUCH) return "Leech Touch";
+		if (id == RB_SHD_LEECHTOUCH) return "Leech Touch";
 		//1
-		else if (id == RB_SK_GOUGINGSKIN) return "Gouging Skin";
+		else if (id == RB_SHD_GOUGINGSKIN) return "Gouging Skin";
 		//3
-		else if (id == RB_SK_HUNGERINGAURA) return "Hungering Aura";
+		else if (id == RB_SHD_HUNGERINGAURA) return "Hungering Aura";
 		//5
-		else if (id == RB_SK_STEADFASTSERVANT) return "Steadfast Servant";
+		else if (id == RB_SHD_STEADFASTSERVANT) return "Steadfast Servant";
 		//7
-		else if (id == RB_SK_ZEVFEERSFEAST) return "Zevfeer's Feast";
+		else if (id == RB_SHD_ZEVFEERSFEAST) return "Zevfeer's Feast";
 		//9
-		else if (id == RB_SK_SWORNENEMY) return "Sworn Enemy";
+		else if (id == RB_SHD_SWORNENEMY) return "Sworn Enemy";
 		//11
 		//12
-		else if (id == RB_SK_BANSHEESMIRROR) return "Banshee's Mirror";
+		else if (id == RB_SHD_BANSHEESMIRROR) return "Banshee's Mirror";
 		//14
 		//15
-		else if (id == RB_SK_AURAOFVAMPIRISM) return "Aura of Vampirism";
+		else if (id == RB_SHD_AURAOFVAMPIRISM) return "Aura of Vampirism";
 		//17
-		else if (id == RB_SK_FESTERINGSPEAR) return "Festering Spear";
+		else if (id == RB_SHD_FESTERINGSPEAR) return "Festering Spear";
 		//19
-		else if (id == RB_SK_FESTERINGWOUND) return "Festering Wound";
+		else if (id == RB_SHD_FESTERINGWOUND) return "Festering Wound";
 		//21
-		else if (id == RB_SK_ROTTENCORE) return "Rotten Core";
+		else if (id == RB_SHD_ROTTENCORE) return "Rotten Core";
 		//23
-		else if (id == RB_SK_LINGERINGPAIN) return "Lingering Pain";
+		else if (id == RB_SHD_LINGERINGPAIN) return "Lingering Pain";
 		//25
-		else if (id == RB_SK_BLOODOATH) return "Blood Oath";
+		else if (id == RB_SHD_BLOODOATH) return "Blood Oath";
 		//27
-		else if (id == RB_SK_GIFTOFURASH) return "Gift of Urash";
+		else if (id == RB_SHD_GIFTOFURASH) return "Gift of Urash";
 		//29
 		//30
-		else if (id == RB_SK_UNHOLYFOCUS) return "Unholy Focus";
+		else if (id == RB_SHD_UNHOLYFOCUS) return "Unholy Focus";
 		//32
 		//33
-		else if (id == RB_SK_BASHOFDEATH) return "Bash of Death";
+		else if (id == RB_SHD_BASHOFDEATH) return "Bash of Death";
 		//35
 		//tier3
-		else if (id == RB_SK_EMBRACEDEATH) return "Embrace Death";
+		else if (id == RB_SHD_EMBRACEDEATH) return "Embrace Death";
 		//37
-		else if (id == RB_SK_DARKNESS) return "Darkness";
+		else if (id == RB_SHD_DARKNESS) return "Darkness";
 		//39
-		else if (id == RB_SK_EMPATHETICSOUL) return "Empathetic Soul";
+		else if (id == RB_SHD_EMPATHETICSOUL) return "Empathetic Soul";
 		//41
 		//42
-		else if (id == RB_SK_EMBRACESHADOW) return "Embrace Shadow";
+		else if (id == RB_SHD_EMBRACESHADOW) return "Embrace Shadow";
 		//44
 		//45
-		else if (id == RB_SK_SIPHONOFDEATH) return "Siphon of Death";
+		else if (id == RB_SHD_SIPHONOFDEATH) return "Siphon of Death";
 		//47
-		else if (id == RB_SK_NIGHTMARE) return "Nightmare";
+		else if (id == RB_SHD_NIGHTMARE) return "Nightmare";
 		//49
-		else if (id == RB_SK_MENTALRESISTANCE) return "Mental Resistance";
+		else if (id == RB_SHD_MENTALRESISTANCE) return "Mental Resistance";
 		//51
-		else if (id == RB_SK_CLOAKOFSHADOWS) return "Cloak of Shadows";
+		else if (id == RB_SHD_CLOAKOFSHADOWS) return "Cloak of Shadows";
 		//53
 		break;
 	}

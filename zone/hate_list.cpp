@@ -625,9 +625,9 @@ void HateList::OnDeathTrigger()
 		struct_HateList *h = (*iterator);
 		Mob *mobHated = h->entity_on_hatelist;
 		if (mobHated->IsClient()) {
-			if (mobHated->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE) > 0) {
+			if (mobHated->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE) > 0) {
 				
-				rank = mobHated->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ROTTENCORE);
+				rank = mobHated->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
 				uint32 counters = mobHated->CastToClient()->GetRottenCoreCounters();
 				mobHated->CastToClient()->AddRottenCoreCounter(1);
 				if (counters < mobHated->CastToClient()->GetRottenCoreCounters()) {

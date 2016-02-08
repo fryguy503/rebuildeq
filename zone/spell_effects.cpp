@@ -237,8 +237,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					if(caster) {
 						uint16 rank;
 						//Shin: Festering Spear
-						if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR) > 0) {
-							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_FESTERINGSPEAR);
+						if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR) > 0) {
+							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
 							if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
 								int festerDmg = (rank * caster->CastToClient()->GetLevel());
 								festerDmg += int32((float)dmg * 0.1 * (float)rank);
@@ -247,8 +247,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 						}
 						//Shin: Lingering Pain
-						if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_LINGERINGPAIN) > 0) {
-							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_LINGERINGPAIN);
+						if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN) > 0) {
+							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
 							if (zone->random.Roll((int)(rank))) { //chance
 								if (GetLevel() > 57) { //Ignite Blood
 									SpellFinished(6, this, buffslot, 0, -1, spells[6].ResistDiff, true, level_override);
@@ -262,9 +262,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 						if (caster->IsClient() && 
 							(spell_id == 2718 || spell_id == 1471) &&
-							caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SIPHONOFDEATH) > 0) {
+							caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH) > 0) {
 
-							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_SIPHONOFDEATH);
+							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH);
 							int mana_amount = (int)(dmg * 0.05 * rank);
 							caster->Message(MT_NonMelee, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
 							caster->SetMana(GetMana() + mana_amount);
@@ -614,9 +614,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				snprintf(effect_desc, _EDLEN, "Invisibility");
 #endif
 				SetInvisible(spell.base[i]);
-				if (spell_id == 8223 && IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_CLOAKOFSHADOWS) > 0) {
+				if (spell_id == 8223 && IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_CLOAKOFSHADOWS) > 0) {
 					if (caster->CastToClient()->GetAggroCount() > 0) {
-						if (zone->random.Roll((int)(5 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_CLOAKOFSHADOWS)))) {
+						if (zone->random.Roll((int)(5 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_CLOAKOFSHADOWS)))) {
 							caster->CastToClient()->Escape();
 							caster->Message(MT_NonMelee, "You successfuly evaded your enemies by stepping into the shadows.");
 						}
@@ -914,9 +914,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					{
 						CastToClient()->AI_Start();
 					}
-					if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_NIGHTMARE) > 0 && zone->random.Roll((int)caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_NIGHTMARE) * 4)) {
+					if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_NIGHTMARE) > 0 && zone->random.Roll((int)caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_NIGHTMARE) * 4)) {
 						entity_list.MessageClose(this, true, 300, MT_Emote, "%s freezes in fear as nightmares of %s overwhelms them.", GetCleanName(), caster->GetCleanName());			
-						Stun((int)(2 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_NIGHTMARE)));
+						Stun((int)(2 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_NIGHTMARE)));
 					}
 					CalculateNewFearpoint();
 					if(currently_fleeing)
@@ -1647,16 +1647,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					else {
 						CastToClient()->SetFeigned(true);
 						//Shin: Embrace Death Perk
-						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACEDEATH) > 0) {
-							uint32 healAmount = GetMaxHP()* (0.02 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACEDEATH));
+						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH) > 0) {
+							uint32 healAmount = GetMaxHP()* (0.02 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH));
 							Message(MT_NonMelee, "Embrace Death has healed you for %i.", healAmount);
 							if (healAmount < 0 || healAmount > 50000) {
 								healAmount = 1;
 							}
 							HealDamage(healAmount);
 						}
-						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACESHADOW) > 0) {
-							if (zone->random.Roll((int)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_EMBRACESHADOW) * 20)) {
+						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACESHADOW) > 0) {
+							if (zone->random.Roll((int)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACESHADOW) * 20)) {
 								SpellFinished(522, this, USE_ITEM_SPELL_SLOT, 0, -1, spells[522].ResistDiff); //invis
 								SpellFinished(1420, this, USE_ITEM_SPELL_SLOT, 0, -1, spells[1420].ResistDiff); //ivu
 							}
@@ -3061,21 +3061,21 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			case SE_SkillProc:
 			case SE_SkillProcSuccess:
 			{
-				if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST) > 0 && (spell_id == 343 || spell_id == 2575)) {
+				if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST) > 0 && (spell_id == 343 || spell_id == 2575)) {
 					uint32 dmg;
 					int manaAmount;
 					if (spell_id == 343) { //siphon strength
-						dmg = (caster->GetMaxHP() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST));						
+						dmg = (caster->GetMaxHP() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));						
 						Damage(caster, dmg, spell_id, spell.skill, false, 0, false);
 					}
 					if (spell_id == 2575) { //abduct strength
-						dmg = (caster->GetMaxHP() * 0.01 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST));						
+						dmg = (caster->GetMaxHP() * 0.01 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));						
 						Damage(caster, dmg, spell_id, spell.skill, false, 0, false);
 					}
 					float range, distance;
 					range = caster->GetAOERange(3409);
 					float range2 = range*range;
-					int mana_amount = (caster->GetMaxMana() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SK_ZEVFEERSFEAST));
+					int mana_amount = (caster->GetMaxMana() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));
 					if (mana_amount < 1) {
 						mana_amount = 5;
 					}
