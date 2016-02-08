@@ -46,3 +46,6 @@ deploy/server/shared_memory
 deploy/server/ucs
 deploy/server/world
 deploy/server/zone
+*.vcxproj
+*.filters
+deploy/server/EQEmu.sln
