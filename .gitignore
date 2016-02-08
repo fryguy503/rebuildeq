@@ -49,3 +49,11 @@ deploy/server/zone
 *.vcxproj
 *.filters
 deploy/server/EQEmu.sln
+deploy/server/EQEmu.sdf
+deploy/server/EQEmu.opensdf
+deploy/server/common/
+deploy/server/client_files/
+deploy/server/luabind/
+deploy/server/Win32/
+deploy/server/eqlaunch/
+deploy/server/shared/*
