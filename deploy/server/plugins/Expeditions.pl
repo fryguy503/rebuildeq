@@ -372,7 +372,7 @@ sub CheckInstance{
 		if($Debug) { $What = "#::: CheckInstance #:::"; $client->Message(8, $What . " " . $query); quest::write("debug/instquery.txt", $What . "\n" . $query); }
 		$query_handle = $connect->prepare($query); $query_handle->execute();
 		while (@row = $query_handle->fetchrow_array()){ if($row[0]){ return @row; } }
-	return false;
+	return 0;
 }
 
 #::: Load Expedition info into a qglobal hash for fast callback
