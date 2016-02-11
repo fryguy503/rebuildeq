@@ -3879,10 +3879,8 @@ void command_bind(Client *c, const Seperator *sep)
 //List all available builds
 void command_builds(Client *c, const Seperator *sep)
 {
-	
-
 	c->RefreshBuild();
-
+	
 	//Reset build
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "reset") == 0) {
 		
@@ -3917,12 +3915,24 @@ void command_builds(Client *c, const Seperator *sep)
 		c->GetSession()
 	);
 	windowText.append(unspentMessage);
-	//if (GetClientVersionBit() & BIT_TitaniumAndEarlier) {	
+	
 	windowText.append(c->GetBuildReport());
 	c->SendPopupToClient(windowTitle, windowText.c_str());
 	if (c->GetLevel() < 20) {
 		c->Message(0, "You are eligble to %s your build choices.", c->CreateSayLink("#builds reset", "reset").c_str());
 	}
+
+
+	//Link in game browser
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "link") == 0) {
+		c->SendWebLink(StringFormat("http://localhost/builds/%s/%s/", GetEQClassName(c->GetClass()), c->GetSession()).c_str());
+	}
+
+	//if (c->GetClientVersionBit() & BIT_TitaniumAndEarlier) {
+		
+	//} else {
+	//	c->Message(0, "%s to view your build inside EQ.", c->CreateSayLink("#builds link", "click").c_str());
+	//}
 	return;
 }
 
