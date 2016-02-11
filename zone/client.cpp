@@ -9064,6 +9064,32 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_SHD_CLOAKOFSHADOWS) return "Cloak of Shadows";
 		//53
 		break;
+	case SHAMAN:
+		if (id == RB_SHM_SPIRITOFSPEED) return "Spirit of Speed";
+		else if (id == RB_SHM_PURIFYSOUL) return "Purify Soul";
+		else if (id == RB_SHM_ANCESTRALAID) return "Ancestral Aid";
+		else if (id == RB_SHM_EXTENDEDHASTE) return "Extended Haste";
+		else if (id == RB_SHM_SPIRITUALHEALING) return "Spiritual Healing";
+		else if (id == RB_SHM_COVENANTOFSPIRIT) return "Covenant of Spirit";
+		else if (id == RB_SHM_REINFORCETORPOR) return "Reinforce Torpor";
+		else if (id == RB_SHM_FATESEELERSBOON) return "Fateseeler's Boon";
+		else if (id == RB_SHM_CANNIBALIZE) return "Cannibalize";
+		else if (id == RB_SHM_SPIRITCALL) return "Spirit Call";
+		else if (id == RB_SHM_VIRULENTPARALYSIS) return "Virulent Paralysis";
+		else if (id == RB_SHM_POISON) return "Poison";
+		else if (id == RB_SHM_EXTENDEDTURGUR) return "Extended Turgur";
+		else if (id == RB_SHM_ANCIENTWRATH) return "Ancient Wrath";
+		else if (id == RB_SHM_TURGURSECHO) return "Turgur's Echo";
+		else if (id == RB_SHM_SPIRITUALCHANNELING) return "Spiritual Channeling";
+		else if (id == RB_SHM_FURY) return "Fury";
+		else if (id == RB_SHM_RABIDBEAR) return "Rabid Bear";
+		else if (id == RB_SHM_ANCESTRALGUARD) return "Ancestral Guard";
+		else if (id == RB_SHM_CALLOFTHEANCIENTS) return "Call of the Ancients";
+		else if (id == RB_SHM_SPIRITUALWRATH) return "Spiritual Wrath";
+		else if (id == RB_SHM_MARKOFSLOTH) return "Mark of Sloth";
+		else if (id == RB_SHM_FERALSWIPE) return "Feral Swipe";
+		else if (id == RB_SHM_PARAGONOFSPIRIT) return "Paragon of Spirit";
+		break;
 	}
 	return "Unknown";
 }
