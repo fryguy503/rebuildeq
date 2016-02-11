@@ -3879,7 +3879,30 @@ void command_bind(Client *c, const Seperator *sep)
 //List all available builds
 void command_builds(Client *c, const Seperator *sep)
 {
+	
+
 	c->RefreshBuild();
+
+	//Reset build
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "reset") == 0) {
+		
+		//Reset confirm
+		if (sep->arg[2] && strcasecmp(sep->arg[2], "confirm") == 0) {
+			if (c->GetLevel() < 20) {
+				c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
+				return;
+			}
+			c->ResetBuild();
+			return;
+		}
+
+		if (c->GetLevel() < 20) {
+			c->Message(0, "You can reset your skills for free until level 20. [ %s ]", c->CreateSayLink("#builds reset confirm", "confirm").c_str());
+		} else {
+			c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
+		}
+		return;
+	}
 	const char *windowTitle = "Builds";
 	uint8 unspent = c->GetBuildUnspentPoints();
 	std::string unspentMessage = "";
@@ -3897,6 +3920,9 @@ void command_builds(Client *c, const Seperator *sep)
 	//if (GetClientVersionBit() & BIT_TitaniumAndEarlier) {	
 	windowText.append(c->GetBuildReport());
 	c->SendPopupToClient(windowTitle, windowText.c_str());
+	if (c->GetLevel() < 20) {
+		c->Message(0, "You are eligble to %s your build choices.", c->CreateSayLink("#builds reset", "reset").c_str());
+	}
 	return;
 }
 

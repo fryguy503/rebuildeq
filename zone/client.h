@@ -1320,6 +1320,8 @@ public:
 
 	std::string GetBuildClassName();
 
+	void ResetBuild();
+
 protected:
 	friend class Mob;
 	void CalcItemBonuses(StatBonuses* newbon);
