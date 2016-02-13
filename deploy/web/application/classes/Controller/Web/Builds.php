@@ -316,7 +316,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//4
 			$newSkill = new stdClass();
 			$newSkill->title = "Ancestral Aid";
-			$newSkill->desc = 'Grants the Ancestral Aid AA, which casts focus line buff scaled to your level.<br>Rank 1: +STR<br>Rank 2: +DEX<br>Rank 3: +AGI<br>Rank 4: +STA<br>Rank 5: +HP as well as targets group';
+			$newSkill->desc = 'Grants the Ancestral Aid AA, which casts focus line buff scaled to your level.<br>Rank 1: +STR<br>Rank 2: +DEX<br>Rank 3: +AGI<br>Rank 4: +STA<br>Rank 5: +HP';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";
 			$skills[4] = $newSkill;
 			//5

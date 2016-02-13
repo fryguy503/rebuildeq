@@ -8922,12 +8922,16 @@ void Client::RefreshBuild() {
 					TrainAARank(aaPurifySoul);
 					Message(15, "You have unlocked the AA \"Purify Soul\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+				if (GetClass() == SHAMAN && i == RB_SHM_ANCESTRALAID && GetAA(aaAncestralAid) < 1) {
+					TrainAARank(aaAncestralAid);
+					Message(15, "You have unlocked the AA \"Purify Soul\"! Find the hotkey in your Alternate Advancement Window.");
+				}
 			}
 		}
 	}
 }
 
-void Client::TrainAARank(uint32 rankId, uint32 rankLevel = 1, uint32 charges = 0) {
+void Client::TrainAARank(uint32 rankId, uint32 rankLevel, uint32 charges) {
 	SetAA(rankId, rankLevel, charges);
 	SendAlternateAdvancementPoints();
 	SendAlternateAdvancementStats();

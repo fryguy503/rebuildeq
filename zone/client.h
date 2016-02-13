@@ -1312,7 +1312,7 @@ public:
 
 	std::string GetBuildReport();
 	void RefreshBuild();
-	void TrainAARank(uint32 rankId, uint32 rankLevel, uint32 charges);
+	void TrainAARank(uint32 rankId, uint32 rankLevel = 1, uint32 charges = 0);
 	std::string GetBuildName(uint32 id);
 	bool IsSwornEnemyActive();
 	uint32 GetBuildRank(uint8 classid, uint32 rankid);
