@@ -168,6 +168,7 @@ int command_init(void)
 #endif
 		command_add("builds", "- Get a list of every build in game", 0, command_builds) ||
 		command_add("buff", "- Pay platinum to receive buffs", 0, command_buff) ||
+		command_add("refer", "- Refer-a-friend reward system", 0, command_refer) ||
 		command_add("camerashake",  "Shakes the camera on everyone's screen globally.",  80, command_camerashake) ||
 		command_add("castspell", "[spellid] - Cast a spell", 50, command_castspell) ||
 		command_add("chat", "[channel num] [message] - Send a channel message to all zones", 200, command_chat) ||
@@ -4208,6 +4209,11 @@ void command_buff(Client *c, const Seperator *sep) {
 	else {
 		c->Message(0, "At level %u, it will cost you %u platinum to receive buffs. [%s]", c->GetLevel(), (c->GetLevel() * mod), c->CreateSayLink("#buff confirm", "Confirm").c_str());
 	}
+}
+
+void command_refer(Client *c, const Seperator *sep) {
+	c->Message(0, "Refer a friend not yet implemented.");
+	return;
 }
 
 void command_rez(Client *c, const Seperator *sep) {
