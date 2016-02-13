@@ -8902,52 +8902,37 @@ void Client::RefreshBuild() {
 					Message(270, message.c_str());
 				}
 				
-				if (GetClass() == SHADOWKNIGHT) {
-					
-					if (i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
-						SetAA(aaDeathPeace2, 1, 0); //aaDeathPeace2 = 1272 
-						SendAlternateAdvancementPoints();
-						SendAlternateAdvancementStats();
-						CalcBonuses();
-						SaveAA();
-						Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");						
-					}
-					if ((i == RB_SHD_LEECHTOUCH || i == RB_SHD_HUNGERINGAURA ) && GetAA(aaLeechTouch) < 1) { //AA 87
-						SetAA(aaLeechTouch, 1, 0); //208 
-						SendAlternateAdvancementPoints();
-						SendAlternateAdvancementStats();
-						CalcBonuses();
-						SaveAA();
-						Message(15, "You have unlocked the AA \"Leech Touch\"! Find the hotkey in your Alternate Advancement Window.");
-					}
-
-					if (i == RB_SHD_STEADFASTSERVANT && GetAA(aaSteadfastServant) < 1) {
-						SetAA(aaSteadfastServant, 1, 0);
-						SendAlternateAdvancementPoints();
-						SendAlternateAdvancementStats();
-						CalcBonuses();
-						SaveAA();
-						Message(15, "You have unlocked the AA \"Steadfast Servant\"! Find the hotkey in your Alternate Advancement Window.");
-					}
-
-					if (i == RB_SHD_CLOAKOFSHADOWS && GetAA(aaCloakofShadows) < 1) {
-						SetAA(aaCloakofShadows, 1, 0);
-						SendAlternateAdvancementPoints();
-						SendAlternateAdvancementStats();
-						CalcBonuses();
-						SaveAA();
-						Message(15, "You have unlocked the AA \"Cloak of Shadows\"! Find the hotkey in your Alternate Advancement Window.");
-					}
-
-					//const Item_Struct* item = database.GetItem(item_id);
-					//if (CheckLoreConflict(item)) {
-
-					//}
-
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
+					TrainAARank(aaDeathPeace2);
+					Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");						
+				}
+				if (GetClass() == SHADOWKNIGHT && (i == RB_SHD_LEECHTOUCH || i == RB_SHD_HUNGERINGAURA ) && GetAA(aaLeechTouch) < 1) { //AA 87						
+					TrainAARank(aaLeechTouch);
+					Message(15, "You have unlocked the AA \"Leech Touch\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_STEADFASTSERVANT && GetAA(aaSteadfastServant) < 1) {
+					TrainAARank(aaSteadfastServant);
+					Message(15, "You have unlocked the AA \"Steadfast Servant\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_CLOAKOFSHADOWS && GetAA(aaCloakofShadows) < 1) {
+					TrainAARank(aaCloakofShadows);
+					Message(15, "You have unlocked the AA \"Cloak of Shadows\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+				if (GetClass() == SHAMAN && i == RB_SHM_PURIFYSOUL && GetAA(aaPurifySoul) < 1) {
+					TrainAARank(aaPurifySoul);
+					Message(15, "You have unlocked the AA \"Purify Soul\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 			}
 		}
 	}
+}
+
+void Client::TrainAARank(uint32 rankId, uint32 rankLevel = 1, uint32 charges = 0) {
+	SetAA(rankId, rankLevel, charges);
+	SendAlternateAdvancementPoints();
+	SendAlternateAdvancementStats();
+	CalcBonuses();
+	SaveAA();
 }
 
 uint32 Client::GetBuildRank(uint8 classid, uint32 id) {
@@ -9024,60 +9009,29 @@ std::string Client::GetBuildName(uint32 id) {
 	switch (this->GetClass()) {
 	case SHADOWKNIGHT:
 		if (id == RB_SHD_LEECHTOUCH) return "Leech Touch";
-		//1
 		else if (id == RB_SHD_GOUGINGSKIN) return "Gouging Skin";
-		//3
 		else if (id == RB_SHD_HUNGERINGAURA) return "Hungering Aura";
-		//5
 		else if (id == RB_SHD_STEADFASTSERVANT) return "Steadfast Servant";
-		//7
 		else if (id == RB_SHD_ZEVFEERSFEAST) return "Zevfeer's Feast";
-		//9
 		else if (id == RB_SHD_SWORNENEMY) return "Sworn Enemy";
-		//11
-		//12
 		else if (id == RB_SHD_BANSHEESMIRROR) return "Banshee's Mirror";
-		//14
-		//15
 		else if (id == RB_SHD_AURAOFVAMPIRISM) return "Aura of Vampirism";
-		//17
 		else if (id == RB_SHD_FESTERINGSPEAR) return "Festering Spear";
-		//19
 		else if (id == RB_SHD_FESTERINGWOUND) return "Festering Wound";
-		//21
 		else if (id == RB_SHD_ROTTENCORE) return "Rotten Core";
-		//23
 		else if (id == RB_SHD_LINGERINGPAIN) return "Lingering Pain";
-		//25
 		else if (id == RB_SHD_BLOODOATH) return "Blood Oath";
-		//27
 		else if (id == RB_SHD_GIFTOFURASH) return "Gift of Urash";
-		//29
-		//30
 		else if (id == RB_SHD_UNHOLYFOCUS) return "Unholy Focus";
-		//32
-		//33
 		else if (id == RB_SHD_BASHOFDEATH) return "Bash of Death";
-		//35
-		//tier3
 		else if (id == RB_SHD_EMBRACEDEATH) return "Embrace Death";
-		//37
 		else if (id == RB_SHD_DARKNESS) return "Darkness";
-		//39
 		else if (id == RB_SHD_EMPATHETICSOUL) return "Empathetic Soul";
-		//41
-		//42
 		else if (id == RB_SHD_EMBRACESHADOW) return "Embrace Shadow";
-		//44
-		//45
 		else if (id == RB_SHD_SIPHONOFDEATH) return "Siphon of Death";
-		//47
 		else if (id == RB_SHD_NIGHTMARE) return "Nightmare";
-		//49
 		else if (id == RB_SHD_MENTALRESISTANCE) return "Mental Resistance";
-		//51
 		else if (id == RB_SHD_CLOAKOFSHADOWS) return "Cloak of Shadows";
-		//53
 		break;
 	case SHAMAN:
 		if (id == RB_SHM_SPIRITOFSPEED) return "Spirit of Speed";
