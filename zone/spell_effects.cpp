@@ -223,6 +223,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if (buffslot >= 0)
 					break;
 
+				uint16 rank;
 				// for offensive spells check if we have a spell rune on
 				int32 dmg = effect_value;
 				if(dmg < 0)
@@ -235,7 +236,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 					//handles AAs and what not...
 					if(caster) {
-						uint16 rank;
 
 						if (caster->IsClient()) {
 							Client * casterClient = caster->CastToClient();
@@ -277,18 +277,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								caster->SetMana(GetMana() + mana_amount);
 							}
 
-							//Rodcet's Gift
-							if ((spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9) && //Paladin direct heals							
-								casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT) > 0) {
-								rank = casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT);
-								if (casterClient->IsGrouped() && zone->random.Roll(rank * 2)) { //2 * rank % chance
-									//Give heal to group
-
-								}
-							}
-
-
-
+							
 						}
 
 						dmg = caster->GetActSpellDamage(spell_id, dmg, this);
@@ -304,8 +293,60 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					if (!PassCastRestriction(false, spells[spell_id].base2[i], false))
 						break;
 
-					if(caster)
-						dmg = caster->GetActSpellHealing(spell_id, dmg, this);					
+					if (caster) {
+						if (caster->IsClient()) {
+							Client * casterClient = caster->CastToClient();
+							//Rodcet's Gift
+							if ((spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9) && //Paladin direct heals							
+								casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT) > 0 &&
+								this->IsClient()) {
+								rank = casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT);
+
+								if (zone->random.Roll(rank * 2)) { //2 * rank % chance
+									if (this->IsGrouped()) {
+										//Give heal to group (and RAID)									
+										auto group = this->GetGroup(); //iterate group
+										for (int i = 0; i < 6; ++i) {
+											if (group->members[i] &&  //target grouped
+												group->members[i]->IsClient() && //Is a client												
+												this->GetID() != group->members[i]->GetID() && //not me
+												this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone
+												!group->members[i]->CastToClient()->IsDead() //and not dead
+												) {
+												caster->Message(MT_Spells, "You have healed %s for %i.", group->members[i]->GetCleanName(), dmg);
+												group->members[i]->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
+												dmg = caster->GetActSpellHealing(spell_id, dmg, this);
+												group->members[i]->HealDamage(dmg, caster);
+											}
+										}
+									}
+									else if (this->IsRaidGrouped()) { //Raid healing
+										auto raid = this->GetRaid();
+										uint32 gid = raid->GetGroup(casterClient);
+										if (gid < 12) {
+											for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+												if (raid->members[i].member &&  //is raid member
+													raid->members[i].GroupNumber == gid && //in group
+													raid->members[i].member->IsClient() && //Is a client
+													raid->members[i].member != this && //not me
+													raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
+													!raid->members[i].member->IsDead() //and not dead
+													) {
+													caster->Message(MT_Spells, "You have healed %s for %i.", raid->members[i].member->GetCleanName(), dmg);
+													raid->members[i].member->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
+
+													dmg = caster->GetActSpellHealing(spell_id, dmg, this);
+													raid->members[i].member->HealDamage(dmg, caster);
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+
+						dmg = caster->GetActSpellHealing(spell_id, dmg, this);
+					}
 
 					HealDamage(dmg, caster);
 				}
