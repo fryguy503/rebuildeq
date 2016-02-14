@@ -8981,7 +8981,7 @@ void Client::DoRestedStatus() {
 	}
 
 	if (!m_epp.in_rested_area) { //We just entered a rested area.
-		Message(13, "You feel %s.", CreateSayLink("#rested", "rested").c_str());
+		Message(MT_Experience, "You feel %s.", CreateSayLink("#rested", "rested").c_str());
 	}
 	else { //This is a tick update for a rested area.
 		AddRestedExperience(6);
