@@ -309,7 +309,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//2
 			$newSkill = new stdClass();
 			$newSkill->title = "Purify Soul";
-			$newSkill->desc = 'Grants the Purify Soul AA, which cures target of disease, poison, as well as gives a <em data-base="10">10</em>% chance to apply a <em data-base="1">1</em>% max HP per tick regen<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Purify Soul AA, which cures target of disease, poison, as well as gives a <em data-base="10">10</em>% chance to heal the target by <em data-base="1">1</em>% max HP per tick regen<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";
 			$skills[2] = $newSkill;
 			//3

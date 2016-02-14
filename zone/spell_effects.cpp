@@ -1961,6 +1961,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								caster->Message(MT_Spells,"You have cured your target of %s!",spells[buffs[j].spellid].name);
 								caster->CastOnCurer(buffs[j].spellid);
 								CastOnCure(buffs[j].spellid);
+								if (caster->IsClient() && spell_id == 2742 && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) > 0) {
+									uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL);
+									uint32 healAmount = GetMaxHP()* (0.01 * rank);
+									if (healAmount < 0 || healAmount > 50000) {
+										healAmount = 1;
+									}
+									caster->Message(MT_Spells, "Purify Soul %u healed your target for %i.", rank, healAmount);
+									Message(MT_Spells, "Purify Soul has healed you for %i.", healAmount);
+									HealDamage(healAmount, caster);
+								}
 							}
 							effect_value -= buffs[j].counters;
 							buffs[j].counters = 0;
@@ -1995,6 +2005,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								caster->Message(MT_Spells,"You have cured your target of %s!",spells[buffs[j].spellid].name);
 								caster->CastOnCurer(buffs[j].spellid);
 								CastOnCure(buffs[j].spellid);
+								if (caster->IsClient() && spell_id == 2742 && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) > 0) {
+									uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL);
+									uint32 healAmount = GetMaxHP()* (0.01 * rank);
+									if (healAmount < 0 || healAmount > 50000) {
+										healAmount = 1;
+									}
+									caster->Message(MT_Spells, "Purify Soul %u healed your target for %i.", rank, healAmount);
+									Message(MT_Spells, "Purify Soul has healed you for %i.", healAmount);
+									HealDamage(healAmount, caster);
+								}
 							}
 							effect_value -= buffs[j].counters;
 							buffs[j].counters = 0;
@@ -2031,6 +2051,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								caster->Message(MT_Spells,"You have cured your target of %s!",spells[buffs[j].spellid].name);
 								caster->CastOnCurer(buffs[j].spellid);
 								CastOnCure(buffs[j].spellid);
+								if (caster->IsClient() && spell_id == 2742 && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) > 0) {
+									uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL);
+									uint32 healAmount = GetMaxHP()* (0.01 * rank);
+									if (healAmount < 0 || healAmount > 50000) {
+										healAmount = 1;
+									}
+									caster->Message(MT_Spells, "Purify Soul %u healed your target for %i.", rank, healAmount);
+									Message(MT_Spells, "Purify Soul has healed you for %i.", healAmount);
+									HealDamage(healAmount, caster);
+								}
 							}
 							effect_value -= buffs[j].counters;
 							buffs[j].counters = 0;
@@ -2066,6 +2096,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								caster->Message(MT_Spells,"You have cured your target of %s!",spells[buffs[j].spellid].name);
 								caster->CastOnCurer(buffs[j].spellid);
 								CastOnCure(buffs[j].spellid);
+								if (caster->IsClient() && spell_id == 2742 && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) > 0) {
+									uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL);
+									uint32 healAmount = GetMaxHP()* (0.01 * rank);
+									if (healAmount < 0 || healAmount > 50000) {
+										healAmount = 1;
+									}
+									caster->Message(MT_Spells, "Purify Soul %u healed your target for %i.", rank, healAmount);
+									Message(MT_Spells, "Purify Soul has healed you for %i.", healAmount);
+									HealDamage(healAmount, caster);
+								}
 							}
 							effect_value -= buffs[j].counters;
 							buffs[j].counters = 0;
