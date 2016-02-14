@@ -369,17 +369,52 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 			Message(15, "You regain %i experience from resurrection. (%.3f%%)", i,  expPct);
 		}
 		else {
-			if(membercount > 1) {
-				Message(15, "You have gained %i party experience! (%.3f%%)", i, expPct);
-				//this->Message_StringID(MT_Experience, GAIN_GROUPXP);
+			if (membercount > 1) {
+				if (m_epp.rested_exp < 1) {
+					Message(15, "You have gained %i party experience! (%.3f%%)", i, expPct);
+				} else {//Rested EXP available					
+					int totalExp = i * membercount; //this means up to 6x EXP in a party
+					m_epp.rested_exp -= i; //remove from rested
+					if (m_epp.rested_exp < 0) { //not enough rested exp for double
+						totalExp += m_epp.rested_exp; //take negative away from bonus
+						m_epp.rested_exp = 0; //reset rested to 0
+					}
+					expPct = (float)((float)totalExp / (float)(GetEXPForLevel(GetLevel() + 1) - GetEXPForLevel(GetLevel())))*(float)100; //EXP needed for level
+					Message(15, "You have gained %i party experience! (+%i rested) (%.3f%%)", i, totalExp - i, expPct);
+					set_exp += (totalExp - i); //Now add bonus exp to set_exp
+				}
+
 			}
 			else if(IsRaidGrouped()) {
-				//Message_StringID(MT_Experience, GAIN_RAIDEXP);
-				Message(15, "You have gained %i raid experience! (%.3f%%)", i, expPct);
+				
+				if (m_epp.rested_exp < 1) {
+					Message(15, "You have gained %i raid experience! (%.3f%%)", i, expPct);
+				} else {//Rested EXP available
+					int totalExp = i + i; //double exp
+					m_epp.rested_exp -= i; //remove from rested
+					if (m_epp.rested_exp < 0) { //not enough rested exp for double
+						totalExp += m_epp.rested_exp; //take negative away from bonus
+						m_epp.rested_exp = 0; //reset rested to 0
+					}
+					expPct = (float)((float)totalExp / (float)(GetEXPForLevel(GetLevel() + 1) - GetEXPForLevel(GetLevel())))*(float)100; //EXP needed for level
+					Message(15, "You have gained %i raid experience! (+%i rested) (%.3f%%)", i, totalExp - i, expPct);
+					set_exp += (totalExp - i); //Now add bonus exp to set_exp
+				}
 			}
 			else {
-				//this->Message_StringID(MT_Experience, GAIN_XP);
-				Message(15, "You have gained %i experience! (%.3f%%)", i, expPct);
+				if (m_epp.rested_exp < 1) {
+					Message(15, "You have gained %i experience! (%.3f%%)", i, expPct);
+				} else {//Rested EXP available
+					int totalExp = i + i; //double exp
+					m_epp.rested_exp -= i; //remove from rested
+					if (m_epp.rested_exp < 0) { //not enough rested exp for double
+						totalExp += m_epp.rested_exp; //take negative away from bonus
+						m_epp.rested_exp = 0; //reset rested to 0
+					}
+					expPct = (float)((float)totalExp / (float)(GetEXPForLevel(GetLevel() + 1) - GetEXPForLevel(GetLevel())))*(float)100; //EXP needed for level
+					Message(15, "You have gained %i experience! (+%i rested) (%.3f%%)", i, totalExp - i, expPct);
+					set_exp += (totalExp - i); //Now add bonus exp to set_exp
+				}
 			}
 
 		
