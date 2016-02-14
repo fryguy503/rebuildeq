@@ -236,38 +236,59 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					//handles AAs and what not...
 					if(caster) {
 						uint16 rank;
-						//Shin: Festering Spear
-						if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR) > 0) {
-							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
-							if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
-								int festerDmg = (rank * caster->CastToClient()->GetLevel());
-								festerDmg += int32((float)dmg * 0.1 * (float)rank);
-								caster->CastToClient()->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
-								dmg -= festerDmg;
-							}
-						}
-						//Shin: Lingering Pain
-						if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN) > 0) {
-							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
-							if (zone->random.Roll((int)(rank))) { //chance
-								if (GetLevel() > 57) { //Ignite Blood
-									SpellFinished(6, this, buffslot, 0, -1, spells[6].ResistDiff, true, level_override);
-								} else if (GetLevel() > 36) { //boil blood
-									SpellFinished(451, this, buffslot, 0, -1, spells[451].ResistDiff, true, level_override);
-								} else if (GetLevel() > 20) { //heat blood
-									SpellFinished(360, this, buffslot, 0, -1, spells[360].ResistDiff, true, level_override);
+
+						if (caster->IsClient()) {
+							Client * casterClient = caster->CastToClient();
+							
+							//Shin: Festering Spear
+							if (casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR) > 0) {
+								rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
+								if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
+									int festerDmg = (rank * casterClient->GetLevel());
+									festerDmg += int32((float)dmg * 0.1 * (float)rank);
+									casterClient->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
+									dmg -= festerDmg;
 								}
 							}
-						}
+							//Shin: Lingering Pain
+							if (casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN) > 0) {
+								rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
+								if (zone->random.Roll((int)(rank))) { //chance
+									if (GetLevel() > 57) { //Ignite Blood
+										SpellFinished(6, this, buffslot, 0, -1, spells[6].ResistDiff, true, level_override);
+									}
+									else if (GetLevel() > 36) { //boil blood
+										SpellFinished(451, this, buffslot, 0, -1, spells[451].ResistDiff, true, level_override);
+									}
+									else if (GetLevel() > 20) { //heat blood
+										SpellFinished(360, this, buffslot, 0, -1, spells[360].ResistDiff, true, level_override);
+									}
+								}
+							}
 
-						if (caster->IsClient() && 
-							(spell_id == 2718 || spell_id == 1471) &&
-							caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH) > 0) {
+							//Siphon of Death
+							if (
+								(spell_id == 2718 || spell_id == 1471) &&
+								casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH) > 0) {
 
-							rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH);
-							int mana_amount = (int)(dmg * 0.05 * rank);
-							caster->Message(MT_NonMelee, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
-							caster->SetMana(GetMana() + mana_amount);
+								rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH);
+								int mana_amount = (int)(dmg * 0.05 * rank);
+								caster->Message(MT_NonMelee, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
+								caster->SetMana(GetMana() + mana_amount);
+							}
+
+							//Rodcet's Gift
+							if ((spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9) && //Paladin direct heals							
+								casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT) > 0) {
+								rank = casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT);
+								if (casterClient->IsGrouped() && zone->random.Roll(rank * 2)) { //2 * rank % chance
+									//Give heal to group
+
+								}
+							}
+
+
+
 						}
 
 						dmg = caster->GetActSpellDamage(spell_id, dmg, this);
