@@ -322,13 +322,13 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Soul Cleansing";
-			$newSkill->desc = 'Cleansing heal over time spells now have a <em data-base="2">2</em>% chance per rank to cure an ailment<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Cleansing heal over time spells now have a <em data-base="2">2</em>% chance to cure an ailment<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[10] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Placeholder";
-			$newSkill->desc = 'Placeholder <em data-base="2">2</em>% chance per rank to cure an ailment<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Placeholder <em data-base="2">2</em>% chance to cure an ailment<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[13] = $newSkill;
 
