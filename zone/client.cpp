@@ -8959,6 +8959,61 @@ uint32 Client::GetBuildRank(uint8 classid, uint32 id) {
 	return 0;
 }
 
+void Client::DoRestedStatus() {
+
+	if (IsDead() || IsLD()) {
+		m_epp.in_rested_area = false;
+		return;
+	}
+
+	bool inRestedArea = false;
+	//ECommons
+	if (GetZoneID() == 22 &&
+		GetX() < 100 && GetX() > -800 &&
+		GetY() < -1500 && GetY() > -2000) {
+		inRestedArea = true;		
+	}
+
+
+	if (!inRestedArea) {
+		m_epp.in_rested_area = false;
+		return;
+	}
+	
+	
+		
+	if (!FindBuff(7)) { //Hymn of Restoration visual when you're in a rested area.
+		SpellFinished(7, this);
+	}
+
+	if (!m_epp.in_rested_area) { //We just entered a rested area.
+		Message(13, "You feel rested.");
+	}
+	else { //This is a tick update for a rested area.
+		AddRestedExperience(6);
+	}
+	m_epp.in_rested_area = true;
+
+}
+
+void Client::AddRestedExperience(uint32 lastUpdate) {
+
+	//Exp earned is based on EXP needed for level, so the formula is like
+	//nextlevelpool-currentlevelpool = exp needed
+	//864000 <= 10 days in seconds (this is max pool)
+	//576000 <= 6 days 10 hours in seconds (this is how long it takes to get a full level)
+	//So, EXP rate is expneeded/576000 .
+
+	uint32 expNeeded = GetEXPForLevel(GetLevel() + 1) - GetEXPForLevel(GetLevel());
+	float expRate = (float)expNeeded / 576000;
+	uint32 maxExpPool = expRate * 864000;
+	m_epp.rested_exp += (float)((float)lastUpdate * expRate);
+	if (m_epp.rested_exp > maxExpPool) {
+		m_epp.rested_exp = maxExpPool;
+	}
+	Message(13, "Rested: %f (rate: %f) expNeeded: %u", m_epp.rested_exp, expRate, expNeeded);
+}
+
 uint8 Client::GetRottenCoreCounters() {
 	if (m_epp.rotten_core_timeout < time(nullptr)) {
 		m_epp.rotten_core = 0;

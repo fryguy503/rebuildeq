@@ -534,6 +534,7 @@ bool Client::Process() {
 					m_epp.blood_oath_timeout = time(nullptr) + 18;
 				}
 			}
+			DoRestedStatus();
 			if(tribute_timer.Check()) {
 				ToggleTribute(true);	//re-activate the tribute.
 			}

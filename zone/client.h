@@ -1316,6 +1316,8 @@ public:
 	std::string GetBuildName(uint32 id);
 	bool IsSwornEnemyActive();
 	uint32 GetBuildRank(uint8 classid, uint32 rankid);
+	void DoRestedStatus();
+	void AddRestedExperience(uint32 lastUpdate);
 	uint8 GetRottenCoreCounters();
 	void AddRottenCoreCounter(uint8 amount);
 

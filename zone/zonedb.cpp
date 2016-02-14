@@ -890,7 +890,8 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`e_expended_aa_spent`,		"
 		"`session`,					"
 		"`session_timeout`,			"
-		"`build_data`,					"				
+		"`build_data`,				"		
+		"`rested_exp`,				"
 		"`e_last_invsnapshot`		"
 		"FROM                       "
 		"character_data             "
@@ -991,6 +992,7 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		strcpy(m_epp->session, row[r]); r++;									 // "`session`,					"
 		m_epp->session_timeout = atoi(row[r]); r++;								 // "`session_timeout`,			"
 		strcpy(m_epp->build, row[r]);  r++;										 // "`build`,				    "
+		m_epp->rested_exp = atof(row[r]); r++; 									 // "`rested_exp`,			    "
 		m_epp->last_invsnapshot_time = atoi(row[r]); r++;						 // "`e_last_invsnapshot`		"
 		m_epp->next_invsnapshot_time = m_epp->last_invsnapshot_time + (RuleI(Character, InvSnapshotMinIntervalM) * 60);
 	}
@@ -1545,7 +1547,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" e_expended_aa_spent,		 "
 		" session,		             "
 		" session_timeout,			 "
-		" build_data,					 "
+		" build_data,				 "
+		" rested_exp,				 "			
 		" e_last_invsnapshot		 "
 		")							 "
 		"VALUES ("
@@ -1645,6 +1648,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"'%s',"  // session
 		"FROM_UNIXTIME(%u),"  // session_timeout
 		"'%s',"  // build
+		"%f,"  // rested_exp
 		"%u"   // e_last_invsnapshot
 		")",
 		character_id,					  // " id,                        "
@@ -1743,6 +1747,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		EscapeString(m_epp->session).c_str(),
 		sessionTimeout,
 		EscapeString(buildbuffer).c_str(),
+		m_epp->rested_exp,
 		m_epp->last_invsnapshot_time
 	);
 	//Log.Out(Logs::General, Logs::Zone_Server);
