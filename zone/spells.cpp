@@ -2667,11 +2667,15 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 	duration = spells[spell_id].buffduration;
 
 	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED) > 0) {
-		duration += (int)((float)duration * (float)0.2 * (float)caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED));
+		int bonusDuration = (int)((float)duration * (float)0.2 * (float)caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED));
+		caster->Message(MT_NonMelee, "Spirit of Speed increased duration by %i seconds.", bonusDuration);
+		duration += bonusDuration;
 	}
 
 	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDHASTE) > 0) {
-		duration += (int)((float)duration * (float)0.3 * (float)caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDHASTE));
+		int bonusDuration = (int)((float)duration * (float)0.3 * (float)caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDHASTE));
+		caster->Message(MT_NonMelee, "Extended Haste increased duration by %i seconds.", bonusDuration);
+		duration += bonusDuration;
 	}
 
 	int castlevel = caster->GetCasterLevel(spell_id);
