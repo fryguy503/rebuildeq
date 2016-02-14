@@ -8966,21 +8966,10 @@ void Client::DoRestedStatus() {
 		return;
 	}
 
-	bool inRestedArea = false;
-	//ECommons
-	if (GetZoneID() == 22 &&
-		GetX() < 100 && GetX() > -800 &&
-		GetY() < -1500 && GetY() > -2000) {
-		inRestedArea = true;		
-	}
-
-
-	if (!inRestedArea) {
+	if (!InRestedArea()) {
 		m_epp.in_rested_area = false;
 		return;
 	}
-	
-	
 		
 	if (!FindBuff(7)) { //Hymn of Restoration visual when you're in a rested area.
 		SpellFinished(7, this);
@@ -8995,7 +8984,16 @@ void Client::DoRestedStatus() {
 	m_epp.in_rested_area = true;
 
 }
+bool Client::InRestedArea() {
+	//ECommons
+	if (GetZoneID() == 22 &&
+		GetX() < 100 && GetX() > -800 &&
+		GetY() < -1500 && GetY() > -2000) {
+		return true;
+	}
 
+	return false;
+}
 void Client::AddRestedExperience(uint32 lastUpdate) {
 
 	//Exp earned is based on EXP needed for level, so the formula is like

@@ -1317,6 +1317,7 @@ public:
 	bool IsSwornEnemyActive();
 	uint32 GetBuildRank(uint8 classid, uint32 rankid);
 	void DoRestedStatus();
+	bool InRestedArea();
 	void AddRestedExperience(uint32 lastUpdate);
 	uint8 GetRottenCoreCounters();
 	void AddRottenCoreCounter(uint8 amount);

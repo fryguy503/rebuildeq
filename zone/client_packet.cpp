@@ -789,6 +789,37 @@ void Client::CompleteConnect()
 			std::string event_desc = StringFormat("Connect :: Logged into zoneid:%i instid:%i", this->GetZoneID(), this->GetInstanceID());
 			QServ->PlayerLogEvent(Player_Log_Connect_State, this->CharacterID(), event_desc);
 		}
+		if (m_pp.birthday > time(nullptr) - 120) { //If they're less than 2 minutes old
+			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome %s to the server!", GetCleanName()).c_str());
+		}
+		else if(m_pp.lastlogin < time(nullptr) - 600) {
+			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome back to the server, %s!", GetCleanName()).c_str());
+		}
+
+		/* Rested Status Update */
+		if (m_pp.lastlogin < time(nullptr) - 60) { //If it's been 60 seconds since last login
+			uint32 ttime = time(nullptr) - m_pp.lastlogin;
+			uint32 day = (ttime / 86400);
+			uint32 hour = (ttime / 3600) % 24;
+			uint32 minute = (ttime / 60) % 60;
+			uint32 second = (ttime / 1) % 60;
+			if (day) {
+				Message(13, "You last logged in %u days, %u hours, %minutes, and %u seconds ago.", day, hour, minute, second);
+			}
+			else if (hour) {
+				Message(13, "You last logged in %u hours, %u minutes, and %u seconds ago.", hour, minute, second);
+			}
+			else if (minute) {
+				Message(13, "You last logged in %u minutes, and %u seconds ago.", minute, second);
+			}
+			else {
+				Message(13, "You last logged in %u seconds ago.", second);
+			}
+			if (InRestedArea()) {
+				AddRestedExperience(time(nullptr) - m_pp.lastlogin);
+				//Save();
+			}
+		}
 	}
 
 	if (zone) {
@@ -1297,6 +1328,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	database.LoadCharacterLeadershipAA(cid, &m_pp); /* Load Character Leadership AA's */
 	database.LoadCharacterTribute(cid, &m_pp); /* Load CharacterTribute */
 
+	
 	/* Load AdventureStats */
 	AdventureStats_Struct as;
 	if(database.GetAdventureStats(cid, &as))
