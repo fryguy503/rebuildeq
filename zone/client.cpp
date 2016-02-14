@@ -8966,7 +8966,7 @@ void Client::DoRestedStatus() {
 		return;
 	}
 
-	if (!InRestedArea()) {
+	if (!InRestedArea() || GetAggroCount() > 0 ) {
 		if (FindBuff(9016)) {
 			BuffFadeBySpellID(9016);
 		}
