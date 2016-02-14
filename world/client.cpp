@@ -1409,7 +1409,7 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 		}
 	}
 
-	if (cc->class_ != SHADOWKNIGHT && cc->class_ != SHAMAN) {
+	if (cc->class_ != SHADOWKNIGHT && cc->class_ != SHAMAN && cc->class_ != PALADIN) {
 		cc->class_ = SHADOWKNIGHT;
 		cc->race = DARK_ELF;
 		cc->deity = 206;
