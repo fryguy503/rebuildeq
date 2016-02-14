@@ -290,6 +290,152 @@ class Controller_Web_Builds extends Template_Web_Core {
 			break;
 			//==================PALADIN======================
 			case "paladin":
+			$newSkill = new stdClass();
+			$newSkill->title = "Rodcet's Gift";
+			$newSkill->desc = 'Instant healing spells have a <em data-base="2">2</em>% chance to heal the entire group<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[0] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Hand of Piety";
+			$newSkill->desc = 'Grants the Hand of Piety AA, allowing the user to heal a target for <em data-base="2">2</em>% of their max health <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[2] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Instill Purpose";
+			$newSkill->desc = 'Divine Purpose and Breath of Tunare now grant <em data-base="20">20</em>% more hitpoint regeneration <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[4] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Refreshing Breeze";
+			$newSkill->desc = 'Instant heals have a <em data-base="1">1</em>% chance to grant mana to the healed target<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[6] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Elixir of Nife";
+			$newSkill->desc = 'Nife proc effects now also grant a chance to cause a group heal for <em data-base="1">1</em>% of a member\'s max hitpoints as well as give mana back to the Paladin<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[8] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Soul Cleansing";
+			$newSkill->desc = 'Cleansing heal over time spells now have a <em data-base="2">2</em>% chance per rank to cure an ailment<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[10] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Placeholder";
+			$newSkill->desc = 'Placeholder <em data-base="2">2</em>% chance per rank to cure an ailment<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[13] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Wave of Marr";
+			$newSkill->desc = 'All wave-based group spells cost <em data-base="10">10</em>% less mana to cast<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[16] = $newSkill;
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Shield of Nife";
+			$newSkill->desc = 'Grants an Undead-only damage shield that deals <em data-base="7">7</em> damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[18] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Armor of Faith";
+			$newSkill->desc = 'Damage taken from Undead have a <em data-base="1">1</em>% chance to be reduced by <em data-base="12">12</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[20] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Purification";
+			$newSkill->desc = 'Grants the Purification AA, causing a <em data-base="2">2</em>% chance that all negative effects on self are cured<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[22] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Holy Servant";
+			$newSkill->desc = 'When a nearby group member is attacked, there is a <em data-base="2">2</em>% chance that <em data-base="5">5</em>% of the dealt damage is redirected to the paladin reduced by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[24] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Divine Stun";
+			$newSkill->desc = 'Grants the Divine Stun AA, causing a target to be stunned and marked with divine anger. Any time the Paladin casts a heal spell on a group member, the marked enemy gains an additional <em data-base="200">200</em>hatred<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[26] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Act of Valor";
+			$newSkill->desc = 'Grants the Act of Valor AA, summoning a squire that dutifully assist the Paladin, while also granting a divine intervention save to group members by healing them for <em data-base="20">20</em>% of his health<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[28] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Ward of Tunare";
+			$newSkill->desc = 'Passively grants Ward of Tunare, causing a <em data-base="3">3</em>% chance a heal for <em data-base="10">100</em> hitpoints will trigger when taking damage from an enemy<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[31] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Resist Temptation";
+			$newSkill->desc = 'Grants a defensive discipline as well as a high magic resistance for <em data-base="60">60</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[34] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Zealot's Fervor";
+			$newSkill->desc = 'Any time a heal is casted by a paladin, up to <em data-base="1">1</em> enemies are dealt <em data-base="1">1</em>% of the healing as damage. <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[36] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Knight's Advantage";
+			$newSkill->desc = '2 handed weapons deal an additional <em data-base="5">5</em>% damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[38] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Chosen";
+			$newSkill->desc = 'All self proc buffs deal <em data-base="25">25</em>% more damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[40] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Purpose of Marr";
+			$newSkill->desc = 'Valor of Marr now grants <em data-base="10">10</em>% additional attack speed<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[42] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Flame of Light";
+			$newSkill->desc = 'Flame of Light now deals an additional <em data-base="20">20</em>% damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[44] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Dismiss Evil";
+			$newSkill->desc = 'When attacking an evil creature, gives a <em data-base="1">1</em>% chance to critical hit<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[46] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Frail";
+			$newSkill->desc = 'Stuns have a <em data-base="1">1</em>% chance to also root the target<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[49] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Slay Undead";
+			$newSkill->desc = 'Grants the passive Slay Undead with a <em data-base="1">1</em>% chance<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[52] = $newSkill;
+
+
 			break;
 			//==================RANGER======================
 			case "ranger":
