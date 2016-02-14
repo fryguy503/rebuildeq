@@ -288,14 +288,23 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					Damage(caster, dmg, spell_id, spell.skill, false, buffslot, false);
 				}
 				else if(dmg > 0) {
-					//healing spell...
-
+					
 					if (!PassCastRestriction(false, spells[spell_id].base2[i], false))
 						break;
 
 					if (caster) {
 						if (caster->IsClient() && this->IsClient()) { //Ensure caster and player is client for these mechanics
 							Client * casterClient = caster->CastToClient();
+
+							if (spell_id == 3261) {
+								if (casterClient->GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY) > 0) {
+									rank = casterClient->GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY);
+									dmg = (int)((float)CastToClient()->GetMaxHP() * (float)0.02 * (float)rank); //Change heal to max HP heal
+								} else {
+									break;
+								}
+							}
+
 							//Rodcet's Gift
 							if ((spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9) && //Paladin direct heals							
 								casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT) > 0 &&
