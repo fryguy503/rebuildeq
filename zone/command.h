@@ -239,6 +239,7 @@ void command_repopclose(Client *c, const Seperator *sep);
 void command_report(Client *c, const Seperator *sep);
 void command_resetaa(Client* c,const Seperator *sep);
 void command_resetaa_timer(Client *c, const Seperator *sep);
+void command_rested(Client *c, const Seperator *sep);
 void command_rez(Client* c, const Seperator *sep);
 void command_revoke(Client *c, const Seperator *sep);
 void command_rules(Client *c, const Seperator *sep);

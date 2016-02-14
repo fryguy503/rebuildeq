@@ -315,6 +315,7 @@ int command_init(void)
 		command_add("race", "[racenum] - Change your or your target's race. Use racenum 0 to return to normal", 50, command_race) ||
 		command_add("raidloot", "LEADER|GROUPLEADER|SELECTED|ALL - Sets your raid loot settings if you have permission to do so.", 50, command_raidloot) ||
 		command_add("randomfeatures", "- Temporarily randomizes the Facial Features of your target", 80, command_randomfeatures) ||
+		command_add("rested", "- Learn about rested status", 0, command_rested) ||
 		command_add("refreshgroup", "- Refreshes Group.",  50, command_refreshgroup) ||
 		command_add("reloadaa", "Reloads AA data", 200, command_reloadaa) ||
 		command_add("reloadallrules", "Executes a reload of all rules.", 80, command_reloadallrules) ||
@@ -11164,6 +11165,16 @@ void command_resetaa_timer(Client *c, const Seperator *sep) {
 	{
 		c->Message(0, "usage: #resetaa_timer [all | timer_id]");
 	}
+}
+
+
+void command_rested(Client *c, const Seperator *sep) {
+	const char *windowTitle = "What is Rested Status?";
+
+	std::string windowText = StringFormat("You currently have %u pooled rested experience.<br> In certain areas across Norrath, players are able to obtain rested experience.<br>Rested experience represents your character's rested state, and is a bonus to normal experience.<br>You are able to obtain rested experience while online or offline if you're within a rested area.",
+		(uint32)c->GetEPP().rested_exp);
+
+	c->SendPopupToClient(windowTitle, windowText.c_str());	
 }
 
 void command_reloadaa(Client *c, const Seperator *sep) {

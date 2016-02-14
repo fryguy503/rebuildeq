@@ -8967,16 +8967,21 @@ void Client::DoRestedStatus() {
 	}
 
 	if (!InRestedArea()) {
+		if (FindBuff(9016)) {
+			BuffFadeBySpellID(9016);
+		}
 		m_epp.in_rested_area = false;
 		return;
 	}
 		
-	if (!FindBuff(7)) { //Hymn of Restoration visual when you're in a rested area.
-		SpellFinished(7, this);
+	if (!FindBuff(9016)) { //Aura of Regeneration visual when you're in a rested area.
+		//AddBuff(this, 9016, 60, 1);
+		SpellOnTarget(9016, this);
+		//SpellFinished(9016, this);
 	}
 
 	if (!m_epp.in_rested_area) { //We just entered a rested area.
-		Message(13, "You feel rested.");
+		Message(13, "You feel %s.", CreateSayLink("#rested", "rested").c_str());
 	}
 	else { //This is a tick update for a rested area.
 		AddRestedExperience(6);
@@ -9009,7 +9014,7 @@ void Client::AddRestedExperience(uint32 lastUpdate) {
 	if (m_epp.rested_exp > maxExpPool) {
 		m_epp.rested_exp = maxExpPool;
 	}
-	Message(13, "Rested: %f (rate: %f) expNeeded: %u", m_epp.rested_exp, expRate, expNeeded);
+	//Message(13, "Rested: %f (rate: %f) expNeeded: %u", m_epp.rested_exp, expRate, expNeeded);
 }
 
 uint8 Client::GetRottenCoreCounters() {
