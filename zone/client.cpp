@@ -9069,6 +9069,30 @@ void Client::ResetBuild() {
 
 std::string Client::GetBuildName(uint32 id) {
 	switch (this->GetClass()) {
+	case PALADIN:		
+		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";
+		else if (id == RB_PAL_HANDOFPIETY) return "Hand of Piety";
+		else if (id == RB_PAL_INSTILLPURPOSE) return "Instill Purpose";
+		else if (id == RB_PAL_REFRESHINGBREEZE) return "Refreshing Breeze";
+		else if (id == RB_PAL_ELIXIROFNIFE) return "Elixir of Nife";
+		else if (id == RB_PAL_SOULCLEANSING) return "Soul Cleansing";
+		else if (id == RB_PAL_WAVEOFMARR) return "Wave of Marr";
+		else if (id == RB_PAL_SHIELDOFNIFE) return "Sheild of Nife";
+		else if (id == RB_PAL_ARMOROFFAITH) return "Armor of Faith";
+		else if (id == RB_PAL_HOLYSERVANT) return "Holy Servant";
+		else if (id == RB_PAL_DIVINESTUN) return "Divine Stun";
+		else if (id == RB_PAL_ACTOFVALOR) return "Act of Valor";
+		else if (id == RB_PAL_WARDOFTUNARE) return "Ward of Tunare";
+		else if (id == RB_PAL_RESISTTEMPTATION) return "Resist Temptation";
+		else if (id == RB_PAL_ZEALOTSFERVOR) return "Zealots Fervor";
+		else if (id == RB_PAL_KNIGHTSADVANTAGE) return "Knight's Advantage";
+		else if (id == RB_PAL_CHOSEN) return "Chosen";
+		else if (id == RB_PAL_PURPOSEOFMARR) return "Purpose of Marr";
+		else if (id == RB_PAL_FLAMEOFLIGHT) return "Flame of Light";
+		else if (id == RB_PAL_DISMISSEVIL) return "Dismiss Evil";
+		else if (id == RB_PAL_FRAIL) return "Frail";
+		else if (id == RB_PAL_SLAYUNDEAD) return "Slay Undead";
+		break;
 	case SHADOWKNIGHT:
 		if (id == RB_SHD_LEECHTOUCH) return "Leech Touch";
 		else if (id == RB_SHD_GOUGINGSKIN) return "Gouging Skin";
@@ -9120,7 +9144,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_SHM_MARKOFSLOTH) return "Mark of Sloth";
 		else if (id == RB_SHM_FERALSWIPE) return "Feral Swipe";
 		else if (id == RB_SHM_PARAGONOFSPIRIT) return "Paragon of Spirit";
-		break;
+		break;	
 	}
 	return "Unknown";
 }
