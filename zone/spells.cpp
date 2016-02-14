@@ -2667,7 +2667,11 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 	duration = spells[spell_id].buffduration;
 
 	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED) > 0) {
-		duration += (int)(duration * 0.2 * caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED));
+		duration += (int)((float)duration * (float)0.2 * (float)caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED));
+	}
+
+	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDHASTE) > 0) {
+		duration += (int)((float)duration * (float)0.3 * (float)caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDHASTE));
 	}
 
 	int castlevel = caster->GetCasterLevel(spell_id);
