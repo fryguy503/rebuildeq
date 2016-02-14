@@ -1383,7 +1383,7 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 	int stats_sum = cc->STR + cc->STA + cc->AGI + cc->DEX + cc->WIS + cc->INT + cc->CHA;
 
 	in.s_addr = GetIP();
-
+	
 	Log.Out(Logs::Detail, Logs::World_Server, "Character creation request from %s LS#%d (%s:%d) : ", GetCLE()->LSName(), GetCLE()->LSID(), inet_ntoa(in), GetPort());
 	Log.Out(Logs::Detail, Logs::World_Server, "Name: %s", name);
 	Log.Out(Logs::Detail, Logs::World_Server, "Race: %d  Class: %d  Gender: %d  Deity: %d  Start zone: %d  Tutorial: %s",
@@ -1409,6 +1409,11 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 		}
 	}
 
+	if (cc->class_ != SHADOWKNIGHT && cc->class_ != SHAMAN) {
+		cc->class_ = SHADOWKNIGHT;
+		cc->race = DARK_ELF;
+		cc->deity = 206;
+	}
 	/* Convert incoming cc_s to the new PlayerProfile_Struct */
 	memset(&pp, 0, sizeof(PlayerProfile_Struct));	// start building the profile
 
@@ -1454,7 +1459,7 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 
 //	strcpy(pp.servername, WorldConfig::get()->ShortName.c_str());
 
-
+	
 	for (i = 0; i < MAX_PP_REF_SPELLBOOK; i++)
 		pp.spell_book[i] = 0xFFFFFFFF;
 
