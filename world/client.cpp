@@ -159,6 +159,9 @@ void Client::SendExpansionInfo() {
 		eis->Expansions = (RuleI(World, ExpansionSettings));
 	}
 
+	//Shin: I'm overriding this to always be velious!
+	eis->Expansions = 3;
+
 	QueuePacket(outapp);
 	safe_delete(outapp);
 }
