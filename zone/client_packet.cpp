@@ -804,16 +804,16 @@ void Client::CompleteConnect()
 			uint32 minute = (ttime / 60) % 60;
 			uint32 second = (ttime / 1) % 60;
 			if (day) {
-				Message(13, "You last logged in %u days, %u hours, %minutes, and %u seconds ago.", day, hour, minute, second);
+				Message(13, "You last logged in %u day%s, %u hour%s, %u minute%s, and %u second%s ago.", day, ((day > 1) ? "s" : ""), hour, ((hour > 1) ? "s" : ""),  minute, ((minute > 1) ? "s" : ""), second, ((second > 1) ? "s" : ""));
 			}
 			else if (hour) {
-				Message(13, "You last logged in %u hours, %u minutes, and %u seconds ago.", hour, minute, second);
+				Message(13, "You last logged in %u hour%s, %u minute%s, and %u second%s ago.", hour, ((hour > 1) ? "s" : ""), minute, ((minute > 1) ? "s" : ""), second, ((second > 1) ? "s" : ""));
 			}
 			else if (minute) {
-				Message(13, "You last logged in %u minutes, and %u seconds ago.", minute, second);
+				Message(13, "You last logged in %u minute%s, and %u second%s ago.", minute, ((minute > 1) ? "s" : ""), second, ((second > 1) ? "s" : ""));
 			}
 			else {
-				Message(13, "You last logged in %u seconds ago.", second);
+				Message(13, "You last logged in %u second%s ago.", second, ((second > 1) ? "s" : ""));
 			}
 			if (InRestedArea()) {
 				AddRestedExperience(time(nullptr) - m_pp.lastlogin);
