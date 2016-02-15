@@ -417,6 +417,11 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 	// mana is checked for clients on the frontend. we need to recheck it for NPCs though
 	// If you're at full mana, let it cast even if you dont have enough mana
 
+	if ((spell_id == 1455 || spell_id == 2589 || spell_id == 3577) &&
+		IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_WAVEOFMARR) > 0) {
+		mana_cost -= (int)(mana_cost * 0.1 * CastToClient()->GetBuildRank(PALADIN, RB_PAL_WAVEOFMARR));
+	}
+
 	// we calculated this above, now enforce it
 	if(mana_cost > 0 && slot != USE_ITEM_SPELL_SLOT)
 	{
