@@ -3235,7 +3235,13 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				entity_list.MessageClose(this, true, 300, MT_Emote, "%s beams a smile at %s", attacker->GetCleanName(), this->GetCleanName() );
 			}
 
-			
+			if (attacker && attacker->GetBodyType() == BT_Undead &&
+				IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH) > 0 &&
+				zone->random.Roll((int)(20 * CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH)))) {
+				int damageReduction = (int)(float)(damage * (float)0.12 * (float)CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH));
+				Message(MT_NonMelee, "Armor of Faith %u reduced damage from %s by %i.", CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH), attacker->GetCleanName(), damageReduction);
+				damage -= damageReduction;
+			}
 
 			//Shin: Rotten Core
 			if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE) > 0) {
