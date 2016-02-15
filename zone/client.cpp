@@ -8937,6 +8937,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Purification\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == PALADIN && i == RB_PAL_DIVINESTUN && GetAA(aaDivineStun) < 1) {
+					TrainAARank(aaDivineStun);
+					Message(15, "You have unlocked the AA \"Divine Stun\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 			}
 		}
 	}

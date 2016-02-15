@@ -326,70 +326,83 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 
 
-							//Rodcet's Gift
-							if ((spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9 || spell_id == 3261) && //Paladin direct heals							
-								casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT) > 0 &&
-								this->IsClient()) {
-								rank = casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT);
-
-								if (zone->random.Roll(rank * 2)) { //2 * rank % chance
-									caster->Message(MT_Spells, "Rodcet's Gift %u spreads your healing power.", rank);
-									if (this->IsGrouped()) {
-										//Give heal to group (and RAID)									
-										auto group = this->GetGroup(); //iterate group
-										for (int i = 0; i < 6; ++i) {
-											if (group->members[i] &&  //target grouped
-												group->members[i]->IsClient() && //Is a client												
-												this->GetID() != group->members[i]->GetID() && //not me
-												this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
-												!group->members[i]->CastToClient()->IsDead() //and not dead
-												) {
+							if ((spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9 || spell_id == 3261)) { //Paladin Direct Heals
+								//Divine Stun Hate bonus
+								if (casterClient->GetBuildRank(PALADIN, RB_PAL_DIVINESTUN) > 0 && casterClient->IsSwornEnemyActive()) {
+									auto aggroMob = entity_list.GetMobID(casterClient->GetEPP().sworn_enemy_id);
+									
+									rank = casterClient->GetBuildRank(PALADIN, RB_PAL_DIVINESTUN);									
+									casterClient->Message(270, "%s intensifies his hatred towards you.", aggroMob->GetCleanName());
+									aggroMob->AddToHateList(caster, (200 * rank));
+								}
 
 
-												float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
-												float range2 = 100 * 100;
-												if (dist2 <= range2) {
-													
-													if (group->members[i] == caster) {
-														group->members[i]->Message(MT_Spells, "You have healed yourself for %i.", dmg);
-													} else {
-														caster->Message(MT_Spells, "You have healed %s for %i.", group->members[i]->GetCleanName(), dmg);
-														group->members[i]->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
-													}
-													dmg = caster->GetActSpellHealing(spell_id, dmg, this);
-													group->members[i]->HealDamage(dmg, caster);
-												}
+								//Rodcet's Gift
+								if (casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT) > 0 &&
+									this->IsClient()) {
+									rank = casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT);
 
-
-												
-											}
-										}
-									}
-									else if (this->IsRaidGrouped()) { //Raid healing
-										auto raid = this->GetRaid();	
-										
-										uint32 gid = raid->GetGroup(this->CastToClient());
-										if (gid < 12) {
-											for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-												if (raid->members[i].member &&  //is raid member
-													raid->members[i].GroupNumber == gid && //in group
-													raid->members[i].member->IsClient() && //Is a client
-													raid->members[i].member != this && //not me
-													raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
-													!raid->members[i].member->IsDead() //and not dead
+									if (zone->random.Roll(rank * 2)) { //2 * rank % chance
+										caster->Message(MT_Spells, "Rodcet's Gift %u spreads your healing power.", rank);
+										if (this->IsGrouped()) {
+											//Give heal to group (and RAID)									
+											auto group = this->GetGroup(); //iterate group
+											for (int i = 0; i < 6; ++i) {
+												if (group->members[i] &&  //target grouped
+													group->members[i]->IsClient() && //Is a client												
+													this->GetID() != group->members[i]->GetID() && //not me
+													this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
+													!group->members[i]->CastToClient()->IsDead() //and not dead
 													) {
 
-													float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
+
+													float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
 													float range2 = 100 * 100;
 													if (dist2 <= range2) {
-														if (raid->members[i].member == caster) {
-															raid->members[i].member->Message(MT_Spells, "You have healed yourself for %i.", dmg);
-														} else {
-															caster->Message(MT_Spells, "You have healed %s for %i.", raid->members[i].member->GetCleanName(), dmg);
-															raid->members[i].member->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
+
+														if (group->members[i] == caster) {
+															group->members[i]->Message(MT_Spells, "You have healed yourself for %i.", dmg);
+														}
+														else {
+															caster->Message(MT_Spells, "You have healed %s for %i.", group->members[i]->GetCleanName(), dmg);
+															group->members[i]->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
 														}
 														dmg = caster->GetActSpellHealing(spell_id, dmg, this);
-														raid->members[i].member->HealDamage(dmg, caster);
+														group->members[i]->HealDamage(dmg, caster);
+													}
+
+
+
+												}
+											}
+										}
+										else if (this->IsRaidGrouped()) { //Raid healing
+											auto raid = this->GetRaid();
+
+											uint32 gid = raid->GetGroup(this->CastToClient());
+											if (gid < 12) {
+												for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+													if (raid->members[i].member &&  //is raid member
+														raid->members[i].GroupNumber == gid && //in group
+														raid->members[i].member->IsClient() && //Is a client
+														raid->members[i].member != this && //not me
+														raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
+														!raid->members[i].member->IsDead() //and not dead
+														) {
+
+														float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
+														float range2 = 100 * 100;
+														if (dist2 <= range2) {
+															if (raid->members[i].member == caster) {
+																raid->members[i].member->Message(MT_Spells, "You have healed yourself for %i.", dmg);
+															}
+															else {
+																caster->Message(MT_Spells, "You have healed %s for %i.", raid->members[i].member->GetCleanName(), dmg);
+																raid->members[i].member->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
+															}
+															dmg = caster->GetActSpellHealing(spell_id, dmg, this);
+															raid->members[i].member->HealDamage(dmg, caster);
+														}
 													}
 												}
 											}
@@ -866,6 +879,24 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 						if (caster->IsClient())
 							effect_value += effect_value*caster->GetFocusEffect(focusFcStunTimeMod, spell_id)/100;
+
+
+						if (spell_id == 2190 && //Divine stun
+							caster->IsClient() &&  //Casted by a paladin client
+							caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_DIVINESTUN) > 0 && //Has divine stun							
+							IsNPC()) { //target is an NPC
+							
+							uint16 rank = caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_DIVINESTUN);
+							if (caster->CastToClient()->GetEPP().sworn_enemy_timeout < time(nullptr)) {
+								caster->CastToClient()->GetEPP().sworn_enemy_id = GetID();
+								caster->CastToClient()->GetEPP().sworn_enemy_timeout = time(nullptr) + 18;
+								caster->Message(270, "Divine Stun %u has marked %s with divine anger.", rank, GetCleanName());
+							}
+							else if (CastToClient()->GetEPP().sworn_enemy_id == GetID()) { //Refresh timeout
+								CastToClient()->GetEPP().sworn_enemy_timeout = time(nullptr) + 18;
+								caster->Message(270, "Divine Stun %u has marked %s with divine anger again.", rank, GetCleanName());
+							}
+						}
 
 						Stun(effect_value);
 					} else {
