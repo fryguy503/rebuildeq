@@ -3285,6 +3285,91 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			}
 		}
 
+		//Holy Servant
+		if (IsClient() && attacker && attacker->IsNPC()) { //If the attacked player is in a group, and being attacked by an NPC
+			if (CastToClient()->IsGrouped()) { //In group
+				Group *caster_group = entity_list.GetGroupByMob(this);
+				if (caster_group) {
+					for (int z = 0; z < MAX_GROUP_MEMBERS; z++) {
+						if (caster_group->members[z] == this) { //Skip self
+							continue;
+						} else if (caster_group->members[z] != nullptr && caster_group->members[z]->GetClass() == PALADIN) { //paladin in group
+							if (!caster_group->members[z]->IsClient() || //don't block if a client
+								caster_group->members[z]->IsMezzed() ||
+								caster_group->members[z]->IsAIControlled() || //don't block while charmed
+								!caster_group->members[z]->IsCasting() || //don't block while casting
+								caster_group->members[z]->GetZoneID() != GetZoneID() || //not in same zone
+								caster_group->members[z]->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT) < 1 ||
+								caster_group->members[z]->animation == ANIM_SIT //don't block while sitting
+								) {
+								continue;
+							}
+							//Check distance from paladin
+							float distance = DistanceSquared(GetPosition(), caster_group->members[z]->GetPosition());
+							if (distance > (100 * 100)) {
+								continue;
+							}
+							rank = caster_group->members[z]->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT);
+							int damage_reduction = (int)((float)damage * (float)0.05 * (float)rank);
+							damage -= damage_reduction;
+							Message(MT_Spells, "%s's Holy Servant %u has taken %i damage for you.", caster_group->members[z]->GetCleanName(), rank, damage_reduction);
+							//reduce dmg_reduction by the amount of skill
+							
+							int damage_reduction2 = damage_reduction;
+							damage_reduction2 -= (int)((float)damage_reduction * 0.02 * (float)rank);
+							caster_group->members[z]->CastToClient()->Message(MT_Spells, "Holy Servant %u has drawn %i damage from %s and has given it to you.", rank, damage_reduction2, attacker->GetCleanName());
+
+							//deal dmg to paladin
+							caster_group->members[z]->CommonDamage(attacker, damage_reduction2, spell_id, skill_used, avoidable, buffslot, iBuffTic, special);
+							
+							break; //Don't let more paladins reduce this damage
+						}
+					}
+				}
+			}
+			else if (CastToClient()->IsRaidGrouped()) { //in raid
+				Raid *target_raid = entity_list.GetRaidByClient(CastToClient()->CastToClient());
+				uint32 gid = 0xFFFFFFFF;
+				if (target_raid) {
+					gid = target_raid->GetGroup(CastToClient()->GetName());
+					if (gid < 12) {
+						for (int x = 0; x < MAX_RAID_MEMBERS; x++) { //iterate raid
+							if (target_raid->members[x].member == this) { //if member is the caster										
+								continue;
+							}
+							else if (target_raid->members[x].member != nullptr) {
+
+								if (!target_raid->members[x].member->IsClient() ||
+									target_raid->members[x].member->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT) < 1 ||
+									target_raid->members[x].member->GetZoneID() != GetZoneID() || //not in same zone
+									target_raid->members[x].GroupNumber != gid) { //not in same raid
+									continue;
+								}
+
+								//Check distance from paladin
+								float distance = DistanceSquared(GetPosition(), target_raid->members[x].member->GetPosition());
+								if (distance > (100 * 100)) {
+									continue;
+								}
+								rank = target_raid->members[x].member->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT);
+								int damage_reduction = (int)((float)damage * (float)0.05 * (float)rank);
+								damage -= damage_reduction;
+
+								//reduce dmg_reduction by the amount of skill
+								damage_reduction -= (int)((float)damage_reduction * 0.02 * (float)rank);
+
+								//deal dmg to paladin
+								target_raid->members[x].member->CommonDamage(attacker, damage_reduction, spell_id, skill_used, avoidable, buffslot, iBuffTic, special);
+
+								break; //Don't let more paladins reduce this damage
+							}
+						}
+					}
+				}
+			}
+
+		}
+
 		Mob *pet = GetPet();
 		if (pet && !pet->IsFamiliar() && !pet->GetSpecialAbility(IMMUNE_AGGRO) && !pet->IsEngaged() && attacker && attacker != this && !attacker->IsCorpse())
 		{
