@@ -1338,6 +1338,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				const char *itemname = item ? item->Name : "*Unknown Item*";
 				snprintf(effect_desc, _EDLEN, "Summon Item: %s (id %d)", itemname, spell.base[i]);
 #endif
+
+				if (spell_id == 223 && IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) > 0) {
+					MakePet(spell_id, "a_squire");
+					break;
+				}
+
+
 				if (!item) {
 					Message(13, "Unable to summon item %d. Item not found.", spell.base[i]);
 				} else if (IsClient()) {
