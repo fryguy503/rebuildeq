@@ -1271,6 +1271,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_Purify:
 			{
+				if (IsClient() && 
+					CastToClient()->GetBuildRank(PALADIN, RB_PAL_PURIFICATION) > 0 &&
+					!zone->random.Roll((int)(15 * CastToClient()->GetBuildRank(PALADIN, RB_PAL_PURIFICATION)))) {
+					Message(MT_Spells, "Purification failed.");
+					break;
+				}
 				//Attempt to remove all Deterimental buffs.
 				int buff_count = GetMaxTotalSlots();
 				for(int slot = 0; slot < buff_count; slot++) {

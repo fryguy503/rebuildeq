@@ -8931,6 +8931,12 @@ void Client::RefreshBuild() {
 					TrainAARank(aaHandofPiety);
 					Message(15, "You have unlocked the AA \"Hand of Piety\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+				
+				if (GetClass() == PALADIN && i == RB_PAL_PURIFICATION && GetAA(aaPurification) < 1) {
+					TrainAARank(aaPurification);
+					Message(15, "You have unlocked the AA \"Purification\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 			}
 		}
 	}
