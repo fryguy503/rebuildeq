@@ -3300,7 +3300,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 								!caster_group->members[z]->IsCasting() || //don't block while casting
 								caster_group->members[z]->GetZoneID() != GetZoneID() || //not in same zone
 								caster_group->members[z]->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT) < 1 ||
-								caster_group->members[z]->animation == ANIM_SIT //don't block while sitting
+								caster_group->members[z]->animation == ANIM_SIT//don't block while sitting								
 								) {
 								continue;
 							}
@@ -3310,6 +3310,11 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 								continue;
 							}
 							rank = caster_group->members[z]->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT);
+							
+							if (!zone->random.Roll((int)(2 * rank))) { //Only block if 2%*rank chance
+								continue;
+							}
+
 							int damage_reduction = (int)((float)damage * (float)0.05 * (float)rank);
 							damage -= damage_reduction;
 							Message(MT_Spells, "%s's Holy Servant %u has taken %i damage for you.", caster_group->members[z]->GetCleanName(), rank, damage_reduction);
