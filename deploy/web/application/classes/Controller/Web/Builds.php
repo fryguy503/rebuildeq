@@ -353,7 +353,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Purification";
-			$newSkill->desc = 'Grants the Purification AA, causing a <em data-base="2">2</em>% chance that all negative effects on self are cured<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Purification AA, causing a <em data-base="15">15</em>% chance that all negative effects on self are cured<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[22] = $newSkill;
 
