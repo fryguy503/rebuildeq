@@ -2559,6 +2559,18 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 		}
 	}
 
+	if (this->IsClient() && 
+		attacker->GetBodyType() == BT_Undead &&
+		this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SHIELDOFNIFE) > 0) {
+
+		//This wonky code is because depending on item or spell ds, it stacks oddly.
+		DS += ((spell_ds) ? 1 : -1) * 7 * this->CastToClient()->GetBuildRank(PALADIN , RB_PAL_SHIELDOFNIFE);
+		if (attacker->IsNPC()) {
+			attacker->AddToHateList(this, uint32(10 * this->CastToClient()->GetBuildRank(PALADIN , RB_PAL_SHIELDOFNIFE)));
+		}
+	}
+
+
 	if(DS == 0 && rev_ds == 0)
 		return;
 	
