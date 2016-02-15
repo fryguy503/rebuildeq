@@ -302,7 +302,11 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		if (CastToClient()->GetbuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) >= 5) {
 			npc_type->race = GetRace();
 			npc_type->gender = GetGender();
-			npc_type->size = GetSize();
+			npc_type->size = GetSize()--;
+			if (npc_type->size < 1) {
+				npc_type->size = 1;
+			}
+
 			/*npc_type->AC = GetAC();
 			npc_type->STR = GetSTR();
 			npc_type->STA = GetSTA();
