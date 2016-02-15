@@ -306,10 +306,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								}
 							}
 
-							
 
 							//Rodcet's Gift
-							if ((spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9) && //Paladin direct heals							
+							if ((spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9 || spell_id == 3261) && //Paladin direct heals							
 								casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT) > 0 &&
 								this->IsClient()) {
 								rank = casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT);
