@@ -9079,7 +9079,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_PAL_HANDOFPIETY) return "Hand of Piety";
 		else if (id == RB_PAL_INSTILLPURPOSE) return "Instill Purpose";
 		else if (id == RB_PAL_REFRESHINGBREEZE) return "Refreshing Breeze";
-		else if (id == RB_PAL_ELIXIROFNIFE) return "Elixir of Nife";
+		else if (id == RB_PAL_ELIXIROFMIGHT) return "Elixir of Might";
 		else if (id == RB_PAL_SOULCLEANSING) return "Soul Cleansing";
 		else if (id == RB_PAL_WAVEOFMARR) return "Wave of Marr";
 		else if (id == RB_PAL_SHIELDOFNIFE) return "Sheild of Nife";

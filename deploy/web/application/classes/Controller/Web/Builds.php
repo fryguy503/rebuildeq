@@ -315,8 +315,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$skills[6] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Elixir of Nife";
-			$newSkill->desc = 'Nife proc effects now also grant a chance to cause a group heal for <em data-base="1">1</em>% of a member\'s max hitpoints as well as give mana back to the Paladin<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Elixir of Might";
+			$newSkill->desc = 'Instrument of Nife and Divine Might proc effects now also grant a <em data-base="5">5</em>% chance to heal the Paladin for <em data-base="10">10</em>% of damage dealt as well as gain <em data-base="2">2</em> mana<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[8] = $newSkill;
 

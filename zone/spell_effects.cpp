@@ -223,6 +223,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if (buffslot >= 0)
 					break;
 				uint16 rank;
+
+				
 				// for offensive spells check if we have a spell rune on
 				int32 dmg = effect_value;
 				if(dmg < 0)
@@ -239,6 +241,24 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (caster->IsClient()) {
 							Client * casterClient = caster->CastToClient();
 							
+							//Elixir of Might
+							if ((spell_id == 2729 || spell_id == 823) &&
+								casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT) > 0 &&
+								zone->random.Roll((int)(casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT) * 20))) {
+									rank = casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT);
+									int healAmount = (int)((float)-dmg * (float)0.1 * (float)rank);
+									int manaAmount = (int)((float)-dmg * (float)0.01 * (float)rank);
+									if (healAmount > 0) {
+										casterClient->Message(MT_NonMelee, "Elixir of Might %u siphons %i health and %i mana from %s.", rank, healAmount, manaAmount, GetCleanName());
+										casterClient->HealDamage(healAmount, caster);
+										if (manaAmount > 0) {
+											casterClient->SetMana(caster->GetMana() + manaAmount);
+										}
+									}
+									
+									
+							}
+
 							//Shin: Festering Spear
 							if (casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR) > 0) {
 								rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
@@ -266,14 +286,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 
 							//Siphon of Death
-							if (
-								(spell_id == 2718 || spell_id == 1471) &&
+							if ((spell_id == 2718 || spell_id == 1471) &&
 								casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH) > 0) {
 
 								rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH);
 								int mana_amount = (int)(dmg * 0.05 * rank);
 								caster->Message(MT_NonMelee, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
-								caster->SetMana(GetMana() + mana_amount);
+								caster->SetMana(caster->GetMana() + mana_amount);
 							}
 
 							
