@@ -25,6 +25,7 @@
 #include "client.h"
 #include "entity.h"
 #include "mob.h"
+#include "string_ids.h"
 
 #ifdef BOTS
 #include "bot.h"
@@ -1595,6 +1596,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 		switch (effectid)
 		{
 			case SE_CurrentHP: //regens
+				Message(MT_Spells, "HealRegen: %i", effect_value);
+
 				if(effect_value > 0) {
 					new_bonus->HPRegen += effect_value;
 				}
@@ -3593,6 +3596,15 @@ void Mob::NegateSpellsBonuses(uint16 spell_id)
 			{
 				case SE_CurrentHP:
 					if(spells[spell_id].base[i] == 1) {
+						//Instill Purpose
+						if (spell_id == 1453 || spell_id == 2588 && this->IsClient()) {
+							if (this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_INSTILLPURPOSE) > 0) {
+								uint32 rank = this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_INSTILLPURPOSE);
+
+								effect_value += (int)((float)effect_value * (float)0.2 * (float)rank); //Change heal to max HP heal
+							}
+						}
+
 						spellbonuses.HPRegen = effect_value;
 						aabonuses.HPRegen = effect_value;
 						itembonuses.HPRegen = effect_value;
