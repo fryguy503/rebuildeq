@@ -3777,6 +3777,47 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 			if (caster)
 				effect_value = caster->GetActSpellHealing(buff.spellid, effect_value);
 
+			if (caster->IsClient() && caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SOULCLEANSING) > 0 &&
+				(buff.spellid == 3683 || buff.spellid == 1283) && 
+				zone->random.Roll((int)(caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SOULCLEANSING) * 2))) { //2%
+				int buff_count = GetMaxTotalSlots();
+				for (int j = 0; j < buff_count; j++) {
+					if (!IsValidSpell(buffs[j].spellid))
+						continue;
+					if (CalculatePoisonCounters(buffs[j].spellid) > 0) {
+						caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
+						caster->CastOnCurer(buffs[j].spellid);
+						CastOnCure(buffs[j].spellid);
+						buffs[j].counters = 0;
+						BuffFadeBySlot(j);
+						break;
+					}
+					if (CalculateCorruptionCounters(buffs[j].spellid) > 0) {
+						caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
+						caster->CastOnCurer(buffs[j].spellid);
+						CastOnCure(buffs[j].spellid);
+						buffs[j].counters = 0;
+						BuffFadeBySlot(j);
+						break;
+					}
+					if (CalculateDiseaseCounters(buffs[j].spellid) > 0) {
+						caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
+						caster->CastOnCurer(buffs[j].spellid);
+						CastOnCure(buffs[j].spellid);
+						buffs[j].counters = 0;
+						BuffFadeBySlot(j);
+						break;
+					}
+					if (CalculateCurseCounters(buffs[j].spellid) > 0) {
+						caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
+						caster->CastOnCurer(buffs[j].spellid);
+						CastOnCure(buffs[j].spellid);
+						buffs[j].counters = 0;
+						BuffFadeBySlot(j);
+						break;
+					}
+				}
+			}
 			HealDamage(effect_value, caster, buff.spellid);
 			// healing aggro would go here; removed for now
 			break;

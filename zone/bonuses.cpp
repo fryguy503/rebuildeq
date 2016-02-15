@@ -1596,8 +1596,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 		switch (effectid)
 		{
 			case SE_CurrentHP: //regens
-				Message(MT_Spells, "HealRegen: %i", effect_value);
-
+				
 				if(effect_value > 0) {
 					new_bonus->HPRegen += effect_value;
 				}
