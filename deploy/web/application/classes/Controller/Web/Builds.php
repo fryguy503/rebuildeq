@@ -310,8 +310,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Refreshing Breeze";
-			$newSkill->desc = 'Instant heals have a <em data-base="1">1</em>% chance to grant mana to the healed target<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->desc = 'Instant heals have a <em data-base="1">1</em>% chance to grant <em data-base="1">1</em>% of the healing as mana to the healed target<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";
 			$skills[6] = $newSkill;
 
 			$newSkill = new stdClass();

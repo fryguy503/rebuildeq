@@ -3595,6 +3595,16 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 		}
 	}
 
+	if (caster->IsClient() && caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE) > 0) {
+		if (zone->random.Roll((int)(1 * caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE)))) {
+			int manaAmount = (int)((float)acthealed * (float)0.01 * (float)caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE));
+			if (manaAmount > 0) {
+				SetMana(GetMana() + manaAmount);
+				Message(MT_Spells, "%s's Refreshing Breeze %u gave you %i mana.", caster->GetCleanName(), caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE), manaAmount);
+			}
+		}
+	}
+
 	if (acthealed > 100) {
 		if (caster) {
 			if (IsBuffSpell(spell_id)) { // hots
