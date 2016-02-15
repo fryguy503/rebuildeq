@@ -299,8 +299,38 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->level = (CastToClient()->GetLevel() - (10 - rank));
 		npc_type->AC += (npc_type->AC * 0.2 * rank);
 		npc_type->size = rank * (GetLevel() / 25); //1.04 to 7.4
-		if (npc_type->size > 7) npc_type->size = 7;
-		if (npc_type->size < 3) npc_type->size = 3;
+		if (CastToClient()->GetbuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) >= 5) {
+			npc_type->race = GetRace();
+			npc_type->gender = GetGender();
+			npc_type->size = GetSize();
+			/*npc_type->AC = GetAC();
+			npc_type->STR = GetSTR();
+			npc_type->STA = GetSTA();
+			npc_type->DEX = GetDEX();
+			npc_type->AGI = GetAGI();
+			npc_type->MR = GetMR();
+			npc_type->FR = GetFR();
+			npc_type->CR = GetCR();
+			npc_type->DR = GetDR();
+			npc_type->PR = GetPR();
+			npc_type->Corrup = GetCorrup();
+			npc_type->PhR = GetPhR();*/
+			// looks
+			npc_type->texture = GetEquipmentMaterial(MaterialChest);
+			npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
+			npc_type->haircolor = GetHairColor();
+			npc_type->beardcolor = GetBeardColor();
+			npc_type->eyecolor1 = GetEyeColor1();
+			npc_type->eyecolor2 = GetEyeColor2();
+			npc_type->hairstyle = GetHairStyle();
+			npc_type->luclinface = GetLuclinFace();
+			npc_type->beard = GetBeard();
+			npc_type->drakkin_heritage = GetDrakkinHeritage();
+			npc_type->drakkin_tattoo = GetDrakkinTattoo();
+			npc_type->drakkin_details = GetDrakkinDetails();
+			npc_type->d_melee_texture1 = GetEquipmentMaterial(MaterialPrimary);
+			npc_type->d_melee_texture2 = GetEquipmentMaterial(MaterialSecondary);
+		}
 	}
 
 	if (this->IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) > 0) {
@@ -308,8 +338,23 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->max_hp += (npc_type->max_hp * 0.2 * rank); //bonus HP
 		npc_type->level = (CastToClient()->GetLevel() - (5 - rank));
 		npc_type->AC += (npc_type->AC * 0.2 * rank);
-		npc_type->gender = (GetGender() == 1 ? 2 : 1);
+		npc_type->gender = (GetGender() == 1 ? 2 : 1); //invert gender
 		npc_type->race = GetRace();
+		npc_type->size = GetSize();
+		npc_type->texture = GetEquipmentMaterial(MaterialChest);
+		npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
+		npc_type->haircolor = GetHairColor();
+		npc_type->beardcolor = GetBeardColor();
+		npc_type->eyecolor1 = GetEyeColor1();
+		npc_type->eyecolor2 = GetEyeColor2();
+		npc_type->hairstyle = GetHairStyle();
+		npc_type->luclinface = GetLuclinFace();
+		npc_type->beard = GetBeard();
+		npc_type->drakkin_heritage = GetDrakkinHeritage();
+		npc_type->drakkin_tattoo = GetDrakkinTattoo();
+		npc_type->drakkin_details = GetDrakkinDetails();
+		npc_type->d_melee_texture1 = GetEquipmentMaterial(MaterialPrimary);
+		npc_type->d_melee_texture2 = GetEquipmentMaterial(MaterialSecondary);
 	}
 
 	if (MaxHP){
