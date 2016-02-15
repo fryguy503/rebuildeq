@@ -405,7 +405,8 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 				if (m_epp.rested_exp < 1) {
 					Message(15, "You have gained %i experience! (%.3f%%)", i, expPct);
 				} else {//Rested EXP available
-					int totalExp = i + i; //double exp
+
+					int totalExp = i + (int)((float)i * 0.25); //25% bonus exp when solo, intentionally it's crappy.
 					m_epp.rested_exp -= i; //remove from rested
 					if (m_epp.rested_exp < 0) { //not enough rested exp for double
 						totalExp += m_epp.rested_exp; //take negative away from bonus
