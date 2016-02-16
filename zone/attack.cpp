@@ -3221,8 +3221,10 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA) > 0 && attacker->CastToClient()->GetAggroCount() > 0) {					
 					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA);
 					int healBonus = int32((float)healed * 0.06 * (float)(attacker->CastToClient()->GetAggroCount() > rank) * attacker->CastToClient()->GetAggroCount());
-					attacker->CastToClient()->Message(MT_NonMelee, "Hungering Aura %u with %i enemies added %i bonus healing.", rank, attacker->CastToClient()->GetAggroCount(), healBonus);
-					healed += healBonus;
+					if (healBonus > 0) {
+						attacker->CastToClient()->Message(MT_NonMelee, "Hungering Aura %u with %i enemies added %i bonus healing.", rank, attacker->CastToClient()->GetAggroCount(), healBonus);
+						healed += healBonus;
+					}
 				}
 
 				healed = attacker->GetActSpellHealing(spell_id, healed);
@@ -3703,7 +3705,7 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 		}
 	}
 
-	if (caster->IsClient() && caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE) > 0) {
+	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE) > 0) {
 		if (zone->random.Roll((int)(1 * caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE)))) {
 			int manaAmount = (int)((float)acthealed * (float)0.01 * (float)caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE));
 			if (manaAmount > 0) {

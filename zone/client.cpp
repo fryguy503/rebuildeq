@@ -9199,7 +9199,7 @@ void Client::SpawnEncounter(bool skipChecks) {
 
 	if (GetZoneID() == 22 || GetZoneID() == 23) { //Commonlands
 		if (m_epp.encounter_type == 6) {
-			Message(8, "You see an air elemental take shape.");
+			Message(8, "You watch as an air elemental takes shape.");
 			PlayMP3AndMessageToGroup("aie_spl.wav", "You see an air elemental take shape.");
 			return;
 		}
