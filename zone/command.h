@@ -93,6 +93,7 @@ void command_emote(Client *c, const Seperator *sep);
 void command_emotesearch(Client* c, const Seperator *sep);
 void command_emoteview(Client* c, const Seperator *sep);
 void command_enablerecipe(Client *c, const Seperator *sep);
+void command_encounter(Client *c, const Seperator *sep);
 void command_equipitem(Client *c, const Seperator *sep);
 void command_face(Client *c, const Seperator *sep);
 void command_faq(Client *c, const Seperator *sep);
@@ -207,7 +208,7 @@ void command_permagender(Client *c, const Seperator *sep);
 void command_permarace(Client *c, const Seperator *sep);
 void command_petitioninfo(Client *c, const Seperator *sep);
 void command_picklock(Client *c, const Seperator *sep);
-
+void command_playsound(Client *c, const Seperator *sep);
 #ifdef EQPROFILE
 void command_profiledump(Client *c, const Seperator *sep);
 void command_profilereset(Client *c, const Seperator *sep);

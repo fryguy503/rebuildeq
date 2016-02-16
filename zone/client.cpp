@@ -9073,6 +9073,129 @@ std::string Client::GetBuildClassName() {
 	return "";
 }
 
+//Check if an encounter is viable to happen
+void Client::DoEncounterCheck() {
+	if (m_epp.next_encounter_time >= time(nullptr)) {
+		return;
+	}	
+	if (!InEncounterArea()) {
+		return;
+	}
+	if (!IsEncounterReady()) {
+		return;
+	}
+	EmoteEncounter();
+	Save(); //Save, EmoteEncounter causes timeout to happen
+}
+
+//Is the client in a valid encounter area?
+bool Client::InEncounterArea() {
+	if (GetZoneID() == 22 &&  //Ecommons 
+		GetX() < 4845 && GetX() > -778 &&
+		GetY() < 1057 && GetY() > -1157) {
+		return true;
+	}
+}
+
+//Is the encounter ready to spawn?
+bool Client::IsEncounterReady() {
+	if (m_epp.next_encounter_time < time(nullptr)) {
+		return false;
+	}
+
+	int chance = 1;
+	float pool = 360;
+	//See if there's a Gone for a while bonus
+	int bonus = time(nullptr) - m_epp.next_encounter_time;
+	bonus = (bonus / 3600) % 24; //How many days it's been since an encounter
+	if (bonus > 0) {
+		pool -= (pool * 0.25 * bonus);
+		if (pool < 50) {
+			pool = 50;
+		}
+	}
+
+	pool = (float)((float)chance / (float)pool);
+	Message(13, "Chance: %f", pool);
+	return zone->random.Roll(pool);
+}
+
+
+//Cause an encounter emote
+void Client::EmoteEncounter() {	
+	//bat_idl2 = bat 
+	//bell005.wav errie bell
+	m_epp.encounter_timeout = time(nullptr) + 120; //You have 2 minutes to spawn the encounter.
+	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(64800, 108000); //18 to 30 hours
+	int dice;
+	if (GetZoneID() == 22 || GetZoneID() == 21) {
+		dice = zone->random.Int(1, 6); //Always +1 of the messages
+		if (dice == 1) {
+			Message(8, "You hear a twig snap %s.", CreateSayLink("#encounter", "nearby"));
+			return;
+		}
+		if (dice == 2) {
+			Message(8, "Orcs begin to %s louder and louder...", CreateSayLink("#encounter", "chant"));
+			return;
+		}
+		if (dice == 3) {
+			Message(8, "An zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter", "below"));
+			return;
+		}
+		if (dice == 4) {
+			Message(8, "The %s of a hillgiant can be heard.", CreateSayLink("#encounter", "stomps"));
+			return;
+		}
+		if (dice == 5) {
+			Message(8, "A willowisp %s in front of you.", CreateSayLink("#encounter", "vanishes"));
+			return;
+		}
+		if (dice == 6) {
+			Message(8, "The %s intensifies near you.", CreateSayLink("#encounter", "wind"));
+			PlayMP3("aie_spl.wav");
+			m_epp.encounter_type = dice;
+			return;	
+		}
+	}
+	dice = zone->random.Int(30, 35);	
+	if (dice == 30) {		
+		Message(8, "An unsettling %s washes over you.", CreateSayLink("#encounter", "feeling"));
+		PlayMP3("ans_idl.wav");
+		m_epp.encounter_type = dice;
+		return;
+	}
+	if (dice == 31) {
+		Message(8, "You have a bow being % nearby.", CreateSayLink("#encounter", "shot"));
+		PlayMP3("bowdraw.wav");
+		m_epp.encounter_type = dice;
+		return;
+	}
+	//aviak = avk_idl.wav
+	return;
+}
+
+//Spawn the encounter
+void Client::SpawnEncounter() {	
+	if (m_epp.next_encounter_time < time(nullptr)) {
+		return;
+	}
+	if (!InEncounterArea()) {
+		return;
+	}
+	//Ok, we're committed. First let's make it so another encounter cannot be spawned for a duration.
+	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(64800, 108000); //18 to 30 hours
+	Save();
+	if (GetZoneID() == 22 || GetZoneID() == 23) { //Commonlands
+		if (m_epp.encounter_type == 6) {
+			Message(8, "You see an air elemental take shape.");
+			PlayMP3("aie_spl.wav");
+			return;
+		}
+			//apx_idl.wav - sword unsheaths
+			//Duration to retry range is 18 hours, 32 max
+	}
+}
+
 void Client::ResetBuild() {	
 	strn0cpy(m_epp.build, "00000000000000000000000000000000000000000000000000000", sizeof(m_epp.build)); //copy to session
 	std::string buildbuffer = m_epp.build;

@@ -60,6 +60,10 @@ struct ExtendedProfile_Struct {
 	uint32				session_timeout;
 	char				build[55];	
 
+	uint32				next_encounter_time; //Next time encounters will be eligible to occur
+	uint32				encounter_timeout; //This is a temporary timeout when an event happens
+	uint32				encounter_type; //This is a unique encounter type
+	uint32				encounter_unclaimed_rewards; //Any time an encounter finishes, this is a counter for that.
 	bool				in_rested_area; //True when in an rested area
 	float				rested_exp; //Experienced while rested
 	uint8				rotten_core; //SK only skill, not saved, a temp buff

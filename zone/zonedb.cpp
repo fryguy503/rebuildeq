@@ -892,6 +892,8 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`session_timeout`,			"
 		"`build_data`,				"		
 		"`rested_exp`,				"
+		"`encounter_timeout`,       "
+		"`encounter_unclaimed_rewards`"
 		"`e_last_invsnapshot`		"
 		"FROM                       "
 		"character_data             "
@@ -993,6 +995,8 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		m_epp->session_timeout = atoi(row[r]); r++;								 // "`session_timeout`,			"
 		strcpy(m_epp->build, row[r]);  r++;										 // "`build`,				    "
 		m_epp->rested_exp = atof(row[r]); r++; 									 // "`rested_exp`,			    "
+		m_epp->encounter_timeout = atoi(row[r]); r++;							 // "`encounter_timeout`,		"
+		m_epp->encounter_unclaimed_rewards = atoi(row[r]); r++;				     // "`encounter_unclaimed_rewards`,"
 		m_epp->last_invsnapshot_time = atoi(row[r]); r++;						 // "`e_last_invsnapshot`		"
 		m_epp->next_invsnapshot_time = m_epp->last_invsnapshot_time + (RuleI(Character, InvSnapshotMinIntervalM) * 60);
 	}
@@ -1448,6 +1452,9 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 	if (sessionTimeout == 0) {
 		sessionTimeout = 1454274245;
 	}
+	if (m_epp->encounter_timeout == 0) {
+		m_epp->encounter_timeout = time(nullptr);
+	}
 
 	clock_t t = std::clock(); /* Function timer start */
 	std::string query = StringFormat(
@@ -1548,7 +1555,9 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" session,		             "
 		" session_timeout,			 "
 		" build_data,				 "
-		" rested_exp,				 "			
+		" rested_exp,				 "
+		" encounter_timeout,		 "	
+		" encounter_unclaimed_rewards"
 		" e_last_invsnapshot		 "
 		")							 "
 		"VALUES ("
@@ -1748,6 +1757,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		sessionTimeout,
 		EscapeString(buildbuffer).c_str(),
 		m_epp->rested_exp,
+		m_epp->encounter_timeout,
+		m_epp->encounter_unclaimed_rewards,
 		m_epp->last_invsnapshot_time
 	);
 	//Log.Out(Logs::General, Logs::Zone_Server);

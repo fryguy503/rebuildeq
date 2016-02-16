@@ -1324,6 +1324,16 @@ public:
 
 	std::string GetBuildClassName();
 
+	void DoEncounterCheck();
+
+	bool InEncounterArea();
+
+	bool IsEncounterReady();
+
+	void EmoteEncounter();
+
+	void SpawnEncounter();
+
 	void ResetBuild();
 
 protected:

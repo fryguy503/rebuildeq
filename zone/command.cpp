@@ -273,6 +273,7 @@ int command_init(void)
 		command_add("mystats", "- Show details about you or your pet", 50, command_mystats) ||
 		command_add("name", "[newname] - Rename your player target", 150, command_name) ||
 		command_add("netstats", "- Gets the network stats for a stream.", 200, command_netstats) ||
+		command_add("encounter", "- Learn more about encounters, or claim rewards.", 0, command_encounter) ||
 		command_add("npccast", "[targetname/entityid] [spellid] - Causes NPC target to cast spellid on targetname/entityid", 80, command_npccast) ||
 		command_add("npcedit", "[column] [value] - Mega NPC editing command", 100, command_npcedit) ||
 		command_add("npcemote", "[message] - Make your NPC target emote a message.", 150, command_npcemote) ||
@@ -303,7 +304,7 @@ int command_init(void)
 		command_add("petitioninfo", "[petition number] - Get info about a petition", 50, command_petitioninfo) ||
 		command_add("pf", "- Display additional mob coordinate and wandering data", 50, command_pf) ||
 		command_add("picklock",  "Analog for ldon pick lock for the newer clients since we still don't have it working.",  100, command_picklock) ||
-
+		command_add("playsound", "Play a sound", 200, command_playsound) ||
 #ifdef EQPROFILE
 		command_add("profiledump", "- Dump profiling info to logs", 250, command_profiledump) ||
 		command_add("profilereset", "- Reset profiling info", 250, command_profilereset) ||
@@ -698,6 +699,11 @@ void command_help(Client *c, const Seperator *sep)
 		if(c->Admin() < cur->second->access)
 			continue;
 		commands_shown++;
+
+		//Skip any encounter messages
+		if (strcmp(cur->first.c_str(), "#encounter")) {
+			continue;
+		}
 		c->Message(0, "	%c%s %s",  COMMAND_CHAR, cur->first.c_str(), cur->second->desc == nullptr?"":cur->second->desc);
 	}
 	c->Message(0, "%d command%s listed.",  commands_shown, commands_shown!=1?"s":"");
@@ -3938,8 +3944,38 @@ void command_builds(Client *c, const Seperator *sep)
 	return;
 }
 
-//Grand AAs
+//Spawns an encounter, if a valid timing
+void command_encounter(Client *c, const Seperator *sep) {
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "claim") == 0) {
+		if (c->GetEPP().encounter_unclaimed_rewards == 0) {
+			c->Message(13, "You have no unclaimed rewards.");
+			return;
+		}
 
+		c->GetEPP().encounter_unclaimed_rewards--;
+		c->Save();
+		c->Message(13, "You have claimed an encounter reward!");
+		
+		return;
+	}
+
+	if (c->GetEPP().encounter_type > 0 && 
+		c->GetEPP().encounter_timeout > time(nullptr) &&
+		c->GetEPP().next_encounter_time < time(nullptr) &&
+		c->InEncounterArea()
+		) {
+		c->SpawnEncounter();
+		return;
+	}
+	if (c->GetEPP().encounter_unclaimed_rewards == 0) {
+		c->Message(13, "You have no unclaimed encounter rewards. Watch for random emotes and team up with allies to defeat random encounters.");
+		return;
+	}
+	
+	c->Message(13, "You have %u unclaimed encounter rewards. [%s]", c->GetEPP().encounter_unclaimed_rewards, c->CreateSayLink("#encounter claim", "claim"));	
+}
+
+//Give AAs
 void command_giveaa(Client *c, const Seperator *sep)
 {
 	if (!sep->IsNumber(1)) {
@@ -10509,6 +10545,17 @@ void command_sensetrap(Client *c, const Seperator *sep)
 		}
 		else
 			c->Message(13, "You do not have the sense traps skill.");
+	}
+}
+
+//Play a sound
+void command_playsound(Client *c, const Seperator *sep) {
+	if (sep->arg[1]) {
+		c->PlayMP3(sep->arg[1]);
+		c->Message(13, "Playing %s", sep->arg[1]);
+	}
+	else {
+		c->Message(13, "Usage: #playsound <filename>");
 	}
 }
 
