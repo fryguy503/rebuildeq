@@ -1334,6 +1334,8 @@ public:
 
 	void SpawnEncounter(bool skipChecks = false);
 
+	void PlayMP3AndMessageToGroup(const char *fname, const char *message);
+
 	void ResetBuild();
 
 protected:

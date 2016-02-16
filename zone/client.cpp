@@ -9180,7 +9180,7 @@ void Client::EmoteEncounter() {
 	return;
 }
 
-//Spawn the encounter, skipChecks will ignore any checks
+//Spawn the encounter, skipChecks will ignore any conditions and not affect normal encounter system (GM Event)
 void Client::SpawnEncounter(bool skipChecks) {
 	if (!skipChecks && m_epp.next_encounter_time < time(nullptr)) {
 		return;
@@ -9197,17 +9197,62 @@ void Client::SpawnEncounter(bool skipChecks) {
 		m_epp.encounter_type = zone->random.Int(30, 35);
 	}
 
-	//Ok, we're committed. First let's make it so another encounter cannot be spawned for a duration.
 	if (GetZoneID() == 22 || GetZoneID() == 23) { //Commonlands
 		if (m_epp.encounter_type == 6) {
 			Message(8, "You see an air elemental take shape.");
-			PlayMP3("aie_spl.wav");
+			PlayMP3AndMessageToGroup("aie_spl.wav", "You see an air elemental take shape.");
 			return;
 		}
 			//apx_idl.wav - sword unsheaths
 			//Duration to retry range is 18 hours, 32 max
 	}
 }
+
+//Plays a mp3 on group as well as sends message, including current player
+void Client::PlayMP3AndMessageToGroup(const char *fname, const char *message) {
+	if (this->IsGrouped()) {							
+		auto group = this->GetGroup(); //iterate group
+		for (int i = 0; i < 6; ++i) {
+			if (group->members[i] &&  //target grouped
+				group->members[i]->IsClient() && //Is a client
+				this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
+				!group->members[i]->CastToClient()->IsDead() //and not dead
+				) {
+				float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
+				float range2 = 200 * 200;
+				if (dist2 <= range2) { //in range
+					group->members[i]->CastToClient()->Message(0, message);
+					group->members[i]->CastToClient()->PlayMP3(fname);
+				}
+			}
+		}
+	} else if (this->IsRaidGrouped()) { //iterate raid
+		auto raid = this->GetRaid();
+		uint32 gid = raid->GetGroup(this->CastToClient());
+		if (gid < 12) {
+			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+				if (raid->members[i].member &&  //is raid member
+					raid->members[i].GroupNumber == gid && //in group
+					raid->members[i].member->IsClient() && //Is a client
+					raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
+					!raid->members[i].member->IsDead() //and not dead
+					) {
+
+					float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
+					float range2 = 200 * 200;
+					if (dist2 <= range2) { //in range
+						raid->members[i].member->CastToClient()->Message(0, message);
+						raid->members[i].member->CastToClient()->PlayMP3(fname);
+					}
+				}
+			}
+		}
+	} else { //Solo
+		Message(0, message);
+		PlayMP3(fname);
+	}
+}
+
 
 void Client::ResetBuild() {	
 	strn0cpy(m_epp.build, "00000000000000000000000000000000000000000000000000000", sizeof(m_epp.build)); //copy to session
