@@ -3888,7 +3888,7 @@ void command_builds(Client *c, const Seperator *sep)
 		
 		//Reset confirm
 		if (sep->arg[2] && strcasecmp(sep->arg[2], "confirm") == 0) {
-			if (c->GetLevel() < 20) {
+			if (c->GetLevel() >= 20) {
 				c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
 				return;
 			}
