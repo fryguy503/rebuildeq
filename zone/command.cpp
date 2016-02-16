@@ -700,10 +700,7 @@ void command_help(Client *c, const Seperator *sep)
 			continue;
 		commands_shown++;
 
-		//Skip any encounter messages
-		if (strcmp(cur->first.c_str(), "#encounter")) {
-			continue;
-		}
+		
 		c->Message(0, "	%c%s %s",  COMMAND_CHAR, cur->first.c_str(), cur->second->desc == nullptr?"":cur->second->desc);
 	}
 	c->Message(0, "%d command%s listed.",  commands_shown, commands_shown!=1?"s":"");
@@ -3954,8 +3951,16 @@ void command_encounter(Client *c, const Seperator *sep) {
 
 		c->GetEPP().encounter_unclaimed_rewards--;
 		c->Save();
-		c->Message(13, "You have claimed an encounter reward!");
+		c->Message(MT_Experience, "You have claimed an encounter reward!");
 		
+		return;
+	}
+	if (c->Admin() > 200 && sep->arg[1] && strcasecmp(sep->arg[1], "spawn") == 0) {
+		if (c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) {
+			c->Message(0, "You must target a player first to spawn an encounter.");
+			return;
+		}
+		c->GetTarget()->CastToClient()->SpawnEncounter(true);
 		return;
 	}
 
@@ -3964,15 +3969,15 @@ void command_encounter(Client *c, const Seperator *sep) {
 		c->GetEPP().next_encounter_time < time(nullptr) &&
 		c->InEncounterArea()
 		) {
-		c->SpawnEncounter();
+		c->SpawnEncounter(false);
 		return;
 	}
 	if (c->GetEPP().encounter_unclaimed_rewards == 0) {
-		c->Message(13, "You have no unclaimed encounter rewards. Watch for random emotes and team up with allies to defeat random encounters.");
+		c->Message(0, "You have no unclaimed encounter rewards. Watch for random emotes and team up with allies to defeat random encounters.");
 		return;
 	}
 	
-	c->Message(13, "You have %u unclaimed encounter rewards. [%s]", c->GetEPP().encounter_unclaimed_rewards, c->CreateSayLink("#encounter claim", "claim"));	
+	c->Message(0, "You have %u unclaimed encounter rewards. [%s]", c->GetEPP().encounter_unclaimed_rewards, c->CreateSayLink("#encounter claim", "claim").c_str());	
 }
 
 //Give AAs

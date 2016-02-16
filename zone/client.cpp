@@ -9180,17 +9180,24 @@ void Client::EmoteEncounter() {
 	return;
 }
 
-//Spawn the encounter
-void Client::SpawnEncounter() {	
-	if (m_epp.next_encounter_time < time(nullptr)) {
+//Spawn the encounter, skipChecks will ignore any checks
+void Client::SpawnEncounter(bool skipChecks) {
+	if (!skipChecks && m_epp.next_encounter_time < time(nullptr)) {
 		return;
 	}
-	if (!InEncounterArea()) {
+	if (!skipChecks && !InEncounterArea()) {
 		return;
 	}
+	if (!skipChecks) {
+		m_epp.next_encounter_time = time(nullptr) + zone->random.Int(64800, 108000); //18 to 30 hours
+		Save();
+	}
+
+	if (m_epp.encounter_type == 0) { //If for some reason encounter_type is not set, just do a generic one.
+		m_epp.encounter_type = zone->random.Int(30, 35);
+	}
+
 	//Ok, we're committed. First let's make it so another encounter cannot be spawned for a duration.
-	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(64800, 108000); //18 to 30 hours
-	Save();
 	if (GetZoneID() == 22 || GetZoneID() == 23) { //Commonlands
 		if (m_epp.encounter_type == 6) {
 			Message(8, "You see an air elemental take shape.");

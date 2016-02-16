@@ -893,7 +893,7 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`build_data`,				"		
 		"`rested_exp`,				"
 		"`encounter_timeout`,       "
-		"`encounter_unclaimed_rewards`"
+		"`encounter_unclaimed_rewards`,"
 		"`e_last_invsnapshot`		"
 		"FROM                       "
 		"character_data             "
@@ -1557,7 +1557,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" build_data,				 "
 		" rested_exp,				 "
 		" encounter_timeout,		 "	
-		" encounter_unclaimed_rewards"
+		" encounter_unclaimed_rewards,"
 		" e_last_invsnapshot		 "
 		")							 "
 		"VALUES ("
@@ -1658,6 +1658,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"FROM_UNIXTIME(%u),"  // session_timeout
 		"'%s',"  // build
 		"%f,"  // rested_exp
+		"FROM_UNIXTIME(%u),"  //encounter_timout
+		"%u," //encounter_unclaimed_rewards
 		"%u"   // e_last_invsnapshot
 		")",
 		character_id,					  // " id,                        "

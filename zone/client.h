@@ -1332,7 +1332,7 @@ public:
 
 	void EmoteEncounter();
 
-	void SpawnEncounter();
+	void SpawnEncounter(bool skipChecks = false);
 
 	void ResetBuild();
 
