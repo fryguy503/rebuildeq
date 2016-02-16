@@ -9095,6 +9095,12 @@ bool Client::InEncounterArea() {
 		GetY() < 1057 && GetY() > -1157) {
 		return true;
 	}
+	if (GetZoneID() == 34 && //Nro
+		GetX() < 1319.44 && GetX() > -840.56 &&
+		GetY() < 2471.97 && GetY() > -1704.55) {
+		return true;
+	}
+
 }
 
 //Is the encounter ready to spawn?
