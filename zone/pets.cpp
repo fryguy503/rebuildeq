@@ -299,10 +299,10 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->level = (CastToClient()->GetLevel() - (10 - rank));
 		npc_type->AC += (npc_type->AC * 0.2 * rank);
 		npc_type->size = rank * (GetLevel() / 25); //1.04 to 7.4
-		if (CastToClient()->GetbuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) >= 5) {
+		if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) >= 5) {
 			npc_type->race = GetRace();
 			npc_type->gender = GetGender();
-			npc_type->size = GetSize()--;
+			npc_type->size = (CastToClient()->GetSize() - 1);
 			if (npc_type->size < 1) {
 				npc_type->size = 1;
 			}
@@ -320,8 +320,25 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			npc_type->Corrup = GetCorrup();
 			npc_type->PhR = GetPhR();*/
 			// looks
+			
 			npc_type->texture = GetEquipmentMaterial(MaterialChest);
-			npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
+			npc_type->armtexture = GetEquipmentMaterial(MaterialArms);
+			npc_type->legtexture = GetEquipmentMaterial(MaterialLegs);
+			npc_type->feettexture = GetEquipmentMaterial(MaterialFeet);
+			npc_type->bracertexture = GetEquipmentMaterial(MaterialWrist);
+			npc_type->handtexture = GetEquipmentMaterial(MaterialHands);
+			//npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
+			
+			npc_type->armor_tint[MaterialArms] = GetEquipmentColor(MaterialArms);
+			npc_type->armor_tint[MaterialChest] = GetEquipmentColor(MaterialChest);
+			npc_type->armor_tint[MaterialLegs] = GetEquipmentColor(MaterialLegs);
+			npc_type->armor_tint[MaterialFeet] = GetEquipmentColor(MaterialFeet);
+			npc_type->armor_tint[MaterialWrist] = GetEquipmentColor(MaterialWrist);
+			npc_type->armor_tint[MaterialHands] = GetEquipmentColor(MaterialHands);
+			//Log.Out(Logs::General, Logs::Zone_Server, "Setting Chest Armor Tint npc_type to %u with Steadfast", npc_type->armor_tint[MaterialChest]);
+
+			
+			//npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
 			npc_type->haircolor = GetHairColor();
 			npc_type->beardcolor = GetBeardColor();
 			npc_type->eyecolor1 = GetEyeColor1();
@@ -332,6 +349,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			npc_type->drakkin_heritage = GetDrakkinHeritage();
 			npc_type->drakkin_tattoo = GetDrakkinTattoo();
 			npc_type->drakkin_details = GetDrakkinDetails();
+			
 			npc_type->d_melee_texture1 = GetEquipmentMaterial(MaterialPrimary);
 			npc_type->d_melee_texture2 = GetEquipmentMaterial(MaterialSecondary);
 		}
@@ -345,14 +363,23 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->gender = (GetGender() == 1 ? 2 : 1); //invert gender
 		npc_type->race = GetRace();
 		npc_type->size = GetSize();
-		npc_type->texture = GetEquipmentMaterial(MaterialChest);
-		npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
+		npc_type->texture = 3; // GetEquipmentMaterial(MaterialChest);
+		
+		//npc_type->armtexture = GetEquipmentMaterial(MaterialArms);
+		//npc_type->legtexture = GetEquipmentMaterial(MaterialLegs);
+		//npc_type->feettexture = GetEquipmentMaterial(MaterialFeet);
+		//npc_type->bracertexture = GetEquipmentMaterial(MaterialWrist);
+		//npc_type->handtexture = GetEquipmentMaterial(MaterialHands);		
+		//npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
 		npc_type->haircolor = GetHairColor();
 		npc_type->beardcolor = GetBeardColor();
 		npc_type->eyecolor1 = GetEyeColor1();
 		npc_type->eyecolor2 = GetEyeColor2();
 		npc_type->hairstyle = GetHairStyle();
 		npc_type->luclinface = GetLuclinFace();
+		
+		
+
 		npc_type->beard = GetBeard();
 		npc_type->drakkin_heritage = GetDrakkinHeritage();
 		npc_type->drakkin_tattoo = GetDrakkinTattoo();
@@ -482,7 +509,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 
 	//this takes ownership of the npc_type data
 	Pet *npc = new Pet(npc_type, this, (PetType)record.petcontrol, spell_id, record.petpower);
-
+	
 	// Now that we have an actual object to interact with, load
 	// the base items for the pet. These are always loaded
 	// so that a rank 1 suspend minion does not kill things
@@ -504,6 +531,17 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	// finally, override size if one was provided
 	if (in_size > 0.0f)
 		npc->size = in_size;
+
+	/*if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) >= 5) {		
+		Log.Out(Logs::General, Logs::Zone_Server, "Before Chest Armor Tint to %u with Steadfast", npc->armor_tint[MaterialChest]);
+		npc->armor_tint[MaterialArms] = GetEquipmentColor(MaterialArms);
+		npc->armor_tint[MaterialChest] = GetEquipmentColor(MaterialChest);
+		npc->armor_tint[MaterialLegs] = GetEquipmentColor(MaterialLegs);
+		npc->armor_tint[MaterialFeet] = GetEquipmentColor(MaterialFeet);
+		npc->armor_tint[MaterialWrist] = GetEquipmentColor(MaterialWrist);
+		npc->armor_tint[MaterialHands] = GetEquipmentColor(MaterialHands);
+		Log.Out(Logs::General, Logs::Zone_Server, "Setting Chest Armor Tint to %u with Steadfast", npc->armor_tint[MaterialChest]);
+	}*/
 
 	entity_list.AddNPC(npc, true, true);
 	SetPetID(npc->GetID());
