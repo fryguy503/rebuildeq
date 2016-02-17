@@ -9200,7 +9200,7 @@ void Client::SpawnEncounter(bool skipChecks) {
 	if (GetZoneID() == 22 || GetZoneID() == 23) { //Commonlands
 		if (m_epp.encounter_type == 6) {
 			Message(8, "You watch as an air elemental takes shape.");
-			PlayMP3AndMessageToGroup("aie_spl.wav", "You see an air elemental take shape.");
+			int playerCount = PlayMP3AndMessageToGroup("aie_spl.wav", "You see an air elemental take shape.");
 			return;
 		}
 			//apx_idl.wav - sword unsheaths
@@ -9208,8 +9208,9 @@ void Client::SpawnEncounter(bool skipChecks) {
 	}
 }
 
-//Plays a mp3 on group as well as sends message, including current player
-void Client::PlayMP3AndMessageToGroup(const char *fname, const char *message) {
+//Plays a mp3 on group as well as sends message, including current player, returns the player count
+int Client::PlayMP3AndMessageToGroup(const char *fname, const char *message) {
+	int playerCount = 0;
 	if (this->IsGrouped()) {							
 		auto group = this->GetGroup(); //iterate group
 		for (int i = 0; i < 6; ++i) {
@@ -9223,6 +9224,7 @@ void Client::PlayMP3AndMessageToGroup(const char *fname, const char *message) {
 				if (dist2 <= range2) { //in range
 					group->members[i]->CastToClient()->Message(0, message);
 					group->members[i]->CastToClient()->PlayMP3(fname);
+					playerCount++;
 				}
 			}
 		}
@@ -9243,6 +9245,7 @@ void Client::PlayMP3AndMessageToGroup(const char *fname, const char *message) {
 					if (dist2 <= range2) { //in range
 						raid->members[i].member->CastToClient()->Message(0, message);
 						raid->members[i].member->CastToClient()->PlayMP3(fname);
+						playerCount++;
 					}
 				}
 			}
@@ -9250,9 +9253,100 @@ void Client::PlayMP3AndMessageToGroup(const char *fname, const char *message) {
 	} else { //Solo
 		Message(0, message);
 		PlayMP3(fname);
+		playerCount = 1;
 	}
+	return playerCount;
 }
 
+//Gives a Box Reward randomly. MinimumRarity by default is 0
+int Client::GiveBoxReward(int minimumRarity) {
+	//Rarity table
+	std::map <int, int> rarityTable;
+	//Pool size for randomizer
+	int pool = 0;
+	if (minimumRarity <= 0) {
+		pool += 5000;
+		rarityTable[pool] = 0;
+	}
+	if (minimumRarity <= 1) {
+		pool += 500;
+		rarityTable[pool] = 1;
+	}
+	if (minimumRarity <= 2) {
+		pool += 100;
+		rarityTable[pool] = 2;
+	}
+	if (minimumRarity <= 3) {
+		pool += 10;
+		rarityTable[pool] = 3;
+	}
+	//Rolled dice
+	int dice = zone->random.Int(1, (pool-1));
+	//Chosen Rarity Type
+	int rarityType;
+	for (auto entry = rarityTable.rbegin(); entry != rarityTable.rend(); ++entry) {
+		if (dice >= entry->first) {
+			rarityType = entry->second;
+			break;
+		}
+	}
+	//http://wiki.project1999.com/Players:Kunark_Gear 
+	std::map<int, int> itemTable;
+	pool = 0;
+	if (rarityType == 0) { //Common
+		pool += 500; itemTable[pool] = 10028; //Peridot
+		pool += 300; itemTable[pool] = 4504; //Crown of King Tranix
+		pool += 150; itemTable[pool] = 10366; //Djarn's Amethyst Ring
+	}
+	else if (rarityType == 1) { //Uncommon
+		pool += 500; itemTable[pool] = 22503; //Blue Diamond
+		pool += 100; itemTable[pool] = 14751; //Fingerbone Hoop
+		pool += 80; itemTable[pool] = 14714; //Earring of Essence
+		if (GetClass() == BARD) {
+			pool += 50; itemTable[pool] = 4557; //Singing Steel Helm
+			pool += 50; itemTable[pool] = 4559; //Singing Steel Arms
+			pool += 100; itemTable[pool] = 4560; //Singing Steel Bracer
+			pool += 50; itemTable[pool] = 4561; //Singing Steel Gauntlets
+			pool += 50; itemTable[pool] = 4563; //Singing Steel Gauntlets
+		}
+	} 
+	else if (rarityType == 1) { //Rare		
+		pool += 1000; itemTable[pool] = 14709; //Necklace of Superiority
+		pool += 600; itemTable[pool] = 10913; //Crown of Rile
+		pool += 500; itemTable[pool] = 17403; //Bag of the Tinkerers
+		if (GetClass() == BARD) {
+			pool += 100; itemTable[pool] = 4558; //Singing Steel Breastplate
+			pool += 100; itemTable[pool] = 4562; //Singing Steel Legs
+		}
+	}
+	else if (rarityType == 1) { //Legendary	
+		pool += 100; itemTable[pool] = 2735; //Fungus Covered Scale Tunic
+	}
+
+	//Rolled dice
+	dice = zone->random.Int(1, (pool - 1));
+
+	for (auto entry = itemTable.rbegin(); entry != itemTable.rend(); ++entry) {
+		if (dice >= entry->first) {
+			//Item Reward
+			int itemid = entry->second;
+			const Item_Struct* item = database.GetItem(itemid);
+			if (!SummonItem(itemid)) {
+				//Log!!
+			}
+
+			if (rarityType == 2) { //Rare Drop!
+				Message(MT_Broadcasts, "%s opened a box to find a rare %s inside it!", GetCleanName(), item->Name);
+			}
+			else if (rarityType == 3) { //Legendary Drop!
+				Message(MT_Broadcasts, "%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name);
+			}
+			return itemid;
+		}
+	}
+	
+	return 0;
+}
 
 void Client::ResetBuild() {	
 	strn0cpy(m_epp.build, "00000000000000000000000000000000000000000000000000000", sizeof(m_epp.build)); //copy to session

@@ -4068,8 +4068,34 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 						{
 							ItemInst* p_inst = (ItemInst*)inst;
 							int i = parse->EventItem(EVENT_ITEM_CLICK_CAST, this, p_inst, nullptr, "", castspell->inventoryslot);
-
+							
 							if (i == 0) {
+								if (item->ID == 100002 || //Old Blue Box
+									item->ID == 100003 || //Old Red Box
+									item->ID == 100004) {  //Old Violet Box
+
+									ItemInst *CursorItemInst = GetInv().GetItem(MainCursor);
+									if (CursorItemInst) {
+										Message(13, "Your cursor must be empty before opening the box.");
+										InterruptSpell(castspell->spell_id);
+										return;
+									}
+
+									if (item->ID == 100002) {
+										GiveBoxReward();
+									}
+									else if (item->ID == 100003) {
+										GiveBoxReward(1);
+									}
+									else if (item->ID == 100004) {
+										GiveBoxReward(2);
+									}
+									
+
+									InterruptSpell(castspell->spell_id);
+									return;
+								}
+
 								CastSpell(item->Click.Effect, castspell->target_id, castspell->slot, item->CastTime, 0, 0, castspell->inventoryslot);
 							}
 							else {

@@ -1334,7 +1334,9 @@ public:
 
 	void SpawnEncounter(bool skipChecks = false);
 
-	void PlayMP3AndMessageToGroup(const char *fname, const char *message);
+	int PlayMP3AndMessageToGroup(const char *fname, const char *message);
+
+	int GiveBoxReward(int minimumRarity = 0);
 
 	void ResetBuild();
 
