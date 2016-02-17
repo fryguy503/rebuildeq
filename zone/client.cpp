@@ -9132,7 +9132,7 @@ void Client::EmoteEncounter() {
 	//bat_idl2 = bat 
 	//bell005.wav errie bell
 	m_epp.encounter_timeout = time(nullptr) + 120; //You have 2 minutes to spawn the encounter.
-	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(64800, 108000); //18 to 30 hours
+	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(1800, 10800); //30 mins to 3 hours, this is if they don't accept it etc.
 	int dice;
 	if (GetZoneID() == 22 || GetZoneID() == 21) {
 		dice = zone->random.Int(1, 6); //Always +1 of the messages
@@ -9295,19 +9295,19 @@ int Client::GiveBoxReward(int minimumRarity) {
 	//Pool size for randomizer
 	int pool = 0;
 	if (minimumRarity <= 0) {
-		pool += 50;		
+		pool += 250;
 		rarityTable[pool] = 0;
 	}
 	if (minimumRarity <= 1) {
-		pool += 30;
+		pool += 150;
 		rarityTable[pool] = 1;
 	}
 	if (minimumRarity <= 2) {
-		pool += 15;
+		pool += 100;
 		rarityTable[pool] = 2;
 	}
 	if (minimumRarity <= 3) {
-		pool += 8;
+		pool += 2;
 		rarityTable[pool] = 3;
 	}
 	//Rolled dice
@@ -9325,7 +9325,8 @@ int Client::GiveBoxReward(int minimumRarity) {
 	//http://wiki.project1999.com/Players:Kunark_Gear 
 	std::map<int, int> itemTable;
 	pool = 0;
-	if (rarityType == 0) { //Common
+	if (rarityType == 0) { 
+		//===Common===
 		pool += 300; itemTable[pool] = 10028; //Peridot
 		pool += 200; itemTable[pool] = 4504; //Crown of King Tranix
 		pool += 150; itemTable[pool] = 10366; //Djarn's Amethyst Ring
@@ -9333,7 +9334,9 @@ int Client::GiveBoxReward(int minimumRarity) {
 		pool += 100; itemTable[pool] = 100002; //Old Blue Box for lulz
 		pool += 500; itemTable[pool] = 100003; //Old Red Box
 	}
-	else if (rarityType == 1) { //Uncommon
+
+	else if (rarityType == 1) { 
+		//===Uncommon===
 		pool += 100; itemTable[pool] = 14751; //Fingerbone Hoop
 		pool += 80; itemTable[pool] = 14714; //Earring of Essence
 		pool += 500; itemTable[pool] = 100003; //Old Violet Box
@@ -9345,7 +9348,8 @@ int Client::GiveBoxReward(int minimumRarity) {
 			pool += 50; itemTable[pool] = 4563; //Singing Steel Gauntlets
 		}
 	} 
-	else if (rarityType == 2) { //Rare		
+	else if (rarityType == 2) { 
+		//===Rare===
 		pool += 1000; itemTable[pool] = 14709; //Necklace of Superiority
 		pool += 600; itemTable[pool] = 10913; //Crown of Rile
 		pool += 500; itemTable[pool] = 17403; //Bag of the Tinkerers
@@ -9353,8 +9357,9 @@ int Client::GiveBoxReward(int minimumRarity) {
 			pool += 100; itemTable[pool] = 4558; //Singing Steel Breastplate
 			pool += 100; itemTable[pool] = 4562; //Singing Steel Legs
 		}
-	}
-	else if (rarityType == 3) { //Legendary	
+	}	
+	else if (rarityType == 3) { 
+		//===Legendary===
 		pool += 100; itemTable[pool] = 2735; //Fungus Covered Scale Tunic
 	}
 
