@@ -1334,8 +1334,8 @@ public:
 
 	void SpawnEncounter(bool skipChecks = false);
 
-	int PlayMP3AndMessageToGroup(const char *fname, const char *message);
-
+	std::vector<Client *> Client::GetEncounterMembers();
+	
 	int GiveBoxReward(int minimumRarity = 0);
 
 	void ResetBuild();

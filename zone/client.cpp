@@ -9196,11 +9196,38 @@ void Client::SpawnEncounter(bool skipChecks) {
 	if (m_epp.encounter_type == 0) { //If for some reason encounter_type is not set, just do a generic one.
 		m_epp.encounter_type = zone->random.Int(30, 35);
 	}
+	int playerCount = 0;
+	auto memberlist = GetEncounterMembers();
+	NPC* npc;
+	if (GetZoneID() == 22 || GetZoneID() == 21) { //Commonlands
+		if (m_epp.encounter_type == 3) { //Zombie!
+			//playerCount = SendEncounterToGroup("gho_idl.wav", "A horde of zombies begin to surface!", "a_zombie 70 1 0 96 1 1");
+			//group->members[i]->CastToClient()->Message(0, message);
+			//group->members[i]->CastToClient()->PlayMP3(fname);
+			for (auto victim = memberlist.begin(); victim != memberlist.end(); ++victim) {
+				(*victim)->PlayMP3("gho_idl.wav");
+				(*victim)->Message(3, "A horde of zombies begin to surface!");
 
-	if (GetZoneID() == 22 || GetZoneID() == 23) { //Commonlands
+				//Randomize position so it's not directly on top?
+				if (zone->random.Roll(50)) { //50/50 chance there's 2
+					if (zone->random.Roll(5)) { //5% chance there's 3
+						npc = NPC::SpawnNPC("a_zombie 70 1", (*victim)->GetPosition(), nullptr);
+						npc->AddToHateList((*victim), 1);
+						npc->SpellEffect(this, 13);
+					}
+					npc = NPC::SpawnNPC("a_zombie 70 1", (*victim)->GetPosition(), nullptr);
+					npc->AddToHateList((*victim), 1);
+					npc->SpellEffect(this, 13);
+				}
+
+				npc = NPC::SpawnNPC("a_zombie 70 1", (*victim)->GetPosition(), nullptr);
+				npc->AddToHateList((*victim), 1);
+				npc->SpellEffect(this, 13);
+			}
+			return;
+		}
 		if (m_epp.encounter_type == 6) {
-			Message(8, "You watch as an air elemental takes shape.");
-			int playerCount = PlayMP3AndMessageToGroup("aie_spl.wav", "You see an air elemental take shape.");
+			//playerCount = SendEncounterToGroup("aie_spl.wav", "You see an air elemental take shape.", );
 			return;
 		}
 			//apx_idl.wav - sword unsheaths
@@ -9209,9 +9236,12 @@ void Client::SpawnEncounter(bool skipChecks) {
 }
 
 //Plays a mp3 on group as well as sends message, including current player, returns the player count
-int Client::PlayMP3AndMessageToGroup(const char *fname, const char *message) {
-	int playerCount = 0;
-	if (this->IsGrouped()) {							
+
+std::vector<Client *> Client::GetEncounterMembers() {
+	std::vector<Client *> clients;
+	clients.reserve(6);
+	
+	if (this->IsGrouped()) {
 		auto group = this->GetGroup(); //iterate group
 		for (int i = 0; i < 6; ++i) {
 			if (group->members[i] &&  //target grouped
@@ -9219,16 +9249,19 @@ int Client::PlayMP3AndMessageToGroup(const char *fname, const char *message) {
 				this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
 				!group->members[i]->CastToClient()->IsDead() //and not dead
 				) {
+				if (this == group->members[i]->CastToClient()) { //It's me.
+					clients.push_back(this);
+					continue;
+				}
 				float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
 				float range2 = 200 * 200;
-				if (dist2 <= range2) { //in range
-					group->members[i]->CastToClient()->Message(0, message);
-					group->members[i]->CastToClient()->PlayMP3(fname);
-					playerCount++;
+				if (dist2 <= range2) { //in range										
+					clients.push_back(group->members[i]->CastToClient());
 				}
 			}
 		}
-	} else if (this->IsRaidGrouped()) { //iterate raid
+	}
+	else if (this->IsRaidGrouped()) { //iterate raid
 		auto raid = this->GetRaid();
 		uint32 gid = raid->GetGroup(this->CastToClient());
 		if (gid < 12) {
@@ -9239,23 +9272,19 @@ int Client::PlayMP3AndMessageToGroup(const char *fname, const char *message) {
 					raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
 					!raid->members[i].member->IsDead() //and not dead
 					) {
-
 					float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
 					float range2 = 200 * 200;
 					if (dist2 <= range2) { //in range
-						raid->members[i].member->CastToClient()->Message(0, message);
-						raid->members[i].member->CastToClient()->PlayMP3(fname);
-						playerCount++;
+						clients.push_back(raid->members[i].member->CastToClient());
 					}
 				}
 			}
 		}
-	} else { //Solo
-		Message(0, message);
-		PlayMP3(fname);
-		playerCount = 1;
 	}
-	return playerCount;
+	else { //Solo
+		clients.push_back(this);
+	}
+	return clients;
 }
 
 //Gives a Box Reward randomly. MinimumRarity by default is 0
