@@ -9100,7 +9100,7 @@ bool Client::InEncounterArea() {
 		GetY() < 2471.97 && GetY() > -1704.55) {
 		return true;
 	}
-
+	return false;
 }
 
 //Is the encounter ready to spawn?
@@ -9289,32 +9289,35 @@ std::vector<Client *> Client::GetEncounterMembers() {
 
 //Gives a Box Reward randomly. MinimumRarity by default is 0
 int Client::GiveBoxReward(int minimumRarity) {
+	if (Admin() >= 200) Message(0, "[GM] GiveBoxReward");	
 	//Rarity table
 	std::map <int, int> rarityTable;
 	//Pool size for randomizer
 	int pool = 0;
 	if (minimumRarity <= 0) {
-		pool += 5000;
+		pool += 50;		
 		rarityTable[pool] = 0;
 	}
 	if (minimumRarity <= 1) {
-		pool += 500;
+		pool += 30;
 		rarityTable[pool] = 1;
 	}
 	if (minimumRarity <= 2) {
-		pool += 100;
+		pool += 15;
 		rarityTable[pool] = 2;
 	}
 	if (minimumRarity <= 3) {
-		pool += 10;
+		pool += 8;
 		rarityTable[pool] = 3;
 	}
 	//Rolled dice
-	int dice = zone->random.Int(1, (pool-1));
+	int dice = zone->random.Int(1, pool);
+	
 	//Chosen Rarity Type
-	int rarityType;
-	for (auto entry = rarityTable.rbegin(); entry != rarityTable.rend(); ++entry) {
-		if (dice >= entry->first) {
+	int rarityType = 0;
+	for (auto entry = rarityTable.begin(); entry != rarityTable.end(); ++entry) {
+		if (dice <= entry->first) {
+			if (Admin() >= 200) Message(0, "[GM] Rarity Roll (%i): %i (%.1f%%)", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100));
 			rarityType = entry->second;
 			break;
 		}
@@ -9323,12 +9326,12 @@ int Client::GiveBoxReward(int minimumRarity) {
 	std::map<int, int> itemTable;
 	pool = 0;
 	if (rarityType == 0) { //Common
-		pool += 500; itemTable[pool] = 10028; //Peridot
-		pool += 300; itemTable[pool] = 4504; //Crown of King Tranix
+		pool += 300; itemTable[pool] = 10028; //Peridot
+		pool += 200; itemTable[pool] = 4504; //Crown of King Tranix
 		pool += 150; itemTable[pool] = 10366; //Djarn's Amethyst Ring
+		pool += 100; itemTable[pool] = 22503; //Blue Diamond
 	}
 	else if (rarityType == 1) { //Uncommon
-		pool += 500; itemTable[pool] = 22503; //Blue Diamond
 		pool += 100; itemTable[pool] = 14751; //Fingerbone Hoop
 		pool += 80; itemTable[pool] = 14714; //Earring of Essence
 		if (GetClass() == BARD) {
@@ -9339,7 +9342,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 			pool += 50; itemTable[pool] = 4563; //Singing Steel Gauntlets
 		}
 	} 
-	else if (rarityType == 1) { //Rare		
+	else if (rarityType == 2) { //Rare		
 		pool += 1000; itemTable[pool] = 14709; //Necklace of Superiority
 		pool += 600; itemTable[pool] = 10913; //Crown of Rile
 		pool += 500; itemTable[pool] = 17403; //Bag of the Tinkerers
@@ -9348,15 +9351,17 @@ int Client::GiveBoxReward(int minimumRarity) {
 			pool += 100; itemTable[pool] = 4562; //Singing Steel Legs
 		}
 	}
-	else if (rarityType == 1) { //Legendary	
+	else if (rarityType == 3) { //Legendary	
 		pool += 100; itemTable[pool] = 2735; //Fungus Covered Scale Tunic
 	}
 
 	//Rolled dice
-	dice = zone->random.Int(1, (pool - 1));
-
-	for (auto entry = itemTable.rbegin(); entry != itemTable.rend(); ++entry) {
-		if (dice >= entry->first) {
+	dice = zone->random.Int(1, pool);
+	
+	for (auto entry = itemTable.begin(); entry != itemTable.end(); ++entry) {
+		if (Admin() >= 200) Message(0, "[GM] %i vs %i", dice, entry->first);
+		if (dice <= entry->first) {
+			if (Admin() >= 200) Message(0, "[GM] Item Roll (%i): %i (%.1f%%)", dice, pool, (float)((float)entry->first / (float)pool * 100));
 			//Item Reward
 			int itemid = entry->second;
 			const Item_Struct* item = database.GetItem(itemid);
@@ -9364,11 +9369,16 @@ int Client::GiveBoxReward(int minimumRarity) {
 				//Log!!
 			}
 
-			if (rarityType == 2) { //Rare Drop!
+			if (rarityType == 3) { //Legendary Drop!
+				Message(MT_Broadcasts, "%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name);
+			}
+			else if (rarityType == 2) { //Rare Drop!
 				Message(MT_Broadcasts, "%s opened a box to find a rare %s inside it!", GetCleanName(), item->Name);
 			}
-			else if (rarityType == 3) { //Legendary Drop!
-				Message(MT_Broadcasts, "%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name);
+			else if (rarityType == 1) { //Uncommon Drop
+				Message(MT_Experience, "Opening the box revealed an uncommon %s!", item->Name);
+			} else if (rarityType == 0) { //Common Drop
+				Message(MT_Experience, "Opening the box revealed a common %s!", item->Name);
 			}
 			return itemid;
 		}

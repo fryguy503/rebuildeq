@@ -4047,11 +4047,13 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 		}
 		else if (m_inv.SupportsClickCasting(castspell->inventoryslot) || (castspell->slot == POTION_BELT_SPELL_SLOT) || (castspell->slot == TARGET_RING_SPELL_SLOT))	// sanity check
 		{
+			Message(0, "ItemClick!!");
 			// packet field types will be reviewed as packet transistions occur
 			const ItemInst* inst = m_inv[castspell->inventoryslot]; //slot values are int16, need to check packet on this field
 			//bool cancast = true;
 			if (inst && inst->IsType(ItemClassCommon))
 			{
+				
 				const Item_Struct* item = inst->GetItem();
 				if (item->Click.Effect != (uint32)castspell->spell_id)
 				{
@@ -4062,40 +4064,17 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 
 				if ((item->Click.Type == ET_ClickEffect) || (item->Click.Type == ET_Expendable) || (item->Click.Type == ET_EquipClick) || (item->Click.Type == ET_ClickEffect2))
 				{
+					Message(0, "ItemClick2?");
 					if (item->Click.Level2 > 0)
 					{
+						Message(0, "ItemClick3");
 						if (GetLevel() >= item->Click.Level2)
 						{
+							Message(0, "ItemClick4");
 							ItemInst* p_inst = (ItemInst*)inst;
 							int i = parse->EventItem(EVENT_ITEM_CLICK_CAST, this, p_inst, nullptr, "", castspell->inventoryslot);
-							
+
 							if (i == 0) {
-								if (item->ID == 100002 || //Old Blue Box
-									item->ID == 100003 || //Old Red Box
-									item->ID == 100004) {  //Old Violet Box
-
-									ItemInst *CursorItemInst = GetInv().GetItem(MainCursor);
-									if (CursorItemInst) {
-										Message(13, "Your cursor must be empty before opening the box.");
-										InterruptSpell(castspell->spell_id);
-										return;
-									}
-
-									if (item->ID == 100002) {
-										GiveBoxReward();
-									}
-									else if (item->ID == 100003) {
-										GiveBoxReward(1);
-									}
-									else if (item->ID == 100004) {
-										GiveBoxReward(2);
-									}
-									
-
-									InterruptSpell(castspell->spell_id);
-									return;
-								}
-
 								CastSpell(item->Click.Effect, castspell->target_id, castspell->slot, item->CastTime, 0, 0, castspell->inventoryslot);
 							}
 							else {
@@ -4114,11 +4093,15 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 					{
 						ItemInst* p_inst = (ItemInst*)inst;
 						int i = parse->EventItem(EVENT_ITEM_CLICK_CAST, this, p_inst, nullptr, "", castspell->inventoryslot);
-
+						Message(0, "EventItem %i", i);
 						if (i == 0) {
+
+							
+
 							CastSpell(item->Click.Effect, castspell->target_id, castspell->slot, item->CastTime, 0, 0, castspell->inventoryslot);
 						}
 						else {
+							Message(0, "Itemfail");
 							InterruptSpell(castspell->spell_id);
 							return;
 						}
@@ -8582,6 +8565,28 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 				}
 				if (GetLevel() >= item->Click.Level2)
 				{
+					if (item->ID == 100002 || //Old Blue Box
+						item->ID == 100003 || //Old Red Box
+						item->ID == 100004) {  //Old Violet Box
+						ItemInst *CursorItemInst = GetInv().GetItem(MainCursor);
+						if (CursorItemInst) {
+							Message(13, "Your cursor must be empty before opening the box.");
+							return;
+						}
+
+						DeleteItemInInventory(slot_id, 1, true);
+						if (item->ID == 100002) {
+							GiveBoxReward();
+						}
+						else if (item->ID == 100003) {
+							GiveBoxReward(1);
+						}
+						else if (item->ID == 100004) {
+							GiveBoxReward(2);
+						}
+						return;
+					}
+
 					int i = parse->EventItem(EVENT_ITEM_CLICK_CAST, this, p_inst, nullptr, "", slot_id);
 					inst = m_inv[slot_id];
 					if (!inst)
@@ -8590,6 +8595,8 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 					}
 
 					if (i == 0) {
+						
+
 						CastSpell(item->Click.Effect, target_id, USE_ITEM_SPELL_SLOT, item->CastTime, 0, 0, slot_id);
 					}
 				}
@@ -8608,7 +8615,7 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 					return;
 				}
 				if (GetLevel() >= augitem->Click.Level2)
-				{
+				{					
 					int i = parse->EventItem(EVENT_ITEM_CLICK_CAST, this, clickaug, nullptr, "", slot_id);
 					inst = m_inv[slot_id];
 					if (!inst)
