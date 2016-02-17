@@ -3949,10 +3949,20 @@ void command_encounter(Client *c, const Seperator *sep) {
 			return;
 		}
 
+		ItemInst *CursorItemInst = c->GetInv().GetItem(MainCursor);
+		if (CursorItemInst) {
+			c->Message(13, "Your cursor must be empty before claiming a reward.");
+			return;
+		}
+
 		c->GetEPP().encounter_unclaimed_rewards--;
 		c->Save();
-		c->Message(MT_Experience, "You have claimed an encounter reward!");
-		
+		int itemid = 100002;
+		const Item_Struct * item = database.GetItem(itemid);
+		if (!c->SummonItem(itemid)) { //
+			//Log!!
+		}
+		c->Message(MT_Experience, "Your encounter reward is: %s!", item->Name);		
 		return;
 	}
 	if (c->Admin() > 200 && sep->arg[1] && strcasecmp(sep->arg[1], "spawn") == 0) {
