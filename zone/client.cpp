@@ -9330,10 +9330,13 @@ int Client::GiveBoxReward(int minimumRarity) {
 		pool += 200; itemTable[pool] = 4504; //Crown of King Tranix
 		pool += 150; itemTable[pool] = 10366; //Djarn's Amethyst Ring
 		pool += 100; itemTable[pool] = 22503; //Blue Diamond
+		pool += 100; itemTable[pool] = 100002; //Old Blue Box for lulz
+		pool += 500; itemTable[pool] = 100003; //Old Red Box
 	}
 	else if (rarityType == 1) { //Uncommon
 		pool += 100; itemTable[pool] = 14751; //Fingerbone Hoop
 		pool += 80; itemTable[pool] = 14714; //Earring of Essence
+		pool += 500; itemTable[pool] = 100003; //Old Violet Box
 		if (GetClass() == BARD) {
 			pool += 50; itemTable[pool] = 4557; //Singing Steel Helm
 			pool += 50; itemTable[pool] = 4559; //Singing Steel Arms
