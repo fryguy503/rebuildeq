@@ -3943,8 +3943,18 @@ void command_builds(Client *c, const Seperator *sep)
 
 //Spawns an encounter, if a valid timing
 void command_encounter(Client *c, const Seperator *sep) {
+	uint32 unclaimed_rewards = 0;
+
+	//Get the unclaimed_encounter_rewards
+	std::string query = StringFormat("SELECT unclaimed_encounter_rewards FROM character_encounter WHERE character_id = %u LIMIT 1", c->CharacterID());
+	auto results = database.QueryDatabase(query);
+	if (results.Success() && results.RowCount() == 1) {
+		auto row = results.begin();
+		unclaimed_rewards = atoi(row[0]);
+	}
+	
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "claim") == 0) {
-		if (c->GetEPP().encounter_unclaimed_rewards == 0) {
+		if (unclaimed_rewards == 0) {
 			c->Message(13, "You have no unclaimed rewards.");
 			return;
 		}
@@ -3955,12 +3965,20 @@ void command_encounter(Client *c, const Seperator *sep) {
 			return;
 		}
 
-		c->GetEPP().encounter_unclaimed_rewards--;
-		c->Save();
+		std::string query = StringFormat("UPDATE character_encounter SET unclaimed_encounter_rewards = unclaimed_encounter_rewards - 1 WHERE character_id = %u and unclaimed_encounter_rewards = %u", c->CharacterID(), unclaimed_rewards);			
+		auto results = database.QueryDatabase(query);
+		if (!results.Success()) {
+			c->Message(13, "Claiming reward failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
+			Log.Out(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());			
+			return;
+		}
+
 		int itemid = 100002;
 		const Item_Struct * item = database.GetItem(itemid);
 		if (!c->SummonItem(itemid)) { //
-			//Log!!
+			Log.Out(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u", c->CharacterID());
+			c->Message(13, "Something went wrong during the claim. The admins have been notified.");
+			return;
 		}
 		c->Message(MT_Experience, "Your encounter reward is: %s!", item->Name);		
 		return;
@@ -3982,12 +4000,12 @@ void command_encounter(Client *c, const Seperator *sep) {
 		c->SpawnEncounter(false);
 		return;
 	}
-	if (c->GetEPP().encounter_unclaimed_rewards == 0) {
+	if (unclaimed_rewards == 0) {
 		c->Message(0, "You have no unclaimed encounter rewards. Watch for random emotes and team up with allies to defeat random encounters.");
 		return;
 	}
 	
-	c->Message(0, "You have %u unclaimed encounter rewards. [%s]", c->GetEPP().encounter_unclaimed_rewards, c->CreateSayLink("#encounter claim", "claim").c_str());	
+	c->Message(0, "You have %u unclaimed encounter rewards. [%s]", unclaimed_rewards, c->CreateSayLink("#encounter claim", "claim").c_str());
 }
 
 //Give AAs

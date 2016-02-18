@@ -893,7 +893,6 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`build_data`,				"		
 		"`rested_exp`,				"
 		"`encounter_timeout`,       "
-		"`encounter_unclaimed_rewards`,"
 		"`e_last_invsnapshot`		"
 		"FROM                       "
 		"character_data             "
@@ -996,7 +995,6 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		strcpy(m_epp->build, row[r]);  r++;										 // "`build`,				    "
 		m_epp->rested_exp = atof(row[r]); r++; 									 // "`rested_exp`,			    "
 		m_epp->encounter_timeout = atoi(row[r]); r++;							 // "`encounter_timeout`,		"
-		m_epp->encounter_unclaimed_rewards = atoi(row[r]); r++;				     // "`encounter_unclaimed_rewards`,"
 		m_epp->last_invsnapshot_time = atoi(row[r]); r++;						 // "`e_last_invsnapshot`		"
 		m_epp->next_invsnapshot_time = m_epp->last_invsnapshot_time + (RuleI(Character, InvSnapshotMinIntervalM) * 60);
 	}
@@ -1557,7 +1555,6 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" build_data,				 "
 		" rested_exp,				 "
 		" encounter_timeout,		 "	
-		" encounter_unclaimed_rewards,"
 		" e_last_invsnapshot		 "
 		")							 "
 		"VALUES ("
@@ -1659,7 +1656,6 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"'%s',"  // build
 		"%f,"  // rested_exp
 		"FROM_UNIXTIME(%u),"  //encounter_timout
-		"%u," //encounter_unclaimed_rewards
 		"%u"   // e_last_invsnapshot
 		")",
 		character_id,					  // " id,                        "
@@ -1760,7 +1756,6 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		EscapeString(buildbuffer).c_str(),
 		m_epp->rested_exp,
 		m_epp->encounter_timeout,
-		m_epp->encounter_unclaimed_rewards,
 		m_epp->last_invsnapshot_time
 	);
 	//Log.Out(Logs::General, Logs::Zone_Server);
