@@ -3964,6 +3964,16 @@ void command_encounter(Client *c, const Seperator *sep) {
 		}
 		
 	}
+
+	if (c->Admin() >= 200 && sep->arg[1] && strcasecmp(sep->arg[1], "emote") == 0) {
+		if (c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
+			c->Message(0, "Created an encounter for %s", c->GetTarget()->GetCleanName());
+			return;
+		}
+		c->EmoteEncounter();
+		c->Message(0, "Creating an encounter for you.");
+		return;
+	}
 	
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "claim") == 0) {
 		if (unclaimed_rewards == 0) {
@@ -4000,14 +4010,14 @@ void command_encounter(Client *c, const Seperator *sep) {
 			c->Message(0, "You must target a player first to spawn an encounter.");
 			return;
 		}
+		c->Message(0, "Spawning an encounter for %s...", c->GetTarget()->GetCleanName());
 		c->GetTarget()->CastToClient()->SpawnEncounter(true);
 		return;
 	}
 
 	if (c->GetEPP().encounter_type > 0 && 
-		c->GetEPP().encounter_timeout > time(nullptr) &&
-		c->GetEPP().next_encounter_time < time(nullptr) &&
-		c->InEncounterArea()
+		c->GetEPP().encounter_timeout > time(nullptr)
+		//c->InEncounterArea()
 		) {
 		c->SpawnEncounter(false);
 		return;
@@ -4360,7 +4370,6 @@ void command_rez(Client *c, const Seperator *sep) {
 
 void command_issue(Client *c, const Seperator *sep) {
 
-
 	//Get the unclaimed_encounter_rewards
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "delete") == 0) { //Delete an issue
 		if (!sep->arg[2] || atoi(sep->arg[2]) == 0) {
@@ -4401,7 +4410,7 @@ void command_issue(Client *c, const Seperator *sep) {
 			if (atoi(row[3]) == 1) status = "Fixed";
 
 			std::string details = "";
-			if (strlen(row[4]) > 0 && strcmp(row[4], "(null)") != 0) details.append(StringFormat("(%s) ", row[4]));
+			if (strlen(row[4]) > 0 && strcasecmp(row[4], "(null)") != 0) details.append(StringFormat("(%s) ", row[4]));
 			std::string deletecommand = StringFormat("#issue delete %u", atoi(row[0]));
 			details.append(StringFormat("%s", row[5]));
 

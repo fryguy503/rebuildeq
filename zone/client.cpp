@@ -9136,42 +9136,44 @@ void Client::EmoteEncounter() {
 	int dice;
 	if (GetZoneID() == 22 || GetZoneID() == 21) {
 		dice = zone->random.Int(1, 6); //Always +1 of the messages
+		if (Admin() >= 200) Message(0, "Zone Encounter dice: %i", dice);
 		if (dice == 1) {
-			Message(8, "You hear a twig snap %s.", CreateSayLink("#encounter", "nearby"));
+			Message(8, "You hear a twig snap %s.", CreateSayLink("#encounter", "nearby").c_str());
 			return;
 		}
 		if (dice == 2) {
-			Message(8, "Orcs begin to %s louder and louder...", CreateSayLink("#encounter", "chant"));
+			Message(8, "Orcs begin to %s louder and louder...", CreateSayLink("#encounter", "chant").c_str());
 			return;
 		}
 		if (dice == 3) {
-			Message(8, "An zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter", "below"));
+			Message(8, "An zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter", "below").c_str());
 			return;
 		}
 		if (dice == 4) {
-			Message(8, "The %s of a hillgiant can be heard.", CreateSayLink("#encounter", "stomps"));
+			Message(8, "The %s of a hillgiant can be heard.", CreateSayLink("#encounter", "stomps").c_str());
 			return;
 		}
 		if (dice == 5) {
-			Message(8, "A willowisp %s in front of you.", CreateSayLink("#encounter", "vanishes"));
+			Message(8, "A willowisp %s in front of you.", CreateSayLink("#encounter", "vanishes").c_str());
 			return;
 		}
 		if (dice == 6) {
-			Message(8, "The %s intensifies near you.", CreateSayLink("#encounter", "wind"));
+			Message(8, "The %s intensifies near you.", CreateSayLink("#encounter", "wind").c_str());
 			PlayMP3("aie_spl.wav");
 			m_epp.encounter_type = dice;
 			return;	
 		}
 	}
-	dice = zone->random.Int(30, 35);	
+
+	dice = zone->random.Int(30, 31);
 	if (dice == 30) {		
-		Message(8, "An unsettling %s washes over you.", CreateSayLink("#encounter", "feeling"));
+		Message(8, "An unsettling %s washes over you.", CreateSayLink("#encounter", "feeling").c_str());
 		PlayMP3("ans_idl.wav");
 		m_epp.encounter_type = dice;
 		return;
 	}
 	if (dice == 31) {
-		Message(8, "You have a bow being % nearby.", CreateSayLink("#encounter", "shot"));
+		Message(8, "You have a bow being %s nearby.", CreateSayLink("#encounter", "shot").c_str());
 		PlayMP3("bowdraw.wav");
 		m_epp.encounter_type = dice;
 		return;
@@ -9193,14 +9195,15 @@ void Client::SpawnEncounter(bool skipChecks) {
 		Save();
 	}
 
-	if (m_epp.encounter_type == 0) { //If for some reason encounter_type is not set, just do a generic one.
-		m_epp.encounter_type = zone->random.Int(30, 35);
+	int e_type = m_epp.encounter_type;
+	if (e_type == 0) { //If for some reason encounter_type is not set, just do a generic one.
+		e_type = zone->random.Int(30, 31);
 	}
 	int playerCount = 0;
 	auto memberlist = GetEncounterMembers();
 	NPC* npc;
 	if (GetZoneID() == 22 || GetZoneID() == 21) { //Commonlands
-		if (m_epp.encounter_type == 3) { //Zombie!
+		if (e_type == 3) { //Zombie!
 			//playerCount = SendEncounterToGroup("gho_idl.wav", "A horde of zombies begin to surface!", "a_zombie 70 1 0 96 1 1");
 			//group->members[i]->CastToClient()->Message(0, message);
 			//group->members[i]->CastToClient()->PlayMP3(fname);
@@ -9226,12 +9229,34 @@ void Client::SpawnEncounter(bool skipChecks) {
 			}
 			return;
 		}
-		if (m_epp.encounter_type == 6) {
+		if (e_type == 6) {
 			//playerCount = SendEncounterToGroup("aie_spl.wav", "You see an air elemental take shape.", );
 			return;
 		}
 			//apx_idl.wav - sword unsheaths
 			//Duration to retry range is 18 hours, 32 max
+		return;
+	}
+	//==== GENERIC EVENTS ====
+	if (e_type == 30) {
+		for (auto victim = memberlist.begin(); victim != memberlist.end(); ++victim) {
+			(*victim)->PlayMP3("ans_atk.wav");
+			(*victim)->Message(3, "A monster appears before you!");
+			npc = NPC::SpawnNPC("a_monster 70 1", (*victim)->GetPosition(), nullptr);
+			npc->AddToHateList((*victim), 1);
+			npc->SpellEffect(this, 13);
+		}
+		return;
+	}
+	if (e_type == 31) {
+		for (auto victim = memberlist.begin(); victim != memberlist.end(); ++victim) {
+			(*victim)->PlayMP3("bowdraw.wav");
+			(*victim)->Message(3, "An elven archer is spotted in the distance!");
+			npc = NPC::SpawnNPC("an_elven_archer 70 1", (*victim)->GetPosition(), nullptr);
+			npc->AddToHateList((*victim), 1);
+			npc->SpellEffect(this, 13);
+		}
+		return;
 	}
 }
 
