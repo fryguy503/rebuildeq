@@ -1334,6 +1334,8 @@ public:
 
 	void SpawnEncounter(bool skipChecks = false);
 
+	uint32 GetEncounterNPCID();
+
 	std::vector<Client *> Client::GetEncounterMembers();
 	
 	int GiveBoxReward(int minimumRarity = 0);

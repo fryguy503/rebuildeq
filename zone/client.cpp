@@ -9147,6 +9147,7 @@ void Client::EmoteEncounter() {
 		}
 		if (dice == 3) {
 			Message(8, "An zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter", "below").c_str());
+			//TODO: moan
 			return;
 		}
 		if (dice == 4) {
@@ -9172,6 +9173,7 @@ void Client::EmoteEncounter() {
 		m_epp.encounter_type = dice;
 		return;
 	}
+	GetHeading
 	if (dice == 31) {
 		Message(8, "You have a bow being %s nearby.", CreateSayLink("#encounter", "shot").c_str());
 		PlayMP3("bowdraw.wav");
@@ -9194,71 +9196,51 @@ void Client::SpawnEncounter(bool skipChecks) {
 		m_epp.next_encounter_time = time(nullptr) + zone->random.Int(64800, 108000); //18 to 30 hours
 		Save();
 	}
+	
+	int playerCount = 0;
+	auto memberlist = GetEncounterMembers();
+	const NPCType* tmp = 0;
+	NPC* npc;
+	uint32 id = GetEncounterNPCID();
+	if (tmp = database.LoadNPCTypesData(187000)) {
+		NPC* npc = new NPC(tmp, 0, GetPosition(), FlyMode3);
+		//npc->SetNPCFactionID(atoi(sep->arg[2]));
+		entity_list.AddNPC(npc);
+		int i = 0;
+		for (auto victim = memberlist.begin(); victim != memberlist.end(); ++victim) {
+			npc->SetEntityVariable(StringFormat("member%i", i).c_str(), StringFormat("%u", (*victim)->CharacterID()).c_str());
+			i++;
+		}
+	}
+	
 
+	return;
+}
+
+uint32 Client::GetEncounterNPCID() {
 	int e_type = m_epp.encounter_type;
+
 	if (e_type == 0) { //If for some reason encounter_type is not set, just do a generic one.
 		e_type = zone->random.Int(30, 31);
 	}
-	int playerCount = 0;
-	auto memberlist = GetEncounterMembers();
-	NPC* npc;
 	if (GetZoneID() == 22 || GetZoneID() == 21) { //Commonlands
-		if (e_type == 3) { //Zombie!
-			//playerCount = SendEncounterToGroup("gho_idl.wav", "A horde of zombies begin to surface!", "a_zombie 70 1 0 96 1 1");
-			//group->members[i]->CastToClient()->Message(0, message);
-			//group->members[i]->CastToClient()->PlayMP3(fname);
-			for (auto victim = memberlist.begin(); victim != memberlist.end(); ++victim) {
-				(*victim)->PlayMP3("gho_idl.wav");
-				(*victim)->Message(3, "A horde of zombies begin to surface!");
-
-				//Randomize position so it's not directly on top?
-				if (zone->random.Roll(50)) { //50/50 chance there's 2
-					if (zone->random.Roll(5)) { //5% chance there's 3
-						npc = NPC::SpawnNPC("a_zombie 70 1", (*victim)->GetPosition(), nullptr);
-						npc->AddToHateList((*victim), 1);
-						npc->SpellEffect(this, 13);
-					}
-					npc = NPC::SpawnNPC("a_zombie 70 1", (*victim)->GetPosition(), nullptr);
-					npc->AddToHateList((*victim), 1);
-					npc->SpellEffect(this, 13);
-				}
-
-				npc = NPC::SpawnNPC("a_zombie 70 1", (*victim)->GetPosition(), nullptr);
-				npc->AddToHateList((*victim), 1);
-				npc->SpellEffect(this, 13);
-			}
-			return;
+		if (e_type == 3) { //Zombie!			
+			return 187000;
 		}
 		if (e_type == 6) {
-			//playerCount = SendEncounterToGroup("aie_spl.wav", "You see an air elemental take shape.", );
-			return;
+			return 0;
 		}
-			//apx_idl.wav - sword unsheaths
-			//Duration to retry range is 18 hours, 32 max
-		return;
 	}
 	//==== GENERIC EVENTS ====
-	if (e_type == 30) {
-		for (auto victim = memberlist.begin(); victim != memberlist.end(); ++victim) {
-			(*victim)->PlayMP3("ans_atk.wav");
-			(*victim)->Message(3, "A monster appears before you!");
-			npc = NPC::SpawnNPC("a_monster 70 1", (*victim)->GetPosition(), nullptr);
-			npc->AddToHateList((*victim), 1);
-			npc->SpellEffect(this, 13);
-		}
-		return;
+	if (e_type == 30) {		
+		return 0;
 	}
-	if (e_type == 31) {
-		for (auto victim = memberlist.begin(); victim != memberlist.end(); ++victim) {
-			(*victim)->PlayMP3("bowdraw.wav");
-			(*victim)->Message(3, "An elven archer is spotted in the distance!");
-			npc = NPC::SpawnNPC("an_elven_archer 70 1", (*victim)->GetPosition(), nullptr);
-			npc->AddToHateList((*victim), 1);
-			npc->SpellEffect(this, 13);
-		}
-		return;
+	if (e_type == 31) {		
+		return 0;
 	}
+	return 0;
 }
+
 
 //Plays a mp3 on group as well as sends message, including current player, returns the player count
 
