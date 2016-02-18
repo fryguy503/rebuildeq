@@ -247,6 +247,7 @@ int command_init(void)
 		command_add("iplookup", "[charname] - Look up IP address of charname", 200, command_iplookup) ||
 		command_add("iteminfo", "- Get information about the item on your cursor", 100, command_iteminfo) ||
 		command_add("itemsearch", "[search criteria] - Search for an item", 100, command_itemsearch) ||
+		command_add("issue", "- Report an issue with the server", 0, command_issue) ||
 		command_add("kick", "[charname] - Disconnect charname", 150, command_kick) ||
 		command_add("kill", "- Kill your target", 100, command_kill) ||
 		command_add("lastname", "[new lastname] - Set your or your player target's lastname", 50, command_lastname) ||
@@ -328,8 +329,7 @@ int command_init(void)
 		command_add("reloadstatic", "- Reload Static Zone Data", 150, command_reloadstatic) ||
 		command_add("reloadtitles", "- Reload player titles from the database",  150, command_reloadtitles) ||
 		command_add("reloadworld", "[0|1] - Clear quest cache (0 - no repop, 1 - repop)", 255, command_reloadworld) ||
-		command_add("reloadzps", "- Reload zone points from database", 150, command_reloadzps) ||
-		command_add("report", "- Report an issue with the server", 0, command_report) ||
+		command_add("reloadzps", "- Reload zone points from database", 150, command_reloadzps) ||		
 		command_add("repop", "[delay] - Repop the zone with optional delay", 100, command_repop) ||
 		command_add("repopclose", "[distance in units] Repops only NPC's nearby for fast development purposes", 100, command_repopclose) ||
 		command_add("resetaa", "- Resets a Player's AA in their profile and refunds spent AA's to unspent, may disconnect player.", 200, command_resetaa) ||
@@ -4358,16 +4358,79 @@ void command_rez(Client *c, const Seperator *sep) {
 }
 
 
-void command_report(Client *c, const Seperator *sep) {
+void command_issue(Client *c, const Seperator *sep) {
+
+
+	//Get the unclaimed_encounter_rewards
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "delete") == 0) { //Delete an issue
+		if (!sep->arg[2] || atoi(sep->arg[2]) == 0) {
+			c->Message(0, "Invalid issue id. Format: #issue delete <number>");
+			return;
+		}
+		uint32 issue_id = atoi(sep->arg[2]);
+		std::string query = StringFormat("UPDATE issues SET is_deleted = 1 WHERE is_deleted = 0 AND my_character_id = %u AND id = %u LIMIT 1", c->CharacterID(), issue_id);
+		auto results = database.QueryDatabase(query);
+		if (!results.Success()) {
+			c->Message(13, "Deleting an issue failed. The admins have been notified.");
+			Log.Out(Logs::General, Logs::Normal, "#issue creation failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
+			return;
+		}
+		c->Message(0, "You have deleted issue #%u.", issue_id);
+		return;
+	}
+
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "list") == 0) { //List past issues
+		//List Issues
+		std::string query = StringFormat("SELECT id, github_issue_id, is_in_progress, is_fixed, tar_name, message FROM issues WHERE my_character_id = %u AND is_deleted = 0 ORDER BY last_modified DESC LIMIT 10", c->CharacterID());
+		auto results = database.QueryDatabase(query);
+		if (!results.Success()) {
+			c->Message(13, "Listing issues failed. The admins have been notified.");
+			Log.Out(Logs::General, Logs::Normal, "#issue list failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
+			return;
+		}
+		if (results.RowCount() == 0) {
+			c->Message(0, "You have no pending issues.");
+			return;			
+		}
+
+		c->Message(0, "Your %u most recently updated issues:", results.RowCount());
+		for (auto row = results.begin(); row != results.end(); ++row) {
+			std::string status = "New";
+			if (atoi(row[1]) == 1) status = "Reported";
+			if (atoi(row[2]) == 1) status = "In Progress";
+			if (atoi(row[3]) == 1) status = "Fixed";
+
+			std::string details = "";
+			if (strlen(row[4]) > 0 && strcmp(row[4], "(null)") != 0) details.append(StringFormat("(%s) ", row[4]));
+			std::string deletecommand = StringFormat("#issue delete %u", atoi(row[0]));
+			details.append(StringFormat("%s", row[5]));
+
+			c->Message(0, "#%u status: %s, details: %s [%s]", atoi(row[0]), status.c_str(), details.c_str(), c->CreateSayLink(deletecommand.c_str(), "delete").c_str());
+		}
+		return;
+	}
+
+
 	if (!sep->arg[1] || (strlen(sep->arg[1]) == 0)) {
-		c->Message(0, "To report something to the GMs:");
-		c->Message(0, "/say #report Your report message here");
+		uint32 issue_count = 0;
+		std::string query = StringFormat("SELECT count(id) FROM issues WHERE my_character_id = %u AND is_deleted = 0 LIMIT 1", c->CharacterID());
+		auto results = database.QueryDatabase(query);
+		if (results.Success()) {
+			if (results.RowCount() == 1) {
+				auto row = results.begin();
+				issue_count = atoi(row[0]);
+			}
+		}		
+
+		if (issue_count > 0) c->Message(0, "You have %u previously submitted issues. [%s]", issue_count, c->CreateSayLink("#issue list", "list"));
+		c->Message(0, "To report something to the GMs, you may target a mob or player and then:");
+		c->Message(0, "/say #issue Your report message");
 		return;
 	}
 	
-	std::string query = StringFormat("INSERT INTO report "
-		"(name, account_id, character_id, zone_id, x, y, z, message)"
-		"VALUES (\"%s\",  %u, %u, %u, %f, %f, %f, \"%s\")",
+	std::string query = StringFormat("INSERT INTO issues"
+		"(my_name, my_account_id, my_character_id, my_zone_id, my_x, my_y, my_z, message, tar_name, tar_is_npc, tar_is_client, tar_account_id, tar_character_id, tar_npc_type_id)"
+		"VALUES (\"%s\", %u, %u, %u, %f, %f, %f, \"%s\", \"%s\", %u, %u, %u, %u, %u)",
 		c->GetName(),
 		c->AccountID(),
 		c->CharacterID(),
@@ -4375,15 +4438,22 @@ void command_report(Client *c, const Seperator *sep) {
 		c->GetX(),
 		c->GetY(),
 		c->GetZ(),
-		sep->argplus[1], 512);
+		sep->argplus[1], //message
+		((c->GetTarget() == nullptr) ? 0 : c->GetTarget()->GetCleanName()),
+		((c->GetTarget() == nullptr || !c->GetTarget()->IsNPC()) ? 0 : 1),
+		((c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) ? 0 : 1),
+		((c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) ? 0 : c->GetTarget()->CastToClient()->AccountID()),
+		((c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) ? 0 : c->GetTarget()->CastToClient()->CharacterID()),
+		((c->GetTarget() == nullptr || !c->GetTarget()->IsNPC()) ? 0 : c->GetTarget()->CastToNPC()->GetNPCTypeID())
+		);
 	auto results = database.QueryDatabase(query);
 	if (!results.Success()) {
-		c->Message(0, "Failed to create a report:");
-		c->Message(13, results.ErrorMessage().c_str());
-		return;
+		c->Message(13, "Creating an issue failed. The admins have been notified.");
+		Log.Out(Logs::General, Logs::Normal, "#issue creation failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
+		return;		
 	}
 
-	c->Message(0, "Your report (#%i) has been submitted.", results.LastInsertedID());
+	c->Message(0, "Your issue #%i has been submitted.", results.LastInsertedID());
 }
 
 void command_depop(Client *c, const Seperator *sep)
