@@ -1,19 +1,56 @@
 #encounter_zombie 187000
 
 my @group;
-my @groupname;
 my @enemies;
 my $isEventFinished = 0;
 my $waveCount = 0;
-
+my $winnerList;
 
 sub EVENT_SPAWN {
-	@group = ();
 	@groupname = ();
 	@enemies = ();
 	$isEventFinished = 0;
 	$waveCount = 0;
-	quest::settimer("start", 1);
+	$winnerList = "";
+	#store group details
+
+	@group_members = plugin::GetGroupMembers();
+
+	#quest::say("Setting ".$groupname[0]);
+	#spawn first wave of enemies
+	foreach $c (@group_members) {
+		if (!$c) { next; }
+		my $groupsize = scalar @group;
+		$group[$groupsize] = $c->GetID();
+		
+    	$winnerList .= $c->GetCleanName().", ";
+
+		$c->Message(8, "A horde of zombies begin to emerge from the ground...");
+		$c->PlayMP3("bowdraw.wav");
+
+		$newid = quest::spawn2(22046, 0, 0, $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
+		if (!$newid) { next; }
+
+		$newmob = $entity_list->GetMobID($newid);			
+		if (!$newmob) { next; }
+		$newnpc = $newmob->CastToNPC();
+		if (!$newnpc) { next; }
+
+		#these should move to mob
+		$newnpc->SpellEffect(13); #Earth rising up effect
+		$newnpc->Stun(1000);
+		#$newspawn->DoAnim(110); #sit
+		
+		#prep mob and add to local tracker
+		$zindex = scalar @enemies;
+		$newnpc->AddToHateList($c, 1);
+		$enemies[$zindex] = $newmob->GetID();		
+		#quest::say("Done");
+	}
+	quest::settimer("nexthorde", quest::ChooseRandom(1,3,6,9,12,15,20));
+	$winnerList = substr $winnerList, 0, -2;
+	$waveCount = 1;
+
 	quest::settimer("eventendcheck", 3)
 }
 
@@ -30,64 +67,18 @@ sub EVENT_TIMER {
 			if ($checkMob && !$checkMob->IsCorpse()) { return; }
 		}
 
-		$winnerList = "";
     	$dbh = plugin::LoadMysql();
-		for ($i = 0; $i < 6; $i++) {
-			my $char_id = $npc->GetEntityVariable("member$i");
-			if ($char_id < 1) { next; }
+    	foreach $c (@group) {
+			if (!$c || $c < 1) { next; }
 	    	$sth = $dbh->prepare("UPDATE `character_custom` SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1 WHERE character_id = ?");
-	    	$sth->execute($char_id);
-	    	$winnerList .= $groupname[$i].", ";
+	    	$sth->execute($c);
+	    	
 	    }
-	    $winnerList = substr $winnerList, 0, -2;
+	    
 	    quest::we(13, "$winnerList successfully stopped a zombie invasion in $zoneln!");
     	$dbh->disconnect();
     	#despawn
 		quest::depop();
-	}
-
-	if ($timer eq "start") { #encounter init, set variables to an easier to handle group
-
-		quest::stoptimer("start");
-		#store group details
-		for ($i = 0; $i < 6; $i++) {
-			my $groupsize = scalar @group;
-			$c = $entity_list->GetClientByCharID($npc->GetEntityVariable("member$i"));			
-			if ($c) {
-				$group[$groupsize] = $c;
-				$groupname[$groupsize] = $c->GetCleanName();
-			}
-		}
-		#quest::say("Setting ".$groupname[0]);
-		#spawn first wave of enemies
-		foreach $c (@group) {
-			if (!$c) { next; }
-			$c->Message(8, "A horde of zombies begin to emerge from the ground...");
-			$c->PlayMP3("bowdraw.wav");
-
-			$newid = quest::spawn2(22046, 0, 0, $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
-			if (!$newid) { next; }
-
-			$newmob = $entity_list->GetMobID($newid);			
-			if (!$newmob) { next; }
-			$newnpc = $newmob->CastToNPC();
-			if (!$newnpc) { next; }
-
-			#these should move to mob
-			$newnpc->SpellEffect(13); #Earth rising up effect
-			$newnpc->Stun(1000);
-			#$newspawn->DoAnim(110); #sit
-			
-			#prep mob and add to local tracker
-			$zindex = scalar @enemies;
-			$newnpc->AddToHateList($c, 1);
-			$enemies[$zindex] = $newmob->GetID();
-			quest::settimer("nexthorde", 1);			
-			#quest::settimer("nexthorde", quest::ChooseRandom(1,3,6,9,12,15,20));
-			#quest::say("Done");
-		}
-		$waveCount = 1;
-		return;
 	}
 
 	if ($timer eq "nexthorde") {

@@ -347,7 +347,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Armor of Faith";
-			$newSkill->desc = 'Damage taken from Undead have a <em data-base="1">1</em>% chance to be reduced by <em data-base="12">12</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Damage taken from Undead have a <em data-base="4">4</em>% chance to be reduced by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[20] = $newSkill;
 

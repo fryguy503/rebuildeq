@@ -4373,7 +4373,7 @@ void command_rez(Client *c, const Seperator *sep) {
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %u platinum to summon and resurrect a corpse in this zone. [%s]", c->GetLevel(), (c->GetLevel() * mod), c->CreateSayLink("#rez confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %u platinum to summon and resurrect the closest nearby corpse in this zone. [%s]", c->GetLevel(), (c->GetLevel() * mod), c->CreateSayLink("#rez confirm", "Confirm").c_str());
 	}
 }
 
