@@ -4022,10 +4022,16 @@ void command_encounter(Client *c, const Seperator *sep) {
 		c->SpawnEncounter(false);
 		return;
 	}
-	if (c->InEncounterArea() && 		
-		c->GetEPP().next_encounter_time < time(nullptr)) {
+	if (c->InEncounterArea()) {
 		c->Message(0, "You are in an encounter area.");
 	}
+	else {
+		c->Message(0, "You are not in an encounter area.");
+	}
+	if (c->GetEPP().next_encounter_time < time(nullptr)) {
+		c->Message(0, "You are eligable for encounters.");
+	}
+
 	if (unclaimed_rewards == 0) {
 		c->Message(0, "You have no unclaimed encounter rewards. Watch for random emotes and team up with allies to defeat random encounters.");
 		return;
