@@ -372,33 +372,42 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 			if (membercount > 1) {
 				if (m_epp.rested_exp < 1) {
 					Message(15, "You have gained %i party experience! (%.3f%%)", i, expPct);
-				} else {//Rested EXP available					
-					int totalExp = i * membercount; //this means up to 6x EXP in a party
-					m_epp.rested_exp -= i; //remove from rested
-					if (m_epp.rested_exp < 0) { //not enough rested exp for double
-						totalExp += m_epp.rested_exp; //take negative away from bonus
-						m_epp.rested_exp = 0; //reset rested to 0
-					}
-					expPct = (float)((float)totalExp / (float)(GetEXPForLevel(GetLevel() + 1) - GetEXPForLevel(GetLevel())))*(float)100; //EXP needed for level
-					Message(15, "You have gained %i party experience! (+%i rested) (%.3f%%)", i, totalExp - i, expPct);
-					set_exp += (totalExp - i); //Now add bonus exp to set_exp
-				}
+				} else {//Rested EXP available
 
+					int restedExp = i * membercount; //rested EXP can be up to 6x in party
+					int totalExp = i + restedExp;
+
+					m_epp.rested_exp -= restedExp; //remove from rested
+					if (m_epp.rested_exp < 0) { //not enough rested exp
+						totalExp += m_epp.rested_exp; //take negative away from bonus
+						restedExp += m_epp.rested_exp;
+						m_epp.rested_exp = 0; //reset rested to 0
+					}					
+					
+					expPct = (float)((float)totalExp / (float)(GetEXPForLevel(GetLevel() + 1) - GetEXPForLevel(GetLevel())))*(float)100; //EXP needed for level
+					Message(15, "You have gained %i party experience! (+%i rested) (%.3f%%)", i, restedExp, expPct);
+					set_exp += restedExp; //Now add bonus exp to set_exp
+				}
 			}
 			else if(IsRaidGrouped()) {
 				
 				if (m_epp.rested_exp < 1) {
 					Message(15, "You have gained %i raid experience! (%.3f%%)", i, expPct);
 				} else {//Rested EXP available
-					int totalExp = i + i; //double exp
-					m_epp.rested_exp -= i; //remove from rested
-					if (m_epp.rested_exp < 0) { //not enough rested exp for double
+
+					int restedExp = i + i; //rested EXP double in raid
+					int totalExp = i + restedExp;
+
+					m_epp.rested_exp -= restedExp; //remove from rested
+					if (m_epp.rested_exp < 0) { //not enough rested exp
 						totalExp += m_epp.rested_exp; //take negative away from bonus
+						restedExp += m_epp.rested_exp;
 						m_epp.rested_exp = 0; //reset rested to 0
 					}
+
 					expPct = (float)((float)totalExp / (float)(GetEXPForLevel(GetLevel() + 1) - GetEXPForLevel(GetLevel())))*(float)100; //EXP needed for level
-					Message(15, "You have gained %i raid experience! (+%i rested) (%.3f%%)", i, totalExp - i, expPct);
-					set_exp += (totalExp - i); //Now add bonus exp to set_exp
+					Message(15, "You have gained %i raid experience! (+%i rested) (%.3f%%)", i, restedExp, expPct);
+					set_exp += restedExp; //Now add bonus exp to set_exp
 				}
 			}
 			else {
@@ -406,15 +415,23 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 					Message(15, "You have gained %i experience! (%.3f%%)", i, expPct);
 				} else {//Rested EXP available
 
-					int totalExp = i + (int)((float)i * 0.25); //25% bonus exp when solo, intentionally it's crappy.
-					m_epp.rested_exp -= i; //remove from rested
+					int restedExp = (int)((float)i * 0.25); //25% bonus exp when solo, intentionally it's crappy.					
+					int totalExp = i + restedExp;
+
+					m_epp.rested_exp -= restedExp; //remove from rested
+					if (m_epp.rested_exp < 0) { //not enough rested exp
+						totalExp += m_epp.rested_exp; //take negative away from bonus
+						restedExp += m_epp.rested_exp;
+						m_epp.rested_exp = 0; //reset rested to 0
+					}
+
 					if (m_epp.rested_exp < 0) { //not enough rested exp for double
 						totalExp += m_epp.rested_exp; //take negative away from bonus
 						m_epp.rested_exp = 0; //reset rested to 0
 					}
 					expPct = (float)((float)totalExp / (float)(GetEXPForLevel(GetLevel() + 1) - GetEXPForLevel(GetLevel())))*(float)100; //EXP needed for level
 					Message(15, "You have gained %i experience! (+%i rested) (%.3f%%)", i, totalExp - i, expPct);
-					set_exp += (totalExp - i); //Now add bonus exp to set_exp
+					set_exp += restedExp; //Now add bonus exp to set_exp
 				}
 			}
 
