@@ -4441,7 +4441,7 @@ void command_issue(Client *c, const Seperator *sep) {
 			}
 		}		
 
-		if (issue_count > 0) c->Message(0, "You have %u previously submitted issues. [%s]", issue_count, c->CreateSayLink("#issue list", "list"));
+		if (issue_count > 0) c->Message(0, "You have %u previously submitted issues. [%s]", issue_count, c->CreateSayLink("#issue list", "list").c_str());
 		c->Message(0, "To report something to the GMs, you may target a mob or player and then:");
 		c->Message(0, "/say #issue Your report message");
 		return;
