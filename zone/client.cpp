@@ -9216,7 +9216,6 @@ void Client::SpawnEncounter(bool skipChecks) {
 	}
 	
 	int playerCount = 0;
-	auto memberlist = GetEncounterMembers();
 	const NPCType* tmp = 0;
 	NPC* npc;
 	uint32 id = GetEncounterNPCID();
@@ -9224,11 +9223,6 @@ void Client::SpawnEncounter(bool skipChecks) {
 		NPC* npc = new NPC(tmp, 0, GetPosition(), FlyMode3);
 		//npc->SetNPCFactionID(atoi(sep->arg[2]));
 		entity_list.AddNPC(npc);
-		int i = 0;
-		for (auto victim = memberlist.begin(); victim != memberlist.end(); ++victim) {
-			npc->SetEntityVariable(StringFormat("member%i", i).c_str(), StringFormat("%u", (*victim)->CharacterID()).c_str());
-			i++;
-		}
 	}
 	
 
@@ -9257,59 +9251,6 @@ uint32 Client::GetEncounterNPCID() {
 		return 0;
 	}
 	return 0;
-}
-
-
-//Plays a mp3 on group as well as sends message, including current player, returns the player count
-
-std::vector<Client *> Client::GetEncounterMembers() {
-	std::vector<Client *> clients;
-	clients.reserve(6);
-	
-	if (this->IsGrouped()) {
-		auto group = this->GetGroup(); //iterate group
-		for (int i = 0; i < 6; ++i) {
-			if (group->members[i] &&  //target grouped
-				group->members[i]->IsClient() && //Is a client
-				this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
-				!group->members[i]->CastToClient()->IsDead() //and not dead
-				) {
-				if (this == group->members[i]->CastToClient()) { //It's me.
-					clients.push_back(this);
-					continue;
-				}
-				float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
-				float range2 = 200 * 200;
-				if (dist2 <= range2) { //in range										
-					clients.push_back(group->members[i]->CastToClient());
-				}
-			}
-		}
-	}
-	else if (this->IsRaidGrouped()) { //iterate raid
-		auto raid = this->GetRaid();
-		uint32 gid = raid->GetGroup(this->CastToClient());
-		if (gid < 12) {
-			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-				if (raid->members[i].member &&  //is raid member
-					raid->members[i].GroupNumber == gid && //in group
-					raid->members[i].member->IsClient() && //Is a client
-					raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
-					!raid->members[i].member->IsDead() //and not dead
-					) {
-					float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
-					float range2 = 200 * 200;
-					if (dist2 <= range2) { //in range
-						clients.push_back(raid->members[i].member->CastToClient());
-					}
-				}
-			}
-		}
-	}
-	else { //Solo
-		clients.push_back(this);
-	}
-	return clients;
 }
 
 //Gives a Box Reward randomly. MinimumRarity by default is 0
