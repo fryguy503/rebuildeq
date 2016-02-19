@@ -9077,14 +9077,13 @@ std::string Client::GetBuildClassName() {
 void Client::DoEncounterCheck() {
 	if (m_epp.next_encounter_time >= time(nullptr)) {
 		return;
-	}	
+	}
 	if (!InEncounterArea()) {
 		return;
 	}
 	if (!IsEncounterReady()) {
 		return;
 	}
-	
 	EmoteEncounter();
 	Save(); //Save, EmoteEncounter causes timeout to happen
 }
@@ -9109,7 +9108,7 @@ bool Client::InEncounterArea() {
 
 //Is the encounter ready to spawn?
 bool Client::IsEncounterReady() {
-	if (m_epp.next_encounter_time < time(nullptr)) {
+	if (m_epp.next_encounter_time >= time(nullptr)) {
 		return false;
 	}
 
@@ -9118,7 +9117,7 @@ bool Client::IsEncounterReady() {
 	}
 
 	int chance = 1;
-	float pool = 360;
+	int pool = 360;
 	//See if there's a Gone for a while bonus
 	int bonus = time(nullptr) - m_epp.next_encounter_time;
 	bonus = (bonus / 3600) % 24; //How many days it's been since an encounter
@@ -9129,9 +9128,8 @@ bool Client::IsEncounterReady() {
 		}
 	}
 
-	pool = (float)((float)chance / (float)pool);
-	Message(13, "Chance: %f", pool);
-	return zone->random.Roll(pool);
+	//Message(13, "Chance: %i", pool);
+	return (zone->random.Int(1, pool) > chance);
 }
 
 
@@ -9206,7 +9204,7 @@ void Client::SpawnEncounter(bool skipChecks) {
 		}
 		return;
 	}
-	if (!skipChecks && m_epp.next_encounter_time < time(nullptr)) {
+	if (!skipChecks && m_epp.next_encounter_time >= time(nullptr)) {
 		return;
 	}
 	if (!skipChecks && !InEncounterArea()) {

@@ -4033,7 +4033,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 	}
 
 	if (unclaimed_rewards == 0) {
-		c->Message(0, "You have no unclaimed encounter rewards. Watch for random emotes and team up with allies to defeat random encounters.");
+		c->Message(0, "You have no unclaimed encounter rewards. Watch for them across Norrath and team up with allies to achieve prizes.");
 		return;
 	}
 	
