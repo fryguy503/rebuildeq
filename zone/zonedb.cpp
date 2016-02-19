@@ -893,6 +893,7 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`build_data`,				"		
 		"`rested_exp`,				"
 		"`encounter_timeout`,       "
+		"`next_encounter_time`,       "
 		"`e_last_invsnapshot`		"
 		"FROM                       "
 		"character_data             "
@@ -995,6 +996,7 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		strcpy(m_epp->build, row[r]);  r++;										 // "`build`,				    "
 		m_epp->rested_exp = atof(row[r]); r++; 									 // "`rested_exp`,			    "
 		m_epp->encounter_timeout = atoi(row[r]); r++;							 // "`encounter_timeout`,		"
+		m_epp->next_encounter_time = atoi(row[r]); r++;							 // "`next_encounter_time`,		"
 		m_epp->last_invsnapshot_time = atoi(row[r]); r++;						 // "`e_last_invsnapshot`		"
 		m_epp->next_invsnapshot_time = m_epp->last_invsnapshot_time + (RuleI(Character, InvSnapshotMinIntervalM) * 60);
 	}
@@ -1453,7 +1455,11 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 	if (m_epp->encounter_timeout == 0) {
 		m_epp->encounter_timeout = time(nullptr);
 	}
-
+	if (m_epp->next_encounter_time == 0) {
+		m_epp->next_encounter_time = time(nullptr);
+	}
+	
+	
 	clock_t t = std::clock(); /* Function timer start */
 	std::string query = StringFormat(
 		"REPLACE INTO `character_data` ("
@@ -1554,7 +1560,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" session_timeout,			 "
 		" build_data,				 "
 		" rested_exp,				 "
-		" encounter_timeout,		 "	
+		" encounter_timeout,		 "
+		" next_encounter_time,		 "	
 		" e_last_invsnapshot		 "
 		")							 "
 		"VALUES ("
@@ -1656,6 +1663,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"'%s',"  // build
 		"%f,"  // rested_exp
 		"FROM_UNIXTIME(%u),"  //encounter_timout
+		"FROM_UNIXTIME(%u)," //next_encounter_time
 		"%u"   // e_last_invsnapshot
 		")",
 		character_id,					  // " id,                        "
@@ -1756,6 +1764,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		EscapeString(buildbuffer).c_str(),
 		m_epp->rested_exp,
 		m_epp->encounter_timeout,
+		m_epp->next_encounter_time,
 		m_epp->last_invsnapshot_time
 	);
 	//Log.Out(Logs::General, Logs::Zone_Server);
