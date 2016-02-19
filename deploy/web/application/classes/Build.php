@@ -43,11 +43,17 @@ class Build {
 			if (($i >= 12 && $i <= 14) || ($i >= 30 && $i <= 32) || ($i >= 48 && $i <= 50)) $tier5 += $val;
 			if (($i >= 15 && $i <= 17) || ($i >= 33 && $i <= 35) || ($i >= 51 && $i <= 53)) $tier6 += $val;			
 		}
-		if ($tier6 >= 1 && ($tier5 < 5 || $tier4 < 5 || $tier3 < 5 || $tier2 < 5 || $tier1 < 5)) return false;
-		else if ($tier5 >= 1 && ($tier4 < 5 || $tier3 < 5 || $tier2 < 5 || $tier1 < 5)) return false;
-		else if ($tier4 >= 1 && ($tier3 < 5 || $tier2 < 5 || $tier1 < 5)) return false;
-		else if ($tier3 >= 1 && ($tier2 < 5 || $tier1 < 5)) return false;
-		else if ($tier2 >= 1 && ($tier1 < 5)) return false;
+
+		$totalTier = $tier1;
+		if ($tier2 >= 1 && $totalTier < 5) return false;
+		$totalTier += $tier2;
+		if ($tier3 >= 1 && $totalTier < 10) return false;
+		$totalTier += $tier3;
+		if ($tier4 >= 1 && $totalTier < 10) return false;		
+		$totalTier += $tier4;
+		if ($tier5 >= 1 && $totalTier < 10) return false;		
+		$totalTier += $tier5;
+		if ($tier6 >= 1 && $totalTier < 10) return false;
 
 		if (($tier1+$tier2+$tier3+$tier4+$tier5+$tier6) > $level) { //Too many points spent
 			return false;
