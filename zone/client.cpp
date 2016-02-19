@@ -9084,18 +9084,22 @@ void Client::DoEncounterCheck() {
 	if (!IsEncounterReady()) {
 		return;
 	}
+	
 	EmoteEncounter();
 	Save(); //Save, EmoteEncounter causes timeout to happen
 }
 
 //Is the client in a valid encounter area?
-bool Client::InEncounterArea() {
-	if (GetZoneID() == 22 &&  //Ecommons 
+bool Client::InEncounterArea() {	
+
+	if (GetZoneID() == 22 &&  //Ecommons
+		GetLevel() < 20 && GetLevel() > 0 &&
 		GetX() < 4845 && GetX() > -778 &&
 		GetY() < 1057 && GetY() > -1157) {
 		return true;
 	}
 	if (GetZoneID() == 34 && //Nro
+		GetLevel() < 20 && GetLevel() > 0 &&
 		GetX() < 1319.44 && GetX() > -840.56 &&
 		GetY() < 2471.97 && GetY() > -1704.55) {
 		return true;
@@ -9106,6 +9110,10 @@ bool Client::InEncounterArea() {
 //Is the encounter ready to spawn?
 bool Client::IsEncounterReady() {
 	if (m_epp.next_encounter_time < time(nullptr)) {
+		return false;
+	}
+
+	if (IsEncounterInZone()) {
 		return false;
 	}
 
@@ -9173,7 +9181,6 @@ void Client::EmoteEncounter() {
 		m_epp.encounter_type = dice;
 		return;
 	}
-	GetHeading
 	if (dice == 31) {
 		Message(8, "You have a bow being %s nearby.", CreateSayLink("#encounter", "shot").c_str());
 		PlayMP3("bowdraw.wav");
@@ -9184,8 +9191,21 @@ void Client::EmoteEncounter() {
 	return;
 }
 
+
+bool Client::IsEncounterInZone() {
+	Mob* mob;
+	mob = entity_list.GetMobByNpcTypeID(187000);
+	if (mob && !mob->IsCorpse()) return true;
+}
+
 //Spawn the encounter, skipChecks will ignore any conditions and not affect normal encounter system (GM Event)
 void Client::SpawnEncounter(bool skipChecks) {
+	if (IsEncounterInZone()) {
+		if (Admin() > 200) {
+			Message(0, "An encounter is already happening in the zone..");
+		}
+		return;
+	}
 	if (!skipChecks && m_epp.next_encounter_time < time(nullptr)) {
 		return;
 	}
@@ -9499,6 +9519,6 @@ std::string Client::GetBuildName(uint32 id) {
 	return "Unknown";
 }
 
-bool Client::IsSwornEnemyActive() {
+bool Client::IsSwornEnemyActive() {	
 	return(m_epp.sworn_enemy_id > 0 && m_epp.sworn_enemy_timeout >= time(nullptr));
 }
