@@ -4267,7 +4267,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 			c->CreateSayLink("#teleport dreadlands", "dreadlands").c_str(),
 			c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str()
 		);
-		c->Message(0, "[%s], [$s], [%s]",
+		c->Message(0, "[%s], [%s], [%s]",
 			c->CreateSayLink("#teleport northkarana", "northkarana").c_str(),
 			c->CreateSayLink("#teleport sro", "sro").c_str(),
 			c->CreateSayLink("#teleport tox", "tox").c_str()
