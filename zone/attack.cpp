@@ -3291,6 +3291,13 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 		//Holy Servant
 		if (IsClient() && attacker && attacker->IsNPC()) { //If the attacked player is in a group, and being attacked by an NPC
+			rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_WARDOFTUNARE);
+			if (rank > 0 && zone->random.Roll((int)(3 * rank))) {
+				uint32 healAmount = (uint32)(100 * rank);
+				CastToClient()->Message(MT_Spells, "Ward of Tunare %u healed you for %i.", rank, healAmount);
+				HealDamage(healAmount, this);
+			}
+
 			if (CastToClient()->IsGrouped()) { //In group
 				Group *caster_group = entity_list.GetGroupByMob(this);
 				if (caster_group) {

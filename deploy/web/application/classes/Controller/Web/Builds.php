@@ -377,7 +377,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Ward of Tunare";
-			$newSkill->desc = 'Passively grants Ward of Tunare, causing a <em data-base="3">3</em>% chance a heal for <em data-base="10">100</em> hitpoints will trigger when taking damage from an enemy<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Passively grants Ward of Tunare, causing a <em data-base="3">3</em>% chance a heal for <em data-base="100">100</em> hitpoints. Triggers when taking damage from an enemy<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[31] = $newSkill;
 
