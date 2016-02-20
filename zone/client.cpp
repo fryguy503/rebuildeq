@@ -9119,17 +9119,17 @@ bool Client::IsEncounterReady() {
 	int chance = 1;
 	int pool = 360;
 	//See if there's a Gone for a while bonus
-	/*int bonus = time(nullptr) - m_epp.next_encounter_time;
+	int bonus = time(nullptr) - m_epp.next_encounter_time;
 	bonus = (bonus / 3600000) % 24; //How many days it's been since an encounter
 	if (bonus > 0) {
 		pool -= (pool * 0.25 * bonus);
 		if (pool < 50) {
 			pool = 50;
 		}
-	}*/
+	}
 
 	//Message(13, "Chance: %i", pool);
-	return (zone->random.Int(1, pool) > chance);
+	return (zone->random.Int(1, pool) <= chance);
 }
 
 
