@@ -10118,13 +10118,28 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 3) || mypet->GetPetType() != petAnimation) {
 			if (mypet->GetPetOrder() == SPO_Sit)
 			{
-				mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
+				//
+				if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+					if (this->GetGender() == 0) mypet->Say("Taking a seat, my Lord.");
+					else mypet->Say("Taking a seat, my Lady.");
+				}
+				else {
+					mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
+				}
+
 				mypet->SetPetOrder(SPO_Follow);
 				mypet->SendAppearancePacket(AT_Anim, ANIM_STAND);
 			}
 			else
 			{
-				mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
+				if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+					if (this->GetGender() == 0) mypet->Say("Ready for action, my Lord.");
+					else mypet->Say("Ready for action, my Lady.");
+				}
+				else {
+					mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
+				}
+
 				mypet->SetPetOrder(SPO_Sit);
 				mypet->SetRunAnimSpeed(0);
 				if (!mypet->UseBardSpellLogic())	//maybe we can have a bard pet

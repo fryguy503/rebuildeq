@@ -248,6 +248,12 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	// adding a random 0-4 to pet power, since it only comes in increments
 	// of five from focus effects.
 
+	if (spell_id == 223 && IsClient()) {
+		if (CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) > 0) {
+			pettype = "a_squire";
+		}
+	}
+
 	//lookup our pets table record for this type
 	PetRecord record;
 	if(!database.GetPoweredPetEntry(pettype, act_power, &record)) {
