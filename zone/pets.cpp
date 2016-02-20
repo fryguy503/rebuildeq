@@ -302,10 +302,17 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) > 0 &&
 		(spell_id == 491 || spell_id == 351 || spell_id == 362 || spell_id == 492 || spell_id == 440 || spell_id == 442 || spell_id == 495)) {
 		uint32 rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT);
-		npc_type->max_hp += (npc_type->max_hp * 0.2 * rank); //bonus HP
+
+		//Nerf level, since that's used as a factor for HP/Dmg calculation
 		npc_type->level = (CastToClient()->GetLevel() - (10 - rank));
-		npc_type->AC += (npc_type->AC * 0.2 * rank);
+		npc_type = this->AdjustNPC(npc_type);
+
+		//Now that we generated base HP, let's nerf it on a new formula
+		npc_type->max_hp = (npc_type->max_hp * 0.1 * rank); //50 % of normal hp
+		npc_type->AC = (npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
 		npc_type->size = rank * (GetLevel() / 25); //1.04 to 7.4
+		npc_type->max_dmg = npc_type->max_dmg * 0.1 * rank; //50% dmg at max
+
 		if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) >= 5) {
 			npc_type->race = GetRace();
 			npc_type->gender = GetGender();
@@ -314,20 +321,6 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 				npc_type->size = 1;
 			}
 
-			/*npc_type->AC = GetAC();
-			npc_type->STR = GetSTR();
-			npc_type->STA = GetSTA();
-			npc_type->DEX = GetDEX();
-			npc_type->AGI = GetAGI();
-			npc_type->MR = GetMR();
-			npc_type->FR = GetFR();
-			npc_type->CR = GetCR();
-			npc_type->DR = GetDR();
-			npc_type->PR = GetPR();
-			npc_type->Corrup = GetCorrup();
-			npc_type->PhR = GetPhR();*/
-			// looks
-			
 			npc_type->texture = GetEquipmentMaterial(MaterialChest);
 			npc_type->armtexture = GetEquipmentMaterial(MaterialArms);
 			npc_type->legtexture = GetEquipmentMaterial(MaterialLegs);
@@ -344,7 +337,6 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			npc_type->armor_tint[MaterialHands] = GetEquipmentColor(MaterialHands);
 			//Log.Out(Logs::General, Logs::Zone_Server, "Setting Chest Armor Tint npc_type to %u with Steadfast", npc_type->armor_tint[MaterialChest]);
 
-			
 			//npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
 			npc_type->haircolor = GetHairColor();
 			npc_type->beardcolor = GetBeardColor();
@@ -359,24 +351,32 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			
 			npc_type->d_melee_texture1 = GetEquipmentMaterial(MaterialPrimary);
 			npc_type->d_melee_texture2 = GetEquipmentMaterial(MaterialSecondary);
+			
+			if (this->CastToClient()->GetInv().GetItem(MainPrimary)) { //If a weapon is equipped
+				npc_type->prim_melee_type = this->CastToClient()->GetInv().GetItem(MainPrimary)->GetItem()->ItemType;
+			}
+			
 		}
 	}
 
 	if (this->IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) > 0) {
 		uint32 rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR);
-		npc_type->max_hp += (npc_type->max_hp * 0.2 * rank); //bonus HP
-		npc_type->level = (CastToClient()->GetLevel() - (5 - rank));
-		npc_type->AC += (npc_type->AC * 0.2 * rank);
-		npc_type->gender = (GetGender() == 1 ? 2 : 1); //invert gender
-		npc_type->race = GetRace();
-		npc_type->size = GetSize();
-		npc_type->texture = 3; // GetEquipmentMaterial(MaterialChest);
+		//Nerf level, since that's used as a factor for HP/Dmg calculation
+		npc_type->level = (CastToClient()->GetLevel() - (10 - rank));
+		npc_type = this->AdjustNPC(npc_type);
+
+		//Now that we generated base HP, let's nerf it on a new formula
+		npc_type->max_hp = (npc_type->max_hp * 0.15 * rank); //75 % of normal hp
+		npc_type->AC = (npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
+		npc_type->size = rank * (GetLevel() / 25); //1.04 to 7.4
+		npc_type->max_dmg = npc_type->max_dmg * 0.05 * rank; //25% dmg at max
+		//npc_type->texture = 3; // GetEquipmentMaterial(MaterialChest);
 		
-		//npc_type->armtexture = GetEquipmentMaterial(MaterialArms);
-		//npc_type->legtexture = GetEquipmentMaterial(MaterialLegs);
-		//npc_type->feettexture = GetEquipmentMaterial(MaterialFeet);
-		//npc_type->bracertexture = GetEquipmentMaterial(MaterialWrist);
-		//npc_type->handtexture = GetEquipmentMaterial(MaterialHands);		
+		npc_type->armtexture = GetEquipmentMaterial(MaterialArms);
+		npc_type->legtexture = GetEquipmentMaterial(MaterialLegs);
+		npc_type->feettexture = GetEquipmentMaterial(MaterialFeet);
+		npc_type->bracertexture = GetEquipmentMaterial(MaterialWrist);
+		npc_type->handtexture = GetEquipmentMaterial(MaterialHands);		
 		//npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
 		npc_type->haircolor = GetHairColor();
 		npc_type->beardcolor = GetBeardColor();
@@ -385,7 +385,6 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->hairstyle = GetHairStyle();
 		npc_type->luclinface = GetLuclinFace();
 		
-		
 
 		npc_type->beard = GetBeard();
 		npc_type->drakkin_heritage = GetDrakkinHeritage();
@@ -393,6 +392,9 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->drakkin_details = GetDrakkinDetails();
 		npc_type->d_melee_texture1 = GetEquipmentMaterial(MaterialPrimary);
 		npc_type->d_melee_texture2 = GetEquipmentMaterial(MaterialSecondary);
+		if (this->CastToClient()->GetInv().GetItem(MainPrimary)) { //If a weapon is equipped
+			npc_type->prim_melee_type = this->CastToClient()->GetInv().GetItem(MainPrimary)->GetItem()->ItemType;
+		}
 	}
 
 	if (MaxHP){
