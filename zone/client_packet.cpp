@@ -10035,7 +10035,12 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 			SetPet(nullptr);
 		}
 
-		mypet->Say_StringID(MT_PetResponse, PET_GETLOST_STRING);
+		if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+			mypet->Say("May the god's blessings be upon you");
+		}
+		else {
+			mypet->Say_StringID(MT_PetResponse, PET_GETLOST_STRING);
+		}
 		mypet->CastToNPC()->Depop();
 
 		//Oddly, the client (Titanium) will still allow "/pet get lost" command despite me adding the code below. If someone can figure that out, you can uncomment this code and use it.
@@ -10054,7 +10059,11 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 1) || mypet->GetPetType() != petAnimation) {
 			if (mypet->IsNPC()) {
 				mypet->SetHeld(false);
-				mypet->Say_StringID(MT_PetResponse, PET_GUARDINGLIFE);
+				if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+					mypet->Say("I will guard this area with my life.");
+				} else {
+					mypet->Say_StringID(MT_PetResponse, PET_GUARDINGLIFE);
+				} 
 				mypet->SetPetOrder(SPO_Guard);
 				mypet->CastToNPC()->SaveGuardSpot();
 			}
@@ -10120,8 +10129,9 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 			{
 				//
 				if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
-					if (this->GetGender() == 0) mypet->Say("Taking a seat, my Lord.");
-					else mypet->Say("Taking a seat, my Lady.");
+
+					if (this->GetGender() == 0) mypet->Say("Ready for action, my Lord.");
+					else mypet->Say("Ready for action, my Lady.");
 				}
 				else {
 					mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
@@ -10133,8 +10143,8 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 			else
 			{
 				if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
-					if (this->GetGender() == 0) mypet->Say("Ready for action, my Lord.");
-					else mypet->Say("Ready for action, my Lady.");
+					if (this->GetGender() == 0) mypet->Say("Taking a seat, my Lord.");
+					else mypet->Say("Taking a seat, my Lady.");
 				}
 				else {
 					mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
