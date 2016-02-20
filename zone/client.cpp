@@ -9141,22 +9141,22 @@ void Client::EmoteEncounter() {
 	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(1800, 10800); //30 mins to 3 hours, this is if they don't accept it etc.
 	int dice;
 	if (GetZoneID() == 22 || GetZoneID() == 21) {
-		dice = zone->random.Int(1, 6); //Always +1 of the messages
+		dice = zone->random.Int(3, 3); //Always +1 of the messages
 		if (Admin() >= 200) Message(0, "Zone Encounter dice: %i", dice);
-		if (dice == 1) {
+		/*if (dice == 1) {
 			Message(8, "You hear a twig snap %s.", CreateSayLink("#encounter", "nearby").c_str());
 			return;
 		}
 		if (dice == 2) {
 			Message(8, "Orcs begin to %s louder and louder...", CreateSayLink("#encounter", "chant").c_str());
 			return;
-		}
+		}*/
 		if (dice == 3) {
-			Message(8, "An zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter", "below").c_str());
+			Message(8, "A zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter", "below").c_str());
 			//TODO: moan
 			return;
 		}
-		if (dice == 4) {
+		/*if (dice == 4) {
 			Message(8, "The %s of a hillgiant can be heard.", CreateSayLink("#encounter", "stomps").c_str());
 			return;
 		}
@@ -9169,7 +9169,7 @@ void Client::EmoteEncounter() {
 			PlayMP3("aie_spl.wav");
 			m_epp.encounter_type = dice;
 			return;	
-		}
+		}*/
 	}
 
 	dice = zone->random.Int(30, 31);
@@ -9180,7 +9180,7 @@ void Client::EmoteEncounter() {
 		return;
 	}
 	if (dice == 31) {
-		Message(8, "You have a bow being %s nearby.", CreateSayLink("#encounter", "shot").c_str());
+		Message(8, "You hear a bow being %s nearby.", CreateSayLink("#encounter", "shot").c_str());
 		PlayMP3("bowdraw.wav");
 		m_epp.encounter_type = dice;
 		return;
