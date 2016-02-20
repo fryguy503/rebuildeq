@@ -1339,8 +1339,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				snprintf(effect_desc, _EDLEN, "Summon Item: %s (id %d)", itemname, spell.base[i]);
 #endif
 
-				if (spell_id == 223 && IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) > 0) {
-					MakePet(spell_id, "a_squire");
+				if (spell_id == 223 && IsClient()) {
+					if (CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) > 0) {
+						MakePet(spell_id, "a_squire");
+					}
+					else {
+						Message(0, "You must train Act of Valor for this effect to work.");
+					}
 					break;
 				}
 
