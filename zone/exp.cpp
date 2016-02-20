@@ -443,7 +443,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 		if (i < 0) {
 			expPct = (float)((float)i / (float)(GetEXPForLevel(GetLevel() + 1) - GetEXPForLevel(GetLevel())))*(float)100; //EXP needed for level
 		}
-		Message(15, "You have lost %i experience. (%.3f%%)", i, expPct);
+		Message(13, "You have lost %i experience. (%.3f%%)", i, expPct);
 	}
 
 	//check_level represents the level we should be when we have

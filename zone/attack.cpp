@@ -3306,9 +3306,9 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 							continue;
 						} else if (caster_group->members[z] != nullptr && caster_group->members[z]->GetClass() == PALADIN) { //paladin in group
 							if (!caster_group->members[z]->IsClient() || //don't block if a client
-								caster_group->members[z]->IsMezzed() ||
-								caster_group->members[z]->IsAIControlled() || //don't block while charmed
-								!caster_group->members[z]->IsCasting() || //don't block while casting
+								//caster_group->members[z]->IsMezzed() ||
+								//caster_group->members[z]->IsAIControlled() || //don't block while charmed
+								//!caster_group->members[z]->IsCasting() || //don't block while casting
 								caster_group->members[z]->GetZoneID() != GetZoneID() || //not in same zone
 								caster_group->members[z]->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT) < 1 ||
 								caster_group->members[z]->animation == ANIM_SIT//don't block while sitting								
@@ -3322,7 +3322,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 							}
 							rank = caster_group->members[z]->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT);
 							
-							if (!zone->random.Roll((int)(20 * rank))) { //Only block if 2%*rank chance
+							if (!zone->random.Roll((int)(2 * rank))) { //Only block if 2%*rank chance
 								continue;
 							}
 
