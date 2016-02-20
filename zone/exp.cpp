@@ -374,7 +374,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 					Message(15, "You have gained %i party experience! (%.3f%%)", i, expPct);
 				} else {//Rested EXP available
 
-					int restedExp = i * membercount; //rested EXP can be up to 6x in party
+					int restedExp = i * (membercount-1); //rested EXP can be up to 6x in party
 					int totalExp = i + restedExp;
 
 					m_epp.rested_exp -= restedExp; //remove from rested
