@@ -3327,16 +3327,18 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 							}
 
 							int damage_reduction = (int)((float)damage * (float)0.05 * (float)rank);
-							damage -= damage_reduction;
-							Message(MT_Spells, "%s's Holy Servant %u has taken %i damage for you.", caster_group->members[z]->GetCleanName(), rank, damage_reduction);
-							//reduce dmg_reduction by the amount of skill
-							
-							int damage_reduction2 = damage_reduction;
-							damage_reduction2 -= (int)((float)damage_reduction * 0.02 * (float)rank);
-							caster_group->members[z]->CastToClient()->Message(MT_Spells, "Holy Servant %u has drawn %i damage from %s and has given it to you.", rank, damage_reduction2, attacker->GetCleanName());
+							if (damage_reduction < 1) {
+								damage -= damage_reduction;
 
-							//deal dmg to paladin
-							caster_group->members[z]->CommonDamage(attacker, damage_reduction2, spell_id, skill_used, avoidable, buffslot, iBuffTic, special);
+								Message(MT_Spells, "%s's Holy Servant %u has taken %i damage for you.", caster_group->members[z]->GetCleanName(), rank, damage_reduction);
+
+								int damage_reduction2 = damage_reduction;
+								damage_reduction2 -= (int)((float)damage_reduction * 0.02 * (float)rank);
+								caster_group->members[z]->CastToClient()->Message(MT_Spells, "Holy Servant %u has drawn %i damage from %s and has given it to you.", rank, damage_reduction2, attacker->GetCleanName());
+
+								//deal dmg to paladin
+								caster_group->members[z]->CommonDamage(attacker, damage_reduction2, spell_id, skill_used, avoidable, buffslot, iBuffTic, special);
+							}
 							
 							break; //Don't let more paladins reduce this damage
 						}
