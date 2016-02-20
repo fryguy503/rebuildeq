@@ -3322,7 +3322,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 							}
 							rank = caster_group->members[z]->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT);
 							
-							if (!zone->random.Roll((int)(2 * rank))) { //Only block if 2%*rank chance
+							if (!zone->random.Roll((int)(20 * rank))) { //Only block if 2%*rank chance
 								continue;
 							}
 
