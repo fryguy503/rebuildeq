@@ -4409,13 +4409,13 @@ void command_issue(Client *c, const Seperator *sep) {
 		}
 		if (results.RowCount() == 0) {
 			c->Message(0, "You have no pending issues.");
-			return;			
+			return;
 		}
 
 		c->Message(0, "Your %u most recently updated issues:", results.RowCount());
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			std::string status = "New";
-			if (atoi(row[1]) == 1) status = "Reported";
+			if (atoi(row[1]) > 0) status = "Reported";
 			if (atoi(row[2]) == 1) status = "In Progress";
 			if (atoi(row[3]) == 1) status = "Fixed";
 
