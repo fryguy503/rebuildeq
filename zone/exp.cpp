@@ -581,6 +581,13 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 #endif
 	}
 
+	if (level_increase) {
+		//Build Stuff
+		if (GetBuildUnspentPoints() > 0) {
+			Message(0, "You have unspent build points. Use %s to spend them.", CreateSayLink("#builds", "#builds").c_str());
+		}
+	}
+
 	//If were at max level then stop gaining experience if we make it to the cap
 	if(GetLevel() == maxlevel - 1){
 		uint32 expneeded = GetEXPForLevel(maxlevel);
