@@ -1133,6 +1133,24 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		return;
 	}
 
+	if (rank_id == aaLeechTouch && GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) < 1 ||
+		rank_id == aaActOfValor && GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) < 1 ||
+		rank_id == aaAncestralAid && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) < 1 ||
+		rank_id == aaDeathPeace && GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH) < 1 ||
+		rank_id == aaDivineStun && GetBuildRank(PALADIN, RB_PAL_DIVINESTUN) < 1 ||
+		rank_id == aaSteadfastServant && GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) < 1 ||
+		rank_id == aaPurifySoul && GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) < 1 ||
+		rank_id == aaSpiritCall && GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL) < 1 ||
+		rank_id == aaVirulentParalysis && GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS) < 1 ||
+		rank_id == aaRabidBear && GetBuildRank(SHAMAN, RB_SHM_RABIDBEAR) < 1 ||
+		rank_id == aaAncestralGuard && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALGUARD) < 1 ||
+		rank_id == aaFeralSwipe && GetBuildRank(SHAMAN, RB_SHM_FERALSWIPE) < 1 ||
+		rank_id == aaParagonofSpirit && GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT) < 1 
+		) {
+		Message(13, "You cannot use this ability until you unlock it via %s.", CreateSayLink("#builds", "#builds"));
+		return;
+	}
+
 	//Shin: set spell Id override
 	int spellid = rank->spell;
 	int manacost = -1;
