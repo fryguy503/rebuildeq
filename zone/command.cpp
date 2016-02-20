@@ -4486,9 +4486,8 @@ void command_issue(Client *c, const Seperator *sep) {
 		((c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) ? 0 : 1),
 		((c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) ? 0 : c->GetTarget()->CastToClient()->AccountID()),
 		((c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) ? 0 : c->GetTarget()->CastToClient()->CharacterID()),
-		((c->GetTarget() == nullptr || !c->GetTarget()->IsNPC()) ? 0 : c->GetTarget()->CastToNPC()->GetNPCTypeID()),
-		//tar_npc_spawngroup_id, item_id, item_name, client
-		((c->GetTarget() == nullptr || !c->GetTarget()->IsNPC()) ? 0 : c->GetTarget()->CastToNPC()->GetSpawnPointID()),
+		((c->GetTarget() == nullptr || !c->GetTarget()->IsNPC()) ? 0 : c->GetTarget()->CastToNPC()->GetNPCTypeID()),		
+		((c->GetTarget() == nullptr || !c->GetTarget()->IsNPC()) ? 0 : c->GetTarget()->CastToNPC()->GetSp2()),
 		itemid,
 		EscapeString(itemname.c_str()).c_str(),
 		EscapeString(clientversion.c_str()).c_str()
