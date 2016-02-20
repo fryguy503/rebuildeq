@@ -4447,23 +4447,51 @@ void command_issue(Client *c, const Seperator *sep) {
 		return;
 	}
 	
+
+	std::string itemname = "";
+	uint32 itemid = 0;
+	auto inst = c->GetInv()[MainCursor];
+	if (inst) { 
+		auto item = inst->GetItem();
+		if (item) {
+			itemname = item->Name;
+			itemid = item->ID;
+		}
+	}
+
+	std::string clientversion = "";
+	
+	if (c->GetClientVersion() == ClientVersion::Titanium) clientversion = "Titanium";
+	else if (c->GetClientVersion() == ClientVersion::SoF) clientversion = "SoF";
+	else if (c->GetClientVersion() == ClientVersion::SoD) clientversion = "SoD";
+	else if (c->GetClientVersion() == ClientVersion::UF) clientversion = "Underfoot";
+	else if (c->GetClientVersion() == ClientVersion::UF) clientversion = "UF";
+	else if (c->GetClientVersion() == ClientVersion::RoF) clientversion = "RoF";
+	else if (c->GetClientVersion() == ClientVersion::RoF2) clientversion = "RoF2";
+	else clientversion = "Unknown";
+	
 	std::string query = StringFormat("INSERT INTO issues"
-		"(my_name, my_account_id, my_character_id, my_zone_id, my_x, my_y, my_z, message, tar_name, tar_is_npc, tar_is_client, tar_account_id, tar_character_id, tar_npc_type_id)"
-		"VALUES (\"%s\", %u, %u, %u, %f, %f, %f, \"%s\", \"%s\", %u, %u, %u, %u, %u)",
-		c->GetName(),
+		"(my_name, my_account_id, my_character_id, my_zone_id, my_x, my_y, my_z, message, tar_name, tar_is_npc, tar_is_client, tar_account_id, tar_character_id, tar_npc_type_id, tar_npc_spawngroup_id, item_id, item_name, client)"
+		"VALUES (\"%s\", %u, %u, %u, %f, %f, %f, \"%s\", \"%s\", %u, %u, %u, %u, %u, %u, %u, \"%s\", \"%s\")",
+		EscapeString(c->GetName()).c_str(),
 		c->AccountID(),
 		c->CharacterID(),
 		c->GetZoneID(),
 		c->GetX(),
 		c->GetY(),
 		c->GetZ(),
-		sep->argplus[1], //message
-		((c->GetTarget() == nullptr) ? 0 : c->GetTarget()->GetCleanName()),
+		EscapeString(sep->argplus[1]).c_str(), //message
+		((c->GetTarget() == nullptr) ? 0 : EscapeString(c->GetTarget()->GetCleanName()).c_str()),
 		((c->GetTarget() == nullptr || !c->GetTarget()->IsNPC()) ? 0 : 1),
 		((c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) ? 0 : 1),
 		((c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) ? 0 : c->GetTarget()->CastToClient()->AccountID()),
 		((c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) ? 0 : c->GetTarget()->CastToClient()->CharacterID()),
-		((c->GetTarget() == nullptr || !c->GetTarget()->IsNPC()) ? 0 : c->GetTarget()->CastToNPC()->GetNPCTypeID())
+		((c->GetTarget() == nullptr || !c->GetTarget()->IsNPC()) ? 0 : c->GetTarget()->CastToNPC()->GetNPCTypeID()),
+		//tar_npc_spawngroup_id, item_id, item_name, client
+		((c->GetTarget() == nullptr || !c->GetTarget()->IsNPC()) ? 0 : c->GetTarget()->CastToNPC()->GetSpawnPointID()),
+		itemid,
+		EscapeString(itemname.c_str()).c_str(),
+		EscapeString(clientversion.c_str()).c_str()
 		);
 	auto results = database.QueryDatabase(query);
 	if (!results.Success()) {
