@@ -5870,3 +5870,279 @@ int Mob::CheckBaneDamage(const ItemInst *item)
 
 	return damage;
 }
+
+
+//Adjusts an NPC's stats based on properties provided
+NPCType* Mob::AdjustNPC(NPCType* npctype) {
+
+	//===== HITPOINTS ======
+	//Stolen from Client::GetMaxHP...
+	uint32 multiplier = 0;
+	switch (npctype->class_)
+	{
+	case WARRIOR:
+		if (npctype->level < 20)
+			multiplier = 22;
+		else if (npctype->level < 30)
+			multiplier = 23;
+		else if (npctype->level < 40)
+			multiplier = 25;
+		else if (npctype->level < 53)
+			multiplier = 27;
+		else if (npctype->level < 57)
+			multiplier = 28;
+		else
+			multiplier = 30;
+		break;
+
+	case DRUID:
+	case CLERIC:
+	case SHAMAN:
+		multiplier = 15;
+		break;
+
+	case PALADIN:
+	case SHADOWKNIGHT:
+		if (npctype->level < 35)
+			multiplier = 21;
+		else if (npctype->level < 45)
+			multiplier = 22;
+		else if (npctype->level < 51)
+			multiplier = 23;
+		else if (npctype->level < 56)
+			multiplier = 24;
+		else if (npctype->level < 60)
+			multiplier = 25;
+		else
+			multiplier = 26;
+		break;
+
+	case MONK:
+	case BARD:
+	case ROGUE:
+		//case BEASTLORD:
+		if (npctype->level < 51)
+			multiplier = 18;
+		else if (npctype->level < 58)
+			multiplier = 19;
+		else
+			multiplier = 20;
+		break;
+
+	case RANGER:
+		if (npctype->level < 58)
+			multiplier = 20;
+		else
+			multiplier = 21;
+		break;
+
+	case MAGICIAN:
+	case WIZARD:
+	case NECROMANCER:
+	case ENCHANTER:
+		multiplier = 12;
+		break;
+
+	default:
+		if (npctype->level < 35)
+			multiplier = 21;
+		else if (npctype->level < 45)
+			multiplier = 22;
+		else if (npctype->level < 51)
+			multiplier = 23;
+		else if (npctype->level < 56)
+			multiplier = 24;
+		else if (npctype->level < 60)
+			multiplier = 25;
+		else
+			multiplier = 26;
+		break;
+	}
+	int hp = 5 + multiplier*npctype->level + multiplier*npctype->level * 75 / 300;
+	npctype->cur_hp = hp;
+	npctype->max_hp = hp;
+	npctype->runspeed = 1.25;
+
+	npctype->STR = 150;
+	npctype->STA = 150;
+	npctype->DEX = 150;
+	npctype->AGI = 150;
+	npctype->INT = 150;
+	npctype->WIS = 150;
+	npctype->CHA = 150;
+
+	npctype->attack_delay = 30;
+
+	npctype->prim_melee_type = 28;
+	npctype->sec_melee_type = 28;
+
+
+
+	//====== DAMAGE ======
+
+	int AC_adjust = 12;
+
+	if (npctype->level >= 66) {
+		npctype->min_dmg = 220;
+		npctype->max_dmg = ((((99000)*(npctype->level - 64)) / 400)*AC_adjust / 10);
+	}
+	else if (npctype->level >= 60 && npctype->level <= 65) {
+		npctype->min_dmg = (npctype->level + (npctype->level / 3));
+		npctype->max_dmg = (npctype->level * 3)*AC_adjust / 10;
+	}
+	else if (npctype->level >= 51 && npctype->level <= 59) {
+		npctype->min_dmg = (npctype->level + (npctype->level / 3));
+		npctype->max_dmg = (npctype->level * 3)*AC_adjust / 10;
+	}
+	else if (npctype->level >= 40 && npctype->level <= 50) {
+		npctype->min_dmg = npctype->level;
+		npctype->max_dmg = (npctype->level * 3)*AC_adjust / 10;
+	}
+	else if (npctype->level >= 28 && npctype->level <= 39) {
+		npctype->min_dmg = npctype->level / 2;
+		npctype->max_dmg = ((npctype->level * 2) + 2)*AC_adjust / 10;
+	}
+	else if (npctype->level <= 27) {
+		npctype->min_dmg = 1;
+		npctype->max_dmg = (npctype->level * 2)*AC_adjust / 10;
+	}
+
+
+	// === DAMAGE MULTIPLIER ====
+	multiplier = 0;
+	uint8 mlevel = npctype->level;
+	switch (npctype->class_) {
+	case WARRIOR: {
+		if (mlevel < 20) {
+			multiplier = 220;
+		}
+		else if (mlevel < 30) {
+			multiplier = 230;
+		}
+		else if (mlevel < 40) {
+			multiplier = 250;
+		}
+		else if (mlevel < 53) {
+			multiplier = 270;
+		}
+		else if (mlevel < 57) {
+			multiplier = 280;
+		}
+		else if (mlevel < 60) {
+			multiplier = 290;
+		}
+		else if (mlevel < 70) {
+			multiplier = 300;
+		}
+		else {
+			multiplier = 311;
+		}
+		break;
+	}
+	case DRUID:
+	case CLERIC:
+	case SHAMAN: {
+		if (mlevel < 70) {
+			multiplier = 150;
+		}
+		else {
+			multiplier = 157;
+		}
+		break;
+	}
+	case BERSERKER:
+	case PALADIN:
+	case SHADOWKNIGHT: {
+		if (mlevel < 35) {
+			multiplier = 210;
+		}
+		else if (mlevel < 45) {
+			multiplier = 220;
+		}
+		else if (mlevel < 51) {
+			multiplier = 230;
+		}
+		else if (mlevel < 56) {
+			multiplier = 240;
+		}
+		else if (mlevel < 60) {
+			multiplier = 250;
+		}
+		else if (mlevel < 68) {
+			multiplier = 260;
+		}
+		else {
+			multiplier = 270;
+		}
+		break;
+	}
+	case MONK:
+	case BARD:
+	case ROGUE:
+	case BEASTLORD: {
+		if (mlevel < 51) {
+			multiplier = 180;
+		}
+		else if (mlevel < 58) {
+			multiplier = 190;
+		}
+		else if (mlevel < 70) {
+			multiplier = 200;
+		}
+		else {
+			multiplier = 210;
+		}
+		break;
+	}
+	case RANGER: {
+		if (mlevel < 58) {
+			multiplier = 200;
+		}
+		else if (mlevel < 70) {
+			multiplier = 210;
+		}
+		else {
+			multiplier = 220;
+		}
+		break;
+	}
+	case MAGICIAN:
+	case WIZARD:
+	case NECROMANCER:
+	case ENCHANTER: {
+		if (mlevel < 70) {
+			multiplier = 120;
+		}
+		else {
+			multiplier = 127;
+		}
+		break;
+	}
+	default: {
+		if (mlevel < 35) {
+			multiplier = 210;
+		}
+		else if (mlevel < 45) {
+			multiplier = 220;
+		}
+		else if (mlevel < 51) {
+			multiplier = 230;
+		}
+		else if (mlevel < 56) {
+			multiplier = 240;
+		}
+		else if (mlevel < 60) {
+			multiplier = 250;
+		}
+		else {
+			multiplier = 260;
+		}
+		break;
+	}
+	}
+	uint32 clfact = multiplier;
+
+	npctype->min_dmg = (npctype->min_dmg * clfact) / 220;
+	npctype->max_dmg = (npctype->max_dmg * clfact) / 220;
+	return npctype;
+}

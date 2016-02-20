@@ -233,6 +233,7 @@ public:
 	int ResistPhysical(int level_diff, uint8 caster_level);
 	int ResistElementalWeaponDmg(const ItemInst *item);
 	int CheckBaneDamage(const ItemInst *item);
+	NPCType * AdjustNPC(NPCType * npctype);
 	uint16 GetSpecializeSkillValue(uint16 spell_id) const;
 	void SendSpellBarDisable();
 	void SendSpellBarEnable(uint16 spellid);
