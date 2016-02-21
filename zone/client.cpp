@@ -9287,12 +9287,14 @@ int Client::GiveBoxReward(int minimumRarity) {
 	//Chosen Rarity Type
 	int rarityType = 0;
 	for (auto entry = rarityTable.begin(); entry != rarityTable.end(); ++entry) {
-		if (dice <= entry->first) {
-			if (Admin() >= 200) Message(0, "[GM] Rarity Roll (%i): %i (%.1f%%)", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100));
-			rarityType = entry->second;
-			break;
+		if (dice > entry->first) {
+			continue;
 		}
+		if (Admin() >= 200) Message(0, "[GM] Rarity Roll dice: %i is in pool: %i, total pool: %i (%.1f%%) Resulted in rarityType %i", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100), rarityType);
+		rarityType = entry->second;
+		break;
 	}
+
 	//http://wiki.project1999.com/Players:Kunark_Gear 
 	std::map<int, int> itemTable;
 	pool = 0;
@@ -9411,7 +9413,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 		if (IsValidItem(4161)) { pool += 40; itemTable[pool] = 4161; } //		Rubicite Helm	0.87%
 		if (IsValidItem(14045)) { pool += 60; itemTable[pool] = 14045; } //		Spirit Tome	1.45%
 		if (IsValidItem(6359)) { pool += 50; itemTable[pool] = 6359; } //		Stein Of Moggok	1.16%
-		if (GetLevel() > 40) {					//Kunark Clicky Armor	0.00%
+	//	if (GetLevel() > 40) {					//Kunark Clicky Armor	0.00%
 			if (IsValidItem(4515)) { pool += 30; itemTable[pool] = 4515; } //		Cobalt Helm	0.87%
 			if (IsValidItem(4517)) { pool += 30; itemTable[pool] = 4517; } //		Cobalt Vambraces	0.87%
 			if (IsValidItem(4518)) { pool += 30; itemTable[pool] = 4518; } //		Cobalt Bracer	0.87%
@@ -9463,7 +9465,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 			if (IsValidItem(4945)) { pool += 30; itemTable[pool] = 4945; } //		Totemic Bracers	0.87%
 			if (IsValidItem(4947)) { pool += 30; itemTable[pool] = 4947; } //		Totemic Helm	0.87%
 			if (IsValidItem(4948)) { pool += 30; itemTable[pool] = 4948; } //		Totemic Cloak	0.87%
-		}
+		//}
 	} 
 	else if (rarityType == 2) { 
 		//===Rare===
@@ -9490,7 +9492,6 @@ int Client::GiveBoxReward(int minimumRarity) {
 		if (IsValidItem(4171)) { pool += 40; itemTable[pool] = 4171; } //	Rubicite Leggings	2.45%
 		if (IsValidItem(4164)) { pool += 40; itemTable[pool] = 4164; } //	Rubicite Breastplate	2.45%
 
-		if (GetLevel() > 40) {
 			if (IsValidItem(4520)) { pool += 30; itemTable[pool] = 4520; } //	Cobalt Greaves	1.84%
 			if (IsValidItem(4516)) { pool += 30; itemTable[pool] = 4516; } //	Cobalt Breastplate	1.84%
 			if (IsValidItem(4523)) { pool += 30; itemTable[pool] = 4523; } //	Blood Ember Breastplate	1.84%
@@ -9511,7 +9512,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 			if (IsValidItem(4576)) { pool += 30; itemTable[pool] = 4576; } //	Elder Spiritist's Greaves	1.84%
 			if (IsValidItem(4946)) { pool += 30; itemTable[pool] = 4946; } //	Totemic Breastplate	1.84%
 			if (IsValidItem(4944)) { pool += 30; itemTable[pool] = 4944; } //	Totemic Greaves	1.84%
-		}
+		
 	}	
 	else if (rarityType == 3) {
 		//===Legendary===
@@ -9524,30 +9525,38 @@ int Client::GiveBoxReward(int minimumRarity) {
 	dice = zone->random.Int(0, pool);
 	
 	for (auto entry = itemTable.begin(); entry != itemTable.end(); ++entry) {
-		if (Admin() >= 200) Message(0, "[GM] %i vs %i", dice, entry->first);
-		if (dice <= entry->first) {
-			if (Admin() >= 200) Message(0, "[GM] Item Roll (%i): %i (%.1f%%)", dice, pool, (float)((float)entry->first / (float)pool * 100));
-			//Item Reward
-			int itemid = entry->second;
-			const Item_Struct* item = database.GetItem(itemid);
-			if (!SummonItem(itemid)) {
-				//Log!!
-			}
-
-			if (rarityType == 3) { //Legendary Drop!
-				Message(MT_Broadcasts, "%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name);
-			}
-			else if (rarityType == 2) { //Rare Drop!
-				Message(MT_Broadcasts, "%s opened a box to find a rare %s inside it!", GetCleanName(), item->Name);
-			}
-			else if (rarityType == 1) { //Uncommon Drop
-				Message(MT_Experience, "Opening the box revealed an uncommon %s!", item->Name);
-			} else if (rarityType == 0) { //Common Drop
-				Message(MT_Experience, "Opening the box revealed a common %s!", item->Name);
-			}
-			return itemid;
+		if (dice > entry->first) {
+			continue;
 		}
+		if (Admin() >= 200) Message(0, "[GM] Loot Roll dice: %i is in pool: %i, total pool: %i (%.1f%%)", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100));
+		//Item Reward
+		int itemid = entry->second;
+		const Item_Struct* item = database.GetItem(itemid);
+		if (!SummonItem(itemid)) {
+			//Log!!
+		}
+
+		if (rarityType == 3) { //Legendary Drop!
+			Message(MT_Broadcasts, "%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name);
+		}
+		else if (rarityType == 2) { //Rare Drop!
+			Message(MT_Broadcasts, "%s opened a box to find a rare %s inside it!", GetCleanName(), item->Name);
+		}
+		else if (rarityType == 1) { //Uncommon Drop
+			Message(MT_Experience, "Opening the box revealed an uncommon %s!", item->Name);
+		} else if (rarityType == 0) { //Common Drop
+			Message(MT_Experience, "Opening the box revealed a common %s!", item->Name);
+		}
+		return itemid;
 	}
+
+	//Failed to win anything, just give a box back
+	if (Admin() >= 200) Message(0, "[GM] Failed to win any loot, so falling back to giving a blue box back");
+	if (!SummonItem(100002)) {
+		//Log!!
+	}
+	Message(MT_Experience, "Opening the box revealed an Old Blue Box!");
+
 	
 	return 0;
 }
@@ -9581,16 +9590,19 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 	//Chosen Rarity Type
 	int rarityType = 0;
 	for (auto entry = rarityTable.begin(); entry != rarityTable.end(); ++entry) {
-		if (dice <= entry->first) {			
-			rarityType = entry->second;
-			break;
+		if (dice > entry->first) {
+			continue;
 		}
+		if (Admin() >= 200) Message(0, "[GM] Rarity Roll dice: %i is in pool: %i, total pool: %i (%.1f%%) Resulted in rarityType %i", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100), rarityType);
+		rarityType = entry->second;
+		break;
 	}
-	if (Admin() >= 200) Message(0, "[GM] Rarity Roll (%i): %i (%.1f%%) Resulted in rarityType %i", dice, pool, (float)((float)dice / (float)pool), rarityType);
+	
 
 	//http://wiki.project1999.com/Players:Kunark_Gear 
 	std::map<int, int> itemTable;
 	pool = 0;
+	
 	if (rarityType == 0) {
 		//===Common===
 		if (IsValidItem(9350)) { pool += 100; itemTable[pool] = 9350; } //	Bark Sheild	5.59%
@@ -9615,7 +9627,6 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 		if (IsValidItem(48378)) { pool += 30; itemTable[pool] = 48378; } //	Ornate Long Spear 2.9	1.68%
 		if (IsValidItem(5665)) { pool += 30; itemTable[pool] = 5665; } //	Gleaming Short Sword 2.9	1.68%
 	}
-
 	else if (rarityType == 1) {
 		//===Uncommon===
 		if (IsValidItem(5622)) { pool += 80; itemTable[pool] = 5622; } //	Argent Defender 1.4	7.69%
@@ -9680,38 +9691,58 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 
 	for (auto entry = itemTable.begin(); entry != itemTable.end(); ++entry) {
 		//if (Admin() >= 200) Message(0, "[GM] %i vs %i", dice, entry->first);
-		if (dice <= entry->first) {
-			//if (Admin() >= 200) Message(0, "[GM] Item Roll (%i): %i (%.1f%%)", dice, pool, (float)((float)entry->first / (float)pool * 100));
-			//Item Reward
-			int itemid = entry->second;
-			const Item_Struct* item = database.GetItem(itemid);
-			if (!SummonItem(itemid)) {
-				//Log!!
-			}
-
-			if (rarityType == 3) { //Legendary Drop!
-				Message(MT_Broadcasts, "%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name);
-			}
-			else if (rarityType == 2) { //Rare Drop!
-				Message(MT_Broadcasts, "%s opened a box to find a rare %s inside it!", GetCleanName(), item->Name);
-			}
-			else if (rarityType == 1) { //Uncommon Drop
-				Message(MT_Experience, "Opening the box revealed an uncommon %s!", item->Name);
-			}
-			else if (rarityType == 0) { //Common Drop
-				Message(MT_Experience, "Opening the box revealed a common %s!", item->Name);
-			}
-			return itemid;
+		if (dice > entry->first) {
+			continue;
 		}
+		if (Admin() >= 200) Message(0, "[GM] Loot Roll dice: %i is in pool: %i, total pool: %i (%.1f%%)", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100));
+		//Item Reward
+		int itemid = entry->second;
+		const Item_Struct* item = database.GetItem(itemid);
+		if (!SummonItem(itemid)) {
+			if (Admin() >= 200) Message(0, "[GM] Failed to summon %i", itemid);
+
+			return 0;
+			//Log!!
+		}
+
+		if (rarityType == 3) { //Legendary Drop!
+			Message(MT_Broadcasts, "%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name);
+		}
+		else if (rarityType == 2) { //Rare Drop!
+			Message(MT_Broadcasts, "%s opened a box to find a rare %s inside it!", GetCleanName(), item->Name);
+		}
+		else if (rarityType == 1) { //Uncommon Drop
+			Message(MT_Experience, "Opening the box revealed an uncommon %s!", item->Name);
+		}
+		else if (rarityType == 0) { //Common Drop
+			Message(MT_Experience, "Opening the box revealed a common %s!", item->Name);
+		}
+		return itemid;
 	}
+
+	//Failed to win anything, just give a box back
+	if (Admin() >= 200) Message(0, "[GM] Failed to win any loot, so falling back to giving a weapon box back");
+	if (!SummonItem(100005)) {
+		//Log!!
+	}
+	Message(MT_Experience, "Opening the box revealed another Old Weapon Box!");
 
 	return 0;
 }
 
 bool Client::IsValidItem(int itemid) {
 	const Item_Struct* item = database.GetItem(itemid);
-	if (!item->IsEquipable(GetRace(), GetClass())) return false;
-	if (!CheckLoreConflict(item)) return false;	
+	if (!item->IsEquipable(GetRace(), GetClass())) {
+		//Message(0, "%s (%i) not equippable", item->Name, itemid);
+		return false;
+	}
+	if (CheckLoreConflict(item)) {
+		//Message(0, "%s (%i) lore conflict", item->Name, itemid);
+		return false;
+	}
+	if (item->ReqLevel > GetLevel()) {
+		return false;
+	}
 	return true;
 }
 

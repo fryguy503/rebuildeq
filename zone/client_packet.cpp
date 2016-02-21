@@ -8575,7 +8575,7 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 							return;
 						}
 
-						DeleteItemInInventory(slot_id, 1, true);
+						DeleteItemInInventory(slot_id, 1, true, true);
 						if (item->ID == 100002) {
 							GiveBoxReward();
 						}
