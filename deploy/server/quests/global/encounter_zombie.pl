@@ -56,7 +56,7 @@ sub EVENT_TIMER {
     		return;
     	}
     	foreach $c (@group) {
-	    	$sth = $dbh->prepare("UPDATE `character_custom` SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1 WHERE character_id = ?");
+	    	$sth = $dbh->prepare("UPDATE `character_custom` SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1 WHERE character_id = ?");
 	    	$sth->execute($c->CharacterID());	    	
 	    }
 	    quest::we(13, "$winnerList successfully stopped a zombie invasion in $zoneln!");
