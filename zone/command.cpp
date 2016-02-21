@@ -3995,7 +3995,40 @@ void command_encounter(Client *c, const Seperator *sep) {
 			return;
 		}
 
+		std::map <int, int> rarityTable;
+		//Pool size for randomizer
+		int pool = 0;
+
+		pool += 70 - c->GetLevel(); //Weight for Weapon Box, lowers as you get more levels.
+		if (pool < 1) pool = 1;
+		rarityTable[pool] = 0; //Weapon Box
+		pool += 30 + c->GetLevel();
+		rarityTable[pool] = 1; //Old Blue Box
+		pool += 4;
+		rarityTable[pool] = 2; //Old Red Box
+		pool += 1;
+		rarityTable[pool] = 3; //Old Violet Box
+
+		//Rolled dice
+		int dice = zone->random.Int(0, pool);
+
+		//Chosen Rarity Type
+		int rarityType = 0;
+		for (auto entry = rarityTable.begin(); entry != rarityTable.end(); ++entry) {
+			if (dice <= entry->first) {
+				if (c->Admin() >= 200) c->Message(0, "[GM] Rarity Roll (%i): %i (%.1f%%)", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100));
+				rarityType = entry->second;
+				break;
+			}
+		}
+
 		int itemid = 100002;
+		if (rarityType == 0) itemid = 100005; //Old Weapon Box
+		if (rarityType == 1) itemid = 100002; //Old Blue Box
+		if (rarityType == 2) itemid = 100003; //Old Red Box
+		if (rarityType == 3) itemid = 100004; //Old Violet Box
+
+
 		const Item_Struct * item = database.GetItem(itemid);
 		if (!c->SummonItem(itemid)) { //
 			Log.Out(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u", c->CharacterID());
