@@ -25,7 +25,7 @@ sub EVENT_TIMER {
 	if ($timer eq "eventendcheck") { #See if event is ending		
 		#is event finished?
 		if (!$isEventFinished) { return; }
-		quest::say("update");
+		#quest::say("update");
 		#see if all enemies are dead.
 		foreach $z (@enemies) {
 			$checkMob = $entity_list->GetMobID($newid);	
@@ -76,14 +76,14 @@ sub EVENT_TIMER {
 		#spawn first wave of enemies
 		foreach $c (@group) {
 			if (!$c) { next; }
-			quest::say($c->CharacterID());
+			#quest::say($c->CharacterID());
 			$c->Message(13, "A horde of zombies begin to emerge from the ground...");
-			$c->PlayMP3("bowdraw.wav");
+			#$c->PlayMP3("bowdraw.wav");
 
 
 			#add enemy
 			#$newid = quest::spawn2(22046, 0, 0, $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
-			$newid = quest::encounterspawn(22046, $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
+			$newid = quest::encounterspawn(quest::ChooseRandom(22046,34013), $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
 			if (!$newid) { next; }
 
 			$newmob = $entity_list->GetMobID($newid);			
@@ -91,7 +91,7 @@ sub EVENT_TIMER {
 			$newnpc = $newmob->CastToNPC();
 			if (!$newnpc) { next; }
 
-			$newnpc->SpellEffect(13); #Earth rising up effect			
+			$newnpc->SpellEffect(13); #Earth rising up effect
 			#$newspawn->DoAnim(110); #sit
 			
 			#prep mob and add to local tracker
@@ -111,9 +111,9 @@ sub EVENT_TIMER {
 	if ($timer eq "nexthorde") {
 		quest::stoptimer("nexthorde");		
 		$waveCount++;
-		quest::say($waveCount);
+		#quest::say($waveCount);
 		my $dice = int(rand(5 * $waveCount));
-		quest::say($dice);
+		#quest::say($dice);
 		if ($dice >= 5) { #wave2 50%, wave3 33%, wave4 25%, etc
 			$isEventFinished = 1;
 			return;
@@ -132,7 +132,7 @@ sub EVENT_TIMER {
 		my $randomClient = int(rand($groupsize));		
 		my $c = $group[$randomClient];
 
-		$newid = quest::encounterspawn(22046, $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
+		$newid = quest::encounterspawn(quest::ChooseRandom(22046,34013), $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
 		if (!$newid) { next; }
 
 		$newmob = $entity_list->GetMobID($newid);			
