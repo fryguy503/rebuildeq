@@ -9194,6 +9194,7 @@ bool Client::IsEncounterInZone() {
 	Mob* mob;
 	mob = entity_list.GetMobByNpcTypeID(187000);
 	if (mob && !mob->IsCorpse()) return true;
+	return false;
 }
 
 //Spawn the encounter, skipChecks will ignore any conditions and not affect normal encounter system (GM Event)
@@ -9217,11 +9218,11 @@ void Client::SpawnEncounter(bool skipChecks) {
 	
 	int playerCount = 0;
 	const NPCType* tmp = 0;
-	NPC* npc;
 	uint32 id = GetEncounterNPCID();
 	if (tmp = database.LoadNPCTypesData(187000)) {
 		NPC* npc = new NPC(tmp, 0, GetPosition(), FlyMode3);
 		//npc->SetNPCFactionID(atoi(sep->arg[2]));
+		npc->SetEntityVariable("client", StringFormat("%u", CharacterID()).c_str());
 		entity_list.AddNPC(npc);
 	}
 	
@@ -9549,7 +9550,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 
 //Gives a Weapon Box Reward randomly. MinimumRarity by default is 0
 int Client::GiveWeaponBoxReward(int minimumRarity) {
-	if (Admin() >= 200) Message(0, "[GM] GiveBoxReward");
+	if (Admin() >= 200) Message(0, "[GM] GiveWeaponBoxReward");
 	//Rarity table
 	std::map <int, int> rarityTable;
 	//Pool size for randomizer
@@ -9576,12 +9577,13 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 	//Chosen Rarity Type
 	int rarityType = 0;
 	for (auto entry = rarityTable.begin(); entry != rarityTable.end(); ++entry) {
-		if (dice <= entry->first) {
-			if (Admin() >= 200) Message(0, "[GM] Rarity Roll (%i): %i (%.1f%%)", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100));
+		if (dice <= entry->first) {			
 			rarityType = entry->second;
 			break;
 		}
 	}
+	if (Admin() >= 200) Message(0, "[GM] Rarity Roll (%i): %i (%.1f%%) Resulted in rarityType %i", dice, pool, (float)((float)dice / (float)pool), rarityType);
+
 	//http://wiki.project1999.com/Players:Kunark_Gear 
 	std::map<int, int> itemTable;
 	pool = 0;
@@ -9670,7 +9672,7 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 	}
 
 	//Rolled dice
-	dice = zone->random.Int(1, pool);
+	dice = zone->random.Int(0, pool);
 
 	for (auto entry = itemTable.begin(); entry != itemTable.end(); ++entry) {
 		//if (Admin() >= 200) Message(0, "[GM] %i vs %i", dice, entry->first);
@@ -9706,6 +9708,7 @@ bool Client::IsValidItem(int itemid) {
 	const Item_Struct* item = database.GetItem(itemid);
 	if (!item->IsEquipable(GetRace(), GetClass())) return false;
 	if (!CheckLoreConflict(item)) return false;	
+	return true;
 }
 
 void Client::ResetBuild() {	

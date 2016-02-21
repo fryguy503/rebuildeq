@@ -229,6 +229,27 @@ XS(XS__spawn)
 	XSRETURN(1);
 }
 
+
+XS(XS__encounterspawn);
+XS(XS__encounterspawn)
+{
+	dXSARGS;
+	if (items != 5)
+		Perl_croak(aTHX_ "Usage: encounterspawn(npc_type, x, y, z, heading)");
+
+	uint16		RETVAL;
+	dXSTARG;
+
+	int	npc_type = (int)SvIV(ST(0));
+	auto position = glm::vec4((float)SvNV(ST(1)), (float)SvNV(ST(2)), (float)SvNV(ST(3)), (float)SvNV(ST(4)));
+
+	Mob *r = quest_manager.encounterspawn(npc_type, position);
+	RETVAL = (r != nullptr) ? r->GetID() : 0;
+	XSprePUSH; PUSHu((UV)RETVAL);
+
+	XSRETURN(1);
+}
+
 XS(XS__spawn2);
 XS(XS__spawn2)
 {
@@ -3760,6 +3781,7 @@ EXTERN_C XS(boot_quest)
 		newXS(strcpy(buf, "enablerecipe"), XS__enablerecipe, file);
 		newXS(strcpy(buf, "enabletask"), XS__enabletask, file);
 		newXS(strcpy(buf, "enabletitle"), XS__enabletitle, file);
+		newXS(strcpy(buf, "encounterspawn"), XS__encounterspawn, file);
 		newXS(strcpy(buf, "exp"), XS__exp, file);
 		newXS(strcpy(buf, "faction"), XS__faction, file);
 		newXS(strcpy(buf, "factionvalue"), XS_FactionValue, file);
@@ -3854,7 +3876,7 @@ EXTERN_C XS(boot_quest)
 		newXS(strcpy(buf, "signalwith"), XS__signalwith, file);
 		newXS(strcpy(buf, "snow"), XS__snow, file);
 		newXS(strcpy(buf, "spawn"), XS__spawn, file);
-		newXS(strcpy(buf, "spawn2"), XS__spawn2, file);
+		newXS(strcpy(buf, "spawn2"), XS__spawn2, file);		
 		newXS(strcpy(buf, "spawn_condition"), XS__spawn_condition, file);
 		newXS(strcpy(buf, "spawn_from_spawn2"), XS__spawn_from_spawn2, file);
 		newXS(strcpy(buf, "start"), XS__start, file);

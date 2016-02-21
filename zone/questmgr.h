@@ -57,6 +57,7 @@ public:
 	void me(const char *str);
 	void summonitem(uint32 itemid, int16 charges = -1);
 	void write(const char *file, const char *str);
+	Mob * encounterspawn(int npc_type, const glm::vec4 & position);
 	Mob* spawn2(int npc_type, int grid, int unused, const glm::vec4& position);
 	Mob* unique_spawn(int npc_type, int grid, int unused, const glm::vec4& position);
 	Mob* spawn_from_spawn2(uint32 spawn2_id);

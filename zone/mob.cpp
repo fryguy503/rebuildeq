@@ -5962,7 +5962,7 @@ NPCType* Mob::AdjustNPC(NPCType* npctype) {
 	npctype->cur_hp = hp;
 	npctype->max_hp = hp;
 	npctype->runspeed = 1.25;
-
+	npctype->hp_regen = (int32)(npctype->max_hp / 320); //regen rate
 	npctype->STR = 150;
 	npctype->STA = 150;
 	npctype->DEX = 150;

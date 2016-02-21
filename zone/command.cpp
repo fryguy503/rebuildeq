@@ -4016,11 +4016,12 @@ void command_encounter(Client *c, const Seperator *sep) {
 		int rarityType = 0;
 		for (auto entry = rarityTable.begin(); entry != rarityTable.end(); ++entry) {
 			if (dice <= entry->first) {
-				if (c->Admin() >= 200) c->Message(0, "[GM] Rarity Roll (%i): %i (%.1f%%)", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100));
+				
 				rarityType = entry->second;
 				break;
 			}
 		}
+		if (c->Admin() >= 200) c->Message(0, "[GM] Reward Roll (%i): %i (%.1f%%)", dice, pool, (float)(dice / pool));
 
 		int itemid = 100002;
 		if (rarityType == 0) itemid = 100005; //Old Weapon Box

@@ -203,6 +203,43 @@ void QuestManager::write(const char *file, const char *str) {
 	fclose (pFile);
 }
 
+//Spawns a custom encounter mob that has adjustments hacked into it magically.
+Mob* QuestManager::encounterspawn(int npc_type, const glm::vec4& position) {
+	const NPCType* npctype = 0;
+	npctype = database.LoadNPCTypesData(npc_type);
+	if (!npctype) return nullptr;
+
+	//we copy the npc_type data because we need to edit it a bit
+	NPCType *enpc = new NPCType;
+	memcpy(enpc, npctype, sizeof(NPCType));
+
+	QuestManagerCurrentQuestVars();
+	if (!owner) return nullptr;	
+
+	enpc = owner->AdjustNPC(enpc);
+	if (npc_type == 22046 || npc_type == 34013) { //zombie encounter
+		enpc->runspeed = 0.25f;
+		enpc->max_hp = (enpc->max_hp * 0.25f);
+		enpc->MR += 200;
+		enpc->DR += 200;
+		enpc->CR += 200;
+		enpc->FR = 0;		
+		enpc->min_dmg = 1;
+		enpc->max_dmg = (enpc->max_dmg * 0.5f);
+	}
+	
+	NPC* npc = new NPC(enpc, nullptr, position, FlyMode3);
+	if (npc_type == 22046 || npc_type == 34013) { //zombie encounter
+		npc->SetAppearance(eaSitting);
+		npc->Stun(1000);
+	}
+	//npc->AddLootTable();
+	
+	entity_list.AddNPC(npc, true, true);
+	npc->SendPosUpdate();
+	return npc;	
+}
+
 Mob* QuestManager::spawn2(int npc_type, int grid, int unused, const glm::vec4& position) {
 	const NPCType* tmp = 0;
 	if (tmp = database.LoadNPCTypesData(npc_type))
