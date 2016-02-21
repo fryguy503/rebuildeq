@@ -87,7 +87,7 @@ sub EVENT_TIMER {
 
 			#add enemy
 			#$newid = quest::spawn2(22046, 0, 0, $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
-			$newid = quest::encounterspawn(quest::ChooseRandom(22046,34013), $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
+			$newid = quest::encounterspawn(quest::ChooseRandom(22046,34013), $c->GetLevel(), $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
 			if (!$newid) { next; }
 
 			$newmob = $entity_list->GetMobID($newid);			
@@ -136,7 +136,12 @@ sub EVENT_TIMER {
 		my $randomClient = int(rand($groupsize));		
 		my $c = $group[$randomClient];
 
-		$newid = quest::encounterspawn(quest::ChooseRandom(22046,34013), $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
+		my $level = $c->GetLevel() - quest::ChooseRandom(0,5);
+		if ($level < 1) {
+			$level = 1;
+		}
+
+		$newid = quest::encounterspawn(quest::ChooseRandom(22046,34013), $level, $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
 		if (!$newid) { next; }
 
 		$newmob = $entity_list->GetMobID($newid);			

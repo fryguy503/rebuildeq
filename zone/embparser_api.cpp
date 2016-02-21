@@ -234,16 +234,17 @@ XS(XS__encounterspawn);
 XS(XS__encounterspawn)
 {
 	dXSARGS;
-	if (items != 5)
-		Perl_croak(aTHX_ "Usage: encounterspawn(npc_type, x, y, z, heading)");
+	if (items != 6)
+		Perl_croak(aTHX_ "Usage: encounterspawn(npc_type, level, x, y, z, heading)");
 
 	uint16		RETVAL;
 	dXSTARG;
 
 	int	npc_type = (int)SvIV(ST(0));
-	auto position = glm::vec4((float)SvNV(ST(1)), (float)SvNV(ST(2)), (float)SvNV(ST(3)), (float)SvNV(ST(4)));
+	int level = (int)SvIV(ST(1));
+	auto position = glm::vec4((float)SvNV(ST(2)), (float)SvNV(ST(3)), (float)SvNV(ST(4)), (float)SvNV(ST(5)));
 
-	Mob *r = quest_manager.encounterspawn(npc_type, position);
+	Mob *r = quest_manager.encounterspawn(npc_type, level, position);
 	RETVAL = (r != nullptr) ? r->GetID() : 0;
 	XSprePUSH; PUSHu((UV)RETVAL);
 

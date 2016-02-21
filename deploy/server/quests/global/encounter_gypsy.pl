@@ -86,7 +86,7 @@ sub EVENT_TIMER {
 			$c->PlayMP3("bowdraw.wav");
 
 
-			$newid = quest::encounterspawn(quest::ChooseRandom($npc1,$npc2), $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
+			$newid = quest::encounterspawn(quest::ChooseRandom($npc1,$npc2), $c->GetLevel(), $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
 			if (!$newid) { next; }
 
 			$newmob = $entity_list->GetMobID($newid);			
@@ -139,7 +139,7 @@ sub EVENT_TIMER {
 		my $randomClient = int(rand($groupsize));		
 		my $c = $group[$randomClient];
 
-		$newid = quest::encounterspawn(quest::ChooseRandom(22046,34013), $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
+		$newid = quest::encounterspawn(quest::ChooseRandom(22046,34013),$c->GetLevel(), $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
 		if (!$newid) { next; }
 
 		$newmob = $entity_list->GetMobID($newid);			

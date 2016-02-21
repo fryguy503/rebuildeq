@@ -204,7 +204,7 @@ void QuestManager::write(const char *file, const char *str) {
 }
 
 //Spawns a custom encounter mob that has adjustments hacked into it magically.
-Mob* QuestManager::encounterspawn(int npc_type, const glm::vec4& position) {
+Mob* QuestManager::encounterspawn(int npc_type, int level, const glm::vec4& position) {
 	const NPCType* npctype = 0;
 	npctype = database.LoadNPCTypesData(npc_type);
 	if (!npctype) return nullptr;
@@ -215,7 +215,7 @@ Mob* QuestManager::encounterspawn(int npc_type, const glm::vec4& position) {
 
 	QuestManagerCurrentQuestVars();
 	if (!owner) return nullptr;	
-
+	enpc->level = level;
 	enpc = owner->AdjustNPC(enpc);
 	if (npc_type == 22046 || npc_type == 34013) { //zombie encounter
 		enpc->runspeed = 0.25f;
