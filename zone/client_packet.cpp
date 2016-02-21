@@ -10040,7 +10040,7 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		}
 
 		if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
-			mypet->Say("May the god's blessings be upon you");
+			mypet->Say("May the gods' blessings be upon you.");
 		}
 		else {
 			mypet->Say_StringID(MT_PetResponse, PET_GETLOST_STRING);
