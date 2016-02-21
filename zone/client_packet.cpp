@@ -8567,7 +8567,8 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 				{
 					if (item->ID == 100002 || //Old Blue Box
 						item->ID == 100003 || //Old Red Box
-						item->ID == 100004) {  //Old Violet Box
+						item->ID == 100004 || //Old Violet Box
+						item->ID == 100005) {  //Old Weapon Box
 						ItemInst *CursorItemInst = GetInv().GetItem(MainCursor);
 						if (CursorItemInst) {
 							Message(13, "Your cursor must be empty before opening the box.");
@@ -8583,6 +8584,9 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 						}
 						else if (item->ID == 100004) {
 							GiveBoxReward(2);
+						}
+						else if (item->ID == 100005) {
+							GiveWeaponBoxReward();
 						}
 						return;
 					}

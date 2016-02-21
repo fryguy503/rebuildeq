@@ -1338,6 +1338,8 @@ public:
 	void SpawnEncounter(bool skipChecks = false);
 	uint32 GetEncounterNPCID();
 	int GiveBoxReward(int minimumRarity = 0);
+	int GiveWeaponBoxReward(int minimumRarity = 0);
+	bool IsValidItem(int itemid);
 	void ResetBuild();
 
 protected:

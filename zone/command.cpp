@@ -4140,7 +4140,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 			c->Message(0, "You are being teleported and bound to ecommons for free due to being below level %u.", levelMin);
 			c->SetBindPoint(22, 0, glm::vec3(-73.06, -1787.51, -3.13));
 		}
-		c->MovePC(22, -73.06, -1787.51, -3.13, 51.8, (uint8)'\000', ZoneSolicited);
+		c->MovePC(22, -73.06, -1787.51, 3.13, 51.8, (uint8)'\000', ZoneSolicited);
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "fieldofbone") == 0) {
 		if (c->GetLevel() >= levelMin) {
