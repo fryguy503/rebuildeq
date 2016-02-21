@@ -9142,6 +9142,7 @@ void Client::EmoteEncounter() {
 	m_epp.encounter_timeout = time(nullptr) + 120; //You have 2 minutes to spawn the encounter.
 	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(1800, 10800); //30 mins to 3 hours, this is if they don't accept it etc.
 	int dice;
+
 	if (GetZoneID() == 22 || GetZoneID() == 21) {
 		dice = zone->random.Int(3, 3); //Always +1 of the messages
 		if (Admin() >= 200) Message(0, "Zone Encounter dice: %i", dice);
@@ -9204,19 +9205,17 @@ bool Client::IsEncounterInZone() {
 //Spawn the encounter, skipChecks will ignore any conditions and not affect normal encounter system (GM Event)
 void Client::SpawnEncounter(bool skipChecks) {
 	if (IsEncounterInZone()) {
-		if (Admin() > 200) {
-			Message(0, "An encounter is already happening in the zone..");
-		}
+		Message(13, "An encounter is already occuring in this zone, please wait until later.");
 		return;
 	}
-	if (!skipChecks && m_epp.next_encounter_time >= time(nullptr)) {
-		return;
-	}
+
 	if (!skipChecks && !InEncounterArea()) {
+		if (Admin() > 200) Message(0, "[GM] Not in an encounter area");
 		return;
 	}
 	if (!skipChecks) {
 		m_epp.next_encounter_time = time(nullptr) + zone->random.Int(64800, 108000); //18 to 30 hours
+		m_epp.encounter_timeout = time(nullptr); //stop encounter eligability
 		Save();
 	}
 	
@@ -9226,8 +9225,12 @@ void Client::SpawnEncounter(bool skipChecks) {
 	if (tmp = database.LoadNPCTypesData(187000)) {
 		NPC* npc = new NPC(tmp, 0, GetPosition(), FlyMode3);
 		//npc->SetNPCFactionID(atoi(sep->arg[2]));
+		if (Admin() > 200) Message(0, "[GM] Spawning encounter");
 		npc->SetEntityVariable("client", StringFormat("%u", CharacterID()).c_str());
 		entity_list.AddNPC(npc);
+	}
+	else {
+		if (Admin() > 200) Message(0, "[GM] Failed to spawn encounter");
 	}
 	
 
@@ -9286,11 +9289,13 @@ int Client::GiveBoxReward(int minimumRarity) {
 	
 	//Chosen Rarity Type
 	int rarityType = 0;
+	int lastPool = 0;
 	for (auto entry = rarityTable.begin(); entry != rarityTable.end(); ++entry) {
 		if (dice > entry->first) {
+			lastPool = entry->first;
 			continue;
 		}
-		if (Admin() >= 200) Message(0, "[GM] Rarity Roll dice: %i is in pool: %i, total pool: %i (%.1f%%) Resulted in rarityType %i", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100), rarityType);
+		if (Admin() >= 200) Message(0, "[GM] Rarity Roll dice: %i is in pool: %i, total pool: %i (%.1f%%) Resulted in rarityType %i", dice, entry->first, pool, (float)((float)(entry->first - lastPool) / (float)pool * 100), rarityType);
 		rarityType = entry->second;
 		break;
 	}
@@ -9388,7 +9393,6 @@ int Client::GiveBoxReward(int minimumRarity) {
 		if (IsValidItem(2347)) { pool += 40; itemTable[pool] = 2347; } //		Etched Ivory Charm	2.32%
 		if (IsValidItem(11538)) { pool += 60; itemTable[pool] = 11538; } //		Forest Loop	1.16%
 		if (IsValidItem(2461)) { pool += 60; itemTable[pool] = 2461; } //		Gatorscale Leggings	1.16%
-		if (IsValidItem(11630)) { pool += 40; itemTable[pool] = 11630; } //		Gold Plated Koshigatana	1.74%
 		if (IsValidItem(11624)) { pool += 30; itemTable[pool] = 11624; } //		Gauntlets of Fiery Might	1.74%
 		if (IsValidItem(10593)) { pool += 20; itemTable[pool] = 10593; } //		Goblin Gazughi Ring	1.16%
 		if (IsValidItem(1412)) { pool += 30; itemTable[pool] = 1412; } //		Green Silken Drape	0.87%
@@ -9476,7 +9480,6 @@ int Client::GiveBoxReward(int minimumRarity) {
 		if (IsValidItem(1620)) { pool += 70; itemTable[pool] = 1620; } //	Runebranded Girdle	4.29%
 		if (IsValidItem(11646)) { pool += 20; itemTable[pool] = 11646; } //	Amulet of Necropotence - lower drop rate off draco as well	1.23%
 		if (IsValidItem(11621)) { pool += 20; itemTable[pool] = 11621; } //	Cloak Of Flames	1.23%
-		if (IsValidItem(14746)) { pool += 30; itemTable[pool] = 14746; } //	Cone Of The Mystics	1.84%
 		if (IsValidItem(11641)) { pool += 10; itemTable[pool] = 11641; } //	Crimson Robe of Adeline	0.61%
 		if (IsValidItem(1262)) { pool += 50; itemTable[pool] = 1262; } //	Elliptical Veil	3.07%
 		if (IsValidItem(10313)) { pool += 60; itemTable[pool] = 10313; } //	Fishbone Earring	3.68%
@@ -9523,12 +9526,13 @@ int Client::GiveBoxReward(int minimumRarity) {
 
 	//Rolled dice
 	dice = zone->random.Int(0, pool);
-	
+	lastPool = 0;
 	for (auto entry = itemTable.begin(); entry != itemTable.end(); ++entry) {
 		if (dice > entry->first) {
+			lastPool = entry->first;
 			continue;
 		}
-		if (Admin() >= 200) Message(0, "[GM] Loot Roll dice: %i is in pool: %i, total pool: %i (%.1f%%)", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100));
+		if (Admin() >= 200) Message(0, "[GM] Loot Roll dice: %i is in pool: %i, total pool: %i (%.1f%%)", dice, entry->first, pool, (float)((float)(entry->first - lastPool) / (float)pool * 100));
 		//Item Reward
 		int itemid = entry->second;
 		const Item_Struct* item = database.GetItem(itemid);
@@ -9586,7 +9590,7 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 	}
 	//Rolled dice
 	int dice = zone->random.Int(0, pool);
-
+	int lastPool = 0;
 	//Chosen Rarity Type
 	int rarityType = 0;
 	for (auto entry = rarityTable.begin(); entry != rarityTable.end(); ++entry) {
@@ -9629,6 +9633,8 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 	}
 	else if (rarityType == 1) {
 		//===Uncommon===
+
+		if (IsValidItem(11630)) { pool += 40; itemTable[pool] = 11630; } //		Gold Plated Koshigatana	1.74%
 		if (IsValidItem(5622)) { pool += 80; itemTable[pool] = 5622; } //	Argent Defender 1.4	7.69%
 		if (IsValidItem(3616)) { pool += 50; itemTable[pool] = 3616; } //	Blackened Alloy Bastard Sword 1.6	4.81%
 		if (IsValidItem(6625)) { pool += 60; itemTable[pool] = 6625; } //	Fighting Baton 2.5	5.77%
@@ -9636,6 +9642,7 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 		if (IsValidItem(5661)) { pool += 30; itemTable[pool] = 5661; } //	Jagged Blade Of Mourning 1.9	2.88%
 		if (IsValidItem(7318)) { pool += 60; itemTable[pool] = 7318; } //	Sacrificial Dagger 4.2	5.77%
 		if (IsValidItem(7312)) { pool += 20; itemTable[pool] = 7312; } //	Stiletto of the Bloodclaw	1.92%
+		if (IsValidItem(14746)) { pool += 30; itemTable[pool] = 14746; } //	Cone Of The Mystics	1.84%
 		if (IsValidItem(9028)) { pool += 40; itemTable[pool] = 9028; } //	Strathbone Shell Shield	3.85%
 		if (IsValidItem(7210)) { pool += 30; itemTable[pool] = 7210; } //	Sionachi's Partisan	2.88%
 		if (IsValidItem(9206)) { pool += 60; itemTable[pool] = 9206; } //	Insignia Protector	5.77%
@@ -9732,6 +9739,10 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 
 bool Client::IsValidItem(int itemid) {
 	const Item_Struct* item = database.GetItem(itemid);
+	if (!item) {
+		if (Admin() >= 200) Message(0, "Invalid item id %i", itemid);
+		return false;
+	}
 	if (!item->IsEquipable(GetRace(), GetClass())) {
 		//Message(0, "%s (%i) not equippable", item->Name, itemid);
 		return false;
