@@ -22,7 +22,7 @@ sub LoadMysql{
 		elsif(/<db>(.*)<\/db>/i) { $db = $1; }
 	}
 	#::: DATA SOURCE NAME
-	$dsn = "dbi:mysql:$db:localhost:3306";
+	$dsn = "dbi:mysql:$db:$host:3306";
 	#::: PERL DBI CONNECT
 	$connect = DBI->connect($dsn, $user, $pass);
 	return $connect;

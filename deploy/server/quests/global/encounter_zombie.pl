@@ -51,6 +51,10 @@ sub EVENT_TIMER {
 
 		#quest::say("inject!");
     	$dbh = plugin::LoadMysql();
+    	if (!$dbh) {
+    		quest::say("Failed to load MySQL... Tell Shin wtfm8! $winnerList");
+    		return;
+    	}
     	foreach $c (@group) {
 	    	$sth = $dbh->prepare("UPDATE `character_custom` SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1 WHERE character_id = ?");
 	    	$sth->execute($c->CharacterID());	    	
