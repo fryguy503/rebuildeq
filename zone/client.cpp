@@ -9571,7 +9571,7 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 		rarityTable[pool] = 3;
 	}
 	//Rolled dice
-	int dice = zone->random.Int(1, pool);
+	int dice = zone->random.Int(0, pool);
 
 	//Chosen Rarity Type
 	int rarityType = 0;
@@ -9587,20 +9587,86 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 	pool = 0;
 	if (rarityType == 0) {
 		//===Common===
-
+		if (IsValidItem(9350)) { pool += 100; itemTable[pool] = 9350; } //	Bark Sheild	5.59%
+		if (IsValidItem(7314)) { pool += 80; itemTable[pool] = 7314; } //	Runed Bone Fork	4.47%
+		if (IsValidItem(11912)) { pool += 100; itemTable[pool] = 11912; } //	Blade Of Passage 5	5.59%
+		if (IsValidItem(10325)) { pool += 100; itemTable[pool] = 10325; } //	Bronze Spider Totem	5.59%
+		if (IsValidItem(5424)) { pool += 80; itemTable[pool] = 5424; } //	Lamentation Blade 2.1	4.47%
+		if (IsValidItem(6692)) { pool += 80; itemTable[pool] = 6692; } //	Smoldering Brand	4.47%
+		if (IsValidItem(9027)) { pool += 60; itemTable[pool] = 9027; } //	Shield Of Spectral Essence	3.35%
+		if (IsValidItem(7323)) { pool += 80; itemTable[pool] = 7323; } //	Dagger Of Dropping	4.47%
+		if (IsValidItem(5642)) { pool += 50; itemTable[pool] = 5642; } //	Crystalline Short Sword 2	2.79%
+		if (IsValidItem(6305)) { pool += 20; itemTable[pool] = 6305; } //	Screaming Mace	1.12%
+		if (IsValidItem(13942)) { pool += 30; itemTable[pool] = 13942; } //	Dragoon Dirk	1.68%
+		if (IsValidItem(1676)) { pool += 100; itemTable[pool] = 1676; } //	Woe 5.8	5.59%
+		if (IsValidItem(6932)) { pool += 150; itemTable[pool] = 6932; } //	Fine Steel Wakizashi 5.7	8.38%
+		if (IsValidItem(57018)) { pool += 150; itemTable[pool] = 57018; } //	Farmer's Rake 5.7500	8.38%
+		if (IsValidItem(11913)) { pool += 150; itemTable[pool] = 11913; } //	Sarnak's Warrior Blade 5.6667	8.38%
+		if (IsValidItem(5011)) { pool += 100; itemTable[pool] = 5011; } //	Claymore 3.8	5.59%
+		if (IsValidItem(52036)) { pool += 100; itemTable[pool] = 52036; } //	Harpoon 3.8	5.59%
+		if (IsValidItem(52026)) { pool += 100; itemTable[pool] = 52026; } //	Broken Bottle 3.8	5.59%
+		if (IsValidItem(8312)) { pool += 100; itemTable[pool] = 8312; } //	Poorly Balanced Battle Axe 3.8	5.59%
+		if (IsValidItem(48378)) { pool += 30; itemTable[pool] = 48378; } //	Ornate Long Spear 2.9	1.68%
+		if (IsValidItem(5665)) { pool += 30; itemTable[pool] = 5665; } //	Gleaming Short Sword 2.9	1.68%
 	}
 
 	else if (rarityType == 1) {
 		//===Uncommon===
-		
+		if (IsValidItem(5622)) { pool += 80; itemTable[pool] = 5622; } //	Argent Defender 1.4	7.69%
+		if (IsValidItem(3616)) { pool += 50; itemTable[pool] = 3616; } //	Blackened Alloy Bastard Sword 1.6	4.81%
+		if (IsValidItem(6625)) { pool += 60; itemTable[pool] = 6625; } //	Fighting Baton 2.5	5.77%
+		if (IsValidItem(7254)) { pool += 40; itemTable[pool] = 7254; } //	Jade Chokidai Prod 2.7	3.85%
+		if (IsValidItem(5661)) { pool += 30; itemTable[pool] = 5661; } //	Jagged Blade Of Mourning 1.9	2.88%
+		if (IsValidItem(7318)) { pool += 60; itemTable[pool] = 7318; } //	Sacrificial Dagger 4.2	5.77%
+		if (IsValidItem(7312)) { pool += 20; itemTable[pool] = 7312; } //	Stiletto of the Bloodclaw	1.92%
+		if (IsValidItem(9028)) { pool += 40; itemTable[pool] = 9028; } //	Strathbone Shell Shield	3.85%
+		if (IsValidItem(7210)) { pool += 30; itemTable[pool] = 7210; } //	Sionachi's Partisan	2.88%
+		if (IsValidItem(9206)) { pool += 60; itemTable[pool] = 9206; } //	Insignia Protector	5.77%
+		if (IsValidItem(5163)) { pool += 80; itemTable[pool] = 5163; } //	Guardian's Mace	7.69%
+		if (IsValidItem(7050)) { pool += 90; itemTable[pool] = 7050; } //	Barbarian Hunting Spear 3.3	8.65%
+		if (IsValidItem(6675)) { pool += 60; itemTable[pool] = 6675; } //	Nightshade Scented Staff 3.3	5.77%
+		if (IsValidItem(11552)) { pool += 60; itemTable[pool] = 11552; } //	Shield Of the Stalwart Seas	5.77%
+		if (IsValidItem(7406)) { pool += 40; itemTable[pool] = 7406; } //	Shield Of The Slain Unicorn	3.85%
+		if (IsValidItem(6681)) { pool += 60; itemTable[pool] = 6681; } //	Staff Of The Dreaded Gaze	5.77%
+		if (IsValidItem(5057)) { pool += 40; itemTable[pool] = 5057; } //	Wurmslayer	3.85%
+		if (IsValidItem(7238)) { pool += 40; itemTable[pool] = 7238; } //	Tombcarver	3.85%
+		if (IsValidItem(10581)) { pool += 60; itemTable[pool] = 10581; } //	Totem Of The Warrior Spirit	5.77%
+		if (IsValidItem(5631)) { pool += 40; itemTable[pool] = 5631; } //	Two Handed Practice Sword	3.85%
 	}
 	else if (rarityType == 2) {
 		//===Rare===
-		
+		if (IsValidItem(5155)) { pool += 20; itemTable[pool] = 5155; } //	Blade Of The Black Dragon Eye 1.7	1.75%
+		if (IsValidItem(9311)) { pool += 80; itemTable[pool] = 9311; } //	Charred Guardian Shield	3.51%
+		if (IsValidItem(5665)) { pool += 60; itemTable[pool] = 5665; } //	Gleaming Short Sword	5.26%
+		if (IsValidItem(11645)) { pool += 10; itemTable[pool] = 11645; } //	Blood Fire	0.88%
+		if (IsValidItem(7211)) { pool += 30; itemTable[pool] = 7211; } //	Howling Harpoon 2.6	2.63%
+		if (IsValidItem(5156)) { pool += 20; itemTable[pool] = 5156; } //	Breath of Harmony 1.8	1.75%
+		if (IsValidItem(11626)) { pool += 40; itemTable[pool] = 11626; } //	Selo's Drum of the March	3.51%
+		if (IsValidItem(5649)) { pool += 50; itemTable[pool] = 5649; } //	Edge of the Nightwalker 1.7	4.39%
+		if (IsValidItem(7222)) { pool += 40; itemTable[pool] = 7222; } //	Sebilite Croaking Dirk 1.8	3.51%
+		if (IsValidItem(9315)) { pool += 60; itemTable[pool] = 9315; } //	Shield Of Prexus	5.26%
+		if (IsValidItem(10859)) { pool += 10; itemTable[pool] = 10859; } //	Katana of Flowing Water 1.7	0.88%
+		if (IsValidItem(5667)) { pool += 20; itemTable[pool] = 5667; } //	Earthshaker 1.8	1.75%
+		if (IsValidItem(7237)) { pool += 60; itemTable[pool] = 7237; } //	Icy Blade 3.5	5.26%
+		if (IsValidItem(14722)) { pool += 40; itemTable[pool] = 14722; } //	Idol Of The Thorned	3.51%
+		if (IsValidItem(11607)) { pool += 60; itemTable[pool] = 11607; } //	McVaxius` Horn Of War	5.26%
+		if (IsValidItem(5401)) { pool += 60; itemTable[pool] = 5401; } //	Mithril Two-Handed Sword 1.9	5.26%
+		if (IsValidItem(5152)) { pool += 40; itemTable[pool] = 5152; } //	Noctivagant Blade 1.4	3.51%
+		if (IsValidItem(9205)) { pool += 60; itemTable[pool] = 9205; } //	Sarnak Battle Shield	5.26%
+		if (IsValidItem(11644)) { pool += 40; itemTable[pool] = 11644; } //	Shield Of Rainbow Hues	3.51%
+		if (IsValidItem(11585)) { pool += 60; itemTable[pool] = 11585; } //	Shield Of The Red Dragon	5.26%
+		if (IsValidItem(6685)) { pool += 30; itemTable[pool] = 6685; } //	Luminescent Staff 2.5	2.63%
+		if (IsValidItem(6679)) { pool += 30; itemTable[pool] = 6679; } //	Lycanthropic Staff 3.3	2.63%
+		if (IsValidItem(6404)) { pool += 60; itemTable[pool] = 6404; } //	Staff Of Writhing	5.26%
+		if (IsValidItem(6610)) { pool += 50; itemTable[pool] = 6610; } //	Stave Of Shielding	4.39%
+		if (IsValidItem(5158)) { pool += 30; itemTable[pool] = 5158; } //	Sword Of The Morning	2.63%
+		if (IsValidItem(14759)) { pool += 80; itemTable[pool] = 14759; } //	Tome Of Miragul	7.02%
 	}
 	else if (rarityType == 3) {
 		//===Legendary===
-		
+		if (IsValidItem(5500)) { pool += 60; itemTable[pool] = 5500; } //	Short Sword Of The ykesha	37.50%
+		if (IsValidItem(12863)) { pool += 60; itemTable[pool] = 12863; } //	Worker Sledgemallet	37.50%
+		if (IsValidItem(6639)) { pool += 40; itemTable[pool] = 6639; } //	Tranquil Staff	25.00%
 	}
 
 	//Rolled dice
