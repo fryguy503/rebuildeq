@@ -227,6 +227,10 @@ Mob* QuestManager::encounterspawn(int npc_type, const glm::vec4& position) {
 		enpc->min_dmg = 1;
 		enpc->max_dmg = (enpc->max_dmg * 0.5f);
 	}
+	if (npc_type == 37056 || npc_type == 37065) { //gypsies
+		enpc->max_hp = (enpc->max_hp * 0.5f);
+	}
+
 	
 	NPC* npc = new NPC(enpc, nullptr, position, FlyMode3);
 	if (npc_type == 22046 || npc_type == 34013) { //zombie encounter

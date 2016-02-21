@@ -9103,7 +9103,9 @@ bool Client::InEncounterArea() {
 		GetY() < 2471.97 && GetY() > -1704.55) {
 		return true;
 	}
-	return false;
+
+	//This should be false, but temporary so encounters can happen!
+	return true;
 }
 
 //Is the encounter ready to spawn?
@@ -9192,7 +9194,9 @@ void Client::EmoteEncounter() {
 
 bool Client::IsEncounterInZone() {
 	Mob* mob;
-	mob = entity_list.GetMobByNpcTypeID(187000);
+	mob = entity_list.GetMobByNpcTypeID(187000); //zombie
+	if (mob && !mob->IsCorpse()) return true;
+	mob = entity_list.GetMobByNpcTypeID(187001); //gypsy
 	if (mob && !mob->IsCorpse()) return true;
 	return false;
 }
