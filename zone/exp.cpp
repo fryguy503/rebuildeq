@@ -370,11 +370,11 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 		}
 		else {
 			if (membercount > 1) {
-				if (m_epp.rested_exp < 1) {
+				if (m_epp.rested_exp < 1 || (i * 0.1) < 1) {
 					Message(15, "You have gained %i party experience! (%.3f%%)", i, expPct);
 				} else {//Rested EXP available
 
-					int restedExp = i * (membercount-1); //rested EXP can be up to 6x in party
+					int restedExp = i * 0.1;
 					int totalExp = i + restedExp;
 
 					m_epp.rested_exp -= restedExp; //remove from rested
@@ -391,11 +391,11 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 			}
 			else if(IsRaidGrouped()) {
 				
-				if (m_epp.rested_exp < 1) {
+				if (m_epp.rested_exp < 1 || (i * 0.1) < 1) {
 					Message(15, "You have gained %i raid experience! (%.3f%%)", i, expPct);
 				} else {//Rested EXP available
 
-					int restedExp = i + i; //rested EXP double in raid
+					int restedExp = i * 0.1;
 					int totalExp = i + restedExp;
 
 					m_epp.rested_exp -= restedExp; //remove from rested
@@ -411,11 +411,12 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 				}
 			}
 			else {
-				if (m_epp.rested_exp < 1) {
+				if (m_epp.rested_exp < 1 || (i * 0.05) < 1) {
 					Message(15, "You have gained %i experience! (%.3f%%)", i, expPct);
 				} else {//Rested EXP available
 
-					int restedExp = (int)((float)i * 0.25); //25% bonus exp when solo, intentionally it's crappy.					
+					//int restedExp = (int)((float)i * 0.25); //25% bonus exp when solo, intentionally it's crappy.					
+					int restedExp = i * 0.05; //5% rested exp when solo.
 					int totalExp = i + restedExp;
 
 					m_epp.rested_exp -= restedExp; //remove from rested
