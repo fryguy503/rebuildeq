@@ -2695,6 +2695,10 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 	res = mod_buff_duration(res, caster, target, spell_id);
 
+	if (spell_id == 359) { //Vampiric Embrace
+		duration += 600;
+	}
+
 	Log.Out(Logs::Detail, Logs::Spells, "Spell %d: Casting level %d, formula %d, base_duration %d: result %d",
 		spell_id, castlevel, formula, duration, res);
 
