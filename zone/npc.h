@@ -153,7 +153,7 @@ public:
 	virtual void InitializeBuffSlots();
 	virtual void UninitializeBuffSlots();
 	inline int GetMinDamage() const { return min_dmg; }
-	inline int GetMaxDamage() const { return min_dmg; }
+	inline int GetMaxDamage() const { return max_dmg; }
 
 	virtual void	SetAttackTimer();
 	virtual void	RangedAttack(Mob* other);
