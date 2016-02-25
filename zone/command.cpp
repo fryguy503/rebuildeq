@@ -1481,6 +1481,7 @@ void command_npcstats(Client *c, const Seperator *sep)
 		c->Message(0, "Name: %s   NpcID: %u",  c->GetTarget()->GetName(), c->GetTarget()->GetNPCTypeID());
 		c->Message(0, "Race: %i  Level: %i  Class: %i  Material: %i",  c->GetTarget()->GetRace(), c->GetTarget()->GetLevel(), c->GetTarget()->GetClass(), c->GetTarget()->GetTexture());
 		c->Message(0, "Current HP: %i  Max HP: %i",  c->GetTarget()->GetHP(), c->GetTarget()->GetMaxHP());
+		c->Message(0, "Min Damage: %i Max Damage: %i", c->GetTarget()->CastToNPC()->GetMinDamage(), c->GetTarget()->CastToNPC()->GetMaxDamage());
 		//c->Message(0, "Weapon Item Number: %s", c->GetTarget()->GetWeapNo());
 		c->Message(0, "Gender: %i  Size: %f  Bodytype: %d",  c->GetTarget()->GetGender(), c->GetTarget()->GetSize(), c->GetTarget()->GetBodyType());
 		c->Message(0, "Runspeed: %.3f  Walkspeed: %.3f",  static_cast<float>(0.025f * c->GetTarget()->GetRunspeed()), static_cast<float>(0.025f * c->GetTarget()->GetWalkspeed()));
