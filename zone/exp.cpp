@@ -1108,12 +1108,7 @@ void Client::UpdateSkillsAndSpells() {
 	}
 	if (abilityCount > 0) {
 		Message(0, "You have learned %u new disciplines!", abilityCount);
-	}
-
-	//Build Stuff
-	if (GetBuildUnspentPoints() > 0) {
-		Message(0, "You have unspent build points. Visit %s to spend them.", CreateSayLink("#builds", "builds").c_str());
-	}
+	}	
 }
 
 // Note: The client calculates exp separately, we cant change this function
