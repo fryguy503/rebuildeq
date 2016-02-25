@@ -370,7 +370,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 		}
 		else {
 			if (membercount > 1) {
-				if (m_epp.rested_exp < 1 || (i * 0.1) < 1) {
+				if (m_epp.rested_exp < 1 || (i * 0.05) < 1) {
 					Message(MT_Experience, "You have gained %i party experience! (%.3f%%)", i, expPct);
 				} else {//Rested EXP available
 
@@ -391,7 +391,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 			}
 			else if(IsRaidGrouped()) {
 				
-				if (m_epp.rested_exp < 1 || (i * 0.1) < 1) {
+				if (m_epp.rested_exp < 1 || (i * 0.05) < 1) {
 					Message(MT_Experience, "You have gained %i raid experience! (%.3f%%)", i, expPct);
 				} else {//Rested EXP available
 
@@ -411,7 +411,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 				}
 			}
 			else {
-				if (m_epp.rested_exp < 1 || (i * 0.05) < 1) {
+				if (m_epp.rested_exp < 1 || (i * 0.025) < 1) {
 					Message(MT_Experience, "You have gained %i experience! (%.3f%%)", i, expPct);
 				} else {//Rested EXP available
 
