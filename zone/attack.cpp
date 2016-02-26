@@ -3297,7 +3297,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				GetTarget() == attacker &&
 				zone->random.Roll((int)(5 * rank))) {
 
-				uint32 healAmount =  (uint32)(GetMaxHP() * rank * 0.05) + (uint32)(40 * rank);
+				uint32 healAmount =  (uint32)(GetMaxHP() * rank * 0.01) + (uint32)(40 * rank);
 				CastToClient()->Message(MT_Spells, "Ward of Tunare %u healed you for %i.", rank, healAmount);
 				HealDamage(healAmount, this);
 			}
