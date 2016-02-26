@@ -431,12 +431,56 @@ void NPC::AddItem(uint32 itemid, uint16 charges, bool equipitem) {
 
 void NPC::AddLootTable() {
 	if (npctype_id != 0) { // check if it's a GM spawn
+		AddCardTable();
 		database.AddLootTableToNPC(this,loottable_id, &itemlist, &copper, &silver, &gold, &platinum);
 	}
 }
 
 void NPC::AddLootTable(uint32 ldid) {
 	if (npctype_id != 0) { // check if it's a GM spawn
+	  AddCardTable();
 	  database.AddLootTableToNPC(this,ldid, &itemlist, &copper, &silver, &gold, &platinum);
 	}
+}
+
+//Adds Card Drops to NPC
+void NPC::AddCardTable() {
+	if (npctype_id == 0) return;
+	uint32 itemid = 0;
+	std::map <int, int> cardTable;
+	int pool = 0;
+	pool += 50000; cardTable[pool] = 0; //Buffer.
+	if (GetBodyType() == BT_Dragon || GetBodyType() == BT_Dragon3 || GetBodyType() == BT_VeliousDragon) { pool += 5; cardTable[pool] = 100100; } //Dragon Card
+	if (GetBodyType() == BT_Insect) { pool += 5; cardTable[pool] = 100101; } //Insect Card
+	if (GetBodyType() == BT_Animal) { pool += 5; cardTable[pool] = 100102; } //Animal Card
+	if (GetBodyType() == BT_Construct) { pool += 5; cardTable[pool] = 100103; } //Construct Card
+	if (GetBodyType() == BT_Extraplanar) { pool += 5; cardTable[pool] = 100104; } //Extra Planar Card
+	if (GetBodyType() == BT_Giant || GetBodyType() == BT_RaidGiant || GetBodyType() == BT_Zek) { pool += 5; cardTable[pool] = 100105; } //Giant Card
+	if (GetBodyType() == BT_Humanoid) { pool += 5; cardTable[pool] = 100106; } //Humanoid Card
+	if (GetBodyType() == BT_Lycanthrope) { pool += 5; cardTable[pool] = 100107; } //Lycanthrope Card
+	if (GetBodyType() == BT_Magical) { pool += 5; cardTable[pool] = 100108; } //Magical Card
+	if (GetBodyType() == BT_Monster) { pool += 5; cardTable[pool] = 100109; } //Monster Card
+	if (GetBodyType() == BT_Plant) { pool += 5; cardTable[pool] = 100110; } //Plant Card
+	if (GetBodyType() == BT_Summoned || GetBodyType() == BT_Summoned2 || GetBodyType() == BT_Summoned3 || GetBodyType() == BT_SummonedUndead) { pool += 5; cardTable[pool] = 100111; } //Summoned Card
+	if (GetBodyType() == BT_Undead || GetBodyType() == BT_Vampire) { pool += 5; cardTable[pool] = 100112; } //Undead Card
+
+	if (GetRace() == 39) { pool += 500; cardTable[pool] = 100113; } //Gnoll Card
+	if (GetRace() == 13) { pool += 5; cardTable[pool] = 100114; } //Aviak Card
+	if (GetRace() == 14) { pool += 5; cardTable[pool] = 100115; } //Werewolf Card
+	if (GetRace() == 38) { pool += 5; cardTable[pool] = 100116; } //Spider Card
+	if (GetRace() == 54) { pool += 100; cardTable[pool] = 100117; } //Orc Card
+
+	if (pool < 1) return;
+
+	int dice = zone->random.Int(1, pool);
+	int lastPool;
+
+	for (auto entry = cardTable.begin(); entry != cardTable.end(); ++entry) {
+		if (dice > entry->first) continue;
+		itemid = entry->second;
+		break;
+	}
+
+	if (itemid < 1) return;
+	AddItem(itemid, 1, false);
 }
