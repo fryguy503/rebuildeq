@@ -9112,16 +9112,20 @@ bool Client::IsEncounterReady() {
 	}
 
 	int chance = 1;
-	int pool = 360;
+	int pool = 360; 
+
+	//Odds before bonus: 0.2% every 6 seconds
+
 	//See if there's a Gone for a while bonus
 	int bonus = time(nullptr) - m_epp.next_encounter_time;
-	bonus = (bonus / 3600000) % 24; //How many days it's been since an encounter
+	bonus = (bonus / 86400); //How many days it's been since an encounter
 	if (bonus > 0) {
-		pool -= (pool * 0.25 * bonus);
+		pool -= bonus * 77.5; //Each day shaves off 77.5, with minimum 50
 		if (pool < 50) {
 			pool = 50;
 		}
 	}
+	//Best odds: 2% every 6 seconds
 
 	//Message(13, "Chance: %i", pool);
 	return (zone->random.Int(1, pool) <= chance);
@@ -9132,8 +9136,9 @@ bool Client::IsEncounterReady() {
 void Client::EmoteEncounter() {	
 	//bat_idl2 = bat 
 	//bell005.wav errie bell
-	m_epp.encounter_timeout = time(nullptr) + 120; //You have 2 minutes to spawn the encounter.
-	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(1800, 10800); //30 mins to 3 hours, this is if they don't accept it etc.
+	m_epp.encounter_timeout = time(nullptr) + 360; //You have 6 minutes to spawn the encounter.
+	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(360, 10800); //6 mins to 3 hours, this is if they don't accept it etc.
+	Save(); //Save now that encounter has happened
 	int dice;
 
 	if (GetZoneID() == 22 || GetZoneID() == 21) {
