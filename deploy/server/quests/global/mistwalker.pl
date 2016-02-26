@@ -1,10 +1,9 @@
 sub EVENT_SAY { 
-	my ($keyword, $spellid) = split / /, $text;
-	
-	if ($keyword eq "spell" && length $spellid > 0) {
-		quest::say("Casting Spell: $spellid");
-		#quest::sendspelleffect($spellid);
-		$npc->SpellEffect($spellid);
+	if($text=~/hail/i){
+		quest::say("Greetings ${name}. Insert Lore Dialog Here. You may wish to [ ". quest::saylink("Bind")." ] your origin here.");
+	} elsif($text=~/bind/i) {
+	    quest::say("Binding your origin.");
+	    $client->SetStartZone(22, $client->GetX(), $client->GetY(), $client->GetZ()); 
+	    quest::say("Done");
 	}
-
  }
