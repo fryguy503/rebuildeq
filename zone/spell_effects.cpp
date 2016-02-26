@@ -870,6 +870,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				{
 					caster->Message_StringID(MT_SpellFailure, IMMUNE_STUN);
 				} else {
+					//This is a bonus stun component for added aggro.
+
+					if (caster->IsClient() && IsNPC()) {
+						AddToHateList(caster, uint32(effect_value * 50)); //add 50 aggro for each second of stun
+						//attacker->AddToHateList(this, uint32(10 * this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SHIELDOFNIFE)));
+					}
+
 					int stun_resist = itembonuses.StunResist+spellbonuses.StunResist;
 					if (IsClient())
 						stun_resist += aabonuses.StunResist;
