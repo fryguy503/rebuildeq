@@ -9626,7 +9626,7 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 		if (IsValidItem(52036)) { pool += 100; itemTable[pool] = 52036; } //	Harpoon 3.8	5.59%
 		if (IsValidItem(52026)) { pool += 100; itemTable[pool] = 52026; } //	Broken Bottle 3.8	5.59%
 		if (IsValidItem(8312)) { pool += 100; itemTable[pool] = 8312; } //	Poorly Balanced Battle Axe 3.8	5.59%
-		if (IsValidItem(48378)) { pool += 30; itemTable[pool] = 48378; } //	Ornate Long Spear 2.9	1.68%
+		//if (IsValidItem(48378)) { pool += 30; itemTable[pool] = 48378; } //	Ornate Long Spear 2.9	1.68%
 		if (IsValidItem(5665)) { pool += 30; itemTable[pool] = 5665; } //	Gleaming Short Sword 2.9	1.68%
 	}
 	else if (rarityType == 1) {
