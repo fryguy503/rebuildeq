@@ -1136,7 +1136,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	if (rank_id == aaLeechTouch && GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) < 1 ||
 		rank_id == aaActOfValor && GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) < 1 ||
 		rank_id == aaAncestralAid && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) < 1 ||
-		rank_id == aaDeathPeace && GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH) < 1 ||
+		rank_id == aaDeathPeace2 && GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH) < 1 ||
 		rank_id == aaDivineStun && GetBuildRank(PALADIN, RB_PAL_DIVINESTUN) < 1 ||
 		rank_id == aaSteadfastServant && GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) < 1 ||
 		rank_id == aaPurifySoul && GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) < 1 ||
