@@ -259,14 +259,14 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN);
 							if (rank > 0 && (spell_id == 2729 || spell_id == 823)) {
-								int cDamage = (rank * dmg * 0.25);
+								int cDamage = (rank * -dmg * 0.25);
 								casterClient->Message(MT_NonMelee, "Chosen %u added %i bonus damage.", rank, cDamage);
 								dmg -= cDamage;
 							}
 
 							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_FLAMEOFLIGHT);
 							if (rank > 0 && spell_id == 1454) {
-								int fDamage = (rank * dmg * 0.20);
+								int fDamage = (rank * -dmg * 0.20);
 								casterClient->Message(MT_NonMelee, "Flame of Light %u added %i bonus damage.", rank, fDamage);
 								dmg -= fDamage;
 							}
