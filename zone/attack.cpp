@@ -3207,6 +3207,16 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				}
 			}
 
+			if (attacker->IsClient() && attacker->CastToClient()->GetBuildRank(PALADIN, RB_PAL_KNIGHTSADVANTAGE) > 0) {
+				if (attacker->CastToClient()->GetPrimarySkillValue() == ItemType2HSlash ||
+					attacker->CastToClient()->GetPrimarySkillValue() == ItemType2HBlunt
+					) {
+					int kDamage = int32((float)damage * 0.05 * (float)rank);
+					attacker->CastToClient()->Message(MT_NonMelee, "Knight's Advantage %u added %i bonus damage.", rank, kDamage);
+					damage += kDamage;
+				}
+			}
+
 			// if spell is lifetap add hp to the caster
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell( spell_id )) {
 				//Shin: If a lifetap and SK and have points into Soul Link
@@ -3718,7 +3728,7 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 			acthealed -= reduction;
 		}
 	}
-
+	
 	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE) > 0) {
 		if (zone->random.Roll((int)(1 * caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE)))) {
 			int manaAmount = (int)((float)acthealed * (float)0.01 * (float)caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE));

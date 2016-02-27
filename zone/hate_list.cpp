@@ -643,7 +643,7 @@ void HateList::OnDeathTrigger()
 int HateList::DamageNearby(Mob *caster, int32 damage, float range, Mob* ae_center, int32 maxTargets)
 {
 	if (!caster)
-		return;
+		return 0;
 
 	Mob* center = caster;
 
