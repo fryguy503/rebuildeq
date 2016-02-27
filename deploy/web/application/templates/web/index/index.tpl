@@ -31,12 +31,15 @@
 					<div class="form-group">
 			          <p class="text-center">
 			           <label class="control-label">Rebuild EQ is an Everquest Private Server Project based on classic Everquest with many <a href="/about">twists</a>.</label>
-
 			          <ul> 
 			          <li>Unique <a href="/builds">builds</a> to custom craft your Everquest experience</li>
+			          <li>Random Encounters happen throughout norrath, granting custom prizes</li>
+			          <li>Rested System lets you gain bonus EXP while offline</li>
 			          <li>Learn spells and skills on level</li>
 			          <li>Unlock AAs through quests</li>
-			          <li>Reimagined classic content</li>
+			          <li>One account online per player limit</li>
+			          <li>Anti-MQ and ShowEQ protections to help deter cheating</li>
+			          <li>Simplified Aug system with rare cards</li>
 			          </ul>
 			          </p>
 			        </div>
