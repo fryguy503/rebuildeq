@@ -389,7 +389,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Zealot's Fervor";
-			$newSkill->desc = 'Any time a heal is casted by a paladin, up to <em data-base="1">1</em> enemies are dealt <em data-base="1">1</em>% of the healing as damage. <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When a heal is casted by a paladin, up to <em data-base="1">1</em> nearby enemies of the target are dealt <em data-base="1">1</em>% of the healing as damage. <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[36] = $newSkill;
 

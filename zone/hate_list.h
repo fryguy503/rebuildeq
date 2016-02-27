@@ -66,6 +66,8 @@ public:
 	void WipeHateList();
 	void OnDeathTrigger();
 
+	int DamageNearby(Mob * caster, int32 damage, float range, Mob * ae_center, int32 maxTargets = 0);
+
 protected:
 	struct_HateList* Find(Mob *ent);
 private:

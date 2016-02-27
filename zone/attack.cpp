@@ -3729,6 +3729,15 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 		}
 	}
 
+	if (caster && caster->IsClient() && 
+		caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR) > 0 &&
+		caster != this //cannot use on self
+		) {
+		int32 zDamage = caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR) * 0.01 * amount;
+		int zCount = caster->hate_list.DamageNearby(caster, zDamage, 50, this, caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR));
+		caster->Message(MT_NonMelee, "Zealot's Fervor %u hit %i enemies for %i points of non-melee damage.", caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR), zCount, zDamage);
+	}
+
 	if (acthealed > 100) {
 		if (caster) {
 			if (IsBuffSpell(spell_id)) { // hots
