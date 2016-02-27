@@ -8917,7 +8917,12 @@ void Client::RefreshBuild() {
 				}
 				if (GetClass() == SHAMAN && i == RB_SHM_ANCESTRALAID && GetAA(aaAncestralAid) < 1) {
 					TrainAARank(aaAncestralAid);
-					Message(15, "You have unlocked the AA \"Purify Soul\"! Find the hotkey in your Alternate Advancement Window.");
+					Message(15, "You have unlocked the AA \"Ancestral Aid\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHAMAN && i == RB_SHM_CANNIBALIZE && GetAA(aaCannibalization) < 1) {
+					TrainAARank(aaCannibalization);
+					Message(15, "You have unlocked the AA \"Cannibalization\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
 				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {

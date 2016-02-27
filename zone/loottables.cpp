@@ -458,17 +458,17 @@ void NPC::AddCardTable() {
 	if (GetBodyType() == BT_Giant || GetBodyType() == BT_RaidGiant || GetBodyType() == BT_Zek) { pool += 5; cardTable[pool] = 100105; } //Giant Card
 	if (GetBodyType() == BT_Humanoid) { pool += 5; cardTable[pool] = 100106; } //Humanoid Card
 	if (GetBodyType() == BT_Lycanthrope) { pool += 5; cardTable[pool] = 100107; } //Lycanthrope Card
-	if (GetBodyType() == BT_Magical) { pool += 5; cardTable[pool] = 100108; } //Magical Card
+	if (GetBodyType() == BT_Magical) { pool += 500; cardTable[pool] = 100108; } //Magical Card 50mana
 	if (GetBodyType() == BT_Monster) { pool += 5; cardTable[pool] = 100109; } //Monster Card
 	if (GetBodyType() == BT_Plant) { pool += 5; cardTable[pool] = 100110; } //Plant Card
 	if (GetBodyType() == BT_Summoned || GetBodyType() == BT_Summoned2 || GetBodyType() == BT_Summoned3 || GetBodyType() == BT_SummonedUndead) { pool += 5; cardTable[pool] = 100111; } //Summoned Card
 	if (GetBodyType() == BT_Undead || GetBodyType() == BT_Vampire) { pool += 5; cardTable[pool] = 100112; } //Undead Card
 
-	if (GetRace() == 39) { pool += 500; cardTable[pool] = 100113; } //Gnoll Card
+	if (GetRace() == 39) { pool += 500; cardTable[pool] = 100113; } //Gnoll Card 50hp
 	if (GetRace() == 13) { pool += 5; cardTable[pool] = 100114; } //Aviak Card
 	if (GetRace() == 14) { pool += 5; cardTable[pool] = 100115; } //Werewolf Card
 	if (GetRace() == 38) { pool += 5; cardTable[pool] = 100116; } //Spider Card
-	if (GetRace() == 54) { pool += 100; cardTable[pool] = 100117; } //Orc Card
+	if (GetRace() == 54) { pool += 250; cardTable[pool] = 100117; } //Orc Card 15ac
 
 	if (pool < 1) return;
 
