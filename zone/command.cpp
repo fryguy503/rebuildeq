@@ -3892,7 +3892,7 @@ void command_builds(Client *c, const Seperator *sep)
 		
 		//Reset confirm
 		if (sep->arg[2] && strcasecmp(sep->arg[2], "confirm") == 0) {
-			if (c->GetLevel() >= 20) {
+			if (c->GetLevel() >= 75) { //Removed level req
 				c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
 				return;
 			}
@@ -3900,7 +3900,7 @@ void command_builds(Client *c, const Seperator *sep)
 			return;
 		}
 
-		if (c->GetLevel() < 20) {
+		if (c->GetLevel() < 75) {
 			c->Message(0, "You can reset your skills for free until level 20. [ %s ]", c->CreateSayLink("#builds reset confirm", "confirm").c_str());
 		} else {
 			c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
@@ -4072,7 +4072,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 		return;
 	}
 	
-	c->Message(0, "You have %u unclaimed encounter rewards. [%s]", unclaimed_rewards, c->CreateSayLink("#encounter claim", "claim").c_str());
+	c->Message(0, "You have %u unclaimed encounter rewards. [ %s ]", unclaimed_rewards, c->CreateSayLink("#encounter claim", "claim").c_str());
 }
 
 //Give AAs
@@ -4283,11 +4283,11 @@ void command_teleport(Client *c, const Seperator *sep) {
 		if (c->GetLevel() < levelMin) {
 			
 			c->Message(0, "Until level %u, you may teleport and be bound for free to:", levelMin);
-			c->Message(0, "[%s], [%s]",
+			c->Message(0, "[ %s ], [ %s ]",
 				c->CreateSayLink("#teleport ecommons", "ecommons").c_str(),
 				c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str()
 			);
-			c->Message(0, "[%s], [%s]",
+			c->Message(0, "[ %s ], [ %s ]",
 				c->CreateSayLink("#teleport tox", "tox").c_str(),
 				c->CreateSayLink("#teleport fieldofbone", "fieldofbone").c_str()
 			);
@@ -4297,12 +4297,12 @@ void command_teleport(Client *c, const Seperator *sep) {
 			c->GetLevel(), 
 			(c->GetLevel() * mod)					
 		);
-		c->Message(0, "[%s], [%s], [%s]",
+		c->Message(0, "[ %s ], [ %s ], [ %s ]",
 			c->CreateSayLink("#teleport commons", "commons").c_str(),
 			c->CreateSayLink("#teleport dreadlands", "dreadlands").c_str(),
 			c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str()
 		);
-		c->Message(0, "[%s], [%s], [%s]",
+		c->Message(0, "[ %s ], [ %s ], [ %s ]",
 			c->CreateSayLink("#teleport northkarana", "northkarana").c_str(),
 			c->CreateSayLink("#teleport sro", "sro").c_str(),
 			c->CreateSayLink("#teleport tox", "tox").c_str()
@@ -4344,7 +4344,7 @@ void command_buff(Client *c, const Seperator *sep) {
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %u platinum to receive buffs. [%s]", c->GetLevel(), (c->GetLevel() * mod), c->CreateSayLink("#buff confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %u platinum to receive buffs. [ %s ]", c->GetLevel(), (c->GetLevel() * mod), c->CreateSayLink("#buff confirm", "Confirm").c_str());
 	}
 }
 
@@ -4408,7 +4408,7 @@ void command_rez(Client *c, const Seperator *sep) {
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %u platinum to summon and resurrect the closest nearby corpse in this zone. [%s]", c->GetLevel(), (c->GetLevel() * mod), c->CreateSayLink("#rez confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %u platinum to summon and resurrect the closest nearby corpse in this zone. [ %s ]", c->GetLevel(), (c->GetLevel() * mod), c->CreateSayLink("#rez confirm", "Confirm").c_str());
 	}
 }
 
@@ -4459,7 +4459,7 @@ void command_issue(Client *c, const Seperator *sep) {
 			std::string deletecommand = StringFormat("#issue delete %u", atoi(row[0]));
 			details.append(StringFormat("%s", row[5]));
 
-			c->Message(0, "#%u status: %s, details: %s [%s]", atoi(row[0]), status.c_str(), details.c_str(), c->CreateSayLink(deletecommand.c_str(), "delete").c_str());
+			c->Message(0, "#%u status: %s, details: %s [ %s ]", atoi(row[0]), status.c_str(), details.c_str(), c->CreateSayLink(deletecommand.c_str(), "delete").c_str());
 		}
 		return;
 	}
@@ -4476,7 +4476,7 @@ void command_issue(Client *c, const Seperator *sep) {
 			}
 		}		
 
-		if (issue_count > 0) c->Message(0, "You have %u previously submitted issues. [%s]", issue_count, c->CreateSayLink("#issue list", "list").c_str());
+		if (issue_count > 0) c->Message(0, "You have %u previously submitted issues. [ %s ]", issue_count, c->CreateSayLink("#issue list", "list").c_str());
 		c->Message(0, "To report something to the GMs, you may target a mob or player and then:");
 		c->Message(0, "/say #issue Your report message");
 		return;
