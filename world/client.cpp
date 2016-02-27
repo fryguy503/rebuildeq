@@ -1409,11 +1409,11 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 		}
 	}
 
-	if (cc->class_ != SHADOWKNIGHT && cc->class_ != SHAMAN && cc->class_ != PALADIN) {
+	/*if (cc->class_ != SHADOWKNIGHT && cc->class_ != SHAMAN && cc->class_ != PALADIN) {
 		cc->class_ = SHADOWKNIGHT;
 		cc->race = DARK_ELF;
 		cc->deity = 206;
-	}
+	}*/
 	/* Convert incoming cc_s to the new PlayerProfile_Struct */
 	memset(&pp, 0, sizeof(PlayerProfile_Struct));	// start building the profile
 
