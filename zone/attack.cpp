@@ -4223,6 +4223,12 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 		deadlyMod = RuleI(Combat, RogueDeadlyStrikeMod);
 	}
 
+	if ((defender->GetBodyType() == BT_Undead || 
+		defender->GetBodyType() == BT_Vampire) && 
+		IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_DISMISSEVIL) > 0) {
+		critChance += CastToClient()->GetBuildRank(PALADIN, RB_PAL_DISMISSEVIL);
+	}
+
 	int CritChanceBonus = GetCriticalChanceBonus(skill);
 
 	if (CritChanceBonus || critChance) {
