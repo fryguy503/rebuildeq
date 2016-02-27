@@ -425,7 +425,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Frail";
-			$newSkill->desc = 'Stuns have a <em data-base="1">1</em>% chance to also root the target<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Stun spells have a <em data-base="1">1</em>% chance to also root the target<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[49] = $newSkill;
 

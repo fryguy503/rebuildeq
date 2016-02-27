@@ -917,6 +917,17 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 						}
 
+						if ((spell_id == 2190 || spell_id == 2581 || spell_id == 2582 || spell_id == 216 || 
+							spell_id == 123 || spell_id == 3975 || spell_id == 124 || spell_id == 2587) &&
+							caster->IsClient() &&  //Casted by a paladin client
+							caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_FRAIL) > 0 && //Has divine stun							
+							IsNPC() && //target is an NPC
+							zone->random.Roll((int)caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_FRAIL))
+							) {
+							caster->Message(MT_Spells, "%s looks frail.", this->GetCleanName());
+							caster->SpellFinished(230, this);
+						}
+
 						Stun(effect_value);
 					} else {
 						if (IsClient())
