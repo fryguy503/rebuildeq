@@ -255,8 +255,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 											casterClient->SetMana(caster->GetMana() + manaAmount);
 										}
 									}
-									
-									
+							}
+
+							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN);
+							if (rank > 0 && (spell_id == 2729 || spell_id == 823)) {
+								int cDamage = (rank * dmg * 0.25);
+								casterClient->Message(MT_NonMelee, "Chosen %u added %i bonus damage.", rank, cDamage);
+								dmg -= cDamage;
 							}
 
 							//Shin: Festering Spear
