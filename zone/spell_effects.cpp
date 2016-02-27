@@ -264,6 +264,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg -= cDamage;
 							}
 
+							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_FLAMEOFLIGHT);
+							if (rank > 0 && spell_id == 1454) {
+								int fDamage = (rank * dmg * 0.20);
+								casterClient->Message(MT_NonMelee, "Flame of Light %u added %i bonus damage.", rank, fDamage);
+								dmg -= fDamage;
+							}
+
 							//Shin: Festering Spear
 							if (casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR) > 0) {
 								rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
