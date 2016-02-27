@@ -383,7 +383,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Resist Temptation";
-			$newSkill->desc = 'Grants a defensive discipline as well as a high magic resistance for <em data-base="60">60</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants a chance to resist a detrimental spell by <em data-base="1">1</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[34] = $newSkill;
 
