@@ -277,7 +277,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Rizlona's Purpose";
-			$newSkill->desc = 'Enhances Rizlona\'s songs with <em data-base="1">1</em> additional overhaste and spell damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Enhances Rizlona\'s songs with <em data-base="1">1</em>% additional overhaste and spell damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[13] = $newSkill;
 
@@ -331,13 +331,13 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Triple Attack";
-			$newSkill->desc = 'Allows a <em data-base="1">1</em> chance to triple attack<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants a <em data-base="1">1</em>% chance to triple attack<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[34] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Chant Cycle";
-			$newSkill->desc = 'Chants with damage over time components now deal <em data-base="10">10</em>% more damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Chants with damage over time effects now deal <em data-base="10">10</em>% more damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[36] = $newSkill;
 
@@ -367,7 +367,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Song of Stone";
-			$newSkill->desc = 'Grants the Song of Stone AA, allowing you to charm targets up either your level, or level <em data-base="12">12</em>, whichever is less.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Song of Stone AA, allowing you to charm targets up to either your level, or level <em data-base="12">12</em>, whichever is less.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[46] = $newSkill;
 
