@@ -239,6 +239,150 @@ class Controller_Web_Builds extends Template_Web_Core {
 		switch($class) {
 			//==================BARD======================
 			case "bard":
+				$newSkill = new stdClass();
+			$newSkill->title = "Elemental Harmony";
+			$newSkill->desc = 'Resistant songs now grant an additional <em data-base="10">10</em> resistance to each resistance type<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[0] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Healing Treble";
+			$newSkill->desc = 'Healing effects on songs are <em data-base="10">10</em>% more effective<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[2] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Psalm of Norrath";
+			$newSkill->desc = 'Damage shield effects on songs are <em data-base="20">20</em>% more effective<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[4] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Cassindra's Chorus";
+			$newSkill->desc = 'Mana effects on songs are <em data-base="10">10</em>% more effective<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[6] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Shield of Songs";
+			$newSkill->desc = 'Rune effects on songs are <em data-base="20">20</em>% more effective<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[8] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Katta's Concord";
+			$newSkill->desc = 'The proc effect on Katta now also grants a <em data-base="10">10</em> damage proc<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[10] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Rizlona's Purpose";
+			$newSkill->desc = 'Enhances Rizlona\'s songs with <em data-base="1">1</em> additional overhaste and spell damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[13] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Bard's Wish";
+			$newSkill->desc = 'All songs are sung <em data-base="0.2">0.2</em> seconds faster<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[16] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Jonathon's Whistle";
+			$newSkill->desc = 'All self only haste songs grant an additional <em data-base="2">2</em> haste and overhaste<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[18] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Offhand Attack";
+			$newSkill->desc = 'All offhand attacks have <em data-base="5">5</em> additional chance to hit<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[20] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Innate Songblade";
+			$newSkill->desc = 'Increases chance to hit and attack by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[22] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Warsong of Zek";
+			$newSkill->desc = 'Grants an innate ability to lower AC of target by <em data-base="1">1</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[24] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Dance of Blades";
+			$newSkill->desc = 'Grants the Dance of Blades AA, increasing chance to dual wield and double attack as well as proc Bladewhirl at <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[26] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Cacophony";
+			$newSkill->desc = 'Grants the Cacophony AA, applying a damage over time on the target dealing <em data-base="10">10</em> damage per tick for 60 seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[28] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Harmonic Affinity";
+			$newSkill->desc = 'Allows the bard to gain affinity with their weapons, causing never before seen proc rates at <em data-base="10">10</em>% effectiveness<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[31] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Triple Attack";
+			$newSkill->desc = 'Allows a <em data-base="1">1</em> chance to triple attack<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[34] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Chant Cycle";
+			$newSkill->desc = 'Chants with damage over time components now deal <em data-base="10">10</em>% more damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[36] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Boastful Bellow";
+			$newSkill->desc = 'Grants the Boastful Bellow AA, and lowers the reuse time by <em data-base="10">10</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[38] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Selo's Crescendo";
+			$newSkill->desc = 'Selo\'s movement songs now work indoors while you are equal or below level <em data-base="12">12</em><span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[40] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Shield of Notes";
+			$newSkill->desc = 'Grants the Shield of Notes AA, allowing you to absorb <em data-base="10">10</em>% of your max hp in spell or melee damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[42] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Shout";
+			$newSkill->desc = 'Increases range of AoE DoTs by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[44] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Song of Stone";
+			$newSkill->desc = 'Grants the Song of Stone AA, allowing you to charm targets up either your level, or level <em data-base="12">12</em>, whichever is less.<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[46] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Lingering Twilight";
+			$newSkill->desc = 'Mesmerizing Songs last <em data-base="20">20</em>% longer and have <em data-base="5">5</em>% less resist chance<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[49] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Fading Memories";
+			$newSkill->desc = 'Grants the Fading Memories AA, allowing you to escape all aggressions towards you, the mana cost is reduced by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[52] = $newSkill;
+
 			break;
 			//==================CLERIC======================
 			case "cleric":
@@ -248,7 +392,6 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill->desc = 'Bash now has a chance to heal nearby group members for <em data-base="2">2</em>% of your maximum health<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[0] = $newSkill;
-			break;
 
 			//4
 			$newSkill = new stdClass();
