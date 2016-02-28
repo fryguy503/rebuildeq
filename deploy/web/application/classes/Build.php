@@ -77,7 +77,6 @@ class Build {
 			$grandTotal += $val;
 		}
 
-		$totalTier = $tier1;
 		if ($tier12 >= 1 && $tier11 < 5) return false;
 		if ($tier13 >= 1 && $tier12 < 5) return false;
 		if ($tier14 >= 1 && $tier13 < 5) return false;
