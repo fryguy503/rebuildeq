@@ -289,7 +289,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jonathon's Whistle";
-			$newSkill->desc = 'All self only haste songs grant an additional <em data-base="2">2</em> haste and overhaste<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'All self only haste songs grant an additional <em data-base="10">10</em>% haste<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[18] = $newSkill;
 

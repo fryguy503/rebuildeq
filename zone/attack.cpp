@@ -433,12 +433,14 @@ bool Mob::AvoidDamage(Mob *other, int32 &damage, int hand)
 			int slip = aabonuses.OffhandRiposteFail + itembonuses.OffhandRiposteFail + spellbonuses.OffhandRiposteFail;
 			chance += chance * slip / 100;
 		}
+		
 		if (chance > 0 && zone->random.Roll(chance)) { // could be <0 from offhand stuff
 			damage = -3;
 			return true;
 		}
 	}
 
+	
 	// block
 	bool bBlockFromRear = false;
 
@@ -1191,6 +1193,11 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			hate *= opts->hate_percent;
 			hate += opts->hate_flat;
 			hit_chance_bonus += opts->hit_chance;
+		}
+		if (Hand == MainSecondary && IsClient() && GetBuildRank(BARD, RB_BRD_OFFHANDATTACK) > 0) {
+			int hcb = (hit_chance_bonus * 0.05 * GetBuildRank(BARD, RB_BRD_OFFHANDATTACK));
+			Message(MT_NonMelee, "Offhand Attack %u gave a %i->%i bonus", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb);
+			hit_chance_bonus += hcb;
 		}
 
 		//check to see if we hit..
