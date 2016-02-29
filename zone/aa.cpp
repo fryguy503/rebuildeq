@@ -1145,7 +1145,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaRabidBear && GetBuildRank(SHAMAN, RB_SHM_RABIDBEAR) < 1 ||
 		rank_id == aaAncestralGuard && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALGUARD) < 1 ||
 		rank_id == aaFeralSwipe && GetBuildRank(SHAMAN, RB_SHM_FERALSWIPE) < 1 ||
-		rank_id == aaParagonofSpirit && GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT) < 1 
+		rank_id == aaParagonofSpirit && GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT) < 1 ||
+		rank_id == aaBoastfulBellow && GetBuildRank(SHAMAN, RB_BRD_BOASTFULBELLOW) < 1
 		) {
 		Message(13, "You cannot use this ability until you unlock it via %s.", CreateSayLink("#builds", "#builds").c_str());
 		return;

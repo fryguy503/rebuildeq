@@ -1939,7 +1939,9 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 
 	if( spells[spell_id].zonetype == 1 && !zone->CanCastOutdoor()){
 		if(IsClient()){
-				if(!CastToClient()->GetGM()){
+				if(!CastToClient()->GetGM() &&
+					((spell_id == 717 || spell_id == 2605 || spell_id == 1750) && CastToClient()->GetBuildRank(BARD, RB_BRD_SELOSCRESCENDO) == 1)//Selo's works indoors
+					){
 					Message_StringID(13, CAST_OUTDOORS);
 					return false;
 				}

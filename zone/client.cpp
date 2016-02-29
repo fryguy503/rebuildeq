@@ -8906,11 +8906,21 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Dance of Blades\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == BARD && i == RB_BRD_SHIELDOFNOTES && GetAA(aaShieldofNotes) < 1) {
+					TrainAARank(aaShieldofNotes);
+					Message(15, "You have unlocked the AA \"Shield of Notes\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == BARD && i == RB_BRD_BOASTFULBELLOW && GetAA(aaBoastfulBellow) < 1) {
+					TrainAARank(aaBoastfulBellow);
+					Message(15, "You have unlocked the AA \"Boastful Bellow\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == BARD && i == RB_BRD_CACOPHONY && GetAA(aaCacophony) < 1) {
 					TrainAARank(aaCacophony);
 					Message(15, "You have unlocked the AA \"Cacophony\"! Find the hotkey in your Alternate Advancement Window.");
 				}
-
+				
 				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
 					TrainAARank(aaDeathPeace2);
 					Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");						
@@ -9816,7 +9826,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_BRD_DANCEOFBLADES) return "Dance of Blades";
 		else if (id == RB_BRD_CACOPHONY) return "Cacophony";
 		else if (id == RB_BRD_HARMONICAFFINITY) return "Harmonic Affinity";
-		else if (id == RB_BRD_TRIPLEATTACK) return "Triple Attack";
+		else if (id == RB_BRD_DOUBLEATTACK) return "Triple Attack";
 		else if (id == RB_BRD_CHANTCYCLE) return "Chant Cycle";
 		else if (id == RB_BRD_BOASTFULBELLOW) return "Bastful Bellow";
 		else if (id == RB_BRD_SELOSCRESCENDO) return "Selo's Crescendo";

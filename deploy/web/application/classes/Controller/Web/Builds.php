@@ -361,7 +361,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Shout";
-			$newSkill->desc = 'Increases range of AoE DoTs by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases range of PB AE songs by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[44] = $newSkill;
 
