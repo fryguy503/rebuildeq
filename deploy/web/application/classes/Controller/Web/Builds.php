@@ -894,7 +894,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill->title = "Embrace Shadow";
 			$newSkill->desc = 'Each time you feign death, grants a <em data-base="20">20</em>% chance<span class="perLevel"> per rank</span> to instantly be invisible to both living and undead creatures.';
 			$newSkill->image = "/images/builds/icons/rb-sk-embraceshadow.png";	
-			$skills[43] = $newSkill;
+			$skills[42] = $newSkill;
 			//44
 			//45
 			//46
@@ -902,21 +902,21 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill->title = "Siphon of Death";
 			$newSkill->desc = 'Scream of Death and Shroud of Death now also grant a mana tap for <em data-base="5">5</em>% of damage dealt<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-siphondeath.png";	
-			$skills[46] = $newSkill;					
+			$skills[44] = $newSkill;					
 			//47
 			//48
 			$newSkill = new stdClass();
 			$newSkill->title = "Nightmare";
 			$newSkill->desc = 'Fear now causes target to freeze in panic for <em data-base="2">2</em>seconds<span class="perLevel"> per rank</span> before fleeing.';
 			$newSkill->image = "/images/builds/icons/rb-sk-nightmare.png";
-			$skills[48] = $newSkill;					
+			$skills[46] = $newSkill;					
 			//49
 			//50
 			$newSkill = new stdClass();
 			$newSkill->title = "Mental Resistance";
 			$newSkill->desc = 'Gives a <em data-base="2">2</em>% chance to resist stun effects<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-mentalresistance.png";	
-			$skills[50] = $newSkill;
+			$skills[49] = $newSkill;
 			//51
 			//52
 			$newSkill = new stdClass();

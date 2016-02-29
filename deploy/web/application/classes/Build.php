@@ -2,7 +2,7 @@
 
 class Build {
 	public static function clean($build) {
-		$skipElements = array(1, 3, 5, 7,9, 11, 12, 14, 15, 17, 19, 21, 23, 25, 27, 29, 30, 32, 33, 35, 37, 39, 41, 42, 44, 45, 47, 49, 51, 53);
+		$skipElements = array(1, 3, 5, 7,9, 11, 12, 14, 15, 17, 19, 21, 23, 25, 27, 29, 30, 32, 33, 35, 37, 39, 41, 43, 45, 47, 48, 50, 51,  53);
 		$skipElements = array_flip($skipElements);
 		//Validate For tier-reqs TOTALS
 		for ($i = 0; $i < 53; $i++) {
@@ -50,6 +50,7 @@ class Build {
 				$val = intval($build[$i]);
 			}
 			if ($val > 5 || $val < 0) return false;
+
 			if ($i >= 0 && $i <= 2) $tier11 += $val;
 			if ($i >= 18 && $i <= 20) $tier21 += $val;
 			if ($i >= 36 && $i <= 38) $tier31 += $val;
