@@ -683,6 +683,11 @@ void Mob::MeleeMitigation(Mob *attacker, int32 &damage, int32 minhit, ExtraAttac
 			myac *= (1.0f - opts->armor_pen_percent);
 			myac -= opts->armor_pen_flat;
 		}
+		if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(BARD, RB_BRD_WARSONGOFZEK) > 0) {
+			int32 woz = (1.0f - (0.01 * attacker->CastToClient()->GetBuildRank(BARD, RB_BRD_WARSONGOFZEK)));
+			attacker->Message(MT_NonMelee, "Warsong of Zek %u reduced AC from %i to %i", myac, myac * woz);
+			myac *= woz;
+		}
 
 		if (damage > 0 && myac > 0) {
 			int acfail=1000;
