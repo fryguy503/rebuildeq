@@ -1598,7 +1598,13 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 		switch (effectid)
 		{
 			case SE_CurrentHP: //regens
-				
+
+				if (caster && caster->IsClient()) {
+					rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_HEALINGTREBLE);
+					if (rank > 0) {
+						effect_value += (rank * 0.1 * effect_value);
+					}
+				}
 				if(effect_value > 0) {
 					new_bonus->HPRegen += effect_value;
 				}
@@ -1954,7 +1960,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster && caster->IsClient()) {
 					rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_PSALMOFNORRATH);
 					if (rank > 0) {
-						effect_value += (rank * 10);
+						effect_value += (effect_value * 0.2 * rank);
 					}
 				}
 				new_bonus->DamageShield += effect_value;
