@@ -8894,7 +8894,11 @@ void Client::RefreshBuild() {
 					message.append(StringFormat("! (%u)", n));
 					Message(270, message.c_str());
 				}
-				
+				if (GetClass() == BARD && i == RB_BRD_DANCEOFBLADES && GetAA(aaDanceofBlades) < 1) {
+					TrainAARank(aaDanceofBlades);
+					Message(15, "You have unlocked the AA \"Dance of Blades\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
 					TrainAARank(aaDeathPeace2);
 					Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");						
