@@ -3842,6 +3842,8 @@ float Mob::GetProcChances(float ProcBonus, uint16 hand)
 		ProcChance += ProcChance * ProcBonus / 100.0f;
 	}
 
+
+
 	Log.Out(Logs::Detail, Logs::Combat, "Proc chance %.2f (%.2f from bonuses)", ProcChance, ProcBonus);
 	return ProcChance;
 }
@@ -3949,6 +3951,10 @@ void Mob::TryWeaponProc(const ItemInst *inst, const Item_Struct *weapon, Mob *on
 
 	if (hand != MainPrimary) //Is Archery intened to proc at 50% rate?
 		ProcChance /= 2;
+
+	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY) > 0) { //Proc chance increases with this skill
+		ProcChance += (ProcChance * 0.1 * CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
+	}
 
 	// Try innate proc on weapon
 	// We can proc once here, either weapon or one aug
