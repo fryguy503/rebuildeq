@@ -2294,6 +2294,19 @@ bool Client::CheckIncreaseSkill(SkillUseTypes skillid, Mob *against_who, int cha
 		}
 	}
 
+	//Double Attack special code for bard
+	if (skillid == SkillDoubleAttack) {
+		if (GetClass() == BARD && GetBuildRank(BARD, RB_BRD_DOUBLEATTACK) == 0) && skillval > 0) {
+			//Reset skill, bard shouldn't have double attack if untrained
+			SetSkill((SkillUseTypes)SkillDoubleAttack, 0);
+			return false;
+		}
+		//Cap is based on build rank for double attack unlock
+		if (GetBuildRank(BARD, RB_BRD_DOUBLEATTACK) > 0) { 
+			maxskill = GetBuildRank(BARD, RB_BRD_DOUBLEATTACK) * 30;
+		}
+	}
+	
 	// Make sure we're not already at skill cap
 	if (skillval < maxskill)
 	{
@@ -8897,7 +8910,7 @@ void Client::RefreshBuild() {
 
 
 				if (GetClass() == BARD && i == RB_BRD_DOUBLEATTACK && GetSkill(SkillDoubleAttack) < (n * 30)) { //Give double attack		
-					SetSkill((SkillUseTypes)SkillDoubleAttack, (n * 30));
+					SetSkill((SkillUseTypes)SkillDoubleAttack, 1);
 				}
 
 
