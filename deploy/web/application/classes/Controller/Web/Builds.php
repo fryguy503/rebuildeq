@@ -271,7 +271,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Katta's Concord";
-			$newSkill->desc = 'The proc effect on Katta now also grants a <em data-base="10">10</em> damage proc<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Changes Katta to Song of the Storm once rank 5, dealing a <em data-base="15">15</em> damage proc<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[10] = $newSkill;
 

@@ -1926,6 +1926,9 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 		resist_adjust -= (resist_adjust * 0.1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS));
 	}
 
+	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_KATTASCONCORD) == 5 && spell_id == 2604) {
+		spell_id = 6734;
+	}
 	if(!IsValidSpell(spell_id))
 		return false;
 
