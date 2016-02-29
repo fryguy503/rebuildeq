@@ -9782,6 +9782,32 @@ void Client::ResetBuild() {
 
 std::string Client::GetBuildName(uint32 id) {
 	switch (this->GetClass()) {
+	case BARD:
+		if (id == RB_BRD_ELEMENTALHARMONY) return "Elemental Harmony";
+		else if (id == RB_BRD_HEALINGTREBLE) return "Healing Treble";
+		else if (id == RB_BRD_PSALMOFNORRATH) return "Psalm of Norrath";
+		else if (id == RB_BRD_CASSINDRASCHORUS) return "Cassindra's Chorus";
+		else if (id == RB_BRD_SHIELDOFSONGS) return "Shield of Songs";
+		else if (id == RB_BRD_KATTASCONCORD) return "Katta's Concord";
+		else if (id == RB_BRD_RIZLONASPURPOSE) return "Rizlona's Purpose";
+		else if (id == RB_BRD_BARDSWISH) return "Bard's Wish";
+		else if (id == RB_BRD_JONATHONSWHISTLE) return "Jonathon's Whistle";
+		else if (id == RB_BRD_OFFHANDATTACK) return "Offhand Attack";
+		else if (id == RB_BRD_INNATESONGBLADE) return "Innate Songblade";
+		else if (id == RB_BRD_WARSONGOFZEK) return "Warsong of Zek";
+		else if (id == RB_BRD_DANCEOFBLADES) return "Dance of Blades";
+		else if (id == RB_BRD_CACOPHONY) return "Cacophony";
+		else if (id == RB_BRD_HARMONICAFFINITY) return "Harmonic Affinity";
+		else if (id == RB_BRD_TRIPLEATTACK) return "Triple Attack";
+		else if (id == RB_BRD_CHANTCYCLE) return "Chant Cycle";
+		else if (id == RB_BRD_BOASTFULBELLOW) return "Bastful Bellow";
+		else if (id == RB_BRD_SELOSCRESCENDO) return "Selo's Crescendo";
+		else if (id == RB_BRD_SHIELDOFNOTES) return "Shield of Notes";
+		else if (id == RB_BRD_SHOUT) return "Shout";
+		else if (id == RB_BRD_SONGOFSTONE) return "Song of Stone";
+		else if (id == RB_BRD_LINGERINGTWILIGHT) return "Lingering Twilight";
+		else if (id == RB_BRD_FADINGMEMORIES) return "Fading Memories";
+		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";
 		else if (id == RB_PAL_HANDOFPIETY) return "Hand of Piety";

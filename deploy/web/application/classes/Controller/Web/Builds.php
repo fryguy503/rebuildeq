@@ -239,7 +239,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 		switch($class) {
 			//==================BARD======================
 			case "bard":
-				$newSkill = new stdClass();
+			$newSkill = new stdClass();
 			$newSkill->title = "Elemental Harmony";
 			$newSkill->desc = 'Resistant songs now grant an additional <em data-base="10">10</em> resistance to each resistance type<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
