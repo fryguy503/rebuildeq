@@ -1633,8 +1633,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if ((effect_value - 100) > 0) { // Haste
 					if (new_bonus->haste < 0) break; // Slowed - Don't apply haste
 
-					if (spell_id == 2585 && IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_WAVEOFMARR) > 0) {
-						effect_value += (int)(CastToClient()->GetBuildRank(PALADIN, RB_PAL_WAVEOFMARR) * 10);
+					if (spell_id == 2585 && IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_PURPOSEOFMARR) > 0) {
+						effect_value += (int)(CastToClient()->GetBuildRank(PALADIN, RB_PAL_PURPOSEOFMARR) * 10);
 					}
 
 					if ((effect_value - 100) > new_bonus->haste) {
