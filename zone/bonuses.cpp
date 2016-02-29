@@ -1548,6 +1548,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 	bool AdditiveWornBonus = false;
 	Mob *caster = nullptr;
 
+	uint32 rank = 0;
+
 	if(!IsAISpellEffect && !IsValidSpell(spell_id))
 		return;
 
@@ -1798,36 +1800,72 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistFire:
 			{
+				if (caster && caster->IsClient()) {
+					rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+					if (rank > 0) {
+						effect_value += (rank * 10);
+					}
+				}
 				new_bonus->FR += effect_value;
 				break;
 			}
 
 			case SE_ResistCold:
 			{
+				if (caster && caster->IsClient()) {
+					rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+					if (rank > 0) {
+						effect_value += (rank * 10);
+					}
+				}
 				new_bonus->CR += effect_value;
 				break;
 			}
 
 			case SE_ResistPoison:
 			{
+				if (caster && caster->IsClient()) {
+					rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+					if (rank > 0) {
+						effect_value += (rank * 10);
+					}
+				}
 				new_bonus->PR += effect_value;
 				break;
 			}
 
 			case SE_ResistDisease:
 			{
+				if (caster && caster->IsClient()) {
+					rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+					if (rank > 0) {
+						effect_value += (rank * 10);
+					}
+				}
 				new_bonus->DR += effect_value;
 				break;
 			}
 
 			case SE_ResistMagic:
 			{
+				if (caster && caster->IsClient()) {
+					rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+					if (rank > 0) {
+						effect_value += (rank * 10);
+					}
+				}
 				new_bonus->MR += effect_value;
 				break;
 			}
 
 			case SE_ResistAll:
 			{
+				if (caster && caster->IsClient()) {
+					rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+					if (rank > 0) {
+						effect_value += (rank * 10);
+					}
+				}
 				new_bonus->MR += effect_value;
 				new_bonus->DR += effect_value;
 				new_bonus->PR += effect_value;
@@ -1838,6 +1876,12 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistCorruption:
 			{
+				if (caster && caster->IsClient()) {
+					rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+					if (rank > 0) {
+						effect_value += (rank * 10);
+					}
+				}
 				new_bonus->Corrup += effect_value;
 				break;
 			}
