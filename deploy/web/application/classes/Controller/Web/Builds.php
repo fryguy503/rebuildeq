@@ -295,13 +295,13 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Offhand Attack";
-			$newSkill->desc = 'All offhand attacks have <em data-base="5">5</em> additional chance to hit<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'All offhand attacks have <em data-base="5">5</em>% additional chance to hit<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[20] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Innate Songblade";
-			$newSkill->desc = 'Increases chance to hit and attack by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases chance to hit and damage by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[22] = $newSkill;
 

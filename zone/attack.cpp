@@ -1196,8 +1196,18 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		}
 		if (Hand == MainSecondary && IsClient() && GetBuildRank(BARD, RB_BRD_OFFHANDATTACK) > 0) {
 			int hcb = (hit_chance_bonus * 0.05 * GetBuildRank(BARD, RB_BRD_OFFHANDATTACK));
-			Message(MT_NonMelee, "Offhand Attack %u gave a %i->%i bonus", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb);
+			Message(MT_NonMelee, "Offhand Attack %u gave a %i->%i bonus.", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb);
 			hit_chance_bonus += hcb;
+		}
+
+		if (IsClient() && GetBuildRank(BARD, RB_BRD_INNATESONGBLADE) > 0) {
+			int isb = (hit_chance_bonus * 0.02 * GetBuildRank(BARD, RB_BRD_INNATESONGBLADE));
+			int isd = (damage * 0.02 * GetBuildRank(BARD, RB_BRD_INNATESONGBLADE));
+			if (isd > 0 && isb > 0) {
+				Message(MT_NonMelee, "Innate Songblade %u gave a %i->%i bonus to hit and %i to damage.", GetBuildRank(BARD, RB_BRD_INNATESONGBLADE), hit_chance_bonus, isb, isd);
+				hit_chance_bonus += isb;
+				damage += isd;
+			}
 		}
 
 		//check to see if we hit..
