@@ -330,8 +330,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$skills[31] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Triple Attack";
-			$newSkill->desc = 'Grants a <em data-base="1">1</em>% chance to triple attack<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Double Attack";
+			$newSkill->desc = 'Grants <em data-base="30">30</em> points into double attack<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[34] = $newSkill;
 

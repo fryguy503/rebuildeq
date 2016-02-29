@@ -8894,6 +8894,13 @@ void Client::RefreshBuild() {
 					message.append(StringFormat("! (%u)", n));
 					Message(270, message.c_str());
 				}
+
+
+				if (GetClass() == BARD && i == RB_BRD_DOUBLEATTACK && GetSkill(SkillDoubleAttack) < (n * 30)) { //Give double attack		
+					SetSkill((SkillUseTypes)SkillDoubleAttack, (n * 30));
+				}
+
+
 				if (GetClass() == BARD && i == RB_BRD_DANCEOFBLADES && GetAA(aaDanceofBlades) < 1) {
 					TrainAARank(aaDanceofBlades);
 					Message(15, "You have unlocked the AA \"Dance of Blades\"! Find the hotkey in your Alternate Advancement Window.");
@@ -9778,7 +9785,9 @@ void Client::ResetBuild() {
 	strn0cpy(m_epp.build, "00000000000000000000000000000000000000000000000000000", sizeof(m_epp.build)); //copy to session
 	std::string buildbuffer = m_epp.build;
 	buildbuffer.erase(53);
-
+	if (GetClass() == BARD && GetSkill(SkillDoubleAttack) > 0) { //Reset Double Attack?		
+		SetSkill((SkillUseTypes)SkillDoubleAttack, 0);
+	}
 	std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %d",
 		EscapeString(buildbuffer).c_str(), CharacterID());
 	auto results = database.QueryDatabase(query);
