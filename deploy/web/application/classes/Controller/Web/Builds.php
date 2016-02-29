@@ -373,7 +373,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Twilight";
-			$newSkill->desc = 'Mesmerizing Songs last <em data-base="20">20</em>% longer and have <em data-base="5">5</em>% less resist chance<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Mesmerizing songs last <em data-base="20">20</em>% longer<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[49] = $newSkill;
 

@@ -3055,38 +3055,38 @@ int Mob::CheckStackConflict(uint16 spellid1, int caster_level1, uint16 spellid2,
 			effect1 == SE_AttackSpeed ||
 			effect1 == SE_AttackSpeed2 ||
 			effect1 == SE_AttackSpeed3
-		)
+)
 		{
 			sp1_value -= 100;
 			sp2_value -= 100;
 		}
 
-		if(sp1_value < 0)
-			sp1_value = 0 - sp1_value;
-		if(sp2_value < 0)
-			sp2_value = 0 - sp2_value;
+if (sp1_value < 0)
+	sp1_value = 0 - sp1_value;
+if (sp2_value < 0)
+	sp2_value = 0 - sp2_value;
 
-		if(sp2_value < sp1_value) {
-			Log.Out(Logs::Detail, Logs::Spells, "Spell %s (value %d) is not as good as %s (value %d). Rejecting %s.",
-				sp2.name, sp2_value, sp1.name, sp1_value, sp2.name);
-			return -1;	// can't stack
-		}
-		if (sp2_value != sp1_value)
-			values_equal = false;
-		//we dont return here... a better value on this one effect dosent mean they are
-		//all better...
+if (sp2_value < sp1_value) {
+	Log.Out(Logs::Detail, Logs::Spells, "Spell %s (value %d) is not as good as %s (value %d). Rejecting %s.",
+		sp2.name, sp2_value, sp1.name, sp1_value, sp2.name);
+	return -1;	// can't stack
+}
+if (sp2_value != sp1_value)
+values_equal = false;
+//we dont return here... a better value on this one effect dosent mean they are
+//all better...
 
-		Log.Out(Logs::Detail, Logs::Spells, "Spell %s (value %d) is not as good as %s (value %d). We will overwrite %s if there are no other conflicts.",
-			sp1.name, sp1_value, sp2.name, sp2_value, sp1.name);
-		will_overwrite = true;
+Log.Out(Logs::Detail, Logs::Spells, "Spell %s (value %d) is not as good as %s (value %d). We will overwrite %s if there are no other conflicts.",
+	sp1.name, sp1_value, sp2.name, sp2_value, sp1.name);
+will_overwrite = true;
 	}
 
 	//if we get here, then none of the values on the new spell are "worse"
 	//so now we see if this new spell is any better, or if its not related at all
-	if(will_overwrite) {
+	if (will_overwrite) {
 		if (values_equal && effect_match && !IsGroupSpell(spellid2) && IsGroupSpell(spellid1)) {
 			Log.Out(Logs::Detail, Logs::Spells, "%s (%d) appears to be the single target version of %s (%d), rejecting",
-					sp2.name, spellid2, sp1.name, spellid1);
+				sp2.name, spellid2, sp1.name, spellid1);
 			return -1;
 		}
 		Log.Out(Logs::Detail, Logs::Spells, "Stacking code decided that %s should overwrite %s.", sp2.name, sp1.name);
@@ -3119,7 +3119,8 @@ bool Client::CheckSpellLevelRestriction(uint16 spell_id)
 				return false;
 			else if (GetLevel() < 61)
 				return false;
-		} else if (SpellLevel > 50) { // 51-65
+		}
+		else if (SpellLevel > 50) { // 51-65
 			if (GetLevel() < (SpellLevel / 2 + 15))
 				return false;
 		}
@@ -3154,6 +3155,11 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 	if (duration == 0) {
 		Log.Out(Logs::Detail, Logs::Spells, "Buff %d failed to add because its duration came back as 0.", spell_id);
 		return -2;	// no duration? this isn't a buff
+	}
+	if ((spell_id == 724 || spell_id == 741 || spell_id == 868 || spell_id == 1753 || spell_id == 1100 || spell_id == 1197) && 
+		caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT) > 0) {
+		caster->Message(MT_NonMelee, "Lingering Twilight %u improved mesmerize duration.", caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT));
+		duration += duration * 0.2 * caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT);
 	}
 
 	Log.Out(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",

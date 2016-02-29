@@ -8916,6 +8916,16 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Boastful Bellow\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == BARD && i == RB_BRD_SONGOFSTONE && GetAA(aaSongofStone) < 1) {
+					TrainAARank(aaSongofStone);
+					Message(15, "You have unlocked the AA \"Song of Stone\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == BARD && i == RB_BRD_FADINGMEMORIES && GetAA(aaFadingMemories) < 1) {
+					TrainAARank(aaFadingMemories);
+					Message(15, "You have unlocked the AA \"Fading Memories\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == BARD && i == RB_BRD_CACOPHONY && GetAA(aaCacophony) < 1) {
 					TrainAARank(aaCacophony);
 					Message(15, "You have unlocked the AA \"Cacophony\"! Find the hotkey in your Alternate Advancement Window.");
