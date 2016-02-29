@@ -463,13 +463,16 @@ void NPC::AddCardTable() {
 	if (GetBodyType() == BT_Plant) { pool += 5; cardTable[pool] = 100110; } //Plant Card
 	if (GetBodyType() == BT_Summoned || GetBodyType() == BT_Summoned2 || GetBodyType() == BT_Summoned3 || GetBodyType() == BT_SummonedUndead) { pool += 5; cardTable[pool] = 100111; } //Summoned Card
 	if (GetBodyType() == BT_Undead || GetBodyType() == BT_Vampire) { pool += 5; cardTable[pool] = 100112; } //Undead Card
+	
 
 	if (GetRace() == 39) { pool += 500; cardTable[pool] = 100113; } //Gnoll Card 50hp
 	if (GetRace() == 13) { pool += 5; cardTable[pool] = 100114; } //Aviak Card
 	if (GetRace() == 14) { pool += 5; cardTable[pool] = 100115; } //Werewolf Card
 	if (GetRace() == 38) { pool += 5; cardTable[pool] = 100116; } //Spider Card
-	if (GetRace() == 54) { pool += 250; cardTable[pool] = 100117; } //Orc Card 15ac
-
+	if (GetRace() == 54) { pool += 250; cardTable[pool] = 100117; } //Orc Card 15ac	
+	if (GetRace() == 28 || GetRace() == 456) { pool += 5; cardTable[pool] = 100118; } //Fungus Card
+	if (GetRace() == 54) { pool += 250; cardTable[pool] = 100119; } //Goblin Card
+	
 	if (pool < 1) return;
 
 	int dice = zone->random.Int(1, pool);
