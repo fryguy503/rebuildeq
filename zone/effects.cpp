@@ -231,7 +231,7 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 	}
 
 	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_CHANTCYCLE) > 0) {
-		extra_dmg = int32((float)value * 0.01 * (float)CastToClient()->GetBuildRank(BARD, RB_BRD_CHANTCYCLE));
+		extra_dmg = int32((float)value * 0.1 * (float)CastToClient()->GetBuildRank(BARD, RB_BRD_CHANTCYCLE));
 		value += extra_dmg;
 	}
 

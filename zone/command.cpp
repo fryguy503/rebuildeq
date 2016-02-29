@@ -4063,7 +4063,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 	else {
 		c->Message(0, "You are not in an encounter area.");
 	}
-	if (c->GetEPP().next_encounter_time < time(nullptr)) {
+	if (c->GetEPP().next_encounter_time <= time(nullptr)) {
 		c->Message(0, "You are eligable for encounters.");
 	}
 

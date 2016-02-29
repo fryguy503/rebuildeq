@@ -253,7 +253,7 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 
 	//Reduce cast time if it's a bard song, and you have bard's wish
 	if (IsBardSong(spell_id) && IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_BARDSWISH) > 0) {
-		cast_time -= cast_time * 0.2 * CastToClient()->GetBuildRank(BARD, RB_BRD_BARDSWISH);
+		cast_time -= cast_time * 0.066 * CastToClient()->GetBuildRank(BARD, RB_BRD_BARDSWISH);
 	}
 
 	//Added to prevent MQ2 exploitation of equipping normally-unequippable/clickable items with effects and clicking them for benefits.

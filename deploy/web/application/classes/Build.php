@@ -77,24 +77,38 @@ class Build {
 			$grandTotal += $val;
 		}
 
+		$tierTotal = 0;
 		if ($tier12 >= 1 && $tier11 < 5) return false;
-		if ($tier13 >= 1 && $tier12 < 5) return false;
-		if ($tier14 >= 1 && $tier13 < 5) return false;
-		if ($tier15 >= 1 && $tier14 < 5) return false;
-		if ($tier16 >= 1 && $tier15 < 5) return false;
+		$tierTotal += $tier12 + $tier11;
+		if ($tier13 >= 1 && $tierTotal < 10) return false;
+		$tierTotal += $tier13;
+		if ($tier14 >= 1 && $tierTotal < 15) return false;
+		$tierTotal += $tier14;
+		if ($tier15 >= 1 && $tierTotal < 20) return false;
+		$tierTotal += $tier15;
+		if ($tier16 >= 1 && $tierTotal < 25) return false;
 
+		$tierTotal = 0;
 		if ($tier22 >= 1 && $tier21 < 5) return false;
-		if ($tier23 >= 1 && $tier22 < 5) return false;
-		if ($tier24 >= 1 && $tier23 < 5) return false;
-		if ($tier25 >= 1 && $tier24 < 5) return false;
-		if ($tier26 >= 1 && $tier25 < 5) return false;
+		$tierTotal += $tier21 + $tier22;
+		if ($tier23 >= 1 && $tierTotal < 10) return false;
+		$tierTotal += $tier23;
+		if ($tier24 >= 1 && $tierTotal < 15) return false;
+		$tierTotal += $tier24;
+		if ($tier25 >= 1 && $tierTotal < 20) return false;
+		$tierTotal += $tier25;
+		if ($tier26 >= 1 && $tierTotal < 25) return false;		
 
+		$tierTotal = 0;
 		if ($tier32 >= 1 && $tier31 < 5) return false;
-		if ($tier33 >= 1 && $tier32 < 5) return false;
-		if ($tier34 >= 1 && $tier33 < 5) return false;
-		if ($tier35 >= 1 && $tier34 < 5) return false;
-		if ($tier36 >= 1 && $tier35 < 5) return false;
-		//if (($tier1+$tier2+$tier3+$tier4+$tier5+$tier6) > $level) { //
+		$tierTotal += $tier32 + $tier31;
+		if ($tier33 >= 1 && $tierTotal < 10) return false;
+		$tierTotal += $tier33;
+		if ($tier34 >= 1 && $tierTotal < 15) return false;
+		$tierTotal += $tier34;
+		if ($tier35 >= 1 && $tierTotal < 20) return false;
+		$tierTotal += $tier35;
+		if ($tier36 >= 1 && $tierTotal < 25) return false;		
 		if ($grandTotal > $level) {
 			return false;
 		}
