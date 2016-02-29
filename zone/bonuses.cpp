@@ -1951,6 +1951,12 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_DamageShield:
 			{
+				if (caster && caster->IsClient()) {
+					rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_PSALMOFNORRATH);
+					if (rank > 0) {
+						effect_value += (rank * 10);
+					}
+				}
 				new_bonus->DamageShield += effect_value;
 				new_bonus->DamageShieldSpellID = spell_id;
 				//When using npc_spells_effects MAX value can be set to determine DS Type
