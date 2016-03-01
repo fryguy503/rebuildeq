@@ -9384,7 +9384,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 		if (IsValidItem(3040)) { pool += 100; itemTable[pool] = 3040; } //	Blackened Iron Coif
 		if (IsValidItem(1410)) { pool += 150; itemTable[pool] = 1410; } //	Bloodstone Eyepatch
 		if (IsValidItem(4313)) { pool += 100; itemTable[pool] = 4313; } //	Bone Mask Of The Jarsath
-		if (IsValidItem(11987)) { pool += 80; itemTable[pool] = 11987; } //	Bracer Of Scavenging
+		if (IsValidItem(11978)) { pool += 80; itemTable[pool] = 11978; } //	Bracer Of Scavenging
 		if (IsValidItem(11911)) { pool += 100; itemTable[pool] = 11911; } //	Bracer Of The Hidden
 		if (IsValidItem(11584)) { pool += 80; itemTable[pool] = 11584; } //	Dragon Hero Bracer
 		if (IsValidItem(3312)) { pool += 150; itemTable[pool] = 3312; } //	Dwarven Work Boots
