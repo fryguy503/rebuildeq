@@ -2296,7 +2296,7 @@ bool Client::CheckIncreaseSkill(SkillUseTypes skillid, Mob *against_who, int cha
 
 	//Double Attack special code for bard
 	if (skillid == SkillDoubleAttack) {
-		if (GetClass() == BARD && GetBuildRank(BARD, RB_BRD_DOUBLEATTACK) == 0) && skillval > 0) {
+		if (GetClass() == BARD && GetBuildRank(BARD, RB_BRD_DOUBLEATTACK) == 0 && skillval > 0) {
 			//Reset skill, bard shouldn't have double attack if untrained
 			SetSkill((SkillUseTypes)SkillDoubleAttack, 0);
 			return false;
@@ -8999,6 +8999,20 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Act of Valor\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == PALADIN && i == RB_PAL_BRELLSBLESSING) {
+					const Item_Struct* item = database.GetItem(100500);
+					if (item && !CheckLoreConflict(item)) { //if the item exists and it isn't lore conflicting
+						ItemInst *CursorItemInst = GetInv().GetItem(MainCursor);
+						if (CursorItemInst) {
+							Message(13, "Your cursor must be empty before obtaining brell's blessing.");
+						}
+						else {
+							SummonItem(100500);
+							Message(15, "You have obtained the item \"Brell's Blessing\"! If you delete it, run #builds again to resummon it.");
+						}
+					}
+				}
+
 			}
 		}
 	}
@@ -9866,6 +9880,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_PAL_REFRESHINGBREEZE) return "Refreshing Breeze";
 		else if (id == RB_PAL_ELIXIROFMIGHT) return "Elixir of Might";
 		else if (id == RB_PAL_SOULCLEANSING) return "Soul Cleansing";
+		else if (id == RB_PAL_BRELLSBLESSING) return "Brell's Blessing";
 		else if (id == RB_PAL_WAVEOFMARR) return "Wave of Marr";
 		else if (id == RB_PAL_SHIELDOFNIFE) return "Sheild of Nife";
 		else if (id == RB_PAL_ARMOROFFAITH) return "Armor of Faith";
