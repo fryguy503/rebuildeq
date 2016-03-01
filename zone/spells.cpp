@@ -1320,6 +1320,60 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, uint16 slot,
 	}
 	
 
+	if (IsClient() &&
+		CastToClient()->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING) > 0 &&
+		target && 
+		spell_id == 202 &&
+		IsFromItem
+		) {
+		//4065 blessing of austerity
+		//3578
+		
+		if (GetLevel() > 59) {
+			SpellOnTarget(1456, target); //divine str
+			SpellOnTarget(20, target); //shield of words
+			SpellOnTarget(314, target); //resolution
+		}
+		else if (GetLevel() > 57) {
+			SpellOnTarget(488, target); //Naltron
+			SpellOnTarget(1288, target); //Divine Glory
+			SpellOnTarget(312, target); //Valor
+			SpellOnTarget(19, target); //Armor of Faith
+		}
+		else if (GetLevel() > 54) {
+			SpellOnTarget(4064, target); //Austerity
+			SpellOnTarget(1288, target); //Divine Glory
+		}
+		else if (GetLevel() > 48) {
+			SpellOnTarget(19, target); //Armor of Faith
+			SpellOnTarget(312, target); //Valor
+			SpellOnTarget(3578, target); //Divine Vigor
+			SpellOnTarget(487, target); //Symbol of pinzarn
+		}
+		else if (GetLevel() > 45) {
+			SpellOnTarget(19, target); //Armor of Faith
+			SpellOnTarget(312, target); //Valor
+			SpellOnTarget(2584, target); //Divine Vigor
+			SpellOnTarget(487, target); //Symbol of pinzarn
+		}
+		else if (GetLevel() > 32) {
+			SpellOnTarget(2584, target); //Divine Vigor
+			SpellOnTarget(89, target); //Daring
+			SpellOnTarget(18, target); //Guard
+			SpellOnTarget(486, target); //Symbol of Ryltan
+		}
+		else if (GetLevel() > 19) {
+			SpellOnTarget(219, target); //Center
+			SpellOnTarget(485, target); //Transal
+			SpellOnTarget(368, target); //Spirit Armor
+		}
+		else if (GetLevel() > 7) {
+			SpellOnTarget(202, target); //Courage
+			SpellOnTarget(11, target); //Holy Armor
+		}
+		
+	}
+
 	if(IsClient()) {
 		char temp[64];
 		sprintf(temp, "%d", spell_id);
