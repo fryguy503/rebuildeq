@@ -8998,21 +8998,19 @@ void Client::RefreshBuild() {
 					TrainAARank(aaActOfValor);
 					Message(15, "You have unlocked the AA \"Act of Valor\"! Find the hotkey in your Alternate Advancement Window.");
 				}
-
-				if (GetClass() == PALADIN && i == RB_PAL_BRELLSBLESSING) {
-					const Item_Struct* item = database.GetItem(100500);
-					if (item && !CheckLoreConflict(item)) { //if the item exists and it isn't lore conflicting
-						ItemInst *CursorItemInst = GetInv().GetItem(MainCursor);
-						if (CursorItemInst) {
-							Message(13, "Your cursor must be empty before obtaining brell's blessing.");
-						}
-						else {
-							SummonItem(100500);
-							Message(15, "You have obtained the item \"Brell's Blessing\"! If you delete it, run #builds again to resummon it.");
-						}
-					}
+			}
+		}
+		if (GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING)> 0) {
+			const Item_Struct* item = database.GetItem(100500);
+			if (item && !CheckLoreConflict(item)) { //if the item exists and it isn't lore conflicting
+				ItemInst *CursorItemInst = GetInv().GetItem(MainCursor);
+				if (CursorItemInst) {
+					Message(13, "Your cursor must be empty before obtaining brell's blessing.");
 				}
-
+				else {
+					SummonItem(100500);
+					Message(15, "You have obtained the item \"Brell's Blessing\"! If you delete it, run #builds again to resummon it.");
+				}
 			}
 		}
 	}
