@@ -23,7 +23,7 @@ class Controller_Rest_Builds extends Template_Rest_Core {
 			return;
 		}
 		if (empty($character)) {
-			$this->rest->Message = "Invalid Session";
+			$this->rest->Message = "Invalid Session provided.";
 			return;
 		}
 		$build = $character->build_data;
