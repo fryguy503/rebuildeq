@@ -104,7 +104,8 @@ class Controller_Web_Builds extends Template_Web_Core {
 			case "bard":
 			$build->fullName = "Bard";
 			$build->monogram = 8;
-			$build->desc = "Bards sing songs to aid allies in battle.<br> Their 3 styles focus on group, melee, or solo.";
+			$build->desc = "Bards sing songs to aid allies in battle.<br> Their 3 styles focus on group, melee, or solo.
+			Bards sing songs to aid allies in battle.<br><font color='#41974D'>Virtuoso</font> specializes in group support<br> <font color='#2A87C7'>Swordsinger</font> focus on improving melee<br> <font color='#A93640'>Maestro</font> focus on improving songs for solo survivability.";
 			$build->styles[0] = "Virtuoso";
 			$build->styles[1] = "Swordsinger";
 			$build->styles[2] = "Maestro";
