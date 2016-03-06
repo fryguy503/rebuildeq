@@ -459,6 +459,10 @@
 #define EN_FUNGUS 187018 //11016 sporali
 #define EN_SPECTRE 187019 //37021 spectre
 #define EN_ALLIGATOR 187020 //37104 lockjaw
+#define EN_COLDAIN 187021 //129060 an_icewell_sentry
+#define EN_KAELGIANT 187022 //113419 a_kael_giant, rare 113079
+#define EN_RYGORR 187023 //116006 Oracle of Ry`Gorr, 116011 Ry`Gorr elite guard
+#define EN_WYVERN 187024 //117003 Wyvern
 
 //Build Skills
 #define RB_BRD_ELEMENTALHARMONY 0

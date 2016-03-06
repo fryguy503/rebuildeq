@@ -9155,18 +9155,77 @@ void Client::DoEncounterCheck() {
 //Is the client in a valid encounter area?
 bool Client::InEncounterArea() {	
 
-	if (GetZoneID() == 22 &&  //Ecommons
-		GetLevel() < 20 && GetLevel() > 0 &&
-		GetX() < 4845 && GetX() > -778 &&
-		GetY() < 1057 && GetY() > -1157) {
+	int zoneid = GetZoneID();
+	if (GetZoneID() == 22) {  //Ecommons
+		if (GetLevel() < 20 && GetLevel() > 0 &&
+			GetX() < 4845 && GetX() > -778 &&
+			GetY() < 1057 && GetY() > -1157) {
+			return true;
+		}
+		return false;
+	}
+	if (GetZoneID() == 34) { //Nro
+		if (GetLevel() < 20 && GetLevel() > 0 &&
+			GetX() < 1319.44 && GetX() > -840.56 &&
+			GetY() < 2471.97 && GetY() > -1704.55) {
+			return true;
+		}
+		return false;
+	}
+
+	if (zoneid == 129 || //thurgadinb
+		zoneid == 115 || //thurgadina
+		zoneid == 118 || //gd
+		zoneid == 116 || //ew
+		zoneid == 113 || //kael
+		zoneid == 119 || //wakening
+		zoneid == 114 || //skyshrine
+		zoneid == 117 || //cobaltscar
+		zoneid == 125 || //sirens
+		zoneid == 120 || //ww
+		zoneid == 123 || //nec
+		zoneid == 111 || //frozenshadow
+		zoneid == 110 //iceclad
+		) {
 		return true;
 	}
-	if (GetZoneID() == 34 && //Nro
-		GetLevel() < 20 && GetLevel() > 0 &&
-		GetX() < 1319.44 && GetX() > -840.56 &&
-		GetY() < 2471.97 && GetY() > -1704.55) {
-		return true;
+
+
+	//Towns
+	if (zoneid == 1 || //sqeynos
+		zoneid == 2 || //nqeynos
+		zoneid == 3 || //sfg
+		zoneid == 8 || //nfreeport
+		zoneid == 9 || //freportw
+		zoneid == 10 ||//efreeport
+		zoneid == 19 || //rivervale
+		zoneid == 23 || //erudin palace
+		zoneid == 24 || //erudin
+		zoneid == 26 || //cshome
+		zoneid == 29 || //halas
+		zoneid == 40 || //neriaka
+		zoneid == 41 || //erniakb
+		zoneid == 42 || //neriakc
+		zoneid == 43 || //neriakd
+		zoneid == 49 || //oggok
+		zoneid == 52 || //grobb
+		zoneid == 54 || //gfay
+		zoneid == 55 || //akanon
+		zoneid == 60 || //kaladim
+		zoneid == 61 || //felwitha
+		zoneid == 62 || //felwithb
+		zoneid == 67 || //kaladimb
+		zoneid == 75 || //paineel
+		zoneid == 77 || //arena
+		zoneid == 82 || //cabwest
+		zoneid == 106 || //cabeast
+		zoneid == 115 || //thurgadina
+		zoneid == 124 || //veeshan
+		zoneid == 129 //thurgadinb
+		) {
+		return false;
 	}
+
 
 	//This should be false, but temporary so encounters can happen!
 	return true;
@@ -9204,12 +9263,12 @@ bool Client::IsEncounterReady() {
 
 
 //Cause an encounter emote
-void Client::EmoteEncounter() {	
+void Client::EmoteEncounter() {
 	//bat_idl2 = bat 
 	//bell005.wav errie bell
 	m_epp.encounter_timeout = time(nullptr) + 360; //You have 6 minutes to spawn the encounter.
 	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(360, 10800); //6 mins to 3 hours, this is if they don't accept it etc.
-			
+
 	Save(); //Save now that encounter has happened	
 
 	//Encounter table for randomizing what kind of encounter
@@ -9239,6 +9298,47 @@ void Client::EmoteEncounter() {
 	encounterTable[pool] = EN_AIRELEMENTAL;
 	pool += 200;
 	encounterTable[pool] = EN_SPECTRE;
+
+	if (zoneid == 129 || //thurgadinb
+		zoneid == 115 || //thurgadina
+		zoneid == 118 || //gd
+		zoneid == 116 || //ew
+		zoneid == 113 || //kael
+		zoneid == 119 || //wakening
+		zoneid == 114 || //skyshrine
+		zoneid == 117 || //cobaltscar
+		zoneid == 125 || //sirens
+		zoneid == 120 || //ww
+		zoneid == 123 || //nec
+		zoneid == 111 || //frozenshadow
+		zoneid == 110 //iceclad
+		) {
+		pool += 400;
+		encounterTable[pool] = EN_COLDAIN;
+	}
+
+	if (zoneid == 118 || //gd
+		zoneid == 116 || //ew
+		zoneid == 113 || //kael
+		zoneid == 119 || //wakening
+		zoneid == 114 || // skyshrine
+		zoneid == 120  //ww
+		) {
+		pool += 400;
+		encounterTable[pool] = EN_KAELGIANT;
+	}
+
+	if (zoneid == 120 || //ww
+		zoneid == 123 //nec
+		) {
+		pool += 400;
+		encounterTable[pool] = EN_WYVERN;
+	}
+
+	if (zoneid == 116) {
+		pool += 800;
+		encounterTable[pool] = EN_RYGORR;
+	}
 
 	if (zoneid == 11 || //runnyeye
 		zoneid == 46 || //innothule
