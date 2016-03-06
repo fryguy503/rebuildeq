@@ -110,7 +110,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$build->styles[1] = "Swordsinger";
 			$build->styles[2] = "Maestro";
 			break;
-			//==================CLERIC======================
+			//==================CLERIC====================== //TODO
 			case "cleric":
 			$build->fullName = "Cleric";
 			$build->monogram = 2;
