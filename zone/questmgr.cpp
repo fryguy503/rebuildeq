@@ -224,11 +224,8 @@ Mob* QuestManager::encounterspawn(int npc_type, int level, const glm::vec4& posi
 		enpc->DR += 200;
 		enpc->CR += 200;
 		enpc->FR = 0;		
-		enpc->min_dmg = 1;
+		enpc->min_dmg = enpc->min_dmg * 0.1f;
 		enpc->max_dmg = (enpc->max_dmg * 0.5f);
-	}
-	if (npc_type == 37056 || npc_type == 37065) { //gypsies
-		enpc->max_hp = (enpc->max_hp * 0.5f);
 	}
 
 	
@@ -237,7 +234,7 @@ Mob* QuestManager::encounterspawn(int npc_type, int level, const glm::vec4& posi
 		//npc->SetAppearance(eaSitting);
 		//npc->Stun(1000);
 	}
-	//npc->AddLootTable();
+	npc->AddLootTable();
 	
 	entity_list.AddNPC(npc, true, true);
 	npc->SendPosUpdate();
