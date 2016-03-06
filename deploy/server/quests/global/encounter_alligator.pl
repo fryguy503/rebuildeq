@@ -9,10 +9,16 @@ my $noTargetTicker;
 
 my $encounterMessage = "An alligator appears nearby.";
 my $encounterSound = "";
+my $encounterType = "an alligator onslaught";
 my $spelleffect = 0;
 my $commonNpcID = 37036;
 my $rareNpcID = 37104;
+my $rareName = "Lockjaw";
+my $isRare = 0;
 my $rarity = 30; #chance of rare spawn
+my $npcName1 = "an alligator";
+my $npcName2 = "a caiman";
+my $npcName3 = "a crocodile";
 
 sub EVENT_SPAWN {
 	@group = ();
@@ -65,7 +71,11 @@ sub EVENT_TIMER {
 	    	$sth = $dbh->prepare("UPDATE `character_custom` SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1 WHERE character_id = ?");
 	    	$sth->execute($c->CharacterID());	    	
 	    }
-	    quest::we(13, "$winnerList successfully stopped a zombie invasion in $zoneln!");
+	    if ($isRare == 1) {
+			quest::we(13, "$winnerList successfully defeated $rareName in $zoneln!");
+	    } else {
+	    	quest::we(13, "$winnerList successfully stopped $encounterType in $zoneln!");
+		}
     	$dbh->disconnect();
     	#despawn
 		quest::depop();
@@ -85,13 +95,14 @@ sub EVENT_TIMER {
 		$winnerList = "";
 
 		#is it rare or not?
-		$isRare = 1;
+		$isRare = 0;
 		my $random = int(rand(100));
 		if ($random <= $rarity) {
 			$npcid = $rareNpcID;
-			$isRare = 0;
+			$isRare = 1;
 		} else {
 			$npcid = $commonNpcID;
+			$isRare = 0;
 		}
 		$isRareSpawned = 0;
 
@@ -122,6 +133,7 @@ sub EVENT_TIMER {
 			$newnpc = $newmob->CastToNPC();
 			if (!$newnpc) { next; }
 
+			if ($isRare == 0) { $newnpc->TempName = quest::ChooseRandom($npcName1, $npcName2, $npcName3); }
 			if ($spelleffect > 0 ) { $newnpc->SpellEffect($spelleffect); }
 			
 			#prep mob and add to local tracker
@@ -137,7 +149,7 @@ sub EVENT_TIMER {
 		if ($isRare == 1) {	
 			$isEventFinished = 1;
 		} else {
-			quest::settimer("nexthorde", quest::ChooseRandom(1,3,6,9,12,15,20));
+			quest::settimer("nexthorde", 3);
 		}
 		return;
 	}
@@ -149,6 +161,11 @@ sub EVENT_TIMER {
 		my $dice = int(rand(5 * $waveCount));
 
 		if ($dice >= 5) { #wave2 50%, wave3 33%, wave4 25%, etc
+			$isEventFinished = 1;
+			return;
+		}
+
+		if ($waveCount > 3) {
 			$isEventFinished = 1;
 			return;
 		}
@@ -178,15 +195,16 @@ sub EVENT_TIMER {
 		if (!$newmob) { next; }
 		$newnpc = $newmob->CastToNPC();
 		if (!$newnpc) { next; }		
+		if ($isRare == 0) { $newnpc->TempName = quest::ChooseRandom($npcName1, $npcName2, $npcName3); }
+		if ($spelleffect > 0 ) { $newnpc->SpellEffect($spelleffect); }
 
-		$newnpc->SpellEffect(13); #Earth rising up effect	
 		#prep mob and add to local tracker
 		$zindex = scalar @enemies;
 		$newnpc->AddToHateList($c, 1);
 		$enemies[$zindex] = $newmob->GetID();
 
 		#make another wave happen, potentially.
-		$nextDelay = quest::ChooseRandom(1,3,6,9,12,15,20);
+		$nextDelay = 3;
 		quest::settimer("nexthorde", ($nextDelay + $waveCount));
 	}	
 
