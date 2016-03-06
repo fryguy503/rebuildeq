@@ -3949,7 +3949,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 		c->GetEPP().encounter_timeout > time(nullptr)
 		//c->InEncounterArea()
 		) {
-		c->SpawnEncounter(false);
+		c->SpawnEncounter(false, c->GetEPP().encounter_type);
 		return;
 	}
 
@@ -3969,8 +3969,12 @@ void command_encounter(Client *c, const Seperator *sep) {
 			c->Message(0, "You must target a player first to spawn an encounter.");
 			return;
 		}
-		c->Message(0, "Spawning an encounter for %s...", c->GetTarget()->GetCleanName());
-		c->GetTarget()->CastToClient()->SpawnEncounter(true);
+		if (sep->arg[2] && strlen(sep->arg[2]) > 3) {
+			c->Message(0, "Spawning an encounter for %s...", c->GetTarget()->GetCleanName());
+			c->GetTarget()->CastToClient()->SpawnEncounter(true, atoi(sep->arg[2]));
+			return;
+		}
+		c->Message(0, "Specify an encounter id, e.g. #spawn encounter 187###");		
 		return;
 	}
 	

@@ -9209,53 +9209,110 @@ void Client::EmoteEncounter() {
 	//bell005.wav errie bell
 	m_epp.encounter_timeout = time(nullptr) + 360; //You have 6 minutes to spawn the encounter.
 	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(360, 10800); //6 mins to 3 hours, this is if they don't accept it etc.
-	Save(); //Save now that encounter has happened
-	int dice;
+			
+	Save(); //Save now that encounter has happened	
 
-	if (GetZoneID() == 22 || GetZoneID() == 21) {
-		dice = zone->random.Int(3, 3); //Always +1 of the messages
-		if (Admin() >= 200) Message(0, "Zone Encounter dice: %i", dice);
-		/*if (dice == 1) {
-			Message(8, "You hear a twig snap %s.", CreateSayLink("#encounter", "nearby").c_str());
-			return;
-		}
-		if (dice == 2) {
-			Message(8, "Orcs begin to %s louder and louder...", CreateSayLink("#encounter", "chant").c_str());
-			return;
-		}*/
-		if (dice == 3) {
-			Message(8, "A zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter", "below").c_str());
-			//TODO: moan
-			return;
-		}
-		/*if (dice == 4) {
-			Message(8, "The %s of a hillgiant can be heard.", CreateSayLink("#encounter", "stomps").c_str());
-			return;
-		}
-		if (dice == 5) {
-			Message(8, "A willowisp %s in front of you.", CreateSayLink("#encounter", "vanishes").c_str());
-			return;
-		}
-		if (dice == 6) {
-			Message(8, "The %s intensifies near you.", CreateSayLink("#encounter", "wind").c_str());
-			PlayMP3("aie_spl.wav");
-			m_epp.encounter_type = dice;
-			return;	
-		}*/
+	//Encounter table for randomizing what kind of encounter
+	std::map <int, int> encounterTable;
+	int pool = 0;
+	int zoneid = GetZoneID();
+
+	//Kodiaks can spawn anywhere
+	pool += 500;
+	encounterTable[pool] = EN_KODIAK;
+	//Froglok anywhere.
+	if (GetCharacterFactionLevel(106) <= FACTION_DUBIOUS) {
+		pool += 100;
+		encounterTable[pool] = EN_FROGLOK;
+	}
+	
+	//Lockjaw anywhere
+	pool += 100;
+	encounterTable[pool] = EN_ALLIGATOR;
+
+	if (zoneid == 11 || //runnyeye
+		zoneid == 46 || //innothule
+		zoneid == 65 //uguk
+		) {
+		pool += 500;
+		encounterTable[pool] = EN_FUNGUS;
 	}
 
-	dice = zone->random.Int(30, 31);
-	if (dice == 30) {		
+	if (zoneid == 20 || //kith
+		zoneid == 22 || //ec
+		zoneid == 21 || 
+		zoneid == 35 || //sro
+		zoneid == 37 ||
+		zoneid == 46) {
+		pool += 500;
+		encounterTable[pool] = EN_ZOMBIE;		
+	}
+
+
+	if (zoneid == 35 //sro
+		) {
+		pool += 500;
+		encounterTable[pool] = EN_MADMAN;
+		pool += 250;
+		encounterTable[pool] = EN_SANDGIANT;
+	}
+
+	if (zoneid == 35 //sro
+		) {
+		pool += 1;
+		encounterTable[pool] = EN_ANCIENTCYCLOPS;
+	}
+
+	if (GetZoneID() == 46) { //TODO: troll guards, npc id 46002 , lvl 34ish EN_TROLLGUARD
+		if (GetCharacterFactionLevel(66) <= FACTION_DUBIOUS) {
+			pool += 500;
+			encounterTable[pool] = EN_TROLLGUARD;
+		}
+		
+	}
+
+	int dice = zone->random.Int(0, pool);
+	int lastPool = 0;
+	for (auto entry = encounterTable.begin(); entry != encounterTable.end(); ++entry) {
+		if (dice > entry->first) {
+			lastPool = entry->first;
+			continue;
+		}
+		m_epp.encounter_type = entry->second;
+	}
+
+	switch (m_epp.encounter_type) {
+	case EN_ZOMBIE:
+		Message(8, "A zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter", "below").c_str());
+		break;
+	case EN_DOPPLEGANGER:
 		Message(8, "An unsettling %s washes over you.", CreateSayLink("#encounter", "feeling").c_str());
 		PlayMP3("ans_idl.wav");
-		m_epp.encounter_type = dice;
-		return;
-	}
-	if (dice == 31) {
+		break;
+	case EN_ARCHER:
 		Message(8, "You hear a bow being %s nearby.", CreateSayLink("#encounter", "shot").c_str());
 		PlayMP3("bowdraw.wav");
-		m_epp.encounter_type = dice;
-		return;
+		break;
+	case EN_ORC:
+		Message(8, "Orcs begin to %s louder and louder...", CreateSayLink("#encounter", "chant").c_str());
+		break;
+	case EN_BANDIT:
+		Message(8, "You hear a twig snap %s.", CreateSayLink("#encounter", "nearby").c_str());
+		break;	
+	case EN_WISP:
+		Message(8, "A willowisp %s in front of you.", CreateSayLink("#encounter", "vanishes").c_str());
+		break;
+	case EN_AIRELEMENTAL:		
+		Message(8, "The %s intensifies near you.", CreateSayLink("#encounter", "wind").c_str());
+		break;
+	case EN_SANDGIANT:
+	case EN_ANCIENTCYCLOPS:
+	case EN_HILLGIANT:
+		Message(8, "The %s of a giant can be heard.", CreateSayLink("#encounter", "stomps").c_str());
+		break;	
+	default:
+
+		break;
 	}
 	//aviak = avk_idl.wav
 	return;
@@ -9272,7 +9329,7 @@ bool Client::IsEncounterInZone() {
 }
 
 //Spawn the encounter, skipChecks will ignore any conditions and not affect normal encounter system (GM Event)
-void Client::SpawnEncounter(bool skipChecks) {
+void Client::SpawnEncounter(bool skipChecks, uint32 type) {
 	if (IsEncounterInZone()) {
 		Message(13, "An encounter is already occuring in this zone, please wait until later.");
 		return;
@@ -9291,7 +9348,7 @@ void Client::SpawnEncounter(bool skipChecks) {
 	int playerCount = 0;
 	const NPCType* tmp = 0;
 	uint32 id = GetEncounterNPCID();
-	if (tmp = database.LoadNPCTypesData(187000)) {
+	if (tmp = database.LoadNPCTypesData(type)) {
 		NPC* npc = new NPC(tmp, 0, GetPosition(), FlyMode3);
 		//npc->SetNPCFactionID(atoi(sep->arg[2]));
 		if (Admin() > 200) Message(0, "[GM] Spawning encounter");

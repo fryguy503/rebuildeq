@@ -1335,7 +1335,7 @@ public:
 	void EmoteEncounter();
 
 	bool IsEncounterInZone();
-	void SpawnEncounter(bool skipChecks = false);
+	void SpawnEncounter(bool skipChecks = false, uint32 type = 187001);
 	uint32 GetEncounterNPCID();
 	int GiveBoxReward(int minimumRarity = 0);
 	int GiveWeaponBoxReward(int minimumRarity = 0);
