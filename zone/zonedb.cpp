@@ -1448,7 +1448,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 	//DoEscapeString(buildbuffer, m_epp->build, strlen(m_epp->build));	
 	std::string buildbuffer = m_epp->build;
 	buildbuffer.erase(53);
-	uint32 sessionTimeout = m_epp->session_timeout;
+	/*uint32 sessionTimeout = m_epp->session_timeout;
 	if (sessionTimeout == 0) {
 		sessionTimeout = 1454274245;
 	}
@@ -1457,7 +1457,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 	}
 	if (m_epp->next_encounter_time == 0) {
 		m_epp->next_encounter_time = time(nullptr);
-	}
+	}*/
 	
 	
 	clock_t t = std::clock(); /* Function timer start */
@@ -1659,11 +1659,11 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"%u,"  // e_percent_to_aa
 		"%u,"  // e_expended_aa_spent
 		"'%s',"  // session
-		"FROM_UNIXTIME(%u),"  // session_timeout
+		"%u,"  // session_timeout
 		"'%s',"  // build
 		"%f,"  // rested_exp
-		"FROM_UNIXTIME(%u),"  //encounter_timout
-		"FROM_UNIXTIME(%u)," //next_encounter_time
+		"%u,"  //encounter_timout
+		"%u," //next_encounter_time
 		"%u"   // e_last_invsnapshot
 		")",
 		character_id,					  // " id,                        "
@@ -1760,7 +1760,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		m_epp->perAA,
 		m_epp->expended_aa,
 		EscapeString(m_epp->session).c_str(),
-		sessionTimeout,
+		m_epp->session_timeout,
 		EscapeString(buildbuffer).c_str(),
 		m_epp->rested_exp,
 		m_epp->encounter_timeout,

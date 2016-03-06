@@ -9182,7 +9182,6 @@ bool Client::IsEncounterReady() {
 		return false;
 	}
 
-	int chance = 1;
 	int pool = 360; 
 
 	//Odds before bonus: 0.2% every 6 seconds
@@ -9197,9 +9196,10 @@ bool Client::IsEncounterReady() {
 		}
 	}
 	//Best odds: 2% every 6 seconds
+	int chance = zone->random.Int(1, pool);
+	//Message(13, "Chance: 1 out of %i => %i", pool, chance);
 
-	Message(13, "Chance: 1 out of %i", pool);
-	return (zone->random.Int(1, pool) <= chance);
+	return (chance <= 1);
 }
 
 
