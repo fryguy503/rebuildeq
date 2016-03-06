@@ -4986,7 +4986,7 @@ void command_loc(Client *c, const Seperator *sep)
 {
 	Mob *t=c->GetTarget()?c->GetTarget():c->CastToMob();
 
-	c->Message(0, "%s's Location (XYZ): %1.2f, %1.2f, %1.2f; heading=%1.1f",  t->GetName(), t->GetX(), t->GetY(), t->GetZ(), t->GetHeading());
+	c->Message(0, "%s's Location (XYZ): %1.2f, %1.2f, %1.2f; heading=%1.1f, zone id=%i, instance=%i",  t->GetName(), t->GetX(), t->GetY(), t->GetZ(), t->GetHeading(), zone->GetZoneID(), zone->GetInstanceID());
 }
 
 void command_goto(Client *c, const Seperator *sep)
