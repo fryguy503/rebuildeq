@@ -9198,7 +9198,7 @@ bool Client::IsEncounterReady() {
 	}
 	//Best odds: 2% every 6 seconds
 
-	//Message(13, "Chance: %i", pool);
+	Message(13, "Chance: 1 out of %i", pool);
 	return (zone->random.Int(1, pool) <= chance);
 }
 

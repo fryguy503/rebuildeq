@@ -3945,6 +3945,36 @@ void command_builds(Client *c, const Seperator *sep)
 //Spawns an encounter, if a valid timing
 void command_encounter(Client *c, const Seperator *sep) {
 	uint32 unclaimed_rewards = 0;
+	if (c->GetEPP().encounter_type > 0 &&
+		c->GetEPP().encounter_timeout > time(nullptr)
+		//c->InEncounterArea()
+		) {
+		c->SpawnEncounter(false);
+		return;
+	}
+
+
+	if (c->Admin() >= 200 && sep->arg[1] && strcasecmp(sep->arg[1], "emote") == 0) {
+		if (c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
+			c->Message(0, "Created an encounter for %s", c->GetTarget()->GetCleanName());
+			return;
+		}
+		c->EmoteEncounter();
+		c->Message(0, "Creating an encounter for you.");
+		return;
+	}
+
+	if (c->Admin() > 200 && sep->arg[1] && strcasecmp(sep->arg[1], "spawn") == 0) {
+		if (c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) {
+			c->Message(0, "You must target a player first to spawn an encounter.");
+			return;
+		}
+		c->Message(0, "Spawning an encounter for %s...", c->GetTarget()->GetCleanName());
+		c->GetTarget()->CastToClient()->SpawnEncounter(true);
+		return;
+	}
+	
+
 
 	//Get the unclaimed_encounter_rewards
 	std::string query = StringFormat("SELECT unclaimed_encounter_rewards FROM character_custom WHERE character_id = %u LIMIT 1", c->CharacterID());
@@ -3963,19 +3993,8 @@ void command_encounter(Client *c, const Seperator *sep) {
 				return;
 			}
 		}
-		
-	}
 
-	if (c->Admin() >= 200 && sep->arg[1] && strcasecmp(sep->arg[1], "emote") == 0) {
-		if (c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
-			c->Message(0, "Created an encounter for %s", c->GetTarget()->GetCleanName());
-			return;
-		}
-		c->EmoteEncounter();
-		c->Message(0, "Creating an encounter for you.");
-		return;
 	}
-	
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "claim") == 0) {
 		if (unclaimed_rewards == 0) {
 			c->Message(13, "You have no unclaimed rewards.");
@@ -4040,23 +4059,8 @@ void command_encounter(Client *c, const Seperator *sep) {
 		c->Message(MT_Experience, "Your encounter reward is: %s!", item->Name);		
 		return;
 	}
-	if (c->Admin() > 200 && sep->arg[1] && strcasecmp(sep->arg[1], "spawn") == 0) {
-		if (c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) {
-			c->Message(0, "You must target a player first to spawn an encounter.");
-			return;
-		}
-		c->Message(0, "Spawning an encounter for %s...", c->GetTarget()->GetCleanName());
-		c->GetTarget()->CastToClient()->SpawnEncounter(true);
-		return;
-	}
+	
 
-	if (c->GetEPP().encounter_type > 0 && 
-		c->GetEPP().encounter_timeout > time(nullptr)
-		//c->InEncounterArea()
-		) {
-		c->SpawnEncounter(false);
-		return;
-	}
 	if (c->InEncounterArea()) {
 		c->Message(0, "You are in an encounter area.");
 	}
