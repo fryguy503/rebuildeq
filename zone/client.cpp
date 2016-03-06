@@ -9220,15 +9220,25 @@ void Client::EmoteEncounter() {
 	//Kodiaks can spawn anywhere
 	pool += 500;
 	encounterTable[pool] = EN_KODIAK;
-	//Froglok anywhere.
+	//Froglok anywhere, but only if your faction is low enough
 	if (GetCharacterFactionLevel(106) <= FACTION_DUBIOUS) {
 		pool += 100;
 		encounterTable[pool] = EN_FROGLOK;
 	}
-	
-	//Lockjaw anywhere
+	if (GetCharacterFactionLevel(66) <= FACTION_DUBIOUS) {
+		pool += 300;
+		encounterTable[pool] = EN_TROLLGUARD;
+	}
 	pool += 100;
 	encounterTable[pool] = EN_ALLIGATOR;
+	pool += 200;
+	encounterTable[pool] = EN_ARCHER;
+	pool += 200;
+	encounterTable[pool] = EN_BANDIT;
+	pool += 200;
+	encounterTable[pool] = EN_AIRELEMENTAL;
+	pool += 200;
+	encounterTable[pool] = EN_SPECTRE;
 
 	if (zoneid == 11 || //runnyeye
 		zoneid == 46 || //innothule
@@ -9238,6 +9248,31 @@ void Client::EmoteEncounter() {
 		encounterTable[pool] = EN_FUNGUS;
 	}
 
+	
+		
+	if (zoneid == 13 || //nkarana
+		zoneid == 35 || //sro
+		zoneid == 14 || //skarana
+		zoneid == 12 ||//wkarana
+		zoneid == 15 //ekarana
+		) {
+		pool += 1;
+		encounterTable[pool] = EN_ANCIENTCYCLOPS;
+	}
+
+	if (zoneid == 14 || //skarana
+		zoneid == 13 || //nkarana
+		zoneid == 12 ||//wkarana
+		zoneid == 15 //ekarana
+		) {
+		pool += 250;
+		encounterTable[pool] = EN_HILLGIANT;
+		pool += 500;
+		encounterTable[pool] = EN_GRIFFIN;
+		pool += 500;
+		encounterTable[pool] = EN_WISP;
+	}
+
 	if (zoneid == 20 || //kith
 		zoneid == 22 || //ec
 		zoneid == 21 || 
@@ -9245,7 +9280,21 @@ void Client::EmoteEncounter() {
 		zoneid == 37 ||
 		zoneid == 46) {
 		pool += 500;
-		encounterTable[pool] = EN_ZOMBIE;		
+		encounterTable[pool] = EN_ZOMBIE;
+		pool += 500;
+		encounterTable[pool] = EN_ORC;
+		pool += 500;
+		encounterTable[pool] = EN_DERVISH;
+		pool += 500;
+		encounterTable[pool] = EN_WISP;
+		pool += 200;
+		encounterTable[pool] = EN_GYPSY;
+		pool += 200;
+		encounterTable[pool] = EN_MADMAN;
+		pool += 200;
+		encounterTable[pool] = EN_SANDGIANT;
+		pool += 200;
+		encounterTable[pool] = EN_FREEPORT;
 	}
 
 
@@ -9257,11 +9306,6 @@ void Client::EmoteEncounter() {
 		encounterTable[pool] = EN_SANDGIANT;
 	}
 
-	if (zoneid == 35 //sro
-		) {
-		pool += 1;
-		encounterTable[pool] = EN_ANCIENTCYCLOPS;
-	}
 
 	if (GetZoneID() == 46) { //TODO: troll guards, npc id 46002 , lvl 34ish EN_TROLLGUARD
 		if (GetCharacterFactionLevel(66) <= FACTION_DUBIOUS) {
