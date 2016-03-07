@@ -9392,7 +9392,7 @@ void Client::EmoteEncounter() {
 	}
 
 	if (zoneid == 22 || //ec
-		zoneid == 21 || //wc
+		zoneid == 21 //wc
 		) {
 		pool += 200;
 		encounterTable[pool] = EN_FREEPORT;
