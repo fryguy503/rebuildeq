@@ -183,6 +183,8 @@ void Client::Handle_OP_ZoneChange(const EQApplicationPacket *app) {
 	buf[9] = '\0';
 	parse->EventPlayer(EVENT_ZONE, this, buf, 0);
 
+	m_epp.encounter_type = 0; //reset encounter type
+
 	//handle circumvention of zone restrictions
 	//we need the value when creating the outgoing packet as well.
 	uint8 ignorerestrictions = zonesummon_ignorerestrictions;

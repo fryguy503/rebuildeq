@@ -112,7 +112,7 @@ sub EVENT_TIMER {
 			if (!$c) { next; }
 			#quest::say($c->CharacterID());
 			$c->Message(13, $encounterMessage);
-			if ($encounterSound != "") { $c->PlayMP3($encounterSound); }
+			if ($encounterSound ne "") { $c->PlayMP3($encounterSound); }
 			$winnerList .= $c->GetCleanName().", ";
 
 			if ($isRareSpawned == 1) { next; }
@@ -133,7 +133,7 @@ sub EVENT_TIMER {
 			$newnpc = $newmob->CastToNPC();
 			if (!$newnpc) { next; }
 
-			if ($isRare == 0) { $newnpc->TempName = quest::ChooseRandom($npcName1, $npcName2, $npcName3); }
+			if ($isRare == 0) { $newnpc->TempName(quest::ChooseRandom($npcName1, $npcName2, $npcName3)); }
 			if ($spelleffect > 0 ) { $newnpc->SpellEffect($spelleffect); }
 			
 			#prep mob and add to local tracker
@@ -195,7 +195,7 @@ sub EVENT_TIMER {
 		if (!$newmob) { next; }
 		$newnpc = $newmob->CastToNPC();
 		if (!$newnpc) { next; }		
-		if ($isRare == 0) { $newnpc->TempName = quest::ChooseRandom($npcName1, $npcName2, $npcName3); }
+		if ($isRare == 0) { $newnpc->TempName(quest::ChooseRandom($npcName1, $npcName2, $npcName3)); }
 		if ($spelleffect > 0 ) { $newnpc->SpellEffect($spelleffect); }
 
 		#prep mob and add to local tracker

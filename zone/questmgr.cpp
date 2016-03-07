@@ -218,7 +218,7 @@ Mob* QuestManager::encounterspawn(int npc_type, int level, const glm::vec4& posi
 	enpc->level = level;
 	enpc = owner->AdjustNPC(enpc);
 	enpc->npc_faction_id = 366; // KoS non-assist
-
+	
 	if (npc_type == 22046 || npc_type == 34013) { //zombie encounter
 		enpc->runspeed = 0.25f;
 		enpc->max_hp = (enpc->max_hp * 0.25f);

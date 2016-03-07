@@ -127,21 +127,23 @@ sub EVENT_TIMER {
 			#add enemy
 			$newid = quest::encounterspawn($npcid, $npclevel, $c->GetX(), $c->GetY(), $c->GetZ(), $c->GetHeading());
 			if (!$newid) { next; }
-
 			$newmob = $entity_list->GetMobID($newid);			
 			if (!$newmob) { next; }
 			$newnpc = $newmob->CastToNPC();
 			if (!$newnpc) { next; }
 
-			if ($isRare == 0) { $newnpc->TempName = quest::ChooseRandom($npcName1, $npcName2, $npcName3); }
+			if ($isRare == 0) { $newnpc->TempName(quest::ChooseRandom($npcName1, $npcName2, $npcName3)); }			
 			else { $rareName = $newnpc->GetCleanName(); }
+			quest::say("tempname");
 			if ($spelleffect > 0 ) { $newnpc->SpellEffect($spelleffect); }
-			
+			quest::say("spelleffect");
+
 			#prep mob and add to local tracker
 			$zindex = scalar @enemies;
 			$newnpc->AddToHateList($c, 1);
 			$enemies[$zindex] = $newmob->GetID();
 			#quest::settimer("nexthorde", 1);
+			quest::say("added mob and hate");
 		}
 		
 		
@@ -196,7 +198,7 @@ sub EVENT_TIMER {
 		if (!$newmob) { next; }
 		$newnpc = $newmob->CastToNPC();
 		if (!$newnpc) { next; }		
-		if ($isRare == 0) { $newnpc->TempName = quest::ChooseRandom($npcName1, $npcName2, $npcName3); }
+		if ($isRare == 0) { $newnpc->TempName(quest::ChooseRandom($npcName1, $npcName2, $npcName3)); }
 		if ($spelleffect > 0 ) { $newnpc->SpellEffect($spelleffect); }
 
 		#prep mob and add to local tracker

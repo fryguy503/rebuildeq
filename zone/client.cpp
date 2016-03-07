@@ -9367,13 +9367,11 @@ void Client::EmoteEncounter() {
 		encounterTable[pool] = EN_HILLGIANT;
 		pool += 500;
 		encounterTable[pool] = EN_GRIFFIN;
-		pool += 500;
-		encounterTable[pool] = EN_WISP;
 	}
 
 	if (zoneid == 20 || //kith
 		zoneid == 22 || //ec
-		zoneid == 21 || 
+		zoneid == 21 ||  //wc
 		zoneid == 35 || //sro
 		zoneid == 37 ||
 		zoneid == 46) {
@@ -9391,10 +9389,14 @@ void Client::EmoteEncounter() {
 		encounterTable[pool] = EN_MADMAN;
 		pool += 200;
 		encounterTable[pool] = EN_SANDGIANT;
+	}
+
+	if (zoneid == 22 || //ec
+		zoneid == 21 || //wc
+		) {
 		pool += 200;
 		encounterTable[pool] = EN_FREEPORT;
 	}
-
 
 	if (zoneid == 35 //sro
 		) {
@@ -9469,7 +9471,7 @@ void Client::EmoteEncounter() {
 	case EN_ALLIGATOR:
 	case EN_FREEPORT:
 	case EN_DERVISH:
-		Message(8, "An feeling settles over you.", CreateSayLink("#encounter", "uneasy").c_str());
+		Message(8, "An %s feeling settles over you.", CreateSayLink("#encounter", "uneasy").c_str());
 		break;
 	case EN_MADMAN:
 		Message(8, "A person %s nearby breaks your concentration.", CreateSayLink("#encounter", "talking to himself").c_str());
@@ -9512,14 +9514,17 @@ void Client::SpawnEncounter(bool skipChecks, uint32 type) {
 		return;
 	}
 
-	if (!skipChecks && !InEncounterArea()) {
-		if (Admin() > 200) Message(0, "[GM] Not in an encounter area");
+	if (type < 187000) {
+		m_epp.next_encounter_time = time(nullptr) + zone->random.Int(64800, 108000); //18 to 30 hours
+		m_epp.encounter_timeout = time(nullptr); //stop encounter eligability
+		Message(13, "You are currently not eligable for any encounters.");
 		return;
 	}
+
+	
 	if (!skipChecks) {
 		m_epp.next_encounter_time = time(nullptr) + zone->random.Int(64800, 108000); //18 to 30 hours
 		m_epp.encounter_timeout = time(nullptr); //stop encounter eligability
-		Save();
 	}
 	
 	int playerCount = 0;

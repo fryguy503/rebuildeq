@@ -133,7 +133,7 @@ sub EVENT_TIMER {
 			$newnpc = $newmob->CastToNPC();
 			if (!$newnpc) { next; }
 
-			if ($isRare == 0) { $newnpc->TempName = quest::ChooseRandom($npcName1, $npcName2, $npcName3); }
+			if ($isRare == 0) { $newnpc->TempName(quest::ChooseRandom($npcName1, $npcName2, $npcName3)); }
 			if ($spelleffect > 0 ) { $newnpc->SpellEffect($spelleffect); }
 			
 			#prep mob and add to local tracker
@@ -195,7 +195,7 @@ sub EVENT_TIMER {
 		if (!$newmob) { next; }
 		$newnpc = $newmob->CastToNPC();
 		if (!$newnpc) { next; }		
-		if ($isRare == 0) { $newnpc->TempName = quest::ChooseRandom($npcName1, $npcName2, $npcName3); }
+		if ($isRare == 0) { $newnpc->TempName(quest::ChooseRandom($npcName1, $npcName2, $npcName3)); }
 		if ($spelleffect > 0 ) { $newnpc->SpellEffect($spelleffect); }
 
 		#prep mob and add to local tracker
