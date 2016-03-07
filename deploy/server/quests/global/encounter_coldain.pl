@@ -112,7 +112,7 @@ sub EVENT_TIMER {
 			if (!$c) { next; }
 			#quest::say($c->CharacterID());
 			$c->Message(13, $encounterMessage);
-			if ($encounterSound != "") { $c->PlayMP3($encounterSound); }
+			if ($encounterSound ne "") { $c->PlayMP3($encounterSound); }
 			$winnerList .= $c->GetCleanName().", ";
 
 			if ($isRareSpawned == 1) { next; }

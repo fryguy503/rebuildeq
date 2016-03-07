@@ -3957,6 +3957,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 	if (c->Admin() >= 200 && sep->arg[1] && strcasecmp(sep->arg[1], "emote") == 0) {
 		if (c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
 			c->Message(0, "Created an encounter for %s", c->GetTarget()->GetCleanName());
+			c->GetTarget()->CastToClient()->EmoteEncounter();
 			return;
 		}
 		c->EmoteEncounter();
@@ -4064,16 +4065,18 @@ void command_encounter(Client *c, const Seperator *sep) {
 		return;
 	}
 	
-
-	if (c->InEncounterArea()) {
-		c->Message(0, "You are in an encounter area.");
+	if (c->GetEPP().next_encounter_time > time(nullptr)) {
+		c->Message(0, "You are not eligable for encounters.");
 	}
 	else {
-		c->Message(0, "You are not in an encounter area.");
+		if (c->InEncounterArea()) {
+			c->Message(0, "You are eligable for encounters and are in an encounter area.");
+		}
+		else {
+			c->Message(0, "You are eligable for encounters, but not in an encounter area.");
+		}
 	}
-	if (c->GetEPP().next_encounter_time <= time(nullptr)) {
-		c->Message(0, "You are eligable for encounters.");
-	}
+	
 
 	if (unclaimed_rewards == 0) {
 		c->Message(0, "You have no unclaimed encounter rewards. Watch for them across Norrath and team up with allies to achieve prizes.");
