@@ -420,18 +420,23 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//==================DRUID======================
 			case "druid":
 			break;
+			
 			//==================ENCHANTER======================
 			case "enchanter":
 			break;
+
 			//==================MAGICIAN======================
 			case "magician":
 			break;
+
 			//==================MONK======================
 			case "monk":
 			break;
+
 			//==================NECROMANCER======================
 			case "necromancer":
 			break;
+
 			//==================PALADIN======================
 			case "paladin":
 			$newSkill = new stdClass();
