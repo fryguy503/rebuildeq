@@ -26,7 +26,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 				$this->template->errorMessage = "Invalid Session Provided. Go in game and type #builds to create a new session.";
 			}
 
-			$tmpChar = DB::select('name, last_name, class, level, build_data')->from('character_data')->where('session', '=', $session)->where('session_timeout', '>=', DB::expr('NOW()'))->limit(1)->as_object()->execute()->current();
+			$tmpChar = DB::select('name, last_name, class, level, build_data')->from('character_data')->where('session', '=', $session)->where('session_timeout', '>=', DB::expr('UNIX_TIMESTAMP(NOW())'))->limit(1)->as_object()->execute()->current();
 			if (empty($tmpChar)) {
 				$this->template->errorMessage = "Expired Session provided. Go in game and type #builds to create a new session.";
 			} else {
