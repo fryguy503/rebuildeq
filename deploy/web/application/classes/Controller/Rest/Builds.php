@@ -14,7 +14,7 @@ class Controller_Rest_Builds extends Template_Rest_Core {
 
 		$character = DB::select()->from('character_data')
 		->where('session', '=', $session)
-		->where('session_timeout', '>=', DB::expr('NOW()'))
+		->where('session_timeout', '>=', DB::expr('UNIX_TIMESTAMP(NOW())'))
 		->limit(1)
 		->as_object()->execute()->current();
 
