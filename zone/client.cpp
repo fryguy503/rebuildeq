@@ -9121,20 +9121,75 @@ void Client::AddRottenCoreCounter(uint8 amount) {
 	}
 }
 
+//Return a class name based on most used class
 std::string Client::GetBuildClassName() {
-
+	int tier1 = 0;
+	int tier2 = 0;
+	int tier3 = 0;
 	for (uint32 i = 0; i < 53; i++) {
-		//tier1 is 0-17
-		if (i < 17) {
-
-		}
 		uint8 points = GetBuildRank(GetClass(), i);
 		if (points < 1) {
 			continue;
 		}
-		
+		if (i < 18) {
+			tier1++;
+		}
+		else if (i < 36) {
+			tier2++;
+		}
+		else {
+			tier3++;
+		}
 	}
-	return "";
+	
+	if (tier1 > tier2 && tier1 > tier3) { //Tier1
+		if (GetClass() == BARD) return "Viruoso";
+		if (GetClass() == CLERIC) return "Templar";
+		if (GetClass() == DRUID) return "Preserver";
+		if (GetClass() == ENCHANTER) return "Illusionist";
+		if (GetClass() == MAGICIAN) return "Conjurer";
+		if (GetClass() == MONK) return "Master";
+		if (GetClass() == NECROMANCER) return "Heretic";
+		if (GetClass() == PALADIN) return "Protector";
+		if (GetClass() == RANGER) return "Archer";
+		if (GetClass() == ROGUE) return "Assassin";
+		if (GetClass() == SHADOWKNIGHT) return "Bloodreaver";
+		if (GetClass() == SHAMAN) return "Prophet";
+		if (GetClass() == WARRIOR) return "Gladiator";
+		if (GetClass() == WIZARD) return "Evoker";
+	}
+	else if (tier2 > tier1 && tier2 > tier3) { //Tier 2
+		if (GetClass() == BARD) return "Swordsinger";
+		if (GetClass() == CLERIC) return "Bishop";
+		if (GetClass() == DRUID) return "Warden";
+		if (GetClass() == ENCHANTER) return "Entrancer";
+		if (GetClass() == MAGICIAN) return "Elementalist";
+		if (GetClass() == MONK) return "Trascendant";
+		if (GetClass() == NECROMANCER) return "Lich";
+		if (GetClass() == PALADIN) return "Knight";
+		if (GetClass() == RANGER) return "Hunter";
+		if (GetClass() == ROGUE) return "Deceiver";
+		if (GetClass() == SHADOWKNIGHT) return "Defiler";
+		if (GetClass() == SHAMAN) return "Oracle";
+		if (GetClass() == WARRIOR) return "Brawler";
+		if (GetClass() == WIZARD) return "Channeler";
+	}
+	if (GetClass() == BARD) return "Maestro";
+	if (GetClass() == CLERIC) return "Archon";
+	if (GetClass() == DRUID) return "Hierophant";
+	if (GetClass() == ENCHANTER) return "Beguiler";
+	if (GetClass() == MAGICIAN) return "Geomancer";
+	if (GetClass() == MONK) return "Ashenhand";
+	if (GetClass() == NECROMANCER) return "Warlock";
+	if (GetClass() == PALADIN) return "Crusader";
+	if (GetClass() == RANGER) return "Plainswalker";
+	if (GetClass() == ROGUE) return "Bandit";
+	if (GetClass() == SHADOWKNIGHT) return "Revenant";
+	if (GetClass() == SHAMAN) return "Elder";
+	if (GetClass() == WARRIOR) return "Champion";
+	if (GetClass() == WIZARD) return "Sage";
+	//Tier 3
+	return "Unknown";
 }
 
 //Check if an encounter is viable to happen
