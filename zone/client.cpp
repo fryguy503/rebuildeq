@@ -9377,8 +9377,10 @@ void Client::EmoteEncounter() {
 		zoneid == 114 || // skyshrine
 		zoneid == 120  //ww
 		) {
-		pool += 400;
-		encounterTable[pool] = EN_KAELGIANT;
+		if (GetLevel() > 54) {
+			pool += 400;
+			encounterTable[pool] = EN_KAELGIANT;
+		}
 	}
 
 	if (zoneid == 120 || //ww
