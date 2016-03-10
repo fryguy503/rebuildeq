@@ -8480,12 +8480,12 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 	}
 
 	spell_id = item->Click.Effect;
-	if (item->ID == 100500) { //Brell's Blessing
+	/*if (item->ID == 100500) { //Brell's Blessing
 		if (GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING) == 0) {
 			Message(13, "You must train Brell's Blessing to use this item.");
 			return;
 		}
-	}
+	}*/
 	if
 		(
 		spell_id > 0 &&
@@ -8595,10 +8595,10 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 						}
 						return;
 					}
-					if (item->ID == 100500) { //Brell's Blessing						
+					/*if (item->ID == 100500) { //Brell's Blessing						
 						CastSpell(item->Click.Effect, target_id, USE_ITEM_SPELL_SLOT, item->CastTime, ((GetLevel() / 60) * 200), 0, slot_id);
 						return;
-					}
+					}*/
 					
 
 					int i = parse->EventItem(EVENT_ITEM_CLICK_CAST, this, p_inst, nullptr, "", slot_id);

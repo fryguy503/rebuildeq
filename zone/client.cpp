@@ -8704,7 +8704,7 @@ void Client::SendHPUpdateMarquee(){
 }
 
 
-//Shin: Create a saylink
+//Creates a say link from client perspective
 std::string Client::CreateSayLink(const char* message, const char* name) {
 	int sayid = 0;
 	int sz = strlen(message);
@@ -9000,7 +9000,7 @@ void Client::RefreshBuild() {
 				}
 			}
 		}
-		if (GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING)> 0) {
+		/*if (GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING)> 0) {
 			const Item_Struct* item = database.GetItem(100500);
 			if (item && !CheckLoreConflict(item)) { //if the item exists and it isn't lore conflicting
 				ItemInst *CursorItemInst = GetInv().GetItem(MainCursor);
@@ -9013,6 +9013,7 @@ void Client::RefreshBuild() {
 				}
 			}
 		}
+		*/
 	}
 }
 

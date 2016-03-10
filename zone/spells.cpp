@@ -319,6 +319,12 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		parse->EventNPC(EVENT_CAST_BEGIN, CastToNPC(), nullptr, temp, 0);
 	}
 
+	if (item_slot == 0 && spell_id == 202 && IsClient() && CastToClient()->GetClass() == PALADIN) {
+		if (CastToClient()->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING) > 0) {
+			mana_cost = ((GetLevel() / 60) * 200);
+		}
+	}
+
 	//To prevent NPC ghosting when spells are cast from scripts
 	if (IsNPC() && IsMoving() && cast_time > 0)
 		SendPosition();
@@ -426,6 +432,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_WAVEOFMARR) > 0) {
 		mana_cost -= (int)(mana_cost * 0.1 * CastToClient()->GetBuildRank(PALADIN, RB_PAL_WAVEOFMARR));
 	}
+
 
 	// we calculated this above, now enforce it
 	if(mana_cost > 0 && slot != USE_ITEM_SPELL_SLOT)
@@ -1324,7 +1331,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, uint16 slot,
 		CastToClient()->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING) > 0 &&
 		target && 
 		spell_id == 202 &&
-		IsFromItem
+		!IsFromItem
 		) {
 		//4065 blessing of austerity
 		//3578
