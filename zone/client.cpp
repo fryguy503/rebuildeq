@@ -9017,6 +9017,7 @@ void Client::RefreshBuild() {
 	}
 }
 
+//Trains an AA rank
 void Client::TrainAARank(uint32 rankId, uint32 rankLevel, uint32 charges) {
 	SetAA(rankId, rankLevel, charges);
 	SendAlternateAdvancementPoints();
