@@ -4153,7 +4153,8 @@ void command_teleport(Client *c, const Seperator *sep) {
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to gfaydark for free due to being below level %u.", levelMin);
-			c->SetBindPoint(54, 0, glm::vec3(-411, -2023, -0.28));
+			c->SetBindPoint(0, 54, 0, glm::vec3(-411, -2023, -0.28)); 
+			c->SetBindPoint(5, 54, 0, glm::vec3(-411, -2023, -0.28));
 		}
 		c->MovePC(54, -411, -2023, -0.28, 47.8, (uint8)'\000', ZoneSolicited);
 		return;
@@ -4175,7 +4176,8 @@ void command_teleport(Client *c, const Seperator *sep) {
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to tox for free due to being below level %u.", levelMin);
-			c->SetBindPoint(38, 0, glm::vec3(-912.10, -1517.81, -37.71));
+			c->SetBindPoint(0, 38, 0, glm::vec3(-912.10, -1517.81, -37.71));
+			c->SetBindPoint(5, 38, 0, glm::vec3(-912.10, -1517.81, -37.71));
 		}
 		c->MovePC(38, -912.10, -1517.81, -37.71, 58.2, (uint8)'\000', ZoneSolicited);
 		return;
@@ -4186,7 +4188,8 @@ void command_teleport(Client *c, const Seperator *sep) {
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to ecommons for free due to being below level %u.", levelMin);
-			c->SetBindPoint(22, 0, glm::vec3(-73.06, -1787.51, -3.13));
+			c->SetBindPoint(0, 22, 0, glm::vec3(-73.06, -1787.51, -3.13));
+			c->SetBindPoint(5, 22, 0, glm::vec3(-73.06, -1787.51, -3.13));
 		}
 		c->MovePC(22, -73.06, -1787.51, 3.13, 51.8, (uint8)'\000', ZoneSolicited);
 		return;
@@ -4197,7 +4200,8 @@ void command_teleport(Client *c, const Seperator *sep) {
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to fieldofbone for free due to being below level %u.", levelMin);
-			c->SetBindPoint(78, 0, glm::vec3(2395.95, -2216.75, 30.63));
+			c->SetBindPoint(0, 78, 0, glm::vec3(2395.95, -2216.75, 30.63));
+			c->SetBindPoint(5, 78, 0, glm::vec3(2395.95, -2216.75, 30.63));
 		}
 		c->MovePC(78, 2395.95, -2216.75, 30.63, 227.6, (uint8)'\000', ZoneSolicited);
 		return;
