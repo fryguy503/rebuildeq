@@ -447,7 +447,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Hand of Piety";
-			$newSkill->desc = 'Grants the Hand of Piety AA, allowing the user to heal a target for <em data-base="2">2</em>% of their max health <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Hand of Piety AA, allowing the user to heal the group for <em data-base="2">2</em>% of their max health <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[2] = $newSkill;
 
