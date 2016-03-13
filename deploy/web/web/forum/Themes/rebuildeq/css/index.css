@@ -2,16 +2,6 @@
 ------------------------------------------------------- */
 
 /* Normal, standard links. */
-a:link, a:visited
-{
-	color: #346;
-	text-decoration: none;
-}
-a:hover
-{
-	text-decoration: underline;
-	cursor: pointer;
-}
 
 /* Links that open in a new window. */
 a.new_win:link, a.new_win:visited

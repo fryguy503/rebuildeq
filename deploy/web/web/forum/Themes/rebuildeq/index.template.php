@@ -85,19 +85,23 @@ function template_html_above()
 <head>';
 
 	// The ?fin20 part of this link is just here to make sure browsers don't cache it wrongly.
-	echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css?fin20" />';
+	echo '<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index', $context['theme_variant'], '.css?fin20" />';
 
 	// Some browsers need an extra stylesheet due to bugs/compatibility issues.
 	foreach (array('ie7', 'ie6', 'webkit') as $cssfix)
 		if ($context['browser']['is_' . $cssfix])
-			echo '
-	<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/', $cssfix, '.css" />';
+			echo '<link rel="stylesheet" type="text/css" href="', $settings['default_theme_url'], '/css/', $cssfix, '.css" />';
 
 	// RTL languages require an additional stylesheet.
 	if ($context['right_to_left'])
 		echo '
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/rtl.css" />';
+	//Shin
+	echo ' <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="/css/jquery-ui.theme.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">';
 
 	// Here comes the JavaScript bits!
 	echo '
@@ -169,6 +173,48 @@ function template_html_above()
 function template_body_above()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
+	echo '
+
+<nav class="navbar navbar-fixed-top navbar-bootsnipp animate">
+  <div class="container-fluid" style="background-color: #222222">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/" class="navbar-brand">RebuildEQ</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="nav-header">
+      <ul class="nav navbar-nav">
+        <li><a href="/about"><span class="glyphicon glyphicon-info-sign"></span> About</a></li>
+
+        <li><a href="/builds"><span class="glyphicon glyphicon-tasks"></span> Builds</a></li>
+      </ul>
+     
+      <ul class="nav navbar-nav navbar-right">
+      <li>
+      
+        <form class="navbar-form navbar-left" action="/forum/index.php?action=search2" method="post" accept-charset="UTF-8" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" name="search" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Search</button>
+      </form>
+
+        
+      </li>
+      <li><a href="/forum"><span class="glyphicon glyphicon-globe"></span> Forums</a></li>
+        <li><a href="/chat"><span class="glyphicon glyphicon-user"></span> Chat</a></li>
+        <li><a href="/updates"><span class="glyphicon glyphicon-bullhorn"></span> Updates</a></li>
+        <li><a href="/donate"><span class="glyphicon glyphicon-apple{*usd*}"></span> Donate</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+	';
 
 	echo !empty($settings['forum_width']) ? '
 <div id="wrapper" style="width: ' . $settings['forum_width'] . '">' : '', '
@@ -248,21 +294,7 @@ function template_body_above()
 	echo '
 			</div>
 			<div class="news normaltext">
-				<form id="search_form" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
-					<input type="text" name="search" value="" class="input_text" />&nbsp;
-					<input type="submit" name="submit" value="', $txt['search'], '" class="button_submit" />
-					<input type="hidden" name="advanced" value="0" />';
-
-	// Search within current topic?
-	if (!empty($context['current_topic']))
-		echo '
-					<input type="hidden" name="topic" value="', $context['current_topic'], '" />';
-	// If we're on a certain board, limit it to this board ;).
-	elseif (!empty($context['current_board']))
-		echo '
-					<input type="hidden" name="brd[', $context['current_board'], ']" value="', $context['current_board'], '" />';
-
-	echo '</form>';
+				';
 
 	// Show a random news item? (or you could pick one from news_lines...)
 	if (!empty($settings['enable_news']))
