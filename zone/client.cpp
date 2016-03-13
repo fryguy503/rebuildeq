@@ -8838,7 +8838,7 @@ const char* Client::GetSession() {
 	m_epp.session_timeout = time(nullptr) + 600; //add 10 minutes from now
 
 	//inject into character_data
-	std::string query = StringFormat("UPDATE character_data SET session = '%s', session_timeout = FROM_UNIXTIME(%u) WHERE id = '%u'",
+	std::string query = StringFormat("UPDATE character_data SET session = '%s', session_timeout = %u WHERE id = '%u'",
 		m_epp.session, m_epp.session_timeout, CharacterID());
 	auto results = database.QueryDatabase(query);
 	if (!results.Success()) {
