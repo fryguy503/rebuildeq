@@ -251,10 +251,6 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		_StopSong();
 	}
 
-	//Reduce cast time if it's a bard song, and you have bard's wish
-	if (IsBardSong(spell_id) && IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_BARDSWISH) > 0) {
-		cast_time -= cast_time * 0.066 * CastToClient()->GetBuildRank(BARD, RB_BRD_BARDSWISH);
-	}
 
 	//Added to prevent MQ2 exploitation of equipping normally-unequippable/clickable items with effects and clicking them for benefits.
 	if(item_slot && IsClient() && ((slot == USE_ITEM_SPELL_SLOT) || (slot == POTION_BELT_SPELL_SLOT) || (slot == TARGET_RING_SPELL_SLOT)))
@@ -477,6 +473,18 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 	}
 
 	cast_time = mod_cast_time(cast_time);
+
+	CastToClient()->Message(0, "Cast Time: %i", cast_time);
+	//Reduce cast time if it's a bard song, and you have bard's wish
+	if (IsBardSong(spell_id) && IsClient() &&
+		CastToClient()->GetBuildRank(BARD, RB_BRD_BARDSWISH) > 4 &&
+		cast_time == 3000) {
+		
+		//198 * rank
+		cast_time -= cast_time * 0.066 * CastToClient()->GetBuildRank(BARD, RB_BRD_BARDSWISH);		
+		orgcasttime = cast_time; //Tell client the cast time proper too
+		CastToClient()->Message(0, "Cast Time2: %i", cast_time);
+	}
 
 	// ok we know it has a cast time so we can start the timer now
 	spellend_timer.Start(cast_time);
