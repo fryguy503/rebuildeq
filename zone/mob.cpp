@@ -5043,7 +5043,10 @@ uint16 Mob::GetSkillByItemType(int ItemType)
 		case ItemType2HBlunt:
 			return Skill2HBlunt;
 		case ItemType2HPiercing:
-			return Skill1HPiercing; // change to 2HPiercing once activated
+			if (IsClient() && CastToClient()->GetClientVersion() < ClientVersion::RoF2)
+				return Skill1HPiercing;
+			else
+				return Skill2HPiercing;
 		case ItemTypeBow:
 			return SkillArchery;
 		case ItemTypeLargeThrowing:
@@ -5071,6 +5074,8 @@ uint8 Mob::GetItemTypeBySkill(SkillUseTypes skill)
 			return ItemType2HSlash;
 		case Skill1HPiercing:
 			return ItemType1HPiercing;
+		case Skill2HPiercing: // watch for undesired client behavior
+			return ItemType2HPiercing;
 		case Skill1HBlunt:
 			return ItemType1HBlunt;
 		case Skill2HBlunt:
@@ -5126,7 +5131,7 @@ int8 Mob::GetDecayEffectValue(uint16 spell_id, uint16 spelleffect) {
 	if (!IsValidSpell(spell_id))
 		return false;
 
-	int spell_level = spells[spell_id].classes[(GetClass()%16) - 1];
+	int spell_level = spells[spell_id].classes[(GetClass()%17) - 1];
 	int effect_value = 0;
 	int lvlModifier = 100;
 
