@@ -3,6 +3,9 @@ deploy/server/eqemu_config.xml
 deploy/server/*.lock
 deploy/server/eqcleanup-linux64
 deploy/server/eqemu_update.pl
+deploy/server/backups/
+deploy/server/db_update/
+deploy/server/db_dumper.pl
 
 # Object files
 *.o
