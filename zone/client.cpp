@@ -10264,16 +10264,16 @@ bool Client::IsSwornEnemyActive() {
 }
 
 bool Client::IsBuildAvailable() {
-	if (c->GetClass() == CLERIC ||
-		c->GetClass() == DRUID ||
-		c->GetClass() == ENCHANTER ||
-		c->GetClass() == MAGICIAN ||
-		c->GetClass() == MONK ||
-		c->GetClass() == NECROMANCER ||
-		c->GetClass() == RANGER ||
-		c->GetClass() == ROGUE ||
-		c->GetClass() == WARRIOR ||
-		c->GetClass() == WIZARD) {		
+	if (GetClass() == CLERIC ||
+		GetClass() == DRUID ||
+		GetClass() == ENCHANTER ||
+		GetClass() == MAGICIAN ||
+		GetClass() == MONK ||
+		GetClass() == NECROMANCER ||
+		GetClass() == RANGER ||
+		GetClass() == ROGUE ||
+		GetClass() == WARRIOR ||
+		GetClass() == WIZARD) {		
 		return false;
 	}
 	return true;
