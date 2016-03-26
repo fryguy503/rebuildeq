@@ -3903,7 +3903,7 @@ void command_builds(Client *c, const Seperator *sep)
 		}
 
 		if (c->GetLevel() < 75) {
-			c->Message(0, "You can reset your skills for free until level 20. [ %s ]", c->CreateSayLink("#builds reset confirm", "confirm").c_str());
+			c->Message(0, "You can reset your skills for free while testing. [ %s ]", c->CreateSayLink("#builds reset confirm", "confirm").c_str());
 		} else {
 			c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
 		}
