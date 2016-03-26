@@ -481,7 +481,7 @@ void Client::SendZoneInPackets()
 	if (GetLevel() < 2 && GetBindZoneID() != 54 && GetBindZoneID() != 38 && GetBindZoneID() != 78 && GetBindZoneID() != 22) {
 		Message(0, "While less than level 10, you may wish to %s to a starting area.", CreateSayLink("#teleport", "#teleport").c_str());
 	}
-	if (GetBuildUnspentPoints() > 0) {
+	if (IsBuildAvailable() && GetBuildUnspentPoints() > 0) {
 		Message(MT_Experience, "You have unspent build points. Visit %s to spend them.", CreateSayLink("#builds", "builds").c_str());
 	}
 }
@@ -10261,4 +10261,20 @@ std::string Client::GetBuildName(uint32 id) {
 
 bool Client::IsSwornEnemyActive() {	
 	return(m_epp.sworn_enemy_id > 0 && m_epp.sworn_enemy_timeout >= time(nullptr));
+}
+
+bool Client::IsBuildAvailable() {
+	if (c->GetClass() == CLERIC ||
+		c->GetClass() == DRUID ||
+		c->GetClass() == ENCHANTER ||
+		c->GetClass() == MAGICIAN ||
+		c->GetClass() == MONK ||
+		c->GetClass() == NECROMANCER ||
+		c->GetClass() == RANGER ||
+		c->GetClass() == ROGUE ||
+		c->GetClass() == WARRIOR ||
+		c->GetClass() == WIZARD) {		
+		return false;
+	}
+	return true;
 }

@@ -3887,6 +3887,11 @@ void command_bind(Client *c, const Seperator *sep)
 //List all available builds
 void command_builds(Client *c, const Seperator *sep)
 {
+	if (!c->IsBuildAvailable()) {
+		c->Message(0, "This class does not yet have builds available. It will be coming soon!");
+		return;
+	}
+
 	c->RefreshBuild();
 	
 	//Reset build

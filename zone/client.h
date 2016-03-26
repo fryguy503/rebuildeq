@@ -1317,6 +1317,7 @@ public:
 	void TrainAARank(uint32 rankId, uint32 rankLevel = 1, uint32 charges = 0);
 	std::string GetBuildName(uint32 id);
 	bool IsSwornEnemyActive();
+	bool IsBuildAvailable();
 	uint32 GetBuildRank(uint8 classid, uint32 rankid);
 	void DoRestedStatus();
 	bool InRestedArea();
