@@ -1,4 +1,5 @@
 <?php defined('SYSPATH') or die('No direct script access.');
+//This is the builds rendering page
 
 class Controller_Web_Builds extends Template_Web_Core {
 

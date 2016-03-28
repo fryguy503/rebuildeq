@@ -1,5 +1,5 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-
+//ABout us page
 class Controller_Web_About extends Template_Web_Core {
 
 
