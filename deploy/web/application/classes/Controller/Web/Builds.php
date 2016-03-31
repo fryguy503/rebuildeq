@@ -442,9 +442,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill->desc = 'When an ally is healed, there is a <em data-base="1">1</em>% to also apply a heal over time effect<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[18] = $newSkill;
-
 			break;
-
 
 			//==================DRUID======================
 			case "druid":
@@ -612,15 +610,15 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill->desc = 'Grants the passive Slay Undead with a <em data-base="1">1</em>% chance<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[52] = $newSkill;
-
-
 			break;
 			//==================RANGER======================
 			case "ranger":
 			break;
+
 			//==================ROGUE======================
 			case "rogue":
 			break;
+			
 			//==================SHAMAN======================
 			case "shaman":
 			//0
