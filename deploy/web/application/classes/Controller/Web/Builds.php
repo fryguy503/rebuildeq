@@ -771,14 +771,17 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$skills[52] = $newSkill;
 
 			break;
+
 			//==================WARRIOR======================
 			case "warrior":
 
 			break;
+
 			//==================WIZARD======================
 			case "wizard":
 
 			break;
+
 			//==================SHADOWKNIGHT======================
 			case "shadowknight":
 			default:
@@ -788,177 +791,145 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill->desc = 'Grants the Leech Touch AA, improves lifetap damage by <em data-base="4">4</em>% and <em data-base="1">1</em>% chance to critical heal<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-leechtouch.png";	
 			$skills[0] = $newSkill;
-			//1
-			//2
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Gouging Skin";
 			$newSkill->desc = 'When attacked, causes a <em data-base="+4">+4</em> point damage shield and <em data-base="+20">+20</em> hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-gougingskin.png";	
 			$skills[2] = $newSkill;
-			//3
-			//4
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Hungering Aura";
 			$newSkill->desc = 'Improves lifetaps by <em data-base="+6">+6</em>% healing for each enemy attacking you with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-hungeringaura.png";	
 			$skills[4] = $newSkill;
-			//5
-			//6
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Steadfast Servant";
 			$newSkill->desc = 'Grants the Steadfast Servant, summoning a pet at <em data-base="+20">+20</em>% power<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-steadfastservant.png";	
 			$skills[6] = $newSkill;
-			//7
-			//8
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Zevfeer's Feast";
 			$newSkill->desc = 'Improves Siphon Strength and Abduct Strength to tap the target for HP and Mana for up to <em data-base="+1">+1</em>% your maximum health and mana<span class="perLevel"> per rank</span> to give it to group.';
 			$newSkill->image = "/images/builds/icons/rb-sk-zevfeersfeast.png";	
 			$skills[8] = $newSkill;
-			//9
-			//10
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Sworn Enemy";
 			$newSkill->desc = 'When you use taunt, you mark a target as your sworn enemy. For the next 3 ticks, any spell damage dealt to target causes an additional <em data-base="100">100</em> hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-swornenemy.png";	
 			$skills[10] = $newSkill;
-			//11
-			//12
-			//13
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Banshee's Mirror";
 			$newSkill->desc = 'Banshee\'s Aura now has a <em data-base="+1">+1</em>% chance to reduce <em data-base="+3">+3</em>% of damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-bansheesmirror.png";
 			$skills[13] = $newSkill;
-			//14
-			//15
-			//16
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Aura of Vampirism";
 			$newSkill->desc = 'Grants the entire group <em data-base="+4">+4</em>% spell vampirism and <em data-base="+10">+10</em>% melee vampirism<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-auraofvampirism.png";	
 			$skills[16] = $newSkill;
-			//17
-			// TIER 2
-			//18
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Festering Spear";
 			$newSkill->desc = 'Improve spear type spells by (level * <em data-base="1">1</em>) bonus damage, <em data-base="10">10</em>% damage, and <em data-base="1">1</em>% critical blast chance <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-festeringspear.png";
 			$skills[18] = $newSkill;
-			//19
-			//20
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Festering Wound";
 			$newSkill->desc = 'Improves DoT damage by <em data-base="+4">+4</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-festeringwound.png";	
 			$skills[20] = $newSkill;
-			//21
-			//22
+		
 			$newSkill = new stdClass();
 			$newSkill->title = "Rotten Core";
 			$newSkill->desc = 'Increases attack by <em data-base="+8">+8</em>% for a short duration each time a target dies nearby with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-rottencore.png";	
 			$skills[22] = $newSkill;
-			//23
-			//24
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Pain";
 			$newSkill->desc = 'All direct damage spells have a <em data-base="1">1</em>%<span class="perLevel"> per rank</span> chance to cause bonus damage over time effects.';
 			$newSkill->image = "/images/builds/icons/rb-sk-lingeringpain.png";
 			$skills[24] = $newSkill;
-			//25
-			//26
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Blood Oath";
 			$newSkill->desc = 'While using a 2 handed weapon, increases damage by <em data-base="10">10</em>%, while causing negative effects of healing gets reduced by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-bloodoath.png";	
 			$skills[26] = $newSkill;					
-			//27
-			//28
+		
 			$newSkill = new stdClass();
 			$newSkill->title = "Gift of Urash";
 			$newSkill->desc = 'Increases all skill damage by <em data-base="+5">+5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-giftofurash.png";	
 			$skills[28] = $newSkill;
-			//29
-			//30
-			//31
+		
 			$newSkill = new stdClass();
 			$newSkill->title = "Unholy Focus";
 			$newSkill->desc = 'Improves all direct damage spells to penetrate <em data-base="10">10</em>% spell resists<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-unholyfocus.png";	
 			$skills[31] = $newSkill;
-			//32
-			//33
-			//34
+		
 			$newSkill = new stdClass();
 			$newSkill->title = "Bash of Death";
 			$newSkill->desc = 'When you bash a target, there is a <em data-base="1">1</em>% chance to cast harm touch<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-bashofdeath.png";	
 			$skills[34] = $newSkill;
-			//35
-			// TIER 3
-			//36
+		
 			$newSkill = new stdClass();
 			$newSkill->title = "Embrace Death";
 			$newSkill->desc = 'Grants you the Death Peace AA, giving the ability to feign death as well as heal you for <em data-base="+2">+2</em>% maximum health on use<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-embracedeath.png";	
 			$skills[36] = $newSkill;
-			//37
-			//38
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Darkness";
 			$newSkill->desc = 'All darkness type spells slow movement for an additional <em data-base="4">4</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-darkness.png";	
 			$skills[38] = $newSkill;
-			//39
-			//40
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Empathetic Soul";
 			$newSkill->desc = 'Improves Dark Empathy by granting an additional <em data-base="+40">+40</em> hitpoints healed and <em data-base="+0.5">+0.5</em>% max mana <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-empatheticsoul.png";	
 			$skills[40] = $newSkill;
-			//41
-			//42
-			//43
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Embrace Shadow";
 			$newSkill->desc = 'Each time you feign death, grants a <em data-base="20">20</em>% chance<span class="perLevel"> per rank</span> to instantly be invisible to both living and undead creatures.';
 			$newSkill->image = "/images/builds/icons/rb-sk-embraceshadow.png";	
 			$skills[42] = $newSkill;
-			//44
-			//45
-			//46
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Siphon of Death";
 			$newSkill->desc = 'Scream of Death and Shroud of Death now also grant a mana tap for <em data-base="5">5</em>% of damage dealt<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-siphondeath.png";	
 			$skills[44] = $newSkill;					
-			//47
-			//48
+		
 			$newSkill = new stdClass();
 			$newSkill->title = "Nightmare";
 			$newSkill->desc = 'Fear now causes target to freeze in panic for <em data-base="2">2</em>seconds<span class="perLevel"> per rank</span> before fleeing.';
 			$newSkill->image = "/images/builds/icons/rb-sk-nightmare.png";
 			$skills[46] = $newSkill;					
-			//49
-			//50
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Mental Resistance";
 			$newSkill->desc = 'Gives a <em data-base="2">2</em>% chance to resist stun effects<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-mentalresistance.png";	
 			$skills[49] = $newSkill;
-			//51
-			//52
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Cloak of Shadows";
 			$newSkill->desc = 'Grants the Cloak of the Shadows AA, allowing you to step into the shadows, causing a <em data-base="5">5</em>% chance that all targets will forget your actions.';
 			$newSkill->image = "/images/builds/icons/rb-sk-cloakofshadow.png";
 			$skills[52] = $newSkill;
-			//53
-		
+			
 			break;
 		}
 		return $skills;
