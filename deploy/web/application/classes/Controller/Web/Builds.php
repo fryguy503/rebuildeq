@@ -1,11 +1,8 @@
 <?php defined('SYSPATH') or die('No direct script access.');
-//This is the builds rendering page
-
+//This is the builds rendering page, needs to be moved to it's own model soon.
 class Controller_Web_Builds extends Template_Web_Core {
 
-
 	public function before() {
-
 		parent::before();
 		$this->template->site->title = "Shadow Knight Build";
 		$this->template->site->description = "Shadow Knight Custom Build For RebuildEQ";
@@ -804,6 +801,10 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$newSkill->image = "/images/builds/icons/rb-sk-hungeringaura.png";	
 			$skills[4] = $newSkill;
 			
+
+
+
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Steadfast Servant";
 			$newSkill->desc = 'Grants the Steadfast Servant, summoning a pet at <em data-base="+20">+20</em>% power<span class="perLevel"> per rank</span>.';
