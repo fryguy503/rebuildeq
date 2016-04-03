@@ -144,6 +144,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$build->styles[1] = "Elementalist";
 			$build->styles[2] = "Geomancer";
 			break;
+
 			//==================MONK======================
 			case "monk":
 			$build->fullName = "Monk";
@@ -153,6 +154,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$build->styles[1] = "Transcendant";
 			$build->styles[2] = "Ashenhand";
 			break;
+
 			//==================NECROMANCER======================
 			case "necromancer":
 			$build->fullName = "Necromancer";
@@ -162,6 +164,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$build->styles[1] = "Lich";
 			$build->styles[2] = "Warlock";
 			break;
+
 			//==================PALADIN======================
 			case "paladin":
 			$build->monogram = 3;
@@ -171,6 +174,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$build->styles[1] = "Knight";
 			$build->styles[2] = "Crusader";
 			break;
+
 			//==================RANGER======================
 			case "ranger":
 			$build->fullName = "Ranger";
@@ -180,6 +184,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$build->styles[1] = "Hunter";
 			$build->styles[2] = "Plainswalker";
 			break;
+
 			//==================ROGUE======================
 			case "rogue":
 			$build->fullName = "Rogue";
@@ -189,6 +194,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$build->styles[1] = "Deceiver";
 			$build->styles[2] = "Bandit";
 			break;
+
 			//==================SHAMAN======================
 			case "shaman":
 			$build->fullName = "Shaman";
@@ -198,6 +204,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$build->styles[1] = "Oracle";
 			$build->styles[2] = "Elder";
 			break;
+
 			//==================WARRIOR======================
 			case "warrior":
 			$build->fullName = "Warrior";
@@ -207,6 +214,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$build->styles[1] = "Brawler";
 			$build->styles[2] = "Champion";
 			break;
+
 			//==================WIZARD======================
 			case "wizard":
 			$build->fullName = "Wizard";
@@ -216,6 +224,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$build->styles[1] = "Channeler";
 			$build->styles[2] = "Sage";
 			break;
+			
 			//==================SHADOWKNIGHT======================
 			case "shadowknight":
 			default:
