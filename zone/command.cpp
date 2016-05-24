@@ -4425,8 +4425,9 @@ void command_return(Client *c, const Seperator *sep) {
 		return;
 	}
 
-	std::string returnZoneName = "";
+	std::string returnZoneName;
 
+	
 	std::string query = StringFormat("SELECT return_zone FROM character_custom WHERE character_id = %u LIMIT 1", c->CharacterID());
 	auto results = database.QueryDatabase(query);
 	if (results.Success()) {
@@ -4459,12 +4460,12 @@ void command_return(Client *c, const Seperator *sep) {
 	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
-		if (returnZoneName == "") {
+		if (returnZoneName.c_str() == "") {
 			c->Message(0, "No return point is currently available.");
 			return;
 		}
 		if (!c->HasMoney(cost)) {
-			c->Message(0, "Not enough money to return to %s.", returnZoneName);
+			c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
 			return;
 		}
 		if (!c->TakeMoneyFromPP(cost)) {
@@ -4472,26 +4473,28 @@ void command_return(Client *c, const Seperator *sep) {
 			MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
 			database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
 			safe_delete_array(hacker_str);
-			c->Message(0, "Not enough money to return to %s.", returnZoneName);
+			c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
 			return;
 		}
 		c->SendMoneyUpdate();
 
-		c->Message(0, "You paid %s to return to %s.", displayCost.c_str(), returnZoneName);
+		c->Message(0, "You paid %s to return to %s.", displayCost.c_str(), returnZoneName.c_str());
 		
-		zoneid = database.GetZoneID(sep->arg[1]);
+		zoneid = database.GetZoneID(returnZoneName.c_str());
 		if(zoneid == 0) {
 			c->Message(0, "Unable to locate zone '%s'",  sep->arg[1]);
 			return;
 		}
 		//zone to safe coords
 		c->MovePC(zoneid, 0.0f, 0.0f, 0.0f, 0.0f, 0, ZoneToSafeCoords);
+		query = StringFormat("UPDATE character_custom SET return_zone = '' WHERE character_id = %u LIMIT 1", c->CharacterID());
+		auto results = database.QueryDatabase(query);
 		return;
 	}
 	if (returnZoneName == "") {
 		c->Message(0, "It costs %s to use #return at your level. You have not died recently.", displayCost.c_str());
 	} else {
-		c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ]", displayCost.c_str(), returnZoneName, c->CreateSayLink("#return confirm", "Confirm").c_str());
+		c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ]", displayCost.c_str(), returnZoneName.c_str(), c->CreateSayLink("#return confirm", "Confirm").c_str());
 	}
 }
 

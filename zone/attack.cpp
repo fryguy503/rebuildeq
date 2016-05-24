@@ -1608,6 +1608,26 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, SkillUseTypes att
 	}
 
 	parse->EventPlayer(EVENT_DEATH_COMPLETE, this, buffer, 0);
+
+	if (this->GetInstanceID() > 0) {
+		return true;
+	}
+
+	//Don't continue if zone instance is set
+
+	//Update character_custom with return_zone
+	std::string query = StringFormat("SELECT return_zone FROM character_custom WHERE character_id = %u LIMIT 1", this->CharacterID());
+	auto results = database.QueryDatabase(query);
+	if (results.Success()) {
+		if (results.RowCount() == 1) {
+			query = StringFormat("UPDATE character_custom SET return_zone = '%s' WHERE character_id = %u LIMIT 1", zone->GetShortName(), this->CharacterID());
+			auto results = database.QueryDatabase(query);
+		}
+		else { //No record in DB yet for character_custom, let's fix that.
+			query = StringFormat("INSERT INTO character_custom (character_id, return_zone) VALUES (%u, %s)", this->CharacterID(), zone->GetShortName());
+			auto results = database.QueryDatabase(query);
+		}
+	}	
 	return true;
 }
 
