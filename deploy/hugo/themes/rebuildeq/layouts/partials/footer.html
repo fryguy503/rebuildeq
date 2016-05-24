@@ -1,10 +1,9 @@
-<footer id="footer">
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; {{.Now.Format "2006"}}
-      {{ with .Site.Params.copyright }}{{ . | markdownify}}{{ end }}
+<footer class="bs-footer" role="contentinfo">
+    <div class="container">
+  Everquest is a registered trademark of Daybreak Game Company LLC.
+  RebuildEQ.com is not associated or affiliated in any way with Daybreak Game Company LLC.
+  Except where otherwise noted, this site is licensed under a Creative Commons License.
     </div>
-  </div>
 </footer>
 
 {{ partial "footer_js" . }}

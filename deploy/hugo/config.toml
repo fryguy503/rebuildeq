@@ -1,10 +1,10 @@
 baseurl = "http://xackery.com/"
 languageCode = "en-us"
-title = "Xackery"
+title = "RebuildEQ"
 # Enable comments by entering your Disqus shortname
 disqusShortname = "xackery"
 # Enable Google Analytics by entering your tracking code
-googleAnalytics = "UA-29343126-2"
+googleAnalytics = "UA-72548849-1"
 # Define the number of posts per page
 paginate = 10
 footnotereturnlinkcontents = "↩"
@@ -16,10 +16,10 @@ theme = "rebuildeq"
 
 [params]
     # Tell me who you are
-    author = "Xackery"
+    author = "Shin Noir"
     bio = "Blogger - Programmer - Gopher"
     location = "Seattle, WA"
-    site_description = "Xackery is my little area to post everything and anything."
+    site_description = "Rebuild EQ is an Everquest Private Server Project based on classic Everquest rebuilt to give a new enhanced experience."
     copyright  = "No real copyrights, except those expressed by the content posted."
     avatar = "css/images/avatar.png"
 

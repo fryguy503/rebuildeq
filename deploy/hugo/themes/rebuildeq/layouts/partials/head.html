@@ -1,16 +1,8 @@
 <!DOCTYPE html>
-<html lang="{{ with .Site.LanguageCode }}{{ . }}{{ else }}en-US{{ end }}">
+<html >
 <head>
-    <title>{{ .Title }} &middot; {{ .Site.Title }}</title>
-    {{ .Hugo.Generator }}
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    {{ with .Site.Params.author }}<meta name="author" content="{{ . }}">{{ end }}
-    {{ with .Description }}
-      <meta name="description" content="{{ . }}">
-    {{ else }}
-      <meta name="description" content="{{ .Site.Params.site_description }}">
-    {{ end }}
+   
+   
     {{ if .RSSlink }}
       <link href="{{ .RSSlink }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
       <link href="{{ .RSSlink }}" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}" />
@@ -39,3 +31,58 @@
 </head>
 <body>
 <div class="container">
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#" xmlns:fb="https://www.facebook.com/2008/fbml" lang="{{ with .Site.LanguageCode }}{{ . }}{{ else }}en-US{{ end }}">
+    <head>
+     <title>{{ .Title }} &middot; {{ .Site.Title }}</title>
+     {{ .Hugo.Generator }}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta property="og:title" content="Rebuild EQ">
+      <meta property="og:type" content="website">
+      <meta property="twitter:account_id" content="4777423195">
+      <meta itemprop="name" content="RebuildEQ">
+      <meta itemprop="description" content="Rebuild EQ - A private Everquest server">
+      <meta property="og:url" content="http://rebuildeq.com">
+      <meta property="og:image" content="http://rebuildeq.com/images/logo.png">
+      <meta property="og:site_name" content="RebuildEQ.com">
+      <meta property="og:description" content="Rebuild EQ is an Everquest Private Server Project based on classic Everquest rebuilt to give a new enhanced experience.">
+      
+       {{ with .Description }}
+      <meta name="description" content="{{ . }}">
+    {{ else }}
+      <meta name="description" content="{{ .Site.Params.site_description }}">
+    {{ end }}
+
+      {{ with .Site.Params.author }}<meta name="author" content="{{ . }}">{{ end }}
+    
+    
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/jquery-ui.theme.min.css">
+    
+    
+    
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.2.0/respond.js"></script>
+    <![endif]-->
+    
+        
+        <!-- Favicon -->
+        <!--link rel="shortcut icon" href="/favicon.ico"-->
+        <!-- Template JS -->
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+        <!-- Page JS -->
+            </head>
+    
+    <body>
