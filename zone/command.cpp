@@ -4145,16 +4145,16 @@ void command_teleport(Client *c, const Seperator *sep) {
 	uint64 cost = 0;
 	if (c->GetLevel() < 30) {
 		cost = c->GetLevel() * 1; //copper
-		displayCost = = Stringformat("%u %s", cost, "copper")
+		displayCost = StringFormat("%u %s", cost, "copper");
 	} else if (c->GetLevel() < 40) {
 		cost = c->GetLevel() * 10; //silver
-		displayCost = = Stringformat("%u %s", (cost / 10), "silver")
+		displayCost = StringFormat("%u %s", (cost / 10), "silver");
 	} else if (c->GetLevel() < 50) {
 		cost = c->GetLevel() * 100; //gold
-		displayCost = = Stringformat("%u %s", (cost / 100), "gold")
+		displayCost = StringFormat("%u %s", (cost / 100), "gold");
 	} else { //50+
 		cost = c->GetLevel() * 1000; //platinum
-		displayCost = = Stringformat("%u %s", (cost / 1000), "platinum")
+		displayCost = StringFormat("%u %s", (cost / 1000), "platinum");
 	}
 
 	uint64 levelMin = 10;
@@ -4360,16 +4360,16 @@ void command_buff(Client *c, const Seperator *sep) {
 	uint64 cost = 0;
 	if (c->GetLevel() < 30) {
 		cost = c->GetLevel() * 1; //copper
-		displayCost = = Stringformat("%u %s", cost, "copper")
+		displayCost = StringFormat("%u %s", cost, "copper");
 	} else if (c->GetLevel() < 40) {
 		cost = c->GetLevel() * 10; //silver
-		displayCost = = Stringformat("%u %s", (cost / 10), "silver")
-	} else if (c->GetLevel() < 50) {
+		displayCost = StringFormat("%u %s", (cost / 10), "silver");
+	} else if (c->GetLevel() < 50) {;
 		cost = c->GetLevel() * 100; //gold
-		displayCost = = Stringformat("%u %s", (cost / 100), "gold")
+		displayCost = StringFormat("%u %s", (cost / 100), "gold");
 	} else { //50+
 		cost = c->GetLevel() * 1000; //platinum
-		displayCost = = Stringformat("%u %s", (cost / 1000), "platinum")
+		displayCost = StringFormat("%u %s", (cost / 1000), "platinum");
 	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
@@ -4437,19 +4437,19 @@ void command_return(Client *c, const Seperator *sep) {
 	uint64 cost = 0;
 	if (c->GetLevel() < 30) {
 		cost = c->GetLevel() * 1; //copper
-		displayCost = = Stringformat("%u %s", cost, "copper")
+		displayCost = StringFormat("%u %s", cost, "copper");
 	} else if (c->GetLevel() < 40) {
 		cost = c->GetLevel() * 10; //silver
-		displayCost = = Stringformat("%u %s", (cost / 10), "silver")
+		displayCost = StringFormat("%u %s", (cost / 10), "silver");
 	} else if (c->GetLevel() < 50) {
 		cost = c->GetLevel() * 100; //gold
-		displayCost = = Stringformat("%u %s", (cost / 100), "gold")
+		displayCost = StringFormat("%u %s", (cost / 100), "gold");
 	} else { //50+
 		cost = c->GetLevel() * 1000; //platinum
-		displayCost = = Stringformat("%u %s", (cost / 1000), "platinum")
+		displayCost = StringFormat("%u %s", (cost / 1000), "platinum");
 	}
 
-	if (sep->arg[1] && strcasecmp(sep->arg[1]), "confirm") == 0) {
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
 		if (returnZoneName == "") {
 			c->Message(0, "No return point is currently available.");
 			return;
@@ -4480,9 +4480,9 @@ void command_return(Client *c, const Seperator *sep) {
 		return;
 	}
 	if (returnZoneName == "") {
-		c->Message(0, "It costs %s to use #return at your level. You have not died recently.", displayCost)
+		c->Message(0, "It costs %s to use #return at your level. You have not died recently.", displayCost);
 	} else {
-		c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ]", displayCost, returnZoneName, c->CreateSayLink("#return confirm", "Confirm").c_str())
+		c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ]", displayCost, returnZoneName, c->CreateSayLink("#return confirm", "Confirm").c_str());
 	}
 }
 
@@ -4503,16 +4503,16 @@ void command_rez(Client *c, const Seperator *sep) {
 	uint64 cost = 0;
 	if (c->GetLevel() < 30) {
 		cost = c->GetLevel() * 1; //copper
-		displayCost = = Stringformat("%u %s", cost, "copper")
+		displayCost = StringFormat("%u %s", cost, "copper");
 	} else if (c->GetLevel() < 40) {
 		cost = c->GetLevel() * 10; //silver
-		displayCost = = Stringformat("%u %s", (cost / 10), "silver")
+		displayCost = StringFormat("%u %s", (cost / 10), "silver");
 	} else if (c->GetLevel() < 50) {
 		cost = c->GetLevel() * 100; //gold
-		displayCost = = Stringformat("%u %s", (cost / 100), "gold")
+		displayCost = StringFormat("%u %s", (cost / 100), "gold");
 	} else { //50+
 		cost = c->GetLevel() * 1000; //platinum
-		displayCost = = Stringformat("%u %s", (cost / 1000), "platinum")
+		displayCost = StringFormat("%u %s", (cost / 1000), "platinum");
 	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {		
