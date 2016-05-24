@@ -4146,7 +4146,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	if (c->GetLevel() < 30) {
 		cost = c->GetLevel() * 1; //copper
 		displayCost = = Stringformat("%u %s", cost, "copper")
-	} else if (c->GetLevel() < 50) {
+	} else if (c->GetLevel() < 40) {
 		cost = c->GetLevel() * 10; //silver
 		displayCost = = Stringformat("%u %s", (cost / 10), "silver")
 	} else if (c->GetLevel() < 50) {
@@ -4361,7 +4361,7 @@ void command_buff(Client *c, const Seperator *sep) {
 	if (c->GetLevel() < 30) {
 		cost = c->GetLevel() * 1; //copper
 		displayCost = = Stringformat("%u %s", cost, "copper")
-	} else if (c->GetLevel() < 50) {
+	} else if (c->GetLevel() < 40) {
 		cost = c->GetLevel() * 10; //silver
 		displayCost = = Stringformat("%u %s", (cost / 10), "silver")
 	} else if (c->GetLevel() < 50) {
@@ -4438,7 +4438,7 @@ void command_return(Client *c, const Seperator *sep) {
 	if (c->GetLevel() < 30) {
 		cost = c->GetLevel() * 1; //copper
 		displayCost = = Stringformat("%u %s", cost, "copper")
-	} else if (c->GetLevel() < 50) {
+	} else if (c->GetLevel() < 40) {
 		cost = c->GetLevel() * 10; //silver
 		displayCost = = Stringformat("%u %s", (cost / 10), "silver")
 	} else if (c->GetLevel() < 50) {
@@ -4497,13 +4497,30 @@ void command_rez(Client *c, const Seperator *sep) {
 		c->Message_StringID(4, CORPSE_CANT_SENSE);
 		return;
 	}
-	uint64 mod = 200;
-	uint64 cost = c->GetLevel() * 200 * 1000;
+
+
+	std::string displayCost;
+	uint64 cost = 0;
+	if (c->GetLevel() < 30) {
+		cost = c->GetLevel() * 1; //copper
+		displayCost = = Stringformat("%u %s", cost, "copper")
+	} else if (c->GetLevel() < 40) {
+		cost = c->GetLevel() * 10; //silver
+		displayCost = = Stringformat("%u %s", (cost / 10), "silver")
+	} else if (c->GetLevel() < 50) {
+		cost = c->GetLevel() * 100; //gold
+		displayCost = = Stringformat("%u %s", (cost / 100), "gold")
+	} else { //50+
+		cost = c->GetLevel() * 1000; //platinum
+		displayCost = = Stringformat("%u %s", (cost / 1000), "platinum")
+	}
+
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {		
 		if (!c->HasMoney(cost)) {
-			c->Message(0, "Not enough platinum to summon and resurrect a corpse in zone.");
+			c->Message(0, "Not enough money to summon and resurrect a corpse in zone.");
 			return;
 		}
+
 		if (!c->TakeMoneyFromPP(cost)) {
 			char *hacker_str = nullptr;
 			MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
@@ -4537,11 +4554,11 @@ void command_rez(Client *c, const Seperator *sep) {
 			//Was sending the packet back to initiate client zone...
 			entity_list.RefreshClientXTargets(c);
 		}
-		c->Message(0, "You paid %u platinum to summon and resurrect a corpse in this zone.", (c->GetLevel() * mod));
+		c->Message(0, "You paid %s to summon and resurrect a corpse in this zone.", displayCost);
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %u platinum to summon and resurrect the closest nearby corpse in this zone. [ %s ]", c->GetLevel(), (c->GetLevel() * mod), c->CreateSayLink("#rez confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %s to summon and resurrect the closest nearby corpse in this zone. [ %s ]", c->GetLevel(), displayCost, c->CreateSayLink("#rez confirm", "Confirm").c_str());
 	}
 }
 
