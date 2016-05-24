@@ -7,11 +7,18 @@ deploy/server/backups/
 deploy/server/db_update/
 deploy/server/db_dumper.pl
 
+#logs are ignored for versioning
+*.log
+
 # Object files
 *.o
 *.obj
 *.svn
 .svn/
+
+common/
+*.pdb
+*.ilk
 
 # Libraries
 *.lib
