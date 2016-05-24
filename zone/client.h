@@ -660,6 +660,8 @@ public:
 	void QuestReadBook(const char* text, uint8 type);
 	void SendClientMoneyUpdate(uint8 type,uint32 amount);
 	void SendMoneyUpdate();
+	bool HasMoneyInInvOrBank(int64 Copper);
+	bool TakeMoneyFromPPOrBank(uint64 copper, bool updateclient);
 	bool TakeMoneyFromPP(uint64 copper, bool updateclient=false);
 	void AddMoneyToPP(uint64 copper,bool updateclient);
 	void AddMoneyToPP(uint32 copper, uint32 silver, uint32 gold,uint32 platinum,bool updateclient);

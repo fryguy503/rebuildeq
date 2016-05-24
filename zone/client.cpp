@@ -2036,6 +2036,100 @@ void Client::SendClientMoneyUpdate(uint8 type,uint32 amount){
 	safe_delete(outapp);
 }
 
+
+bool Client::TakeMoneyFromPPOrBank(uint64 copper, bool updateclient) {
+	//First try player inventory
+	if (this->TakeMoneyFromPP(copper, updateclient)) {
+		return true;
+	}
+
+	//Now try bank
+	int64 copperpp, silver, gold, platinum;
+	copperpp = m_pp.copper_bank;
+	silver = static_cast<int64>(m_pp.silver_bank) * 10;
+	gold = static_cast<int64>(m_pp.gold_bank) * 100;
+	platinum = static_cast<int64>(m_pp.platinum_bank) * 1000;
+
+	int64 clienttotal = copperpp + silver + gold + platinum;
+
+	clienttotal -= copper;
+	if (clienttotal < 0)
+	{
+		return false; // Not enough money!
+	}
+	else
+	{
+		copperpp -= copper;
+		if (copperpp <= 0)
+		{
+			copper = std::abs(copperpp);
+			m_pp.copper_bank = 0;
+		}
+		else
+		{
+			m_pp.copper_bank = copperpp;
+			if (updateclient)
+				SendMoneyUpdate();
+			SaveCurrency();
+			return true;
+		}
+		silver -= copper;
+		if (silver <= 0)
+		{
+			copper = std::abs(silver);
+			m_pp.silver_bank = 0;
+		}
+		else
+		{
+			m_pp.silver_bank = silver / 10;
+			m_pp.copper_bank += (silver - (m_pp.silver_bank * 10));
+			if (updateclient)
+				SendMoneyUpdate();
+			SaveCurrency();
+			return true;
+		}
+
+		gold -= copper;
+
+		if (gold <= 0)
+		{
+			copper = std::abs(gold);
+			m_pp.gold_bank = 0;
+		}
+		else
+		{
+			m_pp.gold_bank = gold / 100;
+			uint64 silvertest = (gold - (static_cast<uint64>(m_pp.gold_bank) * 100)) / 10;
+			m_pp.silver_bank += silvertest;
+			uint64 coppertest = (gold - (static_cast<uint64>(m_pp.gold_bank) * 100 + silvertest * 10));
+			m_pp.copper_bank += coppertest;
+			if (updateclient)
+				SendMoneyUpdate();
+			SaveCurrency();
+			return true;
+		}
+
+		platinum -= copper;
+
+		//Impossible for plat to be negative, already checked above
+
+		m_pp.platinum_bank = platinum / 1000;
+		uint64 goldtest = (platinum - (static_cast<uint64>(m_pp.platinum_bank) * 1000)) / 100;
+		m_pp.gold_bank += goldtest;
+		uint64 silvertest = (platinum - (static_cast<uint64>(m_pp.platinum_bank) * 1000 + goldtest * 100)) / 10;
+		m_pp.silver_bank += silvertest;
+		uint64 coppertest = (platinum - (static_cast<uint64>(m_pp.platinum_bank) * 1000 + goldtest * 100 + silvertest * 10));
+		m_pp.copper_bank = coppertest;
+		if (updateclient)
+			SendMoneyUpdate();
+		RecalcWeight();
+		SaveCurrency();
+		return true;
+	}
+
+
+}
+
 bool Client::TakeMoneyFromPP(uint64 copper, bool updateclient) {
 	int64 copperpp,silver,gold,platinum;
 	copperpp = m_pp.copper;
@@ -2044,7 +2138,7 @@ bool Client::TakeMoneyFromPP(uint64 copper, bool updateclient) {
 	platinum = static_cast<int64>(m_pp.platinum) * 1000;
 
 	int64 clienttotal = copperpp + silver + gold + platinum;
-
+	
 	clienttotal -= copper;
 	if(clienttotal < 0)
 	{
@@ -2234,6 +2328,19 @@ void Client::SendMoneyUpdate() {
 	mus->copper = m_pp.copper;
 
 	FastQueuePacket(&outapp);
+}
+
+bool Client::HasMoneyInInvOrBank(int64 Copper) {
+	if (this->HasMoney(Copper)) {
+		return true;
+	}
+	if ((static_cast<uint64>(m_pp.copper_bank) +
+		(static_cast<uint64>(m_pp.silver_bank) * 10) +
+		(static_cast<uint64>(m_pp.gold_bank) * 100) +
+		(static_cast<uint64>(m_pp.platinum_bank) * 1000)) >= Copper)
+		return true;
+
+	return false;
 }
 
 bool Client::HasMoney(uint64 Copper) {

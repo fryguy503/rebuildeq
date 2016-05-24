@@ -4163,18 +4163,17 @@ void command_teleport(Client *c, const Seperator *sep) {
 	uint64 levelMin = 10;
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "gfaydark") == 0) {
 		if (c->GetLevel() >= levelMin) {
-			if (!c->HasMoney(cost)) {
+			if (!c->HasMoneyInInvOrBank(cost)) {
 				c->Message(0, "Not enough money to teleport.");
 				return;
 			}
-			if (!c->TakeMoneyFromPP(cost)) {
+			if (!c->TakeMoneyFromPPOrBank(cost,true)) {
 				char *hacker_str = nullptr;
 				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
 				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
 				safe_delete_array(hacker_str);
 				return;
 			}
-			c->SendMoneyUpdate();
 			c->Message(0, "You paid %s to teleport to gfaydark.", displayCost.c_str());
 		}
 		else {
@@ -4185,18 +4184,17 @@ void command_teleport(Client *c, const Seperator *sep) {
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "tox") == 0) {
 		if (c->GetLevel() >= levelMin) {
-			if (!c->HasMoney(cost)) {
+			if (!c->HasMoneyInInvOrBank(cost)) {
 				c->Message(0, "Not enough money to teleport.");
 				return;
 			}
-			if (!c->TakeMoneyFromPP(cost)) {
+			if (!c->TakeMoneyFromPPOrBank(cost, true)) {
 				char *hacker_str = nullptr;
 				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
 				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
 				safe_delete_array(hacker_str);
 				return;
 			}
-			c->SendMoneyUpdate();
 			c->Message(0, "You paid %s to teleport to tox.", displayCost.c_str());
 		}
 		else {
@@ -4229,11 +4227,11 @@ void command_teleport(Client *c, const Seperator *sep) {
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "sro") == 0) {
 		if (c->GetLevel() >= levelMin) {
-			if (!c->HasMoney(cost)) {
+			if (!c->HasMoneyInInvOrBank(cost)) {
 				c->Message(0, "Not enough money to teleport.");
 				return;
 			}
-			if (!c->TakeMoneyFromPP(cost)) {
+			if (!c->TakeMoneyFromPPOrBank(cost, true)) {
 				char *hacker_str = nullptr;
 				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
 				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
@@ -4251,18 +4249,17 @@ void command_teleport(Client *c, const Seperator *sep) {
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "commons") == 0) {
 		if (c->GetLevel() >= levelMin) {
-			if (!c->HasMoney(cost)) {
+			if (!c->HasMoneyInInvOrBank(cost)) {
 				c->Message(0, "Not enough money to teleport.");
 				return;
 			}
-			if (!c->TakeMoneyFromPP(cost)) {
+			if (!c->TakeMoneyFromPPOrBank(cost, true)) {
 				char *hacker_str = nullptr;
 				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
 				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
 				safe_delete_array(hacker_str);
 				return;
 			}
-			c->SendMoneyUpdate();
 			c->Message(0, "You paid %s to teleport to commons.", displayCost.c_str());
 		}
 		else {
@@ -4274,18 +4271,17 @@ void command_teleport(Client *c, const Seperator *sep) {
 	}
 	else if (sep->arg[1] && strcasecmp(sep->arg[1], "northkarana") == 0) {
 		if (c->GetLevel() >= levelMin) {
-			if (!c->HasMoney(cost)) {
+			if (!c->HasMoneyInInvOrBank(cost)) {
 				c->Message(0, "Not enough money to teleport.");
 				return;
 			}
-			if (!c->TakeMoneyFromPP(cost)) {
+			if (!c->TakeMoneyFromPPOrBank(cost, true)) {
 				char *hacker_str = nullptr;
 				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
 				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
 				safe_delete_array(hacker_str);
 				return;
 			}
-			c->SendMoneyUpdate();
 			c->Message(0, "You paid %s to teleport to northkarana.", displayCost.c_str());
 		}
 		else {
@@ -4296,18 +4292,17 @@ void command_teleport(Client *c, const Seperator *sep) {
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "dreadlands") == 0) {
 		 if (c->GetLevel() >= levelMin) {
-			 if (!c->HasMoney(cost)) {
+			 if (!c->HasMoneyInInvOrBank(cost)) {
 				 c->Message(0, "Not enough money to teleport.");
 				 return;
 			 }
-			 if (!c->TakeMoneyFromPP(cost)) {
+			 if (!c->TakeMoneyFromPPOrBank(cost, true)) {
 				 char *hacker_str = nullptr;
 				 MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
 				 database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
 				 safe_delete_array(hacker_str);
 				 return;
 			 }
-			 c->SendMoneyUpdate();
 			 c->Message(0, "You paid %s to teleport to dreadlands.", displayCost.c_str());
 		 }
 		 else {
@@ -4379,18 +4374,17 @@ void command_buff(Client *c, const Seperator *sep) {
 	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
-		if (!c->HasMoney(cost)) {
+		if (!c->HasMoneyInInvOrBank(cost)) {
 			c->Message(0, "Not enough platinum to receive buffs.");
 			return;
 		}
-		if (!c->TakeMoneyFromPP(cost)) {
+		if (!c->TakeMoneyFromPPOrBank(cost, true)) {
 			char *hacker_str = nullptr;
 			MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
 			database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
 			safe_delete_array(hacker_str);
 			return;
 		}
-		c->SendMoneyUpdate();
 		c->SpellFinished(412, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[412].ResistDiff);
 		c->SpellFinished(278, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[278].ResistDiff);
 		c->SpellFinished(145, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
@@ -4473,12 +4467,12 @@ void command_return(Client *c, const Seperator *sep) {
 			c->Message(0, "No return point is currently available.");
 			return;
 		}
-		if (!c->HasMoney(cost)) {
+		if (!c->HasMoneyInInvOrBank(cost)) {
 			c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
 			return;
 		}
 
-		if (!c->TakeMoneyFromPP(cost)) {
+		if (!c->TakeMoneyFromPPOrBank(cost, true)) {
 			char *hacker_str = nullptr;
 			MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
 			database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
@@ -4486,7 +4480,6 @@ void command_return(Client *c, const Seperator *sep) {
 			c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
 			return;
 		}
-		c->SendMoneyUpdate();
 
 		c->Message(0, "You paid %s to return to %s.", displayCost.c_str(), returnZoneName.c_str());
 		
@@ -4537,19 +4530,18 @@ void command_rez(Client *c, const Seperator *sep) {
 	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {		
-		if (!c->HasMoney(cost)) {
+		if (!c->HasMoneyInInvOrBank(cost)) {
 			c->Message(0, "Not enough money to summon and resurrect a corpse in zone.");
 			return;
 		}
 
-		if (!c->TakeMoneyFromPP(cost)) {
+		if (!c->TakeMoneyFromPPOrBank(cost, true)) {
 			char *hacker_str = nullptr;
 			MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
 			database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
 			safe_delete_array(hacker_str);
 			return;
 		}
-		c->SendMoneyUpdate();
 
 		corpse->Summon(c, false, false);
 		if (!corpse->IsRezzed()) {
