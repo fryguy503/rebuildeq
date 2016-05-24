@@ -4145,16 +4145,19 @@ void command_teleport(Client *c, const Seperator *sep) {
 	uint64 cost = 0;
 	if (c->GetLevel() < 30) {
 		cost = c->GetLevel() * 1; //copper
-		displayCost = StringFormat("%u %s", cost, "copper");
-	} else if (c->GetLevel() < 40) {
+		displayCost = StringFormat("%u copper", cost);
+	}
+	else if (c->GetLevel() < 40) {
 		cost = c->GetLevel() * 10; //silver
-		displayCost = StringFormat("%u %s", (cost / 10), "silver");
-	} else if (c->GetLevel() < 50) {
+		displayCost = StringFormat("%u silver", (cost / 10));
+	}
+	else if (c->GetLevel() < 50) {
 		cost = c->GetLevel() * 100; //gold
-		displayCost = StringFormat("%u %s", (cost / 100), "gold");
-	} else { //50+
+		displayCost = StringFormat("%u gold", (cost / 100));
+	}
+	else { //50+
 		cost = c->GetLevel() * 1000; //platinum
-		displayCost = StringFormat("%u %s", (cost / 1000), "platinum");
+		displayCost = StringFormat("%u platinum", (cost / 1000));
 	}
 
 	uint64 levelMin = 10;
@@ -4172,7 +4175,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 			c->SendMoneyUpdate();
-			c->Message(0, "You paid %s to teleport to gfaydark.", displayCost);
+			c->Message(0, "You paid %s to teleport to gfaydark.", displayCost.c_str());
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to gfaydark for free due to being below level %u.", levelMin);
@@ -4194,7 +4197,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 			c->SendMoneyUpdate();
-			c->Message(0, "You paid %s to teleport to tox.", displayCost);
+			c->Message(0, "You paid %s to teleport to tox.", displayCost.c_str());
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to tox for free due to being below level %u.", levelMin);
@@ -4238,7 +4241,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			c->Message(0, "You paid %s to teleport to sro.", displayCost);
+			c->Message(0, "You paid %s to teleport to sro.", displayCost.c_str());
 		}
 		else {
 			c->Message(0, "You are too low to teleport to sro.");
@@ -4260,7 +4263,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 			c->SendMoneyUpdate();
-			c->Message(0, "You paid %s to teleport to commons.", displayCost);
+			c->Message(0, "You paid %s to teleport to commons.", displayCost.c_str());
 		}
 		else {
 			c->Message(0, "You are too low to teleport to commons.");
@@ -4283,7 +4286,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				return;
 			}
 			c->SendMoneyUpdate();
-			c->Message(0, "You paid %s to teleport to northkarana.", displayCost);
+			c->Message(0, "You paid %s to teleport to northkarana.", displayCost.c_str());
 		}
 		else {
 			c->Message(0, "You are too low to teleport to northkarana.");
@@ -4305,7 +4308,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 				 return;
 			 }
 			 c->SendMoneyUpdate();
-			 c->Message(0, "You paid %s to teleport to dreadlands.", displayCost);
+			 c->Message(0, "You paid %s to teleport to dreadlands.", displayCost.c_str());
 		 }
 		 else {
 			 c->Message(0, "You are too low to teleport to dreadlands.");
@@ -4331,7 +4334,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 		}
 		c->Message(0, "At level %u, it will cost %s to teleport to:",
 			c->GetLevel(), 
-			displayCost
+			displayCost.c_str()
 		);
 		c->Message(0, "[ %s ], [ %s ], [ %s ]",
 			c->CreateSayLink("#teleport commons", "commons").c_str(),
@@ -4360,16 +4363,19 @@ void command_buff(Client *c, const Seperator *sep) {
 	uint64 cost = 0;
 	if (c->GetLevel() < 30) {
 		cost = c->GetLevel() * 1; //copper
-		displayCost = StringFormat("%u %s", cost, "copper");
-	} else if (c->GetLevel() < 40) {
+		displayCost = StringFormat("%u copper", cost);
+	}
+	else if (c->GetLevel() < 40) {
 		cost = c->GetLevel() * 10; //silver
-		displayCost = StringFormat("%u %s", (cost / 10), "silver");
-	} else if (c->GetLevel() < 50) {;
+		displayCost = StringFormat("%u silver", (cost / 10));
+	}
+	else if (c->GetLevel() < 50) {
 		cost = c->GetLevel() * 100; //gold
-		displayCost = StringFormat("%u %s", (cost / 100), "gold");
-	} else { //50+
+		displayCost = StringFormat("%u gold", (cost / 100));
+	}
+	else { //50+
 		cost = c->GetLevel() * 1000; //platinum
-		displayCost = StringFormat("%u %s", (cost / 1000), "platinum");
+		displayCost = StringFormat("%u platinum", (cost / 1000));
 	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
@@ -4391,11 +4397,11 @@ void command_buff(Client *c, const Seperator *sep) {
 		c->SpellFinished(1693, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[1693].ResistDiff);
 		c->SpellFinished(423, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[423].ResistDiff);
 
-		c->Message(0, "You paid %s for buffs.", displayCost);
+		c->Message(0, "You paid %s for buffs.", displayCost.c_str());
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %s to receive buffs. [ %s ]", c->GetLevel(), displayCost, c->CreateSayLink("#buff confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %s to receive buffs. [ %s ]", c->GetLevel(), displayCost.c_str(), c->CreateSayLink("#buff confirm", "Confirm").c_str());
 	}
 }
 
@@ -4437,16 +4443,19 @@ void command_return(Client *c, const Seperator *sep) {
 	uint64 cost = 0;
 	if (c->GetLevel() < 30) {
 		cost = c->GetLevel() * 1; //copper
-		displayCost = StringFormat("%u %s", cost, "copper");
-	} else if (c->GetLevel() < 40) {
+		displayCost = StringFormat("%u copper", cost);
+	}
+	else if (c->GetLevel() < 40) {
 		cost = c->GetLevel() * 10; //silver
-		displayCost = StringFormat("%u %s", (cost / 10), "silver");
-	} else if (c->GetLevel() < 50) {
+		displayCost = StringFormat("%u silver", (cost / 10));
+	}
+	else if (c->GetLevel() < 50) {
 		cost = c->GetLevel() * 100; //gold
-		displayCost = StringFormat("%u %s", (cost / 100), "gold");
-	} else { //50+
+		displayCost = StringFormat("%u gold", (cost / 100));
+	}
+	else { //50+
 		cost = c->GetLevel() * 1000; //platinum
-		displayCost = StringFormat("%u %s", (cost / 1000), "platinum");
+		displayCost = StringFormat("%u platinum", (cost / 1000));
 	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
@@ -4468,7 +4477,7 @@ void command_return(Client *c, const Seperator *sep) {
 		}
 		c->SendMoneyUpdate();
 
-		c->Message(0, "You paid %s to return to %s.", displayCost, returnZoneName);
+		c->Message(0, "You paid %s to return to %s.", displayCost.c_str(), returnZoneName);
 		
 		zoneid = database.GetZoneID(sep->arg[1]);
 		if(zoneid == 0) {
@@ -4480,9 +4489,9 @@ void command_return(Client *c, const Seperator *sep) {
 		return;
 	}
 	if (returnZoneName == "") {
-		c->Message(0, "It costs %s to use #return at your level. You have not died recently.", displayCost);
+		c->Message(0, "It costs %s to use #return at your level. You have not died recently.", displayCost.c_str());
 	} else {
-		c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ]", displayCost, returnZoneName, c->CreateSayLink("#return confirm", "Confirm").c_str());
+		c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ]", displayCost.c_str(), returnZoneName, c->CreateSayLink("#return confirm", "Confirm").c_str());
 	}
 }
 
@@ -4503,16 +4512,19 @@ void command_rez(Client *c, const Seperator *sep) {
 	uint64 cost = 0;
 	if (c->GetLevel() < 30) {
 		cost = c->GetLevel() * 1; //copper
-		displayCost = StringFormat("%u %s", cost, "copper");
-	} else if (c->GetLevel() < 40) {
+		displayCost = StringFormat("%u copper", cost);
+	}
+	else if (c->GetLevel() < 40) {
 		cost = c->GetLevel() * 10; //silver
-		displayCost = StringFormat("%u %s", (cost / 10), "silver");
-	} else if (c->GetLevel() < 50) {
+		displayCost = StringFormat("%u silver", (cost / 10));
+	}
+	else if (c->GetLevel() < 50) {
 		cost = c->GetLevel() * 100; //gold
-		displayCost = StringFormat("%u %s", (cost / 100), "gold");
-	} else { //50+
+		displayCost = StringFormat("%u gold", (cost / 100));
+	}
+	else { //50+
 		cost = c->GetLevel() * 1000; //platinum
-		displayCost = StringFormat("%u %s", (cost / 1000), "platinum");
+		displayCost = StringFormat("%u platinum", (cost / 1000));
 	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {		
@@ -4554,11 +4566,11 @@ void command_rez(Client *c, const Seperator *sep) {
 			//Was sending the packet back to initiate client zone...
 			entity_list.RefreshClientXTargets(c);
 		}
-		c->Message(0, "You paid %s to summon and resurrect a corpse in this zone.", displayCost);
+		c->Message(0, "You paid %s to summon and resurrect a corpse in this zone.", displayCost.c_str());
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %s to summon and resurrect the closest nearby corpse in this zone. [ %s ]", c->GetLevel(), displayCost, c->CreateSayLink("#rez confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %s to summon and resurrect the closest nearby corpse in this zone. [ %s ]", c->GetLevel(), displayCost.c_str(), c->CreateSayLink("#rez confirm", "Confirm").c_str());
 	}
 }
 
