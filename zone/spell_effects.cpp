@@ -241,6 +241,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (caster->IsClient()) {
 							Client * casterClient = caster->CastToClient();
 							
+
+							if (spell_id == 87) {
+								//Lay on Hands
+								//TODO: Add check for NPC
+							}
+
 							//Elixir of Might
 							if ((spell_id == 2729 || spell_id == 823) &&
 								casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT) > 0 &&
