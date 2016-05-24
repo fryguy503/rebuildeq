@@ -1609,11 +1609,14 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, SkillUseTypes att
 
 	parse->EventPlayer(EVENT_DEATH_COMPLETE, this, buffer, 0);
 
+	//don't continue if instance is set
 	if (this->GetInstanceID() > 0) {
 		return true;
 	}
-
-	//Don't continue if zone instance is set
+	//don't continue if you didn't lose exp
+	if (exploss < 1) {
+		return true;
+	}
 
 	//Update character_custom with return_zone
 	std::string query = StringFormat("SELECT return_zone FROM character_custom WHERE character_id = %u LIMIT 1", this->CharacterID());

@@ -4436,9 +4436,18 @@ void command_return(Client *c, const Seperator *sep) {
 			returnZoneName = row[0];
 		}
 	}
-
-
 	uint16 zoneid = 0;
+	zoneid = database.GetZoneID(returnZoneName.c_str());
+	if (zoneid == 0) {
+		returnZoneName = "";
+	}
+
+	if (zoneid > 0 && c->GetZoneID() == zoneid) {
+		c->Message(0, "You are already in the zone you last died.");
+		return;
+	}
+
+
 
 	std::string displayCost;
 	uint64 cost = 0;
@@ -4468,6 +4477,7 @@ void command_return(Client *c, const Seperator *sep) {
 			c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
 			return;
 		}
+
 		if (!c->TakeMoneyFromPP(cost)) {
 			char *hacker_str = nullptr;
 			MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
@@ -4480,11 +4490,7 @@ void command_return(Client *c, const Seperator *sep) {
 
 		c->Message(0, "You paid %s to return to %s.", displayCost.c_str(), returnZoneName.c_str());
 		
-		zoneid = database.GetZoneID(returnZoneName.c_str());
-		if(zoneid == 0) {
-			c->Message(0, "Unable to locate zone '%s'",  sep->arg[1]);
-			return;
-		}
+		
 		//zone to safe coords
 		c->MovePC(zoneid, 0.0f, 0.0f, 0.0f, 0.0f, 0, ZoneToSafeCoords);
 		query = StringFormat("UPDATE character_custom SET return_zone = '' WHERE character_id = %u LIMIT 1", c->CharacterID());
