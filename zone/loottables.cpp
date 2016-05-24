@@ -462,8 +462,7 @@ void NPC::AddCardTable() {
 	if (GetBodyType() == BT_Monster) { pool += 5; cardTable[pool] = 100109; } //Monster Card
 	if (GetBodyType() == BT_Plant) { pool += 5; cardTable[pool] = 100110; } //Plant Card
 	if (GetBodyType() == BT_Summoned || GetBodyType() == BT_Summoned2 || GetBodyType() == BT_Summoned3 || GetBodyType() == BT_SummonedUndead) { pool += 5; cardTable[pool] = 100111; } //Summoned Card
-	if (GetBodyType() == BT_Undead || GetBodyType() == BT_Vampire) { pool += 5; cardTable[pool] = 100112; } //Undead Card
-	
+	if (GetBodyType() == BT_Undead || GetBodyType() == BT_SummonedUndead || GetBodyType() == BT_Vampire) { pool += 5; cardTable[pool] = 100112; } //Undead Card
 
 	if (GetRace() == 39) { pool += 500; cardTable[pool] = 100113; } //Gnoll Card 50hp
 	if (GetRace() == 13) { pool += 5; cardTable[pool] = 100114; } //Aviak Card
