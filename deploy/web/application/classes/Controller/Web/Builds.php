@@ -613,7 +613,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Slay Undead";
-			$newSkill->desc = 'Grants the passive Slay Undead with a <em data-base="1">1</em>% chance<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the passive Slay Undead with a <em data-base="1">1</em>% chance<span class="perLevel"> per rank</span>.<b>NOT IMPLEMENTED</b>';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[52] = $newSkill;
 			break;
@@ -630,7 +630,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 			//0
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit of Speed";
-			$newSkill->desc = 'Spirit of Wolf lasts <em data-base="20">20</em>% longer<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Spirit of Wolf lasts <em data-base="20">20</em>% longer<span class="perLevel"> per rank</span>. <b>NOT IMPLEMENTED</b>';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[0] = $newSkill;
 			//1
@@ -663,7 +663,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Covenant of Spirit";
-			$newSkill->desc = 'Grants the Covenent of Spirit AA, which imbues divine intervention on the target with a <em data-base="2">2</em>% chance to save<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Covenent of Spirit AA, which imbues divine intervention on the target with a <em data-base="2">2</em>% chance to save<span class="perLevel"> per rank</span>.<b>NOT IMPLEMENTED</b>';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
 			$skills[10] = $newSkill;
 			
