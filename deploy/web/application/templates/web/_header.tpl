@@ -31,8 +31,9 @@
 
         
       </li>
-      *}
       <li><a href="/forum"><span class="glyphicon glyphicon-globe"></span> Forums</a></li>
+      *}
+      
         <li><a href="/chat"><span class="glyphicon glyphicon-user"></span> Chat</a></li>
         <li><a href="/updates"><span class="glyphicon glyphicon-bullhorn"></span> Updates</a></li>
         <li><a href="/donate"><span class="glyphicon glyphicon-apple{*usd*}"></span> Donate</a></li>
