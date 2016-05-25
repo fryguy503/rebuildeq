@@ -1,7 +1,33 @@
+/*	EQEMu: Everquest Server Emulator
+	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.org)
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; version 2 of the License.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY except by those people which sell it, which
+	are required to give you total support for your newly bought product;
+	without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+	A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*/
+
 #ifdef BOTS
 
 #include "bot.h"
 #include "../common/string_util.h"
+
+#if EQDEBUG >= 12
+	#define BotAI_DEBUG_Spells	25
+#elif EQDEBUG >= 9
+	#define BotAI_DEBUG_Spells	10
+#else
+	#define BotAI_DEBUG_Spells	-1
+#endif
 
 bool Bot::AICastSpell(Mob* tar, uint8 iChance, uint16 iSpellTypes) {
 
@@ -977,8 +1003,8 @@ bool Bot::AI_IdleCastCheck() {
 	bool result = false;
 
 	if (AIautocastspell_timer->Check(false)) {
-#if MobAI_DEBUG_Spells >= 25
-		std::cout << "Non-Engaged autocast check triggered: " << this->GetCleanName() << std::endl; // cout undefine [CODEBUG]
+#if BotAI_DEBUG_Spells >= 25
+		Log.Out(Logs::Detail, Logs::AI, "Bot Non-Engaged autocast check triggered: %s", this->GetCleanName());
 #endif
 		AIautocastspell_timer->Disable();	//prevent the timer from going off AGAIN while we are casting.
 
@@ -1025,7 +1051,7 @@ bool Bot::AI_IdleCastCheck() {
 			// bard bots
 			if(!AICastSpell(this, 100, SpellType_Cure)) {
 				if(!AICastSpell(this, 100, SpellType_Heal)) {
-					if((!RuleB(Bots, BotBardUseOutOfCombatSongs) || !GetBardUseOutOfCombatSongs()) || !AICastSpell(this, 100, SpellType_Buff)) { // skips if rule is false
+					if((!RuleB(Bots, BotBardUseOutOfCombatSongs) || !GetAltOutOfCombatBehavior()) || !AICastSpell(this, 100, SpellType_Buff)) { // skips if rule is false
 						if(!AICastSpell(this, 100, SpellType_InCombatBuff)) { // this tries to keep some combat buffs on the group until engaged code can pick up the buffing
 							//
 						}
@@ -1261,7 +1287,7 @@ bool Bot::AIHealRotation(Mob* tar, bool useFastHeals) {
 		return false;
 	}
 
-	if(!AI_HasSpells())
+	if (!AI_HasSpells())
 		return false;
 
 	if(tar->GetAppearance() == eaDead) {
@@ -1302,12 +1328,20 @@ bool Bot::AIHealRotation(Mob* tar, bool useFastHeals) {
 		}
 	}
 
+#if BotAI_DEBUG_Spells >= 10
+	Log.Out(Logs::Detail, Logs::AI, "Bot::AIHealRotation: heal spellid = %u, fastheals = %c, casterlevel = %u",
+		botSpell.SpellId, ((useFastHeals) ? ('T') : ('F')), GetLevel());
+#endif
+#if BotAI_DEBUG_Spells >= 25
+	Log.Out(Logs::Detail, Logs::AI, "Bot::AIHealRotation: target = %s, current_time = %u, donthealmebefore = %u", tar->GetCleanName(), Timer::GetCurrentTime(), tar->DontHealMeBefore());
+#endif
+
 	// If there is still no spell id, then there isn't going to be one so we are done
-	if(botSpell.SpellId == 0)
+	if (botSpell.SpellId == 0)
 		return false;
 
 	// Can we cast this spell on this target?
-	if(!(spells[botSpell.SpellId].targettype==ST_GroupTeleport || spells[botSpell.SpellId].targettype == ST_Target || tar == this)
+	if (!(spells[botSpell.SpellId].targettype == ST_GroupTeleport || spells[botSpell.SpellId].targettype == ST_Target || tar == this)
 		&& !(tar->CanBuffStack(botSpell.SpellId, botLevel, true) >= 0))
 		return false;
 

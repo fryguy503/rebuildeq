@@ -1,5 +1,5 @@
 /*	EQEMu: Everquest Server Emulator
-Copyright (C) 2001-2004 EQEMu Development Team (http://eqemulator.net)
+Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.net)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ Copyright (C) 2001-2004 EQEMu Development Team (http://eqemulator.net)
 #include "../common/races.h"
 #include "../common/spdat.h"
 #include "../common/string_util.h"
-#include "../common/deity.h"
 #include "aa.h"
 #include "client.h"
 #include "corpse.h"
@@ -419,12 +418,12 @@ void Mob::WakeTheDead(uint16 spell_id, Mob *target, uint32 duration)
 
 	//gear stuff, need to make sure there's
 	//no situation where this stuff can be duped
-	for(int x = EmuConstants::EQUIPMENT_BEGIN; x <= EmuConstants::EQUIPMENT_END; x++) // (< 21) added MainAmmo
+	for (int x = EQEmu::legacy::EQUIPMENT_BEGIN; x <= EQEmu::legacy::EQUIPMENT_END; x++) // (< 21) added MainAmmo
 	{
 		uint32 sitem = 0;
 		sitem = CorpseToUse->GetWornItem(x);
 		if(sitem){
-			const Item_Struct * itm = database.GetItem(sitem);
+			const EQEmu::Item_Struct * itm = database.GetItem(sitem);
 			npca->AddLootDrop(itm, &npca->itemlist, 1, 1, 127, true, true);
 		}
 	}
@@ -472,7 +471,7 @@ void Client::ResetAA() {
 
 	database.DeleteCharacterLeadershipAAs(CharacterID());
 	// undefined for these clients
-	if (GetClientVersionBit() & BIT_TitaniumAndEarlier)
+	if (ClientVersionBit() & EQEmu::versions::bit_TitaniumAndEarlier)
 		Kick();
 }
 
@@ -1658,7 +1657,7 @@ bool Mob::CanUseAlternateAdvancementRank(AA::Rank *rank) {
 	//the one titanium hack i will allow
 	//just to make sure we dont crash the client with newer aas
 	//we'll exclude any expendable ones
-	if(IsClient() && CastToClient()->GetClientVersionBit() & BIT_TitaniumAndEarlier) {
+	if(IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_TitaniumAndEarlier) {
 		if(ability->charges > 0) {
 			return false;
 		}
@@ -1674,13 +1673,13 @@ bool Mob::CanUseAlternateAdvancementRank(AA::Rank *rank) {
 		}
 	}
 
-	auto race = GetArrayRace(GetBaseRace());
+	auto race = GetPlayerRaceValue(GetBaseRace());
 	race = race > 16 ? 1 : race;
 	if(!(ability->races & (1 << (race - 1)))) {
 		return false;
 	}
 
-	auto deity = ConvertDeityToBitDeity((DeityTypes)GetDeity());
+	auto deity = GetDeityBit();
 	if(!(ability->deities & deity)) {
 		return false;
 	}

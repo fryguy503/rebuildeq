@@ -1,3 +1,21 @@
+/*	EQEMu: Everquest Server Emulator
+	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.org)
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; version 2 of the License.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY except by those people which sell it, which
+	are required to give you total support for your newly bought product;
+	without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+	A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+*/
+
 #include "../common/global_define.h"
 #include "../common/eq_packet.h"
 #include "../common/eq_stream_intf.h"
@@ -14,7 +32,7 @@
 #include "../common/skills.h"
 #include "../common/extprofile.h"
 #include "../common/string_util.h"
-#include "../common/clientversions.h"
+#include "../common/client_version.h" // inv2 watch
 #include "../common/random.h"
 #include "../common/shareddb.h"
 
@@ -88,8 +106,8 @@ Client::Client(EQStreamInterface* ieqs)
 	pwaitingforbootup = 0;
 	StartInTutorial = false;
 
-	m_ClientVersion = eqs->GetClientVersion();
-	m_ClientVersionBit = ClientBitFromVersion(m_ClientVersion);
+	m_ClientVersion = eqs->ClientVersion();
+	m_ClientVersionBit = EQEmu::versions::ConvertClientVersionToClientVersionBit(m_ClientVersion);
 	
 	numclients++;
 }
@@ -153,7 +171,7 @@ void Client::SendExpansionInfo() {
 	auto outapp = new EQApplicationPacket(OP_ExpansionInfo, sizeof(ExpansionInfo_Struct));
 	ExpansionInfo_Struct *eis = (ExpansionInfo_Struct*)outapp->pBuffer;
 	if(RuleB(World, UseClientBasedExpansionSettings)) {
-		eis->Expansions = ExpansionFromClientVersion(eqs->GetClientVersion());
+		eis->Expansions = EQEmu::versions::ConvertClientVersionToExpansion(eqs->ClientVersion());
 		//eis->Expansions = ExpansionFromClientVersion(this->GetCLE.
 	} else {
 		eis->Expansions = (RuleI(World, ExpansionSettings));
@@ -171,7 +189,7 @@ void Client::SendCharInfo() {
 		cle->SetOnline(CLE_Status_CharSelect);
 	}
 
-	if (m_ClientVersionBit & BIT_RoFAndLater) {
+	if (m_ClientVersionBit & EQEmu::versions::bit_RoFAndLater) {
 		SendMaxCharCreate();
 		SendMembership();
 		SendMembershipSettings();
@@ -196,9 +214,9 @@ void Client::SendMaxCharCreate() {
 	auto outapp = new EQApplicationPacket(OP_SendMaxCharacters, sizeof(MaxCharacters_Struct));
 	MaxCharacters_Struct* mc = (MaxCharacters_Struct*)outapp->pBuffer;
 
-	mc->max_chars = EQLimits::CharacterCreationLimit(m_ClientVersion);
-	if (mc->max_chars > EmuConstants::CHARACTER_CREATION_LIMIT)
-		mc->max_chars = EmuConstants::CHARACTER_CREATION_LIMIT;
+	mc->max_chars = EQEmu::limits::CharacterCreationLimit(m_ClientVersion);
+	if (mc->max_chars > EQEmu::constants::CharacterCreationLimit)
+		mc->max_chars = EQEmu::constants::CharacterCreationLimit;
 
 	QueuePacket(outapp);
 	safe_delete(outapp);
@@ -501,7 +519,7 @@ bool Client::HandleNameApprovalPacket(const EQApplicationPacket *app)
 	uchar race = app->pBuffer[64];
 	uchar clas = app->pBuffer[68];
 
-	Log.Out(Logs::Detail, Logs::World_Server, "Name approval request. Name=%s, race=%s, class=%s", char_name, GetRaceName(race), GetEQClassName(clas));
+	Log.Out(Logs::Detail, Logs::World_Server, "Name approval request. Name=%s, race=%s, class=%s", char_name, GetRaceIDName(race), GetClassIDName(clas));
 
 	EQApplicationPacket *outapp;
 	outapp = new EQApplicationPacket;
@@ -683,7 +701,7 @@ bool Client::HandleCharacterCreatePacket(const EQApplicationPacket *app) {
 	}
 	else
 	{
-		if (m_ClientVersionBit & BIT_TitaniumAndEarlier)
+		if (m_ClientVersionBit & EQEmu::versions::bit_TitaniumAndEarlier)
 			StartInTutorial = true;
 		SendCharInfo();
 	}
@@ -731,9 +749,9 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 	// This can probably be moved outside and have another method return requested info (don't forget to remove the #include "../common/shareddb.h" above)
 	// (This is a literal translation of the original process..I don't see why it can't be changed to a single-target query over account iteration)
 	if (!pZoning) {
-		size_t character_limit = EQLimits::CharacterCreationLimit(eqs->GetClientVersion());
-		if (character_limit > EmuConstants::CHARACTER_CREATION_LIMIT) { character_limit = EmuConstants::CHARACTER_CREATION_LIMIT; }
-		if (eqs->GetClientVersion() == ClientVersion::Titanium) { character_limit = 8; }
+		size_t character_limit = EQEmu::limits::CharacterCreationLimit(eqs->ClientVersion());
+		if (character_limit > EQEmu::constants::CharacterCreationLimit) { character_limit = EQEmu::constants::CharacterCreationLimit; }
+		if (eqs->ClientVersion() == EQEmu::versions::ClientVersion::Titanium) { character_limit = 8; }
 
 		std::string tgh_query = StringFormat(
 			"SELECT                     "
@@ -842,12 +860,12 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 	}
 
 	outapp = new EQApplicationPacket(OP_MOTD);
-	char tmp[500] = {0};
-	if (database.GetVariable("MOTD", tmp, 500)) {
-		outapp->size = strlen(tmp)+1;
+	std::string tmp;
+	if (database.GetVariable("MOTD", tmp)) {
+		outapp->size = tmp.length() + 1;
 		outapp->pBuffer = new uchar[outapp->size];
 		memset(outapp->pBuffer,0,outapp->size);
-		strcpy((char*)outapp->pBuffer, tmp);
+		strcpy((char*)outapp->pBuffer, tmp.c_str());
 
 	} else {
 		// Null Message of the Day. :)
@@ -864,9 +882,9 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 
 	char ConnectionType;
 
-	if (m_ClientVersionBit & BIT_UFAndLater)
+	if (m_ClientVersionBit & EQEmu::versions::bit_UFAndLater)
 		ConnectionType = 'U';
-	else if (m_ClientVersionBit & BIT_SoFAndLater)
+	else if (m_ClientVersionBit & EQEmu::versions::bit_SoFAndLater)
 		ConnectionType = 'S';
 	else
 		ConnectionType = 'C';
@@ -890,7 +908,7 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 
 	outapp2 = new EQApplicationPacket(OP_SetChatServer2);
 
-	if (m_ClientVersionBit & BIT_TitaniumAndEarlier)
+	if (m_ClientVersionBit & EQEmu::versions::bit_TitaniumAndEarlier)
 		ConnectionType = 'M';
 
 	sprintf(buffer,"%s,%i,%s.%s,%c%08X",
@@ -924,7 +942,7 @@ bool Client::HandleDeleteCharacterPacket(const EQApplicationPacket *app) {
 
 bool Client::HandleZoneChangePacket(const EQApplicationPacket *app) {
 	// HoT sends this to world while zoning and wants it echoed back.
-	if (m_ClientVersionBit & BIT_RoFAndLater)
+	if (m_ClientVersionBit & EQEmu::versions::bit_RoFAndLater)
 	{
 		QueuePacket(app);
 	}
@@ -1397,7 +1415,7 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 	Log.Out(Logs::Detail, Logs::World_Server, "Beard: %d  Beardcolor: %d", cc->beard, cc->beardcolor);
 
 	/* Validate the char creation struct */
-	if (m_ClientVersionBit & BIT_SoFAndLater) {
+	if (m_ClientVersionBit & EQEmu::versions::bit_SoFAndLater) {
 		if (!CheckCharCreateInfoSoF(cc)) {
 			Log.Out(Logs::Detail, Logs::World_Server,"CheckCharCreateInfo did not validate the request (bad race/class/stats)");
 			return false;
@@ -1473,7 +1491,7 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 	pp.pvp = database.GetServerType() == 1 ? 1 : 0;
 
 	/* If it is an SoF Client and the SoF Start Zone rule is set, send new chars there */
-	if (m_ClientVersionBit & BIT_SoFAndLater) {
+	if (m_ClientVersionBit & EQEmu::versions::bit_SoFAndLater) {
 		Log.Out(Logs::Detail, Logs::World_Server,"Found 'SoFStartZoneID' rule setting: %i", RuleI(World, SoFStartZoneID));
 		if (RuleI(World, SoFStartZoneID) > 0) {
 			pp.zone_id = RuleI(World, SoFStartZoneID);
@@ -1489,7 +1507,7 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 		}
 	} 	
 	/* use normal starting zone logic to either get defaults, or if startzone was set, load that from the db table.*/
-	bool ValidStartZone = database.GetStartZone(&pp, cc, m_ClientVersionBit & BIT_TitaniumAndEarlier);
+	bool ValidStartZone = database.GetStartZone(&pp, cc, m_ClientVersionBit & EQEmu::versions::bit_TitaniumAndEarlier);
 
 	if (!ValidStartZone){
 		return false;
@@ -1501,7 +1519,25 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 		pp.x = pp.y = pp.z = -1;
 	}
 
-	/* Set Home Binds */
+	/* Set Home Binds  -- yep, all of them */
+	pp.binds[1].zoneId = pp.zone_id;
+	pp.binds[1].x = pp.x;
+	pp.binds[1].y = pp.y;
+	pp.binds[1].z = pp.z;
+	pp.binds[1].heading = pp.heading;
+
+	pp.binds[2].zoneId = pp.zone_id;
+	pp.binds[2].x = pp.x;
+	pp.binds[2].y = pp.y;
+	pp.binds[2].z = pp.z;
+	pp.binds[2].heading = pp.heading;
+
+	pp.binds[3].zoneId = pp.zone_id;
+	pp.binds[3].x = pp.x;
+	pp.binds[3].y = pp.y;
+	pp.binds[3].z = pp.z;
+	pp.binds[3].heading = pp.heading;
+
 	pp.binds[4].zoneId = pp.zone_id;
 	pp.binds[4].x = pp.x;
 	pp.binds[4].y = pp.y;
@@ -1823,7 +1859,7 @@ void Client::SetClassStartingSkills(PlayerProfile_Struct *pp)
 		}
 	}
 
-	if (cle->GetClientVersion() < static_cast<uint8>(ClientVersion::RoF2) && pp->class_ == BERSERKER) {
+	if (cle->GetClientVersion() < static_cast<uint8>(EQEmu::versions::ClientVersion::RoF2) && pp->class_ == BERSERKER) {
 		pp->skills[Skill1HPiercing] = pp->skills[Skill2HPiercing];
 		pp->skills[Skill2HPiercing] = 0;
 	}

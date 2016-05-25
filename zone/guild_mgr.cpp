@@ -322,7 +322,7 @@ void ZoneGuildManager::ProcessWorldPacket(ServerPacket *pack) {
 		else if(c != nullptr && s->guild_id != GUILD_NONE) {
 			//char is in zone, and has changed into a new guild, send MOTD.
 			c->SendGuildMOTD();
-			if(c->GetClientVersion() >= ClientVersion::RoF)
+			if (c->ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 			{
 				c->SendGuildRanks();
 			}
@@ -691,10 +691,10 @@ void GuildBankManager::SendGuildBank(Client *c)
 	auto &guild_bank = *Iterator;
 
 	// RoF+ uses a bulk list packet -- This is also how the Action 0 of older clients basically works
-	if (c->GetClientVersionBit() & BIT_RoFAndLater) {
+	if (c->ClientVersionBit() & EQEmu::versions::bit_RoFAndLater) {
 		auto outapp = new EQApplicationPacket(OP_GuildBankItemList, sizeof(GuildBankItemListEntry_Struct) * 240);
 		for (int i = 0; i < GUILD_BANK_DEPOSIT_AREA_SIZE; ++i) {
-			const Item_Struct *Item = database.GetItem(guild_bank->Items.DepositArea[i].ItemID);
+			const EQEmu::Item_Struct *Item = database.GetItem(guild_bank->Items.DepositArea[i].ItemID);
 			if (Item) {
 				outapp->WriteUInt8(1);
 				outapp->WriteUInt32(guild_bank->Items.DepositArea[i].Permissions);
@@ -718,7 +718,7 @@ void GuildBankManager::SendGuildBank(Client *c)
 		outapp->SetWritePosition(outapp->GetWritePosition() + 20); // newer clients have 40 deposit slots, keep them 0 for now
 
 		for (int i = 0; i < GUILD_BANK_MAIN_AREA_SIZE; ++i) {
-			const Item_Struct *Item = database.GetItem(guild_bank->Items.MainArea[i].ItemID);
+			const EQEmu::Item_Struct *Item = database.GetItem(guild_bank->Items.MainArea[i].ItemID);
 			if (Item) {
 				outapp->WriteUInt8(1);
 				outapp->WriteUInt32(guild_bank->Items.MainArea[i].Permissions);
@@ -749,7 +749,7 @@ void GuildBankManager::SendGuildBank(Client *c)
 	{
 		if(guild_bank->Items.DepositArea[i].ItemID > 0)
 		{
-			const Item_Struct *Item = database.GetItem(guild_bank->Items.DepositArea[i].ItemID);
+			const EQEmu::Item_Struct *Item = database.GetItem(guild_bank->Items.DepositArea[i].ItemID);
 
 			if(!Item)
 				continue;
@@ -785,7 +785,7 @@ void GuildBankManager::SendGuildBank(Client *c)
 	{
 		if(guild_bank->Items.MainArea[i].ItemID > 0)
 		{
-			const Item_Struct *Item = database.GetItem(guild_bank->Items.MainArea[i].ItemID);
+			const EQEmu::Item_Struct *Item = database.GetItem(guild_bank->Items.MainArea[i].ItemID);
 
 			if(!Item)
 				continue;
@@ -916,7 +916,7 @@ bool GuildBankManager::AddItem(uint32 GuildID, uint8 Area, uint32 ItemID, int32 
 		return false;
 	}
 
-	const Item_Struct *Item = database.GetItem(ItemID);
+	const EQEmu::Item_Struct *Item = database.GetItem(ItemID);
 
 	GuildBankItemUpdate_Struct gbius;
 
@@ -982,7 +982,7 @@ int GuildBankManager::Promote(uint32 guildID, int slotID)
 
 	(*iter)->Items.DepositArea[slotID].ItemID = 0;
 
-	const Item_Struct *Item = database.GetItem((*iter)->Items.MainArea[mainSlot].ItemID);
+	const EQEmu::Item_Struct *Item = database.GetItem((*iter)->Items.MainArea[mainSlot].ItemID);
 
 	GuildBankItemUpdate_Struct gbius;
 
@@ -1038,7 +1038,7 @@ void GuildBankManager::SetPermissions(uint32 guildID, uint16 slotID, uint32 perm
 	else
 		(*iter)->Items.MainArea[slotID].WhoFor[0] = '\0';
 
-	const Item_Struct *Item = database.GetItem((*iter)->Items.MainArea[slotID].ItemID);
+	const EQEmu::Item_Struct *Item = database.GetItem((*iter)->Items.MainArea[slotID].ItemID);
 
 	GuildBankItemUpdate_Struct gbius;
 
@@ -1169,7 +1169,7 @@ bool GuildBankManager::DeleteItem(uint32 guildID, uint16 area, uint16 slotID, ui
 
 	bool deleted = true;
 
-	const Item_Struct *Item = database.GetItem(BankArea[slotID].ItemID);
+	const EQEmu::Item_Struct *Item = database.GetItem(BankArea[slotID].ItemID);
 
 	if(!Item->Stackable || (quantity >= BankArea[slotID].Quantity)) {
         std::string query = StringFormat("DELETE FROM `guild_bank` WHERE `guildid` = %i "
@@ -1230,7 +1230,7 @@ bool GuildBankManager::MergeStacks(uint32 GuildID, uint16 SlotID)
 	if(BankArea[SlotID].ItemID == 0)
 		return false;
 
-	const Item_Struct *Item = database.GetItem(BankArea[SlotID].ItemID);
+	const EQEmu::Item_Struct *Item = database.GetItem(BankArea[SlotID].ItemID);
 
 	if(!Item->Stackable)
 		return false;
@@ -1328,7 +1328,7 @@ bool GuildBankManager::SplitStack(uint32 GuildID, uint16 SlotID, uint32 Quantity
 	if(BankArea[SlotID].Quantity <= Quantity || Quantity == 0)
 		return false;
 
-	const Item_Struct *Item = database.GetItem(BankArea[SlotID].ItemID);
+	const EQEmu::Item_Struct *Item = database.GetItem(BankArea[SlotID].ItemID);
 
 	if(!Item->Stackable)
 		return false;
@@ -1406,8 +1406,9 @@ bool GuildApproval::ProcessApproval()
 
 GuildApproval::GuildApproval(const char* guildname, Client* owner,uint32 id)
 {
-	database.GetVariable("GuildCreation", founders, 3);
-	uint8 tmp = atoi(founders);
+	std::string founders;
+	database.GetVariable("GuildCreation", founders);
+	uint8 tmp = atoi(founders.c_str());
 	deletion_timer = new Timer(1800000);
 	strcpy(guild,guildname);
 	this->owner = owner;
@@ -1425,8 +1426,9 @@ GuildApproval::~GuildApproval()
 
 bool GuildApproval::AddMemberApproval(Client* addition)
 {
-	database.GetVariable("GuildCreation", founders, 3);
-	uint8 tmp = atoi(founders);
+	std::string founders;
+	database.GetVariable("GuildCreation", founders);
+	uint8 tmp = atoi(founders.c_str());
 	for(int i=0;i<tmp;i++)
 	{
 		if(members[i] && members[i] == addition)
@@ -1455,8 +1457,9 @@ bool GuildApproval::AddMemberApproval(Client* addition)
 
 void GuildApproval::ApprovedMembers(Client* requestee)
 {
-	database.GetVariable("GuildCreation", founders, 3);
-	uint8 tmp = atoi(founders);
+	std::string founders;
+	database.GetVariable("GuildCreation", founders);
+	uint8 tmp = atoi(founders.c_str());
 	for(int i=0;i<tmp;i++)
 	{
 		if(members[i])
@@ -1471,8 +1474,9 @@ void GuildApproval::GuildApproved()
 
 	if(!owner)
 		return;
-	database.GetVariable("GuildCreation", founders, 3);
-	uint8 tmp = atoi(founders);
+	std::string founders;
+	database.GetVariable("GuildCreation", founders);
+	uint8 tmp = atoi(founders.c_str());
 	uint32 tmpeq = guild_mgr.CreateGuild(guild, owner->CharacterID());
 	guild_mgr.SetGuild(owner->CharacterID(),tmpeq,2);
 	owner->SendAppearancePacket(AT_GuildID,true,false);

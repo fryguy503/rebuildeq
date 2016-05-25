@@ -1,5 +1,5 @@
 /*	EQEMu: Everquest Server Emulator
-	Copyright (C) 2001-2002 EQEMu Development Team (http://eqemu.org)
+	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemu.org)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,6 +15,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
+
 #include "../common/global_define.h"
 #include "../common/eqemu_logsys.h"
 #include "masterentity.h"
@@ -394,7 +395,7 @@ void Group::SendHPPacketsTo(Mob *member)
 			{
 				members[i]->CreateHPPacket(&hpapp);
 				member->CastToClient()->QueuePacket(&hpapp, false);
-				if(member->CastToClient()->GetClientVersion() >= ClientVersion::SoD)
+				if (member->CastToClient()->ClientVersion() >= EQEmu::versions::ClientVersion::SoD)
 				{
 					outapp.SetOpcode(OP_MobManaUpdate);
 					MobManaUpdate_Struct *mmus = (MobManaUpdate_Struct *)outapp.pBuffer;
@@ -425,7 +426,7 @@ void Group::SendHPPacketsFrom(Mob *member)
 		if(members[i] && members[i] != member && members[i]->IsClient())
 		{
 			members[i]->CastToClient()->QueuePacket(&hp_app);
-			if(members[i]->CastToClient()->GetClientVersion() >= ClientVersion::SoD)
+			if (members[i]->CastToClient()->ClientVersion() >= EQEmu::versions::ClientVersion::SoD)
 			{
 				outapp.SetOpcode(OP_MobManaUpdate);
 				MobManaUpdate_Struct *mmus = (MobManaUpdate_Struct *)outapp.pBuffer;
@@ -565,7 +566,7 @@ bool Group::DelMemberOOZ(const char *Name) {
 				if(GroupCount() < 3)
 				{
 					UnDelegateMarkNPC(NPCMarkerName.c_str());
-					if(GetLeader() && GetLeader()->IsClient() && GetLeader()->CastToClient()->GetClientVersion() < ClientVersion::SoD) {
+					if (GetLeader() && GetLeader()->IsClient() && GetLeader()->CastToClient()->ClientVersion() < EQEmu::versions::ClientVersion::SoD) {
 							UnDelegateMainAssist(MainAssistName.c_str());
 					}
 					ClearAllNPCMarks();
@@ -723,7 +724,7 @@ bool Group::DelMember(Mob* oldmember, bool ignoresender)
 	if(GroupCount() < 3)
 	{
 		UnDelegateMarkNPC(NPCMarkerName.c_str());
-		if(GetLeader() && GetLeader()->IsClient() && GetLeader()->CastToClient()->GetClientVersion() < ClientVersion::SoD) {
+		if (GetLeader() && GetLeader()->IsClient() && GetLeader()->CastToClient()->ClientVersion() < EQEmu::versions::ClientVersion::SoD) {
 			UnDelegateMainAssist(MainAssistName.c_str());
 		}
 		ClearAllNPCMarks();
@@ -937,6 +938,41 @@ void Group::DisbandGroup() {
 
 	safe_delete(outapp);
 }
+
+void Group::GetMemberList(std::list<Mob*>& member_list, bool clear_list)
+{
+	if (clear_list)
+		member_list.clear();
+
+	for (auto member_iter : members) {
+		if (member_iter)
+			member_list.push_back(member_iter);
+	}
+}
+
+void Group::GetClientList(std::list<Client*>& client_list, bool clear_list)
+{
+	if (clear_list)
+		client_list.clear();
+
+	for (auto client_iter : members) {
+		if (client_iter && client_iter->IsClient())
+			client_list.push_back(client_iter->CastToClient());
+	}
+}
+
+#ifdef BOTS
+void Group::GetBotList(std::list<Bot*>& bot_list, bool clear_list)
+{
+	if (clear_list)
+		bot_list.clear();
+
+	for (auto bot_iter : members) {
+		if (bot_iter && bot_iter->IsBot())
+			bot_list.push_back(bot_iter->CastToBot());
+	}
+}
+#endif
 
 bool Group::Process() {
 	if(disbandcheck && !GroupCount())
@@ -1568,7 +1604,7 @@ void Group::NotifyMainTank(Client *c, uint8 toggle)
 	if(!MainTankName.size())
 		return;
 
-	if(c->GetClientVersion() < ClientVersion::SoD)
+	if (c->ClientVersion() < EQEmu::versions::ClientVersion::SoD)
 	{
 		if(toggle)
 			c->Message(0, "%s is now Main Tank.", MainTankName.c_str());
@@ -1608,7 +1644,7 @@ void Group::NotifyMainAssist(Client *c, uint8 toggle)
 	if(!MainAssistName.size())
 		return;
 
-	if(c->GetClientVersion() < ClientVersion::SoD)
+	if (c->ClientVersion() < EQEmu::versions::ClientVersion::SoD)
 	{
 		EQApplicationPacket *outapp = new EQApplicationPacket(OP_DelegateAbility, sizeof(DelegateAbility_Struct));
 
@@ -1663,7 +1699,7 @@ void Group::NotifyPuller(Client *c, uint8 toggle)
 	if(!PullerName.size())
 		return;
 
-	if(c->GetClientVersion() < ClientVersion::SoD)
+	if (c->ClientVersion() < EQEmu::versions::ClientVersion::SoD)
 	{
 		if(toggle)
 			c->Message(0, "%s is now Puller.", PullerName.c_str());
@@ -2229,7 +2265,7 @@ void Group::ChangeLeader(Mob* newleader)
 	for (uint32 i = 0; i < MAX_GROUP_MEMBERS; i++) {
 		if (members[i] && members[i]->IsClient())
 		{
-			if(members[i]->CastToClient()->GetClientVersion() >= ClientVersion::SoD)
+			if (members[i]->CastToClient()->ClientVersion() >= EQEmu::versions::ClientVersion::SoD)
 				members[i]->CastToClient()->SendGroupLeaderChangePacket(newleader->GetName());
 
 			members[i]->CastToClient()->QueuePacket(outapp);
@@ -2292,6 +2328,30 @@ void Group::SetPuller(const char *NewPullerName)
 		else
 			MemberRoles[i] &= ~RolePuller;
 	}
+}
+
+bool Group::AmIMainTank(const char *mob_name)
+{
+	if (!mob_name)
+		return false;
+
+	return !((bool)MainTankName.compare(mob_name));
+}
+
+bool Group::AmIMainAssist(const char *mob_name)
+{
+	if (!mob_name)
+		return false;
+
+	return !((bool)MainTankName.compare(mob_name));
+}
+
+bool Group::AmIPuller(const char *mob_name)
+{
+	if (!mob_name)
+		return false;
+	
+	return !((bool)PullerName.compare(mob_name));
 }
 
 bool Group::HasRole(Mob *m, uint8 Role)

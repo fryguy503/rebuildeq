@@ -90,7 +90,11 @@ class Client;
 class Group;
 class Raid;
 class Spawn2;
-struct Item_Struct;
+
+namespace EQEmu
+{
+	struct Item_Struct;
+}
 
 class NPC : public Mob
 {
@@ -106,7 +110,7 @@ public:
 	//abstract virtual function implementations requird by base abstract class
 	virtual bool Death(Mob* killerMob, int32 damage, uint16 spell_id, SkillUseTypes attack_skill);
 	virtual void Damage(Mob* from, int32 damage, uint16 spell_id, SkillUseTypes attack_skill, bool avoidable = true, int8 buffslot = -1, bool iBuffTic = false, int special = 0);
-	virtual bool Attack(Mob* other, int Hand = MainPrimary, bool FromRiposte = false, bool IsStrikethrough = false,
+	virtual bool Attack(Mob* other, int Hand = EQEmu::legacy::SlotPrimary, bool FromRiposte = false, bool IsStrikethrough = false,
 		bool IsFromSpell = false, ExtraAttackOptions *opts = nullptr, int special = 0);
 	virtual bool HasRaid() { return false; }
 	virtual bool HasGroup() { return false; }
@@ -176,7 +180,7 @@ public:
 	virtual void SpellProcess();
 	virtual void FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho);
 
-	void	AddItem(const Item_Struct* item, uint16 charges, bool equipitem = true);
+	void	AddItem(const EQEmu::Item_Struct* item, uint16 charges, bool equipitem = true);
 	void	AddItem(uint32 itemid, uint16 charges, bool equipitem = true);
 	void	AddLootTable();
 	void	AddLootTable(uint32 ldid);
@@ -269,7 +273,7 @@ public:
 	bool	IsTaunting() const { return taunting; }
 	void	PickPocket(Client* thief);
 	void	StartSwarmTimer(uint32 duration) { swarm_timer.Start(duration); }
-	void	AddLootDrop(const Item_Struct*dbitem, ItemList* itemlistconst, int16 charges, uint8 minlevel, uint8 maxlevel, bool equipit, bool wearchange = false);
+	void	AddLootDrop(const EQEmu::Item_Struct*dbitem, ItemList* itemlistconst, int16 charges, uint8 minlevel, uint8 maxlevel, bool equipit, bool wearchange = false);
 	virtual void DoClassAttacks(Mob *target);
 	void	CheckSignal();
 	inline bool IsNotTargetableWithHotkey() const { return no_target_hotkey; }
@@ -402,7 +406,7 @@ public:
 	void	SetMerchantProbability(uint8 amt) { probability = amt; }
 	uint8	GetMerchantProbability() { return probability; }
 	void	mod_prespawn(Spawn2 *sp);
-	int	mod_npc_damage(int damage, SkillUseTypes skillinuse, int hand, const Item_Struct* weapon, Mob* other);
+	int	mod_npc_damage(int damage, SkillUseTypes skillinuse, int hand, const EQEmu::Item_Struct* weapon, Mob* other);
 	void	mod_npc_killed_merit(Mob* c);
 	void	mod_npc_killed(Mob* oos);
 	void	AISpellsList(Client *c);
@@ -498,7 +502,7 @@ protected:
 
 	uint16	skills[HIGHEST_SKILL+1];
 
-	uint32	equipment[EmuConstants::EQUIPMENT_SIZE];	//this is an array of item IDs
+	uint32	equipment[EQEmu::legacy::EQUIPMENT_SIZE];	//this is an array of item IDs
 
 	uint32	herosforgemodel;			//this is the Hero Forge Armor Model (i.e 63 or 84 or 203)
 	uint16	d_melee_texture1;			//this is an item Material value

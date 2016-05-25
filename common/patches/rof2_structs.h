@@ -1,7 +1,28 @@
-#ifndef ROF2_STRUCTS_H_
-#define ROF2_STRUCTS_H_
+/*	EQEMu: Everquest Server Emulator
+	
+	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.net)
 
-namespace RoF2 {
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; version 2 of the License.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY except by those people which sell it, which
+	are required to give you total support for your newly bought product;
+	without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+	A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+#ifndef COMMON_ROF2_STRUCTS_H
+#define COMMON_ROF2_STRUCTS_H
+
+
+namespace RoF2
+{
 	namespace structs {
 
 /*
@@ -29,22 +50,24 @@ struct WorldObjectsSent_Struct {
 };
 
 // New for RoF2 - Size: 12
-struct ItemSlotStruct {
-/*000*/	int16	SlotType;	// Worn and Normal inventory = 0, Bank = 1, Shared Bank = 2, Delete Item = -1
+struct InventorySlot_Struct
+{
+/*000*/	int16	Type;		// Worn and Normal inventory = 0, Bank = 1, Shared Bank = 2, Delete Item = -1
 /*002*/	int16	Unknown02;
-/*004*/	int16	MainSlot;
-/*006*/	int16	SubSlot;
-/*008*/	int16	AugSlot;	// Guessing - Seen 0xffff
+/*004*/	int16	Slot;
+/*006*/	int16	SubIndex;
+/*008*/	int16	AugIndex;	// Guessing - Seen 0xffff
 /*010*/	int16	Unknown01;	// Normally 0 - Seen 13262 when deleting an item, but didn't match item ID
 /*012*/
 };
 
 // New for RoF2 - Used for Merchant_Purchase_Struct
 // Can't sellfrom other than main inventory so Slot Type is not needed.
-struct MainInvItemSlotStruct {
-/*000*/	int16	MainSlot;
-/*002*/	int16	SubSlot;
-/*004*/	int16	AugSlot;
+struct TypelessInventorySlot_Struct
+{
+/*000*/	int16	Slot;
+/*002*/	int16	SubIndex;
+/*004*/	int16	AugIndex;
 /*006*/	int16	Unknown01;
 /*008*/
 };
@@ -656,7 +679,7 @@ struct CastSpell_Struct
 {
 /*00*/	uint32	slot;
 /*04*/	uint32	spell_id;
-/*08*/	ItemSlotStruct inventoryslot;  // slot for clicky item, Seen unknown of 131 = normal cast
+/*08*/	InventorySlot_Struct inventory_slot;  // slot for clicky item, Seen unknown of 131 = normal cast
 /*20*/	uint32	target_id;
 /*24*/	uint32	cs_unknown[2];
 /*32*/	float	y_pos;
@@ -1082,11 +1105,11 @@ union
 	/*00184*/ EquipStruct equipment[22];		// Total Slots
 };
 /*00624*/ uint32 equip2_count;			// Seen 9
-/*00628*/ EquipStruct equipment2[_MaterialCount];	// Appears to be Visible slots, but all 0s
+/*00628*/ EquipStruct equipment2[EQEmu::legacy::MaterialCount];	// Appears to be Visible slots, but all 0s
 /*00808*/ uint32 tint_count;			// Seen 9
-/*00812*/ Color_Struct item_tint[_MaterialCount];	// RR GG BB 00
+/*00812*/ Color_Struct item_tint[EQEmu::legacy::MaterialCount];	// RR GG BB 00
 /*00848*/ uint32 tint_count2;			// Seen 9
-/*00852*/ Color_Struct item_tint2[_MaterialCount];	// RR GG BB 00
+/*00852*/ Color_Struct item_tint2[EQEmu::legacy::MaterialCount];	// RR GG BB 00
 /*00888*/ uint8   haircolor;			// Player hair color
 /*00889*/ uint8   beardcolor;			// Player beard color
 /*00890*/ uint32 unknown_rof5;			//
@@ -1747,7 +1770,7 @@ struct BulkItemPacket_Struct
 
 struct Consume_Struct
 {
-/*000*/ ItemSlotStruct	slot;
+/*000*/ InventorySlot_Struct	inventory_slot;
 /*012*/ uint32	auto_consumed;	// 0xffffffff when auto eating e7030000 when right click
 /*016*/ uint32	type;			// 0x01=Food 0x02=Water
 /*020*/ uint32	c_unknown1;		// Seen 2
@@ -1779,16 +1802,18 @@ struct ItemProperties_Struct {
 /*008*/
 };
 
-struct DeleteItem_Struct {
-/*0000*/ ItemSlotStruct	from_slot;
-/*0012*/ ItemSlotStruct	to_slot;
+struct DeleteItem_Struct
+{
+/*0000*/ InventorySlot_Struct	from_slot;
+/*0012*/ InventorySlot_Struct	to_slot;
 /*0024*/ uint32			number_in_stack;
 /*0028*/
 };
 
-struct MoveItem_Struct {
-/*0000*/ ItemSlotStruct	from_slot;
-/*0012*/ ItemSlotStruct	to_slot;
+struct MoveItem_Struct
+{
+/*0000*/ InventorySlot_Struct	from_slot;
+/*0012*/ InventorySlot_Struct	to_slot;
 /*0024*/ uint32			number_in_stack;
 /*0028*/
 };
@@ -2222,7 +2247,7 @@ struct Merchant_Sell_Struct {
 
 struct Merchant_Purchase_Struct {
 /*000*/	uint32	npcid;			// Merchant NPC's entity id
-/*004*/	MainInvItemSlotStruct	itemslot;
+/*004*/	TypelessInventorySlot_Struct	inventory_slot;
 /*012*/	uint32	quantity;
 /*016*/	uint32	price;
 /*020*/
@@ -2280,9 +2305,10 @@ struct AltCurrencyUpdate_Struct {
 
 //Client -> Server
 //When an item is selected while the alt currency merchant window is open
-struct AltCurrencySelectItem_Struct {
+struct AltCurrencySelectItem_Struct
+{
 /*000*/ uint32 merchant_entity_id;
-/*004*/ MainInvItemSlotStruct slot_id;
+/*004*/ TypelessInventorySlot_Struct inventory_slot;
 /*004*/ //uint32 slot_id;
 /*008*/ uint32 unknown008;
 /*012*/ uint32 unknown012;
@@ -2338,9 +2364,10 @@ struct AltCurrencyReclaim_Struct {
 /*012*/ uint32 reclaim_flag; //1 = this is reclaim
 };
 
-struct AltCurrencySellItem_Struct {
+struct AltCurrencySellItem_Struct
+{
 /*000*/ uint32 merchant_entity_id;
-/*004*/	MainInvItemSlotStruct slot_id;
+/*004*/	TypelessInventorySlot_Struct inventory_slot;
 /*004*/ //uint32 slot_id;
 /*016*/ uint32 charges;
 /*020*/ uint32 cost;
@@ -2356,7 +2383,7 @@ struct Adventure_Purchase_Struct {
 struct Adventure_Sell_Struct {
 /*000*/	uint32	unknown000;	//0x01 - Stack Size/Charges?
 /*004*/	uint32	npcid;
-/*008*/ MainInvItemSlotStruct slot;
+/*008*/ TypelessInventorySlot_Struct inventory_slot;
 /*016*/	uint32	charges;
 /*020*/	uint32	sell_price;
 /*024*/
@@ -2702,9 +2729,9 @@ struct Stun_Struct { // 8 bytes total
 struct AugmentItem_Struct {
 /*00*/	uint32	dest_inst_id;			// The unique serial number for the item instance that is being augmented
 /*04*/	uint32	container_index;				// Seen 0
-/*08*/	ItemSlotStruct container_slot;	// Slot of the item being augmented
+/*08*/	InventorySlot_Struct container_slot;	// Slot of the item being augmented
 /*20*/	uint32	augment_index;				// Seen 0
-/*24*/	ItemSlotStruct augment_slot;	// Slot of the distiller to use (if one applies)
+/*24*/	InventorySlot_Struct augment_slot;	// Slot of the distiller to use (if one applies)
 /*36*/	int32	augment_action;			// Guessed - 0 = augment, 1 = remove with distiller, 3 = delete aug
 /*36*/	//int32	augment_slot;
 /*40*/
@@ -3691,7 +3718,7 @@ struct TributeInfo_Struct {
 
 struct TributeItem_Struct
 {
-/*00*/	ItemSlotStruct	slot;
+/*00*/	InventorySlot_Struct	inventory_slot;
 /*12*/	uint32	quantity;
 /*16*/	uint32	tribute_master_id;
 /*20*/	int32	tribute_points;
@@ -3728,9 +3755,10 @@ struct Split_Struct
 ** Used In: OP_TradeSkillCombine
 ** Last Updated: 01-05-2013
 */
-struct NewCombine_Struct {
-/*00*/	ItemSlotStruct container_slot;
-/*12*/	ItemSlotStruct guildtribute_slot;	// Slot type is 8? (MapGuildTribute = 8)
+struct NewCombine_Struct
+{
+/*00*/	InventorySlot_Struct container_slot;
+/*12*/	InventorySlot_Struct guildtribute_slot;	// Slot type is 8? (MapGuildTribute = 8)
 /*24*/
 };
 
@@ -3769,8 +3797,8 @@ struct RecipeReply_Struct {
 struct RecipeAutoCombine_Struct {
 /*00*/	uint32 object_type;
 /*04*/	uint32 some_id;
-/*08*/	ItemSlotStruct container_slot;		//echoed in reply - Was uint32 unknown1
-/*20*/	ItemSlotStruct unknown_slot;		//echoed in reply
+/*08*/	InventorySlot_Struct container_slot;		//echoed in reply - Was uint32 unknown1
+/*20*/	InventorySlot_Struct unknown_slot;		//echoed in reply
 /*32*/	uint32 recipe_id;
 /*36*/	uint32 reply_code;
 /*40*/
@@ -4488,19 +4516,22 @@ struct ExpansionInfo_Struct {
 /*064*/	uint32	Expansions;
 };
 
-struct ApplyPoison_Struct {
-	MainInvItemSlotStruct inventorySlot;
+struct ApplyPoison_Struct
+{
+	TypelessInventorySlot_Struct inventorySlot;
 	uint32 success;
 };
 
-struct ItemVerifyRequest_Struct {
-/*000*/	ItemSlotStruct slot;
+struct ItemVerifyRequest_Struct
+{
+/*000*/	InventorySlot_Struct inventory_slot;
 /*012*/	uint32	target;		// Target Entity ID
 /*016*/
 };
 
-struct ItemVerifyReply_Struct {
-/*000*/	ItemSlotStruct slot;
+struct ItemVerifyReply_Struct
+{
+/*000*/	InventorySlot_Struct inventory_slot;
 /*012*/	uint32	spell;		// Spell ID to cast if different than item effect
 /*016*/	uint32	target;		// Target Entity ID
 /*020*/
@@ -4785,7 +4816,7 @@ struct ItemQuaternaryBodyStruct
 	int32 HeroicSVCorrup;
 	int32 HealAmt;
 	int32 SpellDmg;
-	int32 clairvoyance;
+	int32 Clairvoyance;
 	uint8 unknown18;	//Power Source Capacity or evolve filename?
 	uint32 evolve_string; // Some String, but being evolution related is just a guess
 	uint8 unknown19;
@@ -4823,7 +4854,6 @@ struct ItemQuaternaryBodyStruct
 	uint8 unknown37a;	// New to RoF2 - Probably variable length string
 	uint8 unknown38;	// 0
 	uint8 unknown39;	// 1
-	uint32 subitem_count;
 };
 
 struct AugmentInfo_Struct
@@ -5058,7 +5088,8 @@ struct MercenaryMerchantResponse_Struct {
 /*0004*/
 };
 
-	};	//end namespace structs
-};	//end namespace RoF2
+	}; /*structs*/
 
-#endif /*ROF2_STRUCTS_H_*/
+}; /*RoF2*/
+
+#endif /*COMMON_ROF2_STRUCTS_H*/

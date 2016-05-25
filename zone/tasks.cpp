@@ -990,7 +990,7 @@ void TaskManager::TaskSetSelector(Client *c, ClientTaskState *state, Mob *mob, i
 
 void TaskManager::SendTaskSelector(Client *c, Mob *mob, int TaskCount, int *TaskList) {
 
-	if (c->GetClientVersion() >= ClientVersion::RoF)
+	if (c->ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 	{
 		SendTaskSelectorNew(c, mob, TaskCount, TaskList);
 		return;
@@ -1884,7 +1884,7 @@ void ClientTaskState::RewardTask(Client *c, TaskInformation *Task) {
 
 	if(!Task || !c) return;
 
-	const Item_Struct* Item;
+	const EQEmu::Item_Struct* Item;
 	std::vector<int> RewardList;
 
 	switch(Task->RewardMethod) {
@@ -2485,7 +2485,7 @@ void TaskManager::SendTaskActivityShort(Client *c, int TaskID, int ActivityID, i
 
 	TaskActivityShort_Struct* tass;
 
-	if(c->GetClientVersionBit() & BIT_RoFAndLater)
+	if (c->ClientVersionBit() & EQEmu::versions::bit_RoFAndLater)
 	{
 		EQApplicationPacket* outapp = new EQApplicationPacket(OP_TaskActivity, 25);
 		outapp->WriteUInt32(ClientTaskIndex);
@@ -2521,7 +2521,7 @@ void TaskManager::SendTaskActivityShort(Client *c, int TaskID, int ActivityID, i
 
 void TaskManager::SendTaskActivityLong(Client *c, int TaskID, int ActivityID, int ClientTaskIndex, bool Optional, bool TaskComplete) {
 
-	if (c->GetClientVersion() >= ClientVersion::RoF)
+	if (c->ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 	{
 		SendTaskActivityNew(c, TaskID, ActivityID, ClientTaskIndex, Optional, TaskComplete);
 		return;
@@ -2777,10 +2777,10 @@ void TaskManager::SendActiveTaskDescription(Client *c, int TaskID, int SequenceN
 		}
 
 		if(ItemID) {
-			const Item_Struct* reward_item = database.GetItem(ItemID);
+			const EQEmu::Item_Struct* reward_item = database.GetItem(ItemID);
 
-			Client::TextLink linker;
-			linker.SetLinkType(linker.linkItemData);
+			EQEmu::saylink::SayLinkEngine linker;
+			linker.SetLinkType(linker.SayLinkItemData);
 			linker.SetItemData(reward_item);
 			linker.SetTaskUse();
 			if (strlen(Tasks[TaskID]->Reward) != 0)

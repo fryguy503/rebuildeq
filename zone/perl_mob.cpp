@@ -1464,7 +1464,7 @@ XS(XS_Mob_GetBuffSlotFromType)
 		Mob *		THIS;
 		int8		RETVAL;
 		dXSTARG;
-		uint8		type = (uint8)SvUV(ST(1));
+		uint16		type = (uint16)SvUV(ST(1));
 
 		if (sv_derived_from(ST(0), "Mob")) {
 			IV tmp = SvIV((SV*)SvRV(ST(0)));
@@ -2357,6 +2357,37 @@ XS(XS_Mob_GetSpellHPBonuses)
 			Perl_croak(aTHX_ "THIS is nullptr, avoiding crash.");
 
 		RETVAL = THIS->GetSpellHPBonuses();
+		XSprePUSH; PUSHi((IV)RETVAL);
+	}
+	XSRETURN(1);
+}
+
+XS(XS_Mob_GetSpellIDFromSlot); /* prototype to pass -Wmissing-prototypes */
+XS(XS_Mob_GetSpellIDFromSlot)
+{
+	dXSARGS;
+	if (items != 2)
+		Perl_croak(aTHX_ "Usage: Mob::GetSpellIDFromSlot(THIS, slot)");
+	{
+		Mob *		THIS;
+		int		RETVAL;
+		dXSTARG;
+		uint8		slot = (uint16)SvUV(ST(1));
+
+		if (sv_derived_from(ST(0), "Mob")) {
+			IV tmp = SvIV((SV*)SvRV(ST(0)));
+			THIS = INT2PTR(Mob *, tmp);
+		}
+		else
+			Perl_croak(aTHX_ "THIS is not of type Mob");
+		if (THIS == nullptr)
+			Perl_croak(aTHX_ "THIS is nullptr, avoiding crash.");
+
+		if (slot > THIS->GetMaxBuffSlots())
+			RETVAL = -1;
+		else 
+			RETVAL = THIS->GetSpellIDFromSlot(slot);
+
 		XSprePUSH; PUSHi((IV)RETVAL);
 	}
 	XSRETURN(1);
@@ -8100,7 +8131,7 @@ XS(XS_Mob_DoThrowingAttackDmg)
 		Mob *		THIS;
 		Mob*		target;
 		ItemInst*	RangeWeapon = nullptr;
-		Item_Struct* item = nullptr;
+		EQEmu::Item_Struct* item = nullptr;
 		uint16		weapon_damage = (uint16)SvIV(ST(4));
 		int16		chance_mod = (int16)SvIV(ST(5));
 		int16		focus = (int16)SvIV(ST(6));
@@ -9105,6 +9136,7 @@ XS(boot_Mob)
 		newXSproto(strcpy(buf, "GetMaxHP"), XS_Mob_GetMaxHP, file, "$");
 		newXSproto(strcpy(buf, "GetItemHPBonuses"), XS_Mob_GetItemHPBonuses, file, "$");
 		newXSproto(strcpy(buf, "GetSpellHPBonuses"), XS_Mob_GetSpellHPBonuses, file, "$");
+		newXSproto(strcpy(buf, "GetSpellIDFromSlot"), XS_Mob_GetSpellIDFromSlot, file, "$$");
 		newXSproto(strcpy(buf, "GetWalkspeed"), XS_Mob_GetWalkspeed, file, "$");
 		newXSproto(strcpy(buf, "GetRunspeed"), XS_Mob_GetRunspeed, file, "$");
 		newXSproto(strcpy(buf, "GetCasterLevel"), XS_Mob_GetCasterLevel, file, "$$");

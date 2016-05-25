@@ -1,5 +1,5 @@
 /*	EQEMu: Everquest Server Emulator
-	Copyright (C) 2001-2009 EQEMu Development Team (http://eqemulator.net)
+	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.net)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -495,7 +495,7 @@ void Client::CompleteConnect()
 {
 	UpdateWho();
 	client_state = CLIENT_CONNECTED;
-
+	SendAllPackets();
 	hpupdate_timer.Start();
 	position_timer.Start();
 	autosave_timer.Start();
@@ -510,7 +510,7 @@ void Client::CompleteConnect()
 
 	if (IsInAGuild()){
 		uint8 rank = GuildRank();
-		if (GetClientVersion() >= ClientVersion::RoF)
+		if (ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 		{
 			switch (rank) {
 			case 0: { rank = 5; break; }	// GUILD_MEMBER	0
@@ -750,8 +750,6 @@ void Client::CompleteConnect()
 
 	entity_list.SendTraders(this);
 
-	zoneinpacket_timer.Start();
-
 	if (GetPet()){
 		GetPet()->SendPetBuffsToClient();
 	}
@@ -864,7 +862,7 @@ void Client::CompleteConnect()
 	if (zone->GetZoneID() == RuleI(World, GuildBankZoneID) && GuildBanks)
 		GuildBanks->SendGuildBank(this);
 
-	if (GetClientVersion() >= ClientVersion::SoD)
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::SoD)
 		entity_list.SendFindableNPCList(this);
 
 	if (IsInAGuild()) {
@@ -879,7 +877,7 @@ void Client::CompleteConnect()
 	worldserver.SendPacket(pack);
 	delete pack;
 
-	if (IsClient() && CastToClient()->GetClientVersionBit() & BIT_UFAndLater) {
+	if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater) {
 		EQApplicationPacket *outapp = MakeBuffsPacket(false);
 		CastToClient()->FastQueuePacket(&outapp);
 	}
@@ -1037,7 +1035,8 @@ void Client::Handle_Connect_OP_ClientError(const EQApplicationPacket *app)
 void Client::Handle_Connect_OP_ClientReady(const EQApplicationPacket *app)
 {
 	conn_state = ClientReadyReceived;
-
+	if (!Spawned())
+		SendZoneInPackets();
 	CompleteConnect();
 	SendHPUpdate();
 }
@@ -1076,7 +1075,7 @@ void Client::Handle_Connect_OP_ReqClientSpawn(const EQApplicationPacket *app)
 	outapp = new EQApplicationPacket(OP_SendExpZonein, 0);
 	FastQueuePacket(&outapp);
 
-	if (GetClientVersion() >= ClientVersion::RoF)
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 	{
 		outapp = new EQApplicationPacket(OP_ClientReady, 0);
 		FastQueuePacket(&outapp);
@@ -1135,7 +1134,7 @@ void Client::Handle_Connect_OP_SendExpZonein(const EQApplicationPacket *app)
 	safe_delete(outapp);
 
 	// SoF+ Gets Zone-In packets after sending OP_WorldObjectsSent
-	if (GetClientVersion() < ClientVersion::SoF)
+	if (ClientVersion() < EQEmu::versions::ClientVersion::SoF)
 	{
 		SendZoneInPackets();
 	}
@@ -1231,8 +1230,8 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 
 	conn_state = ReceivedZoneEntry;
 
-	SetClientVersion(Connection()->GetClientVersion());
-	m_ClientVersionBit = ClientBitFromVersion(Connection()->GetClientVersion());
+	SetClientVersion(Connection()->ClientVersion());
+	m_ClientVersionBit = EQEmu::versions::ConvertClientVersionToClientVersionBit(Connection()->ClientVersion());
 
 	bool siv = m_inv.SetInventoryVersion(m_ClientVersion);
 	Log.Out(Logs::General, Logs::None, "%s inventory version to %s(%i)", (siv ? "Succeeded in setting" : "Failed to set"), ClientVersionName(m_ClientVersion), m_ClientVersion);
@@ -1346,7 +1345,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	}
 
 	/* Set item material tint */
-	for (int i = EmuConstants::MATERIAL_BEGIN; i <= EmuConstants::MATERIAL_END; i++)
+	for (int i = EQEmu::legacy::MATERIAL_BEGIN; i <= EQEmu::legacy::MATERIAL_END; i++)
 	{
 		if (m_pp.item_tint[i].RGB.UseTint == 1 || m_pp.item_tint[i].RGB.UseTint == 255)
 		{
@@ -1420,7 +1419,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 		m_pp.guild_id = GuildID();
 		uint8 rank = guild_mgr.GetDisplayedRank(GuildID(), GuildRank(), CharacterID());
 		// FIXME: RoF guild rank
-		if (GetClientVersion() >= ClientVersion::RoF) {
+		if (ClientVersion() >= EQEmu::versions::ClientVersion::RoF) {
 			switch (rank) {
 			case 0:
 				rank = 5;
@@ -1474,7 +1473,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	if (m_pp.ldon_points_available < 0 || m_pp.ldon_points_available > 2000000000){ m_pp.ldon_points_available = 0; }
 
 	if(RuleB(World, UseClientBasedExpansionSettings)) {
-		m_pp.expansions = ExpansionFromClientVersion(GetClientVersion());
+		m_pp.expansions = EQEmu::versions::ConvertClientVersionToExpansion(ClientVersion());
 	}
 	else {
 		m_pp.expansions = RuleI(World, ExpansionSettings);
@@ -1722,20 +1721,20 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 			if (iter == m_inv.cursor_cbegin())
 				continue;
 			const ItemInst *inst = *iter;
-			SendItemPacket(MainCursor, inst, ItemPacketSummonItem);
+			SendItemPacket(EQEmu::legacy::SlotCursor, inst, ItemPacketSummonItem);
 		}
 	}
 
 	/* Task Packets */
 	LoadClientTaskState();
 
-	if (GetClientVersion() >= ClientVersion::RoF) {
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::RoF) {
 		outapp = new EQApplicationPacket(OP_ReqNewZone, 0);
 		Handle_Connect_OP_ReqNewZone(outapp);
 		safe_delete(outapp);
 	}
 
-	if (m_ClientVersionBit & BIT_UFAndLater) {
+	if (m_ClientVersionBit & EQEmu::versions::bit_UFAndLater) {
 		outapp = new EQApplicationPacket(OP_XTargetResponse, 8);
 		outapp->WriteUInt32(GetMaxXTargets());
 		outapp->WriteUInt32(0);
@@ -1761,7 +1760,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 
 	SetAttackTimer();
 	conn_state = ZoneInfoSent;
-
+	zoneinpacket_timer.Start();
 	return;
 }
 
@@ -1919,7 +1918,7 @@ void Client::Handle_OP_AdventureMerchantPurchase(const EQApplicationPacket *app)
 
 	merchantid = tmp->CastToNPC()->MerchantType;
 
-	const Item_Struct* item = nullptr;
+	const EQEmu::Item_Struct* item = nullptr;
 	bool found = false;
 	std::list<MerchantList> merlist = zone->merchanttable[merchantid];
 	std::list<MerchantList>::const_iterator itr;
@@ -2065,7 +2064,7 @@ void Client::Handle_OP_AdventureMerchantPurchase(const EQApplicationPacket *app)
 	ItemInst *inst = database.CreateItem(item, charges);
 	if (!AutoPutLootInInventory(*inst, true, true))
 	{
-		PutLootInInventory(MainCursor, *inst);
+		PutLootInInventory(EQEmu::legacy::SlotCursor, *inst);
 	}
 	Save(1);
 }
@@ -2095,7 +2094,7 @@ void Client::Handle_OP_AdventureMerchantRequest(const EQApplicationPacket *app)
 	merchantid = tmp->CastToNPC()->MerchantType;
 	tmp->CastToNPC()->FaceTarget(this->CastToMob());
 
-	const Item_Struct *item = 0;
+	const EQEmu::Item_Struct *item = 0;
 	std::list<MerchantList> merlist = zone->merchanttable[merchantid];
 	std::list<MerchantList>::const_iterator itr;
 	for (itr = merlist.begin(); itr != merlist.end() && count<255; ++itr){
@@ -2194,7 +2193,7 @@ void Client::Handle_OP_AdventureMerchantSell(const EQApplicationPacket *app)
 		return;
 	}
 
-	const Item_Struct* item = database.GetItem(itemid);
+	const EQEmu::Item_Struct* item = database.GetItem(itemid);
 	ItemInst* inst = GetInv().GetItem(ams_in->slot);
 	if (!item || !inst){
 		Message(13, "You seemed to have misplaced that item...");
@@ -2469,7 +2468,7 @@ void Client::Handle_OP_AltCurrencyMerchantRequest(const EQApplicationPacket *app
 		ss << alt_cur_id << "|1|" << alt_cur_id;
 		uint32 count = 0;
 		uint32 merchant_id = tar->MerchantType;
-		const Item_Struct *item = nullptr;
+		const EQEmu::Item_Struct *item = nullptr;
 
 		std::list<MerchantList> merlist = zone->merchanttable[merchant_id];
 		std::list<MerchantList>::const_iterator itr;
@@ -2529,7 +2528,7 @@ void Client::Handle_OP_AltCurrencyPurchase(const EQApplicationPacket *app)
 			return;
 		}
 
-		const Item_Struct* item = nullptr;
+		const EQEmu::Item_Struct* item = nullptr;
 		uint32 cost = 0;
 		uint32 current_currency = GetAlternateCurrencyValue(alt_cur_id);
 		uint32 merchant_id = tar->MerchantType;
@@ -2588,7 +2587,7 @@ void Client::Handle_OP_AltCurrencyPurchase(const EQApplicationPacket *app)
 		ItemInst *inst = database.CreateItem(item, charges);
 		if (!AutoPutLootInInventory(*inst, true, true))
 		{
-			PutLootInInventory(MainCursor, *inst);
+			PutLootInInventory(EQEmu::legacy::SlotCursor, *inst);
 		}
 
 		Save(1);
@@ -2638,7 +2637,7 @@ void Client::Handle_OP_AltCurrencyReclaim(const EQApplicationPacket *app)
 			SetAlternateCurrencyValue(reclaim->currency_id, 0);
 		}
 		else {
-			SummonItem(item_id, reclaim->count, 0, 0, 0, 0, 0, 0, false, MainCursor);
+			SummonItem(item_id, reclaim->count, 0, 0, 0, 0, 0, 0, false, EQEmu::legacy::SlotCursor);
 			AddAlternateCurrencyValue(reclaim->currency_id, -((int32)reclaim->count));
 		}
 		/* QS: PlayerLogAlternateCurrencyTransactions :: Cursor to Item Storage */
@@ -2678,7 +2677,7 @@ void Client::Handle_OP_AltCurrencySell(const EQApplicationPacket *app)
 			return;
 		}
 
-		const Item_Struct* item = nullptr;
+		const EQEmu::Item_Struct* item = nullptr;
 		uint32 cost = 0;
 		uint32 current_currency = GetAlternateCurrencyValue(alt_cur_id);
 		uint32 merchant_id = tar->MerchantType;
@@ -2771,7 +2770,7 @@ void Client::Handle_OP_AltCurrencySellSelection(const EQApplicationPacket *app)
 			return;
 		}
 
-		const Item_Struct* item = nullptr;
+		const EQEmu::Item_Struct* item = nullptr;
 		uint32 cost = 0;
 		uint32 current_currency = GetAlternateCurrencyValue(alt_cur_id);
 		uint32 merchant_id = tar->MerchantType;
@@ -2849,11 +2848,11 @@ void Client::Handle_OP_ApplyPoison(const EQApplicationPacket *app)
 	}
 	uint32 ApplyPoisonSuccessResult = 0;
 	ApplyPoison_Struct* ApplyPoisonData = (ApplyPoison_Struct*)app->pBuffer;
-	const ItemInst* PrimaryWeapon = GetInv().GetItem(MainPrimary);
-	const ItemInst* SecondaryWeapon = GetInv().GetItem(MainSecondary);
+	const ItemInst* PrimaryWeapon = GetInv().GetItem(EQEmu::legacy::SlotPrimary);
+	const ItemInst* SecondaryWeapon = GetInv().GetItem(EQEmu::legacy::SlotSecondary);
 	const ItemInst* PoisonItemInstance = GetInv()[ApplyPoisonData->inventorySlot];
 
-	bool IsPoison = PoisonItemInstance && (PoisonItemInstance->GetItem()->ItemType == ItemTypePoison);
+	bool IsPoison = PoisonItemInstance && (PoisonItemInstance->GetItem()->ItemType == EQEmu::item::ItemTypePoison);
 
 	if (!IsPoison)
 	{
@@ -2864,8 +2863,8 @@ void Client::Handle_OP_ApplyPoison(const EQApplicationPacket *app)
 	}
 	else if (GetClass() == ROGUE)
 	{
-		if ((PrimaryWeapon && PrimaryWeapon->GetItem()->ItemType == ItemType1HPiercing) ||
-			(SecondaryWeapon && SecondaryWeapon->GetItem()->ItemType == ItemType1HPiercing)) {
+		if ((PrimaryWeapon && PrimaryWeapon->GetItem()->ItemType == EQEmu::item::ItemType1HPiercing) ||
+			(SecondaryWeapon && SecondaryWeapon->GetItem()->ItemType == EQEmu::item::ItemType1HPiercing)) {
 			float SuccessChance = (GetSkill(SkillApplyPoison) + GetLevel()) / 400.0f;
 			double ChanceRoll = zone->random.Real(0, 1);
 
@@ -2945,7 +2944,7 @@ void Client::Handle_OP_AugmentInfo(const EQApplicationPacket *app)
 	}
 
 	AugmentInfo_Struct* AugInfo = (AugmentInfo_Struct*)app->pBuffer;
-	const Item_Struct * item = database.GetItem(AugInfo->itemid);
+	const EQEmu::Item_Struct * item = database.GetItem(AugInfo->itemid);
 
 	if (item) {
 		strn0cpy(AugInfo->augment_info, item->Name, 64);
@@ -2964,7 +2963,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 
 	AugmentItem_Struct* in_augment = (AugmentItem_Struct*)app->pBuffer;
 	bool deleteItems = false;
-	if (GetClientVersion() >= ClientVersion::RoF)
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 	{
 		ItemInst *itemOneToPush = nullptr, *itemTwoToPush = nullptr;
 
@@ -3003,7 +3002,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 				Message(13, "Error: Missing an augmentation distiller for safely removing this augment.");
 				return;
 			}
-			else if (solvent->GetItem()->ItemType == ItemUseTypes::ItemTypeAugmentationDistiller)
+			else if (solvent->GetItem()->ItemType == EQEmu::item::ItemTypeAugmentationDistiller)
 			{
 				old_aug = tobe_auged->GetAugment(in_augment->augment_index);
 
@@ -3020,7 +3019,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 					return;
 				}
 			}
-			else if (solvent->GetItem()->ItemType != ItemUseTypes::ItemTypePerfectedAugmentationDistiller)
+			else if (solvent->GetItem()->ItemType != EQEmu::item::ItemTypePerfectedAugmentationDistiller)
 			{
 				Log.Out(Logs::General, Logs::Error, "Player tried to safely remove an augment with a non-distiller item.");
 				Message(13, "Error: Invalid augmentation distiller for safely removing this augment.");
@@ -3032,7 +3031,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 		{
 			case 0: // Adding an augment
 			case 2: // Swapping augment
-				new_aug = user_inv.GetItem(MainCursor);
+				new_aug = user_inv.GetItem(EQEmu::legacy::SlotCursor);
 
 				if (!new_aug) // Shouldn't get the OP code without the augment on the user's cursor, but maybe it's h4x.
 				{
@@ -3090,7 +3089,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 						if (itemOneToPush)
 						{
 							DeleteItemInInventory(item_slot, 0, true);
-							DeleteItemInInventory(MainCursor, new_aug->IsStackable() ? 1 : 0, true);
+							DeleteItemInInventory(EQEmu::legacy::SlotCursor, new_aug->IsStackable() ? 1 : 0, true);
 
 							if (solvent)
 							{
@@ -3101,7 +3100,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 							if (itemTwoToPush)
 							{
 								// This is a swap. Return the old aug to the player's cursor.
-								if (!PutItemInInventory(MainCursor, *itemTwoToPush, true))
+								if (!PutItemInInventory(EQEmu::legacy::SlotCursor, *itemTwoToPush, true))
 								{
 									Log.Out(Logs::General, Logs::Error, "Problem returning old augment to player's cursor after augmentation swap.");
 									Message(15, "Error: Failed to retrieve old augment after augmentation swap!");
@@ -3114,7 +3113,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 
 								CalcBonuses();
 
-								if (mat != _MaterialInvalid)
+								if (mat != EQEmu::legacy::MaterialInvalid)
 								{
 									SendWearChange(mat); // Visible item augged while equipped. Send WC in case ornamentation changed.
 								}
@@ -3179,13 +3178,13 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 
 					CalcBonuses();
 					
-					if (mat != _MaterialInvalid)
+					if (mat != EQEmu::legacy::MaterialInvalid)
 					{
 						SendWearChange(mat); // Visible item augged while equipped. Send WC in case ornamentation changed.
 					}
 
 					// Drop the removed augment on the player's cursor
-					if (!PutItemInInventory(MainCursor, *itemTwoToPush, true))
+					if (!PutItemInInventory(EQEmu::legacy::SlotCursor, *itemTwoToPush, true))
 					{
 						Log.Out(Logs::General, Logs::Error, "Problem returning augment to player's cursor after safe removal.");
 						Message(15, "Error: Failed to return augment after removal from item!");
@@ -3234,7 +3233,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 
 				CalcBonuses();
 
-				if (mat != _MaterialInvalid)
+				if (mat != EQEmu::legacy::MaterialInvalid)
 				{
 					SendWearChange(mat);
 				}
@@ -3527,7 +3526,7 @@ void Client::Handle_OP_Barter(const EQApplicationPacket *app)
 	{
 		BarterItemSearchLinkRequest_Struct* bislr = (BarterItemSearchLinkRequest_Struct*)app->pBuffer;
 
-		const Item_Struct* item = database.GetItem(bislr->ItemID);
+		const EQEmu::Item_Struct* item = database.GetItem(bislr->ItemID);
 
 		if (!item)
 			Message(13, "Error: This item does not exist!");
@@ -3560,7 +3559,7 @@ void Client::Handle_OP_Barter(const EQApplicationPacket *app)
 	{
 		BuyerItemSearchLinkRequest_Struct* bislr = (BuyerItemSearchLinkRequest_Struct*)app->pBuffer;
 
-		const Item_Struct* item = database.GetItem(bislr->ItemID);
+		const EQEmu::Item_Struct* item = database.GetItem(bislr->ItemID);
 
 		if (!item)
 			Message(13, "Error: This item does not exist!");
@@ -3599,7 +3598,7 @@ void Client::Handle_OP_BazaarInspect(const EQApplicationPacket *app)
 
 	BazaarInspect_Struct* bis = (BazaarInspect_Struct*)app->pBuffer;
 
-	const Item_Struct* item = database.GetItem(bis->ItemID);
+	const EQEmu::Item_Struct* item = database.GetItem(bis->ItemID);
 
 	if (!item) {
 		Message(13, "Error: This item does not exist!");
@@ -3933,7 +3932,6 @@ void Client::Handle_OP_Camp(const EQApplicationPacket *app)
 {
 #ifdef BOTS
 	// This block is necessary to clean up any bot objects owned by a Client
-	Bot::BotHealRotationsClear(this);
 	Bot::BotOrderCampAll(this);
 #endif
 	if (IsLFP())
@@ -4051,10 +4049,11 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 			// packet field types will be reviewed as packet transistions occur
 			const ItemInst* inst = m_inv[castspell->inventoryslot]; //slot values are int16, need to check packet on this field
 			//bool cancast = true;
-			if (inst && inst->IsType(ItemClassCommon))
+			if (inst && inst->IsClassCommon())
 			{
 				
 				const Item_Struct* item = inst->GetItem();
+				const EQEmu::Item_Struct* item = inst->GetItem();
 				if (item->Click.Effect != (uint32)castspell->spell_id)
 				{
 					database.SetMQDetectionFlag(account_name, name, "OP_CastSpell with item, tried to cast a different spell.", zone->GetShortName());
@@ -4062,7 +4061,7 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 					return;
 				}
 
-				if ((item->Click.Type == ET_ClickEffect) || (item->Click.Type == ET_Expendable) || (item->Click.Type == ET_EquipClick) || (item->Click.Type == ET_ClickEffect2))
+				if ((item->Click.Type == EQEmu::item::ItemEffectClick) || (item->Click.Type == EQEmu::item::ItemEffectExpendable) || (item->Click.Type == EQEmu::item::ItemEffectEquipClick) || (item->Click.Type == EQEmu::item::ItemEffectClick2))
 				{
 					Message(0, "ItemClick2?");
 					if (item->Click.Level2 > 0)
@@ -4120,7 +4119,7 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 		}
 		else
 		{
-			Message(0, "Error: castspell->inventoryslot >= %i (0x%04x)", MainCursor, castspell->inventoryslot);
+			Message(0, "Error: castspell->inventoryslot >= %i (0x%04x)", EQEmu::legacy::SlotCursor, castspell->inventoryslot);
 			InterruptSpell(castspell->spell_id);
 		}
 	}
@@ -4300,7 +4299,7 @@ void Client::Handle_OP_ClickObjectAction(const EQApplicationPacket *app)
 		QueuePacket(&end_trade2);
 
 		// RoF sends a 0 sized packet for closing objects
-		if (GetTradeskillObject() && GetClientVersion() >= ClientVersion::RoF)
+		if (GetTradeskillObject() && ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 			GetTradeskillObject()->CastToObject()->Close();
 		
 		return;
@@ -4909,12 +4908,12 @@ void Client::Handle_OP_Consume(const EQApplicationPacket *app)
 		return;
 	}
 
-	const Item_Struct* eat_item = myitem->GetItem();
+	const EQEmu::Item_Struct* eat_item = myitem->GetItem();
 	if (pcs->type == 0x01) {
-		Consume(eat_item, ItemTypeFood, pcs->slot, (pcs->auto_consumed == 0xffffffff));
+		Consume(eat_item, EQEmu::item::ItemTypeFood, pcs->slot, (pcs->auto_consumed == 0xffffffff));
 	}
 	else if (pcs->type == 0x02) {
-		Consume(eat_item, ItemTypeDrink, pcs->slot, (pcs->auto_consumed == 0xffffffff));
+		Consume(eat_item, EQEmu::item::ItemTypeDrink, pcs->slot, (pcs->auto_consumed == 0xffffffff));
 	}
 	else {
 		Log.Out(Logs::General, Logs::Error, "OP_Consume: unknown type, type:%i", (int)pcs->type);
@@ -5039,7 +5038,7 @@ void Client::Handle_OP_CrashDump(const EQApplicationPacket *app)
 
 void Client::Handle_OP_CreateObject(const EQApplicationPacket *app)
 {
-	DropItem(MainCursor);
+	DropItem(EQEmu::legacy::SlotCursor);
 	return;
 }
 
@@ -5182,14 +5181,14 @@ void Client::Handle_OP_DeleteItem(const EQApplicationPacket *app)
 
 	DeleteItem_Struct* alc = (DeleteItem_Struct*)app->pBuffer;
 	const ItemInst *inst = GetInv().GetItem(alc->from_slot);
-	if (inst && inst->GetItem()->ItemType == ItemTypeAlcohol) {
+	if (inst && inst->GetItem()->ItemType == EQEmu::item::ItemTypeAlcohol) {
 		entity_list.MessageClose_StringID(this, true, 50, 0, DRINKING_MESSAGE, GetName(), inst->GetItem()->Name);
 		CheckIncreaseSkill(SkillAlcoholTolerance, nullptr, 25);
 
 		int16 AlcoholTolerance = GetSkill(SkillAlcoholTolerance);
 		int16 IntoxicationIncrease;
 
-		if (GetClientVersion() < ClientVersion::SoD)
+		if (ClientVersion() < EQEmu::versions::ClientVersion::SoD)
 			IntoxicationIncrease = (200 - AlcoholTolerance) * 30 / 200 + 10;
 		else
 			IntoxicationIncrease = (270 - AlcoholTolerance) * 0.111111108 + 10;
@@ -5501,7 +5500,7 @@ void Client::Handle_OP_EndLootRequest(const EQApplicationPacket *app)
 	Entity* entity = entity_list.GetID(*((uint16*)app->pBuffer));
 	if (entity == 0) {
 		Message(13, "Error: OP_EndLootRequest: Corpse not found (ent = 0)");
-		if (GetClientVersion() >= ClientVersion::SoD)
+		if (ClientVersion() >= EQEmu::versions::ClientVersion::SoD)
 			Corpse::SendEndLootErrorPacket(this);
 		else
 			Corpse::SendLootReqErrorPacket(this);
@@ -6953,7 +6952,7 @@ void Client::Handle_OP_GuildBank(const EQApplicationPacket *app)
 			return;
 		}
 
-		ItemInst *CursorItemInst = GetInv().GetItem(MainCursor);
+		ItemInst *CursorItemInst = GetInv().GetItem(EQEmu::legacy::SlotCursor);
 
 		bool Allowed = true;
 
@@ -6966,7 +6965,7 @@ void Client::Handle_OP_GuildBank(const EQApplicationPacket *app)
 			return;
 		}
 
-		const Item_Struct* CursorItem = CursorItemInst->GetItem();
+		const EQEmu::Item_Struct* CursorItem = CursorItemInst->GetItem();
 
 		if (!CursorItem->NoDrop || CursorItemInst->IsAttuned())
 		{
@@ -7001,7 +7000,7 @@ void Client::Handle_OP_GuildBank(const EQApplicationPacket *app)
 		{
 			GuildBankDepositAck(false, sentAction);
 
-			DeleteItemInInventory(MainCursor, 0, false);
+			DeleteItemInInventory(EQEmu::legacy::SlotCursor, 0, false);
 		}
 
 		break;
@@ -7022,7 +7021,7 @@ void Client::Handle_OP_GuildBank(const EQApplicationPacket *app)
 
 	case GuildBankWithdraw:
 	{
-		if (GetInv()[MainCursor])
+		if (GetInv()[EQEmu::legacy::SlotCursor])
 		{
 			Message_StringID(13, GUILD_BANK_EMPTY_HANDS);
 
@@ -7068,7 +7067,7 @@ void Client::Handle_OP_GuildBank(const EQApplicationPacket *app)
 		{
 			PushItemOnCursor(*inst);
 
-			SendItemPacket(MainCursor, inst, ItemPacketSummonItem);
+			SendItemPacket(EQEmu::legacy::SlotCursor, inst, ItemPacketSummonItem);
 
 			GuildBanks->DeleteItem(GuildID(), gbwis->Area, gbwis->SlotID, gbwis->Quantity);
 		}
@@ -7381,11 +7380,11 @@ void Client::Handle_OP_GuildInvite(const EQApplicationPacket *app)
 					gc->guildeqid = GuildID();
 
 				// Convert Membership Level between RoF and previous clients.
-				if (client->GetClientVersion() < ClientVersion::RoF && GetClientVersion() >= ClientVersion::RoF)
+				if (client->ClientVersion() < EQEmu::versions::ClientVersion::RoF && ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 				{
 					gc->officer = 0;
 				}
-				if (client->GetClientVersion() >= ClientVersion::RoF && GetClientVersion() < ClientVersion::RoF)
+				if (client->ClientVersion() >= EQEmu::versions::ClientVersion::RoF && ClientVersion() < EQEmu::versions::ClientVersion::RoF)
 				{
 					gc->officer = 8;
 				}
@@ -7426,7 +7425,7 @@ void Client::Handle_OP_GuildInviteAccept(const EQApplicationPacket *app)
 
 	uint32 guildrank = gj->response;
 
-	if (GetClientVersion() >= ClientVersion::RoF)
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 	{
 		if (gj->response > 9)
 		{
@@ -7461,11 +7460,11 @@ void Client::Handle_OP_GuildInviteAccept(const EQApplicationPacket *app)
 		{
 			Client* client = inviter->CastToClient();
 			// Convert Membership Level between RoF and previous clients.
-			if (client->GetClientVersion() < ClientVersion::RoF && GetClientVersion() >= ClientVersion::RoF)
+			if (client->ClientVersion() < EQEmu::versions::ClientVersion::RoF && ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 			{
 				guildrank = 0;
 			}
-			if (client->GetClientVersion() >= ClientVersion::RoF && GetClientVersion() < ClientVersion::RoF)
+			if (client->ClientVersion() >= EQEmu::versions::ClientVersion::RoF && ClientVersion() < EQEmu::versions::ClientVersion::RoF)
 			{
 				guildrank = 8;
 			}
@@ -7502,7 +7501,7 @@ void Client::Handle_OP_GuildInviteAccept(const EQApplicationPacket *app)
 
 			guildrank = gj->response;
 
-			if (GetClientVersion() >= ClientVersion::RoF)
+			if (ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 			{
 				if (gj->response == 8)
 				{
@@ -8039,17 +8038,17 @@ void Client::Handle_OP_InspectAnswer(const EQApplicationPacket *app)
 	EQApplicationPacket* outapp = app->Copy();
 	InspectResponse_Struct* insr = (InspectResponse_Struct*)outapp->pBuffer;
 	Mob* tmp = entity_list.GetMob(insr->TargetID);
-	const Item_Struct* item = nullptr;
+	const EQEmu::Item_Struct* item = nullptr;
 
 	int ornamentationAugtype = RuleI(Character, OrnamentationAugmentType);
-	for (int16 L = EmuConstants::EQUIPMENT_BEGIN; L <= MainWaist; L++) {
+	for (int16 L = EQEmu::legacy::EQUIPMENT_BEGIN; L <= EQEmu::legacy::SlotWaist; L++) {
 		const ItemInst* inst = GetInv().GetItem(L);
 		item = inst ? inst->GetItem() : nullptr;
 
 		if (item) {
 			strcpy(insr->itemnames[L], item->Name);
 			if (inst && inst->GetOrnamentationAug(ornamentationAugtype)) {
-				const Item_Struct *aug_item = inst->GetOrnamentationAug(ornamentationAugtype)->GetItem();
+				const EQEmu::Item_Struct *aug_item = inst->GetOrnamentationAug(ornamentationAugtype)->GetItem();
 				insr->itemicons[L] = aug_item->Icon;
 			}
 			else if (inst->GetOrnamentationIcon()) {
@@ -8062,15 +8061,15 @@ void Client::Handle_OP_InspectAnswer(const EQApplicationPacket *app)
 		else { insr->itemicons[L] = 0xFFFFFFFF; }
 	}
 
-	const ItemInst* inst = GetInv().GetItem(MainAmmo);
+	const ItemInst* inst = GetInv().GetItem(EQEmu::legacy::SlotAmmo);
 	item = inst ? inst->GetItem() : nullptr;
 
 	if (item) {
 		// another one..I did these, didn't I!!?
-		strcpy(insr->itemnames[SoF::slots::MainAmmo], item->Name);
-		insr->itemicons[SoF::slots::MainAmmo] = item->Icon;
+		strcpy(insr->itemnames[SoF::inventory::SlotAmmo], item->Name);
+		insr->itemicons[SoF::inventory::SlotAmmo] = item->Icon;
 	}
-	else { insr->itemicons[SoF::slots::MainAmmo] = 0xFFFFFFFF; }
+	else { insr->itemicons[SoF::inventory::SlotAmmo] = 0xFFFFFFFF; }
 
 	InspectMessage_Struct* newmessage = (InspectMessage_Struct*)insr->text;
 	InspectMessage_Struct& playermessage = this->GetInspectMessage();
@@ -8108,7 +8107,7 @@ void Client::Handle_OP_InspectRequest(const EQApplicationPacket *app)
 	Mob* tmp = entity_list.GetMob(ins->TargetID);
 
 	if (tmp != 0 && tmp->IsClient()) {
-		if (tmp->CastToClient()->GetClientVersion() < ClientVersion::SoF) { tmp->CastToClient()->QueuePacket(app); } // Send request to target
+		if (tmp->CastToClient()->ClientVersion() < EQEmu::versions::ClientVersion::SoF) { tmp->CastToClient()->QueuePacket(app); } // Send request to target
 		// Inspecting an SoF or later client will make the server handle the request
 		else { ProcessInspectRequest(tmp->CastToClient(), this); }
 	}
@@ -8149,7 +8148,7 @@ void Client::Handle_OP_ItemLinkClick(const EQApplicationPacket *app)
 	// todo: verify ivrs->link_hash based on a rule, in case we don't care about people being able to sniff data
 	// from the item DB
 
-	const Item_Struct *item = database.GetItem(ivrs->item_id);
+	const EQEmu::Item_Struct *item = database.GetItem(ivrs->item_id);
 	if (!item) {
 		if (ivrs->item_id != SAYLINK_ITEM_ID) {
 			Message(13, "Error: The item for the link you have clicked on does not exist!");
@@ -8240,7 +8239,7 @@ void Client::Handle_OP_ItemName(const EQApplicationPacket *app)
 		return;
 	}
 	ItemNamePacket_Struct *p = (ItemNamePacket_Struct*)app->pBuffer;
-	const Item_Struct *item = 0;
+	const EQEmu::Item_Struct *item = 0;
 	if ((item = database.GetItem(p->item_id)) != nullptr) {
 		EQApplicationPacket* outapp = new EQApplicationPacket(OP_ItemName, sizeof(ItemNamePacket_Struct));
 		p = (ItemNamePacket_Struct*)outapp->pBuffer;
@@ -8256,7 +8255,7 @@ void Client::Handle_OP_ItemPreview(const EQApplicationPacket *app)
 	VERIFY_PACKET_LENGTH(OP_ItemPreview, app, ItemPreview_Struct);
 	ItemPreview_Struct *ips = (ItemPreview_Struct *)app->pBuffer;
 
-	const Item_Struct* item = database.GetItem(ips->itemid);
+	const EQEmu::Item_Struct* item = database.GetItem(ips->itemid);
 
 	if (item) {
 		EQApplicationPacket* outapp = new EQApplicationPacket(OP_ItemPreview, strlen(item->Name) + strlen(item->Lore) + strlen(item->IDFile) + 898);
@@ -8472,7 +8471,7 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 		return;
 	}
 
-	const Item_Struct* item = inst->GetItem();
+	const EQEmu::Item_Struct* item = inst->GetItem();
 	if (!item) {
 		Message(0, "Error: item not found in inventory slot #%i", slot_id);
 		DeleteItemInInventory(slot_id, 0, true);
@@ -8511,7 +8510,7 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 
 	Log.Out(Logs::General, Logs::None, "OP ItemVerifyRequest: spell=%i, target=%i, inv=%i", spell_id, target_id, slot_id);
 
-	if (m_inv.SupportsClickCasting(slot_id) || ((item->ItemType == ItemTypePotion || item->PotionBelt) && m_inv.SupportsPotionBeltCasting(slot_id))) // sanity check
+	if (m_inv.SupportsClickCasting(slot_id) || ((item->ItemType == EQEmu::item::ItemTypePotion || item->PotionBelt) && m_inv.SupportsPotionBeltCasting(slot_id))) // sanity check
 	{
 		ItemInst* p_inst = (ItemInst*)inst;
 
@@ -8525,42 +8524,42 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 		int r;
 		bool tryaug = false;
 		ItemInst* clickaug = 0;
-		Item_Struct* augitem = 0;
+		EQEmu::Item_Struct* augitem = 0;
 
-		for (r = 0; r < EmuConstants::ITEM_COMMON_SIZE; r++) {
+		for (r = 0; r < EQEmu::legacy::ITEM_COMMON_SIZE; r++) {
 			const ItemInst* aug_i = inst->GetAugment(r);
 			if (!aug_i)
 				continue;
-			const Item_Struct* aug = aug_i->GetItem();
+			const EQEmu::Item_Struct* aug = aug_i->GetItem();
 			if (!aug)
 				continue;
 
-			if ((aug->Click.Type == ET_ClickEffect) || (aug->Click.Type == ET_Expendable) || (aug->Click.Type == ET_EquipClick) || (aug->Click.Type == ET_ClickEffect2))
+			if ((aug->Click.Type == EQEmu::item::ItemEffectClick) || (aug->Click.Type == EQEmu::item::ItemEffectExpendable) || (aug->Click.Type == EQEmu::item::ItemEffectEquipClick) || (aug->Click.Type == EQEmu::item::ItemEffectClick2))
 			{
 				tryaug = true;
 				clickaug = (ItemInst*)aug_i;
-				augitem = (Item_Struct*)aug;
+				augitem = (EQEmu::Item_Struct*)aug;
 				spell_id = aug->Click.Effect;
 				break;
 			}
 		}
 
-		if ((spell_id <= 0) && (item->ItemType != ItemTypeFood && item->ItemType != ItemTypeDrink && item->ItemType != ItemTypeAlcohol && item->ItemType != ItemTypeSpell))
+		if ((spell_id <= 0) && (item->ItemType != EQEmu::item::ItemTypeFood && item->ItemType != EQEmu::item::ItemTypeDrink && item->ItemType != EQEmu::item::ItemTypeAlcohol && item->ItemType != EQEmu::item::ItemTypeSpell))
 		{
 			Log.Out(Logs::General, Logs::None, "Item with no effect right clicked by %s", GetName());
 		}
-		else if (inst->IsType(ItemClassCommon))
+		else if (inst->IsClassCommon())
 		{
-			if (item->ItemType == ItemTypeSpell && (strstr((const char*)item->Name, "Tome of ") || strstr((const char*)item->Name, "Skill: ")))
+			if (item->ItemType == EQEmu::item::ItemTypeSpell && (strstr((const char*)item->Name, "Tome of ") || strstr((const char*)item->Name, "Skill: ")))
 			{
 				DeleteItemInInventory(slot_id, 1, true);
 				TrainDiscipline(item->ID);
 			}
-			else if (item->ItemType == ItemTypeSpell)
+			else if (item->ItemType == EQEmu::item::ItemTypeSpell)
 			{
 				return;
 			}
-			else if ((item->Click.Type == ET_ClickEffect) || (item->Click.Type == ET_Expendable) || (item->Click.Type == ET_EquipClick) || (item->Click.Type == ET_ClickEffect2))
+			else if ((item->Click.Type == EQEmu::item::ItemEffectClick) || (item->Click.Type == EQEmu::item::ItemEffectExpendable) || (item->Click.Type == EQEmu::item::ItemEffectEquipClick) || (item->Click.Type == EQEmu::item::ItemEffectClick2))
 			{
 				if (inst->GetCharges() == 0)
 				{
@@ -8649,24 +8648,24 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 			}
 			else
 			{
-				if (GetClientVersion() >= ClientVersion::SoD && !inst->IsEquipable(GetBaseRace(), GetClass()))
+				if (ClientVersion() >= EQEmu::versions::ClientVersion::SoD && !inst->IsEquipable(GetBaseRace(), GetClass()))
 				{
-					if (item->ItemType != ItemTypeFood && item->ItemType != ItemTypeDrink && item->ItemType != ItemTypeAlcohol)
+					if (item->ItemType != EQEmu::item::ItemTypeFood && item->ItemType != EQEmu::item::ItemTypeDrink && item->ItemType != EQEmu::item::ItemTypeAlcohol)
 					{
 						Log.Out(Logs::General, Logs::None, "Error: unknown item->Click.Type (%i)", item->Click.Type);
 					}
 					else
 					{
 						//This is food/drink - consume it
-						if (item->ItemType == ItemTypeFood && m_pp.hunger_level < 5000)
+						if (item->ItemType == EQEmu::item::ItemTypeFood && m_pp.hunger_level < 5000)
 						{
 							Consume(item, item->ItemType, slot_id, false);
 						}
-						else if (item->ItemType == ItemTypeDrink && m_pp.thirst_level < 5000)
+						else if (item->ItemType == EQEmu::item::ItemTypeDrink && m_pp.thirst_level < 5000)
 						{
 							Consume(item, item->ItemType, slot_id, false);
 						}
-						else if (item->ItemType == ItemTypeAlcohol)
+						else if (item->ItemType == EQEmu::item::ItemTypeAlcohol)
 						{
 #if EQDEBUG >= 1
 							Log.Out(Logs::General, Logs::None, "Drinking Alcohol from slot:%i", slot_id);
@@ -9477,14 +9476,14 @@ void Client::Handle_OP_MercenaryDataRequest(const EQApplicationPacket *app)
 			return;
 		}
 
-		mercTypeCount = tar->GetNumMercTypes(static_cast<unsigned int>(GetClientVersion()));
-		mercCount = tar->GetNumMercs(static_cast<unsigned int>(GetClientVersion()));
+		mercTypeCount = tar->GetNumMercTypes(static_cast<unsigned int>(ClientVersion()));
+		mercCount = tar->GetNumMercs(static_cast<unsigned int>(ClientVersion()));
 
 		if (mercCount > MAX_MERC)
 			return;
 
-		std::list<MercType> mercTypeList = tar->GetMercTypesList(static_cast<unsigned int>(GetClientVersion()));
-		std::list<MercData> mercDataList = tar->GetMercsList(static_cast<unsigned int>(GetClientVersion()));
+		std::list<MercType> mercTypeList = tar->GetMercTypesList(static_cast<unsigned int>(ClientVersion()));
+		std::list<MercData> mercDataList = tar->GetMercsList(static_cast<unsigned int>(ClientVersion()));
 
 		int i = 0;
 		int StanceCount = 0;
@@ -9761,7 +9760,7 @@ void Client::Handle_OP_MoveItem(const EQApplicationPacket *app)
 	MoveItem_Struct* mi = (MoveItem_Struct*)app->pBuffer;
 	if (spellend_timer.Enabled() && casting_spell_id && !IsBardSong(casting_spell_id))
 	{
-		if (mi->from_slot != mi->to_slot && (mi->from_slot <= EmuConstants::GENERAL_END || mi->from_slot > 39) && IsValidSlot(mi->from_slot) && IsValidSlot(mi->to_slot))
+		if (mi->from_slot != mi->to_slot && (mi->from_slot <= EQEmu::legacy::GENERAL_END || mi->from_slot > 39) && IsValidSlot(mi->from_slot) && IsValidSlot(mi->to_slot))
 		{
 			char *detect = nullptr;
 			const ItemInst *itm_from = GetInv().GetItem(mi->from_slot);
@@ -9782,22 +9781,22 @@ void Client::Handle_OP_MoveItem(const EQApplicationPacket *app)
 	// Illegal bagslot usage checks. Currently, user only receives a message if this check is triggered.
 	bool mi_hack = false;
 
-	if (mi->from_slot >= EmuConstants::GENERAL_BAGS_BEGIN && mi->from_slot <= EmuConstants::CURSOR_BAG_END) {
-		if (mi->from_slot >= EmuConstants::CURSOR_BAG_BEGIN) { mi_hack = true; }
+	if (mi->from_slot >= EQEmu::legacy::GENERAL_BAGS_BEGIN && mi->from_slot <= EQEmu::legacy::CURSOR_BAG_END) {
+		if (mi->from_slot >= EQEmu::legacy::CURSOR_BAG_BEGIN) { mi_hack = true; }
 		else {
 			int16 from_parent = m_inv.CalcSlotId(mi->from_slot);
 			if (!m_inv[from_parent]) { mi_hack = true; }
-			else if (!m_inv[from_parent]->IsType(ItemClassContainer)) { mi_hack = true; }
+			else if (!m_inv[from_parent]->IsClassBag()) { mi_hack = true; }
 			else if (m_inv.CalcBagIdx(mi->from_slot) >= m_inv[from_parent]->GetItem()->BagSlots) { mi_hack = true; }
 		}
 	}
 
-	if (mi->to_slot >= EmuConstants::GENERAL_BAGS_BEGIN && mi->to_slot <= EmuConstants::CURSOR_BAG_END) {
-		if (mi->to_slot >= EmuConstants::CURSOR_BAG_BEGIN) { mi_hack = true; }
+	if (mi->to_slot >= EQEmu::legacy::GENERAL_BAGS_BEGIN && mi->to_slot <= EQEmu::legacy::CURSOR_BAG_END) {
+		if (mi->to_slot >= EQEmu::legacy::CURSOR_BAG_BEGIN) { mi_hack = true; }
 		else {
 			int16 to_parent = m_inv.CalcSlotId(mi->to_slot);
 			if (!m_inv[to_parent]) { mi_hack = true; }
-			else if (!m_inv[to_parent]->IsType(ItemClassContainer)) { mi_hack = true; }
+			else if (!m_inv[to_parent]->IsClassBag()) { mi_hack = true; }
 			else if (m_inv.CalcBagIdx(mi->to_slot) >= m_inv[to_parent]->GetItem()->BagSlots) { mi_hack = true; }
 		}
 	}
@@ -10656,7 +10655,7 @@ void Client::Handle_OP_PotionBelt(const EQApplicationPacket *app)
 	}
 
 	if (mptbs->Action == 0) {
-		const Item_Struct *BaseItem = database.GetItem(mptbs->ItemID);
+		const EQEmu::Item_Struct *BaseItem = database.GetItem(mptbs->ItemID);
 		if (BaseItem) {
 			m_pp.potionbelt.Items[mptbs->SlotNumber].ID = BaseItem->ID;
 			m_pp.potionbelt.Items[mptbs->SlotNumber].Icon = BaseItem->Icon;
@@ -11431,7 +11430,7 @@ void Client::Handle_OP_ReadBook(const EQApplicationPacket *app)
 	}
 	BookRequest_Struct* book = (BookRequest_Struct*)app->pBuffer;
 	ReadBook(book);
-	if (GetClientVersion() >= ClientVersion::SoF)
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::SoF)
 	{
 		EQApplicationPacket EndOfBook(OP_FinishWindow, 0);
 		QueuePacket(&EndOfBook);
@@ -12134,13 +12133,13 @@ void Client::Handle_OP_Shielding(const EQApplicationPacket *app)
 	Shielding_Struct* shield = (Shielding_Struct*)app->pBuffer;
 	shield_target = entity_list.GetMob(shield->target_id);
 	bool ack = false;
-	ItemInst* inst = GetInv().GetItem(MainSecondary);
+	ItemInst* inst = GetInv().GetItem(EQEmu::legacy::SlotSecondary);
 	if (!shield_target)
 		return;
 	if (inst)
 	{
-		const Item_Struct* shield = inst->GetItem();
-		if (shield && shield->ItemType == ItemTypeShield)
+		const EQEmu::Item_Struct* shield = inst->GetItem();
+		if (shield && shield->ItemType == EQEmu::item::ItemTypeShield)
 		{
 			for (int x = 0; x < 2; x++)
 			{
@@ -12247,7 +12246,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 			break;
 		}
 	}
-	const Item_Struct* item = nullptr;
+	const EQEmu::Item_Struct* item = nullptr;
 	uint32 prevcharges = 0;
 	if (item_id == 0) { //check to see if its on the temporary table
 		std::list<TempMerchantList> tmp_merlist = zone->tmpmerchanttable[tmp->GetNPCTypeID()];
@@ -12351,8 +12350,8 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 	// shouldn't we be reimbursing if these two fail?
 
 	//make sure we are not completely full...
-	if (freeslotid == MainCursor) {
-		if (m_inv.GetItem(MainCursor) != nullptr) {
+	if (freeslotid == EQEmu::legacy::SlotCursor) {
+		if (m_inv.GetItem(EQEmu::legacy::SlotCursor) != nullptr) {
 			Message(13, "You do not have room for any more items.");
 			safe_delete(outapp);
 			safe_delete(inst);
@@ -12493,7 +12492,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 	uint32 itemid = GetItemIDAt(mp->itemslot);
 	if (itemid == 0)
 		return;
-	const Item_Struct* item = database.GetItem(itemid);
+	const EQEmu::Item_Struct* item = database.GetItem(itemid);
 	ItemInst* inst = GetInv().GetItem(mp->itemslot);
 	if (!item || !inst){
 		Message(13, "You seemed to have misplaced that item..");
@@ -12780,7 +12779,7 @@ void Client::Handle_OP_SpawnAppearance(const EQApplicationPacket *app)
 		{
 			if (!HasSkill(SkillHide) && GetSkill(SkillHide) == 0)
 			{
-				if (GetClientVersion() < ClientVersion::SoF)
+				if (ClientVersion() < EQEmu::versions::ClientVersion::SoF)
 				{
 					char *hack_str = nullptr;
 					MakeAnyLenString(&hack_str, "Player sent OP_SpawnAppearance with AT_Invis: %i", sa->parameter);
@@ -12834,7 +12833,7 @@ void Client::Handle_OP_SpawnAppearance(const EQApplicationPacket *app)
 		}
 
 		else {
-			std::cerr << "Client " << name << " unknown apperance " << (int)sa->parameter << std::endl;
+			Log.Out(Logs::Detail, Logs::Error, "Client %s :: unknown appearance %i", name, (int)sa->parameter);
 			return;
 		}
 
@@ -12856,7 +12855,7 @@ void Client::Handle_OP_SpawnAppearance(const EQApplicationPacket *app)
 			m_pp.anon = 0;
 		}
 		else {
-			std::cerr << "Client " << name << " unknown Anon/Roleplay Switch " << (int)sa->parameter << std::endl;
+			Log.Out(Logs::Detail, Logs::Error, "Client %s :: unknown Anon/Roleplay Switch %i", name, (int)sa->parameter);
 			return;
 		}
 		entity_list.QueueClients(this, app, true);
@@ -13590,7 +13589,7 @@ void Client::Handle_OP_Trader(const EQApplicationPacket *app)
 					TradeItemsValid = false;
 					break;
 				}
-				const Item_Struct *Item = database.GetItem(gis->Items[i]);
+				const EQEmu::Item_Struct *Item = database.GetItem(gis->Items[i]);
 
 				if (!Item) {
 					Message(13, "Unexpected error. Unable to start trader mode");
@@ -13630,7 +13629,7 @@ void Client::Handle_OP_Trader(const EQApplicationPacket *app)
 			this->Trader_StartTrader();
 
 			// This refreshes the Trader window to display the End Trader button
-			if (GetClientVersion() >= ClientVersion::RoF)
+			if (ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 			{
 				EQApplicationPacket* outapp = new EQApplicationPacket(OP_Trader, sizeof(TraderStatus_Struct));
 				TraderStatus_Struct* tss = (TraderStatus_Struct*)outapp->pBuffer;
@@ -13802,6 +13801,7 @@ void Client::Handle_OP_TraderShop(const EQApplicationPacket *app)
 			else {
 				Log.Out(Logs::Detail, Logs::Trading, "Client::Handle_OP_TraderShop: entity_list.GetClientByID(tcs->traderid)"
 					" returned a nullptr pointer");
+				safe_delete(outapp);
 				return;
 			}
 

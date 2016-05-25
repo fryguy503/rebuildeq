@@ -177,8 +177,8 @@ void Doors::HandleClick(Client* sender, uint8 trigger)
 				ads->id = GetDoorDBID();
 				worldserver.SendPacket(pack);
 				safe_delete(pack);
-				safe_delete(outapp);
 			}
+			safe_delete(outapp);
 			return;
 		}
 	}
@@ -187,7 +187,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger)
 	uint8 keepoffkeyring = GetNoKeyring();
 	uint32 haskey = 0;
 	uint32 playerkey = 0;
-	const ItemInst *lockpicks = sender->GetInv().GetItem(MainCursor);
+	const ItemInst *lockpicks = sender->GetInv().GetItem(EQEmu::legacy::SlotCursor);
 
 	haskey = sender->GetInv().HasItem(keyneeded, 1);
 
@@ -285,7 +285,7 @@ void Doors::HandleClick(Client* sender, uint8 trigger)
 		{
 			if(sender->GetSkill(SkillPickLock))
 			{
-				if(lockpicks->GetItem()->ItemType == ItemTypeLockPick)
+				if(lockpicks->GetItem()->ItemType == EQEmu::item::ItemTypeLockPick)
 				{
 					float modskill=sender->GetSkill(SkillPickLock);
 					sender->CheckIncreaseSkill(SkillPickLock, nullptr, 1);

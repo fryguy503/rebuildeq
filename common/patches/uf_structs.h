@@ -1,7 +1,28 @@
-#ifndef UF_STRUCTS_H_
-#define UF_STRUCTS_H_
+/*	EQEMu: Everquest Server Emulator
+	
+	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.net)
 
-namespace UF {
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; version 2 of the License.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY except by those people which sell it, which
+	are required to give you total support for your newly bought product;
+	without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+	A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with this program; if not, write to the Free Software
+	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+#ifndef COMMON_UF_STRUCTS_H
+#define COMMON_UF_STRUCTS_H
+
+
+namespace UF
+{
 	namespace structs {
 
 
@@ -4281,14 +4302,13 @@ struct ItemQuaternaryBodyStruct
 	int32 HeroicSVCorrup;
 	int32 HealAmt;
 	int32 SpellDmg;
-	int32 clairvoyance;
+	int32 Clairvoyance;
 	uint8 unknown18;	//Power Source Capacity or evolve filename?
 	uint32 evolve_string; // Some String, but being evolution related is just a guess
 	uint8 unknown19;
 	uint32 unknown20;	// Bard Stuff?
 	uint32 unknown21;
 	uint32 unknown22;
-	uint32 subitem_count;
 };
 
 struct AugmentInfo_Struct
@@ -4553,7 +4573,8 @@ struct MercenaryAssign_Struct {
 /*0012*/
 };
 
-	};	//end namespace structs
-};	//end namespace UF
+	}; /*structs*/
 
-#endif /*UF_STRUCTS_H_*/
+}; /*UF*/
+
+#endif /*COMMON_UF_STRUCTS_H*/

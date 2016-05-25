@@ -146,42 +146,43 @@ void Client::CalcItemBonuses(StatBonuses* newbon) {
 
 	unsigned int i;
 	// Update: MainAmmo should only calc skill mods (TODO: Check for other cases)
-	for (i = MainCharm; i <= MainAmmo; i++) {
+	for (i = EQEmu::legacy::SlotCharm; i <= EQEmu::legacy::SlotAmmo; i++) {
 		const ItemInst* inst = m_inv[i];
 		if(inst == 0)
 			continue;
-		AddItemBonuses(inst, newbon, false, false, 0, (i == MainAmmo));
+		AddItemBonuses(inst, newbon, false, false, 0, (i == EQEmu::legacy::SlotAmmo));
 
 		//These are given special flags due to how often they are checked for various spell effects.
-		const Item_Struct *item = inst->GetItem();
-		if (i == MainSecondary && (item && item->ItemType == ItemTypeShield))
+		const EQEmu::Item_Struct *item = inst->GetItem();
+		if (i == EQEmu::legacy::SlotSecondary && (item && item->ItemType == EQEmu::item::ItemTypeShield))
 			SetShieldEquiped(true);
-		else if (i == MainPrimary && (item && item->ItemType == ItemType2HBlunt)) {
+		else if (i == EQEmu::legacy::SlotPrimary && (item && item->ItemType == EQEmu::item::ItemType2HBlunt)) {
 			SetTwoHandBluntEquiped(true);
 			SetTwoHanderEquipped(true);
-		} else if (i == MainPrimary && (item && (item->ItemType == ItemType2HSlash || item->ItemType == ItemType2HPiercing)))
+		}
+		else if (i == EQEmu::legacy::SlotPrimary && (item && (item->ItemType == EQEmu::item::ItemType2HSlash || item->ItemType == EQEmu::item::ItemType2HPiercing)))
 			SetTwoHanderEquipped(true);
 	}
 
 	//Power Source Slot
-	if (GetClientVersion() >= ClientVersion::SoF)
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::SoF)
 	{
-		const ItemInst* inst = m_inv[MainPowerSource];
+		const ItemInst* inst = m_inv[EQEmu::legacy::SlotPowerSource];
 		if(inst)
 			AddItemBonuses(inst, newbon);
 	}
 
 	//tribute items
-	for (i = 0; i < EmuConstants::TRIBUTE_SIZE; i++) {
-		const ItemInst* inst = m_inv[EmuConstants::TRIBUTE_BEGIN + i];
+	for (i = 0; i < EQEmu::legacy::TRIBUTE_SIZE; i++) {
+		const ItemInst* inst = m_inv[EQEmu::legacy::TRIBUTE_BEGIN + i];
 		if(inst == 0)
 			continue;
 		AddItemBonuses(inst, newbon, false, true);
 	}
 
 	//Optional ability to have worn effects calculate as an addititive bonus instead of highest value
-	if (RuleI(Spells, AdditiveBonusWornType) && RuleI(Spells, AdditiveBonusWornType) != ET_WornEffect){
-		for (i = MainCharm; i < MainAmmo; i++) {
+	if (RuleI(Spells, AdditiveBonusWornType) && RuleI(Spells, AdditiveBonusWornType) != EQEmu::item::ItemEffectWorn){
+		for (i = EQEmu::legacy::SlotCharm; i < EQEmu::legacy::SlotAmmo; i++) {
 			const ItemInst* inst = m_inv[i];
 			if(inst == 0)
 				continue;
@@ -210,7 +211,7 @@ void Client::ProcessItemCaps()
 
 void Client::AddItemBonuses(const ItemInst *inst, StatBonuses *newbon, bool isAug, bool isTribute, int rec_override, bool ammo_slot_item)
 {
-	if (!inst || !inst->IsType(ItemClassCommon)) {
+	if (!inst || !inst->IsClassCommon()) {
 		return;
 	}
 
@@ -218,10 +219,10 @@ void Client::AddItemBonuses(const ItemInst *inst, StatBonuses *newbon, bool isAu
 		return;
 	}
 
-	const Item_Struct *item = inst->GetItem();
+	const EQEmu::Item_Struct *item = inst->GetItem();
 
 	if (!isTribute && !inst->IsEquipable(GetBaseRace(), GetClass())) {
-		if (item->ItemType != ItemTypeFood && item->ItemType != ItemTypeDrink)
+		if (item->ItemType != EQEmu::item::ItemTypeFood && item->ItemType != EQEmu::item::ItemTypeDrink)
 			return;
 	}
 
@@ -430,11 +431,11 @@ void Client::AddItemBonuses(const ItemInst *inst, StatBonuses *newbon, bool isAu
 			else
 				newbon->DSMitigation += item->DSMitigation;
 		}
-		if (item->Worn.Effect > 0 && item->Worn.Type == ET_WornEffect) { // latent effects
+		if (item->Worn.Effect > 0 && item->Worn.Type == EQEmu::item::ItemEffectWorn) { // latent effects
 			ApplySpellsBonuses(item->Worn.Effect, item->Worn.Level, newbon, 0, item->Worn.Type);
 		}
 
-		if (item->Focus.Effect > 0 && (item->Focus.Type == ET_Focus)) { // focus effects
+		if (item->Focus.Effect > 0 && (item->Focus.Type == EQEmu::item::ItemEffectFocus)) { // focus effects
 			ApplySpellsBonuses(item->Focus.Effect, item->Focus.Level, newbon, 0);
 		}
 
@@ -527,7 +528,7 @@ void Client::AddItemBonuses(const ItemInst *inst, StatBonuses *newbon, bool isAu
 	}
 
 	if (!isAug) {
-		for (int i = 0; i < EmuConstants::ITEM_COMMON_SIZE; i++)
+		for (int i = 0; i < EQEmu::legacy::ITEM_COMMON_SIZE; i++)
 			AddItemBonuses(inst->GetAugment(i), newbon, true, false, rec_level, ammo_slot_item);
 	}
 }
@@ -544,13 +545,13 @@ void Client::AdditiveWornBonuses(const ItemInst *inst, StatBonuses* newbon, bool
 	which will also stack with regular (worntype 2) effects. [Ie set rule = 3 and item worntype = 3]
 	*/
 
-	if(!inst || !inst->IsType(ItemClassCommon))
+	if (!inst || !inst->IsClassCommon())
 		return;
 
 	if(inst->GetAugmentType()==0 && isAug == true)
 		return;
 
-	const Item_Struct *item = inst->GetItem();
+	const EQEmu::Item_Struct *item = inst->GetItem();
 
 	if(!inst->IsEquipable(GetBaseRace(),GetClass()))
 		return;
@@ -565,7 +566,7 @@ void Client::AdditiveWornBonuses(const ItemInst *inst, StatBonuses* newbon, bool
 	if (!isAug)
 	{
 		int i;
-		for (i = 0; i < EmuConstants::ITEM_COMMON_SIZE; i++) {
+		for (i = 0; i < EQEmu::legacy::ITEM_COMMON_SIZE; i++) {
 			AdditiveWornBonuses(inst->GetAugment(i),newbon,true);
 		}
 	}
@@ -576,32 +577,32 @@ void Client::CalcEdibleBonuses(StatBonuses* newbon) {
 
 	bool food = false;
 	bool drink = false;
-	for (i = EmuConstants::GENERAL_BEGIN; i <= EmuConstants::GENERAL_BAGS_BEGIN; i++)
+	for (i = EQEmu::legacy::GENERAL_BEGIN; i <= EQEmu::legacy::GENERAL_BAGS_BEGIN; i++)
 	{
 		if (food && drink)
 			break;
 		const ItemInst* inst = GetInv().GetItem(i);
-		if (inst && inst->GetItem() && inst->IsType(ItemClassCommon)) {
-			const Item_Struct *item=inst->GetItem();
-			if (item->ItemType == ItemTypeFood && !food)
+		if (inst && inst->GetItem() && inst->IsClassCommon()) {
+			const EQEmu::Item_Struct *item=inst->GetItem();
+			if (item->ItemType == EQEmu::item::ItemTypeFood && !food)
 				food = true;
-			else if (item->ItemType == ItemTypeDrink && !drink)
+			else if (item->ItemType == EQEmu::item::ItemTypeDrink && !drink)
 				drink = true;
 			else
 				continue;
 			AddItemBonuses(inst, newbon);
 		}
 	}
-	for (i = EmuConstants::GENERAL_BAGS_BEGIN; i <= EmuConstants::GENERAL_BAGS_END; i++)
+	for (i = EQEmu::legacy::GENERAL_BAGS_BEGIN; i <= EQEmu::legacy::GENERAL_BAGS_END; i++)
 	{
 		if (food && drink)
 			break;
 		const ItemInst* inst = GetInv().GetItem(i);
-		if (inst && inst->GetItem() && inst->IsType(ItemClassCommon)) {
-			const Item_Struct *item=inst->GetItem();
-			if (item->ItemType == ItemTypeFood && !food)
+		if (inst && inst->GetItem() && inst->IsClassCommon()) {
+			const EQEmu::Item_Struct *item=inst->GetItem();
+			if (item->ItemType == EQEmu::item::ItemTypeFood && !food)
 				food = true;
-			else if (item->ItemType == ItemTypeDrink && !drink)
+			else if (item->ItemType == EQEmu::item::ItemTypeDrink && !drink)
 				drink = true;
 			else
 				continue;
@@ -911,19 +912,19 @@ void Mob::ApplyAABonuses(const AA::Rank &rank, StatBonuses *newbon)
 			break;
 		case SE_AddSingingMod:
 			switch (base2) {
-			case ItemTypeWindInstrument:
+			case EQEmu::item::ItemTypeWindInstrument:
 				newbon->windMod += base1;
 				break;
-			case ItemTypeStringedInstrument:
+			case EQEmu::item::ItemTypeStringedInstrument:
 				newbon->stringedMod += base1;
 				break;
-			case ItemTypeBrassInstrument:
+			case EQEmu::item::ItemTypeBrassInstrument:
 				newbon->brassMod += base1;
 				break;
-			case ItemTypePercussionInstrument:
+			case EQEmu::item::ItemTypePercussionInstrument:
 				newbon->percussionMod += base1;
 				break;
-			case ItemTypeSinging:
+			case EQEmu::item::ItemTypeSinging:
 				newbon->singingMod += base1;
 				break;
 			}
@@ -1544,15 +1545,11 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 {
 	int i, effect_value, base2, max, effectid;
 	bool AdditiveWornBonus = false;
-	Mob *caster = nullptr;
 
 	uint32 rank = 0;
 
 	if(!IsAISpellEffect && !IsValidSpell(spell_id))
 		return;
-
-	if(casterId > 0)
-		caster = entity_list.GetMob(casterId);
 
 	for (i = 0; i < EFFECT_COUNT; i++)
 	{
@@ -1580,7 +1577,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				AdditiveWornBonus = true;
 
 			effectid = spells[spell_id].effectid[i];
-			effect_value = CalcSpellEffectValue(spell_id, i, casterlevel, instrument_mod, caster, ticsremaining);
+			effect_value = CalcSpellEffectValue(spell_id, i, casterlevel, instrument_mod, nullptr, ticsremaining, casterId);
 			base2 = spells[spell_id].base2[i];
 			max = spells[spell_id].max[i];
 		}
@@ -2829,23 +2826,24 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				break;
 
 			case SE_AddSingingMod:
-				switch (base2)
-				{
-					case ItemTypeWindInstrument:
-						new_bonus->windMod += effect_value;
-						break;
-					case ItemTypeStringedInstrument:
-						new_bonus->stringedMod += effect_value;
-						break;
-					case ItemTypeBrassInstrument:
-						new_bonus->brassMod += effect_value;
-						break;
-					case ItemTypePercussionInstrument:
-						new_bonus->percussionMod += effect_value;
-						break;
-					case ItemTypeSinging:
-						new_bonus->singingMod += effect_value;
-						break;
+				switch (base2) {
+				case EQEmu::item::ItemTypeWindInstrument:
+					new_bonus->windMod += effect_value;
+					break;
+				case EQEmu::item::ItemTypeStringedInstrument:
+					new_bonus->stringedMod += effect_value;
+					break;
+				case EQEmu::item::ItemTypeBrassInstrument:
+					new_bonus->brassMod += effect_value;
+					break;
+				case EQEmu::item::ItemTypePercussionInstrument:
+					new_bonus->percussionMod += effect_value;
+					break;
+				case EQEmu::item::ItemTypeSinging:
+					new_bonus->singingMod += effect_value;
+					break;
+				default:
+					break;
 				}
 				break;
 
@@ -3288,8 +3286,8 @@ void NPC::CalcItemBonuses(StatBonuses *newbon)
 {
 	if(newbon){
 
-		for(int i = 0; i < EmuConstants::EQUIPMENT_SIZE; i++){
-			const Item_Struct *cur = database.GetItem(equipment[i]);
+		for (int i = 0; i < EQEmu::legacy::EQUIPMENT_SIZE; i++){
+			const EQEmu::Item_Struct *cur = database.GetItem(equipment[i]);
 			if(cur){
 				//basic stats
 				newbon->AC += cur->AC;
@@ -3344,12 +3342,12 @@ void NPC::CalcItemBonuses(StatBonuses *newbon)
 				if(cur->CombatEffects > 0) {
 					newbon->ProcChance += cur->CombatEffects;
 				}
-				if (cur->Worn.Effect>0 && (cur->Worn.Type == ET_WornEffect)) { // latent effects
+				if (cur->Worn.Effect>0 && (cur->Worn.Type == EQEmu::item::ItemEffectWorn)) { // latent effects
 					ApplySpellsBonuses(cur->Worn.Effect, cur->Worn.Level, newbon, 0, cur->Worn.Type);
 				}
 
 				if (RuleB(Spells, NPC_UseFocusFromItems)){
-					if (cur->Focus.Effect>0 && (cur->Focus.Type == ET_Focus)){  // focus effects
+					if (cur->Focus.Effect>0 && (cur->Focus.Type == EQEmu::item::ItemEffectFocus)){  // focus effects
 						ApplySpellsBonuses(cur->Focus.Effect, cur->Focus.Level, newbon);
 					}
 				}
@@ -3366,24 +3364,24 @@ void Client::CalcItemScale() {
 	bool changed = false;
 
 	// MainAmmo excluded in helper function below
-	if(CalcItemScale(EmuConstants::EQUIPMENT_BEGIN, EmuConstants::EQUIPMENT_END)) // original coding excluded MainAmmo (< 21)
+	if (CalcItemScale(EQEmu::legacy::EQUIPMENT_BEGIN, EQEmu::legacy::EQUIPMENT_END)) // original coding excluded MainAmmo (< 21)
 		changed = true;
 
-	if(CalcItemScale(EmuConstants::GENERAL_BEGIN, EmuConstants::GENERAL_END)) // original coding excluded MainCursor (< 30)
+	if (CalcItemScale(EQEmu::legacy::GENERAL_BEGIN, EQEmu::legacy::GENERAL_END)) // original coding excluded MainCursor (< 30)
 		changed = true;
 
 	// I excluded cursor bag slots here because cursor was excluded above..if this is incorrect, change 'slot_y' here to CURSOR_BAG_END
 	// and 'slot_y' above to CURSOR from GENERAL_END above - or however it is supposed to be...
-	if(CalcItemScale(EmuConstants::GENERAL_BAGS_BEGIN, EmuConstants::GENERAL_BAGS_END)) // (< 341)
+	if (CalcItemScale(EQEmu::legacy::GENERAL_BAGS_BEGIN, EQEmu::legacy::GENERAL_BAGS_END)) // (< 341)
 		changed = true;
 
-	if(CalcItemScale(EmuConstants::TRIBUTE_BEGIN, EmuConstants::TRIBUTE_END)) // (< 405)
+	if (CalcItemScale(EQEmu::legacy::TRIBUTE_BEGIN, EQEmu::legacy::TRIBUTE_END)) // (< 405)
 		changed = true;
 
 	//Power Source Slot
-	if (GetClientVersion() >= ClientVersion::SoF)
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::SoF)
 	{
-		if(CalcItemScale(MainPowerSource, MainPowerSource))
+		if (CalcItemScale(EQEmu::legacy::SlotPowerSource, EQEmu::legacy::SlotPowerSource))
 			changed = true;
 	}
 
@@ -3398,7 +3396,7 @@ bool Client::CalcItemScale(uint32 slot_x, uint32 slot_y) {
 	bool changed = false;
 	uint32 i;
 	for (i = slot_x; i <= slot_y; i++) {
-		if (i == MainAmmo) // moved here from calling procedure to facilitate future range changes where MainAmmo may not be the last slot
+		if (i == EQEmu::legacy::SlotAmmo) // moved here from calling procedure to facilitate future range changes where MainAmmo may not be the last slot
 			continue;
 
 		ItemInst* inst = m_inv.GetItem(i);
@@ -3408,7 +3406,7 @@ bool Client::CalcItemScale(uint32 slot_x, uint32 slot_y) {
 
 		// TEST CODE: test for bazaar trader crashing with charm items
 		if (Trader)
-			if (i >= EmuConstants::GENERAL_BAGS_BEGIN && i <= EmuConstants::GENERAL_BAGS_END) {
+			if (i >= EQEmu::legacy::GENERAL_BAGS_BEGIN && i <= EQEmu::legacy::GENERAL_BAGS_END) {
 				ItemInst* parent_item = m_inv.GetItem(Inventory::CalcSlotId(i));
 				if (parent_item && parent_item->GetItem()->ID == 17899) // trader satchel
 					continue;
@@ -3428,7 +3426,7 @@ bool Client::CalcItemScale(uint32 slot_x, uint32 slot_y) {
 		}
 
 		//iterate all augments
-		for (int x = AUG_BEGIN; x < EmuConstants::ITEM_COMMON_SIZE; ++x)
+		for (int x = AUG_INDEX_BEGIN; x < EQEmu::legacy::ITEM_COMMON_SIZE; ++x)
 		{
 			ItemInst * a_inst = inst->GetAugment(x);
 			if(!a_inst)
@@ -3460,24 +3458,24 @@ void Client::DoItemEnterZone() {
 	bool changed = false;
 
 	// MainAmmo excluded in helper function below
-	if(DoItemEnterZone(EmuConstants::EQUIPMENT_BEGIN, EmuConstants::EQUIPMENT_END)) // original coding excluded MainAmmo (< 21)
+	if (DoItemEnterZone(EQEmu::legacy::EQUIPMENT_BEGIN, EQEmu::legacy::EQUIPMENT_END)) // original coding excluded MainAmmo (< 21)
 		changed = true;
 
-	if(DoItemEnterZone(EmuConstants::GENERAL_BEGIN, EmuConstants::GENERAL_END)) // original coding excluded MainCursor (< 30)
+	if (DoItemEnterZone(EQEmu::legacy::GENERAL_BEGIN, EQEmu::legacy::GENERAL_END)) // original coding excluded MainCursor (< 30)
 		changed = true;
 
 	// I excluded cursor bag slots here because cursor was excluded above..if this is incorrect, change 'slot_y' here to CURSOR_BAG_END
 	// and 'slot_y' above to CURSOR from GENERAL_END above - or however it is supposed to be...
-	if(DoItemEnterZone(EmuConstants::GENERAL_BAGS_BEGIN, EmuConstants::GENERAL_BAGS_END)) // (< 341)
+	if (DoItemEnterZone(EQEmu::legacy::GENERAL_BAGS_BEGIN, EQEmu::legacy::GENERAL_BAGS_END)) // (< 341)
 		changed = true;
 
-	if(DoItemEnterZone(EmuConstants::TRIBUTE_BEGIN, EmuConstants::TRIBUTE_END)) // (< 405)
+	if (DoItemEnterZone(EQEmu::legacy::TRIBUTE_BEGIN, EQEmu::legacy::TRIBUTE_END)) // (< 405)
 		changed = true;
 
 	//Power Source Slot
-	if (GetClientVersion() >= ClientVersion::SoF)
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::SoF)
 	{
-		if(DoItemEnterZone(MainPowerSource, MainPowerSource))
+		if (DoItemEnterZone(EQEmu::legacy::SlotPowerSource, EQEmu::legacy::SlotPowerSource))
 			changed = true;
 	}
 
@@ -3491,7 +3489,7 @@ bool Client::DoItemEnterZone(uint32 slot_x, uint32 slot_y) {
 	// behavior change: 'slot_y' is now [RANGE]_END and not [RANGE]_END + 1
 	bool changed = false;
 	for(uint32 i = slot_x; i <= slot_y; i++) {
-		if (i == MainAmmo) // moved here from calling procedure to facilitate future range changes where MainAmmo may not be the last slot
+		if (i == EQEmu::legacy::SlotAmmo) // moved here from calling procedure to facilitate future range changes where MainAmmo may not be the last slot
 			continue;
 
 		ItemInst* inst = m_inv.GetItem(i);
@@ -3501,7 +3499,7 @@ bool Client::DoItemEnterZone(uint32 slot_x, uint32 slot_y) {
 
 		// TEST CODE: test for bazaar trader crashing with charm items
 		if (Trader)
-			if (i >= EmuConstants::GENERAL_BAGS_BEGIN && i <= EmuConstants::GENERAL_BAGS_END) {
+			if (i >= EQEmu::legacy::GENERAL_BAGS_BEGIN && i <= EQEmu::legacy::GENERAL_BAGS_END) {
 				ItemInst* parent_item = m_inv.GetItem(Inventory::CalcSlotId(i));
 				if (parent_item && parent_item->GetItem()->ID == 17899) // trader satchel
 					continue;
@@ -3513,7 +3511,7 @@ bool Client::DoItemEnterZone(uint32 slot_x, uint32 slot_y) {
 			uint16 oldexp = inst->GetExp();
 
 			parse->EventItem(EVENT_ITEM_ENTER_ZONE, this, inst, nullptr, "", 0);
-			if(i <= MainAmmo || i == MainPowerSource) {
+			if (i <= EQEmu::legacy::SlotAmmo || i == EQEmu::legacy::SlotPowerSource) {
 				parse->EventItem(EVENT_EQUIP_ITEM, this, inst, nullptr, "", i);
 			}
 
@@ -3523,7 +3521,7 @@ bool Client::DoItemEnterZone(uint32 slot_x, uint32 slot_y) {
 				update_slot = true;
 			}
 		} else {
-			if(i <= MainAmmo || i == MainPowerSource) {
+			if (i <= EQEmu::legacy::SlotAmmo || i == EQEmu::legacy::SlotPowerSource) {
 				parse->EventItem(EVENT_EQUIP_ITEM, this, inst, nullptr, "", i);
 			}
 
@@ -3531,7 +3529,7 @@ bool Client::DoItemEnterZone(uint32 slot_x, uint32 slot_y) {
 		}
 
 		//iterate all augments
-		for (int x = AUG_BEGIN; x < EmuConstants::ITEM_COMMON_SIZE; ++x)
+		for (int x = AUG_INDEX_BEGIN; x < EQEmu::legacy::ITEM_COMMON_SIZE; ++x)
 		{
 			ItemInst *a_inst = inst->GetAugment(x);
 			if(!a_inst)

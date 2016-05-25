@@ -8,10 +8,14 @@ class Corpse;
 class Group;
 class Mob;
 class Raid;
-struct Item_Struct;
 struct MercTemplate;
 struct NPCType;
 struct NewSpawn_Struct;
+
+namespace EQEmu
+{
+	struct Item_Struct;
+}
 
 #define MAXMERCS 1
 #define TANK 1
@@ -62,7 +66,7 @@ public:
 	//abstract virtual function implementations requird by base abstract class
 	virtual bool Death(Mob* killerMob, int32 damage, uint16 spell_id, SkillUseTypes attack_skill);
 	virtual void Damage(Mob* from, int32 damage, uint16 spell_id, SkillUseTypes attack_skill, bool avoidable = true, int8 buffslot = -1, bool iBuffTic = false, int special = 0);
-	virtual bool Attack(Mob* other, int Hand = MainPrimary, bool FromRiposte = false, bool IsStrikethrough = false,
+	virtual bool Attack(Mob* other, int Hand = EQEmu::legacy::SlotPrimary, bool FromRiposte = false, bool IsStrikethrough = false,
 	bool IsFromSpell = false, ExtraAttackOptions *opts = nullptr, int special = 0);
 	virtual bool HasRaid() { return false; }
 	virtual bool HasGroup() { return (GetGroup() ? true : false); }
@@ -279,7 +283,7 @@ public:
 
 protected:
 	void CalcItemBonuses(StatBonuses* newbon);
-	void AddItemBonuses(const Item_Struct *item, StatBonuses* newbon);
+	void AddItemBonuses(const EQEmu::Item_Struct *item, StatBonuses* newbon);
 	int CalcRecommendedLevelBonus(uint8 level, uint8 reclevel, int basestat);
 
 	int16 GetFocusEffect(focusType type, uint16 spell_id);
@@ -288,7 +292,7 @@ protected:
 	std::map<uint32,MercTimer> timers;
 
 	uint16 skills[HIGHEST_SKILL+1];
-	uint32 equipment[EmuConstants::EQUIPMENT_SIZE]; //this is an array of item IDs
+	uint32 equipment[EQEmu::legacy::EQUIPMENT_SIZE]; //this is an array of item IDs
 	uint16 d_melee_texture1; //this is an item Material value
 	uint16 d_melee_texture2; //this is an item Material value (offhand)
 	uint8 prim_melee_type; //Sets the Primary Weapon attack message and animation

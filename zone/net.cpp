@@ -1,5 +1,5 @@
 /*	EQEMu: Everquest Server Emulator
-	Copyright (C) 2001-2002 EQEMu Development Team (http://eqemu.org)
+	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemu.org)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -52,6 +52,10 @@
 #include "zone.h"
 #include "queryserv.h"
 #include "command.h"
+#ifdef BOTS
+#include "bot_command.h"
+#include "bot_database.h"
+#endif
 #include "zone_config.h"
 #include "titles.h"
 #include "guild_mgr.h"
@@ -203,6 +207,18 @@ int main(int argc, char** argv) {
 		return 1;
 	}
 
+#ifdef BOTS
+	if (!botdb.Connect(
+		Config->DatabaseHost.c_str(),
+		Config->DatabaseUsername.c_str(),
+		Config->DatabasePassword.c_str(),
+		Config->DatabaseDB.c_str(),
+		Config->DatabasePort)) {
+		Log.Out(Logs::General, Logs::Error, "Cannot continue without a bots database connection.");
+		return 1;
+	}
+#endif
+
 	/* Register Log System and Settings */
 	Log.OnLogHookCallBackZone(&Zone::GMSayHookCallBackProcess);
 	database.LoadLogSettings(Log.log_settings); 
@@ -238,20 +254,20 @@ int main(int argc, char** argv) {
 
 	Log.Out(Logs::General, Logs::Zone_Server, "Mapping Incoming Opcodes");
 	MapOpcodes();
-	
+
 	Log.Out(Logs::General, Logs::Zone_Server, "Loading Variables");
 	database.LoadVariables();
-	
-	char hotfix_name[256] = { 0 };
-	if(database.GetVariable("hotfix_name", hotfix_name, 256)) {
-		if(strlen(hotfix_name) > 0) {
-			Log.Out(Logs::General, Logs::Zone_Server, "Current hotfix in use: '%s'", hotfix_name);
+
+	std::string hotfix_name;
+	if(database.GetVariable("hotfix_name", hotfix_name)) {
+		if(!hotfix_name.empty()) {
+			Log.Out(Logs::General, Logs::Zone_Server, "Current hotfix in use: '%s'", hotfix_name.c_str());
 		}
 	}
 
 	Log.Out(Logs::General, Logs::Zone_Server, "Loading zone names");
 	database.LoadZoneNames();
-	
+
 	Log.Out(Logs::General, Logs::Zone_Server, "Loading items");
 	if(!database.LoadItems(hotfix_name)) {
 		Log.Out(Logs::General, Logs::Error, "Loading items FAILED!");
@@ -310,20 +326,29 @@ int main(int argc, char** argv) {
 
 	//rules:
 	{
-		char tmp[64];
-		if (database.GetVariable("RuleSet", tmp, sizeof(tmp)-1)) {
-			Log.Out(Logs::General, Logs::Zone_Server, "Loading rule set '%s'", tmp);
-			if(!RuleManager::Instance()->LoadRules(&database, tmp)) {
-				Log.Out(Logs::General, Logs::Error, "Failed to load ruleset '%s', falling back to defaults.", tmp);
+		std::string tmp;
+		if (database.GetVariable("RuleSet", tmp)) {
+			Log.Out(Logs::General, Logs::Zone_Server, "Loading rule set '%s'", tmp.c_str());
+			if(!RuleManager::Instance()->LoadRules(&database, tmp.c_str())) {
+				Log.Out(Logs::General, Logs::Error, "Failed to load ruleset '%s', falling back to defaults.", tmp.c_str());
 			}
 		} else {
 			if(!RuleManager::Instance()->LoadRules(&database, "default")) {
 				Log.Out(Logs::General, Logs::Zone_Server, "No rule set configured, using default rules");
 			} else {
-				Log.Out(Logs::General, Logs::Zone_Server, "Loaded default rule set 'default'", tmp);
+				Log.Out(Logs::General, Logs::Zone_Server, "Loaded default rule set 'default'", tmp.c_str());
 			}
 		}
 	}
+
+#ifdef BOTS
+	Log.Out(Logs::General, Logs::Zone_Server, "Loading bot commands");
+	int botretval = bot_command_init();
+	if (botretval<0)
+		Log.Out(Logs::General, Logs::Error, "Bot command loading FAILED");
+	else
+		Log.Out(Logs::General, Logs::Zone_Server, "%d bot commands loaded", botretval);
+#endif
 
 	if(RuleB(TaskSystem, EnableTaskSystem)) {
 		Log.Out(Logs::General, Logs::Tasks, "[INIT] Loading Tasks");
@@ -524,6 +549,9 @@ int main(int argc, char** argv) {
 	worldserver.Disconnect();
 	safe_delete(taskmanager);
 	command_deinit();
+#ifdef BOTS
+	bot_command_deinit();
+#endif
 	safe_delete(parse);
 	Log.Out(Logs::General, Logs::Zone_Server, "Proper zone shutdown complete.");
 	Log.CloseFileLogs();

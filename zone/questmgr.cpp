@@ -852,12 +852,12 @@ void QuestManager::traindisc(int discipline_tome_item_id) {
 }
 
 bool QuestManager::isdisctome(int item_id) {
-	const Item_Struct *item = database.GetItem(item_id);
+	const EQEmu::Item_Struct *item = database.GetItem(item_id);
 	if(item == nullptr) {
 		return(false);
 	}
 
-	if(item->ItemClass != ItemClassCommon || item->ItemType != ItemTypeSpell) {
+	if (!item->IsClassCommon() || item->ItemType != EQEmu::item::ItemTypeSpell) {
 		return(false);
 	}
 
@@ -1343,12 +1343,12 @@ void QuestManager::settime(uint8 new_hour, uint8 new_min, bool update_world /*= 
 void QuestManager::itemlink(int item_id) {
 	QuestManagerCurrentQuestVars();
 	if (initiator) {
-		const Item_Struct* item = database.GetItem(item_id);
+		const EQEmu::Item_Struct* item = database.GetItem(item_id);
 		if (item == nullptr)
 			return;
 
-		Client::TextLink linker;
-		linker.SetLinkType(linker.linkItemData);
+		EQEmu::saylink::SayLinkEngine linker;
+		linker.SetLinkType(linker.SayLinkItemData);
 		linker.SetItemData(item);
 
 		auto item_link = linker.GenerateLink();
@@ -2096,24 +2096,23 @@ bool QuestManager::botquest()
 bool QuestManager::createBot(const char *name, const char *lastname, uint8 level, uint16 race, uint8 botclass, uint8 gender)
 {
 	QuestManagerCurrentQuestVars();
-	std::string TempErrorMessage;
 	uint32 MaxBotCreate = RuleI(Bots, CreationLimit);
 
 	if (initiator && initiator->IsClient())
 	{
-		if(Bot::SpawnedBotCount(initiator->CharacterID(), &TempErrorMessage) >= MaxBotCreate)
+		if(Bot::SpawnedBotCount(initiator->CharacterID()) >= MaxBotCreate)
 		{
 			initiator->Message(15,"You have the maximum number of bots allowed.");
 			return false;
 		}
 
-		if(!TempErrorMessage.empty())
-		{
-			initiator->Message(13, "Database Error: %s", TempErrorMessage.c_str());
+		std::string test_name = name;
+		bool available_flag = false;
+		if(!botdb.QueryNameAvailablity(test_name, available_flag)) {
+			initiator->Message(0, "%s for '%s'", BotDatabase::fail::QueryNameAvailablity(), (char*)name);
 			return false;
 		}
-
-		if(Bot::IsBotNameAvailable((char*)name,&TempErrorMessage)) {
+		if (!available_flag) {
 			initiator->Message(0, "The name %s is already being used or is invalid. Please choose a different name.", (char*)name);
 			return false;
 		}
@@ -2130,11 +2129,6 @@ bool QuestManager::createBot(const char *name, const char *lastname, uint8 level
 
 			if(!NewBot->IsValidName()) {
 				initiator->Message(0, "%s has invalid characters. You can use only the A-Z, a-z and _ characters in a bot name.", NewBot->GetCleanName());
-				return false;
-			}
-
-			if(!TempErrorMessage.empty()) {
-				initiator->Message(13, "Database Error: %s", TempErrorMessage.c_str());
 				return false;
 			}
 
@@ -2487,12 +2481,12 @@ int QuestManager::collectitems(uint32 item_id, bool remove)
 	int quantity = 0;
 	int slot_id;
 
-	for (slot_id = EmuConstants::GENERAL_BEGIN; slot_id <= EmuConstants::GENERAL_END; ++slot_id)
+	for (slot_id = EQEmu::legacy::GENERAL_BEGIN; slot_id <= EQEmu::legacy::GENERAL_END; ++slot_id)
 	{
 		quantity += collectitems_processSlot(slot_id, item_id, remove);
 	}
 
-	for (slot_id = EmuConstants::GENERAL_BAGS_BEGIN; slot_id <= EmuConstants::GENERAL_BAGS_END; ++slot_id)
+	for (slot_id = EQEmu::legacy::GENERAL_BAGS_BEGIN; slot_id <= EQEmu::legacy::GENERAL_BAGS_END; ++slot_id)
 	{
 		quantity += collectitems_processSlot(slot_id, item_id, remove);
 	}
@@ -2541,7 +2535,7 @@ void QuestManager::MerchantSetItem(uint32 NPCid, uint32 itemid, uint32 quantity)
 	if (merchant == 0 || !merchant->IsNPC() || (merchant->GetClass() != MERCHANT))
 		return;	// don't do anything if NPCid isn't a merchant
 
-	const Item_Struct* item = nullptr;
+	const EQEmu::Item_Struct* item = nullptr;
 	item = database.GetItem(itemid);
 	if (!item) return;		// if the item id doesn't correspond to a real item, do nothing
 
@@ -2554,7 +2548,7 @@ uint32 QuestManager::MerchantCountItem(uint32 NPCid, uint32 itemid) {
 	if (merchant == 0 || !merchant->IsNPC() || (merchant->GetClass() != MERCHANT))
 		return 0;	// if it isn't a merchant, it doesn't have any items
 
-	const Item_Struct* item = nullptr;
+	const EQEmu::Item_Struct* item = nullptr;
 	item = database.GetItem(itemid);
 	if (!item)
 		return 0;	// if it isn't a valid item, the merchant doesn't have any
@@ -2577,12 +2571,12 @@ uint32 QuestManager::MerchantCountItem(uint32 NPCid, uint32 itemid) {
 // Item Link for use in Variables - "my $example_link = quest::varlink(item_id);"
 const char* QuestManager::varlink(char* perltext, int item_id) {
 	QuestManagerCurrentQuestVars();
-	const Item_Struct* item = database.GetItem(item_id);
+	const EQEmu::Item_Struct* item = database.GetItem(item_id);
 	if (!item)
 		return "INVALID ITEM ID IN VARLINK";
 
-	Client::TextLink linker;
-	linker.SetLinkType(linker.linkItemData);
+	EQEmu::saylink::SayLinkEngine linker;
+	linker.SetLinkType(linker.SayLinkItemData);
 	linker.SetItemData(item);
 
 	auto item_link = linker.GenerateLink();
@@ -2807,7 +2801,7 @@ const char* QuestManager::saylink(char* Phrase, bool silent, const char* LinkNam
 	safe_delete_array(escaped_string);
 
 	//Create the say link as an item link hash
-	Client::TextLink linker;
+	EQEmu::saylink::SayLinkEngine linker;
 	linker.SetProxyItemID(SAYLINK_ITEM_ID);
 	if (silent)
 		linker.SetProxyAugment2ID(sayid);
@@ -2921,11 +2915,11 @@ void QuestManager::removetitle(int titleset) {
 	initiator->RemoveTitle(titleset);
 }
 
-void QuestManager::wearchange(uint8 slot, uint16 texture)
+void QuestManager::wearchange(uint8 slot, uint16 texture, uint32 hero_forge_model /*= 0*/, uint32 elite_material /*= 0*/)
 {
 	QuestManagerCurrentQuestVars();
 	if(owner){
-		owner->SendTextureWC(slot, texture);
+		owner->SendTextureWC(slot, texture, hero_forge_model, elite_material);
 		if(owner->IsNPC()) {
 			owner->CastToNPC()->NPCSlotTexture(slot, texture);
 		}

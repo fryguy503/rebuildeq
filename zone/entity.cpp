@@ -647,7 +647,7 @@ void EntityList::AddNPC(NPC *npc, bool SendSpawnPacket, bool dontqueue)
 	uint16 emoteid = npc->GetEmoteID();
 	if (emoteid != 0)
 		npc->DoNPCEmote(ONSPAWN, emoteid);
-
+	npc->SetSpawned();
 	if (SendSpawnPacket) {
 		if (dontqueue) { // aka, SEND IT NOW BITCH!
 			EQApplicationPacket *app = new EQApplicationPacket;
@@ -686,7 +686,7 @@ void EntityList::AddMerc(Merc *merc, bool SendSpawnPacket, bool dontqueue)
 	if (merc)
 	{
 		merc->SetID(GetFreeID());
-
+		merc->SetSpawned();
 		if (SendSpawnPacket)
 		{
 			if (dontqueue) {
@@ -867,7 +867,7 @@ bool EntityList::MakeDoorSpawnPacket(EQApplicationPacket *app, Client *client)
 	if (door_list.empty())
 		return false;
 
-	uint32 mask_test = client->GetClientVersionBit();
+	uint32 mask_test = client->ClientVersionBit();
 	int count = 0;
 
 	auto it = door_list.begin();
@@ -1231,7 +1231,7 @@ void EntityList::SendZoneSpawnsBulk(Client *client)
 	int32 race=-1;
 	for (auto it = mob_list.begin(); it != mob_list.end(); ++it) {
 		spawn = it->second;
-		if (spawn && spawn->InZone()) {
+		if (spawn && spawn->GetID() > 0 && spawn->Spawned()) {
 			if (spawn->IsClient() && (spawn->CastToClient()->GMHideMe(client) ||
 					spawn->CastToClient()->IsHoveringForRespawn()))
 				continue;
@@ -1474,7 +1474,7 @@ void EntityList::QueueClientsByTarget(Mob *sender, const EQApplicationPacket *ap
 			}
 		}
 
-		if (Send && (c->GetClientVersionBit() & ClientVersionBits))
+		if (Send && (c->ClientVersionBit() & ClientVersionBits))
 			c->QueuePacket(app, ackreq);
 	}
 }
@@ -1955,7 +1955,7 @@ void EntityList::QueueClientsGuildBankItemUpdate(const GuildBankItemUpdate_Struc
 
 	memcpy(outgbius, gbius, sizeof(GuildBankItemUpdate_Struct));
 
-	const Item_Struct *Item = database.GetItem(gbius->ItemID);
+	const EQEmu::Item_Struct *Item = database.GetItem(gbius->ItemID);
 
 	auto it = client_list.begin();
 	while (it != client_list.end()) {
@@ -3821,7 +3821,7 @@ void EntityList::GroupMessage(uint32 gid, const char *from, const char *message)
 
 uint16 EntityList::CreateGroundObject(uint32 itemid, const glm::vec4& position, uint32 decay_time)
 {
-	const Item_Struct *is = database.GetItem(itemid);
+	const EQEmu::Item_Struct *is = database.GetItem(itemid);
 	if (!is)
 		return 0;
 
@@ -4406,7 +4406,7 @@ void EntityList::UpdateFindableNPCState(NPC *n, bool Remove)
 	auto it = client_list.begin();
 	while (it != client_list.end()) {
 		Client *c = it->second;
-		if (c && (c->GetClientVersion() >= ClientVersion::SoD))
+		if (c && (c->ClientVersion() >= EQEmu::versions::ClientVersion::SoD))
 			c->QueuePacket(outapp);
 
 		++it;
@@ -4567,6 +4567,7 @@ void EntityList::ExpeditionWarning(uint32 minutes_left)
 		it->second->QueuePacket(outapp);
 		++it;
 	}
+	safe_delete(outapp);
 }
 
 Mob *EntityList::GetClosestMobByBodyType(Mob *sender, bodyType BodyType)

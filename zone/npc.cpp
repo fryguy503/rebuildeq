@@ -24,7 +24,7 @@
 #include "../common/seperator.h"
 #include "../common/spdat.h"
 #include "../common/string_util.h"
-#include "../common/clientversions.h"
+#include "../common/client_version.h" // inv2 watch
 #include "../common/features.h"
 #include "../common/item.h"
 #include "../common/item_struct.h"
@@ -488,7 +488,7 @@ void NPC::CheckMinMaxLevel(Mob *them)
 		if(themlevel < (*cur)->min_level || themlevel > (*cur)->max_level)
 		{
 			material = Inventory::CalcMaterialFromSlot((*cur)->equip_slot);
-			if (material != _MaterialInvalid)
+			if (material != EQEmu::legacy::MaterialInvalid)
 				SendWearChange(material);
 
 			cur = itemlist.erase(cur);
@@ -523,14 +523,14 @@ void NPC::QueryLoot(Client* to)
 
 	int x = 0;
 	for(ItemList::iterator cur = itemlist.begin(); cur != itemlist.end(); ++cur, ++x) {
-		const Item_Struct* item = database.GetItem((*cur)->item_id);
+		const EQEmu::Item_Struct* item = database.GetItem((*cur)->item_id);
 		if (item == nullptr) {
 			Log.Out(Logs::General, Logs::Error, "Database error, invalid item");
 			continue;
 		}
 
-		Client::TextLink linker;
-		linker.SetLinkType(linker.linkItemData);
+		EQEmu::saylink::SayLinkEngine linker;
+		linker.SetLinkType(linker.SayLinkItemData);
 		linker.SetItemData(item);
 
 		auto item_link = linker.GenerateLink();
@@ -745,18 +745,18 @@ uint32 NPC::CountLoot() {
 
 void NPC::UpdateEquipmentLight()
 {
-	m_Light.Type.Equipment = 0;
-	m_Light.Level.Equipment = 0;
+	m_Light.Type[EQEmu::lightsource::LightEquipment] = 0;
+	m_Light.Level[EQEmu::lightsource::LightEquipment] = 0;
 
-	for (int index = MAIN_BEGIN; index < EmuConstants::EQUIPMENT_SIZE; ++index) {
-		if (index == MainAmmo) { continue; }
+	for (int index = SLOT_BEGIN; index < EQEmu::legacy::EQUIPMENT_SIZE; ++index) {
+		if (index == EQEmu::legacy::SlotAmmo) { continue; }
 
 		auto item = database.GetItem(equipment[index]);
 		if (item == nullptr) { continue; }
 
-		if (m_Light.IsLevelGreater(item->Light, m_Light.Type.Equipment)) {
-			m_Light.Type.Equipment = item->Light;
-			m_Light.Level.Equipment = m_Light.TypeToLevel(m_Light.Type.Equipment);
+		if (EQEmu::lightsource::IsLevelGreater(item->Light, m_Light.Type[EQEmu::lightsource::LightEquipment])) {
+			m_Light.Type[EQEmu::lightsource::LightEquipment] = item->Light;
+			m_Light.Level[EQEmu::lightsource::LightEquipment] = EQEmu::lightsource::TypeToLevel(m_Light.Type[EQEmu::lightsource::LightEquipment]);
 		}
 	}
 
@@ -765,17 +765,17 @@ void NPC::UpdateEquipmentLight()
 		auto item = database.GetItem((*iter)->item_id);
 		if (item == nullptr) { continue; }
 
-		if (item->ItemClass != ItemClassCommon) { continue; }
+		if (!item->IsClassCommon()) { continue; }
 		if (item->Light < 9 || item->Light > 13) { continue; }
 
-		if (m_Light.TypeToLevel(item->Light))
+		if (EQEmu::lightsource::TypeToLevel(item->Light))
 			general_light_type = item->Light;
 	}
 
-	if (m_Light.IsLevelGreater(general_light_type, m_Light.Type.Equipment))
-		m_Light.Type.Equipment = general_light_type;
+	if (EQEmu::lightsource::IsLevelGreater(general_light_type, m_Light.Type[EQEmu::lightsource::LightEquipment]))
+		m_Light.Type[EQEmu::lightsource::LightEquipment] = general_light_type;
 
-	m_Light.Level.Equipment = m_Light.TypeToLevel(m_Light.Type.Equipment);
+	m_Light.Level[EQEmu::lightsource::LightEquipment] = EQEmu::lightsource::TypeToLevel(m_Light.Type[EQEmu::lightsource::LightEquipment]);
 }
 
 void NPC::Depop(bool StartSpawnTimer) {
@@ -1372,7 +1372,7 @@ uint32 ZoneDatabase::NPCSpawnDB(uint8 command, const char* zone, uint32 zone_ver
 
 int32 NPC::GetEquipmentMaterial(uint8 material_slot) const
 {
-	if (material_slot >= _MaterialCount)
+	if (material_slot >= EQEmu::legacy::MaterialCount)
 		return 0;
 
 	int16 invslot = Inventory::CalcSlotFromMaterial(material_slot);
@@ -1383,23 +1383,23 @@ int32 NPC::GetEquipmentMaterial(uint8 material_slot) const
 	{
 		switch(material_slot)
 		{
-		case MaterialHead:
+		case EQEmu::legacy::MaterialHead:
 			return helmtexture;
-		case MaterialChest:
+		case EQEmu::legacy::MaterialChest:
 			return texture;
-		case MaterialArms:
+		case EQEmu::legacy::MaterialArms:
 			return armtexture;
-		case MaterialWrist:
+		case EQEmu::legacy::MaterialWrist:
 			return bracertexture;
-		case MaterialHands:
+		case EQEmu::legacy::MaterialHands:
 			return handtexture;
-		case MaterialLegs:
+		case EQEmu::legacy::MaterialLegs:
 			return legtexture;
-		case MaterialFeet:
+		case EQEmu::legacy::MaterialFeet:
 			return feettexture;
-		case MaterialPrimary:
+		case EQEmu::legacy::MaterialPrimary:
 			return d_melee_texture1;
-		case MaterialSecondary:
+		case EQEmu::legacy::MaterialSecondary:
 			return d_melee_texture2;
 		default:
 			//they have nothing in the slot, and its not a special slot... they get nothing.
@@ -1449,20 +1449,20 @@ void NPC::PickPocket(Client* thief)
 	int steal_skill = thief->GetSkill(SkillPickPockets);
 	int steal_chance = steal_skill * 100 / (5 * over_level + 5);
 
-	//Determine wheter to steal money or an item.
-	int money[6] = { 0, ((steal_skill >= 125) ? (GetPlatinum()) : (0)), ((steal_skill >= 60) ? (GetGold()) : (0)), GetSilver(), GetCopper(), 0 };
+	// Determine whether to steal money or an item.
+	uint32 money[6] = { 0, ((steal_skill >= 125) ? (GetPlatinum()) : (0)), ((steal_skill >= 60) ? (GetGold()) : (0)), GetSilver(), GetCopper(), 0 };
 	bool has_coin = ((money[PickPocketPlatinum] | money[PickPocketGold] | money[PickPocketSilver] | money[PickPocketCopper]) != 0);
 	bool steal_item = (steal_skill >= steal_chance && (zone->random.Roll(50) || !has_coin));
 
 	// still needs to have FindFreeSlot vs PutItemInInventory issue worked out
 	while (steal_item) {
-		std::vector<std::pair<const Item_Struct*, uint16>> loot_selection; // <const Item_Struct*, charges>
+		std::vector<std::pair<const EQEmu::Item_Struct*, uint16>> loot_selection; // <const Item_Struct*, charges>
 		for (auto item_iter : itemlist) {
 			if (!item_iter || !item_iter->item_id)
 				continue;
 
 			auto item_test = database.GetItem(item_iter->item_id);
-			if (item_test->Magic || !item_test->NoDrop || item_test->ItemType == ItemClassContainer || thief->CheckLoreConflict(item_test))
+			if (item_test->Magic || !item_test->NoDrop || item_test->IsClassBag() || thief->CheckLoreConflict(item_test))
 				continue;
 
 			loot_selection.push_back(std::make_pair(item_test, ((item_test->Stackable) ? (1) : (item_iter->charges))));
@@ -1473,7 +1473,7 @@ void NPC::PickPocket(Client* thief)
 		}
 
 		int random = zone->random.Int(0, (loot_selection.size() - 1));
-		uint16 slot_id = thief->GetInv().FindFreeSlot(false, true, (loot_selection[random].first->Size), (loot_selection[random].first->ItemType == ItemTypeArrow));
+		uint16 slot_id = thief->GetInv().FindFreeSlot(false, true, (loot_selection[random].first->Size), (loot_selection[random].first->ItemType == EQEmu::item::ItemTypeArrow));
 		if (slot_id == INVALID_INDEX) {
 			steal_item = false;
 			break;
@@ -1539,7 +1539,7 @@ void NPC::PickPocket(Client* thief)
 				return;
 			}
 
-			thief->AddMoneyToPP(money[3], money[2], money[1], money[0], false);
+			thief->AddMoneyToPP(money[PickPocketCopper], money[PickPocketSilver], money[PickPocketGold], money[PickPocketPlatinum], false);
 			thief->SendPickPocketResponse(this, coin_amount, coin_type);
 			return;
 		}
@@ -1961,7 +1961,7 @@ void NPC::ModifyNPCStat(const char *identifier, const char *newValue)
 	else if(id == "cr") { CR = atoi(val.c_str()); return; }
 	else if(id == "pr") { PR = atoi(val.c_str()); return; }
 	else if(id == "dr") { DR = atoi(val.c_str()); return; }
-	else if(id == "PhR") { PhR = atoi(val.c_str()); return; }
+	else if(id == "phr") { PhR = atoi(val.c_str()); return; }
 	else if(id == "runspeed") {
 		runspeed = (float)atof(val.c_str());
 		base_runspeed = (int)((float)runspeed * 40.0f);

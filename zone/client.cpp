@@ -1,5 +1,5 @@
 /*	EQEMu: Everquest Server Emulator
-	Copyright (C) 2001-2003 EQEMu Development Team (http://eqemulator.org)
+	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.org)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -44,6 +44,9 @@ extern volatile bool RunLoops;
 #include "zonedb.h"
 #include "petitions.h"
 #include "command.h"
+#ifdef BOTS
+#include "bot_command.h"
+#endif
 #include "string_ids.h"
 
 #include "guild_mgr.h"
@@ -120,7 +123,7 @@ Client::Client(EQStreamInterface* ieqs)
 	camp_timer(29000),
 	process_timer(100),
 	stamina_timer(40000),
-	zoneinpacket_timer(3000),
+	zoneinpacket_timer(1000),
 	linkdead_timer(RuleI(Zone,ClientLinkdeadMS)),
 	dead_timer(2000),
 	global_channel_timer(1000),
@@ -254,7 +257,7 @@ Client::Client(EQStreamInterface* ieqs)
 	GlobalChatLimiterTimer = new Timer(RuleI(Chat, IntervalDurationMS));
 	AttemptedMessages = 0;
 	TotalKarma = 0;
-	m_ClientVersion = ClientVersion::Unknown;
+	m_ClientVersion = EQEmu::versions::ClientVersion::Unknown;
 	m_ClientVersionBit = 0;
 	AggroCount = 0;
 	RestRegenHP = 0;
@@ -436,6 +439,7 @@ void Client::SendZoneInPackets()
 	outapp->priority = 6;
 	if (!GetHideMe()) entity_list.QueueClients(this, outapp, true);
 	safe_delete(outapp);
+	SetSpawned();
 	if (GetPVP())	//force a PVP update until we fix the spawn struct
 		SendAppearancePacket(AT_PVP, GetPVP(), true, false);
 
@@ -1052,6 +1056,24 @@ void Client::ChannelMessageReceived(uint8 chan_num, uint8 language, uint8 lang_s
 			break;
 		}
 
+#ifdef BOTS
+		if (message[0] == BOT_COMMAND_CHAR) {
+			if (bot_command_dispatch(this, message) == -2) {
+				if (parse->PlayerHasQuestSub(EVENT_COMMAND)) {
+					int i = parse->EventPlayer(EVENT_COMMAND, this, message, 0);
+					if (i == 0 && !RuleB(Chat, SuppressCommandErrors)) {
+						Message(13, "Bot command '%s' not recognized.", message);
+					}
+				}
+				else {
+					if (!RuleB(Chat, SuppressCommandErrors))
+						Message(13, "Bot command '%s' not recognized.", message);
+				}
+			}
+			break;
+		}
+#endif
+
 		Mob* sender = this;
 		if (GetPet() && GetPet()->FindType(SE_VoiceGraft))
 			sender = GetPet();
@@ -1517,7 +1539,7 @@ void Client::UpdateWho(uint8 remove) {
 	else if (m_pp.anon >= 2)
 		scl->anon = 2;
 
-	scl->ClientVersion = static_cast<unsigned int>(GetClientVersion());
+	scl->ClientVersion = static_cast<unsigned int>(ClientVersion());
 	scl->tellsoff = tellsoff;
 	scl->guild_id = guild_id;
 	scl->LFG = LFG;
@@ -1773,7 +1795,7 @@ void Client::SendManaUpdatePacket() {
 	if (!Connected() || IsCasting())
 		return;
 
-	if (GetClientVersion() >= ClientVersion::SoD) {
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::SoD) {
 		SendManaUpdate();
 		SendEnduranceUpdate();
 	}
@@ -1808,7 +1830,7 @@ void Client::SendManaUpdatePacket() {
 
 
 			for(int i = 0; i < MAX_GROUP_MEMBERS; ++i)
-				if(g->members[i] && g->members[i]->IsClient() && (g->members[i] != this) && (g->members[i]->CastToClient()->GetClientVersion() >= ClientVersion::SoD))
+				if (g->members[i] && g->members[i]->IsClient() && (g->members[i] != this) && (g->members[i]->CastToClient()->ClientVersion() >= EQEmu::versions::ClientVersion::SoD))
 				{
 					g->members[i]->CastToClient()->QueuePacket(outapp);
 					g->members[i]->CastToClient()->QueuePacket(outapp2);
@@ -1886,7 +1908,7 @@ void Client::FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho)
 
 	UpdateEquipmentLight();
 	UpdateActiveLight();
-	ns->spawn.light = m_Light.Type.Active;
+	ns->spawn.light = m_Light.Type[EQEmu::lightsource::LightActive];
 }
 
 bool Client::GMHideMe(Client* client) {
@@ -1991,7 +2013,7 @@ void Client::ReadBook(BookRequest_Struct *book) {
 
 		BookText_Struct *out = (BookText_Struct *) outapp->pBuffer;
 		out->window = book->window;
-		if(GetClientVersion() >= ClientVersion::SoF)
+		if (ClientVersion() >= EQEmu::versions::ClientVersion::SoF)
 		{
 			const ItemInst *inst = m_inv[book->invslot];
 			if(inst)
@@ -2468,7 +2490,7 @@ bool Client::HasSkill(SkillUseTypes skill_id) const {
 }
 
 bool Client::CanHaveSkill(SkillUseTypes skill_id) const {
-	if (GetClientVersion() < ClientVersion::RoF2 && class_ == BERSERKER && skill_id == Skill1HPiercing)
+	if (ClientVersion() < EQEmu::versions::ClientVersion::RoF2 && class_ == BERSERKER && skill_id == Skill1HPiercing)
 		skill_id = Skill2HPiercing;
 
 	return(database.GetSkillCap(GetClass(), skill_id, RuleI(Character, MaxLevel)) > 0);
@@ -2476,13 +2498,17 @@ bool Client::CanHaveSkill(SkillUseTypes skill_id) const {
 }
 
 uint16 Client::MaxSkill(SkillUseTypes skillid, uint16 class_, uint16 level) const {
-	if (GetClientVersion() < ClientVersion::RoF2 && class_ == BERSERKER && skillid == Skill1HPiercing)
+	if (ClientVersion() < EQEmu::versions::ClientVersion::RoF2 && class_ == BERSERKER && skillid == Skill1HPiercing)
 		skillid = Skill2HPiercing;
 
 	return(database.GetSkillCap(class_, skillid, level));
 }
 
-uint8 Client::SkillTrainLevel(SkillUseTypes skillid, uint16 class_){
+uint8 Client::SkillTrainLevel(SkillUseTypes skillid, uint16 class_)
+{
+	if (ClientVersion() < EQEmu::versions::ClientVersion::RoF2 && class_ == BERSERKER && skillid == Skill1HPiercing)
+		skillid = Skill2HPiercing;
+
 	return(database.GetTrainLevel(class_, skillid, RuleI(Character, MaxLevel)));
 }
 
@@ -2639,7 +2665,7 @@ void Client::SetFeigned(bool in_feigned) {
 	feigned=in_feigned;
  }
 
-void Client::LogMerchant(Client* player, Mob* merchant, uint32 quantity, uint32 price, const Item_Struct* item, bool buying)
+void Client::LogMerchant(Client* player, Mob* merchant, uint32 quantity, uint32 price, const EQEmu::Item_Struct* item, bool buying)
 {
 	if(!player || !merchant || !item)
 		return;
@@ -2668,25 +2694,25 @@ void Client::LogMerchant(Client* player, Mob* merchant, uint32 quantity, uint32 
 	}
 }
 
-bool Client::BindWound(Mob* bindmob, bool start, bool fail){
-	EQApplicationPacket* outapp = 0;
-	if(!fail)
-	{
+bool Client::BindWound(Mob *bindmob, bool start, bool fail)
+{
+	EQApplicationPacket *outapp = nullptr;
+	if (!fail) {
 		outapp = new EQApplicationPacket(OP_Bind_Wound, sizeof(BindWound_Struct));
-		BindWound_Struct* bind_out = (BindWound_Struct*) outapp->pBuffer;
+		BindWound_Struct *bind_out = (BindWound_Struct *)outapp->pBuffer;
 		// Start bind
-		if(!bindwound_timer.Enabled())
-		{
-			//make sure we actually have a bandage... and consume it.
-			int16 bslot = m_inv.HasItemByUse(ItemTypeBandage, 1, invWhereWorn|invWherePersonal);
+		if (!bindwound_timer.Enabled()) {
+			// make sure we actually have a bandage... and consume it.
+			int16 bslot = m_inv.HasItemByUse(EQEmu::item::ItemTypeBandage, 1, invWhereWorn | invWherePersonal);
 			if (bslot == INVALID_INDEX) {
 				bind_out->type = 3;
 				QueuePacket(outapp);
-				bind_out->type = 7;	//this is the wrong message, dont know the right one.
+				bind_out->type = 7; // this is the wrong message, dont know the right one.
 				QueuePacket(outapp);
-				return(true);
+				safe_delete(outapp);
+				return (true);
 			}
-			DeleteItemInInventory(bslot, 1, true);	//do we need client update?
+			DeleteItemInInventory(bslot, 1, true); // do we need client update?
 
 			// start complete timer
 			bindwound_timer.Start(10000);
@@ -2697,51 +2723,46 @@ bool Client::BindWound(Mob* bindmob, bool start, bool fail){
 			QueuePacket(outapp);
 			bind_out->type = 0;
 			// Client Unlocked
-			if(!bindmob) {
+			if (!bindmob) {
 				// send "bindmob dead" to client
 				bind_out->type = 4;
 				QueuePacket(outapp);
 				bind_out->type = 0;
 				bindwound_timer.Disable();
 				bindwound_target = 0;
-			}
-			else {
+			} else {
 				// send bindmob "stand still"
-				if(!bindmob->IsAIControlled() && bindmob != this ) {
-					bindmob->CastToClient()->Message_StringID(clientMessageYellow, YOU_ARE_BEING_BANDAGED);
-				}
-				else if (bindmob->IsAIControlled() && bindmob != this ){
+				if (!bindmob->IsAIControlled() && bindmob != this) {
+					bindmob->CastToClient()->Message_StringID(clientMessageYellow,
+										  YOU_ARE_BEING_BANDAGED);
+				} else if (bindmob->IsAIControlled() && bindmob != this) {
 					; // Tell IPC to stand still?
-				}
-				else {
+				} else {
 					; // Binding self
 				}
 			}
-		}
-		else if (bindwound_timer.Check()) // Did the timer finish?
+		} else if (bindwound_timer.Check()) // Did the timer finish?
 		{
-		// finish bind
+			// finish bind
 			// disable complete timer
 			bindwound_timer.Disable();
 			bindwound_target = 0;
-			if(!bindmob){
-					// send "bindmob gone" to client
-					bind_out->type = 5; // not in zone
-					QueuePacket(outapp);
-					bind_out->type = 0;
+			if (!bindmob) {
+				// send "bindmob gone" to client
+				bind_out->type = 5; // not in zone
+				QueuePacket(outapp);
+				bind_out->type = 0;
 			}
 
 			else {
-				if (!GetFeigned() && (DistanceSquared(bindmob->GetPosition(), m_Position)  <= 400)) {
+				if (!GetFeigned() && (DistanceSquared(bindmob->GetPosition(), m_Position) <= 400)) {
 					// send bindmob bind done
-					if(!bindmob->IsAIControlled() && bindmob != this ) {
+					if (!bindmob->IsAIControlled() && bindmob != this) {
 
-					}
-					else if(bindmob->IsAIControlled() && bindmob != this ) {
-					// Tell IPC to resume??
-					}
-					else {
-					// Binding self
+					} else if (bindmob->IsAIControlled() && bindmob != this) {
+						// Tell IPC to resume??
+					} else {
+						// Binding self
 					}
 					// Send client bind done
 
@@ -2750,58 +2771,61 @@ bool Client::BindWound(Mob* bindmob, bool start, bool fail){
 					bind_out->type = 0;
 					CheckIncreaseSkill(SkillBindWound, nullptr, 5);
 
-					int maxHPBonus = spellbonuses.MaxBindWound + itembonuses.MaxBindWound + aabonuses.MaxBindWound;
+					int maxHPBonus = spellbonuses.MaxBindWound + itembonuses.MaxBindWound +
+							 aabonuses.MaxBindWound;
 
 					int max_percent = 50 + 10 * maxHPBonus;
 
-					if(GetClass() == MONK && GetSkill(SkillBindWound) > 200) {
+					if (GetClass() == MONK && GetSkill(SkillBindWound) > 200) {
 						max_percent = 70 + 10 * maxHPBonus;
 					}
 
 					max_percent = mod_bindwound_percent(max_percent, bindmob);
 
-					int max_hp = bindmob->GetMaxHP()*max_percent/100;
+					int max_hp = bindmob->GetMaxHP() * max_percent / 100;
 
 					// send bindmob new hp's
-					if (bindmob->GetHP() < bindmob->GetMaxHP() && bindmob->GetHP() <= (max_hp)-1){
+					if (bindmob->GetHP() < bindmob->GetMaxHP() && bindmob->GetHP() <= (max_hp)-1) {
 						// 0.120 per skill point, 0.60 per skill level, minimum 3 max 30
 						int bindhps = 3;
 
-
 						if (GetSkill(SkillBindWound) > 200) {
-							bindhps += GetSkill(SkillBindWound)*4/10;
+							bindhps += GetSkill(SkillBindWound) * 4 / 10;
 						} else if (GetSkill(SkillBindWound) >= 10) {
-							bindhps += GetSkill(SkillBindWound)/4;
+							bindhps += GetSkill(SkillBindWound) / 4;
 						}
 
-						//Implementation of aaMithanielsBinding is a guess (the multiplier)
-						int bindBonus = spellbonuses.BindWound + itembonuses.BindWound + aabonuses.BindWound;
+						// Implementation of aaMithanielsBinding is a guess (the multiplier)
+						int bindBonus = spellbonuses.BindWound + itembonuses.BindWound +
+								aabonuses.BindWound;
 
-						bindhps += bindhps*bindBonus / 100;
+						bindhps += bindhps * bindBonus / 100;
 
 						bindhps = mod_bindwound_hp(bindhps, bindmob);
 
-						//if the bind takes them above the max bindable
-						//cap it at that value. Dont know if live does it this way
-						//but it makes sense to me.
+						// if the bind takes them above the max bindable
+						// cap it at that value. Dont know if live does it this way
+						// but it makes sense to me.
 						int chp = bindmob->GetHP() + bindhps;
-						if(chp > max_hp)
+						if (chp > max_hp)
 							chp = max_hp;
 
 						bindmob->SetHP(chp);
 						bindmob->SendHPUpdate();
-					}
-					else {
-						//I dont have the real, live
-						Message(15, "You cannot bind wounds above %d%% hitpoints.", max_percent);
-						if(bindmob != this && bindmob->IsClient())
-							bindmob->CastToClient()->Message(15, "You cannot have your wounds bound above %d%% hitpoints.", max_percent);
+					} else {
+						// I dont have the real, live
+						Message(15, "You cannot bind wounds above %d%% hitpoints.",
+							max_percent);
+						if (bindmob != this && bindmob->IsClient())
+							bindmob->CastToClient()->Message(
+							    15,
+							    "You cannot have your wounds bound above %d%% hitpoints.",
+							    max_percent);
 						// Too many hp message goes here.
 					}
-				}
-				else {
+				} else {
 					// Send client bind failed
-					if(bindmob != this)
+					if (bindmob != this)
 						bind_out->type = 6; // They moved
 					else
 						bind_out->type = 7; // Bandager moved
@@ -2811,11 +2835,10 @@ bool Client::BindWound(Mob* bindmob, bool start, bool fail){
 				}
 			}
 		}
-	}
-	else if (bindwound_timer.Enabled()) {
+	} else if (bindwound_timer.Enabled()) {
 		// You moved
 		outapp = new EQApplicationPacket(OP_Bind_Wound, sizeof(BindWound_Struct));
-		BindWound_Struct* bind_out = (BindWound_Struct*) outapp->pBuffer;
+		BindWound_Struct *bind_out = (BindWound_Struct *)outapp->pBuffer;
 		bindwound_timer.Disable();
 		bindwound_target = 0;
 		bind_out->type = 7;
@@ -2828,11 +2851,11 @@ bool Client::BindWound(Mob* bindmob, bool start, bool fail){
 }
 
 void Client::SetMaterial(int16 in_slot, uint32 item_id) {
-	const Item_Struct* item = database.GetItem(item_id);
-	if (item && (item->ItemClass==ItemClassCommon))
+	const EQEmu::Item_Struct* item = database.GetItem(item_id);
+	if (item && item->IsClassCommon())
 	{
 		uint8 matslot = Inventory::CalcMaterialFromSlot(in_slot);
-		if (matslot != _MaterialInvalid)
+		if (matslot != EQEmu::legacy::MaterialInvalid)
 		{
 			m_pp.item_material[matslot] = GetEquipmentMaterial(matslot);
 		}
@@ -2917,7 +2940,7 @@ void Client::ServerFilter(SetServerFilter_Struct* filter){
 	Filter0(FilterMissedMe);
 	Filter1(FilterDamageShields);
 
-	if (GetClientVersionBit() & BIT_SoDAndLater) {
+	if (ClientVersionBit() & EQEmu::versions::bit_SoDAndLater) {
 		if (filter->filters[FilterDOT] == 0)
 			ClientFilters[FilterDOT] = FilterShow;
 		else if (filter->filters[FilterDOT] == 1)
@@ -2938,7 +2961,7 @@ void Client::ServerFilter(SetServerFilter_Struct* filter){
 	Filter1(FilterFocusEffects);
 	Filter1(FilterPetSpells);
 
-	if (GetClientVersionBit() & BIT_SoDAndLater) {
+	if (ClientVersionBit() & EQEmu::versions::bit_SoDAndLater) {
 		if (filter->filters[FilterHealOverTime] == 0)
 			ClientFilters[FilterHealOverTime] = FilterShow;
 		// This is called 'Show Mine Only' in the clients, but functions the same as show
@@ -3174,7 +3197,7 @@ void Client::SetTint(int16 in_slot, uint32 color) {
 void Client::SetTint(int16 in_slot, Color_Struct& color) {
 
 	uint8 matslot = Inventory::CalcMaterialFromSlot(in_slot);
-	if (matslot != _MaterialInvalid)
+	if (matslot != EQEmu::legacy::MaterialInvalid)
 	{
 		m_pp.item_tint[matslot].Color = color.Color;
 		database.SaveCharacterMaterialColor(this->CharacterID(), in_slot, color.Color);
@@ -3249,60 +3272,60 @@ void Client::LinkDead()
 }
 
 uint8 Client::SlotConvert(uint8 slot,bool bracer){
-	uint8 slot2=0; // why are we returning MainCharm instead of INVALID_INDEX? (must be a pre-charm segment...)
+	uint8 slot2 = 0; // why are we returning MainCharm instead of INVALID_INDEX? (must be a pre-charm segment...)
 	if(bracer)
-		return MainWrist2;
-	switch(slot){
-		case MaterialHead:
-			slot2=MainHead;
-			break;
-		case MaterialChest:
-			slot2=MainChest;
-			break;
-		case MaterialArms:
-			slot2=MainArms;
-			break;
-		case MaterialWrist:
-			slot2=MainWrist1;
-			break;
-		case MaterialHands:
-			slot2=MainHands;
-			break;
-		case MaterialLegs:
-			slot2=MainLegs;
-			break;
-		case MaterialFeet:
-			slot2=MainFeet;
-			break;
-		}
+		return EQEmu::legacy::SlotWrist2;
+	switch(slot) {
+	case EQEmu::legacy::MaterialHead:
+		slot2 = EQEmu::legacy::SlotHead;
+		break;
+	case EQEmu::legacy::MaterialChest:
+		slot2 = EQEmu::legacy::SlotChest;
+		break;
+	case EQEmu::legacy::MaterialArms:
+		slot2 = EQEmu::legacy::SlotArms;
+		break;
+	case EQEmu::legacy::MaterialWrist:
+		slot2 = EQEmu::legacy::SlotWrist1;
+		break;
+	case EQEmu::legacy::MaterialHands:
+		slot2 = EQEmu::legacy::SlotHands;
+		break;
+	case EQEmu::legacy::MaterialLegs:
+		slot2 = EQEmu::legacy::SlotLegs;
+		break;
+	case EQEmu::legacy::MaterialFeet:
+		slot2 = EQEmu::legacy::SlotFeet;
+		break;
+	}
 	return slot2;
 }
 
 uint8 Client::SlotConvert2(uint8 slot){
-	uint8 slot2=0; // same as above...
+	uint8 slot2 = 0; // same as above...
 	switch(slot){
-		case MainHead:
-			slot2=MaterialHead;
-			break;
-		case MainChest:
-			slot2=MaterialChest;
-			break;
-		case MainArms:
-			slot2=MaterialArms;
-			break;
-		case MainWrist1:
-			slot2=MaterialWrist;
-			break;
-		case MainHands:
-			slot2=MaterialHands;
-			break;
-		case MainLegs:
-			slot2=MaterialLegs;
-			break;
-		case MainFeet:
-			slot2=MaterialFeet;
-			break;
-		}
+	case EQEmu::legacy::SlotHead:
+		slot2 = EQEmu::legacy::MaterialHead;
+		break;
+	case EQEmu::legacy::SlotChest:
+		slot2 = EQEmu::legacy::MaterialChest;
+		break;
+	case EQEmu::legacy::SlotArms:
+		slot2 = EQEmu::legacy::MaterialArms;
+		break;
+	case EQEmu::legacy::SlotWrist1:
+		slot2 = EQEmu::legacy::MaterialWrist;
+		break;
+	case EQEmu::legacy::SlotHands:
+		slot2 = EQEmu::legacy::MaterialHands;
+		break;
+	case EQEmu::legacy::SlotLegs:
+		slot2 = EQEmu::legacy::MaterialLegs;
+		break;
+	case EQEmu::legacy::SlotFeet:
+		slot2 = EQEmu::legacy::MaterialFeet;
+		break;
+	}
 	return slot2;
 }
 
@@ -3687,7 +3710,7 @@ void Client::Insight(uint32 t_id)
 	}
 	strcat(resists," to disease.");
 
-	Message(0,"Your target is a level %i %s. It appears %s and %s for its level. It seems %s",who->GetLevel(),GetEQClassName(who->GetClass(),1),dmg,hitpoints,resists);
+	Message(0,"Your target is a level %i %s. It appears %s and %s for its level. It seems %s",who->GetLevel(),GetClassIDName(who->GetClass(),1),dmg,hitpoints,resists);
 }
 
 void Client::GetGroupAAs(GroupLeadershipAA_Struct *into) const {
@@ -3701,10 +3724,8 @@ void Client::GetRaidAAs(RaidLeadershipAA_Struct *into) const {
 void Client::EnteringMessages(Client* client)
 {
 	//server rules
-	char *rules;
-	rules = new char [4096];
-
-	if(database.GetVariable("Rules", rules, 4096))
+	std::string rules;
+	if(database.GetVariable("Rules", rules))
 	{
 		uint8 flag = database.GetAgreementFlag(client->AccountID());
 		if(!flag)
@@ -3715,25 +3736,18 @@ void Client::EnteringMessages(Client* client)
 			client->SendAppearancePacket(AT_Anim, ANIM_FREEZE);
 		}
 	}
-	safe_delete_array(rules);
 }
 
 void Client::SendRules(Client* client)
 {
-	char *rules;
-	rules = new char [4096];
-	char *ptr;
+	std::string rules;
 
-	database.GetVariable("Rules", rules, 4096);
+	if (!database.GetVariable("Rules", rules))
+		return;
 
-	ptr = strtok(rules, "\n");
-	while(ptr != nullptr)
-	{
-
-		client->Message(0,"%s",ptr);
-		ptr = strtok(nullptr, "\n");
-	}
-	safe_delete_array(rules);
+	auto lines = SplitString(rules, '\n');
+	for (auto&& e : lines)
+		client->Message(0, "%s", e.c_str());
 }
 
 void Client::SetEndurance(int32 newEnd)
@@ -3749,19 +3763,25 @@ void Client::SetEndurance(int32 newEnd)
 	SendManaUpdatePacket();
 }
 
-void Client::SacrificeConfirm(Client *caster) {
+void Client::SacrificeConfirm(Client *caster)
+{
+	EQApplicationPacket *outapp = new EQApplicationPacket(OP_Sacrifice, sizeof(Sacrifice_Struct));
+	Sacrifice_Struct *ss = (Sacrifice_Struct *)outapp->pBuffer;
 
-	EQApplicationPacket* outapp = new EQApplicationPacket(OP_Sacrifice, sizeof(Sacrifice_Struct));
-	Sacrifice_Struct *ss = (Sacrifice_Struct*)outapp->pBuffer;
-
-	if(!caster || PendingSacrifice) return;
-
-	if(GetLevel() < RuleI(Spells, SacrificeMinLevel)){
-		caster->Message_StringID(13, SAC_TOO_LOW);	//This being is not a worthy sacrifice.
+	if (!caster || PendingSacrifice) {
+		safe_delete(outapp);
 		return;
 	}
+
+	if (GetLevel() < RuleI(Spells, SacrificeMinLevel)) {
+		caster->Message_StringID(13, SAC_TOO_LOW); // This being is not a worthy sacrifice.
+		safe_delete(outapp);
+		return;
+	}
+
 	if (GetLevel() > RuleI(Spells, SacrificeMaxLevel)) {
 		caster->Message_StringID(13, SAC_TOO_HIGH);
+		safe_delete(outapp);
 		return;
 	}
 
@@ -3874,7 +3894,7 @@ void Client::SendOPTranslocateConfirm(Mob *Caster, uint16 SpellID) {
 
 	return;
 }
-void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const Item_Struct* item){
+void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu::Item_Struct* item){
 		EQApplicationPacket* outapp = new EQApplicationPacket(OP_PickPocket, sizeof(sPickPocket_Struct));
 		sPickPocket_Struct* pick_out = (sPickPocket_Struct*) outapp->pBuffer;
 		pick_out->coin = amt;
@@ -3903,20 +3923,23 @@ void Client::SetHoTT(uint32 mobid) {
 	safe_delete(outapp);
 }
 
-void Client::SendPopupToClient(const char *Title, const char *Text, uint32 PopupID, uint32 Buttons, uint32 Duration) {
+void Client::SendPopupToClient(const char *Title, const char *Text, uint32 PopupID, uint32 Buttons, uint32 Duration)
+{
 
 	EQApplicationPacket *outapp = new EQApplicationPacket(OP_OnLevelMessage, sizeof(OnLevelMessage_Struct));
-	OnLevelMessage_Struct *olms = (OnLevelMessage_Struct *) outapp->pBuffer;
+	OnLevelMessage_Struct *olms = (OnLevelMessage_Struct *)outapp->pBuffer;
 
-	if((strlen(Title) > (sizeof(olms->Title)-1)) ||
-		(strlen(Text) > (sizeof(olms->Text)-1))) return;
+	if ((strlen(Title) > (sizeof(olms->Title) - 1)) || (strlen(Text) > (sizeof(olms->Text) - 1))) {
+		safe_delete(outapp);
+		return;
+	}
 
 	strcpy(olms->Title, Title);
 	strcpy(olms->Text, Text);
 
 	olms->Buttons = Buttons;
 
-	if(Duration > 0)
+	if (Duration > 0)
 		olms->Duration = Duration * 1000;
 	else
 		olms->Duration = 0xffffffff;
@@ -3943,8 +3966,10 @@ void Client::SendWindow(uint32 PopupID, uint32 NegativeID, uint32 Buttons, const
 	EQApplicationPacket* app = new EQApplicationPacket(OP_OnLevelMessage, sizeof(OnLevelMessage_Struct));
 	OnLevelMessage_Struct* olms=(OnLevelMessage_Struct*)app->pBuffer;
 
-	if(strlen(Text) > (sizeof(olms->Text)-1))
+	if(strlen(Text) > (sizeof(olms->Text)-1)) {
+		safe_delete(app);
 		return;
+	}
 
 	if(!target)
 		title_type = 0;
@@ -4046,7 +4071,7 @@ bool Client::KeyRingCheck(uint32 item_id)
 void Client::KeyRingList()
 {
 	Message(4,"Keys on Keyring:");
-	const Item_Struct *item = 0;
+	const EQEmu::Item_Struct *item = 0;
 	for(std::list<uint32>::iterator iter = keyring.begin();
 		iter != keyring.end();
 		++iter)
@@ -4223,7 +4248,7 @@ bool Client::GroupFollow(Client* inviter) {
 			group->UpdateGroupAAs();
 
 			//Invite the inviter into the group first.....dont ask
-			if (inviter->GetClientVersion() < ClientVersion::SoD)
+			if (inviter->ClientVersion() < EQEmu::versions::ClientVersion::SoD)
 			{
 				EQApplicationPacket* outapp = new EQApplicationPacket(OP_GroupUpdate, sizeof(GroupJoin_Struct));
 				GroupJoin_Struct* outgj = (GroupJoin_Struct*)outapp->pBuffer;
@@ -4269,13 +4294,13 @@ bool Client::GroupFollow(Client* inviter) {
 			return false;
 		}
 
-		if (GetClientVersion() >= ClientVersion::SoD)
+		if (ClientVersion() >= EQEmu::versions::ClientVersion::SoD)
 		{
 			SendGroupJoinAcknowledge();
 		}
 
 		// Temporary hack for SoD, as things seem to work quite differently
-		if (inviter->IsClient() && inviter->GetClientVersion() >= ClientVersion::SoD)
+		if (inviter->IsClient() && inviter->ClientVersion() >= EQEmu::versions::ClientVersion::SoD)
 		{
 			database.RefreshGroupFromDB(inviter);
 		}
@@ -4304,60 +4329,43 @@ bool Client::GroupFollow(Client* inviter) {
 uint16 Client::GetPrimarySkillValue()
 {
 	SkillUseTypes skill = HIGHEST_SKILL; //because nullptr == 0, which is 1H Slashing, & we want it to return 0 from GetSkill
-	bool equiped = m_inv.GetItem(MainPrimary);
+	bool equiped = m_inv.GetItem(EQEmu::legacy::SlotPrimary);
 
 	if (!equiped)
 		skill = SkillHandtoHand;
 
 	else {
 
-		uint8 type = m_inv.GetItem(MainPrimary)->GetItem()->ItemType; //is this the best way to do this?
+		uint8 type = m_inv.GetItem(EQEmu::legacy::SlotPrimary)->GetItem()->ItemType; //is this the best way to do this?
 
-		switch (type)
-		{
-			case ItemType1HSlash: // 1H Slashing
-			{
-				skill = Skill1HSlashing;
-				break;
-			}
-			case ItemType2HSlash: // 2H Slashing
-			{
-				skill = Skill2HSlashing;
-				break;
-			}
-			case ItemType1HPiercing: // Piercing
-			{
+		switch (type) {
+		case EQEmu::item::ItemType1HSlash: // 1H Slashing
+			skill = Skill1HSlashing;
+			break;
+		case EQEmu::item::ItemType2HSlash: // 2H Slashing
+			skill = Skill2HSlashing;
+			break;
+		case EQEmu::item::ItemType1HPiercing: // Piercing
+			skill = Skill1HPiercing;
+			break;
+		case EQEmu::item::ItemType1HBlunt: // 1H Blunt
+			skill = Skill1HBlunt;
+			break;
+		case EQEmu::item::ItemType2HBlunt: // 2H Blunt
+			skill = Skill2HBlunt;
+			break;
+		case EQEmu::item::ItemType2HPiercing: // 2H Piercing
+			if (IsClient() && CastToClient()->ClientVersion() < EQEmu::versions::ClientVersion::RoF2)
 				skill = Skill1HPiercing;
-				break;
-			}
-			case ItemType1HBlunt: // 1H Blunt
-			{
-				skill = Skill1HBlunt;
-				break;
-			}
-			case ItemType2HBlunt: // 2H Blunt
-			{
-				skill = Skill2HBlunt;
-				break;
-			}
-			case ItemType2HPiercing: // 2H Piercing
-			{
-				if (IsClient() && CastToClient()->GetClientVersion() < ClientVersion::RoF2)
-					skill = Skill1HPiercing;
-				else
-					skill = Skill2HPiercing;
-				break;
-			}
-			case ItemTypeMartial: // Hand to Hand
-			{
-				skill = SkillHandtoHand;
-				break;
-			}
-			default: // All other types default to Hand to Hand
-			{
-				skill = SkillHandtoHand;
-				break;
-			}
+			else
+				skill = Skill2HPiercing;
+			break;
+		case EQEmu::item::ItemTypeMartial: // Hand to Hand
+			skill = SkillHandtoHand;
+			break;
+		default: // All other types default to Hand to Hand
+			skill = SkillHandtoHand;
+			break;
 		}
 	}
 
@@ -4512,7 +4520,7 @@ void Client::IncrementAggroCount() {
 	if (AggroCount == 1)
 		SavedRaidRestTimer = rest_timer.GetRemainingTime();
 
-	if(GetClientVersion() >= ClientVersion::SoF) {
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::SoF) {
 
 		EQApplicationPacket *outapp = new EQApplicationPacket(OP_RestState, 1);
 		char *Buffer = (char *)outapp->pBuffer;
@@ -4557,7 +4565,7 @@ void Client::DecrementAggroCount() {
 
 	rest_timer.Start(time_until_rest);
 
-	if(GetClientVersion() >= ClientVersion::SoF) {
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::SoF) {
 
 		EQApplicationPacket *outapp = new EQApplicationPacket(OP_RestState, 5);
 		char *Buffer = (char *)outapp->pBuffer;
@@ -5076,36 +5084,27 @@ void Client::ShowSkillsWindow()
 {
 	const char *WindowTitle = "Skills";
 	std::string WindowText;
-	// using a map for easy alphabetizing of the skills list
-	std::map<std::string, SkillUseTypes> Skills;
-	std::map<std::string, SkillUseTypes>::iterator it;
+	std::map<SkillUseTypes, std::string> Skills = EQEmu::GetSkillUseTypesMap();
 
-	// this list of names must keep the same order as that in common/skills.h
-	const char* SkillName[] = {"1H Blunt","1H Slashing","2H Blunt","2H Slashing","Abjuration","Alteration","Apply Poison","Archery",
-		"Backstab","Bind Wound","Bash","Block","Brass Instruments","Channeling","Conjuration","Defense","Disarm","Disarm Traps","Divination",
-		"Dodge","Double Attack","Dragon Punch","Dual Wield","Eagle Strike","Evocation","Feign Death","Flying Kick","Forage","Hand to Hand",
-		"Hide","Kick","Meditate","Mend","Offense","Parry","Pick Lock","1H Piercing","Ripost","Round Kick","Safe Fall","Sense Heading",
-		"Singing","Sneak","Specialize Abjuration","Specialize Alteration","Specialize Conjuration","Specialize Divination","Specialize Evocation","Pick Pockets",
-		"Stringed Instruments","Swimming","Throwing","Tiger Claw","Tracking","Wind Instruments","Fishing","Make Poison","Tinkering","Research",
-		"Alchemy","Baking","Tailoring","Sense Traps","Blacksmithing","Fletching","Brewing","Alcohol Tolerance","Begging","Jewelry Making",
-		"Pottery","Percussion Instruments","Intimidation","Berserking","Taunt","Frenzy","Remove Traps","Triple Attack","2H Piercing"};
-	for(int i = 0; i <= (int)HIGHEST_SKILL; i++)
-		Skills[SkillName[i]] = (SkillUseTypes)i;
+	if (ClientVersion() < EQEmu::versions::ClientVersion::RoF2)
+		Skills[Skill1HPiercing] = "Piercing";
 
 	// print out all available skills
-	for(it = Skills.begin(); it != Skills.end(); ++it) {
-		if(GetSkill(it->second) > 0 || MaxSkill(it->second) > 0) {
-			WindowText += it->first;
-			// line up the values
-			for (int j = 0; j < EmuConstants::ITEM_COMMON_SIZE; j++)
-				WindowText += "&nbsp;";
-			WindowText += itoa(this->GetSkill(it->second));
-			if (MaxSkill(it->second) > 0) {
-				WindowText += "/";
-				WindowText += itoa(this->GetMaxSkillAfterSpecializationRules(it->second,this->MaxSkill(it->second)));
-			}
-			WindowText += "<br>";
+	for (auto skills_iter : Skills) {
+		if (skills_iter.first == Skill2HPiercing && ClientVersion() < EQEmu::versions::ClientVersion::RoF2)
+			continue;
+		if (!GetSkill(skills_iter.first) && !MaxSkill(skills_iter.first))
+			continue;
+
+		WindowText += skills_iter.second;
+		// line up the values
+		WindowText += "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+		WindowText += itoa(this->GetSkill(skills_iter.first));
+		if (MaxSkill(skills_iter.first) > 0) {
+			WindowText += "/";
+			WindowText += itoa(this->GetMaxSkillAfterSpecializationRules(skills_iter.first, this->MaxSkill(skills_iter.first)));
 		}
+		WindowText += "<br>";
 	}
 	this->SendPopupToClient(WindowTitle, WindowText.c_str());
 }
@@ -5501,7 +5500,7 @@ bool Client::TryReward(uint32 claim_id)
 	// save
 	uint32 free_slot = 0xFFFFFFFF;
 
-	for (int i = EmuConstants::GENERAL_BEGIN; i <= EmuConstants::GENERAL_END; ++i) {
+	for (int i = EQEmu::legacy::GENERAL_BEGIN; i <= EQEmu::legacy::GENERAL_END; ++i) {
 		ItemInst *item = GetInv().GetItem(i);
 		if (!item) {
 			free_slot = i;
@@ -5818,7 +5817,7 @@ void Client::ProcessInspectRequest(Client* requestee, Client* requester) {
 		insr->TargetID = requester->GetID();
 		insr->playerid = requestee->GetID();
 
-		const Item_Struct* item = nullptr;
+		const EQEmu::Item_Struct* item = nullptr;
 		const ItemInst* inst = nullptr;
 		int ornamentationAugtype = RuleI(Character, OrnamentationAugmentType);
 		for(int16 L = 0; L <= 20; L++) {
@@ -5830,7 +5829,7 @@ void Client::ProcessInspectRequest(Client* requestee, Client* requester) {
 					strcpy(insr->itemnames[L], item->Name);
 					if (inst && inst->GetOrnamentationAug(ornamentationAugtype))
 					{
-						const Item_Struct *aug_item = inst->GetOrnamentationAug(ornamentationAugtype)->GetItem();
+						const EQEmu::Item_Struct *aug_item = inst->GetOrnamentationAug(ornamentationAugtype)->GetItem();
 						insr->itemicons[L] = aug_item->Icon;
 					}
 					else if (inst && inst->GetOrnamentationIcon())
@@ -5847,30 +5846,30 @@ void Client::ProcessInspectRequest(Client* requestee, Client* requester) {
 			}
 		}
 
-		inst = requestee->GetInv().GetItem(MainPowerSource);
+		inst = requestee->GetInv().GetItem(EQEmu::legacy::SlotPowerSource);
 
 		if(inst) {
 			item = inst->GetItem();
 			if(item) {
 				// we shouldn't do this..but, that's the way it's coded atm...
 				// (this type of action should be handled exclusively in the client translator)
-				strcpy(insr->itemnames[SoF::slots::MainPowerSource], item->Name);
-				insr->itemicons[SoF::slots::MainPowerSource] = item->Icon;
+				strcpy(insr->itemnames[SoF::inventory::SlotPowerSource], item->Name);
+				insr->itemicons[SoF::inventory::SlotPowerSource] = item->Icon;
 			}
 			else
-				insr->itemicons[SoF::slots::MainPowerSource] = 0xFFFFFFFF;
+				insr->itemicons[SoF::inventory::SlotPowerSource] = 0xFFFFFFFF;
 		}
 
-		inst = requestee->GetInv().GetItem(MainAmmo);
+		inst = requestee->GetInv().GetItem(EQEmu::legacy::SlotAmmo);
 
 		if(inst) {
 			item = inst->GetItem();
 			if(item) {
-				strcpy(insr->itemnames[SoF::slots::MainAmmo], item->Name);
-				insr->itemicons[SoF::slots::MainAmmo] = item->Icon;
+				strcpy(insr->itemnames[SoF::inventory::SlotAmmo], item->Name);
+				insr->itemicons[SoF::inventory::SlotAmmo] = item->Icon;
 			}
 			else
-				insr->itemicons[SoF::slots::MainAmmo] = 0xFFFFFFFF;
+				insr->itemicons[SoF::inventory::SlotAmmo] = 0xFFFFFFFF;
 		}
 
 		strcpy(insr->text, requestee->GetInspectMessage().text);
@@ -6224,7 +6223,7 @@ void Client::SendZonePoints()
 	while(iterator.MoreElements())
 	{
 		ZonePoint* data = iterator.GetData();
-		if(GetClientVersionBit() & data->client_version_mask)
+		if(ClientVersionBit() & data->client_version_mask)
 		{
 			count++;
 		}
@@ -6241,7 +6240,7 @@ void Client::SendZonePoints()
 	while(iterator.MoreElements())
 	{
 		ZonePoint* data = iterator.GetData();
-		if(GetClientVersionBit() & data->client_version_mask)
+		if(ClientVersionBit() & data->client_version_mask)
 		{
 			zp->zpe[i].iterator = data->number;
 			zp->zpe[i].x = data->target_x;
@@ -6402,8 +6401,8 @@ void Client::Doppelganger(uint16 spell_id, Mob *target, const char *name_overrid
 	made_npc->Corrup = GetCorrup();
 	made_npc->PhR = GetPhR();
 	// looks
-	made_npc->texture = GetEquipmentMaterial(MaterialChest);
-	made_npc->helmtexture = GetEquipmentMaterial(MaterialHead);
+	made_npc->texture = GetEquipmentMaterial(EQEmu::legacy::MaterialChest);
+	made_npc->helmtexture = GetEquipmentMaterial(EQEmu::legacy::MaterialHead);
 	made_npc->haircolor = GetHairColor();
 	made_npc->beardcolor = GetBeardColor();
 	made_npc->eyecolor1 = GetEyeColor1();
@@ -6414,9 +6413,9 @@ void Client::Doppelganger(uint16 spell_id, Mob *target, const char *name_overrid
 	made_npc->drakkin_heritage = GetDrakkinHeritage();
 	made_npc->drakkin_tattoo = GetDrakkinTattoo();
 	made_npc->drakkin_details = GetDrakkinDetails();
-	made_npc->d_melee_texture1 = GetEquipmentMaterial(MaterialPrimary);
-	made_npc->d_melee_texture2 = GetEquipmentMaterial(MaterialSecondary);
-	for (int i = EmuConstants::MATERIAL_BEGIN; i <= EmuConstants::MATERIAL_END; i++)	{
+	made_npc->d_melee_texture1 = GetEquipmentMaterial(EQEmu::legacy::MaterialPrimary);
+	made_npc->d_melee_texture2 = GetEquipmentMaterial(EQEmu::legacy::MaterialSecondary);
+	for (int i = EQEmu::legacy::MATERIAL_BEGIN; i <= EQEmu::legacy::MATERIAL_END; i++)	{
 		made_npc->armor_tint[i] = GetEquipmentColor(i);
 	}
 	made_npc->loottable_id = 0;
@@ -6961,7 +6960,7 @@ void Client::SendStatsWindow(Client* client, bool use_window)
 	if(use_window) {
 		if(final_stats.size() < 4096)
 		{
-			uint32 Buttons = (client->GetClientVersion() < ClientVersion::SoD) ? 0 : 1;
+			uint32 Buttons = (client->ClientVersion() < EQEmu::versions::ClientVersion::SoD) ? 0 : 1;
 			client->SendWindow(0, POPUPID_UPDATE_SHOWSTATSWINDOW, Buttons, "Cancel", "Update", 0, 1, this, "", "%s", final_stats.c_str());
 			goto Extra_Info;
 		}
@@ -6997,7 +6996,7 @@ void Client::SendStatsWindow(Client* client, bool use_window)
 }
 
 void Client::SendAltCurrencies() {
-	if(GetClientVersion() >= ClientVersion::SoF) {
+	if (ClientVersion() >= EQEmu::versions::ClientVersion::SoF) {
 		uint32 count = zone->AlternateCurrencies.size();
 		if(count == 0) {
 			return;
@@ -7012,7 +7011,7 @@ void Client::SendAltCurrencies() {
 		uint32 i = 0;
 		std::list<AltCurrencyDefinition_Struct>::iterator iter = zone->AlternateCurrencies.begin();
 		while(iter != zone->AlternateCurrencies.end()) {
-			const Item_Struct* item = database.GetItem((*iter).item_id);
+			const EQEmu::Item_Struct* item = database.GetItem((*iter).item_id);
 			altc->entries[i].currency_number = (*iter).id;
 			altc->entries[i].unknown00 = 1;
 			altc->entries[i].currency_number2 = (*iter).id;
@@ -7548,7 +7547,7 @@ void Client::SendMercPersonalInfo()
 
 	if(mercData)
 	{
-		if (GetClientVersion() >= ClientVersion::RoF)
+		if (ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 		{
 			if (mercCount > 0)
 			{
@@ -7659,13 +7658,13 @@ void Client::SendClearMercInfo()
 
 void Client::DuplicateLoreMessage(uint32 ItemID)
 {
-	if (!(m_ClientVersionBit & BIT_RoFAndLater))
+	if (!(m_ClientVersionBit & EQEmu::versions::bit_RoFAndLater))
 	{
 		Message_StringID(0, PICK_LORE);
 		return;
 	}
 
-	const Item_Struct *item = database.GetItem(ItemID);
+	const EQEmu::Item_Struct *item = database.GetItem(ItemID);
 
 	if(!item)
 		return;
@@ -7681,13 +7680,18 @@ void Client::GarbleMessage(char *message, uint8 variance)
 	int delimiter_count = 0;
 
 	// Don't garble # commands
-	if (message[0] == '#')
+	if (message[0] == COMMAND_CHAR)
 		return;
+
+#ifdef BOTS
+	if (message[0] == BOT_COMMAND_CHAR)
+		return;
+#endif
 
 	for (size_t i = 0; i < strlen(message); i++) {
 		// Client expects hex values inside of a text link body
 		if (message[i] == delimiter) {
-			if (!(delimiter_count & 1)) { i += EmuConstants::TEXT_LINK_BODY_LENGTH; }
+			if (!(delimiter_count & 1)) { i += EQEmu::legacy::TEXT_LINK_BODY_LENGTH; }
 			++delimiter_count;
 			continue;
 		}
@@ -8112,17 +8116,17 @@ void Client::TickItemCheck()
 	if(zone->tick_items.empty()) { return; }
 
 	//Scan equip slots for items
-	for(i = EmuConstants::EQUIPMENT_BEGIN; i <= EmuConstants::EQUIPMENT_END; i++)
+	for (i = EQEmu::legacy::EQUIPMENT_BEGIN; i <= EQEmu::legacy::EQUIPMENT_END; i++)
 	{
 		TryItemTick(i);
 	}
 	//Scan main inventory + cursor
-	for(i = EmuConstants::GENERAL_BEGIN; i <= MainCursor; i++)
+	for (i = EQEmu::legacy::GENERAL_BEGIN; i <= EQEmu::legacy::SlotCursor; i++)
 	{
 		TryItemTick(i);
 	}
 	//Scan bags
-	for(i = EmuConstants::GENERAL_BAGS_BEGIN; i <= EmuConstants::CURSOR_BAG_END; i++)
+	for (i = EQEmu::legacy::GENERAL_BAGS_BEGIN; i <= EQEmu::legacy::CURSOR_BAG_END; i++)
 	{
 		TryItemTick(i);
 	}
@@ -8138,7 +8142,7 @@ void Client::TryItemTick(int slot)
 
 	if(zone->tick_items.count(iid) > 0)
 	{
-		if( GetLevel() >= zone->tick_items[iid].level && zone->random.Int(0, 100) >= (100 - zone->tick_items[iid].chance) && (zone->tick_items[iid].bagslot || slot <= EmuConstants::EQUIPMENT_END) )
+		if (GetLevel() >= zone->tick_items[iid].level && zone->random.Int(0, 100) >= (100 - zone->tick_items[iid].chance) && (zone->tick_items[iid].bagslot || slot <= EQEmu::legacy::EQUIPMENT_END))
 		{
 			ItemInst* e_inst = (ItemInst*)inst;
 			parse->EventItem(EVENT_ITEM_TICK, this, e_inst, nullptr, "", slot);
@@ -8146,9 +8150,9 @@ void Client::TryItemTick(int slot)
 	}
 
 	//Only look at augs in main inventory
-	if(slot > EmuConstants::EQUIPMENT_END) { return; }
+	if (slot > EQEmu::legacy::EQUIPMENT_END) { return; }
 
-	for (int x = AUG_BEGIN; x < EmuConstants::ITEM_COMMON_SIZE; ++x)
+	for (int x = AUG_INDEX_BEGIN; x < EQEmu::legacy::ITEM_COMMON_SIZE; ++x)
 	{
 		ItemInst * a_inst = inst->GetAugment(x);
 		if(!a_inst) { continue; }
@@ -8169,17 +8173,17 @@ void Client::TryItemTick(int slot)
 void Client::ItemTimerCheck()
 {
 	int i;
-	for(i = EmuConstants::EQUIPMENT_BEGIN; i <= EmuConstants::EQUIPMENT_END; i++)
+	for (i = EQEmu::legacy::EQUIPMENT_BEGIN; i <= EQEmu::legacy::EQUIPMENT_END; i++)
 	{
 		TryItemTimer(i);
 	}
 
-	for(i = EmuConstants::GENERAL_BEGIN; i <= MainCursor; i++)
+	for (i = EQEmu::legacy::GENERAL_BEGIN; i <= EQEmu::legacy::SlotCursor; i++)
 	{
 		TryItemTimer(i);
 	}
 
-	for(i = EmuConstants::GENERAL_BAGS_BEGIN; i <= EmuConstants::CURSOR_BAG_END; i++)
+	for (i = EQEmu::legacy::GENERAL_BAGS_BEGIN; i <= EQEmu::legacy::CURSOR_BAG_END; i++)
 	{
 		TryItemTimer(i);
 	}
@@ -8201,11 +8205,11 @@ void Client::TryItemTimer(int slot)
 		++it_iter;
 	}
 
-	if(slot > EmuConstants::EQUIPMENT_END) {
+	if (slot > EQEmu::legacy::EQUIPMENT_END) {
 		return;
 	}
 
-	for (int x = AUG_BEGIN; x < EmuConstants::ITEM_COMMON_SIZE; ++x)
+	for (int x = AUG_INDEX_BEGIN; x < EQEmu::legacy::ITEM_COMMON_SIZE; ++x)
 	{
 		ItemInst * a_inst = inst->GetAugment(x);
 		if(!a_inst) {
@@ -8377,7 +8381,7 @@ void Client::SetConsumption(int32 in_hunger, int32 in_thirst)
 	safe_delete(outapp);
 }
 
-void Client::Consume(const Item_Struct *item, uint8 type, int16 slot, bool auto_consume)
+void Client::Consume(const EQEmu::Item_Struct *item, uint8 type, int16 slot, bool auto_consume)
 {
    if(!item) { return; }
 
@@ -8390,7 +8394,7 @@ void Client::Consume(const Item_Struct *item, uint8 type, int16 slot, bool auto_
 	else
 		 cons_mod = cons_mod * RuleI(Character, ConsumptionMultiplier) / 100;
 
-   if(type == ItemTypeFood)
+	if (type == EQEmu::item::ItemTypeFood)
    {
 	   int hchange = item->CastTime * cons_mod;
 	   hchange = mod_food_value(item, hchange);
@@ -8493,12 +8497,12 @@ void Client::ShowNumHits()
 int Client::GetQuiverHaste(int delay)
 {
 	const ItemInst *pi = nullptr;
-	for (int r = EmuConstants::GENERAL_BEGIN; r <= EmuConstants::GENERAL_END; r++) {
+	for (int r = EQEmu::legacy::GENERAL_BEGIN; r <= EQEmu::legacy::GENERAL_END; r++) {
 		pi = GetInv().GetItem(r);
-		if (pi && pi->IsType(ItemClassContainer) && pi->GetItem()->BagType == BagTypeQuiver &&
+		if (pi && pi->IsClassBag() && pi->GetItem()->BagType == EQEmu::item::BagTypeQuiver &&
 		    pi->GetItem()->BagWR > 0)
 			break;
-		if (r == EmuConstants::GENERAL_END)
+		if (r == EQEmu::legacy::GENERAL_END)
 			// we will get here if we don't find a valid quiver
 			return 0;
 	}
@@ -8520,252 +8524,6 @@ void Client::SendColoredText(uint32 color, std::string message)
 }
 
 
-//
-// class Client::TextLink
-//
-std::string Client::TextLink::GenerateLink()
-{
-	m_Link.clear();
-	m_LinkBody.clear();
-	m_LinkText.clear();
-
-	generate_body();
-	generate_text();
-
-	if ((m_LinkBody.length() == EmuConstants::TEXT_LINK_BODY_LENGTH) && (m_LinkText.length() > 0)) {
-		m_Link.push_back(0x12);
-		m_Link.append(m_LinkBody);
-		m_Link.append(m_LinkText);
-		m_Link.push_back(0x12);
-	}
-
-	if ((m_Link.length() == 0) || (m_Link.length() > 250)) {
-		m_Error = true;
-		m_Link = "<LINKER ERROR>";
-		Log.Out(Logs::General, Logs::Error, "TextLink::GenerateLink() failed to generate a useable text link (LinkType: %i, Lengths: {link: %u, body: %u, text: %u})",
-			m_LinkType, m_Link.length(), m_LinkBody.length(), m_LinkText.length());
-		Log.Out(Logs::General, Logs::Error, ">> LinkBody: %s", m_LinkBody.c_str());
-		Log.Out(Logs::General, Logs::Error, ">> LinkText: %s", m_LinkText.c_str());
-	}
-
-	return m_Link;
-}
-
-void Client::TextLink::Reset()
-{
-	m_LinkType = linkBlank;
-	m_ItemData = nullptr;
-	m_LootData = nullptr;
-	m_ItemInst = nullptr;
-	m_Proxy_unknown_1 = NOT_USED;
-	m_ProxyItemID = NOT_USED;
-	m_ProxyAugment1ID = NOT_USED;
-	m_ProxyAugment2ID = NOT_USED;
-	m_ProxyAugment3ID = NOT_USED;
-	m_ProxyAugment4ID = NOT_USED;
-	m_ProxyAugment5ID = NOT_USED;
-	m_ProxyAugment6ID = NOT_USED;
-	m_ProxyIsEvolving = NOT_USED;
-	m_ProxyEvolveGroup = NOT_USED;
-	m_ProxyEvolveLevel = NOT_USED;
-	m_ProxyOrnamentIcon = NOT_USED;
-	m_ProxyHash = NOT_USED;
-	m_ProxyText = nullptr;
-	m_TaskUse = false;
-	m_Link.clear();
-	m_LinkBody.clear();
-	m_LinkText.clear();
-	m_Error = false;
-}
-
-void Client::TextLink::generate_body()
-{
-	/*
-	Current server mask: EQClientRoF2
-
-	RoF2: "%1X" "%05X" "%05X" "%05X" "%05X" "%05X" "%05X" "%05X" "%1X" "%04X" "%02X" "%05X" "%08X" (56)
-	RoF:  "%1X" "%05X" "%05X" "%05X" "%05X" "%05X" "%05X" "%05X" "%1X" "%04X" "%1X"  "%05X" "%08X" (55)
-	SoF:  "%1X" "%05X" "%05X" "%05X" "%05X" "%05X" "%05X"        "%1X" "%04X" "%1X"  "%05X" "%08X" (50)
-	6.2:  "%1X" "%05X" "%05X" "%05X" "%05X" "%05X" "%05X"        "%1X" "%04X" "%1X"         "%08X" (45)
-	*/
-
-	memset(&m_LinkBodyStruct, 0, sizeof(TextLinkBody_Struct));
-
-	const Item_Struct* item_data = nullptr;
-
-	switch (m_LinkType) {
-	case linkBlank:
-		break;
-	case linkItemData:
-		if (m_ItemData == nullptr) { break; }
-		m_LinkBodyStruct.item_id = m_ItemData->ID;
-		m_LinkBodyStruct.evolve_group = m_ItemData->LoreGroup; // this probably won't work for all items
-		//m_LinkBodyStruct.evolve_level = m_ItemData->EvolvingLevel;
-		// TODO: add hash call
-		break;
-	case linkLootItem:
-		if (m_LootData == nullptr) { break; }
-		item_data = database.GetItem(m_LootData->item_id);
-		if (item_data == nullptr) { break; }
-		m_LinkBodyStruct.item_id = item_data->ID;
-		m_LinkBodyStruct.augment_1 = m_LootData->aug_1;
-		m_LinkBodyStruct.augment_2 = m_LootData->aug_2;
-		m_LinkBodyStruct.augment_3 = m_LootData->aug_3;
-		m_LinkBodyStruct.augment_4 = m_LootData->aug_4;
-		m_LinkBodyStruct.augment_5 = m_LootData->aug_5;
-		m_LinkBodyStruct.augment_6 = m_LootData->aug_6;
-		m_LinkBodyStruct.evolve_group = item_data->LoreGroup; // see note above
-		//m_LinkBodyStruct.evolve_level = item_data->EvolvingLevel;
-		// TODO: add hash call
-		break;
-	case linkItemInst:
-		if (m_ItemInst == nullptr) { break; }
-		if (m_ItemInst->GetItem() == nullptr) { break; }
-		m_LinkBodyStruct.item_id = m_ItemInst->GetItem()->ID;
-		m_LinkBodyStruct.augment_1 = m_ItemInst->GetAugmentItemID(0);
-		m_LinkBodyStruct.augment_2 = m_ItemInst->GetAugmentItemID(1);
-		m_LinkBodyStruct.augment_3 = m_ItemInst->GetAugmentItemID(2);
-		m_LinkBodyStruct.augment_4 = m_ItemInst->GetAugmentItemID(3);
-		m_LinkBodyStruct.augment_5 = m_ItemInst->GetAugmentItemID(4);
-		m_LinkBodyStruct.augment_6 = m_ItemInst->GetAugmentItemID(5);
-		m_LinkBodyStruct.is_evolving = (m_ItemInst->IsEvolving() ? 1 : 0);
-		m_LinkBodyStruct.evolve_group = m_ItemInst->GetItem()->LoreGroup; // see note above
-		m_LinkBodyStruct.evolve_level = m_ItemInst->GetEvolveLvl();
-		m_LinkBodyStruct.ornament_icon = m_ItemInst->GetOrnamentationIcon();
-		// TODO: add hash call
-		break;
-	default:
-		break;
-	}
-
-	if (m_Proxy_unknown_1)
-		m_LinkBodyStruct.unknown_1 = m_Proxy_unknown_1;
-	if (m_ProxyItemID)
-		m_LinkBodyStruct.item_id = m_ProxyItemID;
-	if (m_ProxyAugment1ID)
-		m_LinkBodyStruct.augment_1 = m_ProxyAugment1ID;
-	if (m_ProxyAugment2ID)
-		m_LinkBodyStruct.augment_2 = m_ProxyAugment2ID;
-	if (m_ProxyAugment3ID)
-		m_LinkBodyStruct.augment_3 = m_ProxyAugment3ID;
-	if (m_ProxyAugment4ID)
-		m_LinkBodyStruct.augment_4 = m_ProxyAugment4ID;
-	if (m_ProxyAugment5ID)
-		m_LinkBodyStruct.augment_5 = m_ProxyAugment5ID;
-	if (m_ProxyAugment6ID)
-		m_LinkBodyStruct.augment_6 = m_ProxyAugment6ID;
-	if (m_ProxyIsEvolving)
-		m_LinkBodyStruct.is_evolving = m_ProxyIsEvolving;
-	if (m_ProxyEvolveGroup)
-		m_LinkBodyStruct.evolve_group = m_ProxyEvolveGroup;
-	if (m_ProxyEvolveLevel)
-		m_LinkBodyStruct.evolve_level = m_ProxyEvolveLevel;
-	if (m_ProxyOrnamentIcon)
-		m_LinkBodyStruct.ornament_icon = m_ProxyOrnamentIcon;
-	if (m_ProxyHash)
-		m_LinkBodyStruct.hash = m_ProxyHash;
-
-
-	if (m_TaskUse)
-		m_LinkBodyStruct.hash = 0x14505DC2;
-
-	m_LinkBody = StringFormat(
-		"%1X" "%05X" "%05X" "%05X" "%05X" "%05X" "%05X" "%05X" "%1X" "%04X" "%02X" "%05X" "%08X",
-		(0x0F & m_LinkBodyStruct.unknown_1),
-		(0x000FFFFF & m_LinkBodyStruct.item_id),
-		(0x000FFFFF & m_LinkBodyStruct.augment_1),
-		(0x000FFFFF & m_LinkBodyStruct.augment_2),
-		(0x000FFFFF & m_LinkBodyStruct.augment_3),
-		(0x000FFFFF & m_LinkBodyStruct.augment_4),
-		(0x000FFFFF & m_LinkBodyStruct.augment_5),
-		(0x000FFFFF & m_LinkBodyStruct.augment_6),
-		(0x0F & m_LinkBodyStruct.is_evolving),
-		(0x0000FFFF & m_LinkBodyStruct.evolve_group),
-		(0xFF & m_LinkBodyStruct.evolve_level),
-		(0x000FFFFF & m_LinkBodyStruct.ornament_icon),
-		(0xFFFFFFFF & m_LinkBodyStruct.hash)
-	);
-}
-
-void Client::TextLink::generate_text()
-{
-	if (m_ProxyText != nullptr) {
-		m_LinkText = m_ProxyText;
-		return;
-	}
-
-	const Item_Struct* item_data = nullptr;
-
-	switch (m_LinkType) {
-	case linkBlank:
-		break;
-	case linkItemData:
-		if (m_ItemData == nullptr) { break; }
-		m_LinkText = m_ItemData->Name;
-		return;
-	case linkLootItem:
-		if (m_LootData == nullptr) { break; }
-		item_data = database.GetItem(m_LootData->item_id);
-		if (item_data == nullptr) { break; }
-		m_LinkText = item_data->Name;
-		return;
-	case linkItemInst:
-		if (m_ItemInst == nullptr) { break; }
-		if (m_ItemInst->GetItem() == nullptr) { break; }
-		m_LinkText = m_ItemInst->GetItem()->Name;
-		return;
-	default:
-		break;
-	}
-
-	m_LinkText = "null";
-}
-
-bool Client::TextLink::DegenerateLinkBody(TextLinkBody_Struct& textLinkBodyStruct, const std::string& textLinkBody)
-{
-	memset(&textLinkBodyStruct, 0, sizeof(TextLinkBody_Struct));
-	if (textLinkBody.length() != EmuConstants::TEXT_LINK_BODY_LENGTH) { return false; }
-
-	textLinkBodyStruct.unknown_1 = (uint8)strtol(textLinkBody.substr(0, 1).c_str(), nullptr, 16);
-	textLinkBodyStruct.item_id = (uint32)strtol(textLinkBody.substr(1, 5).c_str(), nullptr, 16);
-	textLinkBodyStruct.augment_1 = (uint32)strtol(textLinkBody.substr(6, 5).c_str(), nullptr, 16);
-	textLinkBodyStruct.augment_2 = (uint32)strtol(textLinkBody.substr(11, 5).c_str(), nullptr, 16);
-	textLinkBodyStruct.augment_3 = (uint32)strtol(textLinkBody.substr(16, 5).c_str(), nullptr, 16);
-	textLinkBodyStruct.augment_4 = (uint32)strtol(textLinkBody.substr(21, 5).c_str(), nullptr, 16);
-	textLinkBodyStruct.augment_5 = (uint32)strtol(textLinkBody.substr(26, 5).c_str(), nullptr, 16);
-	textLinkBodyStruct.augment_6 = (uint32)strtol(textLinkBody.substr(31, 5).c_str(), nullptr, 16);
-	textLinkBodyStruct.is_evolving = (uint8)strtol(textLinkBody.substr(36, 1).c_str(), nullptr, 16);
-	textLinkBodyStruct.evolve_group = (uint32)strtol(textLinkBody.substr(37, 4).c_str(), nullptr, 16);
-	textLinkBodyStruct.evolve_level = (uint8)strtol(textLinkBody.substr(41, 2).c_str(), nullptr, 16);
-	textLinkBodyStruct.ornament_icon = (uint32)strtol(textLinkBody.substr(43, 5).c_str(), nullptr, 16);
-	textLinkBodyStruct.hash = (int)strtol(textLinkBody.substr(48, 8).c_str(), nullptr, 16);
-
-	return true;
-}
-
-bool Client::TextLink::GenerateLinkBody(std::string& textLinkBody, const TextLinkBody_Struct& textLinkBodyStruct)
-{
-	textLinkBody = StringFormat(
-		"%1X" "%05X" "%05X" "%05X" "%05X" "%05X" "%05X" "%05X" "%1X" "%04X" "%02X" "%05X" "%08X",
-		(0x0F & textLinkBodyStruct.unknown_1),
-		(0x000FFFFF & textLinkBodyStruct.item_id),
-		(0x000FFFFF & textLinkBodyStruct.augment_1),
-		(0x000FFFFF & textLinkBodyStruct.augment_2),
-		(0x000FFFFF & textLinkBodyStruct.augment_3),
-		(0x000FFFFF & textLinkBodyStruct.augment_4),
-		(0x000FFFFF & textLinkBodyStruct.augment_5),
-		(0x000FFFFF & textLinkBodyStruct.augment_6),
-		(0x0F & textLinkBodyStruct.is_evolving),
-		(0x0000FFFF & textLinkBodyStruct.evolve_group),
-		(0xFF & textLinkBodyStruct.evolve_level),
-		(0x000FFFFF & textLinkBodyStruct.ornament_icon),
-		(0xFFFFFFFF & textLinkBodyStruct.hash)
-		);
-
-	if (textLinkBody.length() != EmuConstants::TEXT_LINK_BODY_LENGTH) { return false; }
-	return true;
-}
-
 void Client::QuestReward(Mob* target, uint32 copper, uint32 silver, uint32 gold, uint32 platinum, uint32 itemid, uint32 exp, bool faction) {
 
 	EQApplicationPacket* outapp = new EQApplicationPacket(OP_Sound, sizeof(QuestReward_Struct));
@@ -8785,7 +8543,7 @@ void Client::QuestReward(Mob* target, uint32 copper, uint32 silver, uint32 gold,
 		AddMoneyToPP(copper, silver, gold, platinum, false);
 
 	if (itemid > 0)
-		SummonItem(itemid, 0, 0, 0, 0, 0, 0, false, MainPowerSource);
+		SummonItem(itemid, 0, 0, 0, 0, 0, 0, false, EQEmu::legacy::SlotPowerSource);
 
 	if (faction)
 	{
@@ -8807,6 +8565,9 @@ void Client::QuestReward(Mob* target, uint32 copper, uint32 silver, uint32 gold,
 
 void Client::SendHPUpdateMarquee(){
 	if (!RuleB(Character, MarqueeHPUpdates))
+		return;
+
+	if (!this || !this->IsClient() || !this->cur_hp || !this->max_hp)
 		return;
 
 	/* Health Update Marquee Display: Custom*/

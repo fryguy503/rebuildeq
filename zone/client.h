@@ -27,13 +27,18 @@ class Object;
 class Raid;
 class Seperator;
 class ServerPacket;
-struct Item_Struct;
+
+namespace EQEmu
+{
+	struct Item_Struct;
+}
 
 #include "../common/timer.h"
 #include "../common/ptimer.h"
 #include "../common/emu_opcodes.h"
 #include "../common/eq_packet_structs.h"
-#include "../common/eq_constants.h"
+//#include "../common/eq_constants.h"
+#include "../common/emu_constants.h" // inv2 watch
 #include "../common/eq_stream_intf.h"
 #include "../common/eq_packet.h"
 #include "../common/linked_list.h"
@@ -43,7 +48,7 @@ struct Item_Struct;
 #include "../common/item.h"
 #include "../common/guilds.h"
 #include "../common/item_struct.h"
-#include "../common/clientversions.h"
+//#include "../common/clientversions.h"
 
 #include "common.h"
 #include "merc.h"
@@ -217,7 +222,7 @@ public:
 	//abstract virtual function implementations required by base abstract class
 	virtual bool Death(Mob* killerMob, int32 damage, uint16 spell_id, SkillUseTypes attack_skill);
 	virtual void Damage(Mob* from, int32 damage, uint16 spell_id, SkillUseTypes attack_skill, bool avoidable = true, int8 buffslot = -1, bool iBuffTic = false, int special = 0);
-	virtual bool Attack(Mob* other, int Hand = MainPrimary, bool FromRiposte = false, bool IsStrikethrough = false, bool IsFromSpell = false,
+	virtual bool Attack(Mob* other, int Hand = EQEmu::legacy::SlotPrimary, bool FromRiposte = false, bool IsStrikethrough = false, bool IsFromSpell = false,
 			ExtraAttackOptions *opts = nullptr, int special = 0);
 	virtual bool HasRaid() { return (GetRaid() ? true : false); }
 	virtual bool HasGroup() { return (GetGroup() ? true : false); }
@@ -289,7 +294,7 @@ public:
 
 	void FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho);
 	virtual bool Process();
-	void LogMerchant(Client* player, Mob* merchant, uint32 quantity, uint32 price, const Item_Struct* item, bool buying);
+	void LogMerchant(Client* player, Mob* merchant, uint32 quantity, uint32 price, const EQEmu::Item_Struct* item, bool buying);
 	void SendPacketQueue(bool Block = true);
 	void QueuePacket(const EQApplicationPacket* app, bool ack_req = true, CLIENT_CONN_STATUS = CLIENT_CONNECTINGALL, eqFilterType filter=FilterNone);
 	void FastQueuePacket(EQApplicationPacket** app, bool ack_req = true, CLIENT_CONN_STATUS = CLIENT_CONNECTINGALL);
@@ -397,7 +402,7 @@ public:
 
 	inline uint8 GetLanguageSkill(uint16 n) const { return m_pp.languages[n]; }
 
-	void SendPickPocketResponse(Mob *from, uint32 amt, int type, const Item_Struct* item = nullptr);
+	void SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu::Item_Struct* item = nullptr);
 
 	inline const char* GetLastName() const { return lastname; }
 
@@ -595,7 +600,7 @@ public:
 	void AssignToInstance(uint16 instance_id);
 	void RemoveFromInstance(uint16 instance_id);
 	void WhoAll();
-	bool CheckLoreConflict(const Item_Struct* item);
+	bool CheckLoreConflict(const EQEmu::Item_Struct* item);
 	void ChangeLastName(const char* in_lastname);
 	void GetGroupAAs(GroupLeadershipAA_Struct *into) const;
 	void GetRaidAAs(RaidLeadershipAA_Struct *into) const;
@@ -705,7 +710,7 @@ public:
 	inline uint16 MaxSkill(SkillUseTypes skillid) const { return MaxSkill(skillid, GetClass(), GetLevel()); }
 	uint8 SkillTrainLevel(SkillUseTypes skillid, uint16 class_);
 
-	void TradeskillSearchResults(const std::string query, unsigned long objtype, unsigned long someid);
+	void TradeskillSearchResults(const std::string &query, unsigned long objtype, unsigned long someid);
 	void SendTradeskillDetails(uint32 recipe_id);
 	bool TradeskillExecute(DBTradeskillRecipe_Struct *spec);
 	void CheckIncreaseTradeskill(int16 bonusstat, int16 stat_modifier, float skillup_modifier, uint16 success_modifier, SkillUseTypes tradeskill);
@@ -743,7 +748,7 @@ public:
 #endif
 	uint32 GetEquipment(uint8 material_slot) const; // returns item id
 	uint32 GetEquipmentColor(uint8 material_slot) const;
-	virtual void UpdateEquipmentLight() { m_Light.Type.Equipment = m_inv.FindBrightestLightType(); m_Light.Level.Equipment = m_Light.TypeToLevel(m_Light.Type.Equipment); }
+	virtual void UpdateEquipmentLight() { m_Light.Type[EQEmu::lightsource::LightEquipment] = m_inv.FindBrightestLightType(); m_Light.Level[EQEmu::lightsource::LightEquipment] = EQEmu::lightsource::TypeToLevel(m_Light.Type[EQEmu::lightsource::LightEquipment]); }
 
 	inline bool AutoSplitEnabled() { return m_pp.autosplit != 0; }
 
@@ -820,85 +825,10 @@ public:
 	void QSSwapItemAuditor(MoveItem_Struct* move_in, bool postaction_call = false);
 	void PutLootInInventory(int16 slot_id, const ItemInst &inst, ServerLootItem_Struct** bag_item_data = 0);
 	bool AutoPutLootInInventory(ItemInst& inst, bool try_worn = false, bool try_cursor = true, ServerLootItem_Struct** bag_item_data = 0);
-	bool SummonItem(uint32 item_id, int16 charges = -1, uint32 aug1 = 0, uint32 aug2 = 0, uint32 aug3 = 0, uint32 aug4 = 0, uint32 aug5 = 0, uint32 aug6 = 0, bool attuned = false, uint16 to_slot = MainCursor, uint32 ornament_icon = 0, uint32 ornament_idfile = 0, uint32 ornament_hero_model = 0);
+	bool SummonItem(uint32 item_id, int16 charges = -1, uint32 aug1 = 0, uint32 aug2 = 0, uint32 aug3 = 0, uint32 aug4 = 0, uint32 aug5 = 0, uint32 aug6 = 0, bool attuned = false, uint16 to_slot = EQEmu::legacy::SlotCursor, uint32 ornament_icon = 0, uint32 ornament_idfile = 0, uint32 ornament_hero_model = 0);
 	void SetStats(uint8 type,int16 set_val);
 	void IncStats(uint8 type,int16 increase_val);
 	void DropItem(int16 slot_id);
-
-	//
-	// class Client::TextLink
-	//
-	class TextLink {
-	public:
-		enum LinkType { linkBlank = 0, linkItemData, linkLootItem, linkItemInst };
-
-		TextLink() { Reset(); }
-
-		void SetLinkType(LinkType linkType) { m_LinkType = linkType; }
-		void SetItemData(const Item_Struct* itemData) { m_ItemData = itemData; }
-		void SetLootData(const ServerLootItem_Struct* lootData) { m_LootData = lootData; }
-		void SetItemInst(const ItemInst* itemInst) { m_ItemInst = itemInst; }
-
-		// mainly for saylinks..but, not limited to
-		void SetProxyUnknown1(uint8 proxyUnknown1) { m_Proxy_unknown_1 = proxyUnknown1; }
-		void SetProxyItemID(uint32 proxyItemID) { m_ProxyItemID = proxyItemID; }
-		void SetProxyAugment1ID(uint32 proxyAugmentID) { m_ProxyAugment1ID = proxyAugmentID; }
-		void SetProxyAugment2ID(uint32 proxyAugmentID) { m_ProxyAugment2ID = proxyAugmentID; }
-		void SetProxyAugment3ID(uint32 proxyAugmentID) { m_ProxyAugment3ID = proxyAugmentID; }
-		void SetProxyAugment4ID(uint32 proxyAugmentID) { m_ProxyAugment4ID = proxyAugmentID; }
-		void SetProxyAugment5ID(uint32 proxyAugmentID) { m_ProxyAugment5ID = proxyAugmentID; }
-		void SetProxyAugment6ID(uint32 proxyAugmentID) { m_ProxyAugment6ID = proxyAugmentID; }
-		void SetProxyIsEvolving(uint8 proxyIsEvolving) { m_ProxyIsEvolving = proxyIsEvolving; }
-		void SetProxyEvolveGroup(uint32 proxyEvolveGroup) { m_ProxyEvolveGroup = proxyEvolveGroup; }
-		void SetProxyEvolveLevel(uint8 proxyEvolveLevel) { m_ProxyEvolveLevel = proxyEvolveLevel; }
-		void SetProxyOrnamentIcon(uint32 proxyOrnamentIcon) { m_ProxyOrnamentIcon = proxyOrnamentIcon; }
-		void SetProxyHash(int proxyHash) { m_ProxyHash = proxyHash; }
-
-		void SetProxyText(const char* proxyText) { m_ProxyText = proxyText; } // overrides standard text use
-		void SetTaskUse() { m_TaskUse = true; }
-
-		std::string GenerateLink();
-		bool LinkError() { return m_Error; }
-
-		std::string GetLink() { return m_Link; }			// contains full string format: '/12x' '<LinkBody>' '<LinkText>' '/12x'
-		std::string GetLinkBody() { return m_LinkBody; }	// contains string format: '<LinkBody>'
-		std::string GetLinkText() { return m_LinkText; }	// contains string format: '<LinkText>'
-
-		void Reset();
-
-		static bool DegenerateLinkBody(TextLinkBody_Struct& textLinkBodyStruct, const std::string& textLinkBody);
-		static bool GenerateLinkBody(std::string& textLinkBody, const TextLinkBody_Struct& textLinkBodyStruct);
-
-	private:
-		void generate_body();
-		void generate_text();
-
-		int m_LinkType;
-		const Item_Struct* m_ItemData;
-		const ServerLootItem_Struct* m_LootData;
-		const ItemInst* m_ItemInst;
-
-		uint8 m_Proxy_unknown_1;
-		uint32 m_ProxyItemID;
-		uint32 m_ProxyAugment1ID;
-		uint32 m_ProxyAugment2ID;
-		uint32 m_ProxyAugment3ID;
-		uint32 m_ProxyAugment4ID;
-		uint32 m_ProxyAugment5ID;
-		uint32 m_ProxyAugment6ID;
-		uint8 m_ProxyIsEvolving;
-		uint32 m_ProxyEvolveGroup;
-		uint8 m_ProxyEvolveLevel;
-		uint32 m_ProxyOrnamentIcon;
-		int m_ProxyHash;
-		const char* m_ProxyText;
-		bool m_TaskUse;
-		TextLinkBody_Struct m_LinkBodyStruct;
-		std::string m_Link;
-		std::string m_LinkBody;
-		std::string m_LinkText;
-		bool m_Error;
-	};
 
 	int GetItemLinkHash(const ItemInst* inst); // move to Item_Struct..or make use of the pre-calculated database field
 
@@ -1058,9 +988,9 @@ public:
 	inline int ActiveTasksInSet(int TaskSet) { return (taskstate ? taskstate->ActiveTasksInSet(TaskSet) :0); }
 	inline int CompletedTasksInSet(int TaskSet) { return (taskstate ? taskstate->CompletedTasksInSet(TaskSet) :0); }
 
-	inline const ClientVersion GetClientVersion() const { return m_ClientVersion; }
-	inline const uint32 GetClientVersionBit() const { return m_ClientVersionBit; }
-	inline void SetClientVersion(ClientVersion in) { m_ClientVersion = in; }
+	inline const EQEmu::versions::ClientVersion ClientVersion() const { return m_ClientVersion; }
+	inline const uint32 ClientVersionBit() const { return m_ClientVersionBit; }
+	inline void SetClientVersion(EQEmu::versions::ClientVersion client_version) { m_ClientVersion = client_version; }
 
 	/** Adventure Stuff **/
 	void SendAdventureError(const char *error);
@@ -1178,7 +1108,7 @@ public:
 	void HandleLFGuildResponse(ServerPacket *pack);
 	void SendLFGuildStatus();
 	void SendGuildLFGuildStatus();
-	inline bool XTargettingAvailable() const { return ((m_ClientVersionBit & BIT_UFAndLater) && RuleB(Character, EnableXTargetting)); }
+	inline bool XTargettingAvailable() const { return ((m_ClientVersionBit & EQEmu::versions::bit_UFAndLater) && RuleB(Character, EnableXTargetting)); }
 	inline uint8 GetMaxXTargets() const { return MaxXTargets; }
 	void SetMaxXTargets(uint8 NewMax);
 	bool IsXTarget(const Mob *m) const;
@@ -1254,7 +1184,7 @@ public:
 	void LoadAccountFlags();
 	void SetAccountFlag(std::string flag, std::string val);
 	std::string GetAccountFlag(std::string flag); float GetDamageMultiplier(SkillUseTypes);
-	void Consume(const Item_Struct *item, uint8 type, int16 slot, bool auto_consume);
+	void Consume(const EQEmu::Item_Struct *item, uint8 type, int16 slot, bool auto_consume);
 	void PlayMP3(const char* fname);
 	void ExpeditionSay(const char *str, int ExpID);
 	int mod_client_damage(int damage, SkillUseTypes skillinuse, int hand, const ItemInst* weapon, Mob* other);
@@ -1276,9 +1206,9 @@ public:
 	int32 mod_client_xp(int32 in_exp, NPC *npc);
 	uint32 mod_client_xp_for_level(uint32 xp, uint16 check_level);
 	int mod_client_haste_cap(int cap);
-	int mod_consume(Item_Struct *item, ItemUseTypes type, int change);
-	int mod_food_value(const Item_Struct *item, int change);
-	int mod_drink_value(const Item_Struct *item, int change);
+	int mod_consume(EQEmu::Item_Struct *item, EQEmu::item::ItemType type, int change);
+	int mod_food_value(const EQEmu::Item_Struct *item, int change);
+	int mod_drink_value(const EQEmu::Item_Struct *item, int change);
 
 	void SetEngagedRaidTarget(bool value) { EngagedRaidTarget = value; }
 	bool GetEngagedRaidTarget() const { return EngagedRaidTarget; }
@@ -1609,7 +1539,7 @@ private:
 	Timer *GlobalChatLimiterTimer; //60 seconds
 	uint32 AttemptedMessages;
 
-	ClientVersion m_ClientVersion;
+	EQEmu::versions::ClientVersion m_ClientVersion;
 	uint32 m_ClientVersionBit;
 
 	int XPRate;

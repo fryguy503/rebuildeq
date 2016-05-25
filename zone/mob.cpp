@@ -1,5 +1,5 @@
 /*	EQEMu: Everquest Server Emulator
-	Copyright (C) 2001-2002 EQEMu Development Team (http://eqemu.org)
+	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemu.org)
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ Mob::Mob(const char* in_name,
 		uint32		in_drakkin_heritage,
 		uint32		in_drakkin_tattoo,
 		uint32		in_drakkin_details,
-		uint32		in_armor_tint[_MaterialCount],
+		uint32		in_armor_tint[EQEmu::legacy::MaterialCount],
 
 		uint8		in_aa_title,
 		uint8		in_see_invis, // see through invis/ivu
@@ -178,12 +178,10 @@ Mob::Mob(const char* in_name,
 	if (runspeed < 0 || runspeed > 20)
 		runspeed = 1.25f;
 
-	m_Light.Type.Innate = in_light;
-	m_Light.Level.Innate = m_Light.TypeToLevel(m_Light.Type.Innate);
-	m_Light.Level.Equipment = m_Light.Type.Equipment = 0;
-	m_Light.Level.Spell = m_Light.Type.Spell = 0;
-	m_Light.Type.Active = m_Light.Type.Innate;
-	m_Light.Level.Active = m_Light.Level.Innate;
+	m_Light.Type[EQEmu::lightsource::LightInnate] = in_light;
+	m_Light.Level[EQEmu::lightsource::LightInnate] = EQEmu::lightsource::TypeToLevel(m_Light.Type[EQEmu::lightsource::LightInnate]);
+	m_Light.Type[EQEmu::lightsource::LightActive] = m_Light.Type[EQEmu::lightsource::LightInnate];
+	m_Light.Level[EQEmu::lightsource::LightActive] = m_Light.Level[EQEmu::lightsource::LightInnate];
 
 	texture		= in_texture;
 	helmtexture	= in_helmtexture;
@@ -253,6 +251,7 @@ Mob::Mob(const char* in_name,
 	invulnerable = false;
 	IsFullHP	= (cur_hp == max_hp);
 	qglobal=0;
+	spawned = false;
 
 	InitializeBuffSlots();
 
@@ -279,7 +278,7 @@ Mob::Mob(const char* in_name,
 		RangedProcs[j].level_override = -1;
 	}
 
-	for (i = 0; i < _MaterialCount; i++)
+	for (i = 0; i < EQEmu::legacy::MaterialCount; i++)
 	{
 		if (in_armor_tint)
 		{
@@ -473,6 +472,10 @@ Mob::~Mob()
 	safe_delete(PathingRouteUpdateTimerShort);
 	safe_delete(PathingRouteUpdateTimerLong);
 	UninitializeBuffSlots();
+
+#ifdef BOTS
+	LeaveHealRotationTargetPool();
+#endif
 }
 
 uint32 Mob::GetAppearanceValue(EmuAppearance iAppearance) {
@@ -1095,7 +1098,7 @@ void Mob::FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho)
 	ns->spawn.findable	= findable?1:0;
 
 	UpdateActiveLight();
-	ns->spawn.light		= m_Light.Type.Active;
+	ns->spawn.light		= m_Light.Type[EQEmu::lightsource::LightActive];
 
 	ns->spawn.showhelm = (helmtexture && helmtexture != 0xFF) ? 1 : 0;
 
@@ -1279,7 +1282,7 @@ void Mob::SendHPUpdate(bool skip_self)
 	CreateHPPacket(&hp_app);
 
 	// send to people who have us targeted
-	entity_list.QueueClientsByTarget(this, &hp_app, false, 0, false, true, BIT_AllClients);
+	entity_list.QueueClientsByTarget(this, &hp_app, false, 0, false, true, EQEmu::versions::bit_AllClients);
 	entity_list.QueueClientsByXTarget(this, &hp_app, false);
 	entity_list.QueueToGroupsForNPCHealthAA(this, &hp_app);
 
@@ -1766,8 +1769,7 @@ void Mob::SendIllusionPacket(uint16 in_race, uint8 in_gender, uint8 in_texture, 
 
 bool Mob::RandomizeFeatures(bool send_illusion, bool set_variables)
 {
-	if (IsPlayerRace(GetRace()))
-	{
+	if (IsPlayerRace(GetRace())) {
 		uint8 Gender = GetGender();
 		uint8 Texture = 0xFF;
 		uint8 HelmTexture = 0xFF;
@@ -1788,160 +1790,158 @@ bool Mob::RandomizeFeatures(bool send_illusion, bool set_variables)
 		LuclinFace = zone->random.Int(0, 7);
 
 		// Adjust all settings based on the min and max for each feature of each race and gender
-		switch (GetRace())
-		{
-			case 1:	// Human
-				HairColor = zone->random.Int(0, 19);
-				if (Gender == 0) {
-					BeardColor = HairColor;
-					HairStyle = zone->random.Int(0, 3);
-					Beard = zone->random.Int(0, 5);
-				}
-				if (Gender == 1) {
-					HairStyle = zone->random.Int(0, 2);
-				}
-				break;
-			case 2:	// Barbarian
-				HairColor = zone->random.Int(0, 19);
+		switch (GetRace()) {
+		case HUMAN:
+			HairColor = zone->random.Int(0, 19);
+			if (Gender == MALE) {
+				BeardColor = HairColor;
+				HairStyle = zone->random.Int(0, 3);
+				Beard = zone->random.Int(0, 5);
+			}
+			if (Gender == FEMALE) {
+				HairStyle = zone->random.Int(0, 2);
+			}
+			break;
+		case BARBARIAN:
+			HairColor = zone->random.Int(0, 19);
+			LuclinFace = zone->random.Int(0, 87);
+			if (Gender == MALE) {
+				BeardColor = HairColor;
+				HairStyle = zone->random.Int(0, 3);
+				Beard = zone->random.Int(0, 5);
+			}
+			if (Gender == FEMALE) {
+				HairStyle = zone->random.Int(0, 2);
+			}
+			break;
+		case ERUDITE:
+			if (Gender == MALE) {
+				BeardColor = zone->random.Int(0, 19);
+				Beard = zone->random.Int(0, 5);
+				LuclinFace = zone->random.Int(0, 57);
+			}
+			if (Gender == FEMALE) {
 				LuclinFace = zone->random.Int(0, 87);
-				if (Gender == 0) {
-					BeardColor = HairColor;
-					HairStyle = zone->random.Int(0, 3);
-					Beard = zone->random.Int(0, 5);
-				}
-				if (Gender == 1) {
-					HairStyle = zone->random.Int(0, 2);
-				}
-				break;
-			case 3: // Erudite
-				if (Gender == 0) {
-					BeardColor = zone->random.Int(0, 19);
-					Beard = zone->random.Int(0, 5);
-					LuclinFace = zone->random.Int(0, 57);
-				}
-				if (Gender == 1) {
-					LuclinFace = zone->random.Int(0, 87);
-				}
-				break;
-			case 4: // WoodElf
-				HairColor = zone->random.Int(0, 19);
-				if (Gender == 0) {
-					HairStyle = zone->random.Int(0, 3);
-				}
-				if (Gender == 1) {
-					HairStyle = zone->random.Int(0, 2);
-				}
-				break;
-			case 5: // HighElf
-				HairColor = zone->random.Int(0, 14);
-				if (Gender == 0) {
-					HairStyle = zone->random.Int(0, 3);
-					LuclinFace = zone->random.Int(0, 37);
-					BeardColor = HairColor;
-				}
-				if (Gender == 1) {
-					HairStyle = zone->random.Int(0, 2);
-				}
-				break;
-			case 6: // DarkElf
-				HairColor = zone->random.Int(13, 18);
-				if (Gender == 0) {
-					HairStyle = zone->random.Int(0, 3);
-					LuclinFace = zone->random.Int(0, 37);
-					BeardColor = HairColor;
-				}
-				if (Gender == 1) {
-					HairStyle = zone->random.Int(0, 2);
-				}
-				break;
-			case 7: // HalfElf
-				HairColor = zone->random.Int(0, 19);
-				if (Gender == 0) {
-					HairStyle = zone->random.Int(0, 3);
-					LuclinFace = zone->random.Int(0, 37);
-					BeardColor = HairColor;
-				}
-				if (Gender == 1) {
-					HairStyle = zone->random.Int(0, 2);
-				}
-				break;
-			case 8: // Dwarf
-				HairColor = zone->random.Int(0, 19);
+			}
+			break;
+		case WOOD_ELF:
+			HairColor = zone->random.Int(0, 19);
+			if (Gender == MALE) {
+				HairStyle = zone->random.Int(0, 3);
+			}
+			if (Gender == FEMALE) {
+				HairStyle = zone->random.Int(0, 2);
+			}
+			break;
+		case HIGH_ELF:
+			HairColor = zone->random.Int(0, 14);
+			if (Gender == MALE) {
+				HairStyle = zone->random.Int(0, 3);
+				LuclinFace = zone->random.Int(0, 37);
 				BeardColor = HairColor;
-				if (Gender == 0) {
-					HairStyle = zone->random.Int(0, 3);
-					Beard = zone->random.Int(0, 5);
-				}
-				if (Gender == 1) {
-					HairStyle = zone->random.Int(0, 2);
-					LuclinFace = zone->random.Int(0, 17);
-				}
-				break;
-			case 9: // Troll
-				EyeColor1 = zone->random.Int(0, 10);
-				EyeColor2 = zone->random.Int(0, 10);
-				if (Gender == 1) {
-					HairStyle = zone->random.Int(0, 3);
-					HairColor = zone->random.Int(0, 23);
-				}
-				break;
-			case 10: // Ogre
-				if (Gender == 1) {
-					HairStyle = zone->random.Int(0, 3);
-					HairColor = zone->random.Int(0, 23);
-				}
-				break;
-			case 11: // Halfling
-				HairColor = zone->random.Int(0, 19);
-				if (Gender == 0) {
-					BeardColor = HairColor;
-					HairStyle = zone->random.Int(0, 3);
-					Beard = zone->random.Int(0, 5);
-				}
-				if (Gender == 1) {
-					HairStyle = zone->random.Int(0, 2);
-				}
-				break;
-			case 12: // Gnome
-				HairColor = zone->random.Int(0, 24);
-				if (Gender == 0) {
-					BeardColor = HairColor;
-					HairStyle = zone->random.Int(0, 3);
-					Beard = zone->random.Int(0, 5);
-				}
-				if (Gender == 1) {
-					HairStyle = zone->random.Int(0, 2);
-				}
-				break;
-			case 128: // Iksar
-			case 130: // VahShir
-				break;
-			case 330: // Froglok
-				LuclinFace = zone->random.Int(0, 9);
-			case 522: // Drakkin
-				HairColor = zone->random.Int(0, 3);
+			}
+			if (Gender == FEMALE) {
+				HairStyle = zone->random.Int(0, 2);
+			}
+			break;
+		case DARK_ELF:
+			HairColor = zone->random.Int(13, 18);
+			if (Gender == MALE) {
+				HairStyle = zone->random.Int(0, 3);
+				LuclinFace = zone->random.Int(0, 37);
 				BeardColor = HairColor;
-				EyeColor1 = zone->random.Int(0, 11);
-				EyeColor2 = zone->random.Int(0, 11);
-				LuclinFace = zone->random.Int(0, 6);
-				DrakkinHeritage = zone->random.Int(0, 6);
-				DrakkinTattoo = zone->random.Int(0, 7);
-				DrakkinDetails = zone->random.Int(0, 7);
-				if (Gender == 0) {
-					Beard = zone->random.Int(0, 12);
-					HairStyle = zone->random.Int(0, 8);
-				}
-				if (Gender == 1) {
-					Beard = zone->random.Int(0, 3);
-					HairStyle = zone->random.Int(0, 7);
-				}
-				break;
-			default:
-				break;
+			}
+			if (Gender == FEMALE) {
+				HairStyle = zone->random.Int(0, 2);
+			}
+			break;
+		case HALF_ELF:
+			HairColor = zone->random.Int(0, 19);
+			if (Gender == MALE) {
+				HairStyle = zone->random.Int(0, 3);
+				LuclinFace = zone->random.Int(0, 37);
+				BeardColor = HairColor;
+			}
+			if (Gender == FEMALE) {
+				HairStyle = zone->random.Int(0, 2);
+			}
+			break;
+		case DWARF:
+			HairColor = zone->random.Int(0, 19);
+			BeardColor = HairColor;
+			if (Gender == MALE) {
+				HairStyle = zone->random.Int(0, 3);
+				Beard = zone->random.Int(0, 5);
+			}
+			if (Gender == FEMALE) {
+				HairStyle = zone->random.Int(0, 2);
+				LuclinFace = zone->random.Int(0, 17);
+			}
+			break;
+		case TROLL:
+			EyeColor1 = zone->random.Int(0, 10);
+			EyeColor2 = zone->random.Int(0, 10);
+			if (Gender == FEMALE) {
+				HairStyle = zone->random.Int(0, 3);
+				HairColor = zone->random.Int(0, 23);
+			}
+			break;
+		case OGRE:
+			if (Gender == FEMALE) {
+				HairStyle = zone->random.Int(0, 3);
+				HairColor = zone->random.Int(0, 23);
+			}
+			break;
+		case HALFLING:
+			HairColor = zone->random.Int(0, 19);
+			if (Gender == MALE) {
+				BeardColor = HairColor;
+				HairStyle = zone->random.Int(0, 3);
+				Beard = zone->random.Int(0, 5);
+			}
+			if (Gender == FEMALE) {
+				HairStyle = zone->random.Int(0, 2);
+			}
+			break;
+		case GNOME:
+			HairColor = zone->random.Int(0, 24);
+			if (Gender == MALE) {
+				BeardColor = HairColor;
+				HairStyle = zone->random.Int(0, 3);
+				Beard = zone->random.Int(0, 5);
+			}
+			if (Gender == FEMALE) {
+				HairStyle = zone->random.Int(0, 2);
+			}
+			break;
+		case IKSAR:
+		case VAHSHIR:
+			break;
+		case FROGLOK:
+			LuclinFace = zone->random.Int(0, 9);
+		case DRAKKIN:
+			HairColor = zone->random.Int(0, 3);
+			BeardColor = HairColor;
+			EyeColor1 = zone->random.Int(0, 11);
+			EyeColor2 = zone->random.Int(0, 11);
+			LuclinFace = zone->random.Int(0, 6);
+			DrakkinHeritage = zone->random.Int(0, 6);
+			DrakkinTattoo = zone->random.Int(0, 7);
+			DrakkinDetails = zone->random.Int(0, 7);
+			if (Gender == MALE) {
+				Beard = zone->random.Int(0, 12);
+				HairStyle = zone->random.Int(0, 8);
+			}
+			if (Gender == FEMALE) {
+				Beard = zone->random.Int(0, 3);
+				HairStyle = zone->random.Int(0, 7);
+			}
+			break;
+		default:
+			break;
 		}
 
-		if (set_variables)
-		{
+		if (set_variables) {
 			haircolor = HairColor;
 			beardcolor = BeardColor;
 			eyecolor1 = EyeColor1;
@@ -1954,8 +1954,7 @@ bool Mob::RandomizeFeatures(bool send_illusion, bool set_variables)
 			drakkin_details = DrakkinDetails;
 		}
 
-		if (send_illusion)
-		{
+		if (send_illusion) {
 			SendIllusionPacket(GetRace(), Gender, Texture, HelmTexture, HairColor, BeardColor,
 				EyeColor1, EyeColor2, HairStyle, LuclinFace, Beard, 0xFF, DrakkinHeritage,
 				DrakkinTattoo, DrakkinDetails);
@@ -2226,18 +2225,18 @@ void Mob::SetAppearance(EmuAppearance app, bool iIgnoreSelf) {
 
 bool Mob::UpdateActiveLight()
 {
-	uint8 old_light_level = m_Light.Level.Active;
+	uint8 old_light_level = m_Light.Level[EQEmu::lightsource::LightActive];
 
-	m_Light.Type.Active = 0;
-	m_Light.Level.Active = 0;
+	m_Light.Type[EQEmu::lightsource::LightActive] = 0;
+	m_Light.Level[EQEmu::lightsource::LightActive] = 0;
 
-	if (m_Light.IsLevelGreater((m_Light.Type.Innate & 0x0F), m_Light.Type.Active)) { m_Light.Type.Active = m_Light.Type.Innate; }
-	if (m_Light.Level.Equipment > m_Light.Level.Active) { m_Light.Type.Active = m_Light.Type.Equipment; } // limiter in property handler
-	if (m_Light.Level.Spell > m_Light.Level.Active) { m_Light.Type.Active = m_Light.Type.Spell; } // limiter in property handler
+	if (EQEmu::lightsource::IsLevelGreater((m_Light.Type[EQEmu::lightsource::LightInnate] & 0x0F), m_Light.Type[EQEmu::lightsource::LightActive])) { m_Light.Type[EQEmu::lightsource::LightActive] = m_Light.Type[EQEmu::lightsource::LightInnate]; }
+	if (m_Light.Level[EQEmu::lightsource::LightEquipment] > m_Light.Level[EQEmu::lightsource::LightActive]) { m_Light.Type[EQEmu::lightsource::LightActive] = m_Light.Type[EQEmu::lightsource::LightEquipment]; } // limiter in property handler
+	if (m_Light.Level[EQEmu::lightsource::LightSpell] > m_Light.Level[EQEmu::lightsource::LightActive]) { m_Light.Type[EQEmu::lightsource::LightActive] = m_Light.Type[EQEmu::lightsource::LightSpell]; } // limiter in property handler
 
-	m_Light.Level.Active = m_Light.TypeToLevel(m_Light.Type.Active);
+	m_Light.Level[EQEmu::lightsource::LightActive] = EQEmu::lightsource::TypeToLevel(m_Light.Type[EQEmu::lightsource::LightActive]);
 
-	return (m_Light.Level.Active != old_light_level);
+	return (m_Light.Level[EQEmu::lightsource::LightActive] != old_light_level);
 }
 
 void Mob::ChangeSize(float in_size = 0, bool bNoRestriction) {
@@ -2378,14 +2377,14 @@ bool Mob::CanThisClassDualWield(void) const {
 		return(GetSkill(SkillDualWield) > 0);
 	}
 	else if(CastToClient()->HasSkill(SkillDualWield)) {
-		const ItemInst* pinst = CastToClient()->GetInv().GetItem(MainPrimary);
-		const ItemInst* sinst = CastToClient()->GetInv().GetItem(MainSecondary);
+		const ItemInst* pinst = CastToClient()->GetInv().GetItem(EQEmu::legacy::SlotPrimary);
+		const ItemInst* sinst = CastToClient()->GetInv().GetItem(EQEmu::legacy::SlotSecondary);
 
 		// 2HS, 2HB, or 2HP
 		if(pinst && pinst->IsWeapon()) {
-			const Item_Struct* item = pinst->GetItem();
+			const EQEmu::Item_Struct* item = pinst->GetItem();
 
-			if((item->ItemType == ItemType2HBlunt) || (item->ItemType == ItemType2HSlash) || (item->ItemType == ItemType2HPiercing))
+			if (item->IsType2HWeapon())
 				return false;
 		}
 
@@ -2755,7 +2754,7 @@ void Mob::SendArmorAppearance(Client *one_client)
 	{
 		if (!IsClient())
 		{
-			const Item_Struct *item;
+			const EQEmu::Item_Struct *item;
 			for (int i = 0; i < 7; ++i)
 			{
 				item = database.GetItem(GetEquipment(i));
@@ -2858,13 +2857,13 @@ int32 Mob::GetEquipmentMaterial(uint8 material_slot) const
 {
 	uint32 equipmaterial = 0;
 	int32 ornamentationAugtype = RuleI(Character, OrnamentationAugmentType);
-	const Item_Struct *item;
+	const EQEmu::Item_Struct *item;
 	item = database.GetItem(GetEquipment(material_slot));
 
 	if (item != 0)
 	{
 		// For primary and secondary we need the model, not the material
-		if (material_slot == MaterialPrimary || material_slot == MaterialSecondary)
+		if (material_slot == EQEmu::legacy::MaterialPrimary || material_slot == EQEmu::legacy::MaterialSecondary)
 		{
 			if (this->IsClient())
 			{
@@ -2908,10 +2907,10 @@ int32 Mob::GetEquipmentMaterial(uint8 material_slot) const
 int32 Mob::GetHerosForgeModel(uint8 material_slot) const
 {
 	uint32 HeroModel = 0;
-	if (material_slot >= 0 && material_slot < MaterialPrimary)
+	if (material_slot >= 0 && material_slot < EQEmu::legacy::MaterialPrimary)
 	{
 		uint32 ornamentationAugtype = RuleI(Character, OrnamentationAugmentType);
-		const Item_Struct *item;
+		const EQEmu::Item_Struct *item;
 		item = database.GetItem(GetEquipment(material_slot));
 		int16 invslot = Inventory::CalcSlotFromMaterial(material_slot);
 
@@ -2965,7 +2964,7 @@ int32 Mob::GetHerosForgeModel(uint8 material_slot) const
 
 uint32 Mob::GetEquipmentColor(uint8 material_slot) const
 {
-	const Item_Struct *item;
+	const EQEmu::Item_Struct *item;
 
 	if (armor_tint[material_slot])
 	{
@@ -2981,7 +2980,7 @@ uint32 Mob::GetEquipmentColor(uint8 material_slot) const
 
 uint32 Mob::IsEliteMaterialItem(uint8 material_slot) const
 {
-	const Item_Struct *item;
+	const EQEmu::Item_Struct *item;
 
 	item = database.GetItem(GetEquipment(material_slot));
 	if(item != 0)
@@ -3410,12 +3409,13 @@ int Mob::GetSnaredAmount()
 	return worst_snare;
 }
 
-void Mob::TriggerDefensiveProcs(const ItemInst* weapon, Mob *on, uint16 hand, int damage)
+void Mob::TriggerDefensiveProcs(Mob *on, uint16 hand, bool FromSkillProc, int damage)
 {
 	if (!on)
 		return;
 
-	on->TryDefensiveProc(weapon, this, hand);
+	if (!FromSkillProc)
+		on->TryDefensiveProc(this, hand);
 
 	//Defensive Skill Procs
 	if (damage < 0 && damage >= -4) {
@@ -3795,7 +3795,7 @@ int32 Mob::GetVulnerability(Mob* caster, uint32 spell_id, uint32 ticsremaining)
 	return value;
 }
 
-int16 Mob::GetSkillDmgTaken(const SkillUseTypes skill_used)
+int16 Mob::GetSkillDmgTaken(const SkillUseTypes skill_used, ExtraAttackOptions *opts)
 {
 	int skilldmg_mod = 0;
 
@@ -3804,6 +3804,9 @@ int16 Mob::GetSkillDmgTaken(const SkillUseTypes skill_used)
 					itembonuses.SkillDmgTaken[skill_used] + spellbonuses.SkillDmgTaken[skill_used];
 
 	skilldmg_mod += SkillDmgTaken_Mod[skill_used] + SkillDmgTaken_Mod[HIGHEST_SKILL+1];
+
+	if (opts)
+		skilldmg_mod += opts->skilldmgtaken_bonus_flat;
 
 	if(skilldmg_mod < -100)
 		skilldmg_mod = -100;
@@ -3904,7 +3907,7 @@ int32 Mob::GetItemStat(uint32 itemid, const char *identifier)
 	if (!inst)
 		return 0;
 
-	const Item_Struct* item = inst->GetItem();
+	const EQEmu::Item_Struct* item = inst->GetItem();
 	if (!item)
 		return 0;
 
@@ -5030,62 +5033,58 @@ void Mob::SlowMitigation(Mob* caster)
 
 uint16 Mob::GetSkillByItemType(int ItemType)
 {
-	switch (ItemType)
-	{
-		case ItemType1HSlash:
-			return Skill1HSlashing;
-		case ItemType2HSlash:
-			return Skill2HSlashing;
-		case ItemType1HPiercing:
+	switch (ItemType) {
+	case EQEmu::item::ItemType1HSlash:
+		return Skill1HSlashing;
+	case EQEmu::item::ItemType2HSlash:
+		return Skill2HSlashing;
+	case EQEmu::item::ItemType1HPiercing:
+		return Skill1HPiercing;
+	case EQEmu::item::ItemType1HBlunt:
+		return Skill1HBlunt;
+	case EQEmu::item::ItemType2HBlunt:
+		return Skill2HBlunt;
+	case EQEmu::item::ItemType2HPiercing:
+		if (IsClient() && CastToClient()->ClientVersion() < EQEmu::versions::ClientVersion::RoF2)
 			return Skill1HPiercing;
-		case ItemType1HBlunt:
-			return Skill1HBlunt;
-		case ItemType2HBlunt:
-			return Skill2HBlunt;
-		case ItemType2HPiercing:
-			if (IsClient() && CastToClient()->GetClientVersion() < ClientVersion::RoF2)
-				return Skill1HPiercing;
-			else
-				return Skill2HPiercing;
-		case ItemTypeBow:
-			return SkillArchery;
-		case ItemTypeLargeThrowing:
-		case ItemTypeSmallThrowing:
-			return SkillThrowing;
-		case ItemTypeMartial:
-			return SkillHandtoHand;
-		default:
-			return SkillHandtoHand;
+		else
+			return Skill2HPiercing;
+	case EQEmu::item::ItemTypeBow:
+		return SkillArchery;
+	case EQEmu::item::ItemTypeLargeThrowing:
+	case EQEmu::item::ItemTypeSmallThrowing:
+		return SkillThrowing;
+	case EQEmu::item::ItemTypeMartial:
+		return SkillHandtoHand;
+	default:
+		return SkillHandtoHand;
 	}
-	return SkillHandtoHand;
  }
 
 uint8 Mob::GetItemTypeBySkill(SkillUseTypes skill)
 {
-	switch (skill)
-	{
-		case SkillThrowing:
-			return ItemTypeSmallThrowing;
-		case SkillArchery:
-			return ItemTypeArrow;
-		case Skill1HSlashing:
-			return ItemType1HSlash;
-		case Skill2HSlashing:
-			return ItemType2HSlash;
-		case Skill1HPiercing:
-			return ItemType1HPiercing;
-		case Skill2HPiercing: // watch for undesired client behavior
-			return ItemType2HPiercing;
-		case Skill1HBlunt:
-			return ItemType1HBlunt;
-		case Skill2HBlunt:
-			return ItemType2HBlunt;
-		case SkillHandtoHand:
-			return ItemTypeMartial;
-		default:
-			return ItemTypeMartial;
+	switch (skill) {
+	case SkillThrowing:
+		return EQEmu::item::ItemTypeSmallThrowing;
+	case SkillArchery:
+		return EQEmu::item::ItemTypeArrow;
+	case Skill1HSlashing:
+		return EQEmu::item::ItemType1HSlash;
+	case Skill2HSlashing:
+		return EQEmu::item::ItemType2HSlash;
+	case Skill1HPiercing:
+		return EQEmu::item::ItemType1HPiercing;
+	case Skill2HPiercing: // watch for undesired client behavior
+		return EQEmu::item::ItemType2HPiercing;
+	case Skill1HBlunt:
+		return EQEmu::item::ItemType1HBlunt;
+	case Skill2HBlunt:
+		return EQEmu::item::ItemType2HBlunt;
+	case SkillHandtoHand:
+		return EQEmu::item::ItemTypeMartial;
+	default:
+		return EQEmu::item::ItemTypeMartial;
 	}
-	return ItemTypeMartial;
  }
 
 
@@ -5642,7 +5641,7 @@ int32 Mob::GetSpellStat(uint32 spell_id, const char *identifier, uint8 slot)
 
 bool Mob::CanClassEquipItem(uint32 item_id)
 {
-	const Item_Struct* itm = nullptr;
+	const EQEmu::Item_Struct* itm = nullptr;
 	itm = database.GetItem(item_id);
 
 	if (!itm)
@@ -5876,6 +5875,7 @@ int Mob::CheckBaneDamage(const ItemInst *item)
 	return damage;
 }
 
+<<<<<<< HEAD
 
 //Adjusts an NPC's stats based on properties provided
 NPCType* Mob::AdjustNPC(NPCType* npctype) {
@@ -6151,3 +6151,70 @@ NPCType* Mob::AdjustNPC(NPCType* npctype) {
 	npctype->max_dmg = (npctype->max_dmg * clfact) / 220;
 	return npctype;
 }
+=======
+#ifdef BOTS
+bool Mob::JoinHealRotationTargetPool(std::shared_ptr<HealRotation>* heal_rotation)
+{
+	if (IsHealRotationTarget())
+		return false;
+	if (!heal_rotation->use_count())
+		return false;
+	if (!(*heal_rotation))
+		return false;
+	if (!IsHealRotationTargetMobType(this))
+		return false;
+
+	if (!(*heal_rotation)->AddTargetToPool(this))
+		return false;
+
+	m_target_of_heal_rotation = *heal_rotation;
+
+	return IsHealRotationTarget();
+}
+
+bool Mob::LeaveHealRotationTargetPool()
+{
+	if (!IsHealRotationTarget()) {
+		m_target_of_heal_rotation.reset();
+		return true;
+	}
+
+	m_target_of_heal_rotation->RemoveTargetFromPool(this);
+	m_target_of_heal_rotation.reset();
+	
+	return !IsHealRotationTarget();
+}
+
+uint32 Mob::HealRotationHealCount()
+{
+	if (!IsHealRotationTarget())
+		return 0;
+
+	return m_target_of_heal_rotation->HealCount(this);
+}
+
+uint32 Mob::HealRotationExtendedHealCount()
+{
+	if (!IsHealRotationTarget())
+		return 0;
+
+	return m_target_of_heal_rotation->ExtendedHealCount(this);
+}
+
+float Mob::HealRotationHealFrequency()
+{
+	if (!IsHealRotationTarget())
+		return 0.0f;
+
+	return m_target_of_heal_rotation->HealFrequency(this);
+}
+
+float Mob::HealRotationExtendedHealFrequency()
+{
+	if (!IsHealRotationTarget())
+		return 0.0f;
+
+	return m_target_of_heal_rotation->ExtendedHealFrequency(this);
+}
+#endif
+>>>>>>> 12905a3771c1a0020d94f572f32cb6a44074b4e9
