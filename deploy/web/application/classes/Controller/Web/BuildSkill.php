@@ -27,15 +27,16 @@ class Controller_Web_BuildSkill extends Template_Web_Core {
 			$this->redirect('/builds/');
 			return;
 		}
-
-		$this->template->skill = $skills[$skillid];
+		$skill = $skills[$skillid];
+		$this->template->class = $class;
+		$this->template->skill = $skill;
 		$this->template->monogram = $build->monogram;
 		$this->template->styles = $build->styles;
-		$this->template->site->image = "http://rebuildeq.com/images/monograms/".$build->monogram.".gif";
-		$this->template->site->title = $build->fullName;
+		$this->template->site->image = $skill->image;
+		$this->template->site->title = $skill->title." | ".ucfirst($class);
 		$this->template->fullName = $build->fullName;
 		$this->template->classDescription = $build->desc;
-		$this->template->site->description = $build->desc;
+		$this->template->site->description = strip_tags($skill->title." ".$skill->desc);
 	}
 
 }

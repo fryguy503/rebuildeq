@@ -1,6 +1,5 @@
 {include file="../_header.tpl"}
 <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-<script src="/js/builds/skillManager.js"></script>
 <link href="/css/builds/builds.css" rel="stylesheet" type="text/css">
   <div class="container">
 
@@ -9,9 +8,8 @@
 		<div class="row">
 	        	<ul class="breadcrumb">
 	          		<li><a href="/builds">Builds</a></li>
-	          		{if empty($character)}<li class="active">{$fullName}</li>
-	          		{else}<li class="active">{$character->name}</li>
-	          		{/if}
+	          		<li><a href="/builds/{$class}">{$class|capitalize}</a></li>
+	          		<li class="active">{$skill->title}</li>
 	        	</ul>
 	    </div>
 
