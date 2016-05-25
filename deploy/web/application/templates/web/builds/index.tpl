@@ -623,6 +623,22 @@
 		</div>
 		</div>
 
+		<div class="row">
+			<form class="well bs-component">
+				<div class="form-group" style="text-align: left;">
+					
+		          	<div style="text-align: center;"><label class="control-label">{$class|capitalize} Skill List</label><br></div>
+		          	<ul class="build-list">
+		          	{foreach from=$skills item=skill key=s}
+			          	<li>
+			          		<a href="/builds/{$class}/skill/{$s}"><img src="{$skill->image}"> <b>{$skill->title}</b> - {$skill->desc|strip_tags|truncate:150}</a>
+			          	</li>
+		          	{/foreach}		          	
+		          	</ul>		         	
+		        </div>
+		    </form>
+		</div>
+
 
 		
 		<script type="text/javascript">

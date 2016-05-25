@@ -291,3 +291,23 @@ img.portrait {
   	 background: url('/images/classicons/clsborder.png') no-repeat center;
   	 width:48px;
 }
+
+
+.skill-card {
+  position: relative;
+  float: left;
+}
+
+.build-list {
+	list-style: none;
+}
+
+.build-list li a {
+	color: white;
+	text-decoration: none;
+}
+
+.build-list li a:hover {
+	color: #0ce3ac;
+	text-decoration: none;
+}
