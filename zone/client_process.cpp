@@ -531,7 +531,7 @@ bool Client::Process() {
 			RefreshBuild();
 			DoEncounterCheck();
 			if (GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH) > 0) {
-				if (GetPrimarySkillValue() == ItemType2HSlash || GetPrimarySkillValue() == ItemType2HBlunt) {
+				if (GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash || GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt) {
 					m_epp.blood_oath_timeout = time(nullptr) + 18;
 				}
 			}

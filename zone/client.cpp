@@ -8580,47 +8580,26 @@ void Client::SendHPUpdateMarquee(){
 }
 
 
+
+
 //Creates a say link from client perspective
 std::string Client::CreateSayLink(const char* message, const char* name) {
-	int sayid = 0;
-	int sz = strlen(message);
-	char *escaped_string = new char[sz * 2];
-	database.DoEscapeString(escaped_string, message, sz);
-	std::string query = StringFormat("SELECT `id` FROM `saylink` WHERE `phrase` = '%s'", escaped_string);
-	auto results = database.QueryDatabase(query);
-	if (results.Success()) {
-		if (results.RowCount() >= 1) {
-			for (auto row = results.begin(); row != results.end(); ++row)
-				sayid = atoi(row[0]);
-		}
-		else {
-			std::string insert_query = StringFormat("INSERT INTO `saylink` (`phrase`) VALUES ('%s')", escaped_string);
-			results = database.QueryDatabase(insert_query);
-			if (!results.Success()) {
-				Log.Out(Logs::General, Logs::Error, "Error in saylink phrase queries", results.ErrorMessage().c_str());
-			}
-			else {
-				results = database.QueryDatabase(query);
-				if (results.Success()) {
-					if (results.RowCount() >= 1)
-						for (auto row = results.begin(); row != results.end(); ++row)
-							sayid = atoi(row[0]);
-				}
-				else
-					Log.Out(Logs::General, Logs::Error, "Error in saylink phrase queries", results.ErrorMessage().c_str());
-			}
-		}
-	}
+	int saylink_size = strlen(message);
+	char* escaped_string = new char[saylink_size * 2];
+
+	database.DoEscapeString(escaped_string, message, saylink_size);
+
+	uint32 saylink_id = database.LoadSaylinkID(escaped_string);
 	safe_delete_array(escaped_string);
 
-	Client::TextLink linker;
-	linker.SetLinkType(linker.linkItemData);
+	EQEmu::saylink::SayLinkEngine linker;
+	linker.SetLinkType(linker.SayLinkItemData);
 	linker.SetProxyItemID(SAYLINK_ITEM_ID);
-	linker.SetProxyAugment1ID(sayid);
+	linker.SetProxyAugment1ID(saylink_id);
 	linker.SetProxyText(name);
 
-	auto say_link = linker.GenerateLink();
-	return say_link;
+	auto saylink = linker.GenerateLink();
+	return saylink;
 }
 
 
@@ -9068,6 +9047,25 @@ std::string Client::GetBuildClassName() {
 	if (GetClass() == WIZARD) return "Sage";
 	//Tier 3
 	return "Unknown";
+}
+
+std::string Client::GetBaseClassName()
+{	
+	if (GetClass() == BARD) return "Bard";
+	if (GetClass() == CLERIC) return "Cleric";
+	if (GetClass() == DRUID) return "Druid";
+	if (GetClass() == ENCHANTER) return "Enchanter";
+	if (GetClass() == MAGICIAN) return "Magician";
+	if (GetClass() == MONK) return "Monk";
+	if (GetClass() == NECROMANCER) return "Necromancer";
+	if (GetClass() == PALADIN) return "Paladin";
+	if (GetClass() == RANGER) return "Ranger";
+	if (GetClass() == ROGUE) return "Rogue";
+	if (GetClass() == SHADOWKNIGHT) return "ShadowKnight";
+	if (GetClass() == SHAMAN) return "Shaman";
+	if (GetClass() == WIZARD) return "Wizard";
+	return "Warrior";
+	
 }
 
 //Check if an encounter is viable to happen
@@ -9778,7 +9776,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 		if (Admin() >= 200) Message(0, "[GM] Loot Roll dice: %i is in pool: %i, total pool: %i (%.1f%%)", dice, entry->first, pool, (float)((float)(entry->first - lastPool) / (float)pool * 100));
 		//Item Reward
 		int itemid = entry->second;
-		const Item_Struct* item = database.GetItem(itemid);
+		const EQEmu::Item_Struct* item = database.GetItem(itemid);
 		if (!SummonItem(itemid)) {
 			//Log!!
 		}
@@ -9947,7 +9945,7 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 		if (Admin() >= 200) Message(0, "[GM] Loot Roll dice: %i is in pool: %i, total pool: %i (%.1f%%)", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100));
 		//Item Reward
 		int itemid = entry->second;
-		const Item_Struct* item = database.GetItem(itemid);
+		const EQEmu::Item_Struct* item = database.GetItem(itemid);
 		if (!SummonItem(itemid)) {
 			if (Admin() >= 200) Message(0, "[GM] Failed to summon %i", itemid);
 
@@ -9981,7 +9979,7 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 }
 
 bool Client::IsValidItem(int itemid) {
-	const Item_Struct* item = database.GetItem(itemid);
+	const EQEmu::Item_Struct* item = database.GetItem(itemid);
 	if (!item) {
 		if (Admin() >= 200) Message(0, "Invalid item id %i", itemid);
 		return false;

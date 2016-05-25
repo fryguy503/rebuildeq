@@ -4052,7 +4052,6 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 			if (inst && inst->IsClassCommon())
 			{
 				
-				const Item_Struct* item = inst->GetItem();
 				const EQEmu::Item_Struct* item = inst->GetItem();
 				if (item->Click.Effect != (uint32)castspell->spell_id)
 				{
@@ -8573,7 +8572,7 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 						item->ID == 100003 || //Old Red Box
 						item->ID == 100004 || //Old Violet Box
 						item->ID == 100005) {  //Old Weapon Box
-						ItemInst *CursorItemInst = GetInv().GetItem(MainCursor);
+						ItemInst *CursorItemInst = GetInv().GetItem(EQEmu::legacy::SlotCursor);
 						if (CursorItemInst) {
 							Message(13, "Your cursor must be empty before opening the box.");
 							return;

@@ -5875,7 +5875,6 @@ int Mob::CheckBaneDamage(const ItemInst *item)
 	return damage;
 }
 
-<<<<<<< HEAD
 
 //Adjusts an NPC's stats based on properties provided
 NPCType* Mob::AdjustNPC(NPCType* npctype) {
@@ -6151,7 +6150,7 @@ NPCType* Mob::AdjustNPC(NPCType* npctype) {
 	npctype->max_dmg = (npctype->max_dmg * clfact) / 220;
 	return npctype;
 }
-=======
+
 #ifdef BOTS
 bool Mob::JoinHealRotationTargetPool(std::shared_ptr<HealRotation>* heal_rotation)
 {
@@ -6217,4 +6216,3 @@ float Mob::HealRotationExtendedHealFrequency()
 	return m_target_of_heal_rotation->ExtendedHealFrequency(this);
 }
 #endif
->>>>>>> 12905a3771c1a0020d94f572f32cb6a44074b4e9

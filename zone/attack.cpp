@@ -1167,7 +1167,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			hate += opts->hate_flat;
 			hit_chance_bonus += opts->hit_chance;
 		}
-		if (Hand == MainSecondary && IsClient() && GetBuildRank(BARD, RB_BRD_OFFHANDATTACK) > 0) {
+		if (Hand == EQEmu::legacy::SlotSecondary && IsClient() && GetBuildRank(BARD, RB_BRD_OFFHANDATTACK) > 0) {
 			int hcb = (hit_chance_bonus * 0.05 * GetBuildRank(BARD, RB_BRD_OFFHANDATTACK));
 			Message(MT_NonMelee, "Offhand Attack %u gave a %i->%i bonus.", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb);
 			hit_chance_bonus += hcb;
@@ -3206,10 +3206,10 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 	if(damage > 0) {
 		//if there is some damage being done and theres an attacker involved
 		if(attacker) {			
-
 			if (attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH) > 0) {
-				if (attacker->CastToClient()->GetPrimarySkillValue() == ItemType2HSlash ||
-					attacker->CastToClient()->GetPrimarySkillValue() == ItemType2HBlunt
+				if (attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
+					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt
+					
 					) {
 					int oath_damage = int32((float)damage * 0.1 * (float)rank);
 					attacker->CastToClient()->Message(MT_NonMelee, "Blood Oath %u added %i bonus damage.", rank, oath_damage);
@@ -3218,8 +3218,8 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			}
 
 			if (attacker->IsClient() && attacker->CastToClient()->GetBuildRank(PALADIN, RB_PAL_KNIGHTSADVANTAGE) > 0) {
-				if (attacker->CastToClient()->GetPrimarySkillValue() == ItemType2HSlash ||
-					attacker->CastToClient()->GetPrimarySkillValue() == ItemType2HBlunt
+				if (attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
+					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt
 					) {
 					int kDamage = int32((float)damage * 0.05 * (float)rank);
 					attacker->CastToClient()->Message(MT_NonMelee, "Knight's Advantage %u added %i bonus damage.", rank, kDamage);
@@ -3730,8 +3730,8 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 	//Shin: Blood Oath reduces healing.
 	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH) > 0) {
 		if (CastToClient()->GetEPP().blood_oath_timeout >= time(nullptr) ||
-			CastToClient()->GetPrimarySkillValue() == ItemType2HSlash ||
-			CastToClient()->GetPrimarySkillValue() == ItemType2HBlunt
+			CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
+			CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt
 			) {
 			int reduction = (uint32)((float)acthealed * 0.1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH));
 			Message(MT_NonMelee, "Blood Oath reduced healing received by %i.", reduction);

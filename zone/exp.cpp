@@ -608,7 +608,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 					if (bottle_exp >= 175000000) { //bottle is full
 
 						//make a full bottle
-						const Item_Struct* full_bottle_struct = database.GetItem(100001);
+						const EQEmu::Item_Struct* full_bottle_struct = database.GetItem(100001);
 						ItemInst* full_bottle = database.CreateItem(full_bottle_struct, 1);
 
 						if (full_bottle) {

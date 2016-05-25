@@ -222,7 +222,7 @@ const char* EQEmu::constants::InventorySlotName(int16 slot_index)
 	case legacy::SlotGeneral10:
 		return "General10";
 	*/
-	case legacy::SlotCursor:
+	case EQEmu::legacy::SlotCursor:
 		return "Cursor";
 	default:
 		return "Unknown Slot";

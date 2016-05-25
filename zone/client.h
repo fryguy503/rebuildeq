@@ -1258,6 +1258,7 @@ public:
 	void AddRottenCoreCounter(uint8 amount);
 
 	std::string GetBuildClassName();
+	std::string GetBaseClassName();
 
 	void DoEncounterCheck();
 

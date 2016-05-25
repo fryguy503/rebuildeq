@@ -53,7 +53,8 @@
 #include "../common/serverinfo.h"
 #include "../common/string_util.h"
 #include "../common/eqemu_logsys.h"
-
+#include "../common/emu_legacy.h"
+#include "../common/classes.h"
 
 #include "command.h"
 #include "guild_mgr.h"
@@ -3925,10 +3926,11 @@ void command_builds(Client *c, const Seperator *sep)
 
 
 	// align=\"center\"
-	std::string windowText = StringFormat("<table align=\"center\" width=\"100%\"><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\">Click To Review Your Build</a></td></tr></table>",
-		GetEQClassName(c->GetClass()),
+	std::string windowText = StringFormat("<table align=\"center\" width=\"100%\"><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\">Click To Review Your Build</a></td></tr></table>",				
+		c->GetBaseClassName(),
 		c->GetSession()
 	);
+
 	windowText.append(unspentMessage);
 	
 	windowText.append(c->GetBuildReport());
@@ -3939,9 +3941,9 @@ void command_builds(Client *c, const Seperator *sep)
 
 
 	//Link in game browser
-	if (sep->arg[1] && strcasecmp(sep->arg[1], "link") == 0) {
-		c->SendWebLink(StringFormat("http://localhost/builds/%s/%s/", GetEQClassName(c->GetClass()), c->GetSession()).c_str());
-	}
+	//if (sep->arg[1] && strcasecmp(sep->arg[1], "link") == 0) {
+	//	c->SendWebLink(StringFormat("http://localhost/builds/%s/%s/", GetEQClassName(c->GetClass()), c->GetSession()).c_str());
+	//}
 
 	//if (c->GetClientVersionBit() & BIT_TitaniumAndEarlier) {
 		
@@ -4017,7 +4019,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 			return;
 		}
 
-		ItemInst *CursorItemInst = c->GetInv().GetItem(MainCursor);
+		ItemInst *CursorItemInst = c->GetInv().GetItem(EQEmu::legacy::SlotCursor);
 		if (CursorItemInst) {
 			c->Message(13, "Your cursor must be empty before claiming a reward.");
 			return;
@@ -4066,7 +4068,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 		if (rarityType == 3) itemid = 100004; //Old Violet Box
 
 
-		const Item_Struct * item = database.GetItem(itemid);
+		const EQEmu::Item_Struct * item = database.GetItem(itemid);
 		if (!c->SummonItem(itemid)) { //
 			Log.Out(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u", c->CharacterID());
 			c->Message(13, "Something went wrong during the claim. The admins have been notified.");
@@ -4649,7 +4651,7 @@ void command_issue(Client *c, const Seperator *sep) {
 
 	std::string itemname = "";
 	uint32 itemid = 0;
-	auto inst = c->GetInv()[MainCursor];
+	auto inst = c->GetInv()[EQEmu::legacy::SlotCursor];
 	if (inst) { 
 		auto item = inst->GetItem();
 		if (item) {
@@ -4658,16 +4660,6 @@ void command_issue(Client *c, const Seperator *sep) {
 		}
 	}
 
-	std::string clientversion = "";
-	
-	if (c->GetClientVersion() == ClientVersion::Titanium) clientversion = "Titanium";
-	else if (c->GetClientVersion() == ClientVersion::SoF) clientversion = "SoF";
-	else if (c->GetClientVersion() == ClientVersion::SoD) clientversion = "SoD";
-	else if (c->GetClientVersion() == ClientVersion::UF) clientversion = "Underfoot";
-	else if (c->GetClientVersion() == ClientVersion::UF) clientversion = "UF";
-	else if (c->GetClientVersion() == ClientVersion::RoF) clientversion = "RoF";
-	else if (c->GetClientVersion() == ClientVersion::RoF2) clientversion = "RoF2";
-	else clientversion = "Unknown";
 	
 	std::string query = StringFormat("INSERT INTO issues"
 		"(my_name, my_account_id, my_character_id, my_zone_id, my_x, my_y, my_z, message, tar_name, tar_is_npc, tar_is_client, tar_account_id, tar_character_id, tar_npc_type_id, tar_npc_spawngroup_id, item_id, item_name, client)"
@@ -4689,7 +4681,7 @@ void command_issue(Client *c, const Seperator *sep) {
 		((c->GetTarget() == nullptr || !c->GetTarget()->IsNPC()) ? 0 : c->GetTarget()->CastToNPC()->GetSp2()),
 		itemid,
 		EscapeString(itemname.c_str()).c_str(),
-		EscapeString(clientversion.c_str()).c_str()
+		EQEmu::versions::ClientVersionName(c->ClientVersion())
 		);
 	auto results = database.QueryDatabase(query);
 	if (!results.Success()) {
