@@ -9800,7 +9800,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 	if (!SummonItem(100002)) {
 		//Log!!
 	}
-	Message(MT_Experience, "Opening the box revealed an Old Blue Box!");
+	Message(MT_Experience, "Opening the box revealed an Old Armor Box!");
 
 	
 	return 0;

@@ -4025,48 +4025,24 @@ void command_encounter(Client *c, const Seperator *sep) {
 			return;
 		}
 
-		std::string query = StringFormat("UPDATE character_custom SET unclaimed_encounter_rewards = unclaimed_encounter_rewards - 1 WHERE character_id = %u and unclaimed_encounter_rewards = %u", c->CharacterID(), unclaimed_rewards);			
+		int itemid = 100002;
+
+		if (sep->arg[2] && strcasecmp(sep->arg[2], "armor") == 0) {
+			itemid = 100005;
+		} else if (sep->arg[2] && strcasecmp(sep->arg[2], "weapon") == 0) {
+			itemid = 100002;
+		} else {
+			c->Message(13, "Please choose which type of reward to claim: [ %s ], [ %s ].", c->CreateSayLink("#encounter claim armor", "armor box").c_str(), c->CreateSayLink("#encounter claim weapon", "weapon box").c_str());
+			return;
+		}
+
+		std::string query = StringFormat("UPDATE character_custom SET unclaimed_encounter_rewards = unclaimed_encounter_rewards - 1 WHERE character_id = %u and unclaimed_encounter_rewards = %u", c->CharacterID(), unclaimed_rewards);
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Claiming reward failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
 			Log.Out(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());			
 			return;
-		}
-
-		std::map <int, int> rarityTable;
-		//Pool size for randomizer
-		int pool = 0;
-
-		pool += 70 - c->GetLevel(); //Weight for Weapon Box, lowers as you get more levels.
-		if (pool < 1) pool = 1;
-		rarityTable[pool] = 0; //Weapon Box
-		pool += 30 + c->GetLevel();
-		rarityTable[pool] = 1; //Old Blue Box
-		pool += 4;
-		rarityTable[pool] = 2; //Old Red Box
-		pool += 1;
-		rarityTable[pool] = 3; //Old Violet Box
-
-		//Rolled dice
-		int dice = zone->random.Int(0, pool);
-
-		//Chosen Rarity Type
-		int rarityType = 0;
-		for (auto entry = rarityTable.begin(); entry != rarityTable.end(); ++entry) {
-			if (dice <= entry->first) {
-				
-				rarityType = entry->second;
-				break;
-			}
-		}
-		if (c->Admin() >= 200) c->Message(0, "[GM] Reward Roll (%i): %i (%.1f%%)", dice, pool, (float)(dice / pool));
-
-		int itemid = 100002;
-		if (rarityType == 0) itemid = 100005; //Old Weapon Box
-		if (rarityType == 1) itemid = 100002; //Old Blue Box
-		if (rarityType == 2) itemid = 100003; //Old Red Box
-		if (rarityType == 3) itemid = 100004; //Old Violet Box
-
+		}		
 
 		const EQEmu::Item_Struct * item = database.GetItem(itemid);
 		if (!c->SummonItem(itemid)) { //
