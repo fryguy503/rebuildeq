@@ -9358,9 +9358,12 @@ void Client::EmoteEncounter() {
 		m_epp.encounter_type = entry->second;
 	}
 
+	c->SendPopupToClient("You sense an encounter nearby", "An encounter has triggered nearby. Type in the console #encounter to cause it trigger.");
+
 	switch (m_epp.encounter_type) {
 	case EN_ZOMBIE:
 		Message(8, "A zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter", "below").c_str());
+
 		break;
 	case EN_FUNGUS:
 	case EN_DOPPLEGANGER:
