@@ -4220,9 +4220,10 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 
 		//Add slayratebonus if player has RB_PAL
 		if (this->IsClient() && 
-			attacker->GetBodyType() == BT_Undead &&
+			defender && 
+			defender->GetBodyType() == BT_Undead &&
 			this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYUNDEAD) > 0) {
-			SlayRateBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYUNDEAD) * 200
+			SlayRateBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYUNDEAD) * 200;
 		}
 
 		if (SlayRateBonus) {
@@ -4231,9 +4232,8 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 				int32 SlayDmgBonus = aabonuses.SlayUndead[1] + itembonuses.SlayUndead[1] + spellbonuses.SlayUndead[1];
 				
 				if (this->IsClient() && 
-					attacker->GetBodyType() == BT_Undead &&
 					this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYUNDEAD) > 0) {
-					SlayDmgBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYUNDEAD) * 620
+					SlayDmgBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYUNDEAD) * 620;
 				}
 
 				damage = (damage * SlayDmgBonus * 2.25) / 100;
