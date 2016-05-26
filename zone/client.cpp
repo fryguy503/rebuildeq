@@ -9358,7 +9358,7 @@ void Client::EmoteEncounter() {
 		m_epp.encounter_type = entry->second;
 	}
 
-	c->SendPopupToClient("You sense an encounter nearby", "An encounter has triggered nearby. Type in the console #encounter to cause it trigger.");
+	SendPopupToClient("You sense an encounter nearby", "An encounter has triggered nearby. Type in the console #encounter to cause it trigger.");
 
 	switch (m_epp.encounter_type) {
 	case EN_ZOMBIE:
