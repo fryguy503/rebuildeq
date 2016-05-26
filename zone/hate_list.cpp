@@ -683,7 +683,7 @@ int HateList::DamageNearby(Mob *caster, int32 damage, float range, Mob* ae_cente
 		Mob *cur = entity_list.GetMobID((*iter));
 		if (cur && cur->IsNPC())
 		{
-			cur->Damage(caster, damage, 0, SkillEvocation);
+			cur->Damage(caster, damage, 0, EQEmu::skills::SkillEvocation);
 			targetCount++;
 		}
 		iter++;

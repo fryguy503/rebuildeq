@@ -833,8 +833,8 @@ void Client::UpdateSkillsAndSpells() {
 
 
 	//Skill logic
-	//if (GetSkill(Skill1HBlunt) == 0) SetSkill((SkillUseTypes)Skill1HBlunt, 1);
-	if (GetSkill(SkillDodge) == 0) {
+	//if (GetSkill(EQEmu::skills::Skill1HBlunt) == 0) SetSkill(EQEmu::skills::Skill1HBlunt, 1);
+	if (GetSkill(EQEmu::skills::SkillDodge) == 0) {
 		if (
 			(GetClass() == WIZARD && GetLevel() >= 22) ||
 			(GetClass() == BARD && GetLevel() >= 10) ||
@@ -851,37 +851,37 @@ void Client::UpdateSkillsAndSpells() {
 			(GetClass() == ROGUE && GetLevel() >= 4) ||
 			(GetClass() == WARRIOR && GetLevel() >= 6)
 			) {
-			SetSkill((SkillUseTypes)SkillDodge, 1);
+			SetSkill(EQEmu::skills::SkillDodge, 1);
 		}
 	}
-	if (GetSkill(SkillDualWield) == 0) {
+	if (GetSkill(EQEmu::skills::SkillDualWield) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 17) ||
 			(GetClass() == RANGER && GetLevel() >= 17) ||
 			(GetClass() == MONK && GetLevel() >= 1) ||
 			(GetClass() == WARRIOR && GetLevel() >= 13)
 			) {
-			SetSkill((SkillUseTypes)SkillDualWield, 1);
+			SetSkill(EQEmu::skills::SkillDualWield, 1);
 		}
 	}
 
-	if (GetSkill(SkillKick) == 0) {
+	if (GetSkill(EQEmu::skills::SkillKick) == 0) {
 		if (
 			(GetClass() == RANGER && GetLevel() >= 5)
 			) {
-			SetSkill((SkillUseTypes)SkillKick, 1);
+			SetSkill(EQEmu::skills::SkillKick, 1);
 		}
 	}
-	if (GetSkill(SkillIntimidation) == 0) {
+	if (GetSkill(EQEmu::skills::SkillIntimidation) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 25) ||
 			(GetClass() == MONK && GetLevel() >= 18) ||
 			(GetClass() == MONK && GetLevel() >= 22)
 			) {
-			SetSkill((SkillUseTypes)SkillIntimidation, 1);
+			SetSkill(EQEmu::skills::SkillIntimidation, 1);
 		}
 	}
-	if (GetSkill(SkillParry) == 0) {
+	if (GetSkill(EQEmu::skills::SkillParry) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 53) ||
 			(GetClass() == PALADIN && GetLevel() >= 17) ||
@@ -890,10 +890,10 @@ void Client::UpdateSkillsAndSpells() {
 			(GetClass() == WARRIOR && GetLevel() >= 10) ||
 			(GetClass() == ROGUE && GetLevel() >= 12)
 			) {
-			SetSkill((SkillUseTypes)SkillParry, 1);
+			SetSkill(EQEmu::skills::SkillParry, 1);
 		}
 	}
-	if (GetSkill(SkillRiposte) == 0) {
+	if (GetSkill(EQEmu::skills::SkillRiposte) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 58) ||
 			(GetClass() == WARRIOR && GetLevel() >= 25) ||
@@ -903,10 +903,10 @@ void Client::UpdateSkillsAndSpells() {
 			(GetClass() == RANGER && GetLevel() >= 35) ||
 			(GetClass() == MONK && GetLevel() >= 35)
 			) {
-			SetSkill((SkillUseTypes)SkillRiposte, 1);
+			SetSkill(EQEmu::skills::SkillRiposte, 1);
 		}
 	}
-	if (GetSkill(SkillMeditate) == 0) {
+	if (GetSkill(EQEmu::skills::SkillMeditate) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 10) ||
 			(GetClass() == CLERIC && GetLevel() >= 8) ||
@@ -920,10 +920,10 @@ void Client::UpdateSkillsAndSpells() {
 			(GetClass() == RANGER && GetLevel() >= 12) ||
 			(GetClass() == SHADOWKNIGHT && GetLevel() >= 12)
 			) {
-			SetSkill((SkillUseTypes)SkillMeditate, 1);
+			SetSkill(EQEmu::skills::SkillMeditate, 1);
 		}
 	}
-	if (GetSkill(SkillChanneling) == 0) {
+	if (GetSkill(EQEmu::skills::SkillChanneling) == 0) {
 		if (
 			(GetClass() == CLERIC && GetLevel() >= 4) ||
 			(GetClass() == DRUID && GetLevel() >= 4) ||
@@ -932,89 +932,89 @@ void Client::UpdateSkillsAndSpells() {
 			(GetClass() == PALADIN && GetLevel() >= 9) ||
 			(GetClass() == SHADOWKNIGHT && GetLevel() >= 9)
 			) {
-			SetSkill((SkillUseTypes)SkillChanneling, 1);
+			SetSkill(EQEmu::skills::SkillChanneling, 1);
 		}
 	}
-	if (GetSkill(SkillBash) == 0) {
+	if (GetSkill(EQEmu::skills::SkillBash) == 0) {
 		if (
 			(GetClass() == PALADIN && GetLevel() >= 6) ||
 			(GetClass() == SHADOWKNIGHT && GetLevel() >= 6)
 			) {
-			SetSkill((SkillUseTypes)SkillBash, 1);
+			SetSkill(EQEmu::skills::SkillBash, 1);
 		}
 	}
-	if (GetSkill(SkillForage) == 0) {
+	if (GetSkill(EQEmu::skills::SkillForage) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 12) ||
 			(GetClass() == DRUID && GetLevel() >= 5) ||
 			(GetClass() == RANGER && GetLevel() >= 3)
 			) {
-			SetSkill((SkillUseTypes)SkillForage, 1);
+			SetSkill(EQEmu::skills::SkillForage, 1);
 		}
 	}
-	if (GetSkill(SkillSneak) == 0) {
+	if (GetSkill(EQEmu::skills::SkillSneak) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 17) ||
 			(GetClass() == MONK && GetLevel() >= 8) ||
 			(GetClass() == ROGUE && GetLevel() >= 1) ||
 			(GetClass() == RANGER && GetLevel() >= 10)
 			) {
-			SetSkill((SkillUseTypes)SkillSneak, 1);
+			SetSkill(EQEmu::skills::SkillSneak, 1);
 		}
 	}
-	if (GetSkill(SkillSenseTraps) == 0) {
+	if (GetSkill(EQEmu::skills::SkillSenseTraps) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 20) ||
 			(GetClass() == ROGUE && GetLevel() >= 10)
 			) {
-			SetSkill((SkillUseTypes)SkillSenseTraps, 1);
+			SetSkill(EQEmu::skills::SkillSenseTraps, 1);
 		}
 	}
-	if (GetSkill(SkillSafeFall) == 0) {
+	if (GetSkill(EQEmu::skills::SkillSafeFall) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 24) ||
 			(GetClass() == MONK && GetLevel() >= 3) ||
 			(GetClass() == ROGUE && GetLevel() >= 12)
 			) {
-			SetSkill((SkillUseTypes)SkillSafeFall, 1);
+			SetSkill(EQEmu::skills::SkillSafeFall, 1);
 		}
 	}
-	if (GetSkill(SkillHide) == 0) {
+	if (GetSkill(EQEmu::skills::SkillHide) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 25) ||
 			(GetClass() == ROGUE && GetLevel() >= 3) ||
 			(GetClass() == RANGER && GetLevel() >= 25) ||
 			(GetClass() == SHADOWKNIGHT && GetLevel() >= 35)
 			) {
-			SetSkill((SkillUseTypes)SkillHide, 1);
+			SetSkill(EQEmu::skills::SkillHide, 1);
 		}
 	}
-	if (GetSkill(SkillDisarmTraps) == 0) {
+	if (GetSkill(EQEmu::skills::SkillDisarmTraps) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 30) ||
 			(GetClass() == ROGUE && GetLevel() >= 21)
 			) {
-			SetSkill((SkillUseTypes)SkillDisarmTraps, 1);
+			SetSkill(EQEmu::skills::SkillDisarmTraps, 1);
 		}
 	}
-	if (GetSkill(SkillTracking) == 0) {
+	if (GetSkill(EQEmu::skills::SkillTracking) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 35) ||
 			(GetClass() == DRUID && GetLevel() >= 20) ||
 			(GetClass() == RANGER && GetLevel() >= 1)
 			) {
-			SetSkill((SkillUseTypes)SkillTracking, 1);
+			SetSkill(EQEmu::skills::SkillTracking, 1);
 		}
 	}
-	if (GetSkill(SkillPickLock) == 0) {
+	if (GetSkill(EQEmu::skills::SkillPickLock) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 40) ||
 			(GetClass() == ROGUE && GetLevel() >= 6)
 			) {
-			SetSkill((SkillUseTypes)SkillPickLock, 1);
+			SetSkill(EQEmu::skills::SkillPickLock, 1);
 		}
 	}
-	if (GetSkill(SkillDisarm) == 0) {
+	if (GetSkill(EQEmu::skills::SkillDisarm) == 0) {
 		if (
 			(GetClass() == MONK && GetLevel() >= 27) ||
 			(GetClass() == ROGUE && GetLevel() >= 27) ||
@@ -1023,17 +1023,17 @@ void Client::UpdateSkillsAndSpells() {
 			(GetClass() == RANGER && GetLevel() >= 35) ||
 			(GetClass() == SHADOWKNIGHT && GetLevel() >= 40)
 			) {
-			SetSkill((SkillUseTypes)SkillDisarm, 1);
+			SetSkill(EQEmu::skills::SkillDisarm, 1);
 		}
 	}
-	if (GetSkill(SkillBlock) == 0) {
+	if (GetSkill(EQEmu::skills::SkillBlock) == 0) {
 		if (
 			(GetClass() == MONK && GetLevel() >= 12)
 			) {
-			SetSkill((SkillUseTypes)SkillBlock, 1);
+			SetSkill(EQEmu::skills::SkillBlock, 1);
 		}
 	}
-	if (GetSkill(SkillDoubleAttack) == 0) {
+	if (GetSkill(EQEmu::skills::SkillDoubleAttack) == 0) {
 		if (
 			(GetClass() == MONK && GetLevel() >= 15) ||
 			(GetClass() == WARRIOR && GetLevel() >= 15) ||
@@ -1042,10 +1042,10 @@ void Client::UpdateSkillsAndSpells() {
 			(GetClass() == SHADOWKNIGHT && GetLevel() >= 20) ||
 			(GetClass() == RANGER && GetLevel() >= 20)
 			) {
-			SetSkill((SkillUseTypes)SkillDoubleAttack, 1);
+			SetSkill(EQEmu::skills::SkillDoubleAttack, 1);
 		}
 	}
-	if (GetSkill(SkillRiposte) == 0) {
+	if (GetSkill(EQEmu::skills::SkillRiposte) == 0) {
 		if (
 			(GetClass() == MONK && GetLevel() >= 35) ||
 			(GetClass() == PALADIN && GetLevel() >= 30) ||
@@ -1056,49 +1056,49 @@ void Client::UpdateSkillsAndSpells() {
 			(GetClass() == RANGER && GetLevel() >= 35) ||
 			(GetClass() == BARD && GetLevel() >= 58)
 			) {
-			SetSkill((SkillUseTypes)SkillRiposte, 1);
+			SetSkill(EQEmu::skills::SkillRiposte, 1);
 		}
 	}
-	if (GetSkill(SkillFeignDeath) == 0) {
+	if (GetSkill(EQEmu::skills::SkillFeignDeath) == 0) {
 		if (
 			(GetClass() == MONK && GetLevel() >= 1)
 			) {
-			SetSkill((SkillUseTypes)SkillFeignDeath, 1);
+			SetSkill(EQEmu::skills::SkillFeignDeath, 1);
 		}
 	}
 
 	//Bard Specific
-	if (GetSkill(SkillPercussionInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
-		SetSkill((SkillUseTypes)SkillPercussionInstruments, 1);
+	if (GetSkill(EQEmu::skills::SkillPercussionInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
+		SetSkill(EQEmu::skills::SkillPercussionInstruments, 1);
 	}
-	if (GetSkill(SkillStringedInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
-		SetSkill((SkillUseTypes)SkillStringedInstruments, 1);
+	if (GetSkill(EQEmu::skills::SkillStringedInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
+		SetSkill(EQEmu::skills::SkillStringedInstruments, 1);
 	}
-	if (GetSkill(SkillBrassInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
-		SetSkill((SkillUseTypes)SkillBrassInstruments, 1);
+	if (GetSkill(EQEmu::skills::SkillBrassInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
+		SetSkill(EQEmu::skills::SkillBrassInstruments, 1);
 	}
-	if (GetSkill(SkillWindInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
-		SetSkill((SkillUseTypes)SkillWindInstruments, 1);
+	if (GetSkill(EQEmu::skills::SkillWindInstruments) == 0 && GetClass() == BARD && GetLevel() >= 5) {
+		SetSkill(EQEmu::skills::SkillWindInstruments, 1);
 	}
 
 	//Monk Specific
-	if (GetSkill(SkillRoundKick) == 0 && GetClass() == MONK && GetLevel() >= 5) {
-		SetSkill((SkillUseTypes)SkillRoundKick, 1);
+	if (GetSkill(EQEmu::skills::SkillRoundKick) == 0 && GetClass() == MONK && GetLevel() >= 5) {
+		SetSkill(EQEmu::skills::SkillRoundKick, 1);
 	}
-	if (GetSkill(SkillTigerClaw) == 0 && GetClass() == MONK && GetLevel() >= 10) {
-		SetSkill((SkillUseTypes)SkillTigerClaw, 1);
+	if (GetSkill(EQEmu::skills::SkillTigerClaw) == 0 && GetClass() == MONK && GetLevel() >= 10) {
+		SetSkill(EQEmu::skills::SkillTigerClaw, 1);
 	}
-	if (GetSkill(SkillEagleStrike) == 0 && GetClass() == MONK && GetLevel() >= 20) {
-		SetSkill((SkillUseTypes)SkillEagleStrike, 1);
+	if (GetSkill(EQEmu::skills::SkillEagleStrike) == 0 && GetClass() == MONK && GetLevel() >= 20) {
+		SetSkill(EQEmu::skills::SkillEagleStrike, 1);
 	}
-	if (GetSkill(SkillDragonPunch) == 0 && GetRace() != IKSAR && GetClass() == MONK && GetLevel() >= 25) {
-		SetSkill((SkillUseTypes)SkillDragonPunch, 1);
+	if (GetSkill(EQEmu::skills::SkillDragonPunch) == 0 && GetRace() != IKSAR && GetClass() == MONK && GetLevel() >= 25) {
+		SetSkill(EQEmu::skills::SkillDragonPunch, 1);
 	}
-	if (GetSkill(SkillTailRake) == 0 && GetRace() == IKSAR && GetClass() == MONK && GetLevel() >= 25) {
-		SetSkill((SkillUseTypes)SkillTailRake, 1);
+	if (GetSkill(EQEmu::skills::SkillTailRake) == 0 && GetRace() == IKSAR && GetClass() == MONK && GetLevel() >= 25) {
+		SetSkill(EQEmu::skills::SkillTailRake, 1);
 	}
-	if (GetSkill(SkillFlyingKick) == 0 && GetClass() == MONK && GetLevel() >= 30) {
-		SetSkill((SkillUseTypes)SkillFlyingKick, 1);
+	if (GetSkill(EQEmu::skills::SkillFlyingKick) == 0 && GetClass() == MONK && GetLevel() >= 30) {
+		SetSkill(EQEmu::skills::SkillFlyingKick, 1);
 	}
 
 

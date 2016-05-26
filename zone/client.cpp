@@ -20,6 +20,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "../common/say_link.h"
 
 // for windows compile
 #ifndef _WINDOWS
@@ -2423,10 +2424,10 @@ bool Client::CheckIncreaseSkill(EQEmu::skills::SkillType skillid, Mob *against_w
 	}
 
 	//Double Attack special code for bard
-	if (skillid == SkillDoubleAttack) {
+	if (skillid == EQEmu::skills::SkillDoubleAttack) {
 		if (GetClass() == BARD && GetBuildRank(BARD, RB_BRD_DOUBLEATTACK) == 0 && skillval > 0) {
 			//Reset skill, bard shouldn't have double attack if untrained
-			SetSkill((SkillUseTypes)SkillDoubleAttack, 0);
+			SetSkill(EQEmu::skills::SkillDoubleAttack, 0);
 			return false;
 		}
 		//Cap is based on build rank for double attack unlock
@@ -8759,8 +8760,8 @@ void Client::RefreshBuild() {
 				}
 
 
-				if (GetClass() == BARD && i == RB_BRD_DOUBLEATTACK && GetSkill(SkillDoubleAttack) < (n * 30)) { //Give double attack		
-					SetSkill((SkillUseTypes)SkillDoubleAttack, 1);
+				if (GetClass() == BARD && i == RB_BRD_DOUBLEATTACK && GetSkill(EQEmu::skills::SkillDoubleAttack) < (n * 30)) { //Give double attack		
+					SetSkill(EQEmu::skills::SkillDoubleAttack, 1);
 				}
 
 
@@ -10000,8 +10001,8 @@ void Client::ResetBuild() {
 	strn0cpy(m_epp.build, "00000000000000000000000000000000000000000000000000000", sizeof(m_epp.build)); //copy to session
 	std::string buildbuffer = m_epp.build;
 	buildbuffer.erase(53);
-	if (GetClass() == BARD && GetSkill(SkillDoubleAttack) > 0) { //Reset Double Attack?		
-		SetSkill((SkillUseTypes)SkillDoubleAttack, 0);
+	if (GetClass() == BARD && GetSkill(EQEmu::skills::SkillDoubleAttack) > 0) { //Reset Double Attack?		
+		SetSkill(EQEmu::skills::SkillDoubleAttack, 0);
 	}
 	std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %d",
 		EscapeString(buildbuffer).c_str(), CharacterID());
