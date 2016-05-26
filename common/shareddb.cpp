@@ -36,6 +36,7 @@
 #include "rulesys.h"
 #include "shareddb.h"
 #include "string_util.h"
+#include "eqemu_config.h"
 
 SharedDatabase::SharedDatabase()
 : Database()
@@ -810,9 +811,10 @@ bool SharedDatabase::LoadItems(const std::string &prefix) {
 	items_mmf.reset(nullptr);
 
 	try {
+		auto Config = EQEmuConfig::get();
 		EQEmu::IPCMutex mutex("items");
 		mutex.Lock();
-		std::string file_name = std::string("shared/") + prefix + std::string("items");
+		std::string file_name = Config->SharedMemDir + prefix + std::string("items");
 		items_mmf = std::unique_ptr<EQEmu::MemoryMappedFile>(new EQEmu::MemoryMappedFile(file_name));
 		items_hash = std::unique_ptr<EQEmu::FixedMemoryHashSet<EQEmu::Item_Struct>>(new EQEmu::FixedMemoryHashSet<EQEmu::Item_Struct>(reinterpret_cast<uint8*>(items_mmf->Get()), items_mmf->Size()));
 		mutex.Unlock();
@@ -1233,9 +1235,10 @@ bool SharedDatabase::LoadNPCFactionLists(const std::string &prefix) {
 	faction_hash.reset(nullptr);
 
 	try {
+		auto Config = EQEmuConfig::get();
 		EQEmu::IPCMutex mutex("faction");
 		mutex.Lock();
-		std::string file_name = std::string("shared/") + prefix + std::string("faction");
+		std::string file_name = Config->SharedMemDir + prefix + std::string("faction");
 		faction_mmf = std::unique_ptr<EQEmu::MemoryMappedFile>(new EQEmu::MemoryMappedFile(file_name));
 		faction_hash = std::unique_ptr<EQEmu::FixedMemoryHashSet<NPCFactionList>>(new EQEmu::FixedMemoryHashSet<NPCFactionList>(reinterpret_cast<uint8*>(faction_mmf->Get()), faction_mmf->Size()));
 		mutex.Unlock();
@@ -1365,7 +1368,7 @@ bool SharedDatabase::GetCommandSettings(std::map<std::string, std::pair<uint8, s
 			continue;
 
 		std::vector<std::string> aliases = SplitString(row[2], '|');
-		for (std::vector<std::string>::iterator iter = aliases.begin(); iter != aliases.end(); ++iter) {
+		for (auto iter = aliases.begin(); iter != aliases.end(); ++iter) {
 			if (iter->empty())
 				continue;
 			command_settings[row[0]].second.push_back(*iter);
@@ -1379,14 +1382,15 @@ bool SharedDatabase::LoadSkillCaps(const std::string &prefix) {
 	skill_caps_mmf.reset(nullptr);
 
 	uint32 class_count = PLAYER_CLASS_COUNT;
-	uint32 skill_count = HIGHEST_SKILL + 1;
+	uint32 skill_count = EQEmu::skills::HIGHEST_SKILL + 1;
 	uint32 level_count = HARD_LEVEL_CAP + 1;
 	uint32 size = (class_count * skill_count * level_count * sizeof(uint16));
 
 	try {
+		auto Config = EQEmuConfig::get();
 		EQEmu::IPCMutex mutex("skill_caps");
 		mutex.Lock();
-		std::string file_name = std::string("shared/") + prefix + std::string("skill_caps");
+		std::string file_name = Config->SharedMemDir + prefix + std::string("skill_caps");
 		skill_caps_mmf = std::unique_ptr<EQEmu::MemoryMappedFile>(new EQEmu::MemoryMappedFile(file_name));
 		mutex.Unlock();
 	} catch(std::exception &ex) {
@@ -1399,7 +1403,7 @@ bool SharedDatabase::LoadSkillCaps(const std::string &prefix) {
 
 void SharedDatabase::LoadSkillCaps(void *data) {
 	uint32 class_count = PLAYER_CLASS_COUNT;
-	uint32 skill_count = HIGHEST_SKILL + 1;
+	uint32 skill_count = EQEmu::skills::HIGHEST_SKILL + 1;
 	uint32 level_count = HARD_LEVEL_CAP + 1;
 	uint16 *skill_caps_table = reinterpret_cast<uint16*>(data);
 
@@ -1424,7 +1428,7 @@ void SharedDatabase::LoadSkillCaps(void *data) {
     }
 }
 
-uint16 SharedDatabase::GetSkillCap(uint8 Class_, SkillUseTypes Skill, uint8 Level) {
+uint16 SharedDatabase::GetSkillCap(uint8 Class_, EQEmu::skills::SkillType Skill, uint8 Level) {
 	if(!skill_caps_mmf) {
 		return 0;
 	}
@@ -1438,7 +1442,7 @@ uint16 SharedDatabase::GetSkillCap(uint8 Class_, SkillUseTypes Skill, uint8 Leve
 	}
 
 	uint32 class_count = PLAYER_CLASS_COUNT;
-	uint32 skill_count = HIGHEST_SKILL + 1;
+	uint32 skill_count = EQEmu::skills::HIGHEST_SKILL + 1;
 	uint32 level_count = HARD_LEVEL_CAP + 1;
 	if(Class_ > class_count || static_cast<uint32>(Skill) > skill_count || Level > level_count) {
 		return 0;
@@ -1453,7 +1457,7 @@ uint16 SharedDatabase::GetSkillCap(uint8 Class_, SkillUseTypes Skill, uint8 Leve
 	return skill_caps_table[index];
 }
 
-uint8 SharedDatabase::GetTrainLevel(uint8 Class_, SkillUseTypes Skill, uint8 Level) {
+uint8 SharedDatabase::GetTrainLevel(uint8 Class_, EQEmu::skills::SkillType Skill, uint8 Level) {
 	if(!skill_caps_mmf) {
 		return 0;
 	}
@@ -1467,7 +1471,7 @@ uint8 SharedDatabase::GetTrainLevel(uint8 Class_, SkillUseTypes Skill, uint8 Lev
 	}
 
 	uint32 class_count = PLAYER_CLASS_COUNT;
-	uint32 skill_count = HIGHEST_SKILL + 1;
+	uint32 skill_count = EQEmu::skills::HIGHEST_SKILL + 1;
 	uint32 level_count = HARD_LEVEL_CAP + 1;
 	if(Class_ > class_count || static_cast<uint32>(Skill) > skill_count || Level > level_count) {
 		return 0;
@@ -1539,10 +1543,11 @@ bool SharedDatabase::LoadSpells(const std::string &prefix, int32 *records, const
 	spells_mmf.reset(nullptr);
 
 	try {
+		auto Config = EQEmuConfig::get();
 		EQEmu::IPCMutex mutex("spells");
 		mutex.Lock();
 	
-		std::string file_name = std::string("shared/") + prefix + std::string("spells");
+		std::string file_name = Config->SharedMemDir + prefix + std::string("spells");
 		spells_mmf = std::unique_ptr<EQEmu::MemoryMappedFile>(new EQEmu::MemoryMappedFile(file_name));
 		*records = *reinterpret_cast<uint32*>(spells_mmf->Get());
 		*sp = reinterpret_cast<const SPDat_Spell_Struct*>((char*)spells_mmf->Get() + 4);
@@ -1637,10 +1642,10 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 
 		int tmp_skill = atoi(row[100]);;
 
-		if(tmp_skill < 0 || tmp_skill > HIGHEST_SKILL)
-            sp[tempid].skill = SkillBegging; /* not much better we can do. */ // can probably be changed to client-based 'SkillNone' once activated
+		if (tmp_skill < 0 || tmp_skill > EQEmu::skills::HIGHEST_SKILL)
+			sp[tempid].skill = EQEmu::skills::SkillBegging; /* not much better we can do. */ // can probably be changed to client-based 'SkillNone' once activated
         else
-			sp[tempid].skill = (SkillUseTypes) tmp_skill;
+			sp[tempid].skill = (EQEmu::skills::SkillType) tmp_skill;
 
 		sp[tempid].zonetype=atoi(row[101]);
 		sp[tempid].EnvironmentType=atoi(row[102]);
@@ -1742,10 +1747,11 @@ bool SharedDatabase::LoadBaseData(const std::string &prefix) {
 	base_data_mmf.reset(nullptr);
 
 	try {
+		auto Config = EQEmuConfig::get();
 		EQEmu::IPCMutex mutex("base_data");
 		mutex.Lock();
 
-		std::string file_name = std::string("shared/") + prefix + std::string("base_data");
+		std::string file_name = Config->SharedMemDir + prefix + std::string("base_data");
 		base_data_mmf = std::unique_ptr<EQEmu::MemoryMappedFile>(new EQEmu::MemoryMappedFile(file_name));
 		mutex.Unlock();
 	} catch(std::exception& ex) {
@@ -1981,14 +1987,15 @@ bool SharedDatabase::LoadLoot(const std::string &prefix) {
 	loot_drop_mmf.reset(nullptr);
 
 	try {
+		auto Config = EQEmuConfig::get();
 		EQEmu::IPCMutex mutex("loot");
 		mutex.Lock();
-		std::string file_name_lt = std::string("shared/") + prefix + std::string("loot_table");
+		std::string file_name_lt = Config->SharedMemDir + prefix + std::string("loot_table");
 		loot_table_mmf = std::unique_ptr<EQEmu::MemoryMappedFile>(new EQEmu::MemoryMappedFile(file_name_lt));
 		loot_table_hash = std::unique_ptr<EQEmu::FixedMemoryVariableHashSet<LootTable_Struct>>(new EQEmu::FixedMemoryVariableHashSet<LootTable_Struct>(
 			reinterpret_cast<uint8*>(loot_table_mmf->Get()),
 			loot_table_mmf->Size()));
-		std::string file_name_ld = std::string("shared/") + prefix + std::string("loot_drop");
+		std::string file_name_ld = Config->SharedMemDir + prefix + std::string("loot_drop");
 		loot_drop_mmf = std::unique_ptr<EQEmu::MemoryMappedFile>(new EQEmu::MemoryMappedFile(file_name_ld));
 		loot_drop_hash = std::unique_ptr<EQEmu::FixedMemoryVariableHashSet<LootDrop_Struct>>(new EQEmu::FixedMemoryVariableHashSet<LootDrop_Struct>(
 			reinterpret_cast<uint8*>(loot_drop_mmf->Get()),

@@ -249,7 +249,7 @@ void Client::GoFish()
 
 	//success formula is not researched at all
 
-	int fishing_skill = GetSkill(SkillFishing);	//will take into account skill bonuses on pole & bait
+	int fishing_skill = GetSkill(EQEmu::skills::SkillFishing);	//will take into account skill bonuses on pole & bait
 
 	//make sure we still have a fishing pole on:
 	int32 bslot = m_inv.HasItemByUse(EQEmu::item::ItemTypeFishingBait, 1, invWhereWorn | invWherePersonal);
@@ -258,7 +258,7 @@ void Client::GoFish()
 		Bait = m_inv.GetItem(bslot);
 
 	//if the bait isnt equipped, need to add its skill bonus
-	if (bslot >= EQEmu::legacy::GENERAL_BEGIN && Bait != nullptr && Bait->GetItem()->SkillModType == SkillFishing) {
+	if (bslot >= EQEmu::legacy::GENERAL_BEGIN && Bait != nullptr && Bait->GetItem()->SkillModType == EQEmu::skills::SkillFishing) {
 		fishing_skill += Bait->GetItem()->SkillModValue;
 	}
 
@@ -283,14 +283,14 @@ void Client::GoFish()
 					if(tmp != nullptr) {
                         auto positionNPC = GetPosition();
                         positionNPC.x = positionNPC.x + 3;
-						NPC* npc = new NPC(tmp, nullptr, positionNPC, FlyMode3);
-						npc->AddLootTable();
+			auto npc = new NPC(tmp, nullptr, positionNPC, FlyMode3);
+			npc->AddLootTable();
 
-						npc->AddToHateList(this, 1, 0, false);	//no help yelling
+			npc->AddToHateList(this, 1, 0, false); // no help yelling
 
-						entity_list.AddNPC(npc);
+			entity_list.AddNPC(npc);
 
-						Message(MT_Emote, "You fish up a little more than you bargained for...");
+			Message(MT_Emote, "You fish up a little more than you bargained for...");
 					}
 				}
 			}
@@ -357,16 +357,16 @@ void Client::GoFish()
 		DeleteItemInInventory(EQEmu::legacy::SlotPrimary, 0, true);
 	}
 
-	if(CheckIncreaseSkill(SkillFishing, nullptr, 5))
+	if (CheckIncreaseSkill(EQEmu::skills::SkillFishing, nullptr, 5))
 	{
-		if(title_manager.IsNewTradeSkillTitleAvailable(SkillFishing, GetRawSkill(SkillFishing)))
+		if (title_manager.IsNewTradeSkillTitleAvailable(EQEmu::skills::SkillFishing, GetRawSkill(EQEmu::skills::SkillFishing)))
 			NotifyNewTitlesAvailable();
 	}
 }
 
 void Client::ForageItem(bool guarantee) {
 
-	int skill_level = GetSkill(SkillForage);
+	int skill_level = GetSkill(EQEmu::skills::SkillForage);
 
 	//be wary of the string ids in switch below when changing this.
 	uint32 common_food_ids[MAX_COMMON_FOOD_IDS] = {
@@ -457,7 +457,7 @@ void Client::ForageItem(bool guarantee) {
 		parse->EventPlayer(EVENT_FORAGE_FAILURE, this, "", 0);
 	}
 
-	CheckIncreaseSkill(SkillForage, nullptr, 5);
+	CheckIncreaseSkill(EQEmu::skills::SkillForage, nullptr, 5);
 
 }
 

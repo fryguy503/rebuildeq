@@ -104,9 +104,9 @@ QueryServ *QServ = 0;
 TaskManager *taskmanager = 0;
 QuestParserCollection *parse = 0;
 EQEmuLogSys Log;
-
 const SPDat_Spell_Struct* spells;
 int32 SPDAT_RECORDS = -1;
+const ZoneConfig *Config;
 
 void Shutdown();
 extern void MapOpcodes();
@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
 		Log.Out(Logs::General, Logs::Error, "Loading server configuration failed.");
 		return 1;
 	}
-	const ZoneConfig *Config = ZoneConfig::get();
+	Config = ZoneConfig::get();
 
 	const char *zone_name;
 	uint32 instance_id = 0;
@@ -133,7 +133,7 @@ int main(int argc, char** argv) {
 		worldserver.SetLauncherName(argv[2]);
 		auto zone_port = SplitString(argv[1], ':');
 
-		if(zone_port.size() > 0) {
+		if(!zone_port.empty()) {
 			z_name = zone_port[0];
 		}
 
@@ -153,7 +153,7 @@ int main(int argc, char** argv) {
 		worldserver.SetLauncherName(argv[2]);
 		auto zone_port = SplitString(argv[1], ':');
 
-		if(zone_port.size() > 0) {
+		if(!zone_port.empty()) {
 			z_name = zone_port[0];
 		}
 
@@ -172,7 +172,7 @@ int main(int argc, char** argv) {
 		worldserver.SetLauncherName("NONE");
 		auto zone_port = SplitString(argv[1], ':');
 
-		if(zone_port.size() > 0) {
+		if(!zone_port.empty()) {
 			z_name = zone_port[0];
 		}
 
@@ -195,7 +195,7 @@ int main(int argc, char** argv) {
 	}
 
 	worldserver.SetPassword(Config->SharedKey.c_str());
-
+	
 	Log.Out(Logs::General, Logs::Zone_Server, "Connecting to MySQL...");
 	if (!database.Connect(
 		Config->DatabaseHost.c_str(),
@@ -358,12 +358,12 @@ int main(int argc, char** argv) {
 
 	parse = new QuestParserCollection();
 #ifdef LUA_EQEMU
-	LuaParser *lua_parser = new LuaParser();
+	auto lua_parser = new LuaParser();
 	parse->RegisterQuestInterface(lua_parser, "lua");
 #endif
 
 #ifdef EMBPERL
-	PerlembParser *perl_parser = new PerlembParser();
+	auto perl_parser = new PerlembParser();
 	parse->RegisterQuestInterface(perl_parser, "pl");
 
 	/* Load Perl Event Export Settings */
@@ -448,7 +448,7 @@ int main(int argc, char** argv) {
 			struct in_addr	in;
 			in.s_addr = eqsi->GetRemoteIP();
 			Log.Out(Logs::Detail, Logs::World_Server, "New client from %s:%d", inet_ntoa(in), ntohs(eqsi->GetRemotePort()));
-			Client* client = new Client(eqsi);
+			auto client = new Client(eqsi);
 			entity_list.AddClient(client);
 		}
 

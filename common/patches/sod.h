@@ -22,7 +22,6 @@
 
 #include "../struct_strategy.h"
 
-
 class EQStreamIdentifier;
 
 namespace SoD

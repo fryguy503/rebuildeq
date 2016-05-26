@@ -24,6 +24,8 @@
 #include "shareddb.h"
 #include "string_util.h"
 
+#include "../common/light_source.h"
+
 #include <limits.h>
 
 #include <iostream>
@@ -927,7 +929,7 @@ bool Inventory::SupportsClickCasting(int16 slot_id)
 	}
 	else if (slot_id >= EQEmu::legacy::GENERAL_BAGS_BEGIN && slot_id <= EQEmu::legacy::GENERAL_BAGS_END)
 	{
-		if (EQEmu::limits::AllowClickCastFromBag(m_inventory_version))
+		if (EQEmu::inventory::AllowClickCastFromBag(m_inventory_version))
 			return true;
 	}
 
@@ -2119,7 +2121,7 @@ const EQEmu::Item_Struct* ItemInst::GetUnscaledItem() const
 
 std::string ItemInst::GetCustomDataString() const {
 	std::string ret_val;
-	std::map<std::string, std::string>::const_iterator iter = m_custom_data.begin();
+	auto iter = m_custom_data.begin();
 	while (iter != m_custom_data.end()) {
 		if (ret_val.length() > 0) {
 			ret_val += "^";
@@ -2172,7 +2174,7 @@ void ItemInst::SetCustomData(std::string identifier, bool value) {
 }
 
 void ItemInst::DeleteCustomData(std::string identifier) {
-	std::map<std::string, std::string>::iterator iter = m_custom_data.find(identifier);
+	auto iter = m_custom_data.find(identifier);
 	if (iter != m_custom_data.end()) {
 		m_custom_data.erase(iter);
 	}

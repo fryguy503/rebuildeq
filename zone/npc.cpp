@@ -30,6 +30,7 @@
 #include "../common/item_struct.h"
 #include "../common/linked_list.h"
 #include "../common/servertalk.h"
+#include "../common/say_link.h"
 
 #include "client.h"
 #include "entity.h"
@@ -276,20 +277,20 @@ NPC::NPC(const NPCType* d, Spawn2* in_respawn, const glm::vec4& position, int if
 
 	//give NPCs skill values...
 	int r;
-	for(r = 0; r <= HIGHEST_SKILL; r++) {
-		skills[r] = database.GetSkillCap(GetClass(),(SkillUseTypes)r,moblevel);
+	for (r = 0; r <= EQEmu::skills::HIGHEST_SKILL; r++) {
+		skills[r] = database.GetSkillCap(GetClass(), (EQEmu::skills::SkillType)r, moblevel);
 	}
 	// some overrides -- really we need to be able to set skills for mobs in the DB
 	// There are some known low level SHM/BST pets that do not follow this, which supports
 	// the theory of needing to be able to set skills for each mob separately
 	if (moblevel > 50) {
-		skills[SkillDoubleAttack] = 250;
-		skills[SkillDualWield] = 250;
+		skills[EQEmu::skills::SkillDoubleAttack] = 250;
+		skills[EQEmu::skills::SkillDualWield] = 250;
 	} else if (moblevel > 3) {
-		skills[SkillDoubleAttack] = moblevel * 5;
-		skills[SkillDualWield] = skills[SkillDoubleAttack];
+		skills[EQEmu::skills::SkillDoubleAttack] = moblevel * 5;
+		skills[EQEmu::skills::SkillDualWield] = skills[EQEmu::skills::SkillDoubleAttack];
 	} else {
-		skills[SkillDoubleAttack] = moblevel * 5;
+		skills[EQEmu::skills::SkillDoubleAttack] = moblevel * 5;
 	}
 
 	if(d->trap_template > 0)
@@ -303,7 +304,7 @@ NPC::NPC(const NPCType* d, Spawn2* in_respawn, const glm::vec4& position, int if
 			trap_list = trap_ent_iter->second;
 			if(trap_list.size() > 0)
 			{
-				std::list<LDoNTrapTemplate*>::iterator trap_list_iter = trap_list.begin();
+				auto trap_list_iter = trap_list.begin();
 				std::advance(trap_list_iter, zone->random.Int(0, trap_list.size() - 1));
 				LDoNTrapTemplate* tt = (*trap_list_iter);
 				if(tt)
@@ -479,7 +480,7 @@ void NPC::CheckMinMaxLevel(Mob *them)
 	uint16 themlevel = them->GetLevel();
 	uint8 material;
 
-	std::list<ServerLootItem_Struct*>::iterator cur = itemlist.begin();
+	auto cur = itemlist.begin();
 	while(cur != itemlist.end())
 	{
 		if(!(*cur))
@@ -522,7 +523,7 @@ void NPC::QueryLoot(Client* to)
 	to->Message(0, "Coin: %ip %ig %is %ic", platinum, gold, silver, copper);
 
 	int x = 0;
-	for(ItemList::iterator cur = itemlist.begin(); cur != itemlist.end(); ++cur, ++x) {
+	for (auto cur = itemlist.begin(); cur != itemlist.end(); ++cur, ++x) {
 		const EQEmu::Item_Struct* item = database.GetItem((*cur)->item_id);
 		if (item == nullptr) {
 			Log.Out(Logs::General, Logs::Error, "Database error, invalid item");
@@ -848,7 +849,7 @@ bool NPC::SpawnZoneController(){
 	if (!RuleB(Zone, UseZoneController))
 		return false;
 
-	NPCType* npc_type = new NPCType;
+	auto npc_type = new NPCType;
 	memset(npc_type, 0, sizeof(NPCType));
 
 	strncpy(npc_type->name, "zone_controller", 60);
@@ -883,7 +884,7 @@ bool NPC::SpawnZoneController(){
 	point.y = 1000;
 	point.z = 500;
 
-	NPC* npc = new NPC(npc_type, nullptr, point, FlyMode3);
+	auto npc = new NPC(npc_type, nullptr, point, FlyMode3);
 	npc->GiveNPCTypeData(npc_type);
 
 	entity_list.AddNPC(npc);
@@ -1016,7 +1017,7 @@ NPC* NPC::SpawnNPC(const char* spawncommand, const glm::vec4& position, Client* 
 		}
 
 		//Time to create the NPC!!
-		NPCType* npc_type = new NPCType;
+		auto npc_type = new NPCType;
 		memset(npc_type, 0, sizeof(NPCType));
 
 		strncpy(npc_type->name, sep.arg[0], 60);
@@ -1050,7 +1051,7 @@ NPC* NPC::SpawnNPC(const char* spawncommand, const glm::vec4& position, Client* 
 		npc_type->prim_melee_type = 28;
 		npc_type->sec_melee_type = 28;
 
-		NPC* npc = new NPC(npc_type, nullptr, position, FlyMode3);
+		auto npc = new NPC(npc_type, nullptr, position, FlyMode3);
 		npc->GiveNPCTypeData(npc_type);
 
 		entity_list.AddNPC(npc);
@@ -1427,7 +1428,7 @@ uint32 NPC::GetMaxDamage(uint8 tlevel)
 
 void NPC::PickPocket(Client* thief)
 {
-	thief->CheckIncreaseSkill(SkillPickPockets, nullptr, 5);
+	thief->CheckIncreaseSkill(EQEmu::skills::SkillPickPockets, nullptr, 5);
 
 	//make sure were allowed to target them:
 	int over_level = GetLevel();
@@ -1446,7 +1447,7 @@ void NPC::PickPocket(Client* thief)
 		return;
 	}
 
-	int steal_skill = thief->GetSkill(SkillPickPockets);
+	int steal_skill = thief->GetSkill(EQEmu::skills::SkillPickPockets);
 	int steal_chance = steal_skill * 100 / (5 * over_level + 5);
 
 	// Determine whether to steal money or an item.
@@ -2464,7 +2465,7 @@ void NPC::DoQuestPause(Mob *other) {
 void NPC::ChangeLastName(const char* in_lastname)
 {
 
-	EQApplicationPacket* outapp = new EQApplicationPacket(OP_GMLastName, sizeof(GMLastName_Struct));
+	auto outapp = new EQApplicationPacket(OP_GMLastName, sizeof(GMLastName_Struct));
 	GMLastName_Struct* gmn = (GMLastName_Struct*)outapp->pBuffer;
 	strcpy(gmn->name, GetName());
 	strcpy(gmn->gmname, GetName());

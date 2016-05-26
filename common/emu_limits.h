@@ -1,5 +1,5 @@
-/*	EQEMu: Everquest Server Emulator
-
+/*	EQEMu:  Everquest Server Emulator
+	
 	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.net)
 
 	This program is free software; you can redistribute it and/or modify
@@ -11,45 +11,46 @@
 	are required to give you total support for your newly bought product;
 	without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 	A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-	
+
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#ifndef COMMON_ROF_H
-#define COMMON_ROF_H
+#ifndef COMMON_EMU_LIMITS_H
+#define COMMON_EMU_LIMITS_H
 
-#include "../struct_strategy.h"
+#include "types.h"
 
-class EQStreamIdentifier;
+#include <stdlib.h>
 
-namespace RoF
+
+namespace EntityLimits
 {
+	namespace npc {
+		enum : int { Invalid = -1, Null, Safety };
 
-	//these are the only public member of this namespace.
-	extern void Register(EQStreamIdentifier &into);
-	extern void Reload();
+		enum : bool { False = false, True = true };
+	}
 
+	namespace merc {
+		enum : int { Invalid = -1, Null, Safety };
 
+		enum : bool { False = false, True = true };
+	}
 
-	//you should not directly access anything below..
-	//I just dont feel like making a seperate header for it.
+	namespace bot {
+		enum : int { Invalid = -1, Null, Safety };
 
-	class Strategy : public StructStrategy {
-	public:
-		Strategy();
+		enum : bool { False = false, True = true };
+	}
 
-	protected:
+	namespace pet {
+		enum : int { Invalid = -1, Null, Safety };
 
-		virtual std::string Describe() const;
-		virtual const EQEmu::versions::ClientVersion ClientVersion() const;
+		enum : bool { False = false, True = true };
+	}
 
-		//magic macro to declare our opcode processors
-		#include "ss_declare.h"
-		#include "rof_ops.h"
-	};
+}; /*EntityLimits*/
 
-}; /*RoF*/
-
-#endif /*COMMON_ROF_H*/
+#endif /*COMMON_EMU_LIMITS_H*/
