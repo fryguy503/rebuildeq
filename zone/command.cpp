@@ -4148,6 +4148,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "gfaydark") == 0) {
 		if (c->GetZoneID() == 54) {
 			c->Message(0, "You are already in gfaydark.");
+			return;
 		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4172,6 +4173,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "tox") == 0) {
 		if (c->GetZoneID() == 38) {
 			c->Message(0, "You are already in tox.");
+			return;
 		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4196,6 +4198,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "ecommons") == 0) {
 		if (c->GetZoneID() == 22) {
 			c->Message(0, "You are already in ecommons.");
+			return;
 		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4220,6 +4223,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "fieldofbone") == 0) {
 		if (c->GetZoneID() == 78) {
 			c->Message(0, "You are already in fieldofbone.");
+			return;
 		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4244,6 +4248,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "sro") == 0) {
 		if (c->GetZoneID() == 35) {
 			c->Message(0, "You are already in sro.");
+			return;
 		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4269,6 +4274,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "commons") == 0) {
 		if (c->GetZoneID() == 21) {
 			c->Message(0, "You are already in commons.");
+			return;
 		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4294,6 +4300,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	else if (sep->arg[1] && strcasecmp(sep->arg[1], "northkarana") == 0) {
 		if (c->GetZoneID() == 12) {
 			c->Message(0, "You are already in northkarana.");
+			return;
 		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4318,6 +4325,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "dreadlands") == 0) {
 		if (c->GetZoneID() == 86) {
 			c->Message(0, "You are already in dreadlands.");
+			return;
 		}
 		if (c->GetLevel() >= levelMin) {
 			 if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4347,11 +4355,12 @@ void command_teleport(Client *c, const Seperator *sep) {
 			c->Message(0, "Until level %u, you may teleport and be bound for free to:", levelMin);
 			c->Message(0, "[ %s ], [ %s ]",
 				c->CreateSayLink("#teleport ecommons", "ecommons").c_str(),
-				c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str()
+				c->CreateSayLink("#teleport fieldofbone", "fieldofbone").c_str()
+				
 			);
 			c->Message(0, "[ %s ], [ %s ]",
-				c->CreateSayLink("#teleport tox", "tox").c_str(),
-				c->CreateSayLink("#teleport fieldofbone", "fieldofbone").c_str()
+				c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str(),
+				c->CreateSayLink("#teleport tox", "tox").c_str()
 			);
 			return;
 		}
