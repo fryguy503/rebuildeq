@@ -3921,6 +3921,7 @@ void command_builds(Client *c, const Seperator *sep)
 		}
 		return;
 	}
+	
 	const char *windowTitle = "Builds";
 	uint8 unspent = c->GetBuildUnspentPoints();
 	std::string unspentMessage = "";
@@ -3930,8 +3931,8 @@ void command_builds(Client *c, const Seperator *sep)
 
 
 	// align=\"center\"
-	std::string windowText = StringFormat("<table align=\"center\" width=\"100%\"><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\">Click To Review Your Build</a></td></tr></table>",				
-		c->GetBaseClassName(),
+	std::string windowText = StringFormat("<table align=\"center\" width=\"100%\"><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\">Click To Review Your Build</a></td></tr></table>",
+		c->GetBaseClassName().c_str(),
 		c->GetSession()
 	);
 
