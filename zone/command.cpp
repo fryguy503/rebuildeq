@@ -4146,6 +4146,9 @@ void command_teleport(Client *c, const Seperator *sep) {
 
 	uint64 levelMin = 10;
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "gfaydark") == 0) {
+		if (c->GetZoneID() == 54) {
+			c->Message(0, "You are already in gfaydark.");
+		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
 				c->Message(0, "Not enough money to teleport.");
@@ -4167,6 +4170,9 @@ void command_teleport(Client *c, const Seperator *sep) {
 		c->MovePC(54, -411, -2023, -0.28, 47.8, (uint8)'\000', ZoneSolicited);
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "tox") == 0) {
+		if (c->GetZoneID() == 38) {
+			c->Message(0, "You are already in tox.");
+		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
 				c->Message(0, "Not enough money to teleport.");
@@ -4188,9 +4194,22 @@ void command_teleport(Client *c, const Seperator *sep) {
 		c->MovePC(38, -912.10, -1517.81, -37.71, 58.2, (uint8)'\000', ZoneSolicited);
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "ecommons") == 0) {
+		if (c->GetZoneID() == 22) {
+			c->Message(0, "You are already in ecommons.");
+		}
 		if (c->GetLevel() >= levelMin) {
-			c->Message(0, "You are too high to teleport to ecommons.");
-			return;
+			if (!c->HasMoneyInInvOrBank(cost)) {
+				c->Message(0, "Not enough money to teleport.");
+				return;
+			}
+			if (!c->TakeMoneyFromPPOrBank(cost, true)) {
+				char *hacker_str = nullptr;
+				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
+				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+				safe_delete_array(hacker_str);
+				return;
+			}
+			c->Message(0, "You paid %s to teleport to gfaydark.", displayCost.c_str());
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to ecommons for free due to being below level %u.", levelMin);
@@ -4199,9 +4218,22 @@ void command_teleport(Client *c, const Seperator *sep) {
 		c->MovePC(22, -73.06, -1787.51, 3.13, 51.8, (uint8)'\000', ZoneSolicited);
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "fieldofbone") == 0) {
+		if (c->GetZoneID() == 78) {
+			c->Message(0, "You are already in fieldofbone.");
+		}
 		if (c->GetLevel() >= levelMin) {
-			c->Message(0, "You are too high to teleport to fieldofbone.");
-			return;
+			if (!c->HasMoneyInInvOrBank(cost)) {
+				c->Message(0, "Not enough money to teleport.");
+				return;
+			}
+			if (!c->TakeMoneyFromPPOrBank(cost, true)) {
+				char *hacker_str = nullptr;
+				MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
+				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+				safe_delete_array(hacker_str);
+				return;
+			}
+			c->Message(0, "You paid %s to teleport to gfaydark.", displayCost.c_str());
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to fieldofbone for free due to being below level %u.", levelMin);
@@ -4210,6 +4242,9 @@ void command_teleport(Client *c, const Seperator *sep) {
 		c->MovePC(78, 2395.95, -2216.75, 30.63, 227.6, (uint8)'\000', ZoneSolicited);
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "sro") == 0) {
+		if (c->GetZoneID() == 35) {
+			c->Message(0, "You are already in sro.");
+		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
 				c->Message(0, "Not enough money to teleport.");
@@ -4232,6 +4267,9 @@ void command_teleport(Client *c, const Seperator *sep) {
 		c->MovePC(35, -411, 123.79, -1043.44, 8.83, (uint8)'\000', ZoneSolicited);
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "commons") == 0) {
+		if (c->GetZoneID() == 21) {
+			c->Message(0, "You are already in commons.");
+		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
 				c->Message(0, "Not enough money to teleport.");
@@ -4254,6 +4292,9 @@ void command_teleport(Client *c, const Seperator *sep) {
 		return;
 	}
 	else if (sep->arg[1] && strcasecmp(sep->arg[1], "northkarana") == 0) {
+		if (c->GetZoneID() == 12) {
+			c->Message(0, "You are already in northkarana.");
+		}
 		if (c->GetLevel() >= levelMin) {
 			if (!c->HasMoneyInInvOrBank(cost)) {
 				c->Message(0, "Not enough money to teleport.");
@@ -4275,7 +4316,10 @@ void command_teleport(Client *c, const Seperator *sep) {
 		c->MovePC(12, 1205.91, -3685.44, -8.56, 126.6, (uint8)'\000', ZoneSolicited);
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "dreadlands") == 0) {
-		 if (c->GetLevel() >= levelMin) {
+		if (c->GetZoneID() == 86) {
+			c->Message(0, "You are already in dreadlands.");
+		}
+		if (c->GetLevel() >= levelMin) {
 			 if (!c->HasMoneyInInvOrBank(cost)) {
 				 c->Message(0, "Not enough money to teleport.");
 				 return;
@@ -4315,12 +4359,14 @@ void command_teleport(Client *c, const Seperator *sep) {
 			c->GetLevel(), 
 			displayCost.c_str()
 		);
-		c->Message(0, "[ %s ], [ %s ], [ %s ]",
+		c->Message(0, "[ %s ], [ %s ], [ %s ], [ %s ]",
+			c->CreateSayLink("#teleport ecommons", "ecommons").c_str(),
 			c->CreateSayLink("#teleport commons", "commons").c_str(),
 			c->CreateSayLink("#teleport dreadlands", "dreadlands").c_str(),
 			c->CreateSayLink("#teleport gfaydark", "gfaydark").c_str()
 		);
-		c->Message(0, "[ %s ], [ %s ], [ %s ]",
+		c->Message(0, "[ %s ], [ %s ], [ %s ], [ %s ]",
+			c->CreateSayLink("#teleport fieldofbone", "fieldofbone").c_str(),
 			c->CreateSayLink("#teleport northkarana", "northkarana").c_str(),
 			c->CreateSayLink("#teleport sro", "sro").c_str(),
 			c->CreateSayLink("#teleport tox", "tox").c_str()
