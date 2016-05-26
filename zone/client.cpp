@@ -9193,7 +9193,7 @@ bool Client::IsEncounterReady() {
 void Client::EmoteEncounter() {
 	//bat_idl2 = bat 
 	//bell005.wav errie bell
-	m_epp.encounter_timeout = time(nullptr) + 360; //You have 6 minutes to spawn the encounter.
+	m_epp.encounter_timeout = time(nullptr) + 720; //You have 12 minutes to spawn the encounter.
 	m_epp.next_encounter_time = time(nullptr) + zone->random.Int(360, 10800); //6 mins to 3 hours, this is if they don't accept it etc.
 
 	//Encounter table for randomizing what kind of encounter
