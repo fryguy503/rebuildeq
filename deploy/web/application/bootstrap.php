@@ -165,7 +165,14 @@ Route::set('rest', 'rest(/<controller>(/<action>(/<id>(/<field>))))')
 		'action'     => 'Skill',
 	));
 */
-
+/*
+Route::set('items', 'items(/<itemname>)')
+	->defaults(array(
+		'directory' => 'Web',
+		'controller' => 'Items',
+		'action'     => 'index',
+	));
+*/
 Route::set('buildpage', 'builds/<class>/skill(/<skillid>)')
 	->defaults(array(
 		'directory' => 'Web',

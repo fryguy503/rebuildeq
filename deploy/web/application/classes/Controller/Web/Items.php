@@ -10,14 +10,8 @@ class Controller_Web_BuildSkill extends Template_Web_Core {
 	}
 
 	public function action_index() {
-		$class =  strtolower($this->request->param('class'));
-		$skills = array();
-
-
-		$skillid = intval($this->request->param('skillid'));
-		$build = Build::get_build_info($class);
-		$skills = Build::get_skills($class);
-
+		$class =  strtolower($this->request->param('itemname'));
+		
 		if (empty($class) || empty($build) || empty($build->styles)) {
 			$this->redirect('/builds/');
 			return;

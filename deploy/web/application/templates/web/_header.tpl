@@ -16,6 +16,7 @@
         <li><a href="/about"><span class="glyphicon glyphicon-info-sign"></span> About</a></li>
 
         <li><a href="/builds"><span class="glyphicon glyphicon-tasks"></span> Builds</a></li>
+        {*<li><a href="/items"><span class="glyphicon glyphicon-tasks"></span> Items</a></li>*}
       </ul>
      
       <ul class="nav navbar-nav navbar-right">
