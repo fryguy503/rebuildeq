@@ -4032,11 +4032,11 @@ void command_encounter(Client *c, const Seperator *sep) {
 		int itemid = 100002;
 
 		if (sep->arg[2] && strcasecmp(sep->arg[2], "armor") == 0) {
-			itemid = 100005;
-		} else if (sep->arg[2] && strcasecmp(sep->arg[2], "weapon") == 0) {
 			itemid = 100002;
+		} else if (sep->arg[2] && strcasecmp(sep->arg[2], "weapon") == 0) {
+			itemid = 100005;
 		} else {
-			c->Message(13, "Please choose which type of reward to claim: [ %s ], [ %s ].", c->CreateSayLink("#encounter claim armor", "armor box").c_str(), c->CreateSayLink("#encounter claim weapon", "weapon box").c_str());
+			c->Message(0, "Please choose which type of reward to claim: [ %s ], [ %s ].", c->CreateSayLink("#encounter claim armor", "armor box").c_str(), c->CreateSayLink("#encounter claim weapon", "weapon box").c_str());
 			return;
 		}
 

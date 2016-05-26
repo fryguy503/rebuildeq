@@ -9323,8 +9323,10 @@ void Client::EmoteEncounter() {
 	if (zoneid == 22 || //ec
 		zoneid == 21 //wc
 		) {
-		pool += 200;
-		encounterTable[pool] = EN_FREEPORT;
+		if (GetCharacterFactionLevel(696) <= FACTION_DUBIOUS) {
+			pool += 200;
+			encounterTable[pool] = EN_FREEPORT;
+		}		
 	}
 
 	if (zoneid == 35 //sro
@@ -9354,7 +9356,9 @@ void Client::EmoteEncounter() {
 		m_epp.encounter_type = entry->second;
 	}
 
-	SendPopupToClient("You sense an encounter nearby", "An encounter has triggered nearby. Type in the console #encounter to cause it trigger.");
+	const char *windowTitle = "You sense an encounter nearby";
+	std::string windowText = StringFormat("An encounter has triggered nearby. Rally your friends quickly and type in '/say #encounter' to begin.");	
+	this->SendPopupToClient(windowTitle, windowText.c_str());
 
 	switch (m_epp.encounter_type) {
 	case EN_ZOMBIE:
