@@ -789,6 +789,7 @@ void Client::CompleteConnect()
 		}
 		if (m_pp.birthday > time(nullptr) - 120) { //If they're less than 2 minutes old
 			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome %s to the server!", GetCleanName()).c_str());
+			UpdateSkillsAndSpells();
 		}
 		else if(m_pp.lastlogin < time(nullptr) - 600) {
 			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome back to the server, %s!", GetCleanName()).c_str());
