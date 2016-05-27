@@ -300,8 +300,8 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	
 
 	//Shaman pet
-	if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) > 0 && spell_id == 164) {
-		uint32 rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT);
+	if (this->IsClient() && CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL) > 0 && spell_id == 164) {
+		uint32 rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL);
 		//Nerf level, since that's used as a factor for HP/Dmg calculation
 		npc_type->level = (CastToClient()->GetLevel() - (10 - rank));
 		npc_type = this->AdjustNPC(npc_type);
