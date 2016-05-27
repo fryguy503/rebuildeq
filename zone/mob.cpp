@@ -6151,8 +6151,9 @@ NPCType* Mob::AdjustNPC(NPCType* npctype) {
 
 	//Encounter Triggers
 
-	if (npctype->id == 37021) {
-		npctype->spells = 0;
+	if (npctype_id == 37021) { //spectres
+		npctype->npc_spells_id = 0; //nerf spectrestun
+		npctype->npc_spells_effects_id = 0; //nerf lifetap
 	}
 	
 	return npctype;
