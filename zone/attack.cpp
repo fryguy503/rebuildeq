@@ -1577,8 +1577,9 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	if (this->GetInstanceID() > 0) {
 		return true;
 	}
+
 	//don't continue if you didn't lose exp
-	if (exploss < 1) {
+	if (exploss < 1 && this->GetLevel() > 10) {
 		return true;
 	}
 
