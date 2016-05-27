@@ -729,7 +729,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit Call";
-			$newSkill->desc = 'Grants the Spirit Call AA, granted a new pet with <em data-base="10">10</em>% effectiveness<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Spirit Call AA, summoning a racial pet with <em data-base="10">10</em>% effectiveness<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
 			$skills[20] = $newSkill;
 			
