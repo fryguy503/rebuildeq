@@ -448,7 +448,7 @@ void NPC::AddCardTable() {
 	uint32 itemid = 0;
 	std::map <int, int> cardTable;
 	int pool = 0;
-	pool += 5000; cardTable[pool] = 0; //Buffer.
+	pool += 50000; cardTable[pool] = 0; //Buffer.
 	if (GetBodyType() == BT_Dragon || GetBodyType() == BT_Dragon3 || GetBodyType() == BT_VeliousDragon) { pool += 5; cardTable[pool] = 100100; } //Dragon Card
 	if (GetBodyType() == BT_Insect) { pool += 5; cardTable[pool] = 100101; } //Insect Card
 	if (GetBodyType() == BT_Animal) { pool += 5; cardTable[pool] = 100102; } //Animal Card
