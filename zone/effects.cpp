@@ -233,11 +233,17 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 
 	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND) > 0) {
 		extra_dmg = int32((float)value * 0.04 * (float)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND));
+		if (extra_dmg < CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND)) {
+			extra_dmg = int32(CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND) * 2);
+		}
 		value += extra_dmg;
 	}
 
 	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_CHANTCYCLE) > 0) {
 		extra_dmg = int32((float)value * 0.1 * (float)CastToClient()->GetBuildRank(BARD, RB_BRD_CHANTCYCLE));
+		if (extra_dmg < CastToClient()->GetBuildRank(BARD, RB_BRD_CHANTCYCLE)) {
+			extra_dmg = int32(CastToClient()->GetBuildRank(BARD, RB_BRD_CHANTCYCLE) * 2);
+		}
 		value += extra_dmg;
 	}
 
