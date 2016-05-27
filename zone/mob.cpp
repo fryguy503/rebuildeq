@@ -6148,6 +6148,13 @@ NPCType* Mob::AdjustNPC(NPCType* npctype) {
 
 	npctype->min_dmg = (npctype->min_dmg * clfact) / 220;
 	npctype->max_dmg = (npctype->max_dmg * clfact) / 220;
+
+	//Encounter Triggers
+
+	if (npctype->id == 37021) {
+		npctype->spells = 0;
+	}
+	
 	return npctype;
 }
 

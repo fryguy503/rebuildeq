@@ -13,11 +13,11 @@ my $encounterType = "a wave of spectres";
 my $spelleffect = 0;
 my $commonNpcID = 37021;
 my $rareNpcID = 37021;
-my $rareName = "a spectre";
+my $rareName = "an evil spectre";
 my $isRare = 0;
 my $rarity = 10; #chance of rare spawn
-my $npcName1 = "a spectre";
-my $npcName2 = "a spectre";
+my $npcName1 = "an odd spectre";
+my $npcName2 = "an angry spectre";
 my $npcName3 = "a spectre";
 
 sub EVENT_SPAWN {
