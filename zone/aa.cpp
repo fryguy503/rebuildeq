@@ -1185,6 +1185,36 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			cooldown = 4;
 		}	
 	}
+	
+	if (rank_id == aaSpiritCall) {
+		spellid = 164;
+		if (GetLevel() < 14) {
+			manacost = 40;
+			cooldown = 16;
+		} else if (GetLevel() < 22) {
+			manacost = 80;
+			cooldown = 16;
+		} else if (GetLevel() < 30) {
+			manacost = 120;
+			cooldown = 16;
+		} else if (GetLevel() < 38) {
+			manacost = 160;
+			cooldown = 16;
+		} else if (GetLevel() < 46) {
+			manacost = 200;
+			cooldown = 16;
+		} else if (GetLevel() < 52) {
+			manacost = 290;
+			cooldown = 16;
+		} else if (GetLevel() < 58) {
+			manacost = 390;
+			cooldown = 16;
+		} else {
+			manacost = 450;
+			cooldown = 16;
+		}
+	}
+
 	if (rank_id == aaSteadfastServant) {
 		if (GetLevel() < 14) { //leering corpse 7
 			spellid = 491;

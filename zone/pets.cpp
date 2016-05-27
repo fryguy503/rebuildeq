@@ -298,6 +298,52 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	//Live AA - Elemental Durability
 	int16 MaxHP = aabonuses.PetMaxHP + itembonuses.PetMaxHP + spellbonuses.PetMaxHP;
 	
+
+	//Shaman pet
+	if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) > 0 && spell_id == 164) {
+		uint32 rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT);
+		//Nerf level, since that's used as a factor for HP/Dmg calculation
+		npc_type->level = (CastToClient()->GetLevel() - (10 - rank));
+		npc_type = this->AdjustNPC(npc_type);
+		//Now that we generated base HP, let's nerf it on a new formula
+		npc_type->max_hp = (npc_type->max_hp * 0.1 * rank); //50 % of normal hp
+		npc_type->AC = (npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
+		npc_type->size = rank * (GetLevel() / 25); //1.04 to 7.4
+		npc_type->max_dmg = npc_type->max_dmg * 0.1 * rank; //50% dmg at max
+		//Turn it into a pet
+		switch(GetBaseRace())
+		{
+		case VAHSHIR:
+			npc_type->race = TIGER;
+			npc_type->size *= 0.8f;
+			break;
+		case TROLL:
+			npc_type->race = ALLIGATOR;
+			npc_type->size *= 2.5f;
+			break;
+		case OGRE:
+			npc_type->race = BEAR;
+			npc_type->texture = 3;
+			npc_type->gender = 2;
+			break;
+		case BARBARIAN:
+			npc_type->race = WOLF;
+			npc_type->texture = 2;
+			break;
+		case IKSAR:
+			npc_type->race = WOLF;
+			npc_type->texture = 0;
+			npc_type->gender = 1;
+			npc_type->size *= 2.0f;
+			npc_type->luclinface = 0;
+			break;
+		default:
+			npc_type->race = WOLF;
+			npc_type->texture = 0;
+		}
+	}
+
+	
 	//Shin: Pet buff system
 	if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) > 0 &&
 		(spell_id == 491 || spell_id == 351 || spell_id == 362 || spell_id == 492 || spell_id == 440 || spell_id == 442 || spell_id == 495)) {
