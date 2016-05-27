@@ -2,7 +2,7 @@
 
 sub EVENT_SAY {
   if($text =~ /Hail/i) {
-    quest::say("Greetings, friend! I am Bubar, merchant from the burning sands. You must be thirsty or, perhaps, hungry. Please look over my goods.");
+    quest::say("Greetings, friend! I am Bubar, merchant from the burning sands. You must be wary, please look over my goods.");
   }
 }
 
