@@ -9972,14 +9972,26 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		if (!target)
 			break;
 		if (target->IsMezzed()) {
-			Message_StringID(10, CANNOT_WAKE, mypet->GetCleanName(), target->GetCleanName());
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				if (this->GetGender() == 0) mypet->Say("I do wish to wake a sleeping enemy, my Lord.");
+				else mypet->Say("I do not wish to wake a sleeping enemy, my Lady.");
+			}
+			else {
+				Message_StringID(10, CANNOT_WAKE, mypet->GetCleanName(), GetTarget()->GetCleanName());
+			}
 			break;
 		}
 		if (mypet->IsFeared())
 			break; //prevent pet from attacking stuff while feared
 
 		if (!mypet->IsAttackAllowed(target)) {
-			mypet->Say_StringID(NOT_LEGAL_TARGET);
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				if (this->GetGender() == 0) mypet->Say("This target is not one I can attack, my Lord.");
+				else mypet->Say("This target is not one I can attack, my Lady.");
+			}
+			else {
+				mypet->Say_StringID(NOT_LEGAL_TARGET);
+			}
 			break;
 		}
 
@@ -9997,7 +10009,13 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 				}
 				zone->AddAggroMob();
 				mypet->AddToHateList(target, 1);
-				Message_StringID(MT_PetResponse, PET_ATTACKING, mypet->GetCleanName(), target->GetCleanName());
+				if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+					if (this->GetGender() == 0) mypet->Say("Engaging, my Lord.");
+					else mypet->Say("Engaging, my Lady.");
+				}
+				else {
+					Message_StringID(MT_PetResponse, PET_ATTACKING, mypet->GetCleanName(), target->GetCleanName());
+				}
 			}
 		}
 		break;
@@ -10009,12 +10027,24 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		if (!GetTarget())
 			break;
 		if (GetTarget()->IsMezzed()) {
-			Message_StringID(10, CANNOT_WAKE, mypet->GetCleanName(), GetTarget()->GetCleanName());
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				if (this->GetGender() == 0) mypet->Say("I do wish to wake a sleeping enemy, my Lord.");
+				else mypet->Say("I do not wish to wake a sleeping enemy, my Lady.");
+			}
+			else {
+				Message_StringID(10, CANNOT_WAKE, mypet->GetCleanName(), GetTarget()->GetCleanName());
+			}
 			break;
 		}
 
 		if (!mypet->IsAttackAllowed(GetTarget())) {
-			mypet->Say_StringID(NOT_LEGAL_TARGET);
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				if (this->GetGender() == 0) mypet->Say("This target is not one I can attack, my Lord.");
+				else mypet->Say("This target is not one I can attack, my Lady.");
+			}
+			else {
+				mypet->Say_StringID(NOT_LEGAL_TARGET);
+			}
 			break;
 		}
 
@@ -10022,7 +10052,9 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 			if (GetTarget() != this && DistanceSquaredNoZ(mypet->GetPosition(), GetTarget()->GetPosition()) <= (RuleR(Pets, AttackCommandRange)*RuleR(Pets, AttackCommandRange))) {
 				zone->AddAggroMob();
 				mypet->AddToHateList(GetTarget(), 1);
+				
 				Message_StringID(MT_PetResponse, PET_ATTACKING, mypet->GetCleanName(), GetTarget()->GetCleanName());
+				
 			}
 		}
 		break;
@@ -10031,7 +10063,13 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		if (mypet->IsFeared()) break; //keeps pet running while feared
 
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 3) || mypet->GetPetType() != petAnimation) {
-			mypet->Say_StringID(MT_PetResponse, PET_CALMING);
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				if (this->GetGender() == 0) mypet->Say("Calmly returning, my Lord.");
+				else mypet->Say("Calmly returning, my Lady.");
+			}
+			else {
+				mypet->Say_StringID(MT_PetResponse, PET_CALMING);
+			}
 			mypet->WipeHateList();
 			mypet->SetTarget(nullptr);
 		}
@@ -10097,7 +10135,13 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 1) || mypet->GetPetType() != petAnimation) {
 			mypet->SetHeld(false);
-			mypet->Say_StringID(MT_PetResponse, PET_FOLLOWING);
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				mypet->Say("Following your lead.");				
+			}
+			else {
+				mypet->Say_StringID(MT_PetResponse, PET_FOLLOWING);
+			}
+			
 			mypet->SetPetOrder(SPO_Follow);
 			mypet->SendAppearancePacket(AT_Anim, ANIM_STAND);
 		}
@@ -10107,7 +10151,12 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 3) || mypet->GetPetType() != petAnimation) {
 			if (mypet->CastToNPC()->IsTaunting())
 			{
-				Message_StringID(MT_PetResponse, PET_NO_TAUNT);
+				if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+					mypet->Say("I will no longer taunt enemies, as you have instructed me.");
+				}
+				else {
+					Message_StringID(MT_PetResponse, PET_NO_TAUNT);
+				}
 				mypet->CastToNPC()->SetTaunting(false);
 			}
 			else
@@ -10120,14 +10169,24 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 	}
 	case PET_TAUNT_ON: {
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 3) || mypet->GetPetType() != petAnimation) {
-			Message_StringID(MT_PetResponse, PET_DO_TAUNT);
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				mypet->Say("I will now taunt targets, as you have instructed me.");
+			}
+			else {
+				Message_StringID(MT_PetResponse, PET_DO_TAUNT);
+			}
 			mypet->CastToNPC()->SetTaunting(true);
 		}
 		break;
 	}
 	case PET_TAUNT_OFF: {
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 3) || mypet->GetPetType() != petAnimation) {
-			Message_StringID(MT_PetResponse, PET_NO_TAUNT);
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				mypet->Say("I will no longer taunt enemies, as you have instructed me.");
+			}
+			else {
+				Message_StringID(MT_PetResponse, PET_NO_TAUNT);
+			}
 			mypet->CastToNPC()->SetTaunting(false);
 		}
 		break;
@@ -10137,7 +10196,12 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 1) || mypet->GetPetType() != petAnimation) {
 			mypet->SetHeld(false);
-			mypet->Say_StringID(MT_PetResponse, PET_GUARDME_STRING);
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				mypet->Say("I will guard this area with my life.");
+			}
+			else {
+				mypet->Say_StringID(MT_PetResponse, PET_GUARDME_STRING);
+			}
 			mypet->SetPetOrder(SPO_Follow);
 			mypet->SendAppearancePacket(AT_Anim, ANIM_STAND);
 		}
@@ -10185,7 +10249,13 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		if (mypet->IsFeared()) break; //could be exploited like PET_BACKOFF
 
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 3) || mypet->GetPetType() != petAnimation) {
-			mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				if (this->GetGender() == 0) mypet->Say("Standing up, my Lord.");
+				else mypet->Say("Standing up, my Lady.");
+			}
+			else {
+				mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
+			}
 			mypet->SetPetOrder(SPO_Follow);
 			mypet->SendAppearancePacket(AT_Anim, ANIM_STAND);
 		}
@@ -10195,7 +10265,13 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		if (mypet->IsFeared()) break; //could be exploited like PET_BACKOFF
 
 		if ((mypet->GetPetType() == petAnimation && GetAA(aaAnimationEmpathy) >= 3) || mypet->GetPetType() != petAnimation) {
-			mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				if (this->GetGender() == 0) mypet->Say("Taking a seat, my Lord.");
+				else mypet->Say("Taking a seat, my Lady.");
+			}
+			else {
+				mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
+			}
 			mypet->SetPetOrder(SPO_Sit);
 			mypet->SetRunAnimSpeed(0);
 			if (!mypet->UseBardSpellLogic())	//maybe we can have a bard pet
@@ -10208,8 +10284,17 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		if (mypet->IsFeared()) break; //could be exploited like PET_BACKOFF
 
 		if (mypet->GetPetType() != petAnimation) {
+
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				if (this->GetGender() == 0) mypet->Say("Taking a seat, my Lord.");
+				else mypet->Say("Taking a seat, my Lady.");
+			}
+			else {
+				mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
+			}
+
 			// Needs to have an IsSleeping() check added and this case should toggle on/off
-			mypet->Say_StringID(MT_PetResponse, PET_SIT_STRING);
+			
 			mypet->SetPetOrder(SPO_Sit);
 			mypet->SetRunAnimSpeed(0);
 			if (!mypet->UseBardSpellLogic())	//maybe we can have a bard pet
@@ -10253,7 +10338,13 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 			}
 			else
 			{
-				mypet->Say_StringID(MT_PetResponse, PET_ON_HOLD);
+				if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+					if (this->GetGender() == 0) mypet->Say("Holding steady, my Lord.");
+					else mypet->Say("Holding steady, my Lady.");
+				}
+				else {
+					mypet->Say_StringID(MT_PetResponse, PET_ON_HOLD);
+				}
 				mypet->WipeHateList();
 				mypet->SetHeld(true);
 			}
@@ -10265,7 +10356,13 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 			if (mypet->IsFeared())
 				break; //could be exploited like PET_BACKOFF
 
-			mypet->Say_StringID(MT_PetResponse, PET_ON_HOLD);
+			if (this->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) && mypet->GetNPCTypeID() == 999217) {
+				if (this->GetGender() == 0) mypet->Say("Holding steady, my Lord.");
+				else mypet->Say("Holding steady, my Lady.");
+			}
+			else {
+				mypet->Say_StringID(MT_PetResponse, PET_ON_HOLD);
+			}
 			mypet->WipeHateList();
 			mypet->SetHeld(true);
 		}
