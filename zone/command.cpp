@@ -4258,8 +4258,9 @@ void command_teleport(Client *c, const Seperator *sep) {
 		else {
 			c->Message(0, "You are too low to teleport to sro.");
 			return;
-		}
-		c->MovePC(35, -411, 123.79, -1043.44, 8.83, (uint8)'\000', ZoneSolicited);
+		}		
+
+		c->MovePC(35, -123, -1039, 8.8, 99.5, (uint8)'\000', ZoneSolicited);
 		return;
 	} else if (sep->arg[1] && strcasecmp(sep->arg[1], "commons") == 0) {
 		if (c->GetZoneID() == 21) {
