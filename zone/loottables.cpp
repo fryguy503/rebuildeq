@@ -471,6 +471,19 @@ void NPC::AddCardTable() {
 	if (GetRace() == 28 || GetRace() == 456) { pool += 5; cardTable[pool] = 100118; } //Fungus Card
 	if (GetRace() == 54) { pool += 250; cardTable[pool] = 100119; } //Goblin Card	
 	if (GetBodyType() == BT_Monster) { pool += 50; cardTable[pool] = 100120; } //Evil Eye Card
+	if (GetRace() == HUMAN) { pool + 5; cardTable[pool] = 100121; } //Human Card
+	if (GetRace() == BARBARIAN) { pool + 5; cardTable[pool] = 100122; } //Barbarian Card
+	if (GetRace() == ERUDITE) { pool + 5; cardTable[pool] = 100123; } //Erudite Card
+	if (GetRace() == WOOD_ELF) { pool + 5; cardTable[pool] = 100124; } //Wood Elf Card
+	if (GetRace() == HIGH_ELF) { pool + 5; cardTable[pool] = 100125; } //High Elf Card
+	if (GetRace() == DARK_ELF) { pool + 5; cardTable[pool] = 100126; } //Dark Elf Card
+	if (GetRace() == HALF_ELF) { pool + 5; cardTable[pool] = 100127; } //Half Elf Card
+	if (GetRace() == DWARF) { pool + 5; cardTable[pool] = 100128; } //Dwarf Card
+	if (GetRace() == TROLL) { pool + 5; cardTable[pool] = 100129; } //Troll Card
+	if (GetRace() == OGRE) { pool + 5; cardTable[pool] = 100130; } //Ogre Card
+	if (GetRace() == HALFLING) { pool + 5; cardTable[pool] = 100131; } //Halfling Card
+	if (GetRace() == GNOME) { pool + 5; cardTable[pool] = 100132; } //Gnome Card
+	if (GetRace() == FROGLOK || GetRace() == FROGLOK2) { pool + 5; cardTable[pool] = 100133; } //Froglok Card
 
 	if (pool < 1) return;
 
