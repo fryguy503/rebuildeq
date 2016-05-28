@@ -4127,22 +4127,12 @@ void command_teleport(Client *c, const Seperator *sep) {
 
 	std::string displayCost;
 	uint64 cost = 0;
-	if (c->GetLevel() < 30) {
-		cost = c->GetLevel() * 1; //copper
-		displayCost = StringFormat("%u copper", cost);
+	cost = (40 * (c->GetLevel() / 60)) * 1000;
+	cost /= 2;
+	if (cost < 1000) {
+		cost = 1000;
 	}
-	else if (c->GetLevel() < 40) {
-		cost = c->GetLevel() * 10; //silver
-		displayCost = StringFormat("%u silver", (cost / 10));
-	}
-	else if (c->GetLevel() < 50) {
-		cost = c->GetLevel() * 100; //gold
-		displayCost = StringFormat("%u gold", (cost / 100));
-	}
-	else { //50+
-		cost = c->GetLevel() * 1000; //platinum
-		displayCost = StringFormat("%u platinum", (cost / 1000));
-	}
+	displayCost = StringFormat("%u platinum", (cost / 1000));
 
 	uint64 levelMin = 10;
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "gfaydark") == 0) {
@@ -4395,22 +4385,13 @@ void command_buff(Client *c, const Seperator *sep) {
 
 	std::string displayCost;
 	uint64 cost = 0;
-	if (c->GetLevel() < 30) {
-		cost = c->GetLevel() * 1; //copper
-		displayCost = StringFormat("%u copper", cost);
+	
+	cost = (40 * (c->GetLevel() / 60)) * 1000;
+	if (cost < 1000) {
+		cost = 1000;
 	}
-	else if (c->GetLevel() < 40) {
-		cost = c->GetLevel() * 10; //silver
-		displayCost = StringFormat("%u silver", (cost / 10));
-	}
-	else if (c->GetLevel() < 50) {
-		cost = c->GetLevel() * 100; //gold
-		displayCost = StringFormat("%u gold", (cost / 100));
-	}
-	else { //50+
-		cost = c->GetLevel() * 1000; //platinum
-		displayCost = StringFormat("%u platinum", (cost / 1000));
-	}
+	displayCost = StringFormat("%u platinum", (cost / 1000));
+	
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
 		if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4484,22 +4465,12 @@ void command_return(Client *c, const Seperator *sep) {
 
 	std::string displayCost;
 	uint64 cost = 0;
-	if (c->GetLevel() < 30) {
-		cost = c->GetLevel() * 1; //copper
-		displayCost = StringFormat("%u copper", cost);
+	cost = (40 * (c->GetLevel() / 60)) * 1000;
+	cost /= 2;
+	if (cost < 1000) {
+		cost = 1000;
 	}
-	else if (c->GetLevel() < 40) {
-		cost = c->GetLevel() * 10; //silver
-		displayCost = StringFormat("%u silver", (cost / 10));
-	}
-	else if (c->GetLevel() < 50) {
-		cost = c->GetLevel() * 100; //gold
-		displayCost = StringFormat("%u gold", (cost / 100));
-	}
-	else { //50+
-		cost = c->GetLevel() * 1000; //platinum
-		displayCost = StringFormat("%u platinum", (cost / 1000));
-	}
+	displayCost = StringFormat("%u platinum", (cost / 1000));
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
 		if (returnZoneName.c_str() == "") {
@@ -4551,22 +4522,11 @@ void command_rez(Client *c, const Seperator *sep) {
 
 	std::string displayCost;
 	uint64 cost = 0;
-	if (c->GetLevel() < 30) {
-		cost = c->GetLevel() * 1; //copper
-		displayCost = StringFormat("%u copper", cost);
+	cost = (40 * (c->GetLevel() / 60)) * 1000;
+	if (cost < 1000) {
+		cost = 1000;
 	}
-	else if (c->GetLevel() < 40) {
-		cost = c->GetLevel() * 10; //silver
-		displayCost = StringFormat("%u silver", (cost / 10));
-	}
-	else if (c->GetLevel() < 50) {
-		cost = c->GetLevel() * 100; //gold
-		displayCost = StringFormat("%u gold", (cost / 100));
-	}
-	else { //50+
-		cost = c->GetLevel() * 1000; //platinum
-		displayCost = StringFormat("%u platinum", (cost / 1000));
-	}
+	displayCost = StringFormat("%u platinum", (cost / 1000));
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {		
 		if (!c->HasMoneyInInvOrBank(cost)) {

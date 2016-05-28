@@ -475,7 +475,6 @@ void NPC::AddCardTable() {
 	if (pool < 1) return;
 
 	int dice = zone->random.Int(1, pool);
-	int lastPool;
 
 	for (auto entry = cardTable.begin(); entry != cardTable.end(); ++entry) {
 		if (dice > entry->first) continue;
