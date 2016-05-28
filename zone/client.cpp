@@ -9205,11 +9205,11 @@ void Client::EmoteEncounter() {
 	pool += 500;
 	encounterTable[pool] = EN_KODIAK;
 	//Froglok anywhere, but only if your faction is low enough
-	if (GetCharacterFactionLevel(106) <= FACTION_DUBIOUS) {
+	if (GetCharacterFactionLevel(106) < FACTION_DUBIOUS) {
 		pool += 100;
 		encounterTable[pool] = EN_FROGLOK;
 	}
-	if (GetCharacterFactionLevel(66) <= FACTION_DUBIOUS) {
+	if (GetCharacterFactionLevel(66) < FACTION_DUBIOUS) {
 		pool += 300;
 		encounterTable[pool] = EN_TROLLGUARD;
 	}
@@ -9323,7 +9323,7 @@ void Client::EmoteEncounter() {
 	if (zoneid == 22 || //ec
 		zoneid == 21 //wc
 		) {
-		if (GetCharacterFactionLevel(696) <= FACTION_DUBIOUS) {
+		if (GetCharacterFactionLevel(696) < FACTION_DUBIOUS) {
 			pool += 200;
 			encounterTable[pool] = EN_FREEPORT;
 		}		
@@ -9339,7 +9339,7 @@ void Client::EmoteEncounter() {
 
 
 	if (GetZoneID() == 46) { //TODO: troll guards, npc id 46002 , lvl 34ish EN_TROLLGUARD
-		if (GetCharacterFactionLevel(66) <= FACTION_DUBIOUS) {
+		if (GetCharacterFactionLevel(66) < FACTION_DUBIOUS) {
 			pool += 500;
 			encounterTable[pool] = EN_TROLLGUARD;
 		}
