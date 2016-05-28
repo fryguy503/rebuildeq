@@ -1723,6 +1723,30 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 		sp[tempid].min_range = static_cast<float>(atoi(row[231]));
 		sp[tempid].no_remove = atoi(row[232]) != 0;
 		sp[tempid].DamageShieldType = 0;
+
+		if (tempid == 3274) { 
+			//reset skill
+			for (y = 0; y < EFFECT_COUNT; y++)
+				sp[tempid].base[y] = 0;
+
+			for (y = 0; y < EFFECT_COUNT; y++)
+				sp[tempid].base2[y] = 0;
+
+			for (y = 0; y < EFFECT_COUNT; y++)
+				sp[tempid].max[y] = 0;
+
+			for (y = 0; y < EFFECT_COUNT; y++)
+				sp[tempid].effectid[y] = 254;
+
+			for (y = 0; y < EFFECT_COUNT; y++)
+				sp[tempid].formula[y] = 0;
+			if (tempid == 3274) { //SHM_VIRULENTPARALYSIS
+				sp[tempid].effectid[0] = SE_CHA;
+				sp[tempid].effectid[1] = SE_Root; //ROOT
+				sp[tempid].formula[1] = 100;
+				sp[tempid].buffduration = 2;
+			}
+		}
     }
 
     LoadDamageShieldTypes(sp, max_spells);

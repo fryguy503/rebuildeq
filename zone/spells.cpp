@@ -1324,6 +1324,7 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, uint16 slot,
 	// at this point the spell has successfully been cast
 	//
 	
+
 	if (IsClient() && 
 		target &&
 		target != this &&
@@ -3242,6 +3243,12 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT) > 0) {
 		caster->Message(MT_NonMelee, "Lingering Twilight %u improved mesmerize duration.", caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT));
 		duration += duration * 0.2 * caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT);
+	}
+
+	if (spell_id == 3274 && caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS) > 0) {
+		uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
+		duration = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
+		//caster->CastToClient()->Message(0, "Duration! %i", duration);
 	}
 
 	Log.Out(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",

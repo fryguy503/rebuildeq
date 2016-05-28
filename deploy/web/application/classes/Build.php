@@ -723,7 +723,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Cannibalize";
-			$newSkill->desc = 'Grants the Cannibalization AA, increasing effectiveness by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Cannibalization AA, causing <em data-base="5">5</em>%<span class="perLevel">current HP loss in exchange for mana at <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[18] = $newSkill;
 			
@@ -735,7 +735,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Virulent Paralysis";
-			$newSkill->desc = 'Grants the Virulent Paralysis AA, causing a target to be immobilized. Each rank increases duration by <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>. At max rank, also knocks back target.';
+			$newSkill->desc = 'Grants the Virulent Paralysis AA, causing a target to be immobilized. Each rank increases duration by <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
 			$skills[22] = $newSkill;
 			

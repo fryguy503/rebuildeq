@@ -8830,6 +8830,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Spirit Call\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == SHAMAN && i == RB_SHM_VIRULENTPARALYSIS && GetAA(aaVirulentParalysis) < 1) {
+					TrainAARank(aaVirulentParalysis);
+					Message(15, "You have unlocked the AA \"Virulent Paralysis\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == SHAMAN && i == RB_SHM_RABIDBEAR && GetAA(aaRabidBear) < 1) {
 					TrainAARank(aaRabidBear);
 					Message(15, "You have unlocked the AA \"Rabid Bear\"! Find the hotkey in your Alternate Advancement Window.");
