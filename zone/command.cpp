@@ -4127,7 +4127,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 
 	std::string displayCost;
 	uint64 cost = 0;
-	cost = (40 * (c->GetLevel() / 60)) * 1000;
+	cost = (uint64)((float)(40 * (float)((float)c->GetLevel() / (float)60)) * 1000);
 	cost /= 2;
 	if (cost < 1000) {
 		cost = 1000;
@@ -4386,7 +4386,7 @@ void command_buff(Client *c, const Seperator *sep) {
 	std::string displayCost;
 	uint64 cost = 0;
 	
-	cost = (40 * (c->GetLevel() / 60)) * 1000;
+	cost = (uint64)((float)(40 * (float)((float)c->GetLevel() / (float)60)) * 1000);
 	if (cost < 1000) {
 		cost = 1000;
 	}
@@ -4465,7 +4465,7 @@ void command_return(Client *c, const Seperator *sep) {
 
 	std::string displayCost;
 	uint64 cost = 0;
-	cost = (40 * (c->GetLevel() / 60)) * 1000;
+	cost = (uint64)((float)(40 * (float)((float)c->GetLevel() / (float)60)) * 1000);
 	cost /= 2;
 	if (cost < 1000) {
 		cost = 1000;
@@ -4522,7 +4522,7 @@ void command_rez(Client *c, const Seperator *sep) {
 
 	std::string displayCost;
 	uint64 cost = 0;
-	cost = (40 * (c->GetLevel() / 60)) * 1000;
+	cost = (uint64)((float)(40 * (float)((float)c->GetLevel() / (float)60)) * 1000);
 	if (cost < 1000) {
 		cost = 1000;
 	}
