@@ -225,9 +225,9 @@ void Mob::MakePet(uint16 spell_id, const char* pettype, const char *petname) {
 // stay equipped when the character zones. petpower of -1 means that the currently equipped petfocus
 // of a client is searched for and used instead.
 void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
-		const char *petname, float in_size) {
+	const char *petname, float in_size) {
 	// Sanity and early out checking first.
-	if(HasPet() || pettype == nullptr)
+	if (HasPet() || pettype == nullptr)
 		return;
 
 	int16 act_power = 0; // The actual pet power we'll use.
@@ -256,7 +256,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 
 	//lookup our pets table record for this type
 	PetRecord record;
-	if(!database.GetPoweredPetEntry(pettype, act_power, &record)) {
+	if (!database.GetPoweredPetEntry(pettype, act_power, &record)) {
 		Message(13, "Unable to find data for pet %s", pettype);
 		Log.Out(Logs::General, Logs::Error, "Unable to find data for pet %s, check pets table.", pettype);
 		return;
@@ -264,7 +264,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 
 	//find the NPC data for the specified NPC type
 	const NPCType *base = database.LoadNPCTypesData(record.npc_type);
-	if(base == nullptr) {
+	if (base == nullptr) {
 		Message(13, "Unable to load NPC data for pet %s", pettype);
 		Log.Out(Logs::General, Logs::Error, "Unable to load NPC data for pet %s (NPC ID %d), check pets and npc_types tables.", pettype, record.npc_type);
 		return;
@@ -275,14 +275,14 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	memcpy(npc_type, base, sizeof(NPCType));
 
 	// If pet power is set to -1 in the DB, use stat scaling
-	if ((this->IsClient() 
+	if ((this->IsClient()
 #ifdef BOTS
 		|| this->IsBot()
 #endif
 		) && record.petpower == -1)
 	{
 		float scale_power = (float)act_power / 100.0f;
-		if(scale_power > 0)
+		if (scale_power > 0)
 		{
 			npc_type->max_hp *= (1 + scale_power);
 			npc_type->cur_hp = npc_type->max_hp;
@@ -290,20 +290,31 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			npc_type->level += 1 + ((int)act_power / 25) > npc_type->level + RuleR(Pets, PetPowerLevelCap) ? RuleR(Pets, PetPowerLevelCap) : 1 + ((int)act_power / 25); // gains an additional level for every 25 pet power
 			npc_type->min_dmg = (npc_type->min_dmg * (1 + (scale_power / 2)));
 			npc_type->max_dmg = (npc_type->max_dmg * (1 + (scale_power / 2)));
-			npc_type->size = npc_type->size * (1 + (scale_power / 2)) > npc_type->size * 3 ? npc_type->size * 3 : npc_type-> size * (1 + (scale_power / 2));
+			npc_type->size = npc_type->size * (1 + (scale_power / 2)) > npc_type->size * 3 ? npc_type->size * 3 : npc_type->size * (1 + (scale_power / 2));
 		}
 		record.petpower = act_power;
 	}
 
 	//Live AA - Elemental Durability
 	int16 MaxHP = aabonuses.PetMaxHP + itembonuses.PetMaxHP + spellbonuses.PetMaxHP;
-	
+
 
 	//Shaman pet
 	if (this->IsClient() && CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL) > 0 && spell_id == 164) {
 		uint32 rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL);
 		//Nerf level, since that's used as a factor for HP/Dmg calculation
-		npc_type->level = (CastToClient()->GetLevel() - (10 - rank));
+		
+		if (CastToClient()->GetLevel() < 6) {
+			if (CastToClient()->GetLevel() < rank) {
+				npc_type->level = rank;
+			}
+			else {
+				npc_type->level = CastToClient()->GetLevel();
+			}			
+		}
+		else {
+			npc_type->level = (CastToClient()->GetLevel() - (4 - rank));
+		}
 		npc_type = this->AdjustNPC(npc_type);
 		//Now that we generated base HP, let's nerf it on a new formula
 		npc_type->max_hp = (npc_type->max_hp * 0.1 * rank); //50 % of normal hp
