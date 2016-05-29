@@ -9307,7 +9307,8 @@ void Client::EmoteEncounter() {
 	if (zoneid == 14 || //skarana
 		zoneid == 13 || //nkarana
 		zoneid == 12 ||//wkarana
-		zoneid == 15 //ekarana
+		zoneid == 15 || //ekarana
+		zoneid == 22
 		) {
 		pool += 250;
 		encounterTable[pool] = EN_HILLGIANT;
@@ -9333,8 +9334,10 @@ void Client::EmoteEncounter() {
 		encounterTable[pool] = EN_GYPSY;
 		pool += 200;
 		encounterTable[pool] = EN_MADMAN;
-		pool += 200;
-		encounterTable[pool] = EN_SANDGIANT;
+		if (zoneid != 22) {
+			pool += 200;
+			encounterTable[pool] = EN_SANDGIANT;
+		}
 	}
 
 	if (zoneid == 22 || //ec
@@ -9362,15 +9365,16 @@ void Client::EmoteEncounter() {
 		}
 		
 	}
+	
 
 	int dice = zone->random.Int(0, pool);
-	int lastPool = 0;
+	
 	for (auto entry = encounterTable.begin(); entry != encounterTable.end(); ++entry) {
 		if (dice > entry->first) {
-			lastPool = entry->first;
 			continue;
 		}
 		m_epp.encounter_type = entry->second;
+		break;
 	}
 
 	const char *windowTitle = "You sense an encounter nearby";
@@ -9380,7 +9384,6 @@ void Client::EmoteEncounter() {
 	switch (m_epp.encounter_type) {
 	case EN_ZOMBIE:
 		Message(8, "A zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter", "below").c_str());
-
 		break;
 	case EN_FUNGUS:
 	case EN_DOPPLEGANGER:
