@@ -241,6 +241,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (caster->IsClient()) {
 							Client * casterClient = caster->CastToClient();
 							
+							if (spell_id == 2749 &&	casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE) > 0) {
+								int damageAmount = casterClient->GetHP() * 0.05f * casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE);
+								dmg = -damageAmount;
+								int manaAmount = damageAmount * 0.1f * casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE);
+								casterClient->SetMana(caster->GetMana() + manaAmount);
+							}
 
 							
 							//Elixir of Might
@@ -551,7 +557,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			}
 
 			case SE_CurrentMana:
-			{
+			{				
 
 				// Bards don't get mana from effects, good or bad.
 				if(GetClass() == BARD)

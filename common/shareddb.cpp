@@ -1724,6 +1724,11 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 		sp[tempid].no_remove = atoi(row[232]) != 0;
 		sp[tempid].DamageShieldType = 0;
 
+		if (tempid == 2749) { //RB_SHM_CANNIBALIZE
+			sp[tempid].effectid[1] = 254; //remove mana effect, since it's done programmaticcally.
+		}
+
+
 		if (tempid == 3274) { 
 			//reset skill
 			for (y = 0; y < EFFECT_COUNT; y++)
