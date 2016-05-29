@@ -231,14 +231,15 @@ int command_init(void)
 		command_add("haircolor", "- Change the hair color of your target", 80, command_haircolor) ||
 		command_add("haste", "[percentage] - Set your haste percentage", 100, command_haste) ||
 		command_add("hatelist", " - Display hate list for target.",  80, command_hatelist) ||
-		command_add("heal", "- Completely heal your target", 100, command_heal) ||
+		command_add("heal", "- Completely heal your target", 101, command_heal) ||
 		command_add("helm", "- Change the helm of your target", 80, command_helm) ||
 		command_add("help", "[search term] - List available commands and their description, specify partial command as argument to search", 50, command_help) ||
 		command_add("heritage", "- Change the heritage of your target (Drakkin Only)", 80, command_heritage) ||
 		command_add("heromodel",  "[hero model] [slot] - Full set of Hero's Forge Armor appearance. If slot is set, sends exact model just to slot.",  200, command_heromodel) ||
 		command_add("hideme", "[on/off] - Hide yourself from spawn lists.", 80, command_hideme) ||
 		command_add("hotfix", "[hotfix_name] - Reloads shared memory into a hotfix, equiv to load_shared_memory followed by apply_shared_memory", 250, command_hotfix) ||
-		command_add("hp", "- Refresh your HP bar from the server.", 50, command_hp) ||
+		command_add("hp", "- Refresh your HP bar from the server.", 101, command_hp) ||
+		command_add("identity", "- Display or set your identity.", 0, command_identity) ||
 		command_add("incstat", "- Increases or Decreases a client's stats permanently.", 200, command_incstat) ||
 		command_add("instance", "- Modify Instances", 200, command_instance) ||
 		command_add("interrogateinv", "- use [help] argument for available options", 100, command_interrogateinv) ||
@@ -4575,6 +4576,9 @@ void command_rez(Client *c, const Seperator *sep) {
 	}
 }
 
+void command_identity(Client *c, const Seperator *sep) {
+	c->Message(0, "Your identity is: %s", c->Identity());
+}
 
 void command_issue(Client *c, const Seperator *sep) {
 

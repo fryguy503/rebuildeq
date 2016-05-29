@@ -185,6 +185,7 @@ Client::Client(EQStreamInterface* ieqs)
 	GuildBanker = false;
 	memset(lskey, 0, sizeof(lskey));
 	strcpy(account_name, "");
+	strcpy(identity, "");
 	tellsoff = false;
 	last_reported_mana = 0;
 	last_reported_endur = 0;

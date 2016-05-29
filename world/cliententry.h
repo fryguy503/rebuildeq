@@ -50,6 +50,7 @@ public:
 	inline const char*	LSName() const		{ return plsname; }
 	inline int16		WorldAdmin() const	{ return pworldadmin; }
 	inline const char*	GetLSKey() const	{ return plskey; }
+	inline const char* GetIdentity() const { return identity; }
 
 	// Account stuff
 	inline uint32		AccountID() const		{ return paccountid; }
@@ -101,6 +102,8 @@ private:
 	char	plskey[16];
 	int16	pworldadmin;		// Login server's suggested admin status setting
 	bool	plocal;
+	
+	char identity[32];
 
 	// Account stuff
 	uint32	paccountid;

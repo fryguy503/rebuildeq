@@ -138,6 +138,7 @@ void command_heromodel(Client *c, const Seperator *sep);
 void command_hideme(Client *c, const Seperator *sep);
 void command_hotfix(Client *c, const Seperator *sep);
 void command_hp(Client *c, const Seperator *sep);
+void command_identity(Client *c, const Seperator *sep);
 void command_incstat(Client *c, const Seperator *sep);
 void command_instance(Client *c, const Seperator *sep);
 void command_interrogateinv(Client *c, const Seperator *sep);

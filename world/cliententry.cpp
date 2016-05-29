@@ -38,8 +38,19 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginN
 
 	pIP = ip;
 	pLSID = iLSID;
-	if(iLSID > 0)
+	if (iLSID > 0) {
 		paccountid = database.GetAccountIDFromLSID(iLSID, paccountname, &padmin);
+		//Get identity. Stupid database.
+		std::string query = StringFormat("SELECT `identity` FROM `account` WHERE `id` = %u", paccountid);
+		auto results = database.QueryDatabase(query);
+		if (results.Success()) {
+			auto row = results.begin();
+			if (row != results.end()) {
+				memset(identity, 0, sizeof(identity));
+				strcpy(identity, row[0]);
+			}
+		}
+	}
 	strn0cpy(plsname, iLoginName, sizeof(plsname));
 	strn0cpy(plskey, iLoginKey, sizeof(plskey));
 	pworldadmin = iWorldAdmin;

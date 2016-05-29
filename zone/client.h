@@ -629,6 +629,7 @@ public:
 	inline void SetWID(uint32 iWID) { WID = iWID; }
 	inline uint32 AccountID() const { return account_id; }
 
+	inline const char* Identity()const { return identity; }
 	inline const char* AccountName()const { return account_name; }
 	inline int GetAccountCreation() const { return account_creation; }
 	inline int16 Admin() const { return admin; }
@@ -1382,6 +1383,7 @@ private:
 	uint32 WID;
 	uint32 account_id;
 	char account_name[30];
+	char identity[32];
 	uint32 lsaccountid;
 	char lskey[30];
 	int16 admin;
