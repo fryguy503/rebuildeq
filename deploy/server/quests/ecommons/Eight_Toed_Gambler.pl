@@ -20,7 +20,7 @@ sub EVENT_SAY {
 		}
 
 		if ($bet > 0 && $bet == $qglobals{"roll"}) {
-			$cash = $qglobals{"bet"} * 10;
+			$cash = $qglobals{"bet"} * 5;
 			quest::say("You won! Congrats, I'll give you 10 times your money");
 			$copper = ($cash % 10);
 			$cash -= $copper;
