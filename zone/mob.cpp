@@ -5877,7 +5877,7 @@ int Mob::CheckBaneDamage(const ItemInst *item)
 
 
 //Adjusts an NPC's stats based on properties provided
-NPCType* Mob::AdjustNPC(NPCType* npctype) {
+NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true) {
 
 	//===== HITPOINTS ======
 	//Stolen from Client::GetMaxHP...
@@ -5980,7 +5980,10 @@ NPCType* Mob::AdjustNPC(NPCType* npctype) {
 	npctype->prim_melee_type = 28;
 	npctype->sec_melee_type = 28;
 
-
+	if (!keepSpells) {
+		npctype->npc_spells_id = 0; //nerf spectrestun
+		npctype->npc_spells_effects_id = 0; //nerf lifetap
+	}
 
 	//====== DAMAGE ======
 
@@ -6151,10 +6154,6 @@ NPCType* Mob::AdjustNPC(NPCType* npctype) {
 
 	//Encounter Triggers
 
-	if (npctype_id == 37021) { //spectres
-		npctype->npc_spells_id = 0; //nerf spectrestun
-		npctype->npc_spells_effects_id = 0; //nerf lifetap
-	}
 	
 	return npctype;
 }

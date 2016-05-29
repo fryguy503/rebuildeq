@@ -217,7 +217,7 @@ Mob* QuestManager::encounterspawn(int npc_type, int level, const glm::vec4& posi
 	QuestManagerCurrentQuestVars();
 	if (!owner) return nullptr;	
 	enpc->level = level;
-	enpc = owner->AdjustNPC(enpc);
+	enpc = owner->AdjustNPC(enpc, false);
 	enpc->npc_faction_id = 366; // KoS non-assist
 	
 	if (npc_type == 22046 || npc_type == 34013) { //zombie encounter
