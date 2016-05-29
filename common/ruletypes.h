@@ -629,7 +629,7 @@ RULE_INT(Console, SessionTimeOut, 600000)	// Amount of time in ms for the consol
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(QueryServ)
-RULE_BOOL(QueryServ, PlayerLogChat, false) // Logs Player Chat
+RULE_BOOL(QueryServ, PlayerLogChat, true) // Logs Player Chat
 RULE_BOOL(QueryServ, PlayerLogTrades, false) // Logs Player Trades
 RULE_BOOL(QueryServ, PlayerLogHandins, false) // Logs Player Handins
 RULE_BOOL(QueryServ, PlayerLogNPCKills, false) // Logs Player NPC Kills
