@@ -42,7 +42,7 @@ sub EVENT_SAY {
 		return;
 	}
 
-	quest::say("The game is simple, my friend.. I shuffle these cups with a ball under one, and you try to guess which has it. Hand me money to get started.");
+	quest::say("The game is simple, my friend.. I shuffle these cups with a ball under one, and you try to guess which has it. If you guess right, you get 5x your profit! Hand me money to get started.");
 	
 
 }
