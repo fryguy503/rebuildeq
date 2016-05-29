@@ -3998,7 +3998,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 
 
 	//Get the unclaimed_encounter_rewards
-	std::string query = StringFormat("SELECT unclaimed_encounter_rewards FROM character_custom WHERE character_id = %u LIMIT 1", c->CharacterID());
+	std::string query = StringFormat("SELECT unclaimed_encounter_rewards FROM account_custom WHERE account_id = %u LIMIT 1", c->AccountID());
 	auto results = database.QueryDatabase(query);
 	if (results.Success()) {
 		if (results.RowCount() == 1) {
@@ -4006,11 +4006,11 @@ void command_encounter(Client *c, const Seperator *sep) {
 			unclaimed_rewards = atoi(row[0]);
 		}
 		else { //No record in DB yet for character_custom, let's fix that.
-			std::string query = StringFormat("INSERT INTO character_custom (character_id) VALUES (%u)", c->CharacterID());
+			std::string query = StringFormat("INSERT INTO account_custom (account_id) VALUES (%u)", c->AccountID());
 			auto results = database.QueryDatabase(query);
 			if (!results.Success()) {
 				c->Message(13, "Claiming reward failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
-				Log.Out(Logs::General, Logs::Normal, "Creating character_custom failed with error user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
+				Log.Out(Logs::General, Logs::Normal, "Creating account_custom failed with error user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 				return;
 			}
 		}
@@ -4041,11 +4041,11 @@ void command_encounter(Client *c, const Seperator *sep) {
 			return;
 		}
 
-		std::string query = StringFormat("UPDATE character_custom SET unclaimed_encounter_rewards = unclaimed_encounter_rewards - 1 WHERE character_id = %u and unclaimed_encounter_rewards = %u", c->CharacterID(), unclaimed_rewards);
+		std::string query = StringFormat("UPDATE account_custom SET unclaimed_encounter_rewards = unclaimed_encounter_rewards - 1 WHERE account_id = %u and unclaimed_encounter_rewards = %u", c->AccountID(), unclaimed_rewards);
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Claiming reward failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
-			Log.Out(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());			
+			Log.Out(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());			
 			return;
 		}		
 

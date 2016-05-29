@@ -253,16 +253,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							if ((spell_id == 2729 || spell_id == 823) &&
 								casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT) > 0 &&
 								zone->random.Roll((int)(casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT) * 20))) {
-									rank = casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT);
-									int healAmount = (int)((float)-dmg * (float)0.1 * (float)rank);
-									int manaAmount = (int)((float)-dmg * (float)0.01 * (float)rank);
-									if (healAmount > 0) {
-										casterClient->Message(MT_NonMelee, "Elixir of Might %u siphons %i health and %i mana from %s.", rank, healAmount, manaAmount, GetCleanName());
-										casterClient->HealDamage(healAmount, caster);
-										if (manaAmount > 0) {
-											casterClient->SetMana(caster->GetMana() + manaAmount);
-										}
+								rank = casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT);
+								int healAmount = (int)((float)-dmg * (float)0.1 * (float)rank);
+								int manaAmount = (int)((float)-dmg * (float)0.01 * (float)rank);
+								if (healAmount > 0) {
+									casterClient->Message(MT_NonMelee, "Elixir of Might %u siphons %i health and %i mana from %s.", rank, healAmount, manaAmount, GetCleanName());
+									casterClient->HealDamage(healAmount, caster);
+									if (manaAmount > 0) {
+										casterClient->SetMana(caster->GetMana() + manaAmount);
 									}
+								}
 							}
 
 							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN);
