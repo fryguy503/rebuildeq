@@ -268,6 +268,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN);
 							if (rank > 0 && (spell_id == 2729 || spell_id == 823)) {
 								int cDamage = (rank * -dmg * 0.25);
+								if (cDamage < rank) cDamage = rank;
 								casterClient->Message(MT_NonMelee, "Chosen %u added %i bonus damage.", rank, cDamage);
 								dmg -= cDamage;
 							}
@@ -275,6 +276,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_FLAMEOFLIGHT);
 							if (rank > 0 && spell_id == 1454) {
 								int fDamage = (rank * -dmg * 0.20);
+								if (fDamage < rank) fDamage = rank;
 								casterClient->Message(MT_NonMelee, "Flame of Light %u added %i bonus damage.", rank, fDamage);
 								dmg -= fDamage;
 							}
@@ -285,10 +287,21 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
 									int festerDmg = (rank * casterClient->GetLevel());
 									festerDmg += int32((float)dmg * 0.1 * (float)rank);
+									if (festerDmg < rank) festerDmg = rank;
 									casterClient->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
 									dmg -= festerDmg;
 								}
 							}
+
+							if (casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH) > 0) {
+								rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
+								int festerDmg = (rank * casterClient->GetLevel());
+								festerDmg += int32((float)dmg * 0.1f * (float)rank);
+								if (festerDmg < rank) festerDmg = rank;
+								casterClient->Message(MT_NonMelee, "Ancient Wrath %u added %i bonus damage.", rank, festerDmg);
+								dmg -= festerDmg;
+							}
+
 							//Shin: Lingering Pain
 							if (casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN) > 0) {
 								rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
@@ -308,9 +321,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							//Siphon of Death
 							if ((spell_id == 2718 || spell_id == 1471) &&
 								casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH) > 0) {
-
 								rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH);
 								int mana_amount = (int)(dmg * 0.05 * rank);
+								if (dmg > 0 && mana_amount < rank) mana_amount = rank;
 								caster->Message(MT_NonMelee, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}
