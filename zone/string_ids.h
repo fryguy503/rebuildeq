@@ -463,6 +463,7 @@
 #define EN_KAELGIANT 187022 //113419 a_kael_giant, rare 113079
 #define EN_RYGORR 187023 //116006 Oracle of Ry`Gorr, 116011 Ry`Gorr elite guard
 #define EN_WYVERN 187024 //117003 Wyvern
+#define EN_KOBOLD 187025 //101101 warren
 
 //Build Skills
 #define RB_BRD_ELEMENTALHARMONY 0

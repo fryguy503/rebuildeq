@@ -9223,15 +9223,16 @@ void Client::EmoteEncounter() {
 		pool += 300;
 		encounterTable[pool] = EN_TROLLGUARD;
 	}
-	pool += 100;
+
+	pool += 50;
 	encounterTable[pool] = EN_ALLIGATOR;
-	pool += 200;
+	pool += 50;
 	encounterTable[pool] = EN_ARCHER;
-	pool += 200;
+	pool += 50;
 	encounterTable[pool] = EN_BANDIT;
-	pool += 200;
+	pool += 50;
 	encounterTable[pool] = EN_AIRELEMENTAL;
-	pool += 200;
+	pool += 50;
 	encounterTable[pool] = EN_SPECTRE;
 
 	if (zoneid == 129 || //thurgadinb
@@ -9270,6 +9271,11 @@ void Client::EmoteEncounter() {
 		) {
 		pool += 400;
 		encounterTable[pool] = EN_WYVERN;
+	}
+
+	if (zoneid == 101) {
+		pool += 400;
+		encounterTable[pool] = EN_KOBOLD;
 	}
 
 	if (zoneid == 116) {
