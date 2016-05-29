@@ -5963,6 +5963,9 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true) {
 		break;
 	}
 	int hp = 5 + multiplier*npctype->level + multiplier*npctype->level * 75 / 300;
+	if (npctype->level < 10 && !keepSpells) { //keepspells is only disabled for encounters, so, i'm nerfing hp
+		hp /= 2; //let's just cut it in half.
+	}
 	npctype->cur_hp = hp;
 	npctype->max_hp = hp;
 	npctype->runspeed = 1.25;
@@ -6012,8 +6015,10 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true) {
 	else if (npctype->level <= 27) {
 		npctype->min_dmg = 1;
 		npctype->max_dmg = (npctype->level * 2)*AC_adjust / 10;
+		if (npctype->level < 10 && !keepSpells) { //keepspells is only disabled for encounters, so, i'm nerfing hp
+			npctype->max_dmg /= 2; //cut max damage in half. give them a chance.
+		}
 	}
-
 
 	// === DAMAGE MULTIPLIER ====
 	multiplier = 0;
