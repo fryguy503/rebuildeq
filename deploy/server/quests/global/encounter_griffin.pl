@@ -11,13 +11,13 @@ my $encounterMessage = "Griffins begin to swoop down.";
 my $encounterSound = "";
 my $encounterType = "a flock of griffins";
 my $spelleffect = 0;
-my $commonNpcID = 9014;
-my $rareNpcID = 22067;
-my $rareName = "An enraged Griffin";
+my $commonNpcID = 13002;
+my $rareNpcID = 15041;
+my $rareName = "An_enraged_griffin";
 my $isRare = 0;
 my $rarity = 10; #chance of rare spawn
-my $npcName1 = "a_griffin";
-my $npcName2 = "a_griffin";
+my $npcName1 = "a_griffon";
+my $npcName2 = "a_griffawn";
 my $npcName3 = "a_griffin";
 
 sub EVENT_SPAWN {
