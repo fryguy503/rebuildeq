@@ -13,12 +13,12 @@ my $encounterType = "a coldain recon force";
 my $spelleffect = 0;
 my $commonNpcID = 129060;
 my $rareNpcID = 129060;
-my $rareName = "An Icewell Sentry";
+my $rareName = "An_Icewell_Sentry";
 my $isRare = 0;
 my $rarity = 10; #chance of rare spawn
-my $npcName1 = "an icewell sentry";
-my $npcName2 = "an icewell sentry";
-my $npcName3 = "an icewell sentry";
+my $npcName1 = "an_icewell_sentry";
+my $npcName2 = "an_icewell_sentry";
+my $npcName3 = "an_icewell_sentry";
 
 sub EVENT_SPAWN {
 	@group = ();

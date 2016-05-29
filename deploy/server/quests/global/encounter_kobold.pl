@@ -13,12 +13,12 @@ my $encounterType = "a kobold pack";
 my $spelleffect = 0;
 my $commonNpcID = 10101;
 my $rareNpcID = 101016;
-my $rareName = "The Growler";
+my $rareName = "The_Growler";
 my $isRare = 0;
 my $rarity = 10; #chance of rare spawn
-my $npcName1 = "a kobold";
-my $npcName2 = "a growler";
-my $npcName3 = "a biter";
+my $npcName1 = "a_kobold";
+my $npcName2 = "a_growler";
+my $npcName3 = "a_biter";
 
 sub EVENT_SPAWN {
 	@group = ();

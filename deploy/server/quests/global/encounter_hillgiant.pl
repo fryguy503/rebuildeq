@@ -16,9 +16,9 @@ my $rareNpcID = 13008;
 my $rareName = "An upset hill giant";
 my $isRare = 0;
 my $rarity = 30; #chance of rare spawn
-my $npcName1 = "a hill giant";
-my $npcName2 = "an angry hill giant";
-my $npcName3 = "a large creature";
+my $npcName1 = "a_hill_giant";
+my $npcName2 = "an_angry_hill_giant";
+my $npcName3 = "a_large_creature";
 
 sub EVENT_SPAWN {
 	@group = ();

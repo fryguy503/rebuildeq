@@ -13,12 +13,12 @@ my $encounterType = "an army of kael giants";
 my $spelleffect = 0;
 my $commonNpcID = 113419;
 my $rareNpcID = 113079;
-my $rareName = "";
+my $rareName = "a_large_kael_giant";
 my $isRare = 0;
 my $rarity = 10; #chance of rare spawn
-my $npcName1 = "a kael giant";
-my $npcName2 = "a kael giant";
-my $npcName3 = "a kael giant";
+my $npcName1 = "a_kael_giant";
+my $npcName2 = "a_kael_giant";
+my $npcName3 = "a_kael_giant";
 
 sub EVENT_SPAWN {
 	@group = ();

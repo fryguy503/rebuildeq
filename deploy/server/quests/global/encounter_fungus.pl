@@ -16,9 +16,9 @@ my $rareNpcID = 11124;
 my $rareName = "A Sporali Moldmaster";
 my $isRare = 0;
 my $rarity = 30; #chance of rare spawn
-my $npcName1 = "a sporali";
-my $npcName2 = "a sporali";
-my $npcName3 = "a sporali";
+my $npcName1 = "a_sporali";
+my $npcName2 = "a_sporali";
+my $npcName3 = "a_sporali";
 
 sub EVENT_SPAWN {
 	@group = ();

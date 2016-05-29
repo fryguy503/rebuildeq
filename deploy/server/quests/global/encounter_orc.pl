@@ -13,12 +13,12 @@ my $encounterType = "a Deathfist ambush";
 my $spelleffect = 0;
 my $commonNpcID = 22022;
 my $rareNpcID = 22150;
-my $rareName = "High Chief Fosloas";
+my $rareName = "High_Chief_Fosloas";
 my $isRare = 0;
 my $rarity = 30; #chance of rare spawn
-my $npcName1 = "orc centurion";
-my $npcName2 = "orc oracle";
-my $npcName3 = "orc pawn";
+my $npcName1 = "orc_centurion";
+my $npcName2 = "orc_oracle";
+my $npcName3 = "orc_pawn";
 
 sub EVENT_SPAWN {
 	@group = ();
