@@ -4665,7 +4665,7 @@ void command_issue(Client *c, const Seperator *sep) {
 	std::string query = StringFormat("INSERT INTO issues"
 		"(my_name, my_account_id, my_character_id, my_zone_id, my_x, my_y, my_z, message, tar_name, tar_is_npc, tar_is_client, tar_account_id, tar_character_id, tar_npc_type_id, tar_npc_spawngroup_id, item_id, item_name, client)"
 		"VALUES (\"%s\", %u, %u, %u, %f, %f, %f, \"%s\", \"%s\", %u, %u, %u, %u, %u, %u, %u, \"%s\", \"%s\")",
-		EscapeString(c->GetName()).c_str(),
+		StringFormat("%s (%s)", c->GetName(), c->Identity()).c_str(),
 		c->AccountID(),
 		c->CharacterID(),
 		c->GetZoneID(),
