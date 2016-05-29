@@ -2010,8 +2010,13 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 
 	//Shin: resist adjust penetration for Unholy Focus
 	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS) > 0) {
-		resist_adjust -= (resist_adjust * 0.1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS));
+		resist_adjust -= (resist_adjust * 0.1f * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS));
 	}
+
+	if (IsClient() && CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR) > 0) {
+		resist_adjust -= (resist_adjust * 0.05f * CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR));
+	}
+
 
 	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_KATTASCONCORD) == 5 && spell_id == 2604) {
 		spell_id = 6734;
@@ -3249,6 +3254,11 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
 		duration = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
 		//caster->CastToClient()->Message(0, "Duration! %i", duration);
+	}
+	if ((spell_id == 505 || spell_id == 506 || spell_id ==507 || spell_id ==1588 || spell_id ==2527 || spell_id == 1589) &&
+		caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR) > 0) {
+		uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR);
+		duration += duration * 0.05f * rank;
 	}
 
 	Log.Out(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",
