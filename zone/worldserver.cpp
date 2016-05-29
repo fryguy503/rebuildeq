@@ -1911,7 +1911,13 @@ bool WorldServer::SendChannelMessage(Client* from, const char* to, uint8 chan_nu
 		strcpy(scm->from, "ZServer");
 		scm->fromadmin = 0;
 	} else {
-		strcpy(scm->from, from->GetName());
+		if (from->IsClient()) {
+			strcpy(scm->from, StringFormat("%s_[%s]", from->GetName(), from->CastToClient()->Identity()).c_str());
+		}
+		else {
+			strcpy(scm->from, from->GetName());
+		}
+		
 		scm->fromadmin = from->Admin();
 	}
 	if (to == 0) {
