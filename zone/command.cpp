@@ -4220,7 +4220,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to %s for free due to being below level %u.", location->ZoneName, FreeLevel);
-			c->SetBindPoint(location->ZoneID, 54, 0, glm::vec3(location->X, location->Y, location->Z));
+			c->SetBindPoint(0, location->ZoneID, 0, glm::vec3(location->X, location->Y, location->Z));
 		}
 
 		// Finally, Teleport!
