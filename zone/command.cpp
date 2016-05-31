@@ -169,6 +169,7 @@ int command_init(void)
 		command_add("bot", "- Type \"#bot help\" or \"^help\" to the see the list of available commands for bots.", 0, command_bot) ||
 #endif
 		command_add("builds", "- Get a list of every build in game", 0, command_builds) ||
+		command_add("setbuild", "- Set a build", 255, command_setbuild) ||
 		command_add("buff", "- Pay platinum to receive buffs", 0, command_buff) ||
 		command_add("refer", "- Refer-a-friend reward system", 0, command_refer) ||
 		command_add("camerashake",  "Shakes the camera on everyone's screen globally.",  80, command_camerashake) ||
@@ -3957,6 +3958,67 @@ void command_builds(Client *c, const Seperator *sep)
 	//	c->Message(0, "%s to view your build inside EQ.", c->CreateSayLink("#builds link", "click").c_str());
 	//}
 	return;
+}
+
+void command_setbuild(Client *c, const Seperator *sep) {
+	// Check: Valid input (count and type).
+	if (sep->argnum != 2 || !sep->IsNumber(1) || !sep->IsNumber(2)) {
+		c->Message(0, "Usage: #setbuild id rank");
+		return;
+	}
+
+	const int id = atoi(sep->arg[1]);
+	// Check: Valid input (id range).
+	if (id < 0 || id > 53) { // TODO: Remove hard code values.
+		c->Message(0, "Usage: #setbuild id(0-53) rank");
+		return;
+	}
+
+	const int rank = atoi(sep->arg[2]);
+	// Check: Valid input (rank range).
+	if (rank < 0 || rank > 5) {
+		c->Message(0, "Usage: #setbuild id rank(0-5)");
+		return;
+	}
+
+	Client* cTarget = nullptr;
+	auto target = c->GetTarget();
+
+	// Check: Valid target.
+	if (target && target->IsClient()) {
+		cTarget = c->GetTarget()->CastToClient();
+	}
+	// No target or target is not a Client, use self instead.
+	else {
+		cTarget = c;
+	}
+
+	// Get a session, this allows RefreshBuild to detect that changes have happened.
+	cTarget->GetSession();
+
+	// Copy existing build.
+	std::string build = cTarget->GetEPP().build;
+	build[id] = std::to_string(rank)[0];
+	build.erase(53);
+
+	std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %i", EscapeString(build).c_str(), cTarget->CharacterID());
+	auto results = database.QueryDatabase(query);
+	if (!results.Success()) {
+		c->Message(13, "Failed to set build.");
+		return;
+	}
+	else {
+		if (c == cTarget) {
+			c->Message(15, "Successfully updated your build.");
+		}
+		else {
+			c->Message(15, "Successfully updated your target's build.");
+			cTarget->Message(15, "Your build has been updated.");
+		}
+	}
+
+	// Trigger refresh on target.
+	cTarget->RefreshBuild();
 }
 
 //Spawns an encounter, if a valid timing
