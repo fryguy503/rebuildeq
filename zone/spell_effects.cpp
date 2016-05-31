@@ -248,29 +248,40 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								casterClient->SetMana(caster->GetMana() + manaAmount);
 							}
 
-							
-							//Elixir of Might
-							if ((spell_id == 2729 || spell_id == 823) &&
-								casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT) > 0 &&
-								zone->random.Roll((int)(casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT) * 20))) {
-								rank = casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT);
-								int healAmount = (int)((float)-dmg * (float)0.1 * (float)rank);
-								int manaAmount = (int)((float)-dmg * (float)0.01 * (float)rank);
-								if (healAmount > 0) {
-									casterClient->Message(MT_NonMelee, "Elixir of Might %u siphons %i health and %i mana from %s.", rank, healAmount, manaAmount, GetCleanName());
-									casterClient->HealDamage(healAmount, caster);
-									if (manaAmount > 0) {
-										casterClient->SetMana(caster->GetMana() + manaAmount);
-									}
-								}
+							// Chosen
+							if ((spell_id == 2729 || spell_id == 823) && casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN) > 0) {
+
+								auto rank = casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN);
+								static const float BaseDamageBonus = 0.25f;		// 25% per rank
+
+								int bonusDamage = rank * BaseDamageBonus * dmg;
+								casterClient->Message(MT_NonMelee, "Chosen %u added %i bonus damage.", rank, bonusDamage);
+
+								dmg -= bonusDamage;
 							}
 
-							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN);
-							if (rank > 0 && (spell_id == 2729 || spell_id == 823)) {
-								int cDamage = (rank * -dmg * 0.25);
-								if (cDamage < rank) cDamage = rank;
-								casterClient->Message(MT_NonMelee, "Chosen %u added %i bonus damage.", rank, cDamage);
-								dmg -= cDamage;
+							// Elixir of Might
+							// NOTE: This must be done after extra damage from Chosen has been calculated.
+							if ((spell_id == 2729 || spell_id == 823) && casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT) > 0) {
+
+								auto rank = casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT);
+								static const float TriggerChance = 0.05f;		// 5% chance per rank (25% max)
+								static const float BaseHealth = 0.1;			// 10% per rank (50% max)
+								static const float BaseMana = 2;				// 2 mana per rank. (10 max)
+
+								const auto roll = zone->random.Real(0.0, 1.0);
+								const auto reqRoll = (double)rank * TriggerChance;
+
+								// Success!
+								if (roll <= reqRoll) {
+									auto healAmount = rank * BaseHealth * dmg;
+									auto manaAmount = rank * BaseMana;
+
+									casterClient->Message(MT_NonMelee, "Elixir of Might %u gifted %i health and %i mana.", rank, healAmount, manaAmount);
+
+									casterClient->HealDamage(healAmount, caster);
+									casterClient->SetMana(caster->GetMana() + manaAmount);
+								}
 							}
 
 							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_FLAMEOFLIGHT);
