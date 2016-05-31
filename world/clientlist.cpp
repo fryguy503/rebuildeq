@@ -706,12 +706,14 @@ void ClientList::SendWhoAll(uint32 fromid,const char* to, int16 admin, Who_All_S
 	//char plstatus[20]={0};
 	//sprintf(plstatus, "Status %i",cle->Admin());
 	char plname[64]={0};
-	std::string n(cle->name());
-	if ((cle->Anon() == 0 && countcle->Online() >= CLE_Status_Zoning) || (admin >= cle->Admin() && admin > 100)) {
-		n += " [" + std::string(cle->GetIdentity()) + "]";
-	}
+	strcpy(plname, cle->name());
 
-	strcpy(plname, n.c_str());
+	//std::string n(cle->name());
+	//if ((cle->Anon() == 0 && countcle->Online() >= CLE_Status_Zoning) || (admin >= cle->Admin() && admin > 100)) {
+	//	n += " [" + std::string(cle->GetIdentity()) + "]";
+	//}
+//	strcpy(plname, n.c_str());
+
 	char placcount[30]={0};
 	if(admin>=cle->Admin() && admin>0)
 		strcpy(placcount,cle->AccountName());
