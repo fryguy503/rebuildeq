@@ -4026,6 +4026,8 @@ void EntityList::ZoneWho(Client *c, Who_All_Struct *Who)
 			client_sub_list.push_back(ClientEntry);
 
 			PacketLength = PacketLength + strlen(ClientEntry->GetName());
+			// Adjust packet size for identity data.
+			PacketLength += strlen(ClientEntry->Identity()) + 3; // +3 is for space and 2x square bracket.
 
 			if (strlen(guild_mgr.GetGuildName(ClientEntry->GuildID())) > 0)
 				PacketLength = PacketLength + strlen(guild_mgr.GetGuildName(ClientEntry->GuildID())) + 2;
@@ -4109,10 +4111,13 @@ void EntityList::ZoneWho(Client *c, Who_All_Struct *Who)
 				PlayerRace = ClientEntry->GetRace();
 			}
 
+			std::stringstream ss;
+
 			WhoAllPlayerPart1* WAPP1 = (WhoAllPlayerPart1*)Buffer;
 			WAPP1->FormatMSGID = FormatMSGID;
 			WAPP1->PIDMSGID = 0xFFFFFFFF;
-			strcpy(WAPP1->Name, ClientEntry->GetName());
+			ss << ClientEntry->GetName() << " [" << ClientEntry->Identity() << "]";
+			strcpy(WAPP1->Name, ss.str().c_str());
 			Buffer += sizeof(WhoAllPlayerPart1) + strlen(WAPP1->Name);
 			WhoAllPlayerPart2* WAPP2 = (WhoAllPlayerPart2*)Buffer;
 
