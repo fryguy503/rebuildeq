@@ -284,12 +284,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								}
 							}
 
-							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_FLAMEOFLIGHT);
-							if (rank > 0 && spell_id == 1454) {
-								int fDamage = (rank * -dmg * 0.20);
-								if (fDamage < rank) fDamage = rank;
-								casterClient->Message(MT_NonMelee, "Flame of Light %u added %i bonus damage.", rank, fDamage);
-								dmg -= fDamage;
+							// Flame of Light
+							if (spell_id == 1454 && casterClient->GetBuildRank(PALADIN, RB_PAL_FLAMEOFLIGHT) > 0) {
+
+								auto rank = casterClient->GetBuildRank(PALADIN, RB_PAL_FLAMEOFLIGHT);
+								static const float BaseBonusDamage = 0.2f;			// 20% per rank.
+
+								int bonusDamage = rank * BaseBonusDamage * dmg;
+								casterClient->Message(MT_NonMelee, "Flame of Light %u added %i bonus damage.", rank, bonusDamage);
+
+								dmg -= bonusDamage;
 							}
 
 							//Shin: Festering Spear
