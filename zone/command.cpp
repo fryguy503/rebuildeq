@@ -4140,7 +4140,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 		Location("dreadlands", 86, -411, 123.79, -1043.44, 8.83, 10),
 	};
 
-	auto search = [](auto pZoneName) -> Location* {
+	auto search = [](const char * pZoneName) -> Location* {
 		for (auto&& i : Locations)
 			if (strcasecmp(pZoneName, i.ZoneName.c_str()) == 0)
 				return &i;
