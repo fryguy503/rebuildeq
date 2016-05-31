@@ -772,7 +772,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fury";
-			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma with <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma with <em data-base="20">20</em>% effectiveness and <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[36] = $newSkill;
 			

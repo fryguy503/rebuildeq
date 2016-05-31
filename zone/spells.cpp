@@ -2782,6 +2782,13 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 		duration += bonusDuration;
 	}
 
+	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FURY) > 0 && spell_id == 271) {
+		int bonusDuration = (int)(duration * 0.3f * caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FURY));
+		//caster->Message(MT_NonMelee, "Extended Haste increased duration by %i seconds.", bonusDuration);
+		duration += bonusDuration;
+	}
+
+
 	int castlevel = caster->GetCasterLevel(spell_id);
 	if(caster_level_override > 0)
 		castlevel = caster_level_override;
