@@ -706,7 +706,9 @@ void ClientList::SendWhoAll(uint32 fromid,const char* to, int16 admin, Who_All_S
 	//char plstatus[20]={0};
 	//sprintf(plstatus, "Status %i",cle->Admin());
 	char plname[64]={0};
-	strcpy(plname,cle->name());
+	std::string n(cle->name());
+	n += " [" + std::string(cle->GetIdentity()) + "]";
+	strcpy(plname,n.c_str());
 
 	char placcount[30]={0};
 	if(admin>=cle->Admin() && admin>0)
