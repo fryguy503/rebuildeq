@@ -4193,13 +4193,13 @@ void command_teleport(Client *c, const Seperator *sep) {
 
 	static Location Locations[] = {
 		Location("gfaydark", 54, -411, -2023, -0.28, 47.8, 1),
-		Location("tox", 38, -912.10, -1517.81, -37.71, 58.2, 1),
+		Location("toxxulia", 414, -1656.96, -1502.43, 72.29, 58.2, 1),
 		Location("ecommons", 22, -73.06, -1787.51, 3.13, 51.8, 1),
 		Location("fieldofbone", 78, 2395.95, -2216.75, 30.63, 227.6, 1),
-		Location("sro", 35, -123, -1039, 8.8, 99.5, 10),
+		Location("sro", 35, 124.6, -1041.51, 9.45, 99.5, 10),
 		Location("commons", 21, 1839.84, 0.15, -15.61, 61.0, 10),
-		Location("northkarana", 12, 1205.91, -3685.44, -8.56, 126.6, 10),
-		Location("dreadlands", 86, -411, 123.79, -1043.44, 8.83, 10),
+		Location("northkarana", 13, 1205.91, -3685.44, -8.56, 126.6, 10),
+		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10),
 	};
 
 	auto search = [](auto pZoneName) -> Location* {
