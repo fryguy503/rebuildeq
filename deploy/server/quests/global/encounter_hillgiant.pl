@@ -72,7 +72,7 @@ sub EVENT_TIMER {
 	    	$sth->execute($c->AccountID());	    	
 	    }
 	    if ($isRare == 1) {
-			quest::we(13, "$winnerList successfully defeated $rareName in $zoneln!");
+			quest::we(13, "$winnerList successfully stopped $encounterType in $zoneln!");
 	    } else {
 	    	quest::we(13, "$winnerList successfully stopped $encounterType in $zoneln!");
 		}

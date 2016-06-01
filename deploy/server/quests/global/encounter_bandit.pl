@@ -13,7 +13,7 @@ my $encounterType = "a bandit takeover";
 my $spelleffect = 0;
 my $commonNpcID = 12016;
 my $rareNpcID = 12016;
-my $rareName = "An evil bandit";
+my $rareName = "an_evil_bandit";
 my $isRare = 0;
 my $rarity = 30; #chance of rare spawn
 my $npcName1 = "a_bandit";
@@ -69,13 +69,11 @@ sub EVENT_TIMER {
     	}
     	foreach $c (@group) {
 	    	$sth = $dbh->prepare("UPDATE `account_custom` SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1 WHERE account_id = ?");
-	    	$sth->execute($c->AccountID());	    	
+	    	$sth->execute($c->AccountID());	    		    
 	    }
-	    if ($isRare == 1) {
-			quest::we(13, "$winnerList successfully defeated $rareName in $zoneln!");
-	    } else {
-	    	quest::we(13, "$winnerList successfully stopped $encounterType in $zoneln!");
-		}
+
+	    quest::we(13, "$winnerList successfully stopped $encounterType in $zoneln!");
+		
     	$dbh->disconnect();
     	#despawn
 		quest::depop();
