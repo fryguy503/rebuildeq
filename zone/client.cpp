@@ -9324,6 +9324,7 @@ void Client::EmoteEncounter() {
 		zoneid == 22 || //ec
 		zoneid == 21 ||  //wc
 		zoneid == 35 || //sro
+		zoneid == 34 || //nro
 		zoneid == 37 ||
 		zoneid == 46) {
 		pool += 500;
@@ -9336,12 +9337,16 @@ void Client::EmoteEncounter() {
 		encounterTable[pool] = EN_WISP;
 		pool += 200;
 		encounterTable[pool] = EN_GYPSY;
-		pool += 200;
-		encounterTable[pool] = EN_MADMAN;
 		if (zoneid != 22) {
 			pool += 200;
 			encounterTable[pool] = EN_SANDGIANT;
 		}
+	}
+	if (zoneid == 35 || //sro
+		zoneid == 34 //nro?
+		) {
+		pool += 200;
+		encounterTable[pool] = EN_MADMAN;
 	}
 	
 	//Message(0, "My faction to freeport is: %i", CalculateFaction(&fmods, GetCharacterFactionLevel(696)));
