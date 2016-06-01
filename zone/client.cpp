@@ -10064,7 +10064,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_BRD_HARMONICAFFINITY) return "Harmonic Affinity";
 		else if (id == RB_BRD_DOUBLEATTACK) return "Double Attack";
 		else if (id == RB_BRD_CHANTCYCLE) return "Chant Cycle";
-		else if (id == RB_BRD_BOASTFULBELLOW) return "Bastful Bellow";
+		else if (id == RB_BRD_BOASTFULBELLOW) return "Boastful Bellow";
 		else if (id == RB_BRD_SELOSCRESCENDO) return "Selo's Crescendo";
 		else if (id == RB_BRD_SHIELDOFNOTES) return "Shield of Notes";
 		else if (id == RB_BRD_SHOUT) return "Shout";
