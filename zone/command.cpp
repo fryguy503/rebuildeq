@@ -3970,31 +3970,49 @@ void command_encounter(Client *c, const Seperator *sep) {
 		return;
 	}
 
-
+	//GM: emote an encounter for targetted player
 	if (c->Admin() >= 200 && sep->arg[1] && strcasecmp(sep->arg[1], "emote") == 0) {
 		if (c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
-			c->Message(0, "Created an encounter for %s", c->GetTarget()->GetCleanName());
+			c->Message(0, "[GM] Created an encounter for %s", c->GetTarget()->GetCleanName());
 			c->GetTarget()->CastToClient()->EmoteEncounter();
 			return;
 		}
-		c->EmoteEncounter();
-		c->Message(0, "Creating an encounter for you.");
 		return;
 	}
 
+	//GM: spawn an encounter for targetted player
 	if (c->Admin() > 200 && sep->arg[1] && strcasecmp(sep->arg[1], "spawn") == 0) {
 		if (c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) {
 			c->Message(0, "You must target a player first to spawn an encounter.");
 			return;
 		}
 		if (sep->arg[2] && strlen(sep->arg[2]) > 3) {
-			c->Message(0, "Spawning an encounter for %s...", c->GetTarget()->GetCleanName());
+			c->Message(0, "[GM] Spawning an encounter for %s...", c->GetTarget()->GetCleanName());
 			c->GetTarget()->CastToClient()->SpawnEncounter(true, atoi(sep->arg[2]));
 			return;
 		}
 		c->Message(0, "Specify an encounter id, e.g. #spawn encounter 187###");		
 		return;
 	}
+
+	//If a GM types #encounter targetting a player, gives a report
+	if (c->Admin() > 200 && c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
+		std::string query = StringFormat("SELECT unclaimed_encounter_rewards, unclaimed_encounter_rewards_total FROM account_custom WHERE account_id = %u LIMIT 1", c->GetTarget()->CastToClient()->AccountID());
+		auto results = database.QueryDatabase(query);
+		if (results.Success()) {
+			if (results.RowCount() == 1) {
+				auto row = results.begin();
+				unclaimed_rewards = atoi(row[0]);
+				uint32 unclaimed_rewards_total = atoi(row[1]);
+				c->Message(0, "[GM] %s [%s] (%u) has %u unclaimed rewards and %u total rewards ever", c->GetTarget()->CastToClient()->GetCleanName(), c->GetTarget()->CastToClient()->Identity(), c->GetTarget()->CastToClient()->AccountID(), unclaimed_rewards, unclaimed_rewards_total);
+			} else {
+				c->Message(0, "Target failed to get a record result")
+			}
+		} else {
+			c->Message(0, "Target failed to get unclaimed_encounter_rewards")
+		}		
+		return
+	} 
 	
 
 
