@@ -4035,7 +4035,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 		}
 
 	} else {
-		//TODO: results.Failure detecting and parsing
+		Log.Out(Logs::General, Logs::Normal, "Failed to select unclaimed_encounter_rewards for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 	}
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "claim") == 0) {
 		if (unclaimed_rewards == 0) {
@@ -4404,13 +4404,6 @@ void command_rez(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
-	
-	Corpse *corpse = entity_list.GetCorpseByOwner(c);
-	if (!corpse) {
-		c->Message_StringID(4, CORPSE_CANT_SENSE);
-		return;
-	}
-
 
 	std::string displayCost;
 	uint64 cost = 0;
@@ -4419,6 +4412,27 @@ void command_rez(Client *c, const Seperator *sep) {
 		cost = 1000;
 	}
 	displayCost = StringFormat("%u platinum", (cost / 1000));
+
+
+	Corpse *corpse = nullptr;
+	//Iterate the corpses and find a player unrezzed corpse.
+	auto it = corpse_list.begin();
+	while (it != corpse_list.end()) {
+		if (it->second->IsPlayerCorpse() && 
+			strcasecmp(it->second->GetOwnerName(), client->GetName()) == 0 &&
+			!it->second->IsRezzed()
+			) {
+				corpse = it->second;
+				break;
+			}
+		++it;
+	}
+
+	//no corpses found
+	if (!corpse) {
+		c->Message(0, "At level %u, it will cost you %s to summon and resurrect one of your corpses in this zone. There are no corpses in this zone that are eligable.", c->GetLevel(), displayCost.c_str(), c->CreateSayLink("#rez confirm", "Confirm").c_str());
+		return;
+	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {		
 		if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4434,30 +4448,35 @@ void command_rez(Client *c, const Seperator *sep) {
 			return;
 		}
 
+		//summon corpse
 		corpse->Summon(c, false, false);
-		if (!corpse->IsRezzed()) {
-			// Mark the corpse as rezzed in the database, just in case the corpse has buried, or the zone the
-			// corpse is in has shutdown since the rez spell was cast.
-			database.MarkCorpseAsRezzed(corpse->GetCorpseDBID());
-			c->BuffFadeNonPersistDeath(); //strip buffs
 
-			int SpellEffectDescNum = GetSpellEffectDescNum(1524); //Reviviscence
-			// Rez spells with Rez effects have this DescNum (first is Titanium, second is 6.2 Client)
-			if ((SpellEffectDescNum == 82) || (SpellEffectDescNum == 39067)) {
-				c->SetMana(0);
-				c->SetHP(c->GetMaxHP() / 5);
-				c->SpellOnTarget(756, c->CastToMob()); // Rezz effects
-			}			
+		// Mark the corpse as rezzed in the database, just in case the corpse has buried, or the zone the
+		// corpse is in has shutdown since the rez spell was cast.
+		database.MarkCorpseAsRezzed(corpse->GetCorpseDBID());
+		c->BuffFadeNonPersistDeath(); //strip buffs
 
-			if (spells[1524].base[0] < 100 && spells[1524].base[0] > 0 && corpse->GetRezExp() > 0)
-			{				
-				c->SetEXP(((int)(c->GetEXP() + ((float)((corpse->GetRezExp() / 100) * spells[1524].base[0])))),
-					c->GetAAXP(), true);
-			}
-
-			//Was sending the packet back to initiate client zone...
-			entity_list.RefreshClientXTargets(c);
+		int SpellEffectDescNum = GetSpellEffectDescNum(1524); //Reviviscence
+		// Rez spells with Rez effects have this DescNum (first is Titanium, second is 6.2 Client)
+		if ((SpellEffectDescNum == 82) || (SpellEffectDescNum == 39067)) {
+			c->SetMana(0);
+			c->SetHP(c->GetMaxHP() / 5);
+			c->SpellOnTarget(756, c->CastToMob()); // Rezz effects
 		}
+
+		if (spells[1524].base[0] < 100 && spells[1524].base[0] > 0 && corpse->GetRezExp() > 0)
+		{				
+			c->SetEXP(((int)(c->GetEXP() + ((float)((corpse->GetRezExp() / 100) * spells[1524].base[0])))),
+			c->GetAAXP(), true);
+		}
+		
+		//This was missing before, this is the pivotal step.
+		corpse->IsRezzed(true);
+		corpse->CompleteResurrection();
+
+
+		//Was sending the packet back to initiate client zone...
+		entity_list.RefreshClientXTargets(c);
 		c->Message(0, "You paid %s to summon and resurrect a corpse in this zone.", displayCost.c_str());
 		return;
 	}
