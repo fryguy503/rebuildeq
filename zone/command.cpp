@@ -4202,7 +4202,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10),
 	};
 
-	auto search = [](auto pZoneName) -> Location* {
+	auto search = [](const char * pZoneName) -> Location* {
 		for (auto&& i : Locations)
 			if (strcasecmp(pZoneName, i.ZoneName.c_str()) == 0)
 				return &i;
@@ -4238,7 +4238,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	}
 	
 	// Handle: Player is trying to #teleport to a location.
-	if (sep->arg[1]) {
+	if (sep->arg[1] && strlen(sep->arg[1]) > 0 ) {
 		auto location = search(sep->arg[1]);
 
 		// Handle: Invalid zone.
@@ -4249,13 +4249,13 @@ void command_teleport(Client *c, const Seperator *sep) {
 		
 		// Handle: Not high enough level.
 		if (c->GetLevel() < location->MinimumLevel) {
-			c->Message(0, "You are too low to teleport to %s.", location->ZoneName);
+			c->Message(0, "You are too low to teleport to %s.", location->ZoneName.c_str());
 			return;
 		}
 
 		// Handle: Already in the zone.
 		if (c->GetZoneID() == location->ZoneID) {
-			c->Message(0, "You are already in %s.", location->ZoneName);
+			c->Message(0, "You are already in %s.", location->ZoneName.c_str());
 			return;
 		}
 
@@ -4281,7 +4281,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 			c->Message(0, "You paid %s to teleport to %s.", StringFormat("%u platinum", (cost / 1000)).c_str(), location->ZoneName.c_str());
 		}
 		else {
-			c->Message(0, "You are being teleported and bound to %s for free due to being below level %u.", location->ZoneName, FreeLevel);
+			c->Message(0, "You are being teleported and bound to %s for free due to being below level %i.", location->ZoneName.c_str(), FreeLevel);
 			c->SetBindPoint(0, location->ZoneID, 0, glm::vec3(location->X, location->Y, location->Z));
 		}
 
@@ -4294,7 +4294,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	const auto cost = calculateCost(c);
 	std::stringstream ss;
 	if (cost > 0) {
-		ss << "At level " << c->GetLevel() << ", it will cost " << (cost / 1000) << " platinum to teleport to";
+		ss << "At level " << (int)c->GetLevel() << ", it will cost " << (cost / 1000) << " platinum to teleport to";
 	}
 	else {
 		ss << "Until level" << FreeLevel << ", you may teleport and be bound for free to";

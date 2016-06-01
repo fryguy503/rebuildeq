@@ -474,7 +474,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 
 	cast_time = mod_cast_time(cast_time);
 
-	CastToClient()->Message(0, "Cast Time: %i", cast_time);
+	//CastToClient()->Message(0, "Cast Time: %i", cast_time);
 	//Reduce cast time if it's a bard song, and you have bard's wish
 	if (IsBardSong(spell_id) && IsClient() &&
 		CastToClient()->GetBuildRank(BARD, RB_BRD_BARDSWISH) > 4 &&
@@ -483,7 +483,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		//198 * rank
 		cast_time -= cast_time * 0.066 * CastToClient()->GetBuildRank(BARD, RB_BRD_BARDSWISH);		
 		orgcasttime = cast_time; //Tell client the cast time proper too
-		CastToClient()->Message(0, "Cast Time2: %i", cast_time);
+		//CastToClient()->Message(0, "Cast Time2: %i", cast_time);
 	}
 
 	// ok we know it has a cast time so we can start the timer now
@@ -2781,6 +2781,13 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 		caster->Message(MT_NonMelee, "Extended Haste increased duration by %i seconds.", bonusDuration);
 		duration += bonusDuration;
 	}
+
+	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FURY) > 0 && spell_id == 271) {
+		int bonusDuration = (int)(duration * 0.3f * caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FURY));
+		//caster->Message(MT_NonMelee, "Extended Haste increased duration by %i seconds.", bonusDuration);
+		duration += bonusDuration;
+	}
+
 
 	int castlevel = caster->GetCasterLevel(spell_id);
 	if(caster_level_override > 0)

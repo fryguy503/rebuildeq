@@ -1592,7 +1592,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 			auto results = database.QueryDatabase(query);
 		}
 		else { //No record in DB yet for character_custom, let's fix that.
-			query = StringFormat("INSERT INTO character_custom (character_id, return_zone) VALUES (%u, %s)", this->CharacterID(), zone->GetShortName());
+			query = StringFormat("INSERT INTO character_custom (character_id, return_zone) VALUES (%u, '%s')", this->CharacterID(), zone->GetShortName());
 			auto results = database.QueryDatabase(query);
 		}
 	}	

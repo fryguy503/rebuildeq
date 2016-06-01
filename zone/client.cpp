@@ -9807,7 +9807,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 		}
 
 		if (rarityType == 3) { //Legendary Drop!
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name).c_str());			
+			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name).c_str());
 		}
 		else if (rarityType == 2) { //Rare Drop!
 			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a rare %s inside it!", GetCleanName(), item->Name).c_str());
@@ -9977,11 +9977,11 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 			//Log!!
 		}
 
-		if (rarityType == 3) { //Legendary Drop!
-			Message(MT_Broadcasts, "%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name);
+		if (rarityType == 3) { //Legendary Drop!			
+			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name).c_str());
 		}
 		else if (rarityType == 2) { //Rare Drop!
-			Message(MT_Broadcasts, "%s opened a box to find a rare %s inside it!", GetCleanName(), item->Name);
+			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a rare %s inside it!", GetCleanName(), item->Name).c_str());
 		}
 		else if (rarityType == 1) { //Uncommon Drop
 			Message(MT_Experience, "Opening the box revealed an uncommon %s!", item->Name);

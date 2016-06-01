@@ -1912,6 +1912,10 @@ void EntityList::ChannelMessageFromWorld(const char *from, const char *to,
 		} else if (chan_num == 5) {
 			if (client->GetFilter(FilterOOC) == FilterHide)
 				continue;
+	
+			if (strcasecmp(StringFormat("%s_[%s]", client->GetName(), client->CastToClient()->Identity()).c_str(), from) == 0) {
+				continue;
+			}
 		}
 		client->ChannelMessageSend(from, to, chan_num, language, message);
 	}

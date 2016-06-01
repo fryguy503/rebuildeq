@@ -291,9 +291,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								static const float BaseBonusDamage = 0.2f;			// 20% per rank.
 
 								int bonusDamage = rank * BaseBonusDamage * dmg;
-								casterClient->Message(MT_NonMelee, "Flame of Light %u added %i bonus damage.", rank, bonusDamage);
+								casterClient->Message(MT_NonMelee, "Flame of Light %u added %i bonus damage.", rank, -bonusDamage);
 
-								dmg -= bonusDamage;
+								dmg += bonusDamage;
 							}
 
 							//Shin: Festering Spear

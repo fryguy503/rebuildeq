@@ -643,7 +643,7 @@ void ClientList::SendWhoAll(uint32 fromid,const char* to, int16 admin, Who_All_S
 						rankstring=5017;
 					else if (cle->Admin() >= 150)
 						rankstring=5016;
-					else if (cle->Admin() >= 100)
+					/*else if (cle->Admin() >= 100)
 						rankstring=5015;
 					else if (cle->Admin() >= 95)
 						rankstring=5014;
@@ -660,7 +660,7 @@ void ClientList::SendWhoAll(uint32 fromid,const char* to, int16 admin, Who_All_S
 					else if (cle->Admin() >= 20)
 						rankstring=5008;
 					else if (cle->Admin() >= 10)
-						rankstring=5007;
+						rankstring=5007;*/
 				}
 			idx++;
 			char guildbuffer[67]={0};
@@ -706,9 +706,13 @@ void ClientList::SendWhoAll(uint32 fromid,const char* to, int16 admin, Who_All_S
 	//char plstatus[20]={0};
 	//sprintf(plstatus, "Status %i",cle->Admin());
 	char plname[64]={0};
-	std::string n(cle->name());
-	n += " [" + std::string(cle->GetIdentity()) + "]";
-	strcpy(plname,n.c_str());
+	strcpy(plname, cle->name());
+
+	//std::string n(cle->name());
+	//if ((cle->Anon() == 0 && countcle->Online() >= CLE_Status_Zoning) || (admin >= cle->Admin() && admin > 100)) {
+	//	n += " [" + std::string(cle->GetIdentity()) + "]";
+	//}
+//	strcpy(plname, n.c_str());
 
 	char placcount[30]={0};
 	if(admin>=cle->Admin() && admin>0)

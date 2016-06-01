@@ -1728,6 +1728,11 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 			sp[tempid].effectid[1] = 254; //remove mana effect, since it's done programmaticcally.
 		}
 
+		if (tempid == 271) { //fleeting fury for RB_SHM_FURY
+			sp[tempid].targettype = (SpellTargetType)6;
+			sp[tempid].effectid[4] = 85;
+			sp[tempid].base[4] = 6908;
+		}
 
 		if (tempid == 3274) { 
 			//reset skill
@@ -1745,7 +1750,7 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 
 			for (y = 0; y < EFFECT_COUNT; y++)
 				sp[tempid].formula[y] = 0;
-			if (tempid == 3274) { //SHM_VIRULENTPARALYSIS
+			if (tempid == 3274) { //RB_SHM_VIRULENTPARALYSIS
 				sp[tempid].effectid[0] = SE_CHA;
 				sp[tempid].effectid[1] = SE_Root; //ROOT
 				sp[tempid].formula[1] = 100;
