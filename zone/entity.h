@@ -169,6 +169,7 @@ public:
 	Raid *GetRaidByID(uint32 id);
 	Raid *GetRaidByLeaderName(const char *leader);
 
+	Corpse *GetUnrezzedCorpseByOwner(Client * client);
 	Corpse *GetCorpseByOwner(Client* client);
 	Corpse *GetCorpseByOwnerWithinRange(Client* client, Mob* center, int range);
 	inline Corpse *GetCorpseByID(uint16 id)

@@ -4006,12 +4006,12 @@ void command_encounter(Client *c, const Seperator *sep) {
 				uint32 unclaimed_rewards_total = atoi(row[1]);
 				c->Message(0, "[GM] %s [%s] (%u) has %u unclaimed rewards and %u total rewards ever", c->GetTarget()->CastToClient()->GetCleanName(), c->GetTarget()->CastToClient()->Identity(), c->GetTarget()->CastToClient()->AccountID(), unclaimed_rewards, unclaimed_rewards_total);
 			} else {
-				c->Message(0, "Target failed to get a record result")
+				c->Message(0, "Target failed to get a record result");
 			}
 		} else {
-			c->Message(0, "Target failed to get unclaimed_encounter_rewards")
+			c->Message(0, "Target failed to get unclaimed_encounter_rewards");
 		}		
-		return
+		return;
 	} 
 	
 
@@ -4413,20 +4413,7 @@ void command_rez(Client *c, const Seperator *sep) {
 	}
 	displayCost = StringFormat("%u platinum", (cost / 1000));
 
-
-	Corpse *corpse = nullptr;
-	//Iterate the corpses and find a player unrezzed corpse.
-	auto it = corpse_list.begin();
-	while (it != corpse_list.end()) {
-		if (it->second->IsPlayerCorpse() && 
-			strcasecmp(it->second->GetOwnerName(), client->GetName()) == 0 &&
-			!it->second->IsRezzed()
-			) {
-				corpse = it->second;
-				break;
-			}
-		++it;
-	}
+	Corpse *corpse = entity_list.GetUnrezzedCorpseByOwner(c);
 
 	//no corpses found
 	if (!corpse) {

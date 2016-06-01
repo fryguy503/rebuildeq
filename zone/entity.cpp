@@ -1645,6 +1645,22 @@ Client *EntityList::GetRandomClient(const glm::vec3& location, float Distance, C
 	return ClientsInRange[zone->random.Int(0, ClientsInRange.size() - 1)];
 }
 
+
+Corpse *EntityList::GetUnrezzedCorpseByOwner(Client *client)
+{
+	auto it = corpse_list.begin();
+	while (it != corpse_list.end()) {
+		if (it->second->IsPlayerCorpse() &&
+			strcasecmp(it->second->GetName(), client->GetName()) == 0 &&
+			!it->second->IsRezzed()) {
+			return it->second;
+		}
+		++it;
+	}
+
+	return nullptr;
+}
+
 Corpse *EntityList::GetCorpseByOwner(Client *client)
 {
 	auto it = corpse_list.begin();
