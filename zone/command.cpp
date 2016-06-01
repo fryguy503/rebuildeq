@@ -3895,6 +3895,7 @@ void command_bind(Client *c, const Seperator *sep)
 //List all available builds
 void command_builds(Client *c, const Seperator *sep)
 {
+	uint8 level_req = 75;
 	if (!c->IsBuildAvailable()) {
 		c->Message(0, "This class does not yet have builds available. It will be coming soon!");
 		return;
@@ -3907,7 +3908,7 @@ void command_builds(Client *c, const Seperator *sep)
 		
 		//Reset confirm
 		if (sep->arg[2] && strcasecmp(sep->arg[2], "confirm") == 0) {
-			if (c->GetLevel() >= 75) { //Removed level req
+			if (c->GetLevel() >= level_req) { //Removed level req
 				c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
 				return;
 			}
@@ -3915,7 +3916,7 @@ void command_builds(Client *c, const Seperator *sep)
 			return;
 		}
 
-		if (c->GetLevel() < 75) {
+		if (c->GetLevel() < level_req) {
 			c->Message(0, "You can reset your skills for free while testing. [ %s ]", c->CreateSayLink("#builds reset confirm", "confirm").c_str());
 		} else {
 			c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
@@ -3941,7 +3942,7 @@ void command_builds(Client *c, const Seperator *sep)
 	
 	windowText.append(c->GetBuildReport());
 	c->SendPopupToClient(windowTitle, windowText.c_str());
-	if (c->GetLevel() < 20) {
+	if (c->GetLevel() < level_req) {
 		c->Message(0, "You are eligble to %s your build choices.", c->CreateSayLink("#builds reset", "reset").c_str());
 	}
 
