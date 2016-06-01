@@ -5963,7 +5963,7 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true) {
 		break;
 	}
 	int hp = 5 + multiplier*npctype->level + multiplier*npctype->level * 75 / 300;
-	if (npctype->level < 10 && !keepSpells) { //keepspells is only disabled for encounters, so, i'm nerfing hp
+	if (npctype->level < 21 && !keepSpells) { //keepspells is only disabled for encounters, so, i'm nerfing hp
 		hp /= 2; //let's just cut it in half.
 	}
 	npctype->cur_hp = hp;
