@@ -548,11 +548,13 @@ void ClientList::SendWhoAll(uint32 fromid,const char* to, int16 admin, Who_All_S
 				totalusers++;
 				if(totalusers<=20 || admin>=100)
 					totallength=totallength+strlen(countcle->name())+strlen(countcle->AccountName())+strlen(guild_mgr.GetGuildName(countcle->GuildID()))+5;
+					totallength += strlen(countcle->GetIdentity()) + 4;
 			}
 			else if((countcle->Anon()>0 && admin<=countcle->Admin()) || (countcle->Anon()==0 && !countcle->GetGM())) {
 				totalusers++;
 				if(totalusers<=20 || admin>=100)
 					totallength=totallength+strlen(countcle->name())+strlen(guild_mgr.GetGuildName(countcle->GuildID()))+5;
+					totallength += strlen(countcle->GetIdentity()) + 4;
 			}
 		}
 		countclients.Advance();
@@ -703,16 +705,12 @@ void ClientList::SendWhoAll(uint32 fromid,const char* to, int16 admin, Who_All_S
 	unknown80[1]=0xFFFFFFFF;//1035
 
 
-	//char plstatus[20]={0};
-	//sprintf(plstatus, "Status %i",cle->Admin());
 	char plname[64]={0};
-	strcpy(plname, cle->name());
-
-	//std::string n(cle->name());
-	//if ((cle->Anon() == 0 && countcle->Online() >= CLE_Status_Zoning) || (admin >= cle->Admin() && admin > 100)) {
-	//	n += " [" + std::string(cle->GetIdentity()) + "]";
-	//}
-//	strcpy(plname, n.c_str());
+	std::string n(cle->name());
+	if ((cle->Anon() == 0 && countcle->Online() >= CLE_Status_Zoning) || (admin >= cle->Admin() && admin > 100)) {
+		n += " [" + std::string(cle->GetIdentity()) + "]";
+	}
+	strcpy(plname, n.c_str());
 
 	char placcount[30]={0};
 	if(admin>=cle->Admin() && admin>0)

@@ -40,16 +40,6 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginN
 	pLSID = iLSID;
 	if (iLSID > 0) {
 		paccountid = database.GetAccountIDFromLSID(iLSID, paccountname, &padmin);
-		//Get identity. Stupid database.
-		std::string query = StringFormat("SELECT `identity` FROM `account` WHERE `id` = %u", paccountid);
-		auto results = database.QueryDatabase(query);
-		if (results.Success()) {
-			auto row = results.begin();
-			if (row != results.end()) {
-				memset(identity, 0, sizeof(identity));
-				strcpy(identity, row[0]);
-			}
-		}
 	}
 	strn0cpy(plsname, iLoginName, sizeof(plsname));
 	strn0cpy(plskey, iLoginKey, sizeof(plskey));
@@ -57,6 +47,7 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginN
 	plocal=(local==1);
 
 	pinstance = 0;
+	loadIdentity();
 }
 
 ClientListEntry::ClientListEntry(uint32 in_id, uint32 iAccID, const char* iAccName, MD5& iMD5Pass, int16 iAdmin)
@@ -74,6 +65,7 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iAccID, const char* iAccNa
 	padmin = iAdmin;
 
 	pinstance = 0;
+	loadIdentity();
 }
 
 ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer* iZS, ServerClientList_Struct* scl, int8 iOnline)
@@ -97,6 +89,8 @@ ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer* iZS, ServerClientList
 		Update(iZS, scl, iOnline);
 	else
 		SetOnline(iOnline);
+
+	loadIdentity();
 }
 
 ClientListEntry::~ClientListEntry() {
@@ -233,6 +227,7 @@ void ClientListEntry::ClearVars(bool iAll) {
 		paccountid = 0;
 		memset(paccountname, 0, sizeof(paccountname));
 		padmin = 0;
+		memset(identity, 0, sizeof(identity));
 	}
 	pzoneserver = 0;
 	pzone = 0;
@@ -250,6 +245,21 @@ void ClientListEntry::ClearVars(bool iAll) {
 	for (auto &elem : tell_queue)
 		safe_delete_array(elem);
 	tell_queue.clear();
+}
+
+void ClientListEntry::loadIdentity() {
+	if (paccountid) {
+		//Get identity. Stupid database.
+		std::string query = StringFormat("SELECT `identity` FROM `account` WHERE `id` = %u", paccountid);
+		auto results = database.QueryDatabase(query);
+		if (results.Success()) {
+			auto row = results.begin();
+			if (row != results.end()) {
+				memset(identity, 0, sizeof(identity));
+				strcpy(identity, row[0]);
+			}
+		}
+	}
 }
 
 void ClientListEntry::Camp(ZoneServer* iZS) {
