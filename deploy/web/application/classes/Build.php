@@ -657,7 +657,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Slay Undead";
-			$newSkill->desc = 'Grants the passive Slay Undead with a <em data-base="1">1</em>% chance<span class="perLevel"> per rank</span>.<b>NOT IMPLEMENTED</b>';
+			$newSkill->desc = 'Grants the passive Slay Undead with a <em data-base="1">1</em>% chance<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[52] = $newSkill;
 			break;
