@@ -331,11 +331,13 @@ class Build {
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[13] = $newSkill;
 
+			//http://everquest.allakhazam.com/db/spell.html?spell=6239
 			$newSkill = new stdClass();
-			$newSkill->title = "Bard's Wish";
-			$newSkill->desc = 'All songs are sung <em data-base="0.2">0.2</em> seconds faster<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Kinsong";
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, Increasing the groups spell critical dot dmg, dot, and accuracy for <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[16] = $newSkill;
+			
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jonathon's Whistle";
@@ -380,8 +382,8 @@ class Build {
 			$skills[31] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Double Attack";
-			$newSkill->desc = 'Grants <em data-base="30">30</em> points into double attack<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Bard's Wish";
+			$newSkill->desc = 'All songs are sung <em data-base="0.2">0.2</em> seconds faster<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[34] = $newSkill;
 

@@ -1149,7 +1149,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
 		( //Lesson of the Devoted is used by multiple classes different builds
 			rank_id == aaLessonoftheDevoted && (
-					GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1
+					GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 ||
+					GetBuildRank(BARD, RB_BRD_KINSONG) < 1
 			)
 		) //end lessons
 		) {
@@ -1310,7 +1311,9 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	if (rank_id == aaLessonoftheDevoted) {
 		if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) > 0) {
 			spell_id = 6236;
-		}
+		} else if (GetBuildRank(BARD, RB_BRD_KINSONG) > 0) {
+			spell_id = 6239;
+		} 
 	}
 
 	if (rank_id == aaAncestralAid) {

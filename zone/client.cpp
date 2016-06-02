@@ -2425,7 +2425,7 @@ bool Client::CheckIncreaseSkill(EQEmu::skills::SkillType skillid, Mob *against_w
 	}
 
 	//Double Attack special code for bard
-	if (skillid == EQEmu::skills::SkillDoubleAttack) {
+	/*if (skillid == EQEmu::skills::SkillDoubleAttack) {
 		if (GetClass() == BARD && GetBuildRank(BARD, RB_BRD_DOUBLEATTACK) == 0 && skillval > 0) {
 			//Reset skill, bard shouldn't have double attack if untrained
 			SetSkill(EQEmu::skills::SkillDoubleAttack, 0);
@@ -2435,7 +2435,7 @@ bool Client::CheckIncreaseSkill(EQEmu::skills::SkillType skillid, Mob *against_w
 		if (GetBuildRank(BARD, RB_BRD_DOUBLEATTACK) > 0) { 
 			maxskill = GetBuildRank(BARD, RB_BRD_DOUBLEATTACK) * 30;
 		}
-	}
+	}*/
 	
 	// Make sure we're not already at skill cap
 	if (skillval < maxskill)
@@ -8761,10 +8761,10 @@ void Client::RefreshBuild() {
 				}
 
 
-				if (GetClass() == BARD && i == RB_BRD_DOUBLEATTACK && GetSkill(EQEmu::skills::SkillDoubleAttack) < (n * 30)) { //Give double attack		
-					SetSkill(EQEmu::skills::SkillDoubleAttack, 1);
+				if (GetClass() == BARD && (i == RB_BRD_KINSONG || i == RB_BRD_KINSONG ) && GetAA(aaLessonoftheDevoted) < 1) {					
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
-
 
 				if (GetClass() == BARD && i == RB_BRD_DANCEOFBLADES && GetAA(aaDanceofBlades) < 1) {
 					TrainAARank(aaDanceofBlades);
@@ -10078,7 +10078,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_BRD_DANCEOFBLADES) return "Dance of Blades";
 		else if (id == RB_BRD_CACOPHONY) return "Cacophony";
 		else if (id == RB_BRD_HARMONICAFFINITY) return "Harmonic Affinity";
-		else if (id == RB_BRD_DOUBLEATTACK) return "Double Attack";
+		else if (id == RB_BRD_KINSONG) return "Kinsong";
 		else if (id == RB_BRD_CHANTCYCLE) return "Chant Cycle";
 		else if (id == RB_BRD_BOASTFULBELLOW) return "Boastful Bellow";
 		else if (id == RB_BRD_SELOSCRESCENDO) return "Selo's Crescendo";
