@@ -790,12 +790,17 @@ void Client::CompleteConnect()
 		if (m_pp.birthday > time(nullptr) - 120) { //If they're less than 2 minutes old
 			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome %s to the server!", GetCleanName()).c_str());
 			UpdateSkillsAndSpells();
-			std::string query = StringFormat("INSERT INTO account_custom (account_id) VALUES (%u)", AccountID());
+
+			//make sure account custom is set
+			std::string query = StringFormat("SELECT unclaimed_encounter_rewards FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
 			auto results = database.QueryDatabase(query);
-			if (!results.Success()) {
-				Log.Out(Logs::General, Logs::Normal, "Creating account_custom failed with error user %u: %s",AccountID(), results.ErrorMessage().c_str());
-				return;
+			if (results.Success()) {
+				if (results.RowCount() < 1) {
+					std::string query = StringFormat("INSERT INTO account_custom (account_id) VALUES (%u)", AccountID());
+					auto results = database.QueryDatabase(query);
+				}
 			}
+
 		}
 		else if(m_pp.lastlogin < time(nullptr) - 600) {
 			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome back to the server, %s!", GetCleanName()).c_str());
