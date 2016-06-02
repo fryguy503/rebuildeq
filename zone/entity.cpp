@@ -1651,7 +1651,7 @@ Corpse *EntityList::GetUnrezzedCorpseByOwner(Client *client)
 	auto it = corpse_list.begin();
 	while (it != corpse_list.end()) {
 		if (it->second->IsPlayerCorpse() &&
-			strcasecmp(it->second->GetName(), client->GetName()) == 0 &&
+			strcasecmp(it->second->GetOwnerName(), client->GetName()) == 0 &&
 			!it->second->IsRezzed()) {
 			return it->second;
 		}
