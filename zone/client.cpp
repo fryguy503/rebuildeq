@@ -9811,16 +9811,22 @@ int Client::GiveBoxReward(int minimumRarity) {
 			//Log!!
 		}
 
+		EQEmu::saylink::SayLinkEngine linker;
+		linker.SetLinkType(linker.SayLinkItemData);
+		linker.SetItemData(item);
+		std::string item_link;
+		item_link = linker.GenerateLink();
+
 		if (rarityType == 3) { //Legendary Drop!
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name).c_str());
+			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item_link.c_str()).c_str());
 		}
 		else if (rarityType == 2) { //Rare Drop!
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a rare %s inside it!", GetCleanName(), item->Name).c_str());
+			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a rare %s inside it!", GetCleanName(), item_link.c_str()).c_str());
 		}
 		else if (rarityType == 1) { //Uncommon Drop
-			Message(MT_Experience, "Opening the box revealed an uncommon %s!", item->Name);
+			Message(MT_Experience, "Opening the box revealed an uncommon %s!", item_link.c_str());
 		} else if (rarityType == 0) { //Common Drop
-			Message(MT_Experience, "Opening the box revealed a common %s!", item->Name);
+			Message(MT_Experience, "Opening the box revealed a common %s!", item_link.c_str());
 		}
 		return itemid;
 	}
@@ -9982,17 +9988,23 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 			//Log!!
 		}
 
-		if (rarityType == 3) { //Legendary Drop!			
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item->Name).c_str());
+		EQEmu::saylink::SayLinkEngine linker;
+		linker.SetLinkType(linker.SayLinkItemData);
+		linker.SetItemData(item);
+		std::string item_link;
+		item_link = linker.GenerateLink();
+
+		if (rarityType == 3) { //Legendary Drop!
+			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item_link.c_str()).c_str());
 		}
 		else if (rarityType == 2) { //Rare Drop!
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a rare %s inside it!", GetCleanName(), item->Name).c_str());
+			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a rare %s inside it!", GetCleanName(), item_link.c_str()).c_str());
 		}
 		else if (rarityType == 1) { //Uncommon Drop
-			Message(MT_Experience, "Opening the box revealed an uncommon %s!", item->Name);
+			Message(MT_Experience, "Opening the box revealed an uncommon %s!", item_link.c_str());
 		}
 		else if (rarityType == 0) { //Common Drop
-			Message(MT_Experience, "Opening the box revealed a common %s!", item->Name);
+			Message(MT_Experience, "Opening the box revealed a common %s!", item_link.c_str());
 		}
 		return itemid;
 	}
