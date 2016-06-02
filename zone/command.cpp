@@ -4091,7 +4091,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 			next_daily_claim = atoi(row[1]);
 		}
 		else { //No record in DB yet for character_custom, let's fix that.
-			next_daily_claim = time(nullptr) + 86400;
+			next_daily_claim = time(nullptr) + 72000;
 			std::string query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", c->AccountID(), next_daily_claim);
 			
 			auto results = database.QueryDatabase(query);
@@ -4109,7 +4109,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 
 	//See if eligable for daily reward
 	if (next_daily_claim < time(nullptr)) {
-		next_daily_claim = time(nullptr) + 86400;
+		next_daily_claim = time(nullptr) + 72000;
 		std::string query = StringFormat("UPDATE account_custom SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1, next_daily_claim = %i WHERE account_id = %u and unclaimed_encounter_rewards = %u", next_daily_claim,  c->AccountID(), unclaimed_rewards);
 		unclaimed_rewards++;
 		auto results = database.QueryDatabase(query);
@@ -4118,7 +4118,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 			Log.Out(Logs::General, Logs::Normal, "Daily claim increment failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
-		c->Message(15, "You have acquired the daily login reward [ %s ]! In 24 hours a new reward will be available to claim.", c->CreateSayLink("#encounter claim", "claim").c_str());
+		c->Message(15, "You have acquired the daily login reward [ %s ]! In 20 hours a new reward will be available to claim.", c->CreateSayLink("#encounter claim", "claim").c_str());
 	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "claim") == 0) {

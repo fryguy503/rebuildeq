@@ -789,7 +789,7 @@ void Client::CompleteConnect()
 		}
 
 		uint32 unclaimed_rewards = 0;
-		uint32 next_daily_claim = time(nullptr) + 86400;
+		uint32 next_daily_claim = time(nullptr) + 72000;
 		//make sure account custom is set
 		std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
 
@@ -808,7 +808,7 @@ void Client::CompleteConnect()
 
 		//Do account_custom check and also give daily rewards
 		if (next_daily_claim < time(nullptr)) {
-			next_daily_claim = time(nullptr) + 86400;
+			next_daily_claim = time(nullptr) + 72000;
 			std::string query = StringFormat("UPDATE account_custom SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1, next_daily_claim = %i WHERE account_id = %u and unclaimed_encounter_rewards = %u", next_daily_claim, AccountID(), unclaimed_rewards);
 			unclaimed_rewards++;
 			auto results = database.QueryDatabase(query);
@@ -817,7 +817,7 @@ void Client::CompleteConnect()
 				Log.Out(Logs::General, Logs::Normal, "Daily claim increment failed for user %u: %s", AccountID(), results.ErrorMessage().c_str());
 				return;
 			}
-			Message(15, "You have acquired the daily login reward [ %s ]! In 24 hours a new reward will be available to claim.", CreateSayLink("#encounter claim", "claim").c_str());
+			Message(15, "You have acquired the daily login reward [ %s ]! In 20 hours a new reward will be available to claim.", CreateSayLink("#encounter claim", "claim").c_str());
 		}
 
 
