@@ -169,6 +169,7 @@ int command_init(void)
 		command_add("bot", "- Type \"#bot help\" or \"^help\" to the see the list of available commands for bots.", 0, command_bot) ||
 #endif
 		command_add("builds", "- Get a list of every build in game", 0, command_builds) ||
+		command_add("setbuild", "- Set a build", 255, command_setbuild) ||
 		command_add("buff", "- Pay platinum to receive buffs", 0, command_buff) ||
 		command_add("refer", "- Refer-a-friend reward system", 0, command_refer) ||
 		command_add("camerashake",  "Shakes the camera on everyone's screen globally.",  80, command_camerashake) ||
@@ -3960,6 +3961,67 @@ void command_builds(Client *c, const Seperator *sep)
 	return;
 }
 
+void command_setbuild(Client *c, const Seperator *sep) {
+	// Check: Valid input (count and type).
+	if (sep->argnum != 2 || !sep->IsNumber(1) || !sep->IsNumber(2)) {
+		c->Message(0, "Usage: #setbuild id rank");
+		return;
+	}
+
+	const int id = atoi(sep->arg[1]);
+	// Check: Valid input (id range).
+	if (id < 0 || id > 53) { // TODO: Remove hard code values.
+		c->Message(0, "Usage: #setbuild id(0-53) rank");
+		return;
+	}
+
+	const int rank = atoi(sep->arg[2]);
+	// Check: Valid input (rank range).
+	if (rank < 0 || rank > 5) {
+		c->Message(0, "Usage: #setbuild id rank(0-5)");
+		return;
+	}
+
+	Client* cTarget = nullptr;
+	auto target = c->GetTarget();
+
+	// Check: Valid target.
+	if (target && target->IsClient()) {
+		cTarget = c->GetTarget()->CastToClient();
+	}
+	// No target or target is not a Client, use self instead.
+	else {
+		cTarget = c;
+	}
+
+	// Get a session, this allows RefreshBuild to detect that changes have happened.
+	cTarget->GetSession();
+
+	// Copy existing build.
+	std::string build = cTarget->GetEPP().build;
+	build[id] = std::to_string(rank)[0];
+	build.erase(53);
+
+	std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %i", EscapeString(build).c_str(), cTarget->CharacterID());
+	auto results = database.QueryDatabase(query);
+	if (!results.Success()) {
+		c->Message(13, "Failed to set build.");
+		return;
+	}
+	else {
+		if (c == cTarget) {
+			c->Message(15, "Successfully updated your build.");
+		}
+		else {
+			c->Message(15, "Successfully updated your target's build.");
+			cTarget->Message(15, "Your build has been updated.");
+		}
+	}
+
+	// Trigger refresh on target.
+	cTarget->RefreshBuild();
+}
+
 //Spawns an encounter, if a valid timing
 void command_encounter(Client *c, const Seperator *sep) {
 	uint32 unclaimed_rewards = 0;
@@ -4150,13 +4212,13 @@ void command_teleport(Client *c, const Seperator *sep) {
 
 	static Location Locations[] = {
 		Location("gfaydark", 54, -411, -2023, -0.28, 47.8, 1),
-		Location("tox", 38, -912.10, -1517.81, -37.71, 58.2, 1),
+		Location("toxxulia", 414, -1656.96, -1502.43, 72.29, 58.2, 1),
 		Location("ecommons", 22, -73.06, -1787.51, 3.13, 51.8, 1),
 		Location("fieldofbone", 78, 2395.95, -2216.75, 30.63, 227.6, 1),
-		Location("sro", 35, -123, -1039, 8.8, 99.5, 10),
+		Location("sro", 35, 124.6, -1041.51, 9.45, 99.5, 10),
 		Location("commons", 21, 1839.84, 0.15, -15.61, 61.0, 10),
-		Location("northkarana", 12, 1205.91, -3685.44, -8.56, 126.6, 10),
-		Location("dreadlands", 86, -411, 123.79, -1043.44, 8.83, 10),
+		Location("northkarana", 13, 1205.91, -3685.44, -8.56, 126.6, 10),
+		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10),
 	};
 
 	auto search = [](const char * pZoneName) -> Location* {
