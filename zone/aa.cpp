@@ -1146,7 +1146,12 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaFeralSwipe && GetBuildRank(SHAMAN, RB_SHM_FERALSWIPE) < 1 ||
 		rank_id == aaParagonofSpirit && GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT) < 1 ||
 		rank_id == aaBoastfulBellow && GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW) < 1 ||
-		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 
+		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
+		( //Lesson of the Devoted is used by multiple classes different builds
+			rank_id == aaLessonoftheDevoted && (
+					GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1
+			)
+		) //end lessons
 		) {
 		Message(13, "You cannot use this ability until you unlock it via %s.", CreateSayLink("#builds", "#builds").c_str());
 		return;
@@ -1301,6 +1306,12 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		cooldown = 0;
 	}
 
+
+	if (rank_id == aaLessonoftheDevoted) {
+		if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) > 0) {
+			spell_id = 6236;
+		}
+	}
 
 	if (rank_id == aaAncestralAid) {
 		//primal essence 1819, gives 20 to all

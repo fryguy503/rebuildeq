@@ -8812,6 +8812,10 @@ void Client::RefreshBuild() {
 					TrainAARank(aaCloakofShadows);
 					Message(15, "You have unlocked the AA \"Cloak of Shadows\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+				if (GetClass() == SHADOWKNIGHT && (i == RB_SHD_REAPERSSTRIKE || i == RB_SHD_REAPERSSTRIKE ) && GetAA(aaLessonoftheDevoted) < 1) { //AA 87						
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
+				}
 				if (GetClass() == SHAMAN && i == RB_SHM_PURIFYSOUL && GetAA(aaPurifySoul) < 1) {
 					TrainAARank(aaPurifySoul);
 					Message(15, "You have unlocked the AA \"Purify Soul\"! Find the hotkey in your Alternate Advancement Window.");
@@ -10118,7 +10122,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_SHD_ZEVFEERSFEAST) return "Zevfeer's Feast";
 		else if (id == RB_SHD_SWORNENEMY) return "Sworn Enemy";
 		else if (id == RB_SHD_BANSHEESMIRROR) return "Banshee's Mirror";
-		else if (id == RB_SHD_AURAOFVAMPIRISM) return "Aura of Vampirism";
+		else if (id == RB_SHD_REAPERSSTRIKE) return "Reaper's Strike";
 		else if (id == RB_SHD_FESTERINGSPEAR) return "Festering Spear";
 		else if (id == RB_SHD_FESTERINGWOUND) return "Festering Wound";
 		else if (id == RB_SHD_ROTTENCORE) return "Rotten Core";

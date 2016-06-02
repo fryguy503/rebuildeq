@@ -858,7 +858,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Steadfast Servant";
-			$newSkill->desc = 'Grants the Steadfast Servant, summoning a pet at <em data-base="+20">+20</em>% power<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Steadfast Servant AA, summoning a pet at <em data-base="+20">+20</em>% power<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-steadfastservant.png";	
 			$skills[6] = $newSkill;
 			
@@ -881,9 +881,9 @@ class Build {
 			$skills[13] = $newSkill;
 			
 			$newSkill = new stdClass();
-			$newSkill->title = "Aura of Vampirism";
-			$newSkill->desc = 'Grants the entire group <em data-base="+4">+4</em>% spell vampirism and <em data-base="+10">+10</em>% melee vampirism<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-sk-auraofvampirism.png";	
+			$newSkill->title = "Reaper's Strike";
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, which improves accuracy by 50% and gain lifetap from weapon damage for <em data-base="6">6</em>seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-sk-reapersstrike.png";	
 			$skills[16] = $newSkill;
 			
 			$newSkill = new stdClass();
