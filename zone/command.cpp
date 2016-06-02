@@ -4025,6 +4025,8 @@ void command_setbuild(Client *c, const Seperator *sep) {
 //Spawns an encounter, if a valid timing
 void command_encounter(Client *c, const Seperator *sep) {
 	uint32 unclaimed_rewards = 0;
+	uint32 next_daily_claim = 0;
+
 	if (c->GetEPP().encounter_type > 0 &&
 		c->GetEPP().encounter_timeout > time(nullptr)
 		//c->InEncounterArea()
@@ -4080,15 +4082,18 @@ void command_encounter(Client *c, const Seperator *sep) {
 
 
 	//Get the unclaimed_encounter_rewards
-	std::string query = StringFormat("SELECT unclaimed_encounter_rewards FROM account_custom WHERE account_id = %u LIMIT 1", c->AccountID());
+	std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim FROM account_custom WHERE account_id = %u LIMIT 1", c->AccountID());
 	auto results = database.QueryDatabase(query);
 	if (results.Success()) {
 		if (results.RowCount() == 1) {
 			auto row = results.begin();
 			unclaimed_rewards = atoi(row[0]);
+			next_daily_claim = atoi(row[1]);
 		}
 		else { //No record in DB yet for character_custom, let's fix that.
-			std::string query = StringFormat("INSERT INTO account_custom (account_id) VALUES (%u)", c->AccountID());
+			next_daily_claim = time(nullptr) + 86400;
+			std::string query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", c->AccountID(), next_daily_claim);
+			
 			auto results = database.QueryDatabase(query);
 			if (!results.Success()) {
 				c->Message(13, "Claiming reward failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
@@ -4099,7 +4104,23 @@ void command_encounter(Client *c, const Seperator *sep) {
 
 	} else {
 		Log.Out(Logs::General, Logs::Normal, "Failed to select unclaimed_encounter_rewards for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+		return;
 	}
+
+	//See if eligable for daily reward
+	if (next_daily_claim < time(nullptr)) {
+		next_daily_claim = time(nullptr) + 86400;
+		std::string query = StringFormat("UPDATE account_custom SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1, next_daily_claim = %i WHERE account_id = %u and unclaimed_encounter_rewards = %u", next_daily_claim,  c->AccountID(), unclaimed_rewards);
+		unclaimed_rewards++;
+		auto results = database.QueryDatabase(query);
+		if (!results.Success()) {
+			c->Message(13, "Setting daily claim failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
+			Log.Out(Logs::General, Logs::Normal, "Daily claim increment failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			return;
+		}
+		c->Message(15, "You have acquired the daily login reward [ %s ]! In 24 hours a new reward will be available to claim.", c->CreateSayLink("#encounter claim", "claim").c_str());
+	}
+
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "claim") == 0) {
 		if (unclaimed_rewards == 0) {
 			c->Message(13, "You have no unclaimed rewards.");

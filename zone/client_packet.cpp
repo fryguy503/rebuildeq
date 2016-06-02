@@ -787,20 +787,43 @@ void Client::CompleteConnect()
 			std::string event_desc = StringFormat("Connect :: Logged into zoneid:%i instid:%i", this->GetZoneID(), this->GetInstanceID());
 			QServ->PlayerLogEvent(Player_Log_Connect_State, this->CharacterID(), event_desc);
 		}
+
+		uint32 unclaimed_rewards = 0;
+		uint32 next_daily_claim = time(nullptr) + 86400;
+		//make sure account custom is set
+		std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
+
+		auto results = database.QueryDatabase(query);
+		if (results.Success()) {
+			if (results.RowCount() > 0) {
+				auto row = results.begin();
+				unclaimed_rewards = atoi(row[0]);
+				next_daily_claim = atoi(row[1]);
+			}
+			else {
+				std::string query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", AccountID(), next_daily_claim);
+				auto results = database.QueryDatabase(query);
+			}
+		}
+
+		//Do account_custom check and also give daily rewards
+		if (next_daily_claim < time(nullptr)) {
+			next_daily_claim = time(nullptr) + 86400;
+			std::string query = StringFormat("UPDATE account_custom SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1, next_daily_claim = %i WHERE account_id = %u and unclaimed_encounter_rewards = %u", next_daily_claim, AccountID(), unclaimed_rewards);
+			unclaimed_rewards++;
+			auto results = database.QueryDatabase(query);
+			if (!results.Success()) {
+				//Message(13, "Setting daily claim failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
+				Log.Out(Logs::General, Logs::Normal, "Daily claim increment failed for user %u: %s", AccountID(), results.ErrorMessage().c_str());
+				return;
+			}
+			Message(15, "You have acquired the daily login reward [ %s ]! In 24 hours a new reward will be available to claim.", CreateSayLink("#encounter claim", "claim").c_str());
+		}
+
+
 		if (m_pp.birthday > time(nullptr) - 120) { //If they're less than 2 minutes old
 			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome %s to the server!", GetCleanName()).c_str());
 			UpdateSkillsAndSpells();
-
-			//make sure account custom is set
-			std::string query = StringFormat("SELECT unclaimed_encounter_rewards FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
-			auto results = database.QueryDatabase(query);
-			if (results.Success()) {
-				if (results.RowCount() < 1) {
-					std::string query = StringFormat("INSERT INTO account_custom (account_id) VALUES (%u)", AccountID());
-					auto results = database.QueryDatabase(query);
-				}
-			}
-
 		}
 		else if(m_pp.lastlogin < time(nullptr) - 600) {
 			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome back to the server, %s!", GetCleanName()).c_str());
