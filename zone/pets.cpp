@@ -358,7 +358,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	
 	//Shin: Pet buff system
 	if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) > 0 &&
-		(spell_id == 491 || spell_id == 351 || spell_id == 362 || spell_id == 492 || spell_id == 440 || spell_id == 442 || spell_id == 495)) {
+		(spell_id == 491 || spell_id == 351 || spell_id == 362 || spell_id == 492 || spell_id == 440 || spell_id == 441 || spell_id == 442 || spell_id == 495)) {
 		uint32 rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT);
 
 		//Nerf level, since that's used as a factor for HP/Dmg calculation
