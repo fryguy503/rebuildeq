@@ -4442,13 +4442,6 @@ float Mob::ResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, bool use
 		return(0);
 	}
 
-	if (IsClient() &&
-		CastToClient()->GetBuildRank(PALADIN, RB_PAL_RESISTTEMPTATION) > 0 &&
-		zone->random.Roll((int)(CastToClient()->GetBuildRank(PALADIN, RB_PAL_RESISTTEMPTATION)))) {
-		Message(MT_Spells, "Resist Temptation %u assisted in resisting a spell.", CastToClient()->GetBuildRank(PALADIN, RB_PAL_RESISTTEMPTATION));
-		return 0;
-	}
-
 	//Get resist modifier and adjust it based on focus 2 resist about eq to 1% resist chance
 	int resist_modifier = (use_resist_override) ? resist_override : spells[spell_id].ResistDiff;
 

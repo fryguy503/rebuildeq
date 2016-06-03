@@ -8864,6 +8864,10 @@ void Client::RefreshBuild() {
 					TrainAARank(aaActOfValor);
 					Message(15, "You have unlocked the AA \"Act of Valor\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+				if (GetClass() == PALADIN && i == RB_PAL_FLAMESOFREDEMPTION && GetAA(aaLessonoftheDevoted) < 1) {						
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
+				}
 			}
 		}
 		/*if (GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING)> 0) {
@@ -10104,7 +10108,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_PAL_DIVINESTUN) return "Divine Stun";
 		else if (id == RB_PAL_ACTOFVALOR) return "Act of Valor";
 		else if (id == RB_PAL_WARDOFTUNARE) return "Ward of Tunare";
-		else if (id == RB_PAL_RESISTTEMPTATION) return "Resist Temptation";
+		else if (id == RB_PAL_FLAMESOFREDEMPTION) return "Flames of Redemption";
 		else if (id == RB_PAL_ZEALOTSFERVOR) return "Zealots Fervor";
 		else if (id == RB_PAL_KNIGHTSADVANTAGE) return "Knight's Advantage";
 		else if (id == RB_PAL_CHOSEN) return "Chosen";

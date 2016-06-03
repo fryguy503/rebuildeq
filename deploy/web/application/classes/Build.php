@@ -608,8 +608,8 @@ class Build {
 			$skills[31] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Resist Temptation";
-			$newSkill->desc = 'Grants a chance to resist a detrimental spell by <em data-base="1">1</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Flames of Redemption";
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, causing flames of redemption buff improving healing effectiveness by 25% and the flames of redemption DD proc for<em data-base="6">6</em>seconds <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[34] = $newSkill;
 
