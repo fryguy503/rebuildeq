@@ -334,7 +334,7 @@ class Build {
 			//http://everquest.allakhazam.com/db/spell.html?spell=6239
 			$newSkill = new stdClass();
 			$newSkill->title = "Kinsong";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, Increasing the groups spell critical dot dmg, dot, and accuracy for <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, Increasing the groups spell critical dot dmg, dot, and accuracy for <em data-base="12">12</em> seconds<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[16] = $newSkill;
 			
@@ -609,7 +609,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Flames of Redemption";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, causing flames of redemption buff improving healing effectiveness by 25% and the flames of redemption DD proc for<em data-base="6">6</em>seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, causing flames of redemption buff improving healing effectiveness by 25% and the flames of redemption DD proc for<em data-base="12">12</em>seconds <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[34] = $newSkill;
 
@@ -694,7 +694,7 @@ class Build {
 			$skills[13] = $newSkill;
 			$newSkill = new stdClass();
 			$newSkill->title = "Assassin's Taint";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, granting the assassins taint buff that grants triple backstab and a proc that causes skill taken damage to be increased by 7% and increases duration by <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, granting the assassins taint buff that grants triple backstab and a proc that causes skill taken damage to be increased by 7% and increases duration by <em data-base="12">12</em> seconds <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
 			$skills[16] = $newSkill;
 			break;
