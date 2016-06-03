@@ -277,7 +277,12 @@ bool Mob::CheckHitChance(Mob* other, EQEmu::skills::SkillType skillinuse, int Ha
 	if (attacker->IsClient() && 
 		attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB) > 0 &&
 		skillinuse == EQEmu::skills::BACKSTAB) {
-		hitBonus += hitBonus * 0.2f * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB);
+		hitBonus += hitBonus * 0.05f * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB);
+	}
+
+	if (attacker->IsClient() && 
+		attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEFSEYES) > 0) {
+		hitBonus += hitBonus * 0.01f * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEFSEYES);
 	}
 
 	//Calculate final chance to hit

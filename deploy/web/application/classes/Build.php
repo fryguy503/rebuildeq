@@ -672,7 +672,7 @@ class Build {
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";
 			$skills[0] = $newSkill;
 			$newSkill->title = "Thief's Eyes";
-			$newSkill->desc = 'Grants the Thiefs Eyes combat ability, increasing chance to hit by 5% with all skills for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increasing chance to hit by <em data-base="2">2</em>% with all skills <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";			
 			$skills[4] = $newSkill;
 			$newSkill->title = "Sinister Strikes";
