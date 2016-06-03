@@ -2823,7 +2823,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 				break;
 			}
-
+			case SE_Appraisal:
+			{
+				if (caster &&
+					caster->IsClient() &&
+					caster->CastToClient()->GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
+					) {
+				caster->AddBuff(this, 271);
+				}
+				break;
+			}
 			case SE_FcTimerRefresh:
 			{
 				if(IsClient()) {

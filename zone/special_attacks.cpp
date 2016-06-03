@@ -515,6 +515,9 @@ void Mob::TryBackstab(Mob *other, int ReuseTime) {
 		//Live AA - Seized Opportunity
 		int FrontalBSChance = itembonuses.FrontalBackstabChance + spellbonuses.FrontalBackstabChance + aabonuses.FrontalBackstabChance;
 
+		if (IsClient() && CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB) > 4) {
+			FrontalBSChance += 30; //30% chance with focused stab at full rank
+		}
 		if (FrontalBSChance && zone->random.Roll(FrontalBSChance))
 			bCanFrontalBS = true;
 	}
@@ -636,6 +639,10 @@ void Mob::RogueBackstab(Mob* other, bool min_damage, int ReuseTime)
 	}
 	else{
 		ndamage = -5;
+	}
+
+	if (IsClient() && CastToClient()->GetBuildRank(ROGUE, RB_ROG_VITALORGANS) > 0) {
+		ndamage += ndamage * 0.25f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_VITALORGANS);
 	}
 
 	ndamage = mod_backstab_damage(ndamage);

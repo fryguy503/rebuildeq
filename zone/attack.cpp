@@ -274,6 +274,12 @@ bool Mob::CheckHitChance(Mob* other, EQEmu::skills::SkillType skillinuse, int Ha
 	if (skillinuse == EQEmu::skills::SkillArchery)
 		hitBonus -= hitBonus*RuleR(Combat, ArcheryHitPenalty);
 
+	if (attacker->IsClient() && 
+		attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB) > 0 &&
+		skillinuse == EQEmu::skills::BACKSTAB) {
+		hitBonus += hitBonus * 0.2f * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB);
+	}
+
 	//Calculate final chance to hit
 	chancetohit += ((chancetohit * (hitBonus - avoidanceBonus)) / 100.0f);
 	Log.Out(Logs::Detail, Logs::Attack, "Chance to hit %.2f after accuracy calc %.2f and avoidance calc %.2f", chancetohit, hitBonus, avoidanceBonus);
@@ -1132,6 +1138,15 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 #endif
 		//Live AA - Sinister Strikes *Adds weapon damage bonus to offhand weapon.
 		if (Hand == EQEmu::legacy::SlotSecondary) {
+			if (IsClient() && CastToClient()->GetBuildRank(ROGUE, RB_ROG_SINISTERSTRIKES) > 0) {
+				
+				ucDamageBonus = GetWeaponDamageBonus(weapon ? weapon->GetItem() : (const EQEmu::Item_Struct*) nullptr, true );
+				ucDamageBonus = ucDamageBonus * 0.2f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_SINISTERSTRIKES);
+				min_hit += (int) ucDamageBonus;
+				max_hit += (int) ucDamageBonus;
+				hate += ucDamageBonus;
+			}
+
 			if (aabonuses.SecondaryDmgInc || itembonuses.SecondaryDmgInc || spellbonuses.SecondaryDmgInc){
 
 				ucDamageBonus = GetWeaponDamageBonus(weapon ? weapon->GetItem() : (const EQEmu::Item_Struct*) nullptr, true );

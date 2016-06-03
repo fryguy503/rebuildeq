@@ -667,13 +667,31 @@ class Build {
 
 			//==================ROGUE======================
 			case "rogue":
-
+			$newSkill->title = "Appraisal";
+			$newSkill->desc = 'Grants the Appraisal AA, granting a self buff that will give a puma-like proc for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";
+			$skills[0] = $newSkill;
+			$newSkill->title = "Thief's Eyes";
+			$newSkill->desc = 'Grants the Thiefs Eyes combat ability, increasing chance to hit by 5% with all skills for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";			
+			$skills[4] = $newSkill;
+			$newSkill->title = "Sinister Strikes";
+			$newSkill->desc = 'Increases offhand damage bonus by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$skills[6] = $newSkill;
+			$newSkill->title = "Focused Stab";
+			$newSkill->desc = 'Backstab has a <em data-base="5">5</em>% better chance to hit<span class="perLevel"> per rank</span> and when maxxed, allows backstabs from front.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$skills[10] = $newSkill;
+			$newSkill->title = "Vital Organs";
+			$newSkill->desc = 'Backstab now deals <em data-base="25">25</em>% more damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";
+			$skills[13] = $newSkill;
 			$newSkill = new stdClass();
 			$newSkill->title = "Assassin's Taint";
 			$newSkill->desc = 'Grants the Lesson of the Devoted AA, granting the assassins taint buff that grants triple backstab and a proc that causes skill taken damage to be increased by 7% and increases duration by <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
 			$skills[16] = $newSkill;
-
 			break;
 			
 			//==================SHAMAN======================

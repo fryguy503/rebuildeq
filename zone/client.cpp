@@ -8874,6 +8874,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == ROGUE && i == RB_ROG_APPRAISAL && GetAA(aaAppraisal) < 1) {
+					TrainAARank(aaAppraisal);
+					Message(15, "You have unlocked the AA \"Appraisal\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == ROGUE && i == RB_ROG_ASSASSINSTAINT && GetAA(aaLessonoftheDevoted) < 1) {
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
@@ -10077,7 +10082,12 @@ void Client::ResetBuild() {
 std::string Client::GetBuildName(uint32 id) {
 	switch (this->GetClass()) {
 	case ROGUE:
-		if (id == RB_ROG_ASSASSINSTAINT) return "Assassin's Taint";
+		if (id == RB_ROG_APPRAISAL) return "Appraisal";
+		else if (id == RB_ROG_THIEFSEYES) return "Thief's Eyes";
+		else if (id == RB_ROG_SINISTERSTRIKES) return "Sinister Strikes";
+		else if (id == RB_ROG_FOCUSEDSTAB) return "Focused Stab";
+		else if (id == RB_ROG_VITALORGANS) return "Vital Organs";
+		else if (id == RB_ROG_ASSASSINSTAINT) return "Assassin's Taint";
 		break;
 	case BARD:
 		if (id == RB_BRD_ELEMENTALHARMONY) return "Elemental Harmony";
