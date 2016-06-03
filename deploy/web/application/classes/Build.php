@@ -341,7 +341,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jonathon's Whistle";
-			$newSkill->desc = 'All self only haste songs grant an additional <em data-base="10">10</em>% haste<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'All self only haste songs grant an additional <em data-base="10">10</em>% haste as well as a puma-like proc<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[18] = $newSkill;
 
