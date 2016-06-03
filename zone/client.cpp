@@ -8845,6 +8845,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Rabid Bear\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == SHAMAN && i == RB_SHM_FATESEERSBOON && GetAA(aaLessonoftheDevoted) < 1) {						
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
 					TrainAARank(aaHandofPiety);
 					Message(15, "You have unlocked the AA \"Hand of Piety\"! Find the hotkey in your Alternate Advancement Window.");
@@ -10152,7 +10157,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_SHM_SPIRITUALHEALING) return "Spiritual Healing";
 		else if (id == RB_SHM_COVENANTOFSPIRIT) return "Covenant of Spirit";
 		else if (id == RB_SHM_REINFORCETORPOR) return "Reinforce Torpor";
-		else if (id == RB_SHM_FATESEELERSBOON) return "Fateseeler's Boon";
+		else if (id == RB_SHM_FATESEERSBOON) return "Fateseer's Boon";
 		else if (id == RB_SHM_CANNIBALIZE) return "Cannibalize";
 		else if (id == RB_SHM_SPIRITCALL) return "Spirit Call";
 		else if (id == RB_SHM_VIRULENTPARALYSIS) return "Virulent Paralysis";
