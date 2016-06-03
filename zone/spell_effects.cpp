@@ -362,13 +362,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (caster->IsClient() && this->IsClient()) { //Ensure caster and player is client for these mechanics
 							Client * casterClient = caster->CastToClient();
 
-							if (spell_id == 87 && !IsPetOwnerClient() && !IsClient()) {
-								//Lay on Hands target is not a pet that's client owned, nor a client, so									
-								dmg = caster->GetActSpellHealing(spell_id, dmg, this);
-								caster->HealDamage(dmg, caster);								
-								dmg = 0;
-								break;
-							}
+							
 
 
 							//Hand of Piety

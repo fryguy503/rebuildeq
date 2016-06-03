@@ -663,7 +663,7 @@ void Mob::MeleeMitigation(Mob *attacker, int32 &damage, int32 minhit, ExtraAttac
 			myac -= opts->armor_pen_flat;
 		}
 		if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(BARD, RB_BRD_WARSONGOFZEK) > 0) {
-			int32 woz = (1.0f - (0.01 * attacker->CastToClient()->GetBuildRank(BARD, RB_BRD_WARSONGOFZEK)));
+			int32 woz = (1.0f - (0.01f * attacker->CastToClient()->GetBuildRank(BARD, RB_BRD_WARSONGOFZEK)));
 			attacker->Message(MT_NonMelee, "Warsong of Zek %u reduced AC from %i to %i", myac, myac * woz);
 			myac *= woz;
 		}
@@ -1188,14 +1188,14 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			hit_chance_bonus += opts->hit_chance;
 		}
 		if (Hand == EQEmu::legacy::SlotSecondary && IsClient() && GetBuildRank(BARD, RB_BRD_OFFHANDATTACK) > 0) {
-			int hcb = (hit_chance_bonus * 0.05 * GetBuildRank(BARD, RB_BRD_OFFHANDATTACK));
+			int hcb = (hit_chance_bonus * 0.05f * GetBuildRank(BARD, RB_BRD_OFFHANDATTACK));
 			Message(MT_NonMelee, "Offhand Attack %u gave a %i->%i bonus.", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb);
 			hit_chance_bonus += hcb;
 		}
 
 		if (IsClient() && GetBuildRank(BARD, RB_BRD_INNATESONGBLADE) > 0) {
-			int isb = (hit_chance_bonus * 0.02 * GetBuildRank(BARD, RB_BRD_INNATESONGBLADE));
-			int isd = (damage * 0.02 * GetBuildRank(BARD, RB_BRD_INNATESONGBLADE));
+			int isb = (hit_chance_bonus * 0.02f * GetBuildRank(BARD, RB_BRD_INNATESONGBLADE));
+			int isd = (damage * 0.02f * GetBuildRank(BARD, RB_BRD_INNATESONGBLADE));
 			if (isd > 0 && isb > 0) {
 				Message(MT_NonMelee, "Innate Songblade %u gave a %i->%i bonus to hit and %i to damage.", GetBuildRank(BARD, RB_BRD_INNATESONGBLADE), hit_chance_bonus, isb, isd);
 				hit_chance_bonus += isb;
@@ -1263,7 +1263,77 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 
 	if(GetTarget())
 		TriggerDefensiveProcs(other, Hand, true, damage);
+	
+	//Do special procs for rebuild
+	if (damage > 0 && 
+		IsClient() && 
+		GetTarget() && 
+		!other->GetSpecialAbility(NO_HARM_FROM_CLIENT) && //not immune to dmg
+		!IsNoCast() //not silenced
+		) {
 
+		uint16 spellid = 0;
+		int proc_damage = 1;
+		bool is_proc = false;
+		float chance = 0;
+		std::string message;
+
+		//Check for SHM fury proc
+		if (GetBuildRank(SHAMAN, RB_SHM_FURY) > 0) {
+			spellid = 271; //Fury spell
+			chance = 400;
+			message = "%s feels the fury of %s's blow.";
+			proc_damage = GetLevel() * 5;
+			proc_damage = proc_damage * 0.25f * GetBuildRank(SHAMAN, RB_SHM_FURY);
+			if (proc_damage < 20) {
+				proc_damage = 20;
+			}
+			//Check if they have fleeting fury on
+			int buff_count = GetMaxTotalSlots();
+			for (int i = 0; i < buff_count; i++)
+			{
+				if (buffs[i].spellid == spellid) {
+					is_proc = true;
+					break;
+				}
+			}
+		}
+
+		//Check for BRD whistle
+		if (GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE) > 0) {
+			spellid = 734; //Song
+			chance = 400;
+			message = "%s staggers at te power of %'s song.";
+			proc_damage = GetLevel() * 5;
+			proc_damage = proc_damage * 0.25f * GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE);
+			if (proc_damage < 20) {
+				proc_damage = 20;
+			}
+			//Check if they have fleeting fury on
+			int buff_count = GetMaxTotalSlots();
+			for (int i = 0; i < buff_count; i++)
+			{
+				if (buffs[i].spellid == spellid) {
+					is_proc = true;
+					break;
+				}
+			}
+		}
+
+		//Now do proc calculations
+
+		if (is_proc) {
+			chance = GetProcChances(chance, Hand);
+
+			if (Hand != EQEmu::legacy::SlotPrimary) //Is Archery intened to proc at 50% rate?
+				chance /= 2;
+
+			if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance)) {				
+				other->Damage(this, proc_damage, 615, skillinuse, true, -1, false, special);
+
+			}
+		}
+	}
 	if (damage > 0)
 		return true;
 
@@ -3242,7 +3312,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt
 					
 					) {
-					int oath_damage = int32((float)damage * 0.1 * (float)rank);
+					int oath_damage = int32((float)damage * 0.1f * (float)rank);
 					attacker->CastToClient()->Message(MT_NonMelee, "Blood Oath %u added %i bonus damage.", rank, oath_damage);
 					damage += oath_damage;
 				}
@@ -3252,7 +3322,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				if (attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
 					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt
 					) {
-					int kDamage = int32((float)damage * 0.05 * (float)rank);
+					int kDamage = int32((float)damage * 0.05f * (float)rank);
 					attacker->CastToClient()->Message(MT_NonMelee, "Knight's Advantage %u added %i bonus damage.", rank, kDamage);
 					damage += kDamage;
 				}
@@ -3264,14 +3334,14 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) > 0) {
 					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
 					attacker->CastToClient()->Message(MT_NonMelee, "Leech Touch %u added %i bonus damage.", rank, int32((float)damage * 0.04 * (float)rank));
-					damage += int32((float)damage * 0.04 * (float)rank);
+					damage += int32((float)damage * 0.04f * (float)rank);
 				}
 
 				int healed = damage;
 				//Shin: Hungering Aura check
 				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA) > 0 && attacker->CastToClient()->GetAggroCount() > 0) {					
 					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA);
-					int healBonus = int32((float)healed * 0.06 * (float)(attacker->CastToClient()->GetAggroCount() > rank) * attacker->CastToClient()->GetAggroCount());
+					int healBonus = int32((float)healed * 0.06f * (float)(attacker->CastToClient()->GetAggroCount() > rank) * attacker->CastToClient()->GetAggroCount());
 					if (healBonus > 0) {
 						attacker->CastToClient()->Message(MT_NonMelee, "Hungering Aura %u with %i enemies added %i bonus healing.", rank, attacker->CastToClient()->GetAggroCount(), healBonus);
 						healed += healBonus;
@@ -3291,7 +3361,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			if (attacker && attacker->GetBodyType() == BT_Undead &&
 				IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH) > 0 &&
 				zone->random.Roll((int)(4 * CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH)))) {
-				int damageReduction = (int)(float)(damage * (float)0.05 * (float)CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH));
+				int damageReduction = (int)(float)(damage * (float)0.05f * (float)CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH));
 				if (damageReduction < 1) {
 					Message(MT_NonMelee, "Armor of Faith %u reduced damage from %s by %i.", CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH), attacker->GetCleanName(), damageReduction);
 					damage -= damageReduction;
@@ -3334,7 +3404,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 		if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BANSHEESMIRROR) > 0) {
 			rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BANSHEESMIRROR);
 			if (zone->random.Roll((int)rank)) {
-				int damage_reduction = (damage * 0.03 * rank);
+				int damage_reduction = (damage * 0.03f * rank);
 				damage -= damage_reduction;
 				Message(MT_NonMelee, "Banshee's Mirror %u reduced %i of incoming damage.", rank, damage_reduction);
 			}
@@ -3348,7 +3418,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				GetTarget() == attacker &&
 				zone->random.Roll((int)(5 * rank))) {
 
-				uint32 healAmount =  (uint32)(GetMaxHP() * rank * 0.01) + (uint32)(40 * rank);
+				uint32 healAmount =  (uint32)(GetMaxHP() * rank * 0.01f) + (uint32)(40 * rank);
 				CastToClient()->Message(MT_Spells, "Ward of Tunare %u healed you for %i.", rank, healAmount);
 				HealDamage(healAmount, this);
 			}
@@ -3425,13 +3495,13 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 								continue;
 							}
 							rank = target_raid->members[x].member->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT);
-							int damage_reduction = (int)((float)damage * (float)0.05 * (float)rank);
+							int damage_reduction = (int)((float)damage * (float)0.05f * (float)rank);
 							if (damage_reduction < 1) {
 								continue;
 							}
 							damage -= damage_reduction;
 							//reduce dmg_reduction by the amount of skill
-							damage_reduction -= (int)((float)damage_reduction * 0.02 * (float)rank);
+							damage_reduction -= (int)((float)damage_reduction * 0.02f * (float)rank);
 							//deal dmg to paladin
 							target_raid->members[x].member->CommonDamage(attacker, damage_reduction, spell_id, skill_used, avoidable, buffslot, iBuffTic, special);
 							break; //Don't let more paladins reduce this damage
@@ -3558,7 +3628,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 			if (attacker->IsClient() &&
 				attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH) > 0 &&
-				zone->random.Roll((int)attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH))) {
+				zone->random.Roll((int)attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH)*2)) {
 				attacker->Message(HIT_NON_MELEE, "%s is hit by a Bash of Death.", this->GetCleanName());
 				attacker->SpellFinished(13531, this); //Proc Harm Touch!
 			}
@@ -3772,7 +3842,7 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 	
 	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE) > 0) {
 		if (zone->random.Roll((int)(1 * caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE)))) {
-			int manaAmount = (int)((float)acthealed * (float)0.01 * (float)caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE));
+			int manaAmount = (int)((float)acthealed * (float)0.01f * (float)caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE));
 			if (manaAmount > 0) {
 				SetMana(GetMana() + manaAmount);
 				Message(MT_Spells, "%s's Refreshing Breeze %u gave you %i mana.", caster->GetCleanName(), caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE), manaAmount);
@@ -3784,7 +3854,7 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 		caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR) > 0 &&
 		caster != this //cannot use on self
 		) {
-		int32 zDamage = caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR) * 0.01 * amount;
+		int32 zDamage = caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR) * 0.01f * amount;
 		int zCount = caster->hate_list.DamageNearby(caster, zDamage, 50, this, caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR));
 		if (zCount > 0) {
 			caster->Message(MT_NonMelee, "Zealot's Fervor %u hit %i enemies for %i points of non-melee damage.", caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR), zCount, zDamage);
@@ -3979,84 +4049,88 @@ void Mob::TryWeaponProc(const ItemInst *inst, const EQEmu::Item_Struct *weapon, 
 	float ProcChance = GetProcChances(ProcBonus, hand);
 
 	if (hand != EQEmu::legacy::SlotPrimary) //Is Archery intened to proc at 50% rate?
-		ProcChance /= 2;
+ProcChance /= 2;
 
-	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY) > 0) { //Proc chance increases with this skill
-		ProcChance += (ProcChance * 0.1 * CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
-	}
+if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY) > 0) { //Proc chance increases with this skill
+	ProcChance += (ProcChance * 0.1f * CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
+}
 
-	// Try innate proc on weapon
-	// We can proc once here, either weapon or one aug
-	bool proced = false; // silly bool to prevent augs from going if weapon does
-	skillinuse = GetSkillByItemType(weapon->ItemType);
-	if (weapon->Proc.Type == EQEmu::item::ItemEffectCombatProc && IsValidSpell(weapon->Proc.Effect)) {
-		float WPC = ProcChance * (100.0f + // Proc chance for this weapon
-				static_cast<float>(weapon->ProcRate)) / 100.0f;
-		if (zone->random.Roll(WPC)) {	// 255 dex = 0.084 chance of proc. No idea what this number should be really.
-			if (weapon->Proc.Level > ourlevel) {
-				Log.Out(Logs::Detail, Logs::Combat,
-						"Tried to proc (%s), but our level (%d) is lower than required (%d)",
-						weapon->Name, ourlevel, weapon->Proc.Level);
-				if (IsPet()) {
-					Mob *own = GetOwner();
-					if (own)
-						own->Message_StringID(13, PROC_PETTOOLOW);
-				} else {
-					Message_StringID(13, PROC_TOOLOW);
-				}
-			} else {
-				Log.Out(Logs::Detail, Logs::Combat,
-						"Attacking weapon (%s) successfully procing spell %d (%.2f percent chance)",
-						weapon->Name, weapon->Proc.Effect, WPC * 100);
-				ExecWeaponProc(inst, weapon->Proc.Effect, on);
-				proced = true;
+// Try innate proc on weapon
+// We can proc once here, either weapon or one aug
+bool proced = false; // silly bool to prevent augs from going if weapon does
+skillinuse = GetSkillByItemType(weapon->ItemType);
+if (weapon->Proc.Type == EQEmu::item::ItemEffectCombatProc && IsValidSpell(weapon->Proc.Effect)) {
+	float WPC = ProcChance * (100.0f + // Proc chance for this weapon
+		static_cast<float>(weapon->ProcRate)) / 100.0f;
+	if (zone->random.Roll(WPC)) {	// 255 dex = 0.084 chance of proc. No idea what this number should be really.
+		if (weapon->Proc.Level > ourlevel) {
+			Log.Out(Logs::Detail, Logs::Combat,
+				"Tried to proc (%s), but our level (%d) is lower than required (%d)",
+				weapon->Name, ourlevel, weapon->Proc.Level);
+			if (IsPet()) {
+				Mob *own = GetOwner();
+				if (own)
+					own->Message_StringID(13, PROC_PETTOOLOW);
+			}
+			else {
+				Message_StringID(13, PROC_TOOLOW);
 			}
 		}
+		else {
+			Log.Out(Logs::Detail, Logs::Combat,
+				"Attacking weapon (%s) successfully procing spell %d (%.2f percent chance)",
+				weapon->Name, weapon->Proc.Effect, WPC * 100);
+			ExecWeaponProc(inst, weapon->Proc.Effect, on);
+			proced = true;
+		}
 	}
-	//If OneProcPerWeapon is not enabled, we reset the try for that weapon regardless of if we procced or not.
-	//This is for some servers that may want to have as many procs triggering from weapons as possible in a single round.
-	if(!RuleB(Combat, OneProcPerWeapon))
-		proced = false;
+}
+//If OneProcPerWeapon is not enabled, we reset the try for that weapon regardless of if we procced or not.
+//This is for some servers that may want to have as many procs triggering from weapons as possible in a single round.
+if (!RuleB(Combat, OneProcPerWeapon))
+proced = false;
 
-	if (!proced && inst) {
-		for (int r = 0; r < EQEmu::legacy::ITEM_COMMON_SIZE; r++) {
-			const ItemInst *aug_i = inst->GetAugment(r);
-			if (!aug_i) // no aug, try next slot!
-				continue;
-			const EQEmu::Item_Struct *aug = aug_i->GetItem();
-			if (!aug)
-				continue;
+if (!proced && inst) {
+	for (int r = 0; r < EQEmu::legacy::ITEM_COMMON_SIZE; r++) {
+		const ItemInst *aug_i = inst->GetAugment(r);
+		if (!aug_i) // no aug, try next slot!
+			continue;
+		const EQEmu::Item_Struct *aug = aug_i->GetItem();
+		if (!aug)
+			continue;
 
-			if (aug->Proc.Type == EQEmu::item::ItemEffectCombatProc && IsValidSpell(aug->Proc.Effect)) {
-				float APC = ProcChance * (100.0f + // Proc chance for this aug
-					static_cast<float>(aug->ProcRate)) / 100.0f;
-				if (zone->random.Roll(APC)) {
-					if (aug->Proc.Level > ourlevel) {
-						if (IsPet()) {
-							Mob *own = GetOwner();
-							if (own)
-								own->Message_StringID(13, PROC_PETTOOLOW);
-						} else {
-							Message_StringID(13, PROC_TOOLOW);
-						}
-					} else {
-						ExecWeaponProc(aug_i, aug->Proc.Effect, on);
-						if (RuleB(Combat, OneProcPerWeapon))
-							break;
+		if (aug->Proc.Type == EQEmu::item::ItemEffectCombatProc && IsValidSpell(aug->Proc.Effect)) {
+			float APC = ProcChance * (100.0f + // Proc chance for this aug
+				static_cast<float>(aug->ProcRate)) / 100.0f;
+			if (zone->random.Roll(APC)) {
+				if (aug->Proc.Level > ourlevel) {
+					if (IsPet()) {
+						Mob *own = GetOwner();
+						if (own)
+							own->Message_StringID(13, PROC_PETTOOLOW);
+					}
+					else {
+						Message_StringID(13, PROC_TOOLOW);
 					}
 				}
+				else {
+					ExecWeaponProc(aug_i, aug->Proc.Effect, on);
+					if (RuleB(Combat, OneProcPerWeapon))
+						break;
+				}
 			}
 		}
 	}
-	// TODO: Powersource procs -- powersource procs are from augs so shouldn't need anything extra
+}
+// TODO: Powersource procs -- powersource procs are from augs so shouldn't need anything extra
 
-	return;
+return;
 }
 
 void Mob::TrySpellProc(const ItemInst *inst, const EQEmu::Item_Struct *weapon, Mob *on, uint16 hand)
 {
 	float ProcBonus = static_cast<float>(spellbonuses.SpellProcChance +
-			itembonuses.SpellProcChance + aabonuses.SpellProcChance);
+		itembonuses.SpellProcChance + aabonuses.SpellProcChance);
 	float ProcChance = 0.0f;
 	ProcChance = GetProcChances(ProcBonus, hand);
 
@@ -4249,7 +4323,7 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 					SlayDmgBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYUNDEAD) * 620;
 				}
 
-				damage = (damage * SlayDmgBonus * 2.25) / 100;
+				damage = (damage * SlayDmgBonus * 2.25f) / 100;
 				if (GetGender() == 1) // female
 					entity_list.FilteredMessageClose_StringID(this, false, 200,
 							MT_CritMelee, FilterMeleeCrits, FEMALE_SLAYUNDEAD,

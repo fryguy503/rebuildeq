@@ -1726,18 +1726,7 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 
 		if (tempid == 2749) { //RB_SHM_CANNIBALIZE
 			sp[tempid].effectid[1] = 254; //remove mana effect, since it's done programmaticcally.
-		}
-
-		if (tempid == 734) { //RB_BRD_JONATHONSWHISTLE
-			sp[tempid].effectid[4] = 85;
-			sp[tempid].base[4] = 6908;
-		}
-
-		if (tempid == 271) { //fleeting fury for RB_SHM_FURY
-			sp[tempid].targettype = (SpellTargetType)6;
-			sp[tempid].effectid[4] = 85;
-			sp[tempid].base[4] = 6908;
-		}
+		}		
 
 		if (tempid == 3274) { 
 			//reset skill

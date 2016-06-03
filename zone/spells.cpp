@@ -2023,7 +2023,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 	}
 	if(!IsValidSpell(spell_id))
 		return false;
-
+	
 	if( spells[spell_id].zonetype == 1 && !zone->CanCastOutdoor()){
 		if(IsClient()){
 				if(!CastToClient()->GetGM() &&
@@ -2091,6 +2091,17 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 		return(false);
 
 	Log.Out(Logs::Detail, Logs::Spells, "Spell %d: target type %d, target %s, AE center %s", spell_id, CastAction, spell_target?spell_target->GetName():"NONE", ae_center?ae_center->GetName():"NONE");
+
+	//fleeting fury doesn't target anyone
+	if (spell_id == 271) {
+		spell_target = this;
+	}
+
+	if (IsBeneficialSpell(spell_id) && spell_target && !spell_target->IsPetOwnerClient() && !spell_target->IsClient()) {
+		spell_target = this;
+	}
+
+	
 
 	// if a spell has the AEDuration flag, it becomes an AE on target
 	// spell that's recast every 2500 msec for AEDuration msec. There are
@@ -2784,7 +2795,7 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FURY) > 0 && spell_id == 271) {
 		int bonusDuration = (int)(duration * 0.3f * caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FURY));
-		//caster->Message(MT_NonMelee, "Extended Haste increased duration by %i seconds.", bonusDuration);
+		caster->Message(MT_NonMelee, "Fury increased duration by %i seconds.", bonusDuration);
 		duration += bonusDuration;
 	}
 
@@ -3255,7 +3266,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 	if ((spell_id == 724 || spell_id == 741 || spell_id == 868 || spell_id == 1753 || spell_id == 1100 || spell_id == 1197) && 
 		caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT) > 0) {
 		caster->Message(MT_NonMelee, "Lingering Twilight %u improved mesmerize duration.", caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT));
-		duration += duration * 0.2 * caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT);
+		duration += duration * 0.2f * caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT);
 	}
 
 	if (spell_id == 3274 && caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS) > 0) {
