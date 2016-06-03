@@ -10209,7 +10209,6 @@ bool Client::IsBuildAvailable() {
 		GetClass() == MONK ||
 		GetClass() == NECROMANCER ||
 		GetClass() == RANGER ||
-		GetClass() == ROGUE ||
 		GetClass() == WARRIOR ||
 		GetClass() == WIZARD) {		
 		return false;

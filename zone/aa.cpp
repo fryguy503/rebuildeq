@@ -1148,13 +1148,12 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaBoastfulBellow && GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW) < 1 ||
 		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
 		( //Lesson of the Devoted is used by multiple classes different builds
-			rank_id == aaLessonoftheDevoted && (
-					GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 ||
-					GetBuildRank(BARD, RB_BRD_KINSONG) < 1 ||
-					GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) < 1 ||
-					GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) < 1 ||
-					GetBuildrank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1
-			)
+			rank_id == aaLessonoftheDevoted && 
+				GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
+				GetBuildRank(BARD, RB_BRD_KINSONG) < 1 &&
+				GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) < 1 &&
+				GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) < 1 &&
+				GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1			
 		) //end lessons
 		) {
 		Message(13, "You cannot use this ability until you unlock it via %s.", CreateSayLink("#builds", "#builds").c_str());
@@ -1313,15 +1312,15 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 
 	if (rank_id == aaLessonoftheDevoted) {
 		if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) > 0) {
-			spell_id = 6236;
+			spellid = 6236;
 		} else if (GetBuildRank(BARD, RB_BRD_KINSONG) > 0) {
-			spell_id = 6239;
+			spellid = 6239;
 		} else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) > 0) {
-			spell_id = 6234;
+			spellid = 6234;
 		} else if (GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) > 0) {
-			spell_id = 6241;
+			spellid = 6241;
 		} else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) > 0) {
-			spell_id = 6240;
+			spellid = 6240;
 		}
 	}
 

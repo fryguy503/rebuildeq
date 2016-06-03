@@ -2827,7 +2827,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			{
 				if (caster &&
 					caster->IsClient() &&
-					caster->CastToClient()->GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
+					caster->CastToClient()->GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0
 					) {
 				caster->AddBuff(this, 271);
 				}

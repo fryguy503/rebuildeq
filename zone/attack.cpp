@@ -276,7 +276,7 @@ bool Mob::CheckHitChance(Mob* other, EQEmu::skills::SkillType skillinuse, int Ha
 
 	if (attacker->IsClient() && 
 		attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB) > 0 &&
-		skillinuse == EQEmu::skills::BACKSTAB) {
+		skillinuse == EQEmu::skills::SkillBackstab) {
 		hitBonus += hitBonus * 0.05f * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB);
 	}
 

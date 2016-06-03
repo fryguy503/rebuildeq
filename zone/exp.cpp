@@ -860,7 +860,8 @@ void Client::UpdateSkillsAndSpells() {
 			(GetClass() == BARD && GetLevel() >= 17) ||
 			(GetClass() == RANGER && GetLevel() >= 17) ||
 			(GetClass() == MONK && GetLevel() >= 1) ||
-			(GetClass() == WARRIOR && GetLevel() >= 13)
+			(GetClass() == WARRIOR && GetLevel() >= 13) ||
+			(GetClass() == ROGUE && GetLevel() >= 13)
 			) {
 			SetSkill(EQEmu::skills::SkillDualWield, 1);
 		}
@@ -873,11 +874,18 @@ void Client::UpdateSkillsAndSpells() {
 			SetSkill(EQEmu::skills::SkillKick, 1);
 		}
 	}
+	if (GetSkill(EQEmu::skills::SkillPickPockets) == 0) {
+		if (
+			(GetClass() == ROGUE && GetLevel() >= 1)
+			) {
+			SetSkill(EQEmu::skills::SkillPickPockets, 1);
+		}
+	}
 	if (GetSkill(EQEmu::skills::SkillIntimidation) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 25) ||
 			(GetClass() == MONK && GetLevel() >= 18) ||
-			(GetClass() == MONK && GetLevel() >= 22)
+			(GetClass() == ROGUE && GetLevel() >= 22)
 			) {
 			SetSkill(EQEmu::skills::SkillIntimidation, 1);
 		}
@@ -1027,6 +1035,23 @@ void Client::UpdateSkillsAndSpells() {
 			SetSkill(EQEmu::skills::SkillDisarm, 1);
 		}
 	}
+
+	if (GetSkill(EQEmu::skills::SkillBackstab) == 0) {
+		if (
+			(GetClass() == ROGUE && GetLevel() >= 10)
+			) {
+			SetSkill(EQEmu::skills::SkillBackstab, 1);
+		}
+	}
+
+	if (GetSkill(EQEmu::skills::SkillApplyPoison) == 0) {
+		if (
+			(GetClass() == ROGUE && GetLevel() >= 18)
+			) {
+			SetSkill(EQEmu::skills::SkillApplyPoison, 1);
+		}
+	}
+
 	if (GetSkill(EQEmu::skills::SkillBlock) == 0) {
 		if (
 			(GetClass() == MONK && GetLevel() >= 12)
