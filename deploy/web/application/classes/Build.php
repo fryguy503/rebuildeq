@@ -603,7 +603,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Ward of Tunare";
-			$newSkill->desc = 'Passively grants Ward of Tunare, causing a <em data-base="5">5</em>% chance a heal for <em data-base="40">40</em> hitpoints plus <em data-base="1">1</em>% Max Hitpoints. Triggers when taking damage from an enemy you have targetted.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Passively grants Ward of Tunare, causing a <em data-base="5">5</em>% chance a heal for <em data-base="40">40</em> hitpoints plus <em data-base="1">1</em>% Max Hitpoints <span class="perLevel"> per rank</span>. Triggers when taking damage from an enemy you have targetted.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[31] = $newSkill;
 
@@ -908,7 +908,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Banshee's Mirror";
-			$newSkill->desc = 'Banshee\'s Aura now has a <em data-base="+1">+1</em>% chance to reduce <em data-base="+3">+3</em>% of damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Passively grants Banshee\'s Mirror, causing a <em data-base="5">5</em>% chance a heal for <em data-base="40">40</em> hitpoints plus <em data-base="5">5</em>% Max hitpoints<span class="perLevel"> per rank</span>. Triggers when taking damage from an enemy you have targetted.';
 			$newSkill->image = "/images/builds/icons/rb-sk-bansheesmirror.png";
 			$skills[13] = $newSkill;
 			
