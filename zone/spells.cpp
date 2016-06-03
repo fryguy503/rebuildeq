@@ -2799,7 +2799,7 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 		duration += bonusDuration;
 	}
 
-
+	
 	int castlevel = caster->GetCasterLevel(spell_id);
 	if(caster_level_override > 0)
 		castlevel = caster_level_override;
@@ -2811,10 +2811,6 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 		res = 10000; // ~16h override
 
 	res = mod_buff_duration(res, caster, target, spell_id);
-
-	if (spell_id == 359) { //Vampiric Embrace
-		duration += 600;
-	}
 
 	Log.Out(Logs::Detail, Logs::Spells, "Spell %d: Casting level %d, formula %d, base_duration %d: result %d",
 		spell_id, castlevel, formula, duration, res);
@@ -3278,6 +3274,27 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR) > 0) {
 		uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR);
 		duration += duration * 0.05f * rank;
+	}
+
+
+	if (spell_id == 359) { //Vampiric Embrace
+		duration += 600;
+	}
+
+	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) > 0 && spell_id == 6241) {
+		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON);
+	}
+	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) > 0 && spell_id == 6240) {
+		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT);
+	}
+	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) > 0 && spell_id == 6234) {
+		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION);
+	}
+	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) > 0 && spell_id == 6299) {
+		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE);
+	}
+	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(BARD, RB_BRD_KINSONG) > 0 && spell_id == 6239) {
+		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(BARD, RB_BRD_KINSONG);
 	}
 
 	Log.Out(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",

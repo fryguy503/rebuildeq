@@ -744,7 +744,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fateseer's Boon";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, giving a group buff that increases critical damage by 70% with all skills, chance to critical hit by 50% with all skills, as well as a 400 hitpoint per tick regen. Each rank reduces recast by<em data-base="30">30</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, giving a group buff that increases critical damage by 70% with all skills, chance to critical hit by 50% with all skills, as well as a 400 hitpoint per tick regen. Each rank increases duration by <em data-base="12">12</em> seconds<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
 			$skills[16] = $newSkill;
 			

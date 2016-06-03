@@ -1189,7 +1189,10 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		}
 		if (Hand == EQEmu::legacy::SlotSecondary && IsClient() && GetBuildRank(BARD, RB_BRD_OFFHANDATTACK) > 0) {
 			int hcb = (hit_chance_bonus * 0.05f * GetBuildRank(BARD, RB_BRD_OFFHANDATTACK));
-			Message(MT_NonMelee, "Offhand Attack %u gave a %i->%i bonus.", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb);
+			//Message(MT_NonMelee, "Offhand Attack %u gave a %i->%i bonus.", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb);
+			if (hcb < 1) {
+				hcb = 1;
+			}
 			hit_chance_bonus += hcb;
 		}
 
