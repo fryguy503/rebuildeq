@@ -667,6 +667,13 @@ class Build {
 
 			//==================ROGUE======================
 			case "rogue":
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Assassin's Taint";
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, granting the assassins taint buff that grants triple backstab and a proc that causes skill taken damage to be increased by 7% and increases duration by <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$skills[16] = $newSkill;
+
 			break;
 			
 			//==================SHAMAN======================
