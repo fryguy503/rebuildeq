@@ -1279,15 +1279,32 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		int proc_damage = 1;
 		bool is_proc = false;
 		float chance = 0;
-		std::string message;
 
 		//Check for SHM fury proc
 		if (GetBuildRank(SHAMAN, RB_SHM_FURY) > 0) {
 			spellid = 271; //Fury spell
 			chance = 400;
-			message = "%s feels the fury of %s's blow.";
 			proc_damage = GetLevel() * 5;
 			proc_damage = proc_damage * 0.25f * GetBuildRank(SHAMAN, RB_SHM_FURY);
+			if (proc_damage < 20) {
+				proc_damage = 20;
+			}
+			//Check if they have fleeting fury on
+			int buff_count = GetMaxTotalSlots();
+			for (int i = 0; i < buff_count; i++)
+			{
+				if (buffs[i].spellid == spellid) {
+					is_proc = true;
+					break;
+				}
+			}
+		}
+
+		if (GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
+			spellid = 271; //Fury spell
+			chance = 400;
+			proc_damage = GetLevel() * 5;
+			proc_damage = proc_damage * 0.25f * GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
 			if (proc_damage < 20) {
 				proc_damage = 20;
 			}
@@ -1306,7 +1323,6 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		if (GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE) > 0) {
 			spellid = 734; //Song
 			chance = 400;
-			message = "%s staggers at te power of %'s song.";
 			proc_damage = GetLevel() * 5;
 			proc_damage = proc_damage * 0.25f * GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE);
 			if (proc_damage < 20) {

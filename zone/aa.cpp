@@ -1147,6 +1147,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaParagonofSpirit && GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT) < 1 ||
 		rank_id == aaBoastfulBellow && GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW) < 1 ||
 		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
+		rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) < 1 ||
 		( //Lesson of the Devoted is used by multiple classes different builds
 			rank_id == aaLessonoftheDevoted && 
 				GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
@@ -1160,10 +1161,23 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		return;
 	}
 
+	
+
 	//Shin: set spell Id override
 	int spellid = rank->spell;
 	int manacost = -1;
 	int cooldown = 0;
+
+	if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
+		
+		AddBuff(this, 271, 600);
+		Message(0, "Appraisal");
+		cooldown = 10;
+		CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
+		SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
+		return;
+	}
+
 	if (rank_id == aaLeechTouch) {
 		if (GetLevel() < 15) { //lifetap
 			spellid = 341; 
