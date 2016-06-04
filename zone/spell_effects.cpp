@@ -274,13 +274,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 								// Success!
 								if (roll <= reqRoll) {
-									auto healAmount = rank * BaseHealth * dmg;
-									auto manaAmount = rank * BaseMana;
+									int healAmount = rank * BaseHealth * dmg;
+									int manaAmount = rank * BaseMana;
 
 									casterClient->Message(MT_NonMelee, "Elixir of Might %u gifted %i health and %i mana.", rank, healAmount, manaAmount);
 
 									casterClient->HealDamage(healAmount, caster);
-									casterClient->SetMana(caster->GetMana() + manaAmount);
+									casterClient->SetMana(casterClient->GetMana() + manaAmount);
 								}
 							}
 
