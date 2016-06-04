@@ -1208,6 +1208,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			cooldown = 4;
 		}	
 	}
+
+	if (rank_id == aaHandofPiety) {
+		manacost = GetMaxMana() * 0.05f;
+	}
 	
 	if (rank_id == aaSpiritCall) {
 		spellid = 164;
