@@ -9348,8 +9348,7 @@ void Client::EmoteEncounter() {
 		zoneid == 21 ||  //wc
 		zoneid == 35 || //sro
 		zoneid == 34 || //nro
-		zoneid == 37 ||
-		zoneid == 46) {
+		zoneid == 37) { //Oasis
 		pool += 500;
 		encounterTable[pool] = EN_ZOMBIE;
 		pool += 500;
