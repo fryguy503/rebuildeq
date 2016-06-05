@@ -438,7 +438,7 @@ class Build {
 			break;
 			//==================CLERIC======================
 			case "cleric":
-			$newSkill = new stdClass();
+			/*$newSkill = new stdClass();
 			$newSkill->title = "Divine Bash";
 			$newSkill->desc = 'Bash now has a chance to heal nearby group members for <em data-base="2">2</em>% of your maximum health<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
@@ -491,7 +491,7 @@ class Build {
 			$newSkill->title = "Instill Life";
 			$newSkill->desc = 'When an ally is healed, there is a <em data-base="1">1</em>% to also apply a heal over time effect<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
-			$skills[18] = $newSkill;
+			$skills[18] = $newSkill;*/
 			break;
 
 			//==================DRUID======================
