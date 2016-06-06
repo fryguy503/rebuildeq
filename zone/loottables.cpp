@@ -469,7 +469,7 @@ void NPC::AddCardTable() {
 	if (GetRace() == 38) { pool += 5; cardTable[pool] = 100116; } //Spider Card
 	if (GetRace() == 54) { pool += 250; cardTable[pool] = 100117; } //Orc Card 15ac	
 	if (GetRace() == 28 || GetRace() == 456) { pool += 5; cardTable[pool] = 100118; } //Fungus Card
-	if (GetRace() == 54) { pool += 250; cardTable[pool] = 100119; } //Goblin Card	
+	if (GetRace() == 40) { pool += 250; cardTable[pool] = 100119; } //Goblin Card	
 	if (GetBodyType() == BT_Monster) { pool += 50; cardTable[pool] = 100120; } //Evil Eye Card
 	if (GetRace() == HUMAN) { pool + 5; cardTable[pool] = 100121; } //Human Card
 	if (GetRace() == BARBARIAN) { pool + 5; cardTable[pool] = 100122; } //Barbarian Card
