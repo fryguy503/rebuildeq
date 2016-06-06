@@ -992,7 +992,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Siphon of Death";
-			$newSkill->desc = 'Scream of Death and Shroud of Death now also grant a mana tap for <em data-base="5">5</em>% of damage dealt<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Vampiric Embrace, Scream of Death and Shroud of Death now also grant a mana tap for <em data-base="5">5</em>% of damage dealt<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-siphondeath.png";	
 			$skills[44] = $newSkill;					
 		
