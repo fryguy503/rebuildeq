@@ -820,13 +820,20 @@ void Client::CompleteConnect()
 			Message(15, "You have acquired the daily login reward [ %s ]! In 20 hours a new reward will be available to claim.", CreateSayLink("#encounter claim", "claim").c_str());
 		}
 
+		std::string display_name;
+		if (GetAnon()) {
+			display_name = StringFormat("%s", GetCleanName());			
+		}
+		else {
+			display_name = StringFormat("%s [%s]", GetCleanName(), Identity());
+		}
 
 		if (m_pp.birthday > time(nullptr) - 120) { //If they're less than 2 minutes old
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome %s to the server!", GetCleanName()).c_str());
+			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome %s to the server!", display_name.c_str()).c_str());
 			UpdateSkillsAndSpells();
 		}
 		else if(m_pp.lastlogin < time(nullptr) - 600) {
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome back to the server, %s!", GetCleanName()).c_str());
+			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome back to the server, %s!", display_name.c_str()).c_str());
 		}
 
 		/* Rested Status Update */
