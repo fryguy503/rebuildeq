@@ -229,6 +229,28 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	// Sanity and early out checking first.
 	if (HasPet() || pettype == nullptr)
 		return;
+	uint32 rank;
+
+	if (IsClient()) {
+		rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL);
+		if (spell_id == 164 && rank < 1) {
+			Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
+			return;
+		}
+
+		rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR);
+		if (spell_id == 223 && rank < 1) {
+			Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
+			return;
+		}
+
+		rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT);
+		if ((spell_id == 491 || spell_id == 351 || spell_id == 362 || spell_id == 492 || spell_id == 440 || spell_id == 441 || spell_id == 442 || spell_id == 495)
+			&& rank < 1) {
+			Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
+			return;
+		}
+	}
 
 	int16 act_power = 0; // The actual pet power we'll use.
 	if (petpower == -1) {
@@ -298,12 +320,11 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	//Live AA - Elemental Durability
 	int16 MaxHP = aabonuses.PetMaxHP + itembonuses.PetMaxHP + spellbonuses.PetMaxHP;
 
-
-	//Shaman pet
-	if (this->IsClient() && CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL) > 0 && spell_id == 164) {
-		uint32 rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL);
+	if (spell_id == 164 && this->IsClient() && CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL)  > 0) {
+			
+		rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL);
 		//Nerf level, since that's used as a factor for HP/Dmg calculation
-		
+
 		if (CastToClient()->GetLevel() < 6) {
 			if (CastToClient()->GetLevel() < rank) {
 				npc_type->level = rank;
@@ -323,7 +344,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->max_dmg = npc_type->max_dmg * 0.1 * rank; //50% dmg at max
 
 		//Turn it into a pet
-		switch(GetBaseRace())
+		switch (GetBaseRace())
 		{
 		case VAHSHIR:
 			npc_type->race = TIGER;
