@@ -10075,6 +10075,11 @@ void Client::ResetBuild() {
 		return;
 	}
 
+	//poof pet if they reset.
+	if (HasPet()) {
+		this->GetPet()->Depop();
+	}
+
 	Message(0, "Your build has been successfully reset!");
 }
 
