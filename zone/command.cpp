@@ -1494,7 +1494,7 @@ void command_npcstats(Client *c, const Seperator *sep)
 		c->Message(0, "Gender: %i  Size: %f  Bodytype: %d",  c->GetTarget()->GetGender(), c->GetTarget()->GetSize(), c->GetTarget()->GetBodyType());
 		c->Message(0, "Runspeed: %.3f  Walkspeed: %.3f",  static_cast<float>(0.025f * c->GetTarget()->GetRunspeed()), static_cast<float>(0.025f * c->GetTarget()->GetWalkspeed()));
 		c->Message(0, "Spawn Group: %i  Grid: %i",  c->GetTarget()->CastToNPC()->GetSp2(), c->GetTarget()->CastToNPC()->GetGrid());
-		c->Message(0, "EmoteID: %i",  c->GetTarget()->CastToNPC()->GetEmoteID());
+		c->Message(0, "EmoteID: %i, FactionID: %i, MyFactionVs: %i", c->GetTarget()->CastToNPC()->GetEmoteID(), c->GetTarget()->GetPrimaryFaction(),  c->FactionLevelRaw(c->GetTarget()->GetPrimaryFaction()));
 		c->GetTarget()->CastToNPC()->QueryLoot(c);
 	}
 }
