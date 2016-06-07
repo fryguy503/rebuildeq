@@ -441,56 +441,56 @@ class Build {
 			/*$newSkill = new stdClass();
 			$newSkill->title = "Divine Bash";
 			$newSkill->desc = 'Bash now has a chance to heal nearby group members for <em data-base="2">2</em>% of your maximum health<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-divinebash.png";	
 			$skills[0] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Ward of Vie";
 			$newSkill->desc = 'All ward spells last an additional <em data-base="100">100</em> hitpoints<span class="perLevel"> per rank</span>. NOT IMPLEMENTED';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-wardofvie.png";	
 			$skills[2] = $newSkill;
 
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Harken the Gods";
 			$newSkill->desc = 'Yaulp now gives enhanced accuracy, attack, and mana regen by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-harkenthegods.png";	
 			$skills[4] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Blessing of Haste";
 			$newSkill->desc = 'All spell haste spells are <em data-base="20">20</em>% more effective on you<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/grb-clr-blessingofhaste.png";	
 			$skills[6] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Hammer";
 			$newSkill->desc = 'Grants a passive ability that gives the cleric a <em data-base="2">2</em>% to use the God proc<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-divinehammer.png";	
 			$skills[8] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Avatar's Boon";
 			$newSkill->desc = 'Gives a <em data-base="2">2</em>% chance that the next ally you heal is blessed with Avatar\s Boon, granting <em data-base="2">2</em>% of the next damage dealt by the player to return as mana to the cleric<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-avatarsboon.png";	
 			$skills[10] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Augmented Retribution";
 			$newSkill->desc = 'Each melee attack has a <em data-base="1">1</em>% chance to proc a smite-like spell<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-augmentedretribution.png";	
 			$skills[13] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Avatar";
 			$newSkill->desc = 'Grants the Divine Avatar AA, allowing a cleric many statistic bonuses and a <em data-base="10">10</em>% chance dodge<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-divineavatar.png";	
 			$skills[16] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Instill Life";
 			$newSkill->desc = 'When an ally is healed, there is a <em data-base="1">1</em>% to also apply a heal over time effect<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
 			$skills[18] = $newSkill;*/
 			break;
 
