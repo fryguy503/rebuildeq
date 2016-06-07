@@ -341,7 +341,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jonathon's Whistle";
-			$newSkill->desc = 'Jonathon\'s Whistling Warsong now also grants a proc line similar to puma that deals your level * 5 damage at <em data-base="20">20</em>% effectiveness and increases duration by <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Jonathon\'s Whistling Warsong now also grants a proc line similar to puma that deals your level * <em data-base="1">1</em><span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[18] = $newSkill;
 
