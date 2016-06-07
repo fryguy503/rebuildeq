@@ -4385,9 +4385,16 @@ void command_buff(Client *c, const Seperator *sep) {
 		c->SpellFinished(412, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[412].ResistDiff);
 		c->SpellFinished(278, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[278].ResistDiff);
 		c->SpellFinished(145, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
-		c->SpellFinished(1693, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[1693].ResistDiff);
-		c->SpellFinished(423, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[423].ResistDiff);
+		if (c->GetLevel() > 30) {
+			c->SpellFinished(1693, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[1693].ResistDiff);
+		}
+		else {
+			c->SpellFinished(174, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
+		}
 
+		
+		c->SpellFinished(423, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[423].ResistDiff);
+		
 		c->Message(0, "You paid %s for buffs.", displayCost.c_str());
 		return;
 	}
