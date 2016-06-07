@@ -944,7 +944,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Blood Oath";
-			$newSkill->desc = 'While using a 2 handed weapon, increases damage by <em data-base="10">10</em>%, while causing negative effects of healing gets reduced by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While using a 2 handed weapon, increases damage by <em data-base="10">10</em>%.';
 			$newSkill->image = "/images/builds/icons/rb-sk-bloodoath.png";	
 			$skills[26] = $newSkill;					
 		
