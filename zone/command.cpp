@@ -4394,7 +4394,12 @@ void command_buff(Client *c, const Seperator *sep) {
 
 		
 		c->SpellFinished(423, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[423].ResistDiff);
-		
+		if (c->HasPet()) {
+			c->GetPet()->SpellFinished(412, c->GetPet(), USE_ITEM_SPELL_SLOT, 0, -1, spells[412].ResistDiff);
+			c->GetPet()->SpellFinished(278, c->GetPet(), USE_ITEM_SPELL_SLOT, 0, -1, spells[278].ResistDiff);
+			c->GetPet()->SpellFinished(145, c->GetPet(), USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
+			c->GetPet()->SpellFinished(423, c->GetPet(), USE_ITEM_SPELL_SLOT, 0, -1, spells[423].ResistDiff);
+		}
 		c->Message(0, "You paid %s for buffs.", displayCost.c_str());
 		return;
 	}
