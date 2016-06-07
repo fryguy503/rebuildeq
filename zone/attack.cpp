@@ -1578,10 +1578,15 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 			}
 			if (exp_pool > 0) { //if there's pooled exp to lose from
 				exp_pool -= exploss; //subtract it.
+				int pool_loss = exploss;
+				exploss = 0; //null out the loss
 				if (exp_pool < 0) { //if there's any negative exp after
 					exploss = -exp_pool; //put it back as exploss to subtract from level
 					exp_pool = 0; //set to 0, to prep for update
+					pool_loss -= exploss;
 				}
+				Message(13, "Your experience pool has taken %i experience.", exploss);
+
 				auto query = StringFormat("UPDATE character_custom SET exp_pool = %i WHERE character_id = %i", exp_pool, CharacterID());
 				auto results = database.QueryDatabase(query);
 			}

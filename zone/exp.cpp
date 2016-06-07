@@ -529,6 +529,54 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 	if(maxlevel <= 1)
 		maxlevel = RuleI(Character, MaxLevel) + 1;
 
+
+	//If were at max level then stop gaining experience if we make it to the cap
+	if (GetLevel() >= (maxlevel-1)) {
+		Message(0, "triggered pool check");
+		uint32 expneeded = GetEXPForLevel(maxlevel);
+		Message(0, "setexp %i vs expneeded %i", set_exp, expneeded);
+		if (set_exp > expneeded) {
+			
+			//Give EXP to buffer
+			uint32 excess_exp = set_exp - expneeded; //excess exp from gaining
+			std::string query = StringFormat("UPDATE character_custom SET exp_pool = exp_pool + %i WHERE character_id = %i", excess_exp, CharacterID());
+			auto results = database.QueryDatabase(query);
+			Message(0, "Gave %i excess exp", excess_exp);
+			//Old bottle code, used for the bottle mechanic later.
+			/*int16 slotid = m_inv.HasItem(100000, 1, invWherePersonal); //check personal inventory for any bottles
+			if (slotid != INVALID_INDEX) {
+
+			//const Item_Struct* bottleStruct = database.GetItem(100000); //get item instance
+
+			ItemInst *bottle = m_inv.GetItem(slotid); //grab instance of bottle
+			if (bottle) {
+			std::string saved_exp = bottle->GetCustomData("exp"); //get previous exp
+
+			int bottle_exp = atoi(saved_exp.c_str()) + excess_exp; //bottle new exp
+			if (bottle_exp >= 175000000) { //bottle is full
+
+			//make a full bottle
+			const EQEmu::Item_Struct* full_bottle_struct = database.GetItem(100001);
+			ItemInst* full_bottle = database.CreateItem(full_bottle_struct, 1);
+
+			if (full_bottle) {
+			PutItemInInventory(slotid, *full_bottle, true); //add new full bottle
+			safe_delete(full_bottle);
+			Message(15, "You have filled a Bottle of Experience.");
+			}
+
+			} else { //Bottle not full, add new exp to bottle
+			Message(15, "Your Bottle of Experience has gained %u experience. (%.3f%%)", excess_exp, ((float)((float)excess_exp / (float)175000000)*(float)100));
+			bottle->SetCustomData("exp", bottle_exp);
+			}
+			}
+			}*/
+
+			//we took the excess, set_exp is now equal to expneeded.
+			set_exp = expneeded;
+		}
+	}
+
 	if(check_level > maxlevel) {
 		check_level = maxlevel;
 
@@ -587,51 +635,6 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 		//Build Stuff
 		if (IsBuildAvailable() && GetBuildUnspentPoints() > 0) {
 			Message(MT_Experience, "You have unspent build points. Use %s to spend them.", CreateSayLink("#builds", "#builds").c_str());
-		}
-	}
-
-	//If were at max level then stop gaining experience if we make it to the cap
-	if(GetLevel() >= maxlevel){
-		uint32 expneeded = GetEXPForLevel(maxlevel);
-		if(set_exp > expneeded) {
-			
-			//Give EXP to buffer
-			uint32 excess_exp = set_exp - expneeded; //excess exp from gaining
-			std::string query = StringFormat("UPDATE character_custom SET exp_pool = exp_pool + %i WHERE id = %i", excess_exp, CharacterID());
-			auto results = database.QueryDatabase(query);
-
-			//Old bottle code, used for the bottle mechanic later.
-			/*int16 slotid = m_inv.HasItem(100000, 1, invWherePersonal); //check personal inventory for any bottles
-			if (slotid != INVALID_INDEX) {
-				
-				//const Item_Struct* bottleStruct = database.GetItem(100000); //get item instance
-
-				ItemInst *bottle = m_inv.GetItem(slotid); //grab instance of bottle
-				if (bottle) {
-					std::string saved_exp = bottle->GetCustomData("exp"); //get previous exp
-					
-					int bottle_exp = atoi(saved_exp.c_str()) + excess_exp; //bottle new exp
-					if (bottle_exp >= 175000000) { //bottle is full
-
-						//make a full bottle
-						const EQEmu::Item_Struct* full_bottle_struct = database.GetItem(100001);
-						ItemInst* full_bottle = database.CreateItem(full_bottle_struct, 1);
-
-						if (full_bottle) {
-							PutItemInInventory(slotid, *full_bottle, true); //add new full bottle
-							safe_delete(full_bottle);
-							Message(15, "You have filled a Bottle of Experience.");
-						}
-
-					} else { //Bottle not full, add new exp to bottle
-						Message(15, "Your Bottle of Experience has gained %u experience. (%.3f%%)", excess_exp, ((float)((float)excess_exp / (float)175000000)*(float)100));
-						bottle->SetCustomData("exp", bottle_exp);
-					}
-				}
-			}*/
-
-
-			set_exp = expneeded;
 		}
 	}
 
