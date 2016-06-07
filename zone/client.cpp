@@ -9271,12 +9271,11 @@ void Client::EmoteEncounter() {
 	encounterTable[pool] = EN_KODIAK;
 	//Froglok anywhere, but only if your faction is low enough
 	
-	
-	if (FactionLevelRaw(106) < FACTION_DUBIOUS) {
+	if (FactionLevelRaw(106) > FACTION_DUBIOUS) {
 		pool += 100;
 		encounterTable[pool] = EN_FROGLOK;
 	}
-	if (FactionLevelRaw(66) < FACTION_DUBIOUS) {
+	if (FactionLevelRaw(66) > FACTION_DUBIOUS) {
 		pool += 300;
 		encounterTable[pool] = EN_TROLLGUARD;
 	}
@@ -9292,7 +9291,7 @@ void Client::EmoteEncounter() {
 	pool += 50;
 	encounterTable[pool] = EN_SPECTRE;
 
-	if (zoneid == 129 || //thurgadinb
+	if ((zoneid == 129 || //thurgadinb
 		zoneid == 115 || //thurgadina
 		zoneid == 118 || //gd
 		zoneid == 116 || //ew
@@ -9304,23 +9303,24 @@ void Client::EmoteEncounter() {
 		zoneid == 120 || //ww
 		zoneid == 123 || //nec
 		zoneid == 111 || //frozenshadow
-		zoneid == 110 //iceclad
+		zoneid == 110) &&  //iceclad
+		FactionLevelRaw(49) > FACTION_DUBIOUS
 		) {
 		pool += 400;
 		encounterTable[pool] = EN_COLDAIN;
 	}
 
-	if (zoneid == 118 || //gd
+	if ((zoneid == 118 || //gd
 		zoneid == 116 || //ew
 		zoneid == 113 || //kael
 		zoneid == 119 || //wakening
 		zoneid == 114 || // skyshrine
-		zoneid == 120  //ww
+		zoneid == 120) && //ww
+		FactionLevelRaw(188) > FACTION_DUBIOUS &&
+		GetLevel() > 45
 		) {
-		if (GetLevel() > 54) {
 			pool += 400;
 			encounterTable[pool] = EN_KAELGIANT;
-		}
 	}
 
 	if (zoneid == 120 || //ww
@@ -9404,7 +9404,7 @@ void Client::EmoteEncounter() {
 	if (zoneid == 22 || //ec
 		zoneid == 21 //wc
 		) {
-		if (FactionLevelRaw(696) < FACTION_DUBIOUS) {
+		if (FactionLevelRaw(696) > FACTION_DUBIOUS) {
 			pool += 200;
 			encounterTable[pool] = EN_FREEPORT;
 		}		
@@ -9421,7 +9421,7 @@ void Client::EmoteEncounter() {
 	//Message(0, "My faction to trolls is: %i", CalculateFaction(&fmods, GetCharacterFactionLevel(66)));
 
 	if (GetZoneID() == 46) { //TODO: troll guards, npc id 46002 , lvl 34ish EN_TROLLGUARD
-		if (FactionLevelRaw(66) < FACTION_DUBIOUS) {
+		if (FactionLevelRaw(66) > FACTION_DUBIOUS) {
 			pool += 500;
 			encounterTable[pool] = EN_TROLLGUARD;
 		}
