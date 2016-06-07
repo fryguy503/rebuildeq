@@ -199,6 +199,7 @@ int command_init(void)
 		command_add("emoteview", "Lists all NPC Emotes", 80, command_emoteview) ||
 		command_add("enablerecipe",  "[recipe_id] - Enables a recipe using the recipe id.",  80, command_enablerecipe) ||
 		command_add("equipitem", "[slotid(0-21)] - Equip the item on your cursor into the specified slot", 50, command_equipitem) ||
+		command_add("exp", "- Get current exp pool buffer. (60+)", 0, command_exp) ||
 		command_add("face", "- Change the face of your target", 80, command_face) ||
 		command_add("faq", "- Read the server FAQs", 0, command_faq) ||
 		command_add("findaliases", "[search term]- Searches for available command aliases, by alias or command", 50, command_findaliases) ||
@@ -5723,6 +5724,25 @@ void command_randomfeatures(Client *c, const Seperator *sep)
 		else
 			c->Message(0,"This command requires a Playable Race as the target");
 	}
+}
+
+void command_exp(Client *c, const Seperator *sep) 
+{
+	uint8 maxlevel = 60;
+	
+	if (c->GetLevel() < maxlevel) {
+		c->Message(0, "When a player reaches level %u and fills their experience bar, any excess experience goes into a pool reserve. This reserve can be drawn from on death as well as placed into experience bottles.");
+		return;
+	}
+	int exp_pool = 0;
+	auto query = StringFormat("SELECT exp_pool FROM character_custom WHERE character_id = %i", c->CharacterID());
+	auto results = database.QueryDatabase(query);
+	if (results.Success() && results.RowCount() != 0) {
+		auto row = results.begin();
+		exp_pool = atoi(row[0]);
+	}
+	int bottles = exp_pool / RuleI(AA, ExpPerPoint);
+	c->Message(0, "You currently have %i experience stored in reserve, which equates to %i experience bottles.", exp_pool, bottles);
 }
 
 void command_face(Client *c, const Seperator *sep)

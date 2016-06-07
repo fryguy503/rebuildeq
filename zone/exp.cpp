@@ -591,14 +591,19 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 	}
 
 	//If were at max level then stop gaining experience if we make it to the cap
-	if(GetLevel() == maxlevel - 1){
+	if(GetLevel() >= maxlevel){
 		uint32 expneeded = GetEXPForLevel(maxlevel);
 		if(set_exp > expneeded) {
 			
-			//Give EXP to bottles			
-			int16 slotid = m_inv.HasItem(100000, 1, invWherePersonal); //check personal inventory for any bottles
+			//Give EXP to buffer
+			uint32 excess_exp = set_exp - expneeded; //excess exp from gaining
+			std::string query = StringFormat("UPDATE character_custom SET exp_pool = exp_pool + %i WHERE id = %i", excess_exp, CharacterID());
+			auto results = database.QueryDatabase(query);
+
+			//Old bottle code, used for the bottle mechanic later.
+			/*int16 slotid = m_inv.HasItem(100000, 1, invWherePersonal); //check personal inventory for any bottles
 			if (slotid != INVALID_INDEX) {
-				uint32 excess_exp = set_exp - expneeded; //excess exp from gaining
+				
 				//const Item_Struct* bottleStruct = database.GetItem(100000); //get item instance
 
 				ItemInst *bottle = m_inv.GetItem(slotid); //grab instance of bottle
@@ -623,7 +628,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 						bottle->SetCustomData("exp", bottle_exp);
 					}
 				}
-			}
+			}*/
 
 
 			set_exp = expneeded;
