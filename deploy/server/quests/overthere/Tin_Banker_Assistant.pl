@@ -9,11 +9,14 @@
 sub EVENT_SAY {
 
   if ($text=~/hail/i) {
-
-    quest::say("Insert Metal Key *whirrrr*."); 
-
-  }
-
+    quest::say("Insert Metal Key *whirrrr*. [ ". quest::saylink("bind origin")." ], [ ". quest::saylink("bind affinity")." ]. *click*"); 
+	} elsif($text=~/bind origin/i) {
+		quest::say("Origin.. Bound.. *whirrrr*");
+		$client->SetStartZone(22, $client->GetX(), $client->GetY(), $client->GetZ()); 
+	} elsif($text=~/bind affinity/i) {
+		quest::say("Affinity.. Bound.. *whirrrr*");
+		quest::selfcast(2049);
+	}
 }
 
 

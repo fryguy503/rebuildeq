@@ -1,13 +1,19 @@
 sub EVENT_SAY {
   if ($text=~/hail/i) {
-    quest::say("Well hello there. I am new to the bank. I am helping the Fargins out since it is so busy lately. Mr. Fargin doesn't even have time for his [hobby] these days.");
+    quest::say("Well hello there. I am new to the bank. I am helping the Fargins out since it is so busy lately. Mr. Fargin doesn't even have time for his [hobby] these days. I can assist by casting [ ". quest::saylink("bind origin")." ], or [ ". quest::saylink("bind affinity")." ]");
   } 
   if ($text=~/hobby/i) {
     quest::say("'Mr. Fargin used to collect rare coins and gems. He came to Firiona Vie to do just that, but now he never has the time to [collect rare coins] since he is always working here. That is why I came to help him out.");
   } 
   if ($text=~/collect rare coins/i) {
     quest::say("If you want to help, you can begin by replacing Mr. Fargin's prized Star of Odus which was taken from his vault when he stepped out to dine one night. Do so, and I may trust you to collect coins. I will also reward you with an item a composer left here. With Mr. Fargin's approval of course.");
-  } 
+  } elsif($text=~/bind origin/i) {
+      quest::say("Binding your origin.");
+      $client->SetStartZone(22, $client->GetX(), $client->GetY(), $client->GetZ()); 
+  } elsif($text=~/bind affinity/i) {
+      quest::say("Binding your affinity.");
+      quest::selfcast(2049);
+  }
 }
 
 sub EVENT_ITEM {

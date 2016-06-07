@@ -8962,28 +8962,39 @@ void Client::DoRestedStatus() {
 }
 
 bool Client::InRestedArea() {
-	//ECommons
-	if (GetZoneID() == 22 &&
+	
+	if (GetZoneID() == 22 && //ecommons
 		GetX() < 100 && GetX() > -800 &&
 		GetY() < -1500 && GetY() > -2000) {
 		return true;
 	}
 
-	//Thurgadina
-	if ((GetZoneID() == 115 || GetZoneID() == 129) &&
+	if ((GetZoneID() == 115 || GetZoneID() == 129) && //thurgadin a or b
 		FactionLevelRaw(1152) < FACTION_DUBIOUS) {
 		return true;
 	}
 
-	//Kael
-	if (GetZoneID() == 113 &&
+	if (GetZoneID() == 113 && //kael
 		FactionLevelRaw(188) < FACTION_DUBIOUS) {
 		return true;
 	}
 
-	//Skyshrine
-	if (GetZoneID() == 114 &&
+	if (GetZoneID() == 114 && //skyshrine
 		FactionLevelRaw(42) < FACTION_DUBIOUS) {
+		return true;
+	}
+
+	if (GetZoneID() == 93 && //overthere
+		GetX() < 3645 && GetX() > 1921 &&
+		GetY() < 3726 && GetY() > 2182 && 
+		FactionLevelRaw(353) < FACTION_DUBIOUS) {
+		return true;
+	}
+
+	if (GetZoneID() == 93 && //firiona
+		GetX() < 3245 && GetX() > 917 &&
+		GetY() < -2242 && GetY() > -4817 &&
+		FactionLevelRaw(418) < FACTION_DUBIOUS) {
 		return true;
 	}
 
