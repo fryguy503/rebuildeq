@@ -8959,8 +8959,8 @@ void Client::DoRestedStatus() {
 		AddRestedExperience(6);
 	}
 	m_epp.in_rested_area = true;
-
 }
+
 bool Client::InRestedArea() {
 	//ECommons
 	if (GetZoneID() == 22 &&
@@ -8968,6 +8968,25 @@ bool Client::InRestedArea() {
 		GetY() < -1500 && GetY() > -2000) {
 		return true;
 	}
+
+	//Thurgadina
+	if ((GetZoneID() == 115 || GetZoneID() == 129) &&
+		FactionLevelRaw(1152) < FACTION_DUBIOUS) {
+		return true;
+	}
+
+	//Kael
+	if (GetZoneID() == 113 &&
+		FactionLevelRaw(188) < FACTION_DUBIOUS) {
+		return true;
+	}
+
+	//Skyshrine
+	if (GetZoneID() == 114 &&
+		FactionLevelRaw(42) < FACTION_DUBIOUS) {
+		return true;
+	}
+
 
 	return false;
 }
@@ -9170,7 +9189,7 @@ bool Client::InEncounterArea() {
 		zoneid == 43 || //neriakd
 		zoneid == 49 || //oggok
 		zoneid == 52 || //grobb
-		zoneid == 54 || //gfay
+		//zoneid == 54 || //gfay
 		zoneid == 55 || //akanon
 		zoneid == 60 || //kaladim
 		zoneid == 61 || //felwitha
@@ -9179,10 +9198,10 @@ bool Client::InEncounterArea() {
 		zoneid == 75 || //paineel
 		zoneid == 77 || //arena
 		zoneid == 82 || //cabwest
-		zoneid == 106 || //cabeast
-		zoneid == 115 || //thurgadina
-		zoneid == 124 || //veeshan
-		zoneid == 129 //thurgadinb
+		zoneid == 106 //|| //cabeast
+		//zoneid == 115 || //thurgadina
+		//zoneid == 124 //veeshan
+		//zoneid == 129 //thurgadinb
 		) {
 		return false;
 	}
@@ -9235,7 +9254,6 @@ void Client::EmoteEncounter() {
 	int pool = 0;
 	int zoneid = GetZoneID();
 
-	FactionMods fmods;
 
 	//Kodiaks can spawn anywhere
 	pool += 500;
@@ -9243,11 +9261,11 @@ void Client::EmoteEncounter() {
 	//Froglok anywhere, but only if your faction is low enough
 	
 	
-	if (CalculateFaction(&fmods, GetCharacterFactionLevel(106)) < FACTION_DUBIOUS) {
+	if (FactionLevelRaw(106) < FACTION_DUBIOUS) {
 		pool += 100;
 		encounterTable[pool] = EN_FROGLOK;
 	}
-	if (CalculateFaction(&fmods, GetCharacterFactionLevel(66)) < FACTION_DUBIOUS) {
+	if (FactionLevelRaw(66) < FACTION_DUBIOUS) {
 		pool += 300;
 		encounterTable[pool] = EN_TROLLGUARD;
 	}
@@ -9375,7 +9393,7 @@ void Client::EmoteEncounter() {
 	if (zoneid == 22 || //ec
 		zoneid == 21 //wc
 		) {
-		if (CalculateFaction(&fmods, GetCharacterFactionLevel(696)) < FACTION_DUBIOUS) {
+		if (FactionLevelRaw(696) < FACTION_DUBIOUS) {
 			pool += 200;
 			encounterTable[pool] = EN_FREEPORT;
 		}		
@@ -9392,7 +9410,7 @@ void Client::EmoteEncounter() {
 	//Message(0, "My faction to trolls is: %i", CalculateFaction(&fmods, GetCharacterFactionLevel(66)));
 
 	if (GetZoneID() == 46) { //TODO: troll guards, npc id 46002 , lvl 34ish EN_TROLLGUARD
-		if (CalculateFaction(&fmods, GetCharacterFactionLevel(66)) < FACTION_DUBIOUS) {
+		if (FactionLevelRaw(66) < FACTION_DUBIOUS) {
 			pool += 500;
 			encounterTable[pool] = EN_TROLLGUARD;
 		}
@@ -10218,4 +10236,18 @@ bool Client::IsBuildAvailable() {
 		return false;
 	}
 	return true;
+}
+
+//Since faction level takes in to account so many outside aspects that things like rested and encounters don't care
+FACTION_VALUE Client::FactionLevelRaw(int32 faction_id) {
+	if (faction_id < 1) {
+		return(FACTION_INDIFFERENT);
+	}
+	FactionMods fmods;
+
+	//Get the faction data from the database
+	if (database.GetFactionData(&fmods, GetClass(), GetRace(), GetDeity(), faction_id)) {
+		return CalculateFaction(&fmods, GetCharacterFactionLevel(faction_id));
+	}
+	return(FACTION_INDIFFERENT);	
 }
