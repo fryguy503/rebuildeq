@@ -1214,7 +1214,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		}	
 	}
 
-	if (rank_id == aaSpiritoftheWood) {
+	if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesSalve) {
 		cooldown = 16;
 		if (GetLevel() < 10) {
 			manacost = 20;
@@ -1230,6 +1230,12 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		}
 		else {
 			manacost = GetLevel() * 7.5f;
+		}
+		if (rank_id == aaNaturesSalve) {
+			cooldown = 85 - (12 * GetBuildRank(DRUID, RB_DRU_NATURESSALVE));
+			if (cooldown < 20) {
+				cooldown = 20;
+			}
 		}
 	}
 

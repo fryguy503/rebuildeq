@@ -1730,7 +1730,8 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 
 		if (tempid == 3274 || //virulent paralysis
 			tempid == 8190 || //convergence of spirits
-			tempid == 11267 //spirit of the wood
+			tempid == 11267 || //spirit of the wood
+			tempid == 16794 // nature's salve
 			) { 
 			//reset skill
 			for (y = 0; y < EFFECT_COUNT; y++)
@@ -1760,6 +1761,11 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 				//Just give 1 hp, so it casts.
 				sp[tempid].effectid[0] = SE_CurrentHP;
 				sp[tempid].base[0] = 1;
+			}
+			if (tempid == 16794) { //RB_DRU_NATURESSALVE
+				sp[tempid].effectid[0] = SE_CurrentHP;
+				sp[tempid].base[0] = 1; //1 hp tick
+				sp[tempid].buffduration = 1; //1 tick by default
 			}
 		}
     }

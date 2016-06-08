@@ -240,18 +240,27 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 						if (caster->IsClient()) {
 							Client * casterClient = caster->CastToClient();
+
+							uint32 rank;
 							
-							if (spell_id == 2749 &&	casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE) > 0) {
-								int damageAmount = casterClient->GetHP() * 0.05f * casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE);
+							rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESSALVE);
+							if (rank > 0 && spell_id == 16794) {
+								auto healAmount = GetLevel() * 10;
+								casterClient->Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
+								HealDamage(healAmount, caster);
+							}
+
+							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE);
+							if (spell_id == 2749 &&	rank > 0) {
+								int damageAmount = casterClient->GetHP() * 0.05f * rank;
 								dmg = -damageAmount;
-								int manaAmount = damageAmount * 0.1f * casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE);
+								int manaAmount = damageAmount * 0.1f * rank;
 								casterClient->SetMana(caster->GetMana() + manaAmount);
 							}
 
 							// Chosen
-							if ((spell_id == 2729 || spell_id == 823) && casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN) > 0) {
-
-								auto rank = casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN);
+							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN);
+							if ((spell_id == 2729 || spell_id == 823) && rank > 0) {
 								static const float BaseDamageBonus = 0.25f;		// 25% per rank
 
 								int bonusDamage = rank * BaseDamageBonus * dmg;
@@ -262,9 +271,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							// Elixir of Might
 							// NOTE: This must be done after extra damage from Chosen has been calculated.
-							if ((spell_id == 2729 || spell_id == 823) && casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT) > 0) {
-
-								auto rank = casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT);
+							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT);
+							if ((spell_id == 2729 || spell_id == 823) && rank > 0) {								
 								static const float TriggerChance = 0.05f;		// 5% chance per rank (25% max)
 								static const float BaseHealth = 0.1;			// 10% per rank (50% max)
 								static const float BaseMana = 2;				// 2 mana per rank. (10 max)
@@ -285,9 +293,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 
 							// Flame of Light
-							if (spell_id == 1454 && casterClient->GetBuildRank(PALADIN, RB_PAL_FLAMEOFLIGHT) > 0) {
-
-								auto rank = casterClient->GetBuildRank(PALADIN, RB_PAL_FLAMEOFLIGHT);
+							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_FLAMEOFLIGHT);
+							if (spell_id == 1454 && rank > 0) {
 								static const float BaseBonusDamage = 0.2f;			// 20% per rank.
 
 								int bonusDamage = rank * BaseBonusDamage * dmg;
@@ -297,19 +304,18 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 
 							//Shin: Festering Spear
-							if (casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR) > 0) {
-								rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
-								if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
-									int festerDmg = (rank * casterClient->GetLevel());
-									festerDmg += int32((float)dmg * 0.1 * (float)rank);
-									if (festerDmg < rank) festerDmg = rank;
-									casterClient->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
-									dmg -= festerDmg;
-								}
+							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
+							if (rank > 0 &&
+								(spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562)) { //spear spells
+								int festerDmg = (rank * casterClient->GetLevel());
+								festerDmg += int32((float)dmg * 0.1f * (float)rank);
+								if (festerDmg < rank) festerDmg = rank;
+								casterClient->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
+								dmg -= festerDmg;
 							}
 
-							if (casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH) > 0) {
-								rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
+							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
+							if (rank > 0) {
 								int festerDmg = (rank * casterClient->GetLevel());
 								festerDmg += int32((float)dmg * 0.1f * (float)rank);
 								if (festerDmg < rank) festerDmg = rank;
@@ -317,9 +323,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg -= festerDmg;
 							}
 
-							//Shin: Lingering Pain
-							if (casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN) > 0) {
-								rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
+							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
+							if (rank > 0) {
 								if (zone->random.Roll((int)(rank))) { //chance
 									if (GetLevel() > 57) { //Ignite Blood
 										SpellFinished(6, this, buffslot, 0, -1, spells[6].ResistDiff, true, level_override);
@@ -334,16 +339,14 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 
 							//Siphon of Death
+							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH);
 							if ((spell_id == 2718 || spell_id == 1471 || spell_id == 359) &&
-								casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH) > 0) {
-								rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH);
-								int mana_amount = (int)(dmg * 0.05 * rank);
+								rank > 0) {
+								int mana_amount = (int)(dmg * 0.05f * rank);
 								if (dmg > 0 && mana_amount < rank) mana_amount = rank;
 								caster->Message(MT_NonMelee, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
-							}
-
-							
+							}							
 						}
 
 						dmg = caster->GetActSpellDamage(spell_id, dmg, this);
@@ -4642,6 +4645,14 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 			notify->Message_StringID(MT_WornOff, SPELL_WORN_OFF_OF,
 				spells[buffs[slot].spellid].name, GetCleanName());
 		}
+	}
+
+	if (p && p->IsClient() && buffs[slot].spellid == 16794 && p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESSALVE) > 0) {
+		uint32 rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESSALVE);
+		auto healAmount = GetMaxHP() * 0.05f * rank;
+		p->Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
+		Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
+		HealDamage(healAmount, p);
 	}
 
 	if (HasNumhits()){
