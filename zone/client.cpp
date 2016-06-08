@@ -8795,6 +8795,27 @@ void Client::RefreshBuild() {
 					TrainAARank(aaCacophony);
 					Message(15, "You have unlocked the AA \"Cacophony\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+
+				if (GetClass() == DRUID && i == RB_DRU_CONVERGENCEOFSPIRITS  && GetAA(aaConvergenceofSpirits) < 1) {
+					TrainAARank(aaConvergenceofSpirits);
+					Message(15, "You have unlocked the AA \"Convergence of Spirits\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == DRUID && i == RB_DRU_SPIRITOFTHEWOOD  && GetAA(aaSpiritoftheWood) < 1) {
+					TrainAARank(aaSpiritoftheWood);
+					Message(15, "You have unlocked the AA \"Spirit of the Wood\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == DRUID && i == RB_DRU_NATURESSALVE  && GetAA(aaNaturesSalve) < 1) {
+					TrainAARank(aaNaturesSalve);
+					Message(15, "You have unlocked the AA \"Nature's Salve\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == DRUID && i == RB_DRU_NATURESBLESSING  && GetAA(aaNaturesBlessing) < 1) {
+					TrainAARank(aaNaturesBlessing);
+					Message(15, "You have unlocked the AA \"Nature's Blessing\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				
 				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
 					TrainAARank(aaDeathPeace2);
@@ -10126,9 +10147,9 @@ std::string Client::GetBuildName(uint32 id) {
 		if (id == RB_DRU_REGENERATION) return "Regeneration";
 		else if (id == RB_DRU_CONVERGENCEOFSPIRITS) return "Convergence of Spirits";
 		else if (id == RB_DRU_LIFEFLOW) return "Lifeflow";
-		else if (id == RB_DRU_SPIRITOFWOOD) return "Spirit of Wood";
+		else if (id == RB_DRU_SPIRITOFTHEWOOD) return "Spirit of the Wood";
 		else if (id == RB_DRU_SPIRITUALAWAKENING) return "Spiritual Awakening";
-		else if (id == RB_DRU_NATURESPROMISE) return "Nature's Promise";
+		else if (id == RB_DRU_NATURESSALVE) return "Nature's Salve";
 		else if (id == RB_DRU_NATURESWHISPER) return "Nature's Whisper";
 		else if (id == RB_DRU_NATURESBLESSING) return "Nature's Blessing";
 	case BARD:

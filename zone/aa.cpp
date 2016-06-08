@@ -1149,6 +1149,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaBoastfulBellow && GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW) < 1 ||
 		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
 		rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) < 1 ||
+		rank_id == aaConvergenceofSpirits && GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) < 1 ||
+		rank_id == aaSpiritoftheWood && GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) < 1 ||
+		rank_id == aaNaturesSalve && GetBuildRank(DRUID, RB_DRU_NATURESSALVE) < 1 ||
+		rank_id == aaNaturesBlessing && GetBuildRank(DRUID, RB_DRU_NATURESBLESSING) < 1 ||
 		( //Lesson of the Devoted is used by multiple classes different builds
 			rank_id == aaLessonoftheDevoted && 
 				GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
