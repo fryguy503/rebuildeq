@@ -1766,6 +1766,14 @@ void Client::OPGMSummon(const EQApplicationPacket *app)
 
 void Client::DoHPRegen() {
 	SetHP(GetHP() + CalcHPRegen() + RestRegenHP);
+	if (GetBuildRank(DRUID, RB_DRU_REGENERATION) > 0) {
+		if ((GetLevel() * 0.2f) < 2) {
+			SetHP(GetHP() + 2);
+		}
+		else {
+			SetHP(GetHP() + (GetLevel() * 0.2f));
+		}
+	}
 	SendHPUpdate();
 }
 
