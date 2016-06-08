@@ -1175,8 +1175,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 
 	if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
 		
-		AddBuff(this, 271, 600);
-		Message(0, "Appraisal");
+		AddBuff(this, 271, GetBuildRank(ROGUE, RB_ROG_APPRAISAL));
+		//Message(0, "Appraisal");
 		cooldown = 10;
 		CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
 		SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
@@ -1212,6 +1212,25 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			manacost = 248;
 			cooldown = 4;
 		}	
+	}
+
+	if (rank_id == aaSpiritoftheWood) {
+		cooldown = 16;
+		if (GetLevel() < 10) {
+			manacost = 20;
+		}
+		else if (GetLevel() < 31) {
+			manacost = GetLevel() * 2.6f;
+		}
+		else if (GetLevel() < 41) {
+			manacost = GetLevel() * 4.6f;
+		}
+		else if (GetLevel() < 51) {
+			manacost = GetLevel() * 5.6f;
+		}
+		else {
+			manacost = GetLevel() * 7.5f;
+		}
 	}
 
 	if (rank_id == aaHandofPiety) {
