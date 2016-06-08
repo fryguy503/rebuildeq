@@ -1599,6 +1599,10 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 					if (rank > 0) {
 						effect_value += (rank * 0.1 * effect_value);
 					}
+					rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_REGENERATION);
+					if (rank > 0) {
+						effect_value += (rank * 0.2 * effect_value);
+					}
 				}
 				if(effect_value > 0) {
 					new_bonus->HPRegen += effect_value;
