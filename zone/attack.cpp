@@ -1279,13 +1279,21 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		int proc_damage = 1;
 		bool is_proc = false;
 		float chance = 0;
+		uint32 rank;
+		rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
+		if (rank > 0) {						
+			//caster->Message(MT_NonMelee, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
+			SetMana(GetMana() + rank);
+		}
+
 
 		//Check for SHM fury proc
-		if (GetBuildRank(SHAMAN, RB_SHM_FURY) > 0) {
+		rank = GetBuildRank(SHAMAN, RB_SHM_FURY);
+		if (rank > 0) {
 			spellid = 271; //Fury spell
 			chance = 400;
 			proc_damage = GetLevel() * 5;
-			proc_damage = proc_damage * 0.25f * GetBuildRank(SHAMAN, RB_SHM_FURY);
+			proc_damage = proc_damage * 0.25f * rank;
 			if (proc_damage < 20) {
 				proc_damage = 20;
 			}
@@ -1300,11 +1308,12 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			}
 		}
 
-		if (GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
+		rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
+		if (rank > 0) {
 			spellid = 271; //Fury spell
 			chance = 400;
 			proc_damage = GetLevel() * 5;
-			proc_damage = proc_damage * 0.25f * GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
+			proc_damage = proc_damage * 0.25f * rank;
 			if (proc_damage < 20) {
 				proc_damage = 20;
 			}
@@ -1320,11 +1329,12 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		}
 
 		//Check for BRD whistle
-		if (GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE) > 0) {
+		rank = GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE);
+		if (rank > 0) {
 			spellid = 734; //Song
 			chance = 400;
 			proc_damage = GetLevel() * 5;
-			proc_damage = proc_damage * 0.25f * GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE);
+			proc_damage = proc_damage * 0.25f * rank;
 			if (proc_damage < 20) {
 				proc_damage = 20;
 			}
