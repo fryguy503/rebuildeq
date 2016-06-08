@@ -4382,15 +4382,45 @@ void command_buff(Client *c, const Seperator *sep) {
 			safe_delete_array(hacker_str);
 			return;
 		}
-		c->SpellFinished(412, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[412].ResistDiff);
-		c->SpellFinished(278, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[278].ResistDiff);
-		c->SpellFinished(145, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
-		if (c->GetLevel() > 30) {
-			c->SpellFinished(1693, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[1693].ResistDiff);
-		}
-		else {
-			c->SpellFinished(174, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[145].ResistDiff);
-		}
+		uint8 level = c->GetLevel();
+		if (level < 35) c->AddBuff(c, 144); //regeneration 34
+		else if (level < 40) c->AddBuff(c, 137); //pack regen 39
+		else if (level < 43) c->AddBuff(c, 145); //chloro 42
+		else if (level < 46) c->AddBuff(c, 138); //pack chloro 45
+		else if (level < 55) c->AddBuff(c, 1568); //regrowuth 54
+		else if (level < 59) c->AddBuff(c, 1569); //regrowth of grove 58 /grpp
+		else c->AddBuff(c, 2520); //nature's recov - 60
+
+		if (level < 2) c->AddBuff(c, 26); //skin like wood 1
+		else if (level < 10) c->AddBuff(c, 2511); //prot of wood 9
+		else if (level < 15) c->AddBuff(c, 263); //skin like rock 14
+		else if (level < 20) c->AddBuff(c, 2512); //prot of rock 19
+		else if (level < 25) c->AddBuff(c, 421); //skin like steel 24
+		else if (level < 28) c->AddBuff(c, 2513); //prot like steel 27
+		else if (level < 37) c->AddBuff(c, 422); //skin like diamond 36
+		else if (level < 40) c->AddBuff(c, 2514); //prot diamond 39
+		else if (level < 47) c->AddBuff(c, 423); //skin like nature 46
+		else if (level < 50) c->AddBuff(c, 2515); //prot of nature 49
+		else if (level < 58) c->AddBuff(c, 1559); //natureskin 57
+		else if (level < 60) c->AddBuff(c, 2188); //prot cabbage 59
+		else c->AddBuff(c, 1442); //prot glades 60
+
+		if (level < 8) c->AddBuff(c, 256); //shield of thistles 7
+		else if (level < 18) c->AddBuff(c, 273); //shield of barbs 17
+		else if (level < 28) c->AddBuff(c, 129); //shield of brambles 27
+		else if (level < 38) c->AddBuff(c, 432); //shield of spikes 37
+		else if (level < 47) c->AddBuff(c, 356); //shield of thorns 47
+		else if (level < 50) c->AddBuff(c, 1727); //legacy of spike 49
+		else if (level < 58) c->AddBuff(c, 1560); //shield of blades 58
+		else c->AddBuff(c, 1561); //legacy of thorns 59
+
+		if (level < 2) c->AddBuff(c, 268); //str of earth 1
+		else if (level < 35) c->AddBuff(c, 429); //str of stone 34
+		else c->AddBuff(c, 430); //storm str 44
+
+		if (level > 30) c->AddBuff(c, 1693);
+		else c->AddBuff(c, 174);
+		
 
 		
 		c->SpellFinished(423, c->CastToMob(), USE_ITEM_SPELL_SLOT, 0, -1, spells[423].ResistDiff);

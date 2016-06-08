@@ -1728,7 +1728,10 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 			sp[tempid].effectid[1] = 254; //remove mana effect, since it's done programmaticcally.
 		}		
 
-		if (tempid == 3274 || tempid == 8190) { 
+		if (tempid == 3274 || //virulent paralysis
+			tempid == 8190 || //convergence of spirits
+			tempid == 11267 //spirit of the wood
+			) { 
 			//reset skill
 			for (y = 0; y < EFFECT_COUNT; y++)
 				sp[tempid].base[y] = 0;
@@ -1752,6 +1755,11 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 			}
 			if (tempid == 8190) { //RB_DRU_CONVERGENCEOFSPIRITS
 				sp[tempid].buffduration = 1;
+			}
+			if (tempid == 11267) { //RB_DRU_SPIRITOFTHEWOOD
+				//Just give 1 hp, so it casts.
+				sp[tempid].effectid[0] = SE_CurrentHP;
+				sp[tempid].base[0] = 1;
 			}
 		}
     }

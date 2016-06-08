@@ -362,7 +362,75 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (caster->IsClient() && this->IsClient()) { //Ensure caster and player is client for these mechanics
 							Client * casterClient = caster->CastToClient();
 
-							
+							//Spirit of the Wood
+							if (spell_id == 11267 && casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) > 0) {
+								uint8 level = GetLevel();
+								rank = casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD);
+								if (rank > 4) { //Damage shield
+									if (level < 8) AddBuff(caster, 256); //shield of thistles 7
+									else if (level < 18) AddBuff(caster, 273); //shield of barbs 17
+									else if (level < 28) AddBuff(caster, 129); //shield of brambles 27
+									else if (level < 38) AddBuff(caster, 432); //shield of spikes 37
+									else if (level < 47) AddBuff(caster, 356); //shield of thorns 47
+									else if (level < 50) AddBuff(caster, 1727); //legacy of spike 49
+									else if (level < 58) AddBuff(caster, 1560); //shield of blades 58
+									else AddBuff(caster, 1561); //legacy of thorns 59
+								}
+								if (rank > 3) { //HP
+									if (level < 2) AddBuff(caster, 26); //skin like wood 1
+									else if (level < 10) AddBuff(caster, 2511); //prot of wood 9
+									else if (level < 15) AddBuff(caster, 263); //skin like rock 14
+									else if (level < 20) AddBuff(caster, 2512); //prot of rock 19
+									else if (level < 25) AddBuff(caster, 421); //skin like steel 24
+									else if (level < 28) AddBuff(caster, 2513); //prot like steel 27
+									else if (level < 37) AddBuff(caster, 422); //skin like diamond 36
+									else if (level < 40) AddBuff(caster, 2514); //prot diamond 39
+									else if (level < 47) AddBuff(caster, 423); //skin like nature 46
+									else if (level < 50) AddBuff(caster, 2515); //prot of nature 49
+									else if (level < 58) AddBuff(caster, 1559); //natureskin 57
+									else if (level < 60) AddBuff(caster, 2188); //prot cabbage 59
+									else AddBuff(caster, 1442); //prot glades 60
+								}
+								if (rank > 2) { //HP Regen
+									if (level < 35) AddBuff(caster, 144); //regeneration 34
+									else if (level < 40) AddBuff(caster, 137); //pack regen 39
+									else if (level < 43) AddBuff(caster, 145); //chloro 42
+									else if (level < 46) AddBuff(caster, 138); //pack chloro 45
+									else if (level < 55) AddBuff(caster, 1568); //regrowuth 54
+									else if (level < 59) AddBuff(caster, 1569); //regrowth of grove 58 /grpp
+									else AddBuff(caster, 2520); //nature's recov - 60
+								}
+								if (rank > 1) { //cold/fire resist
+									if (level < 20) {
+										AddBuff(caster, 224); //endure fire 1
+										AddBuff(caster, 225); //endure cold 9
+										AddBuff(caster, 226); //endure disease 19
+										AddBuff(caster, 227); //endure poison 19
+										AddBuff(caster, 228); //endure magic 34
+									}
+									else if (level < 50) {
+										AddBuff(caster, 60); //resist fire 20
+										AddBuff(caster, 61); //resist cold 30
+										AddBuff(caster, 64); //resist magic 49
+										AddBuff(caster, 226); //endure disease 19
+										AddBuff(caster, 227); //endure poison 19
+									}
+									else {
+										//AddBuff(caster, 1551); //circle of winter 51
+									//	AddBuff(caster, 1552); //circle of summer 52
+										AddBuff(caster, 2519); //circle of seasons 58
+										AddBuff(caster, 226); //endure disease 19
+										AddBuff(caster, 227); //endure poison 19
+										AddBuff(caster, 64); //resist magic 49
+									}
+								}
+								if (rank > 0) { //STR
+									if (level < 2) AddBuff(caster, 268); //str of earth 1
+									else if (level < 35) AddBuff(caster, 429); //str of stone 34
+									else AddBuff(caster, 430); //storm str 44
+								}
+								break;
+							}
 
 
 							//Hand of Piety
@@ -6291,6 +6359,7 @@ bool Mob::TryDeathSave() {
 					Client* buff_client = entity_list.GetClientByID(buffs[i].casterid);
 					if (buff_client && buff_client->GetBuildRank(DRUID, RB_DRU_LIFEFLOW) > 0) {
 						SuccessChance = ((GetCHA() * (RuleI(Spells, DeathSaveCharismaMod))) + 1) / 10; //(CHA Mod Default = 3)
+						SuccessChance += buff_client->GetBuildRank(DRUID, RB_DRU_LIFEFLOW);
 						if (SuccessChance > 95)
 							SuccessChance = 95;
 

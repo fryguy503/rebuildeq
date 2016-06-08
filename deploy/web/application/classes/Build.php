@@ -516,7 +516,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit of the Wood";
-			$newSkill->desc = 'Grants the Spirit of the Wood AA, which casts buffs scaled based on your level.<br>Rank 1: +STR<br>Rank 2: +Cold and Fire resist<br>Rank 3: +HP regeneration<br>Rank 4: +HP<br>Rank 5: +Damage Shield';
+			$newSkill->desc = 'Grants the Spirit of the Wood AA, which casts buffs scaled based on your level.<br>Rank 1: +STR<br>Rank 2: +Resists<br>Rank 3: +HP regeneration<br>Rank 4: +HP<br>Rank 5: +Damage Shield';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[24] = $newSkill;			
 
