@@ -496,6 +496,55 @@ class Build {
 
 			//==================DRUID======================
 			case "druid":
+			$newSkill = new stdClass();
+			$newSkill->title = "Regeneration";
+			$newSkill->desc = 'Grants the druid an innate hp regeneration of Level * 0.2 hitpoints per tick, as well as any duration regeneration spells casted by the druid give <em data-base="20">20</em>% additional hitpoint regeneration per tick while in the same zone as the druid<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[18] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Convergence of Spirits";
+			$newSkill->desc = 'Grants the Convergence of Spirits AA, giving a heal over time that heals for <em data-base="0.5">0.5</em>% of the target\'s max health per tick for <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[20] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Lifeflow";
+			$newSkill->desc = 'While an ally has Covergence of Spirits or Nature\'s Promised buff on them, they are granted a <em data-base="1">1</em>% death save chance<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[22] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Spirit of Wood";
+			$newSkill->desc = 'Grants the Spirit of Wood AA, which casts buffs scaled based on your level.<br>Rank 1: +STR<br>Rank 2: +Cold and Fire resist<br>Rank 3: +HP regeneration<br>Rank 4: +HP<br>Rank 5: +Damage Shield';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[24] = $newSkill;			
+
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Spirital Awakening";
+			$newSkill->desc = 'Any successful melee hit on an enemy by the druid grants <em data-base="1">1</em> mana<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";
+			$skills[26] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Nature's Promise";
+			$newSkill->desc = 'Grants the Nature\'s Promise AA, where the target receives a buff that lasts 80 seconds, giving the target Level * 10 hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="5">5</em>% of their max hitpoints<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[28] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Nature's Whisper";
+			$newSkill->desc = 'While a target is affected by Nature\'s Promise or Convergence of Spirits, they also regain <em data-base="1">1</em>% of any healing done from these spells as mana.<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[31] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Nature's Blessing";
+			$newSkill->desc = 'Grants the Nature\'s Blessing AA, where <em data-base="1">1</em>% of the caster\'s current mana is infused by nature and can be transferred to a target or to the caster<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[34] = $newSkill;
+
 			break;
 			
 			//==================ENCHANTER======================
@@ -692,6 +741,7 @@ class Build {
 			$newSkill->desc = 'Backstab now deals <em data-base="25">25</em>% more damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-vitalorgans.png";
 			$skills[13] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Assassin's Taint";
 			$newSkill->desc = 'Grants the Lesson of the Devoted AA, granting the assassins taint buff that grants triple backstab and a proc that causes skill taken damage to be increased by 7% and increases duration by <em data-base="12">12</em> seconds <span class="perLevel"> per rank</span>.';

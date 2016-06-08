@@ -10122,6 +10122,15 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ROG_VITALORGANS) return "Vital Organs";
 		else if (id == RB_ROG_ASSASSINSTAINT) return "Assassin's Taint";
 		break;
+	case DRUID:
+		if (id == RB_DRU_REGENERATION) return "Regeneration";
+		else if (id == RB_DRU_CONVERGENCEOFSPIRITS) return "Convergence of Spirits";
+		else if (id == RB_DRU_LIFEFLOW) return "Lifeflow";
+		else if (id == RB_DRU_SPIRITOFWOOD) return "Spirit of Wood";
+		else if (id == RB_DRU_SPIRITUALAWAKENING) return "Spiritual Awakening";
+		else if (id == RB_DRU_NATURESPROMISE) return "Nature's Promise";
+		else if (id == RB_DRU_NATURESWHISPER) return "Nature's Whisper";
+		else if (id == RB_DRU_NATURESBLESSING) return "Nature's Blessing";
 	case BARD:
 		if (id == RB_BRD_ELEMENTALHARMONY) return "Elemental Harmony";
 		else if (id == RB_BRD_HEALINGTREBLE) return "Healing Treble";

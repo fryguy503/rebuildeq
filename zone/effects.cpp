@@ -304,6 +304,7 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 	value = value_BaseEffect;
 
 	value += int(value_BaseEffect*GetFocusEffect(focusImprovedHeal, spell_id)/100);
+	uint8 rank = 0;
 
 	// Instant Heals
 	if(spells[spell_id].buffduration < 1) {
@@ -377,7 +378,15 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 
 	//Heal over time spells. [Heal Rate and Additional Healing effects do not increase this value]
 	else {
-
+		if (IsClient() && CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) > 0 && spell_id == 8190) {
+			rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
+			if (target) {
+				value = target->GetMaxHP() * 0.005f * rank;
+			}
+			else {
+				value = 0;
+			}
+		}
 		chance = itembonuses.CriticalHealOverTime + spellbonuses.CriticalHealOverTime + aabonuses.CriticalHealOverTime;
 
 		chance += target->GetFocusIncoming(focusFcHealPctCritIncoming, SE_FcHealPctCritIncoming, this, spell_id);

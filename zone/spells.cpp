@@ -3296,6 +3296,9 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(BARD, RB_BRD_KINSONG) > 0 && spell_id == 6239) {
 		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(BARD, RB_BRD_KINSONG);
 	}
+	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) > 0 && spell_id == 8190) {
+		duration = 1 * caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
+	}
 
 	Log.Out(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",
 		spell_id, caster?caster->GetName():"UNKNOWN", caster_level, duration);

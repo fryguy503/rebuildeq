@@ -1728,7 +1728,7 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 			sp[tempid].effectid[1] = 254; //remove mana effect, since it's done programmaticcally.
 		}		
 
-		if (tempid == 3274) { 
+		if (tempid == 3274 || tempid == 8190) { 
 			//reset skill
 			for (y = 0; y < EFFECT_COUNT; y++)
 				sp[tempid].base[y] = 0;
@@ -1749,6 +1749,9 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 				sp[tempid].effectid[1] = SE_Root; //ROOT
 				sp[tempid].formula[1] = 100;
 				sp[tempid].buffduration = 2;
+			}
+			if (tempid == 8190) { //RB_DRU_CONVERGENCEOFSPIRITS
+				sp[tempid].buffduration = 1;
 			}
 		}
     }
