@@ -1764,8 +1764,12 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 			}
 			if (tempid == 16794) { //RB_DRU_NATURESSALVE
 				sp[tempid].effectid[0] = SE_CurrentHP;
-				sp[tempid].base[0] = 1; //1 hp tick
+				sp[tempid].base[0] = 1; //1 hp tick				
 				sp[tempid].buffduration = 1; //1 tick by default
+			}
+			if (tempid == 23586) { //RB_DRU_NATURESBLESSING
+				sp[tempid].effectid[0] = SE_CurrentHP;
+				sp[tempid].base[0] = 1; //1 hp tick
 			}
 		}
     }

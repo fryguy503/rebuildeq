@@ -1213,6 +1213,9 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			cooldown = 4;
 		}	
 	}
+	if (rank_id == aaNaturesBlessing) {
+		cooldown = 16;
+	}
 
 	if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesSalve) {
 		cooldown = 16;

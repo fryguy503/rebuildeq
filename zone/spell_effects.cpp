@@ -242,7 +242,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							Client * casterClient = caster->CastToClient();
 
 							uint32 rank;
-							
+							rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESBLESSING);
+							if (rank > 0 && spell_id == 23586) {								
+								auto manaAmount = casterClient->GetMana() * (0.01f * rank);
+								if (manaAmount < 1) manaAmount = 1;
+								if (casterClient != this) casterClient->Message(MT_NonMelee, "Nature's Blessing %u gifted %i mana to %s.", rank, manaAmount, GetCleanName());
+								Message(MT_NonMelee, "%s's Nature's Blessing %u gifted %i mana.", casterClient->GetCleanName(), rank, manaAmount);
+								SetMana(GetMana() + manaAmount);
+							}
+
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESSALVE);
 							if (rank > 0 && spell_id == 16794) {
 								auto healAmount = GetLevel() * 10;
@@ -4660,7 +4668,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 		p->Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
 		Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
 		HealDamage(healAmount, p);
-		rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
+		rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
 		if (rank > 0) {
 			auto manaAmount = healAmount * (0.01f * rank);
 			if (manaAmount < 1) manaAmount = 1;
