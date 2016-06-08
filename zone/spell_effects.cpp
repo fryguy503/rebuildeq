@@ -248,6 +248,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								auto healAmount = GetLevel() * 10;
 								casterClient->Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
 								HealDamage(healAmount, caster);
+								rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
+								if (rank > 0) {
+									auto manaAmount = healAmount * (0.01f * rank);
+									if (manaAmount < 1) manaAmount = 1;
+									Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, manaAmount);
+									SetMana(GetMana() + manaAmount);
+								}
 							}
 
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE);
@@ -4653,6 +4660,13 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 		p->Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
 		Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
 		HealDamage(healAmount, p);
+		rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
+		if (rank > 0) {
+			auto manaAmount = healAmount * (0.01f * rank);
+			if (manaAmount < 1) manaAmount = 1;
+			Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, manaAmount);
+			SetMana(GetMana() + manaAmount);
+		}
 	}
 
 	if (HasNumhits()){
