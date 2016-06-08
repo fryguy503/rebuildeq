@@ -6279,12 +6279,43 @@ bool Mob::TryDeathSave() {
 	-In later expansions this SE_DeathSave was given a level limit and a heal value in its effect data.
 	*/
 
+	int SuccessChance = 0;
+	int HealAmt = 300; //Death Pact max Heal
+
+	if ((HasSpellEffect(8192) || HasSpellEffect(16794))) { //There is a chance druid spell with lifeflow is on them.
+		int i;
+		uint32 buff_count = GetMaxTotalSlots();
+		for (i = 0; i < buff_count; i++) {
+			if (buffs[i].spellid == 8192 || buffs[i].spellid == 16794) {
+				if (buffs[i].casterid != 0) {
+					Client* buff_client = entity_list.GetClientByID(buffs[i].casterid);
+					if (buff_client && buff_client->GetBuildRank(DRUID, RB_DRU_LIFEFLOW) > 0) {
+						SuccessChance = ((GetCHA() * (RuleI(Spells, DeathSaveCharismaMod))) + 1) / 10; //(CHA Mod Default = 3)
+						if (SuccessChance > 95)
+							SuccessChance = 95;
+
+						if (zone->random.Roll(SuccessChance)) {
+							HealAmt = RuleI(Spells, DivineInterventionHeal); //8000HP is how much LIVE Divine Intervention max heals
+						}
+						if ((GetMaxHP() - GetHP()) < HealAmt)
+							HealAmt = GetMaxHP() - GetHP();
+						SetHP((GetHP() + HealAmt));
+						Message(263, "The gods have healed you for %i points of damage.", HealAmt);
+						entity_list.MessageClose_StringID(this, false, 200, MT_CritMelee, DIVINE_INTERVENTION, GetCleanName());
+						SendHPUpdate();
+						BuffFadeBySpellID(8192);
+						BuffFadeBySpellID(16794);
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	if (spellbonuses.DeathSave[0]){
 
-		int SuccessChance = 0;
 		int buffSlot = spellbonuses.DeathSave[1];
 		int32 UD_HealMod = 0;
-		int HealAmt = 300; //Death Pact max Heal
 
 		if(buffSlot >= 0){
 

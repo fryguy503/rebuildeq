@@ -510,7 +510,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lifeflow";
-			$newSkill->desc = 'While an ally has Covergence of Spirits or Nature\'s Promised buff on them, they are granted a <em data-base="1">1</em>% death save chance<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While an ally has Covergence of Spirits or Nature\'s Salve buff on them, they are granted a <em data-base="1">1</em>% death save chance, healing for 8000 hitpoints<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[22] = $newSkill;
 
