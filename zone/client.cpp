@@ -8988,7 +8988,7 @@ void Client::DoRestedStatus() {
 }
 
 bool Client::InRestedArea() {
-	
+
 	if (GetZoneID() == 22 && //ecommons
 		GetX() < 100 && GetX() > -800 &&
 		GetY() < -1500 && GetY() > -2000) {
@@ -9171,6 +9171,10 @@ void Client::DoEncounterCheck() {
 
 //Is the client in a valid encounter area?
 bool Client::InEncounterArea() {	
+
+	if (this->AFK) {
+		return false;
+	}
 
 	int zoneid = GetZoneID();
 	if (GetZoneID() == 22) {  //Ecommons
