@@ -2801,7 +2801,7 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 			caster->Message(MT_NonMelee, "Fury increased duration by %i seconds.", bonusDuration);
 			duration += bonusDuration;
 		}
-		rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESSALVE);
+		rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
 		if (rank > 0 && spell_id == 16794) {
 			duration = 14 - (rank * 2);
 		}

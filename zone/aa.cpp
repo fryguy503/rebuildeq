@@ -1151,7 +1151,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) < 1 ||
 		rank_id == aaConvergenceofSpirits && GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) < 1 ||
 		rank_id == aaSpiritoftheWood && GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) < 1 ||
-		rank_id == aaNaturesSalve && GetBuildRank(DRUID, RB_DRU_NATURESSALVE) < 1 ||
+		rank_id == aaNaturesBoon && GetBuildRank(DRUID, RB_DRU_NATURESBOON) < 1 ||
 		rank_id == aaNaturesBlessing && GetBuildRank(DRUID, RB_DRU_NATURESBLESSING) < 1 ||
 		( //Lesson of the Devoted is used by multiple classes different builds
 			rank_id == aaLessonoftheDevoted && 
@@ -1176,6 +1176,12 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
 		
 		AddBuff(this, 271, GetBuildRank(ROGUE, RB_ROG_APPRAISAL));
+		if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
+		{
+			EQApplicationPacket *outapp = MakeBuffsPacket(false);
+			CastToClient()->FastQueuePacket(&outapp);
+		}
+
 		//Message(0, "Appraisal");
 		cooldown = 10;
 		CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
@@ -1217,7 +1223,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		cooldown = 16;
 	}
 
-	if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesSalve) {
+	if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesBoon) {
 		cooldown = 16;
 		if (GetLevel() < 10) {
 			manacost = 20;
@@ -1234,8 +1240,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		else {
 			manacost = GetLevel() * 7.5f;
 		}
-		if (rank_id == aaNaturesSalve) {
-			cooldown = 85 - (12 * GetBuildRank(DRUID, RB_DRU_NATURESSALVE));
+		if (rank_id == aaNaturesBoon) {
+			cooldown = 85 - (12 * GetBuildRank(DRUID, RB_DRU_NATURESBOON));
 			if (cooldown < 20) {
 				cooldown = 20;
 			}
@@ -1563,6 +1569,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			return;
 		}
 	}
+
+	Log.Out(Logs::General, Logs::Spells, "AA rank_id %i casting spellid %i", rank_id, spellid);
 
 	// Bards can cast instant cast AAs while they are casting another song
 	if(spells[rank->spell].cast_time == 0 && GetClass() == BARD && IsBardSong(casting_spell_id)) {

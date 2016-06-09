@@ -251,7 +251,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								SetMana(GetMana() + manaAmount);
 							}
 
-							rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESSALVE);
+							rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
 							if (rank > 0 && spell_id == 16794) {
 								auto healAmount = GetLevel() * 10;
 								casterClient->Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
@@ -381,71 +381,76 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							Client * casterClient = caster->CastToClient();
 
 							//Spirit of the Wood
-							if (spell_id == 11267 && casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) > 0) {
+							if (spell_id == 3277 && casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) > 0) {
 								uint8 level = GetLevel();
 								rank = casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD);
 								if (rank > 4) { //Damage shield
-									if (level < 8) AddBuff(caster, 256); //shield of thistles 7
-									else if (level < 18) AddBuff(caster, 273); //shield of barbs 17
-									else if (level < 28) AddBuff(caster, 129); //shield of brambles 27
-									else if (level < 38) AddBuff(caster, 432); //shield of spikes 37
-									else if (level < 47) AddBuff(caster, 356); //shield of thorns 47
-									else if (level < 50) AddBuff(caster, 1727); //legacy of spike 49
-									else if (level < 58) AddBuff(caster, 1560); //shield of blades 58
+									if (level < 8) AddBuff(caster, 256, 200, 60); //shield of thistles 7
+									else if (level < 18) AddBuff(caster, 273, 200, 60); //shield of barbs 17
+									else if (level < 28) AddBuff(caster, 129, 200, 60); //shield of brambles 27
+									else if (level < 38) AddBuff(caster, 432, 200, 60); //shield of spikes 37
+									else if (level < 47) AddBuff(caster, 356, 200, 60); //shield of thorns 47
+									else if (level < 50) AddBuff(caster, 1727, 200, 60); //legacy of spike 49
+									else if (level < 58) AddBuff(caster, 1560, 200, 60); //shield of blades 58
 									else AddBuff(caster, 1561); //legacy of thorns 59
 								}
 								if (rank > 3) { //HP
-									if (level < 2) AddBuff(caster, 26); //skin like wood 1
-									else if (level < 10) AddBuff(caster, 2511); //prot of wood 9
-									else if (level < 15) AddBuff(caster, 263); //skin like rock 14
-									else if (level < 20) AddBuff(caster, 2512); //prot of rock 19
-									else if (level < 25) AddBuff(caster, 421); //skin like steel 24
-									else if (level < 28) AddBuff(caster, 2513); //prot like steel 27
-									else if (level < 37) AddBuff(caster, 422); //skin like diamond 36
-									else if (level < 40) AddBuff(caster, 2514); //prot diamond 39
-									else if (level < 47) AddBuff(caster, 423); //skin like nature 46
-									else if (level < 50) AddBuff(caster, 2515); //prot of nature 49
-									else if (level < 58) AddBuff(caster, 1559); //natureskin 57
-									else if (level < 60) AddBuff(caster, 2188); //prot cabbage 59
-									else AddBuff(caster, 1442); //prot glades 60
+									if (level < 2) AddBuff(caster, 26, 200, 60); //skin like wood 1
+									else if (level < 10) AddBuff(caster, 2511, 200, 60); //prot of wood 9
+									else if (level < 15) AddBuff(caster, 263, 200, 60); //skin like rock 14
+									else if (level < 20) AddBuff(caster, 2512, 200, 60); //prot of rock 19
+									else if (level < 25) AddBuff(caster, 421, 200, 60); //skin like steel 24
+									else if (level < 28) AddBuff(caster, 2513, 200, 60); //prot like steel 27
+									else if (level < 37) AddBuff(caster, 422, 200, 60); //skin like diamond 36
+									else if (level < 40) AddBuff(caster, 2514, 200, 60); //prot diamond 39
+									else if (level < 47) AddBuff(caster, 423, 200, 60); //skin like nature 46
+									else if (level < 50) AddBuff(caster, 2515, 200, 60); //prot of nature 49
+									else if (level < 58) AddBuff(caster, 1559, 200, 60); //natureskin 57
+									else if (level < 60) AddBuff(caster, 2188, 200, 60); //prot cabbage 59
+									else AddBuff(caster, 1442, 200, 60); //prot glades 60
 								}
 								if (rank > 2) { //HP Regen
-									if (level < 35) AddBuff(caster, 144); //regeneration 34
-									else if (level < 40) AddBuff(caster, 137); //pack regen 39
-									else if (level < 43) AddBuff(caster, 145); //chloro 42
-									else if (level < 46) AddBuff(caster, 138); //pack chloro 45
-									else if (level < 55) AddBuff(caster, 1568); //regrowuth 54
-									else if (level < 59) AddBuff(caster, 1569); //regrowth of grove 58 /grpp
-									else AddBuff(caster, 2520); //nature's recov - 60
+									if (level < 35) AddBuff(caster, 144, 200, 60); //regeneration 34
+									else if (level < 40) AddBuff(caster, 137, 200, 60); //pack regen 39
+									else if (level < 43) AddBuff(caster, 145, 200, 60); //chloro 42
+									else if (level < 46) AddBuff(caster, 138, 200, 60); //pack chloro 45
+									else if (level < 55) AddBuff(caster, 1568, 200, 60); //regrowuth 54
+									else if (level < 59) AddBuff(caster, 1569, 200, 60); //regrowth of grove 58 /grpp
+									else AddBuff(caster, 2520, 200, 60); //nature's recov - 60
 								}
 								if (rank > 1) { //cold/fire resist
 									if (level < 20) {
-										AddBuff(caster, 224); //endure fire 1
-										AddBuff(caster, 225); //endure cold 9
-										AddBuff(caster, 226); //endure disease 19
-										AddBuff(caster, 227); //endure poison 19
-										AddBuff(caster, 228); //endure magic 34
+										AddBuff(caster, 224, 200, 60); //endure fire 1
+										AddBuff(caster, 225, 200, 60); //endure cold 9
+										AddBuff(caster, 226, 200, 60); //endure disease 19
+										AddBuff(caster, 227, 200, 60); //endure poison 19
+										AddBuff(caster, 228, 200, 60); //endure magic 34
 									}
 									else if (level < 50) {
-										AddBuff(caster, 60); //resist fire 20
-										AddBuff(caster, 61); //resist cold 30
-										AddBuff(caster, 64); //resist magic 49
-										AddBuff(caster, 226); //endure disease 19
-										AddBuff(caster, 227); //endure poison 19
+										AddBuff(caster, 60, 200, 60); //resist fire 20
+										AddBuff(caster, 61, 200, 60); //resist cold 30
+										AddBuff(caster, 64, 200, 60); //resist magic 49
+										AddBuff(caster, 226, 200, 60); //endure disease 19
+										AddBuff(caster, 227, 200, 60); //endure poison 19
 									}
 									else {
 										//AddBuff(caster, 1551); //circle of winter 51
 									//	AddBuff(caster, 1552); //circle of summer 52
-										AddBuff(caster, 2519); //circle of seasons 58
-										AddBuff(caster, 226); //endure disease 19
-										AddBuff(caster, 227); //endure poison 19
-										AddBuff(caster, 64); //resist magic 49
+										AddBuff(caster, 2519, 200, 60); //circle of seasons 58
+										AddBuff(caster, 226, 200, 60); //endure disease 19
+										AddBuff(caster, 227, 200, 60); //endure poison 19
+										AddBuff(caster, 64, 200, 60); //resist magic 49
 									}
 								}
 								if (rank > 0) { //STR
-									if (level < 2) AddBuff(caster, 268); //str of earth 1
-									else if (level < 35) AddBuff(caster, 429); //str of stone 34
-									else AddBuff(caster, 430); //storm str 44
+									if (level < 2) AddBuff(caster, 268, 200, 60); //str of earth 1
+									else if (level < 35) AddBuff(caster, 429, 200, 60); //str of stone 34
+									else AddBuff(caster, 430, 200, 60); //storm str 44
+								}
+								if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
+								{
+									EQApplicationPacket *outapp = MakeBuffsPacket(false);
+									CastToClient()->FastQueuePacket(&outapp);
 								}
 								break;
 							}
@@ -2905,12 +2910,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			}
 			case SE_Appraisal:
 			{
-				if (caster &&
-					caster->IsClient() &&
-					caster->CastToClient()->GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0
-					) {
-				caster->AddBuff(this, 271);
-				}
+				//This is a dud.
 				break;
 			}
 			case SE_FcTimerRefresh:
@@ -4662,8 +4662,8 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 		}
 	}
 
-	if (p && p->IsClient() && buffs[slot].spellid == 16794 && p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESSALVE) > 0) {
-		uint32 rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESSALVE);
+	if (p && p->IsClient() && buffs[slot].spellid == 4796 && p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON) > 0) {
+		uint32 rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
 		auto healAmount = GetMaxHP() * 0.05f * rank;
 		p->Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
 		Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);

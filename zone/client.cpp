@@ -8806,9 +8806,9 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Spirit of the Wood\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == DRUID && i == RB_DRU_NATURESSALVE  && GetAA(aaNaturesSalve) < 1) {
-					TrainAARank(aaNaturesSalve);
-					Message(15, "You have unlocked the AA \"Nature's Salve\"! Find the hotkey in your Alternate Advancement Window.");
+				if (GetClass() == DRUID && i == RB_DRU_NATURESBOON  && GetAA(aaNaturesBoon) < 1) {
+					TrainAARank(aaNaturesBoon);
+					Message(15, "You have unlocked the AA \"Nature's Boon\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
 				if (GetClass() == DRUID && i == RB_DRU_NATURESBLESSING  && GetAA(aaNaturesBlessing) < 1) {
@@ -8968,8 +8968,13 @@ void Client::DoRestedStatus() {
 	}
 		
 	if (!FindBuff(9016)) { //Aura of Regeneration visual when you're in a rested area.
-		//AddBuff(this, 9016, 60, 1);
-		SpellOnTarget(9016, this);
+		AddBuff(this, 9016, 600, 1);
+		if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
+		{
+			EQApplicationPacket *outapp = MakeBuffsPacket(false);
+			CastToClient()->FastQueuePacket(&outapp);
+		}
+		//SpellOnTarget(9016, this);
 		//SpellFinished(9016, this);
 	}
 
@@ -10149,7 +10154,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_DRU_LIFEFLOW) return "Lifeflow";
 		else if (id == RB_DRU_SPIRITOFTHEWOOD) return "Spirit of the Wood";
 		else if (id == RB_DRU_SPIRITUALAWAKENING) return "Spiritual Awakening";
-		else if (id == RB_DRU_NATURESSALVE) return "Nature's Salve";
+		else if (id == RB_DRU_NATURESBOON) return "Nature's Boon";
 		else if (id == RB_DRU_NATURESWHISPER) return "Nature's Whisper";
 		else if (id == RB_DRU_NATURESBLESSING) return "Nature's Blessing";
 	case BARD:

@@ -1730,8 +1730,8 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 
 		if (tempid == 3274 || //virulent paralysis
 			tempid == 8190 || //convergence of spirits
-			tempid == 11267 || //spirit of the wood
-			tempid == 16794 // nature's salve
+			tempid == 3277 || //spirit of the wood
+			tempid == 4796 // nature's boon
 			) { 
 			//reset skill
 			for (y = 0; y < EFFECT_COUNT; y++)
@@ -1748,25 +1748,34 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 
 			for (y = 0; y < EFFECT_COUNT; y++)
 				sp[tempid].formula[y] = 0;
+
+			for (y = 0; y < EFFECT_COUNT; y++)
+				sp[tempid].buffduration = 0;
+
+
 			if (tempid == 3274) { //RB_SHM_VIRULENTPARALYSIS
 				sp[tempid].effectid[0] = SE_CHA;
 				sp[tempid].effectid[1] = SE_Root; //ROOT
 				sp[tempid].formula[1] = 100;
 				sp[tempid].buffduration = 2;
 			}
+
 			if (tempid == 8190) { //RB_DRU_CONVERGENCEOFSPIRITS
 				sp[tempid].buffduration = 1;
 			}
-			if (tempid == 11267) { //RB_DRU_SPIRITOFTHEWOOD
+
+			if (tempid == 3277) { //RB_DRU_SPIRITOFTHEWOOD
 				//Just give 1 hp, so it casts.
 				sp[tempid].effectid[0] = SE_CurrentHP;
 				sp[tempid].base[0] = 1;
 			}
-			if (tempid == 16794) { //RB_DRU_NATURESSALVE
+			if (tempid == 4796) { //RB_DRU_NATURESBOON
+				sp[tempid].targettype = ST_Target;
 				sp[tempid].effectid[0] = SE_CurrentHP;
-				sp[tempid].base[0] = 1; //1 hp tick				
+				sp[tempid].base[0] = 1; //1 hp tick
 				sp[tempid].buffduration = 1; //1 tick by default
 			}
+
 			if (tempid == 23586) { //RB_DRU_NATURESBLESSING
 				sp[tempid].effectid[0] = SE_CurrentHP;
 				sp[tempid].base[0] = 1; //1 hp tick

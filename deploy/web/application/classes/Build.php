@@ -510,7 +510,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lifeflow";
-			$newSkill->desc = 'While an ally has Covergence of Spirits or Nature\'s Salve buff on them, they are granted a <em data-base="1">1</em>% death save chance, healing for 8000 hitpoints<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While an ally has Covergence of Spirits or Nature\'s Boon buff on them, they are granted a <em data-base="1">1</em>% death save chance, healing for 8000 hitpoints<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[22] = $newSkill;
 
@@ -528,8 +528,8 @@ class Build {
 			$skills[26] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Nature's Salve";
-			$newSkill->desc = 'Grants the Nature\'s Salve AA, where the target receives a buff that lasts 84 seconds, giving the target Level * 10 hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="5">5</em>% of their max hitpoints<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Nature's Boon";
+			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, giving the target Level * 10 hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="5">5</em>% of their max hitpoints<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[28] = $newSkill;
 
