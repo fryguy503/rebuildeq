@@ -432,7 +432,7 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Fading Memories";
 			$newSkill->desc = 'Grants the Fading Memories AA, allowing you to escape all aggressions towards you, the mana cost is reduced by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/grb-brd-fadingmemories.png";	
+			$newSkill->image = "/images/builds/icons/rb-brd-fadingmemories.png";	
 			$skills[52] = $newSkill;
 
 			break;
