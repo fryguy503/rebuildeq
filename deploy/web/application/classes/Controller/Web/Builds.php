@@ -82,7 +82,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 		$this->template->site->title = $build->fullName;
 		$this->template->fullName = $build->fullName;
 		$this->template->classDescription = $build->desc;
-		$this->template->site->description = $build->desc;
+		$this->template->site->description = strip_tags($build->desc);
 	}
 
 }
