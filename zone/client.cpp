@@ -9302,7 +9302,7 @@ void Client::EmoteEncounter() {
 	//Froglok anywhere, but only if your faction is low enough
 	
 	if (FactionLevelRaw(106) > FACTION_DUBIOUS) {
-		pool += 100;
+		pool += 10;
 		encounterTable[pool] = EN_FROGLOK;
 	}
 	if (FactionLevelRaw(66) > FACTION_DUBIOUS) {
