@@ -1277,7 +1277,7 @@ public:
 	int GiveWeaponBoxReward(int minimumRarity = 0);
 	bool IsValidItem(int itemid);
 	void ResetBuild();
-	FACTION_VALUE Client::FactionLevelRaw(int32 faction_id);
+	FACTION_VALUE FactionLevelRaw(int32 faction_id);
 
 protected:
 	friend class Mob;
