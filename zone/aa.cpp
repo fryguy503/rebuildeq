@@ -1147,6 +1147,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaCannibalization && GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE) < 1 ||
 		rank_id == aaParagonofSpirit && GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT) < 1 ||
 		rank_id == aaBoastfulBellow && GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW) < 1 ||
+		rank_id == aaCacophony && GetBuildRank(BARD, RB_BRD_CACOPHONY) < 1 ||
+		rank_id == aaDanceofBlades && GetBuildRank(BARD, RB_BRD_DANCEOFBLADES) < 1 ||
 		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
 		rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) < 1 ||
 		rank_id == aaConvergenceofSpirits && GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) < 1 ||
