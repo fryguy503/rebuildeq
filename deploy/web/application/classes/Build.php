@@ -516,7 +516,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit of the Wood";
-			$newSkill->desc = 'Grants the Spirit of the Wood AA, which casts buffs scaled based on your level.<br>Rank 1: Strength<br>Rank 2: Resists Buffs<br>Rank 3: HP Regen<br>Rank 4: HP (Wood Line)<br>Rank 5: Damage Shield';
+			$newSkill->desc = 'Grants the Spirit of the Wood AA, which casts buffs scaled based on your level.<br>Rank 1: Strength<br>Rank 2: Resists<br>Rank 3: HP Regen<br>Rank 4: HP (Wood Line)<br>Rank 5: Damage Shield';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[24] = $newSkill;			
 
@@ -535,7 +535,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Nature's Whisper";
-			$newSkill->desc = 'While a target is affected by Nature\'s Promise or Convergence of Spirits, they also regain <em data-base="1">1</em>% of any healing done from these spells as mana.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While a target is affected by Nature\'s Boon or Convergence of Spirits, they also regain <em data-base="1">1</em>% of any healing done from these spells as mana.<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[31] = $newSkill;
 
