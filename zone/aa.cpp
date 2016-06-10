@@ -1154,7 +1154,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaConvergenceofSpirits && GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) < 1 ||
 		rank_id == aaSpiritoftheWood && GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) < 1 ||
 		rank_id == aaNaturesBoon && GetBuildRank(DRUID, RB_DRU_NATURESBOON) < 1 ||
-		rank_id == aaNaturesBlessing && GetBuildRank(DRUID, RB_DRU_NATURESBLESSING) < 1 ||
+		rank_id == aaNaturesGuardian && GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN) < 1 ||
 		( //Lesson of the Devoted is used by multiple classes different builds
 			rank_id == aaLessonoftheDevoted && 
 				GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
@@ -1248,6 +1248,9 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 				cooldown = 20;
 			}
 		}
+	}
+	if (rank_id == aaConvergenceofSpirits) {
+		manacost = GetMaxMana() * 0.05f; //5% of mana for cos
 	}
 
 	if (rank_id == aaHandofPiety) {

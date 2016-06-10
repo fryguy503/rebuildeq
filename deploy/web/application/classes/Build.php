@@ -496,7 +496,7 @@ class Build {
 
 			//==================DRUID======================
 			case "druid":
-			/*$newSkill = new stdClass();
+			$newSkill = new stdClass();
 			$newSkill->title = "Regeneration";
 			$newSkill->desc = 'Grants the druid an innate hp regeneration of Level * 0.2 hitpoints (minimum 2) per tick, as well as any duration regeneration spells casted by the druid give <em data-base="20">20</em>% additional hitpoint regeneration per tick while in the same zone as the druid<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
@@ -510,13 +510,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lifeflow";
-			$newSkill->desc = 'While an ally has Covergence of Spirits or Nature\'s Boon buff on them, they are granted a <em data-base="1">1</em>% death save chance, healing for 8000 hitpoints<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While an ally has Covergence of Spirits or Nature\'s Boon buff on them, they are granted a <em data-base="1">1</em>% death save chance, healing when triggered for 8000 hitpoints<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[22] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit of the Wood";
-			$newSkill->desc = 'Grants the Spirit of the Wood AA, which casts buffs scaled based on your level.<br>Rank 1: +STR<br>Rank 2: +Resists<br>Rank 3: +HP regeneration<br>Rank 4: +HP<br>Rank 5: +Damage Shield';
+			$newSkill->desc = 'Grants the Spirit of the Wood AA, which casts buffs scaled based on your level.<br>Rank 1: Strength<br>Rank 2: Resists Buffs<br>Rank 3: HP Regen<br>Rank 4: HP (Wood Line)<br>Rank 5: Damage Shield';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[24] = $newSkill;			
 
@@ -529,7 +529,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Nature's Boon";
-			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, giving the target Level * 10 hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="5">5</em>% of their max hitpoints<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, giving the target (Level) hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="5">5</em>% of their max hitpoints<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[28] = $newSkill;
 
@@ -540,11 +540,11 @@ class Build {
 			$skills[31] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Nature's Blessing";
-			$newSkill->desc = 'Grants the Nature\'s Blessing AA, where <em data-base="1">1</em>% of the caster\'s current mana is infused by nature and can be transferred to a target or to the caster<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Nature's Guardian";
+			$newSkill->desc = 'Grants the Nature\'s Guardian AA, where <em data-base="3">3</em>% of the caster\'s current mana is infused by nature and can be transferred to a target or to the caster<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[34] = $newSkill;
-*/
+
 			break;
 			
 			//==================ENCHANTER======================

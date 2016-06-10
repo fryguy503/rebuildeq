@@ -1752,6 +1752,7 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 			for (y = 0; y < EFFECT_COUNT; y++)
 				sp[tempid].buffduration = 0;
 
+			memset(sp[tempid].teleport_zone, 0, sizeof(sp[tempid].teleport_zone));
 
 			if (tempid == 3274) { //RB_SHM_VIRULENTPARALYSIS
 				sp[tempid].effectid[0] = SE_CHA;
@@ -1760,9 +1761,6 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 				sp[tempid].buffduration = 2;
 			}
 
-			if (tempid == 8190) { //RB_DRU_CONVERGENCEOFSPIRITS
-				sp[tempid].buffduration = 1;
-			}
 
 			if (tempid == 3277) { //RB_DRU_SPIRITOFTHEWOOD
 				//Just give 1 hp, so it casts.
@@ -1771,14 +1769,15 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 			}
 			if (tempid == 4796) { //RB_DRU_NATURESBOON
 				sp[tempid].targettype = ST_Target;
-				sp[tempid].effectid[0] = SE_CurrentHP;
+				sp[tempid].effectid[0] = SE_HealOverTime;
 				sp[tempid].base[0] = 1; //1 hp tick
 				sp[tempid].buffduration = 1; //1 tick by default
 			}
 
-			if (tempid == 23586) { //RB_DRU_NATURESBLESSING
+			if (tempid == 8193) { //RB_DRU_NATURESGUARDIAN
 				sp[tempid].effectid[0] = SE_CurrentHP;
 				sp[tempid].base[0] = 1; //1 hp tick
+				sp[tempid].buffduration = 6; //1 tick
 			}
 		}
     }

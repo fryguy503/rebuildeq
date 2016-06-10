@@ -2802,7 +2802,7 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 			duration += bonusDuration;
 		}
 		rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
-		if (rank > 0 && spell_id == 16794) {
+		if (rank > 0 && spell_id == 4796) {
 			duration = 14 - (rank * 2);
 		}
 
@@ -3289,6 +3289,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		duration += 600;
 	}
 
+	
 	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) > 0 && spell_id == 6241) {
 		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON);
 	}

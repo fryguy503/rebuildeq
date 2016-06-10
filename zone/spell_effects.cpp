@@ -211,7 +211,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 #ifdef SPELL_EFFECT_SPAM
 		effect_desc[0] = 0;
 #endif
-
+		Log.Out(Logs::General, Logs::Spells, "spell %i effect slot: %i, SE: %i, buffslot: %i", spell_id, i, effect, buffslot);
 		switch(effect)
 		{
 			case SE_CurrentHP:	// nukes, heals; also regen/dot if a buff
@@ -225,8 +225,26 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				uint16 rank;
 
 				
+				if (caster) {
+					if (caster->IsClient()) { //Ensure caster is client for these mechanics
+						Client * casterClient = caster->CastToClient();
+
+						rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN);
+						if (rank > 0 && spell_id == 8193 && IsClient()) { //This only works on player characters.
+							int32 mana_amount = casterClient->GetMana() * (0.03f * rank);
+							if (mana_amount < 1) mana_amount = 1;
+							if (casterClient != this) casterClient->Message(MT_NonMelee, "Nature's Guardian %u gifted %i mana to %s.", rank, mana_amount, GetCleanName());
+							Message(MT_NonMelee, "%s's Nature's Guardian %u gifted %i mana.", casterClient->GetCleanName(), rank, mana_amount);
+							SetMana(GetMana() + mana_amount);
+							break;
+						}
+					}
+				}
+
+
 				// for offensive spells check if we have a spell rune on
 				int32 dmg = effect_value;
+				Log.Out(Logs::General, Logs::Spells, "Current HP trigger for spell %i and dmg %i", spell_id, dmg);
 				if(dmg < 0)
 				{
 					if (!PassCastRestriction(false, spells[spell_id].base2[i], true))
@@ -240,34 +258,14 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 						if (caster->IsClient()) {
 							Client * casterClient = caster->CastToClient();
+							
 
-							uint32 rank;
-							rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESBLESSING);
-							if (rank > 0 && spell_id == 23586) {								
-								auto manaAmount = casterClient->GetMana() * (0.01f * rank);
-								if (manaAmount < 1) manaAmount = 1;
-								if (casterClient != this) casterClient->Message(MT_NonMelee, "Nature's Blessing %u gifted %i mana to %s.", rank, manaAmount, GetCleanName());
-								Message(MT_NonMelee, "%s's Nature's Blessing %u gifted %i mana.", casterClient->GetCleanName(), rank, manaAmount);
-								SetMana(GetMana() + manaAmount);
-							}
-
-							rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
-							if (rank > 0 && spell_id == 16794) {
-								auto healAmount = GetLevel() * 10;
-								casterClient->Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
-								HealDamage(healAmount, caster);
-								rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
-								if (rank > 0) {
-									auto manaAmount = healAmount * (0.01f * rank);
-									if (manaAmount < 1) manaAmount = 1;
-									Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, manaAmount);
-									SetMana(GetMana() + manaAmount);
-								}
-							}
+						
 
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE);
 							if (spell_id == 2749 &&	rank > 0) {
 								int damageAmount = casterClient->GetHP() * 0.05f * rank;
+								if (damageAmount < 1) damageAmount = 1;
 								dmg = -damageAmount;
 								int manaAmount = damageAmount * 0.1f * rank;
 								casterClient->SetMana(caster->GetMana() + manaAmount);
@@ -279,6 +277,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								static const float BaseDamageBonus = 0.25f;		// 25% per rank
 
 								int bonusDamage = rank * BaseDamageBonus * dmg;
+								if (bonusDamage < 1) bonusDamage = 1;
 								casterClient->Message(MT_NonMelee, "Chosen %u added %i bonus damage.", rank, -bonusDamage);
 
 								dmg -= bonusDamage;
@@ -299,6 +298,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								if (roll <= reqRoll) {
 									int healAmount = rank * BaseHealth * dmg;
 									int manaAmount = rank * BaseMana;
+									if (healAmount < 1) healAmount = 1;
+									if (manaAmount < 1) manaAmount = 1;
 
 									casterClient->Message(MT_NonMelee, "Elixir of Might %u gifted %i health and %i mana.", rank, healAmount, manaAmount);
 
@@ -313,6 +314,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								static const float BaseBonusDamage = 0.2f;			// 20% per rank.
 
 								int bonusDamage = rank * BaseBonusDamage * dmg;
+								if (bonusDamage < 1) bonusDamage = 1;
 								casterClient->Message(MT_NonMelee, "Flame of Light %u added %i bonus damage.", rank, -bonusDamage);
 
 								dmg += bonusDamage;
@@ -377,8 +379,18 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						break;
 					
 					if (caster) {
-						if (caster->IsClient() && this->IsClient()) { //Ensure caster and player is client for these mechanics
+						if (caster->IsClient()) { //Ensure caster is client for these mechanics
 							Client * casterClient = caster->CastToClient();
+
+							rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN);
+							if (rank > 0 && spell_id == 8193 && IsClient()) { //This only works on player characters.
+								int32 mana_amount = casterClient->GetMana() * (0.01f * rank);
+								if (mana_amount < 1) mana_amount = 1;
+								if (casterClient != this) casterClient->Message(MT_NonMelee, "Nature's Guardian %u gifted %i mana to %s.", rank, mana_amount, GetCleanName());
+								Message(MT_NonMelee, "%s's Nature's Guardian %u gifted %i mana.", casterClient->GetCleanName(), rank, mana_amount);
+								SetMana(GetMana() + mana_amount);
+								break;
+							}
 
 							//Spirit of the Wood
 							if (spell_id == 3277 && casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) > 0) {
@@ -4001,44 +4013,114 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 			if (caster)
 				effect_value = caster->GetActSpellHealing(buff.spellid, effect_value);
 
-			if (caster->IsClient() && caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SOULCLEANSING) > 0 &&
-				(buff.spellid == 3683 || buff.spellid == 1283) && 
-				zone->random.Roll((int)(caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SOULCLEANSING) * 2))) { //2%
-				int buff_count = GetMaxTotalSlots();
-				for (int j = 0; j < buff_count; j++) {
-					if (!IsValidSpell(buffs[j].spellid))
-						continue;
-					if (CalculatePoisonCounters(buffs[j].spellid) > 0) {
-						caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
-						caster->CastOnCurer(buffs[j].spellid);
-						CastOnCure(buffs[j].spellid);
-						buffs[j].counters = 0;
-						BuffFadeBySlot(j);
-						break;
+			uint16 rank;
+
+			if (caster->IsClient()) {
+
+
+				rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
+				if (rank > 0 && buff.spellid == 8190) {
+
+					int32 heal_amount = GetMaxHP() * 0.005f * rank; //figure out potential heal amount
+					if (heal_amount < 1) heal_amount = 1;
+					int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
+					int32 amount_healed = 0; //this was real amount healed
+
+					if (amount_to_heal <= heal_amount) {
+						amount_healed = amount_to_heal;
 					}
-					if (CalculateCorruptionCounters(buffs[j].spellid) > 0) {
-						caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
-						caster->CastOnCurer(buffs[j].spellid);
-						CastOnCure(buffs[j].spellid);
-						buffs[j].counters = 0;
-						BuffFadeBySlot(j);
-						break;
+					else {
+						amount_healed = heal_amount;
 					}
-					if (CalculateDiseaseCounters(buffs[j].spellid) > 0) {
-						caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
-						caster->CastOnCurer(buffs[j].spellid);
-						CastOnCure(buffs[j].spellid);
-						buffs[j].counters = 0;
-						BuffFadeBySlot(j);
-						break;
+
+					if (amount_healed > 0) { //if any healing was done, display
+						if (caster != this) caster->Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
+						//Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+						HealDamage(amount_healed, caster);
+
+						rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
+						if (rank > 0) {
+							int32 mana_amount = amount_healed * (0.01f * rank);
+							if (mana_amount < 1) mana_amount = 1;
+							if (caster != this) caster->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+							Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+							SetMana(GetMana() + mana_amount);
+						}
 					}
-					if (CalculateCurseCounters(buffs[j].spellid) > 0) {
-						caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
-						caster->CastOnCurer(buffs[j].spellid);
-						CastOnCure(buffs[j].spellid);
-						buffs[j].counters = 0;
-						BuffFadeBySlot(j);
-						break;
+					break;
+				}
+
+				rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
+				if (rank > 0 && buff.spellid == 4796) {
+
+					int32 heal_amount = GetLevel(); //figure out potential heal amount
+					if (heal_amount < 1) heal_amount = 1;
+					int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
+					int32 amount_healed = 0; //this was real amount healed
+
+					if (amount_to_heal <= heal_amount) {
+						amount_healed = amount_to_heal;
+					}
+					else {
+						amount_healed = heal_amount;
+					}
+
+					if (amount_healed > 0) { //if any healing was done, display
+						if (caster != this) caster->Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+						//Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+						HealDamage(amount_healed, caster);
+
+						rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
+						if (rank > 0) {
+							int32 mana_amount = amount_healed * (0.01f * rank);
+							if (mana_amount < 1) mana_amount = 1;
+							if (caster != this) caster->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+							Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+							SetMana(GetMana() + mana_amount);
+						}
+					}
+					break;
+				}
+
+				if (caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SOULCLEANSING) > 0 &&
+					(buff.spellid == 3683 || buff.spellid == 1283) &&
+					zone->random.Roll((int)(caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SOULCLEANSING) * 2))) { //2%
+					int buff_count = GetMaxTotalSlots();
+					for (int j = 0; j < buff_count; j++) {
+						if (!IsValidSpell(buffs[j].spellid))
+							continue;
+						if (CalculatePoisonCounters(buffs[j].spellid) > 0) {
+							caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
+							caster->CastOnCurer(buffs[j].spellid);
+							CastOnCure(buffs[j].spellid);
+							buffs[j].counters = 0;
+							BuffFadeBySlot(j);
+							break;
+						}
+						if (CalculateCorruptionCounters(buffs[j].spellid) > 0) {
+							caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
+							caster->CastOnCurer(buffs[j].spellid);
+							CastOnCure(buffs[j].spellid);
+							buffs[j].counters = 0;
+							BuffFadeBySlot(j);
+							break;
+						}
+						if (CalculateDiseaseCounters(buffs[j].spellid) > 0) {
+							caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
+							caster->CastOnCurer(buffs[j].spellid);
+							CastOnCure(buffs[j].spellid);
+							buffs[j].counters = 0;
+							BuffFadeBySlot(j);
+							break;
+						}
+						if (CalculateCurseCounters(buffs[j].spellid) > 0) {
+							caster->Message(MT_Spells, "You have cured your target of %s!", spells[buffs[j].spellid].name);
+							caster->CastOnCurer(buffs[j].spellid);
+							CastOnCure(buffs[j].spellid);
+							buffs[j].counters = 0;
+							BuffFadeBySlot(j);
+							break;
+						}
 					}
 				}
 			}
@@ -4662,18 +4744,66 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 		}
 	}
 
+	Log.Out(Logs::General, Logs::Spells, "Buff Fade By Slot %i spellid %i", slot, buffs[slot].spellid);
+	if (p && p->IsClient() && buffs[slot].spellid == 8190 && p->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) > 0) {
+		
+		uint32 rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
+		int32 heal_amount = GetMaxHP() * 0.005f * rank; //figure out potential heal amount
+		if (heal_amount < 1) heal_amount = 1;
+		int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
+		int32 amount_healed = 0; //this was real amount healed
+
+		if (amount_to_heal <= heal_amount) {
+			amount_healed = amount_to_heal;
+		}
+		else {
+			amount_healed = heal_amount;
+		}
+
+		if (amount_healed > 0) { //if any healing was done, display
+			if (p != this) p->Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
+			Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
+			HealDamage(amount_healed, p);
+
+			rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
+			if (rank > 0) {
+
+				int32 mana_amount = amount_healed * (0.01f * rank);
+				if (mana_amount < 1) mana_amount = 1;
+				Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+				SetMana(GetMana() + mana_amount);
+			}
+		}
+	}
+
 	if (p && p->IsClient() && buffs[slot].spellid == 4796 && p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON) > 0) {
-		uint32 rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
-		auto healAmount = GetMaxHP() * 0.05f * rank;
-		p->Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
-		Message(MT_NonMelee, "Nature's Salve %u healed for %i points of damage.", rank, healAmount);
-		HealDamage(healAmount, p);
-		rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
-		if (rank > 0) {
-			auto manaAmount = healAmount * (0.01f * rank);
-			if (manaAmount < 1) manaAmount = 1;
-			Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, manaAmount);
-			SetMana(GetMana() + manaAmount);
+		
+		uint32 rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);		
+		int32 heal_amount = GetMaxHP() * 0.05f * rank; //figure out potential heal amount
+		if (heal_amount < 1) heal_amount = 1;
+		int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
+		int32 amount_healed = 0; //this was real amount healed
+		
+		if (amount_to_heal <= heal_amount) {
+			amount_healed = amount_to_heal;
+		}
+		else {
+			amount_healed = heal_amount;
+		}
+
+		if (amount_healed > 0) { //if any healing was done, display
+			if (p != this) p->Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+			Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+			HealDamage(amount_healed, p);
+
+			rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
+			if (rank > 0) {
+
+				int32 mana_amount = amount_healed * (0.01f * rank);
+				if (mana_amount < 1) mana_amount = 1;
+				Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+				SetMana(GetMana() + mana_amount);
+			}
 		}
 	}
 

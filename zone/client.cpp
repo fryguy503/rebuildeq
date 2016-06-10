@@ -8811,9 +8811,9 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Nature's Boon\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == DRUID && i == RB_DRU_NATURESBLESSING  && GetAA(aaNaturesBlessing) < 1) {
-					TrainAARank(aaNaturesBlessing);
-					Message(15, "You have unlocked the AA \"Nature's Blessing\"! Find the hotkey in your Alternate Advancement Window.");
+				if (GetClass() == DRUID && i == RB_DRU_NATURESGUARDIAN  && GetAA(aaNaturesGuardian) < 1) {
+					TrainAARank(aaNaturesGuardian);
+					Message(15, "You have unlocked the AA \"Nature's Guardian\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
 				
@@ -10160,7 +10160,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_DRU_SPIRITUALAWAKENING) return "Spiritual Awakening";
 		else if (id == RB_DRU_NATURESBOON) return "Nature's Boon";
 		else if (id == RB_DRU_NATURESWHISPER) return "Nature's Whisper";
-		else if (id == RB_DRU_NATURESBLESSING) return "Nature's Blessing";
+		else if (id == RB_DRU_NATURESGUARDIAN) return "Nature's Guardian";
 	case BARD:
 		if (id == RB_BRD_ELEMENTALHARMONY) return "Elemental Harmony";
 		else if (id == RB_BRD_HEALINGTREBLE) return "Healing Treble";
@@ -10275,7 +10275,6 @@ bool Client::IsSwornEnemyActive() {
 
 bool Client::IsBuildAvailable() {
 	if (GetClass() == CLERIC ||
-		GetClass() == DRUID ||
 		GetClass() == ENCHANTER ||
 		GetClass() == MAGICIAN ||
 		GetClass() == MONK ||
