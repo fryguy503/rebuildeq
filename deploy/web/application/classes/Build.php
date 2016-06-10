@@ -565,7 +565,7 @@ class Build {
 			$skills[40] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Blessing of Ro";
+			$newSkill->title = "Blessing of Ro TODO";
 			$newSkill->desc = 'All Ro debuffs reduce an additional (Level * rank) AC.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[42] = $newSkill;
@@ -573,7 +573,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Whirling Disaster";
-			$newSkill->desc = 'Direct Damage spells now also have a <em data-base="2">2</em>% chance to stun a target<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Direct Damage spells now also have a <em data-base="2">2</em>% chance to stun a target for 2 seconds<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[44] = $newSkill;
 

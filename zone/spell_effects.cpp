@@ -277,6 +277,34 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									else AddBuff(caster, 239, 2);
 								}
 							}
+
+							rank = casterClient->GetBuildRank(DRUID, RB_DRU_WHIRLINGDISASTER);
+							if (rank > 0 &&
+								(spell_id == 239 || spell_id == 93 || spell_id == 92 || spell_id == 252 || spell_id == 91 || spell_id == 419 || spell_id == 52 || spell_id == 405 || spell_id == 27 || spell_id == 115 || spell_id == 217 || spell_id == 1439 || spell_id == 406 || spell_id == 418 || spell_id == 664 || spell_id == 57 || spell_id == 1436 || spell_id == 29 || spell_id == 420 || spell_id == 433 || spell_id == 671 || spell_id == 1603 || spell_id == 1529 || spell_id == 1605 || spell_id == 2518 || spell_id == 1606 || spell_id == 1607 || spell_id == 2126 || spell_id == 2877)) {
+								if (zone->random.Roll(2 * rank)) {
+									if ((GetSpecialAbility(UNSTUNABLE) ||
+										(caster && (!caster->IsNPC() ||
+											(caster->IsNPC() && !RuleB(Spells, NPCIgnoreBaseImmunity))))))
+									{
+										caster->Message_StringID(MT_SpellFailure, IMMUNE_STUN);
+									}
+									else {
+										if (caster->IsClient() && IsNPC()) {
+											AddToHateList(caster, uint32(2 * 50)); //add 50 aggro for each second of stun
+										}
+
+										int stun_resist = itembonuses.StunResist + spellbonuses.StunResist;
+										if (IsClient())
+											stun_resist += aabonuses.StunResist;
+
+										if (stun_resist <= 0 || zone->random.Int(0, 99) >= stun_resist) {
+											caster->Message(MT_NonMelee, "Whirling Disaster %u stunned %s.", rank, GetCleanName());
+											Stun(2);
+										}
+									}
+								}
+							}
+
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE);
 							if (spell_id == 2749 &&	rank > 0) {
 								int damageAmount = casterClient->GetHP() * 0.05f * rank;

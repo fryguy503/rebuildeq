@@ -8825,10 +8825,7 @@ void Client::RefreshBuild() {
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
-				if (GetClass() == DRUID && i == RB_DRU_NATURESGUARDIAN  && GetAA(aaBlessingofRo) < 1) {
-					TrainAARank(aaBlessingofRo);
-					Message(15, "You have unlocked the AA \"Blessing of Ro\"! Find the hotkey in your Alternate Advancement Window.");
-				}
+			
 
 				
 				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
