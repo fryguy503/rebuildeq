@@ -3305,6 +3305,9 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(BARD, RB_BRD_KINSONG) > 0 && spell_id == 6239) {
 		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(BARD, RB_BRD_KINSONG);
 	}
+	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) > 0 && spell_id == 6239) {
+		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT);
+	}
 	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) > 0 && spell_id == 8190) {
 		duration = 1 * caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
 	}

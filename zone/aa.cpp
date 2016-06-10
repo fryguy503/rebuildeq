@@ -1385,6 +1385,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			spellid = 6241;
 		} else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) > 0) {
 			spellid = 6240;
+		} else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) > 0) {
+			spellid = 6237;
 		}
 	}
 

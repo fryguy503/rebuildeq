@@ -4481,7 +4481,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 
 		parse->EventSpell(EVENT_SPELL_FADE, CastToNPC(), nullptr, buffs[slot].spellid, slot, &args);
 	}
-
+	bool root_faded = false;
 	for (int i=0; i < EFFECT_COUNT; i++)
 	{
 		if(IsBlankSpellEffect(buffs[slot].spellid, i))
@@ -4688,9 +4688,10 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 			}
 
 			case SE_Root:
-			{
+			{				
 				buffs[slot].RootBreakChance = 0;
 				rooted = false;
+				root_faded = true;
 				break;
 			}
 
@@ -4827,33 +4828,41 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 	}
 
 	Log.Out(Logs::General, Logs::Spells, "Buff Fade By Slot %i spellid %i", slot, buffs[slot].spellid);
-	if (p && p->IsClient() && buffs[slot].spellid == 8190 && p->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) > 0) {
-		
-		uint32 rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
-		int32 heal_amount = GetMaxHP() * 0.005f * rank; //figure out potential heal amount
-		if (heal_amount < 1) heal_amount = 1;
-		int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
-		int32 amount_healed = 0; //this was real amount healed
-
-		if (amount_to_heal <= heal_amount) {
-			amount_healed = amount_to_heal;
-		}
-		else {
-			amount_healed = heal_amount;
+	uint16 rank;
+	if (p && p->IsClient()) {
+		rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_DEEPROOTS);
+		if (root_faded && rank > 0 && zone->random.Roll(rank * 3)) {
+			if (p->GetLevel() > 25) AddBuff(p, 512);
+			else AddBuff(p, 242);
 		}
 
-		if (amount_healed > 0) { //if any healing was done, display
-			if (p != this) p->Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
-			Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
-			HealDamage(amount_healed, p);
+		rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
+		if (buffs[slot].spellid == 8190 && rank > 0) {			
+			int32 heal_amount = GetMaxHP() * 0.005f * rank; //figure out potential heal amount
+			if (heal_amount < 1) heal_amount = 1;
+			int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
+			int32 amount_healed = 0; //this was real amount healed
 
-			rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
-			if (rank > 0) {
+			if (amount_to_heal <= heal_amount) {
+				amount_healed = amount_to_heal;
+			}
+			else {
+				amount_healed = heal_amount;
+			}
 
-				int32 mana_amount = amount_healed * (0.01f * rank);
-				if (mana_amount < 1) mana_amount = 1;
-				Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
-				SetMana(GetMana() + mana_amount);
+			if (amount_healed > 0) { //if any healing was done, display
+				if (p != this) p->Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
+				Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
+				HealDamage(amount_healed, p);
+
+				rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
+				if (rank > 0) {
+
+					int32 mana_amount = amount_healed * (0.01f * rank);
+					if (mana_amount < 1) mana_amount = 1;
+					Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+					SetMana(GetMana() + mana_amount);
+				}
 			}
 		}
 	}

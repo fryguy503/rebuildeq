@@ -64,14 +64,19 @@ int32 Mob::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 		chance += itembonuses.CriticalSpellChance + spellbonuses.CriticalSpellChance + aabonuses.CriticalSpellChance;
 		chance += itembonuses.FrenziedDevastation + spellbonuses.FrenziedDevastation + aabonuses.FrenziedDevastation;
 
-
-	//Shin: Added crit chance based on Festering Spear build spec
-	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR) > 0) {
-		if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
-			chance = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
+	uint16 rank;
+	if (IsClient()) {
+		rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
+		if (rank > 0) {
+			if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
+				chance = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
+			}
+		}
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_STINGINAFFLICTION);
+		if (rank > 0) {
+			chance = rank;
 		}
 	}
-
 	//Crtical Hit Calculation pathway
 	if (chance > 0 || (IsClient() && GetClass() == WIZARD && GetLevel() >= RuleI(Spells, WizCritLevel))) {
 
@@ -179,6 +184,16 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 	int32 value_BaseEffect = 0;
 	int32 extra_dmg = 0;
 	int16 chance = 0;
+
+
+	uint16 rank;
+	if (IsClient()) {		
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_STINGINAFFLICTION);
+		if (rank > 0) {
+			chance = rank;
+		}
+	}
+
 	chance += itembonuses.CriticalDoTChance + spellbonuses.CriticalDoTChance + aabonuses.CriticalDoTChance;
 
 	if (spellbonuses.CriticalDotDecay)
