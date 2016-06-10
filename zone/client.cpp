@@ -8816,6 +8816,16 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Nature's Guardian\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == DRUID && i == RB_DRU_WRATHOFTHEWILD  && GetAA(aaWrathoftheWild) < 1) {
+					TrainAARank(aaWrathoftheWild);
+					Message(15, "You have unlocked the AA \"Wrath of the Wild\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == DRUID && i == RB_DRU_NATURESBLIGHT  && GetAA(aaLessonoftheDevoted) < 1) {
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				
 				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
 					TrainAARank(aaDeathPeace2);
@@ -10161,6 +10171,15 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_DRU_NATURESBOON) return "Nature's Boon";
 		else if (id == RB_DRU_NATURESWHISPER) return "Nature's Whisper";
 		else if (id == RB_DRU_NATURESGUARDIAN) return "Nature's Guardian";
+		else if (id == RB_DRU_WRATHOFTHEWILD) return "Wrath of the Wild";
+		else if (id == RB_DRU_LINGERINGPAIN) return "Lingering Pain";
+		else if (id == RB_DRU_FOCUSEDSWARM) return "Focused Swarm";
+		else if (id == RB_DRU_BLESSINGOFRO) return "Blessing of Ro";
+		else if (id == RB_DRU_WHIRLINGDISASTER) return "Whirling Disaster";
+		else if (id == RB_DRU_STINGINAFFLICTION) return "Stingin Affliction";
+		else if (id == RB_DRU_DEEPROOTS) return "Deep Roots";
+		else if (id == RB_DRU_NATURESBLIGHT) return "Natures Blight";
+
 	case BARD:
 		if (id == RB_BRD_ELEMENTALHARMONY) return "Elemental Harmony";
 		else if (id == RB_BRD_HEALINGTREBLE) return "Healing Treble";

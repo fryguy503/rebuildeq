@@ -4035,7 +4035,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 					if (amount_healed > 0) { //if any healing was done, display
 						if (caster != this) caster->Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
-						//Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+						Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
 						HealDamage(amount_healed, caster);
 
 						rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
@@ -4067,7 +4067,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 					if (amount_healed > 0) { //if any healing was done, display
 						if (caster != this) caster->Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
-						//Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+						Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
 						HealDamage(amount_healed, caster);
 
 						rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);

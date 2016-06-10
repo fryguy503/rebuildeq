@@ -545,6 +545,54 @@ class Build {
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[34] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Wrath of the Wild";
+			$newSkill->desc = 'Grants the Wrath of the Wild AA, granting a damage that deals (Level * Rank) damage in one hit.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[36] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Lingering Pain";
+			$newSkill->desc = 'When a direct spell is casted, there is a <em data-base="3">3</em>% that a short duration DoT will also affect the target<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[38] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Focused Swarm";
+			$newSkill->desc = 'When standing nearby a mob, DoTs now deal  <em data-base="10">10</em>% more damage. This damage bonus reduces by 10% for every 50m you\'re away from an enemy.<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[40] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Blessing of Ro";
+			$newSkill->desc = 'Grants the Blessing of Ro debuff, which reduces magic and fire resists of a target by (Level * rank).';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[42] = $newSkill;
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Whirling Disaster";
+			$newSkill->desc = 'Direct Damage spells now also have a <em data-base="2">2</em>% chance to stun a target<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[44] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Stinging Affliction";
+			$newSkill->desc = 'DoTs and Direct Damage spells have a <em data-base="1"></em>% chance to critical hit<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[46] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Deep Roots";
+			$newSkill->desc = 'When a root wears off, there is a <em data-base="3"></em>% chance the target will be snared if it is not already.<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[49] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Nature's Blight";
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, causing the target to take 5% increased spell damage for <em data-base="24">24</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$skills[52] = $newSkill;
 			break;
 			
 			//==================ENCHANTER======================
