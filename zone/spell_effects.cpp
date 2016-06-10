@@ -3494,6 +3494,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			{
 				if (caster && caster->IsClient()) {
 					Client * casterClient = caster->CastToClient();					
+					rank = casterClient->GetBuildRank(DRUID, RB_DRU_BLESSINGOFRO);
+					if (rank > 0 && zone->random.Roll(5 * rank)) {		
+						int infect_count = caster->hate_list.InfectNearby(caster, spell_id, (10 * rank), this, 10);
+						if (infect_count > 0) {
+							caster->Message(MT_NonMelee, "Blessing of Ro %u spread to %i nearby enemies.", rank, infect_count);
+						}
+					}
 
 					if (caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST) > 0 && (spell_id == 343 || spell_id == 2575)) {
 						uint32 dmg;
@@ -4073,10 +4080,17 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 						}
 						if (multiplier > 0) {
 							int bonus_damage = effect_value * multiplier * 0.2f * rank;
-							if (bonus_damage < 1) bonus_damage = 1;
-							caster_client->Message(MT_DoTDamage, "Focused Swarm %u dealt %i bonus damage to %s.", rank, -bonus_damage, GetCleanName());
+							if (bonus_damage > 0) bonus_damage = -1;
+							caster_client->Message(MT_DoTDamage, "Focused Swarm %u caused %i bonus damage to %s.", rank, -bonus_damage, GetCleanName());
 							effect_value += bonus_damage;
 						}
+					}
+					rank = caster_client->GetBuildRank(DRUID, RB_DRU_INTENSITY);
+					if (rank > 0 && zone->random.Roll(1 * rank)) {
+						int bonus_damage = effect_value * 3;
+						if (bonus_damage > 0) bonus_damage = -1;
+						caster_client->Message(MT_DoTDamage, "Intensity %u caused %i bonus damage to %s.", rank, -bonus_damage, GetCleanName());
+						effect_value += bonus_damage;
 					}
 				}
 				effect_value = caster->GetActDoTDamage(buff.spellid, effect_value, this);

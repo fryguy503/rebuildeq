@@ -68,6 +68,8 @@ public:
 
 	int DamageNearby(Mob * caster, int32 damage, float range, Mob * ae_center, int32 maxTargets = 0);
 
+	int InfectNearby(Mob * caster, int32 spell_id, float range, Mob * ae_center, int32 maxTargets);
+
 protected:
 	struct_HateList* Find(Mob *ent);
 private:

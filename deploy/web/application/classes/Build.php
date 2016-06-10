@@ -547,8 +547,8 @@ class Build {
 
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Wrath of the Wild TODO";
-			$newSkill->desc = 'Grants the Wrath of the Wild AA, granting a damage that deals (Level * Rank) damage in one hit.';
+			$newSkill->title = "Intensity";
+			$newSkill->desc = 'When an enemy is affected by a damage over time, there is a <em data-base="1">1</em>% chance the DoT will do triple damage on a single tick.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[36] = $newSkill;
 
@@ -565,8 +565,8 @@ class Build {
 			$skills[40] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Blessing of Ro TODO";
-			$newSkill->desc = 'All Ro debuffs reduce an additional (Level * rank) AC.';
+			$newSkill->title = "Blessing of Ro";
+			$newSkill->desc = 'All Ro debuffs now have a <em data-base="5">5</em>% chance to spread to enemies within <em data-base="10">10</em>m of an affected target if they are on the aggro list of the druid.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[42] = $newSkill;
 

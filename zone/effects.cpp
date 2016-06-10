@@ -72,7 +72,7 @@ int32 Mob::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 				chance = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
 			}
 		}
-		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_STINGINAFFLICTION);
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_STINGINGAFFLICTION);
 		if (rank > 0) {
 			chance = rank;
 		}
@@ -188,7 +188,7 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 
 	uint16 rank;
 	if (IsClient()) {		
-		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_STINGINAFFLICTION);
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_STINGINGAFFLICTION);
 		if (rank > 0) {
 			chance = rank;
 		}
