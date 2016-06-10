@@ -3885,18 +3885,6 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 	else
 		acthealed = amount;
 
-	//Shin: Blood Oath reduces healing.
-	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH) > 0) {
-		if (CastToClient()->GetEPP().blood_oath_timeout >= time(nullptr) ||
-			CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
-			CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt
-			) {
-			int reduction = (uint32)((float)acthealed * 0.1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH));
-			Message(MT_NonMelee, "Blood Oath reduced healing received by %i.", reduction);
-			acthealed -= reduction;
-		}
-	}
-	
 	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE) > 0) {
 		if (zone->random.Roll((int)(1 * caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE)))) {
 			int manaAmount = (int)((float)acthealed * (float)0.01f * (float)caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE));
