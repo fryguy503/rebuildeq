@@ -9401,7 +9401,7 @@ void Client::EmoteEncounter() {
 		encounterTable[pool] = EN_ANCIENTCYCLOPS;
 	}
 
-	if (zoneid == 14 || //skarana
+	if (//zoneid == 14 || //skarana
 		zoneid == 13 || //nkarana
 		zoneid == 12 ||//wkarana
 		zoneid == 15 || //ekarana
