@@ -545,27 +545,28 @@ class Build {
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[34] = $newSkill;
 
+
 			$newSkill = new stdClass();
-			$newSkill->title = "Wrath of the Wild";
+			$newSkill->title = "Wrath of the Wild TODO";
 			$newSkill->desc = 'Grants the Wrath of the Wild AA, granting a damage that deals (Level * Rank) damage in one hit.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[36] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Pain";
-			$newSkill->desc = 'When a direct spell is casted, there is a <em data-base="3">3</em>% that a short duration DoT will also affect the target<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When a direct spell is casted, there is a <em data-base="3">3</em>% chance that a short duration DoT will also affect the target<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[38] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Focused Swarm";
-			$newSkill->desc = 'When standing nearby a mob, DoTs now deal  <em data-base="10">10</em>% more damage. This damage bonus reduces by 10% for every 50m you\'re away from an enemy.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When standing nearby a mob, DoTs now deal <em data-base="10">10</em>% more damage. This damage bonus reduces by 10% for every 50m you\'re away from an enemy.<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[40] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Blessing of Ro";
-			$newSkill->desc = 'Grants the Blessing of Ro debuff, which reduces magic and fire resists of a target by (Level * rank).';
+			$newSkill->desc = 'All Ro debuffs reduce an additional (Level * rank) AC.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[42] = $newSkill;
 

@@ -211,6 +211,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 #ifdef SPELL_EFFECT_SPAM
 		effect_desc[0] = 0;
 #endif
+
+		uint16 rank;
 		Log.Out(Logs::General, Logs::Spells, "spell %i effect slot: %i, SE: %i, buffslot: %i", spell_id, i, effect, buffslot);
 		switch(effect)
 		{
@@ -222,7 +224,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				// SE_CurrentHP is calculated at first tick if its a dot/buff
 				if (buffslot >= 0)
 					break;
-				uint16 rank;
 
 				
 				if (caster) {
@@ -258,10 +259,24 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 						if (caster->IsClient()) {
 							Client * casterClient = caster->CastToClient();
-							
+							uint8 caster_level = casterClient->GetLevel();
 
-						
-
+							rank = casterClient->GetBuildRank(DRUID, RB_DRU_LINGERINGPAIN);
+							if (rank > 0 && 
+								(spell_id == 239 || spell_id == 93 || spell_id == 92 || spell_id == 252 || spell_id == 91 || spell_id == 419 || spell_id == 52 || spell_id == 405 || spell_id == 27 || spell_id == 115 || spell_id == 217 || spell_id == 1439 || spell_id == 406 || spell_id == 418 || spell_id == 664 || spell_id == 57 || spell_id == 1436 || spell_id == 29 || spell_id == 420 || spell_id == 433 || spell_id == 671 || spell_id == 1603 || spell_id == 1529 || spell_id == 1605 || spell_id == 2518 || spell_id == 1606 || spell_id == 1607 || spell_id == 2126 || spell_id == 2877)) {
+								if (zone->random.Roll(3 * rank)) {
+									caster->Message(MT_NonMelee, "Lingering Pain %i activated.", rank);
+									if (caster_level > 54) AddBuff(caster, 4105, 2);
+									else if (caster_level > 50) AddBuff(caster, 1601, 2);
+									else if (caster_level > 45) AddBuff(caster, 1600, 2);
+									else if (caster_level > 40) AddBuff(caster, 4104, 2);
+									else if (caster_level > 35) AddBuff(caster, 665, 2);
+									else if (caster_level > 28) AddBuff(caster, 259, 2);
+									else if (caster_level > 18) AddBuff(caster, 78, 2);
+									else if (caster_level > 5) AddBuff(caster, 264, 2);
+									else AddBuff(caster, 239, 2);
+								}
+							}
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE);
 							if (spell_id == 2749 &&	rank > 0) {
 								int damageAmount = casterClient->GetHP() * 0.05f * rank;
@@ -3449,95 +3464,102 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			case SE_SkillProc:
 			case SE_SkillProcSuccess:
 			{
-				if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST) > 0 && (spell_id == 343 || spell_id == 2575)) {
-					uint32 dmg;
-					int manaAmount;
-					if (spell_id == 343) { //siphon strength
-						dmg = (caster->GetMaxHP() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));
-						if (dmg < 1) {
-							dmg = 1;
+				if (caster && caster->IsClient()) {
+					Client * casterClient = caster->CastToClient();					
+
+					if (caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST) > 0 && (spell_id == 343 || spell_id == 2575)) {
+						uint32 dmg;
+						int manaAmount;
+						if (spell_id == 343) { //siphon strength
+							dmg = (caster->GetMaxHP() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));
+							if (dmg < 1) {
+								dmg = 1;
+							}
+							Damage(caster, dmg, spell_id, spell.skill, false, 0, false);
 						}
-						Damage(caster, dmg, spell_id, spell.skill, false, 0, false);
-					}
-					if (spell_id == 2575) { //abduct strength
-						dmg = (caster->GetMaxHP() * 0.01 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));
-						if (dmg < 1) {
-							dmg = 1;
+						if (spell_id == 2575) { //abduct strength
+							dmg = (caster->GetMaxHP() * 0.01 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));
+							if (dmg < 1) {
+								dmg = 1;
+							}
+							Damage(caster, dmg, spell_id, spell.skill, false, 0, false);
 						}
-						Damage(caster, dmg, spell_id, spell.skill, false, 0, false);
-					}
-					float range, distance;
-					range = caster->GetAOERange(3409);
-					float range2 = range*range;
-					int mana_amount = (caster->GetMaxMana() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));
-					if (mana_amount < 1) {
-						mana_amount = 5;
-					}
-					if (caster->IsGrouped()) {						
-						Group *caster_group = entity_list.GetGroupByMob(caster);
-						if (caster_group) {
-							for (int z = 0; z < MAX_GROUP_MEMBERS; z++) {
-								if (caster_group->members[z] == caster) {
-									//caster->Message(0, "Group! %i %i", dmg, mana_amount);
-									caster->HealDamage(dmg, caster, 3409);
-									caster->SetMana(caster->GetMana() + mana_amount);
-									if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
-										caster->HealDamage(dmg, caster->GetPet());
+						float range, distance;
+						range = caster->GetAOERange(3409);
+						float range2 = range*range;
+						int mana_amount = (caster->GetMaxMana() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));
+						if (mana_amount < 1) {
+							mana_amount = 5;
+						}
+						if (caster->IsGrouped()) {
+							Group *caster_group = entity_list.GetGroupByMob(caster);
+							if (caster_group) {
+								for (int z = 0; z < MAX_GROUP_MEMBERS; z++) {
+									if (caster_group->members[z] == caster) {
+										//caster->Message(0, "Group! %i %i", dmg, mana_amount);
+										caster->HealDamage(dmg, caster, 3409);
+										caster->SetMana(caster->GetMana() + mana_amount);
+										if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
+											caster->HealDamage(dmg, caster->GetPet());
+										}
 									}
-								}
-								else if (caster_group->members[z] != nullptr) {
-									distance = DistanceSquared(caster->GetPosition(), caster_group->members[z]->GetPosition());
-									if (distance <= range2) {
-										caster_group->members[z]->HealDamage(dmg, caster, 3409);
-										caster_group->members[z]->SetMana(caster_group->members[z]->GetMana() + mana_amount);
-										if (caster_group->members[z]->GetPet() && !caster_group->members[z]->GetPet()->IsCharmed()) {
-											caster_group->members[z]->GetPet()->HealDamage(dmg, caster);
+									else if (caster_group->members[z] != nullptr) {
+										distance = DistanceSquared(caster->GetPosition(), caster_group->members[z]->GetPosition());
+										if (distance <= range2) {
+											caster_group->members[z]->HealDamage(dmg, caster, 3409);
+											caster_group->members[z]->SetMana(caster_group->members[z]->GetMana() + mana_amount);
+											if (caster_group->members[z]->GetPet() && !caster_group->members[z]->GetPet()->IsCharmed()) {
+												caster_group->members[z]->GetPet()->HealDamage(dmg, caster);
+											}
 										}
 									}
 								}
 							}
 						}
-					} else if (caster->IsRaidGrouped()) {
-						
-						Raid *target_raid = entity_list.GetRaidByClient(caster->CastToClient());
-						uint32 gid = 0xFFFFFFFF;
-						if (target_raid) {
-							gid = target_raid->GetGroup(caster->GetName());
-							if (gid < 12) { 
-								//Cast on raid
-							
-								for (int x = 0; x < MAX_RAID_MEMBERS; x++) { //iterate raid
-									if (target_raid->members[x].member == caster) { //if member is the caster										
-										caster->HealDamage(dmg, caster, 3409);
-										caster->SetMana(caster->GetMana() + mana_amount);
-										if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
-											caster->HealDamage(dmg, caster->GetPet(), 3409);
+						else if (caster->IsRaidGrouped()) {
+
+							Raid *target_raid = entity_list.GetRaidByClient(caster->CastToClient());
+							uint32 gid = 0xFFFFFFFF;
+							if (target_raid) {
+								gid = target_raid->GetGroup(caster->GetName());
+								if (gid < 12) {
+									//Cast on raid
+
+									for (int x = 0; x < MAX_RAID_MEMBERS; x++) { //iterate raid
+										if (target_raid->members[x].member == caster) { //if member is the caster										
+											caster->HealDamage(dmg, caster, 3409);
+											caster->SetMana(caster->GetMana() + mana_amount);
+											if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
+												caster->HealDamage(dmg, caster->GetPet(), 3409);
+											}
 										}
-									} else if (target_raid->members[x].member != nullptr) {
-										if (target_raid->members[x].GroupNumber == gid) { //in raid group id
-											distance = DistanceSquared(caster->GetPosition(), target_raid->members[x].member->GetPosition()); //get distance
-											if (distance <= range2) { //in distance
-												target_raid->members[x].member->HealDamage(dmg, caster, 3409);
-												target_raid->members[x].member->SetMana(target_raid->members[x].member->GetMana() + mana_amount);
-												if (target_raid->members[x].member->GetPet() && !target_raid->members[x].member->GetPet()->IsCharmed()) {
+										else if (target_raid->members[x].member != nullptr) {
+											if (target_raid->members[x].GroupNumber == gid) { //in raid group id
+												distance = DistanceSquared(caster->GetPosition(), target_raid->members[x].member->GetPosition()); //get distance
+												if (distance <= range2) { //in distance
 													target_raid->members[x].member->HealDamage(dmg, caster, 3409);
+													target_raid->members[x].member->SetMana(target_raid->members[x].member->GetMana() + mana_amount);
+													if (target_raid->members[x].member->GetPet() && !target_raid->members[x].member->GetPet()->IsCharmed()) {
+														target_raid->members[x].member->HealDamage(dmg, caster, 3409);
+													}
 												}
 											}
 										}
 									}
 								}
-							}			
+							}
 						}
-					} else { //not grouped
-						//caster->Message(0, "Lifesteal! %i %i", dmg, mana_amount);
-						caster->HealDamage(dmg, caster, 3409);
-						caster->SetMana(caster->GetMana() + mana_amount);
-						if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
-							caster->HealDamage(dmg, caster->GetPet(), 3409);
+						else { //not grouped
+						 //caster->Message(0, "Lifesteal! %i %i", dmg, mana_amount);
+							caster->HealDamage(dmg, caster, 3409);
+							caster->SetMana(caster->GetMana() + mana_amount);
+							if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
+								caster->HealDamage(dmg, caster->GetPet(), 3409);
+							}
 						}
 					}
+					break;
 				}
-				break;
 			}
 
 			default:
@@ -3997,6 +4019,38 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 						AddToHateList(caster, -effect_value);
 				}
 
+				if (caster->IsClient()) {
+					Client* caster_client = caster->CastToClient();
+					uint16 rank = caster_client->GetBuildRank(DRUID, RB_DRU_FOCUSEDSWARM);
+					if (rank > 0) {
+						float dist2 = DistanceSquared(m_Position, caster->GetPosition());						
+						float multiplier = 0.5f;
+						if (dist2 <= (50 * 50)) {
+							multiplier = 0.5f;
+						}
+						else if (dist2 <= (100 * 100)) {
+							multiplier = 0.4f;
+						}
+						else if (dist2 <= (150 * 150)) {
+							multiplier = 0.3f;
+						}
+						else if (dist2 <= (200 * 200)) {
+							multiplier = 0.2f;
+						}
+						else if (dist2 <= (250 * 250)) {
+							multiplier = 0.4f;
+						}
+						else {
+							multiplier = 0;
+						}
+						if (multiplier > 0) {
+							int bonus_damage = effect_value * multiplier * 0.2f * rank;
+							if (bonus_damage < 1) bonus_damage = 1;
+							caster_client->Message(MT_DoTDamage, "Focused Swarm %u dealt %i bonus damage to %s.", rank, -bonus_damage, GetCleanName());
+							effect_value += bonus_damage;
+						}
+					}
+				}
 				effect_value = caster->GetActDoTDamage(buff.spellid, effect_value, this);
 
 				caster->ResourceTap(-effect_value, buff.spellid);
