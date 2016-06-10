@@ -4428,6 +4428,8 @@ void command_buff(Client *c, const Seperator *sep) {
 
 		if (level > 30) target->AddBuff(target, 1693, duration);
 		else target->AddBuff(target, 174, duration);
+		target->AddBuff(target, 278, duration); //sow
+
 		if (c->HasPet()) {
 			target = c->GetPet();
 			if (level < 35) target->AddBuff(target, 144, duration); //regeneration 34
@@ -4467,11 +4469,12 @@ void command_buff(Client *c, const Seperator *sep) {
 
 			if (level > 30) target->AddBuff(target, 1693, duration);
 			else target->AddBuff(target, 174, duration);
+			target->AddBuff(target, 278, duration); //sow
 		}
-		if (target->IsClient() && target->CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
+		if (c->IsClient() && c->CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 		{
 			EQApplicationPacket *outapp = target->MakeBuffsPacket(false);
-			target->CastToClient()->FastQueuePacket(&outapp);
+			c->CastToClient()->FastQueuePacket(&outapp);
 		}
 
 		c->Message(0, "You paid %s for buffs.", displayCost.c_str());
