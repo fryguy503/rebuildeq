@@ -1248,7 +1248,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			if (cooldown < 20) {
 				cooldown = 20;
 			}
-			manacost /= 3; //1/3rds mana cost for Boon
 		}
 	}
 	if (rank_id == aaConvergenceofSpirits) {
