@@ -261,6 +261,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							Client * casterClient = caster->CastToClient();
 							uint8 caster_level = casterClient->GetLevel();
 
+							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH);
+							if (rank > 0 && spell_id == 13531) {
+								dmg += zone->random.Real(10, 43) * rank * GetLevel();
+							}
+
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_LINGERINGPAIN);
 							if (rank > 0 && spells[spell_id].classes[DRUID] > (GetLevel() - 15) &&
 								(spell_id == 239 || spell_id == 93 || spell_id == 92 || spell_id == 252 || spell_id == 91 || spell_id == 419 || spell_id == 52 || spell_id == 405 || spell_id == 27 || spell_id == 115 || spell_id == 217 || spell_id == 1439 || spell_id == 406 || spell_id == 418 || spell_id == 664 || spell_id == 57 || spell_id == 1436 || spell_id == 29 || spell_id == 420 || spell_id == 433 || spell_id == 671 || spell_id == 1603 || spell_id == 1529 || spell_id == 1605 || spell_id == 2518 || spell_id == 1606 || spell_id == 1607 || spell_id == 2126 || spell_id == 2877 || spell_id == 1740)) {
@@ -475,7 +480,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									else if (level >= 54 && caster_level >= 54) AddBuff(caster, 1568, duration, 60); //regrowuth 54
 									else if (level >= 45 && caster_level >= 45) AddBuff(caster, 138, duration, 60); //pack chloro 45
 									else if (level >= 42 && caster_level >= 42) AddBuff(caster, 145, duration, 60); //chloro 42
-									else if (level >= 39 && caster_level >= 39)) AddBuff(caster, 137, duration, 60); //pack regen 39									
+									else if (level >= 39 && caster_level >= 39) AddBuff(caster, 137, duration, 60); //pack regen 39									
 									else AddBuff(caster, 144, duration, 60); //regeneration 34									
 								}
 								if (rank > 1) { //cold/fire resist
