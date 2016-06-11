@@ -529,13 +529,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Nature's Boon";
-			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, giving the target (Level) hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="5">5</em>% of their max hitpoints<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, giving the target (Level) hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="20">20</em>% of their max hitpoints<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Nature's Whisper";
-			$newSkill->desc = 'While a target is affected by Nature\'s Boon or Convergence of Spirits, they also regain <em data-base="1">1</em>% of any healing done from these spells as mana.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While a target is affected by Nature\'s Boon or Convergence of Spirits, they also regain <em data-base="2">2</em>% of any healing done from these spells as mana.<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[31] = $newSkill;
 

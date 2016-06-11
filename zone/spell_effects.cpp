@@ -4201,7 +4201,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 						rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
 						if (rank > 0) {
-							int32 mana_amount = amount_healed * (0.01f * rank);
+							int32 mana_amount = amount_healed * (0.02f * rank);
 							if (mana_amount < 1) mana_amount = 1;
 							if (caster != this) caster->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 							Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
@@ -4214,7 +4214,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 				rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
 				if (rank > 0 && buff.spellid == 4796) {
 
-					int32 heal_amount = GetLevel(); //figure out potential heal amount
+					int32 heal_amount = GetMaxHP() * 0.2f * rank; //figure out potential heal amount
 					if (heal_amount < 1) heal_amount = 1;
 					int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
 					int32 amount_healed = 0; //this was real amount healed
