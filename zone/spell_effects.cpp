@@ -441,7 +441,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								uint8 level = GetLevel();
 								uint8 caster_level = casterClient->GetLevel();
 								rank = casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD);
-								int duration = caster_level * 10;
+								int duration = caster_level * 6;
 								if (rank > 4) { //Damage shield
 									if (level > 58 && caster_level > 58) AddBuff(caster, 1561); //legacy of thorns 59
 									else if (level >= 58 && caster_level >= 58) AddBuff(caster, 1560, duration, 60); //shield of blades 58
