@@ -54,6 +54,7 @@
 #define MINOR_ILL_OBJ 142
 #define TREE 143
 #define IKSAR_SKELETON 161
+#define DERVISH 170 //Whirling dervish
 #define FROGLOK 330
 // TODO: check all clients for (BYTE) usage of '/who all' class and remove FROGLOK2, if possible (330 - 74 = 256 .. WORD->BYTE conversion loss...)
 #define FROGLOK2 74	// Not sure why /who all reports race as 74 for frogloks
