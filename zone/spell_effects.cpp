@@ -430,6 +430,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					if (caster) {
 						if (caster->IsClient()) { //Ensure caster is client for these mechanics
 							Client * casterClient = caster->CastToClient();
+							uint8 level = GetLevel();
+							uint8 caster_level = casterClient->GetLevel();
 
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN);
 							if (rank > 0 && spell_id == 8193 && IsClient()) { //This only works on player characters.
@@ -441,76 +443,129 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								break;
 							}
 
+
+							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID);
+							if (spell_id == 267 && rank > 0) {
+									int duration = caster_level * 6;
+
+									if (rank > 4) { //HP/AC
+										if (level > 57 && caster_level > 57) AddBuff(caster, 2530);
+										else if (level >= 55 && caster_level >= 55) { AddBuff(caster, 1548, duration, 60); AddBuff(caster, 1585, duration, 60); }
+										else if (level >= 46 && caster_level >= 46) AddBuff(caster, 2525, duration, 60);
+										else if (level >= 40 && caster_level >= 40) { AddBuff(caster, 389, duration, 60); AddBuff(caster, 168, duration, 60); }
+										else if (level >= 32 && caster_level >= 32) { AddBuff(caster, 431, duration, 60); AddBuff(caster, 167, duration, 60); }
+										else { AddBuff(caster, 274, duration, 60);  AddBuff(caster, 267, duration, 60); }										
+										
+										AddBuff(caster, 278, duration); //Spirit of wolf duration is based on natural stats										
+									}
+
+									if (rank > 0) { //STR
+										if (level > 57 && caster_level > 57) AddBuff(caster, 1581); //talisman of rhino 57
+										else if (level >= 46 && caster_level >= 46) AddBuff(caster, 159, duration, 60); //strength 46
+										else if (level >= 39 && caster_level >= 39) AddBuff(caster, 1727, duration, 60); //furious strength 39
+										else if (level >= 35 && caster_level >= 35) AddBuff(caster, 356, duration, 60); //tumulous strength 35
+										else if (level >= 28 && caster_level >= 28) AddBuff(caster, 432, duration, 60); //raging strength 28
+										else if (level >= 18 && caster_level >= 18) AddBuff(caster, 129, duration, 60); //spirit strength 18
+										else if (level >= 8 && caster_level >= 8) AddBuff(caster, 273, duration, 60); //talisman of beast 8
+										else AddBuff(caster, 40, duration, 60); //strengthen
+									}
+
+									if (rank > 1) { //DEX
+										if (level > 58 && caster_level > 58) AddBuff(caster, 1583);
+										else if (level >= 48 && caster_level >= 48) AddBuff(caster, 157, duration, 60);
+										else if (level >= 39 && caster_level >= 39) AddBuff(caster, 152, duration, 60);
+										else if (level >= 25 && caster_level >= 25) AddBuff(caster, 349, duration, 60);
+										else if (level >= 21 && caster_level >= 21) AddBuff(caster, 146, duration, 60);
+										else AddBuff(caster, 266, duration, 60);
+									}
+
+									if (rank > 2) { //AGI
+										if (level > 57 && caster_level > 57) AddBuff(caster, 1579); 
+										else if (level >= 53 && caster_level >= 53) AddBuff(caster, 1594, duration, 60);
+										else if (level >= 41 && caster_level >= 41) AddBuff(caster, 154, duration, 60);
+										else if (level >= 31 && caster_level >= 31) AddBuff(caster, 160, duration, 60);
+										else if (level >= 18 && caster_level >= 18) AddBuff(caster, 147, duration, 60); 
+										else AddBuff(caster, 169, duration, 60);
+									}
+
+									if (rank > 3) { //STA
+										if (level > 57 && caster_level > 57) AddBuff(caster, 1580);
+										else if (level >= 54 && caster_level >= 54) AddBuff(caster, 1595, duration, 60);
+										else if (level >= 43 && caster_level >= 43) AddBuff(caster, 158, duration, 60);
+										else if (level >= 30 && caster_level >= 30) AddBuff(caster, 161, duration, 60);
+										else if (level >= 21 && caster_level >= 21) AddBuff(caster, 149, duration, 60);
+										else AddBuff(caster, 279, duration, 60);
+									}
+								}
+
+							rank = casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD);
 							//Spirit of the Wood
-							if (spell_id == 3277 && casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) > 0) {
-								uint8 level = GetLevel();
-								uint8 caster_level = casterClient->GetLevel();
-								rank = casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD);
+							if (spell_id == 3277 && rank > 0) {								
 								int duration = caster_level * 6;
 								if (rank > 4) { //Damage shield
-									if (level > 58 && caster_level > 58) AddBuff(caster, 1561); //legacy of thorns 59
-									else if (level >= 58 && caster_level >= 58) AddBuff(caster, 1560, duration, 60); //shield of blades 58
-									else if (level >= 49 && caster_level >= 49) AddBuff(caster, 1727, duration, 60); //legacy of spike 49
-									else if (level >= 47 && caster_level >= 37) AddBuff(caster, 356, duration, 60); //shield of thorns 47
-									else if (level >= 37 && caster_level >= 37) AddBuff(caster, 432, duration, 60); //shield of spikes 37
-									else if (level >= 27 && caster_level >= 27) AddBuff(caster, 129, duration, 60); //shield of brambles 27
-									else if (level >= 17 && caster_level >= 17) AddBuff(caster, 273, duration, 60); //shield of barbs 17
+									if (level > 58 && caster_level > 58) AddBuff(caster, 1561, duration); //legacy of thorns 59
+									else if (level >= 58 && caster_level >= 58) AddBuff(caster, 1560, duration); //shield of blades 58
+									else if (level >= 49 && caster_level >= 49) AddBuff(caster, 1727, duration); //legacy of spike 49
+									else if (level >= 47 && caster_level >= 37) AddBuff(caster, 356, duration); //shield of thorns 47
+									else if (level >= 37 && caster_level >= 37) AddBuff(caster, 432, duration); //shield of spikes 37
+									else if (level >= 27 && caster_level >= 27) AddBuff(caster, 129, duration); //shield of brambles 27
+									else if (level >= 17 && caster_level >= 17) AddBuff(caster, 273, duration); //shield of barbs 17
 									else AddBuff(caster, 256, duration, 60); //shield of thistles 7		
 									AddBuff(caster, 278, duration); //Spirit of wolf duration is based on natural stats
 								}
 
 								if (rank > 3) { //HP
-									if (level >= 60 && caster_level >= 60) AddBuff(caster, 1442, duration, 60); //prot glades 60
-									else if (level >= 59 && caster_level >= 59) AddBuff(caster, 2188, duration, 60); //prot cabbage 59
-									else if (level >= 57 && caster_level >= 57) AddBuff(caster, 1559, duration, 60); //natureskin 57									
-									else if (level >= 49 && caster_level >= 49) AddBuff(caster, 2515, duration, 60); //prot of nature 49
-									else if (level >= 46 && caster_level >= 46) AddBuff(caster, 423, duration, 60); //skin like nature 46
-									else if (level >= 39 && caster_level >= 39) AddBuff(caster, 2514, duration, 60); //prot diamond 39
-									else if (level >= 36 && caster_level >= 36) AddBuff(caster, 422, duration, 60); //skin like diamond 36
-									else if (level >= 27 && caster_level >= 27) AddBuff(caster, 2513, duration, 60); //prot like steel 27
-									else if (level >= 24 && caster_level >= 24) AddBuff(caster, 421, duration, 60); //skin like steel 24
-									else if (level >= 19 && caster_level >= 19) AddBuff(caster, 2512, duration, 60); //prot of rock 19
-									else if (level >= 14 && caster_level >= 14) AddBuff(caster, 263, duration, 60); //skin like rock 14
-									else if (level >= 9 && caster_level >= 9) AddBuff(caster, 2511, duration, 60); //prot of wood 9
+									if (level >= 60 && caster_level >= 60) AddBuff(caster, 1442, duration); //prot glades 60
+									else if (level >= 59 && caster_level >= 59) AddBuff(caster, 2188, duration); //prot cabbage 59
+									else if (level >= 57 && caster_level >= 57) AddBuff(caster, 1559, duration); //natureskin 57									
+									else if (level >= 49 && caster_level >= 49) AddBuff(caster, 2515, duration); //prot of nature 49
+									else if (level >= 46 && caster_level >= 46) AddBuff(caster, 423, duration); //skin like nature 46
+									else if (level >= 39 && caster_level >= 39) AddBuff(caster, 2514, duration); //prot diamond 39
+									else if (level >= 36 && caster_level >= 36) AddBuff(caster, 422, duration); //skin like diamond 36
+									else if (level >= 27 && caster_level >= 27) AddBuff(caster, 2513, duration); //prot like steel 27
+									else if (level >= 24 && caster_level >= 24) AddBuff(caster, 421, duration); //skin like steel 24
+									else if (level >= 19 && caster_level >= 19) AddBuff(caster, 2512, duration); //prot of rock 19
+									else if (level >= 14 && caster_level >= 14) AddBuff(caster, 263, duration); //skin like rock 14
+									else if (level >= 9 && caster_level >= 9) AddBuff(caster, 2511, duration); //prot of wood 9
 									else AddBuff(caster, 26, duration, 60); //skin like wood 1									
 								}
 								if (rank > 2) { //HP Regen
-									if (level >= 60 && caster_level >= 60) AddBuff(caster, 2520, duration, 60); //nature's recov - 60
-									else if (level >= 58 && caster_level >= 58) AddBuff(caster, 1569, duration, 60); //regrowth of grove 58 /grpp
-									else if (level >= 54 && caster_level >= 54) AddBuff(caster, 1568, duration, 60); //regrowuth 54
-									else if (level >= 45 && caster_level >= 45) AddBuff(caster, 138, duration, 60); //pack chloro 45
-									else if (level >= 42 && caster_level >= 42) AddBuff(caster, 145, duration, 60); //chloro 42
-									else if (level >= 39 && caster_level >= 39) AddBuff(caster, 137, duration, 60); //pack regen 39									
+									if (level >= 60 && caster_level >= 60) AddBuff(caster, 2520, duration); //nature's recov - 60
+									else if (level >= 58 && caster_level >= 58) AddBuff(caster, 1569, duration); //regrowth of grove 58 /grpp
+									else if (level >= 54 && caster_level >= 54) AddBuff(caster, 1568, duration); //regrowuth 54
+									else if (level >= 45 && caster_level >= 45) AddBuff(caster, 138, duration); //pack chloro 45
+									else if (level >= 42 && caster_level >= 42) AddBuff(caster, 145, duration); //chloro 42
+									else if (level >= 39 && caster_level >= 39) AddBuff(caster, 137, duration); //pack regen 39									
 									else AddBuff(caster, 144, duration, 60); //regeneration 34									
 								}
 								if (rank > 1) { //cold/fire resist
 									if (level >= 51 && caster_level >= 51) {
 										//AddBuff(caster, 1551); //circle of winter 51
 										//	AddBuff(caster, 1552); //circle of summer 52
-										AddBuff(caster, 2519, duration, 60); //circle of seasons 58
-										AddBuff(caster, 226, duration, 60); //endure disease 19
-										AddBuff(caster, 227, duration, 60); //endure poison 19
-										AddBuff(caster, 64, duration, 60); //resist magic 49
+										AddBuff(caster, 2519, duration); //circle of seasons 58
+										AddBuff(caster, 226, duration); //endure disease 19
+										AddBuff(caster, 227, duration); //endure poison 19
+										AddBuff(caster, 64, duration); //resist magic 49
 									}
 									else if (level >= 21 && caster_level >= 21) {
-										AddBuff(caster, 60, duration, 60); //resist fire 20
-										AddBuff(caster, 61, duration, 60); //resist cold 30
-										AddBuff(caster, 64, duration, 60); //resist magic 49
-										AddBuff(caster, 226, duration, 60); //endure disease 19
-										AddBuff(caster, 227, duration, 60); //endure poison 19
+										AddBuff(caster, 60, duration); //resist fire 20
+										AddBuff(caster, 61, duration); //resist cold 30
+										AddBuff(caster, 64, duration); //resist magic 49
+										AddBuff(caster, 226, duration); //endure disease 19
+										AddBuff(caster, 227, duration); //endure poison 19
 									}
 									else {
-										AddBuff(caster, 224, duration, 60); //endure fire 1
-										AddBuff(caster, 225, duration, 60); //endure cold 9
-										AddBuff(caster, 226, duration, 60); //endure disease 19
-										AddBuff(caster, 227, duration, 60); //endure poison 19
-										AddBuff(caster, 228, duration, 60); //endure magic 34
+										AddBuff(caster, 224, duration); //endure fire 1
+										AddBuff(caster, 225, duration); //endure cold 9
+										AddBuff(caster, 226, duration); //endure disease 19
+										AddBuff(caster, 227, duration); //endure poison 19
+										AddBuff(caster, 228, duration); //endure magic 34
 									}
 								}
 								if (rank > 0) { //STR								
-									if (level >= 44 && caster_level >= 44) AddBuff(caster, 430, duration, 60); //storm str 44
-									else if (level >= 34 && caster_level >= 34) AddBuff(caster, 429, duration, 60); //str of stone 34
-									else AddBuff(caster, 268, duration, 60); //str of earth 1
+									if (level >= 44 && caster_level >= 44) AddBuff(caster, 430, duration); //storm str 44
+									else if (level >= 34 && caster_level >= 34) AddBuff(caster, 429, duration); //str of stone 34
+									else AddBuff(caster, 268, duration); //str of earth 1
 								}
 								if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 								{

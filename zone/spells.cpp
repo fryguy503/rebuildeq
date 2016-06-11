@@ -3267,21 +3267,63 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		Log.Out(Logs::Detail, Logs::Spells, "Buff %d failed to add because its duration came back as 0.", spell_id);
 		return -2;	// no duration? this isn't a buff
 	}
-	if ((spell_id == 724 || spell_id == 741 || spell_id == 868 || spell_id == 1753 || spell_id == 1100 || spell_id == 1197) && 
-		caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT) > 0) {
-		caster->Message(MT_NonMelee, "Lingering Twilight %u improved mesmerize duration.", caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT));
-		duration += duration * 0.2f * caster->CastToClient()->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT);
-	}
 
-	if (spell_id == 3274 && caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS) > 0) {
-		uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
-		duration = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
-		//caster->CastToClient()->Message(0, "Duration! %i", duration);
-	}
-	if ((spell_id == 505 || spell_id == 506 || spell_id ==507 || spell_id ==1588 || spell_id ==2527 || spell_id == 1589) &&
-		caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR) > 0) {
-		uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR);
-		duration += duration * 0.05f * rank;
+	uint8 rank;
+	if (caster && caster->IsClient()) {
+		Client * caster_client = caster->CastToClient();
+		rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED);
+		if (rank > 0 && spell_id == 278) {
+			duration += duration * 0.2f * rank;
+		}
+
+		rank = caster_client->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT);
+		if ((spell_id == 724 || spell_id == 741 || spell_id == 868 || spell_id == 1753 || spell_id == 1100 || spell_id == 1197) &&
+			rank > 0) {
+			caster->Message(MT_NonMelee, "Lingering Twilight %u improved mesmerize duration.", rank);
+			duration += duration * 0.2f * rank;
+		}
+
+		rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
+		if (spell_id == 3274 && rank > 0) {
+			uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
+			duration = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
+			//caster->CastToClient()->Message(0, "Duration! %i", duration);
+		}
+
+		rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR);
+		if ((spell_id == 505 || spell_id == 506 || spell_id == 507 || spell_id == 1588 || spell_id == 2527 || spell_id == 1589) &&
+			rank > 0) {
+			uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR);
+			duration += duration * 0.05f * rank;
+		}
+		rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON);
+		if (caster && caster->IsClient() && rank > 0 && spell_id == 6241) {
+			duration = 10 * 0.2f * rank;
+		}
+		rank = caster->CastToClient()->GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT);
+		if (caster && caster->IsClient() && rank > 0 && spell_id == 6240) {
+			duration = 10 * 0.2f * rank;
+		}
+		rank = caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION);
+		if (caster && caster->IsClient() && rank > 0 && spell_id == 6234) {
+			duration = 10 * 0.2f * rank;
+		}
+		rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE);
+		if (caster && caster->IsClient() && rank > 0 && spell_id == 6299) {
+			duration = 10 * 0.2f * rank;
+		}
+		rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_KINSONG);
+		if (caster && caster->IsClient() && rank > 0 && spell_id == 6239) {
+			duration = 10 * 0.2f * rank;
+		}
+		rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT);
+		if (rank > 0 && spell_id == 6239) {
+			duration = 10 * 0.2f * rank;
+		}
+		rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
+		if (rank > 0 && spell_id == 8190) {
+			duration = 1 * rank;
+		}
 	}
 
 
@@ -3290,27 +3332,6 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 	}
 
 	
-	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) > 0 && spell_id == 6241) {
-		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON);
-	}
-	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) > 0 && spell_id == 6240) {
-		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT);
-	}
-	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) > 0 && spell_id == 6234) {
-		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION);
-	}
-	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) > 0 && spell_id == 6299) {
-		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE);
-	}
-	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(BARD, RB_BRD_KINSONG) > 0 && spell_id == 6239) {
-		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(BARD, RB_BRD_KINSONG);
-	}
-	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) > 0 && spell_id == 6239) {
-		duration = 10 * 0.2f * caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT);
-	}
-	else if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) > 0 && spell_id == 8190) {
-		duration = 1 * caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
-	}
 
 	Log.Out(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",
 		spell_id, caster?caster->GetName():"UNKNOWN", caster_level, duration);

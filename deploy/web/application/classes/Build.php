@@ -803,7 +803,7 @@ class Build {
 			//0
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit of Speed";
-			$newSkill->desc = 'Spirit of Wolf lasts <em data-base="20">20</em>% longer<span class="perLevel"> per rank</span>. <b>NOT IMPLEMENTED</b>';
+			$newSkill->desc = 'Spirit of Wolf lasts <em data-base="20">20</em>% longer<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[0] = $newSkill;
 			//1
