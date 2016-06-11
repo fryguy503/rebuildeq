@@ -9571,7 +9571,7 @@ void Client::SpawnEncounter(bool skipChecks, uint32 type) {
 	if (type < 187000) {
 		m_epp.next_encounter_time = time(nullptr) + zone->random.Int(64800, 108000); //18 to 30 hours
 		m_epp.encounter_timeout = time(nullptr); //stop encounter eligability
-		Message(13, "You are currently not eligable for any encounters.");
+		Message(13, "You are currently not eligible for any encounters.");
 		return;
 	}
 

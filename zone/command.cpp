@@ -4164,14 +4164,14 @@ void command_encounter(Client *c, const Seperator *sep) {
 	}
 	
 	if (c->GetEPP().next_encounter_time > time(nullptr)) {
-		c->Message(0, "You are not eligable for encounters.");
+		c->Message(0, "You are not eligible for encounters.");
 	}
 	else {
 		if (c->InEncounterArea()) {
-			c->Message(0, "You are eligable for encounters and are in an encounter area.");
+			c->Message(0, "You are eligible for encounters and are in an encounter area.");
 		}
 		else {
-			c->Message(0, "You are eligable for encounters, but not in an encounter area.");
+			c->Message(0, "You are eligible for encounters, but not in an encounter area.");
 		}
 	}
 	
@@ -4591,7 +4591,7 @@ void command_rez(Client *c, const Seperator *sep) {
 
 	//no corpses found
 	if (!corpse) {
-		c->Message(0, "At level %u, it will cost you %s to summon and resurrect one of your corpses in this zone. There are no corpses in this zone that are eligable.", c->GetLevel(), displayCost.c_str(), c->CreateSayLink("#rez confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %s to summon and resurrect one of your corpses in this zone. There are no corpses in this zone that are eligible.", c->GetLevel(), displayCost.c_str(), c->CreateSayLink("#rez confirm", "Confirm").c_str());
 		return;
 	}
 
