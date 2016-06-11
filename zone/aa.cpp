@@ -1226,7 +1226,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		cooldown = 16;
 	}
 
-	if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesBoon) {
+	if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesBoon || rank_id == aaAncestralAid) {
 		cooldown = 16;
 		if (GetLevel() < 10) {
 			manacost = 20;
@@ -1248,10 +1248,11 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			if (cooldown < 20) {
 				cooldown = 20;
 			}
+			manacost /= 3; //1/3rds mana cost for Boon
 		}
 	}
 	if (rank_id == aaConvergenceofSpirits) {
-		manacost = GetMaxMana() * 0.05f; //5% of mana for cos
+		manacost = GetMaxMana() * 0.02f; //2% of mana for cos
 	}
 
 	if (rank_id == aaHandofPiety) {
@@ -1389,7 +1390,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		}
 	}
 
-	if (rank_id == aaSpiritoftheWood) {
+	if (rank_id == aaSpiritoftheWood || rank_id == aaAncestralAid) {
 		if (GetLevel() < 14) {
 			manacost = 20;
 			cooldown = 16;
@@ -1424,159 +1425,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		}
 	}
 
-	if (rank_id == aaAncestralAid) {
-		//primal essence 1819, gives 20 to all
-		//1599 26 to all
-		//3454
-
-		bool isFocusStats = false;
-		bool isHoSStats = false;
-		if (GetLevel() >= 60 && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) > 4) {
-			isFocusStats = true;
-			isHoSStats = true;
-		}
-		if (GetLevel() >= 46 && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) > 4) {
-			isHoSStats = true;
-		}
-
-		if (GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) > 0 && !isHoSStats) { //STR
-			if (GetLevel() >= 57) {
-				//spellid = 1593; //str maniacal strength
-				spellid = 1581; //talisman of rhino
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-			else if (GetLevel() >= 46) {
-				spellid = 159; //str strength
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-
-			}
-			else if (GetLevel() >= 39) {
-				spellid = 153; //str furious strength
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-			else if (GetLevel() >= 35) {
-				spellid = 1428; //str tumulous strength
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-			else if (GetLevel() >= 28) {
-				spellid = 151; //str raging strength
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-			else if (GetLevel() >= 18) {
-				spellid = 147; //str spirit strength 18
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-			else if (GetLevel() >= 8) {
-				spellid = 2521; //str talisman of beast 8
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-			else {
-				spellid = 40; //str strengthen 1
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-		}
-
-		if (GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) > 1 && !isHoSStats) { //DEX			
-			if (GetLevel() >= 58) {
-				//1596
-				spellid = 1583;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-			else if (GetLevel() >= 48) {
-				spellid = 157;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-			else if (GetLevel() >= 39) {
-				spellid = 152;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-			else if (GetLevel() >= 25) {
-				spellid = 349;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-			else if (GetLevel() >= 21) {
-				spellid = 146;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-			else {
-				spellid = 266;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-		}
-
-		if (GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) > 2) { //AGI
-			if (GetLevel() >= 57) { //group
-				spellid = 1579;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			} else if (GetLevel() >= 53) {
-				spellid = 1594;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			} else if (GetLevel() >= 41) {
-				spellid = 154;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			} else if (GetLevel() >= 31) {
-				spellid = 160;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			} else if (GetLevel() >= 18) {
-				spellid = 147;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			} else {
-				spellid = 269;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-		}
-
-		if (GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) > 3) { //STA
-			if (GetLevel() >= 57) { //group
-				spellid = 1580;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			} else if (GetLevel() >= 54) {
-				spellid = 1595;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			} else if (GetLevel() >= 43) {
-				spellid = 158;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			} else if (GetLevel() >= 30) {
-				spellid = 161;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			} else if (GetLevel() >= 21) {
-				spellid = 149;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			} else {
-				spellid = 279;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-			}
-		}
-		if (GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) > 4) { //HP and AC
-			if (GetLevel() >= 57) { //group
-				spellid = 2530;
-			} else if (GetLevel() >= 55) {
-				spellid = 1584;
-				
-				CastSpell(spellid, target_id, 0, 0, spells[spellid].mana);
-				SpellFinished(spellid, entity_list.GetMob(target_id), 0, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-				spellid = 1585;
-			} else if (GetLevel() >= 46) {
-				spellid = 2525;
-			} else if (GetLevel() >= 40) {
-				spellid = 389;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-				spellid = 168;
-			} else if (GetLevel() >= 32) {
-				spellid = 431;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-				spellid = 167;
-			} else {
-				spellid = 274;
-				SpellFinished(spellid, entity_list.GetMob(target_id), 1, spells[spellid].mana, -1, spells[spellid].ResistDiff, false);
-				spellid = 267;
-			}
-		} else { //If they are casting ancestrial aid and they don't do a HP buff, then don't continue
-			CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
-			SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
-			return;
-		}
-	}
 
 	Log.Out(Logs::General, Logs::Spells, "AA rank_id %i casting spellid %i", rank_id, spellid);
 
