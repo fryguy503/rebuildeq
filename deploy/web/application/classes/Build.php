@@ -554,7 +554,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Pain";
-			$newSkill->desc = 'When a direct spell is casted, there is a <em data-base="3">3</em>% chance that a short duration DoT will also affect the target<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When a direct spell is casted, there is a <em data-base="3">3</em>% chance that a short duration DoT will also affect the target if the spell casted was obtained within 15 levels of the enemy\'s level<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[38] = $newSkill;
 
@@ -573,7 +573,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Whirling Disaster";
-			$newSkill->desc = 'Direct Damage spells now also have a <em data-base="2">2</em>% chance to stun a target for 2 seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Direct Damage spells now also have a <em data-base="2">2</em>% chance to stun a target for 2 seconds if the spell casted was obtained within 15 levels of the enemy\'s level<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[44] = $newSkill;
 
