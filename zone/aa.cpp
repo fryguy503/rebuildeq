@@ -1424,7 +1424,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		}
 	}
 
-
 	Log.Out(Logs::General, Logs::Spells, "AA rank_id %i casting spellid %i", rank_id, spellid);
 
 	// Bards can cast instant cast AAs while they are casting another song

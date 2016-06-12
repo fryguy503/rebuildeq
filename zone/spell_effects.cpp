@@ -263,7 +263,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH);
 							if (rank > 0 && spell_id == 13531) {
-								dmg += zone->random.Real(10, 43) * rank * GetLevel();
+								dmg -= zone->random.Real(10, 43) * rank * GetLevel();
 							}
 
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_LINGERINGPAIN);
@@ -446,57 +446,62 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID);
 							if (spell_id == 267 && rank > 0) {
-									int duration = caster_level * 6;
+								int duration = caster_level * 6;
 
-									if (rank > 4) { //HP/AC
-										if (level > 57 && caster_level > 57) AddBuff(caster, 2530);
-										else if (level >= 55 && caster_level >= 55) { AddBuff(caster, 1548, duration, 60); AddBuff(caster, 1585, duration, 60); }
-										else if (level >= 46 && caster_level >= 46) AddBuff(caster, 2525, duration, 60);
-										else if (level >= 40 && caster_level >= 40) { AddBuff(caster, 389, duration, 60); AddBuff(caster, 168, duration, 60); }
-										else if (level >= 32 && caster_level >= 32) { AddBuff(caster, 431, duration, 60); AddBuff(caster, 167, duration, 60); }
-										else { AddBuff(caster, 274, duration, 60);  AddBuff(caster, 267, duration, 60); }										
+								if (rank > 4) { //HP/AC
+									if (level > 57 && caster_level > 57) AddBuff(caster, 2530);
+									else if (level >= 55 && caster_level >= 55) { AddBuff(caster, 1548, duration, 60); AddBuff(caster, 1585, duration, 60); }
+									else if (level >= 46 && caster_level >= 46) AddBuff(caster, 2525, duration, 60);
+									else if (level >= 40 && caster_level >= 40) { AddBuff(caster, 389, duration, 60); AddBuff(caster, 168, duration, 60); }
+									else if (level >= 32 && caster_level >= 32) { AddBuff(caster, 431, duration, 60); AddBuff(caster, 167, duration, 60); }
+									else { AddBuff(caster, 274, duration, 60);  AddBuff(caster, 267, duration, 60); }										
 										
-										AddBuff(caster, 278, duration); //Spirit of wolf duration is based on natural stats										
-									}
-
-									if (rank > 0) { //STR
-										if (level > 57 && caster_level > 57) AddBuff(caster, 1581); //talisman of rhino 57
-										else if (level >= 46 && caster_level >= 46) AddBuff(caster, 159, duration, 60); //strength 46
-										else if (level >= 39 && caster_level >= 39) AddBuff(caster, 1727, duration, 60); //furious strength 39
-										else if (level >= 35 && caster_level >= 35) AddBuff(caster, 356, duration, 60); //tumulous strength 35
-										else if (level >= 28 && caster_level >= 28) AddBuff(caster, 432, duration, 60); //raging strength 28
-										else if (level >= 18 && caster_level >= 18) AddBuff(caster, 129, duration, 60); //spirit strength 18
-										else if (level >= 8 && caster_level >= 8) AddBuff(caster, 273, duration, 60); //talisman of beast 8
-										else AddBuff(caster, 40, duration, 60); //strengthen
-									}
-
-									if (rank > 1) { //DEX
-										if (level > 58 && caster_level > 58) AddBuff(caster, 1583);
-										else if (level >= 48 && caster_level >= 48) AddBuff(caster, 157, duration, 60);
-										else if (level >= 39 && caster_level >= 39) AddBuff(caster, 152, duration, 60);
-										else if (level >= 25 && caster_level >= 25) AddBuff(caster, 349, duration, 60);
-										else if (level >= 21 && caster_level >= 21) AddBuff(caster, 146, duration, 60);
-										else AddBuff(caster, 266, duration, 60);
-									}
-
-									if (rank > 2) { //AGI
-										if (level > 57 && caster_level > 57) AddBuff(caster, 1579); 
-										else if (level >= 53 && caster_level >= 53) AddBuff(caster, 1594, duration, 60);
-										else if (level >= 41 && caster_level >= 41) AddBuff(caster, 154, duration, 60);
-										else if (level >= 31 && caster_level >= 31) AddBuff(caster, 160, duration, 60);
-										else if (level >= 18 && caster_level >= 18) AddBuff(caster, 147, duration, 60); 
-										else AddBuff(caster, 169, duration, 60);
-									}
-
-									if (rank > 3) { //STA
-										if (level > 57 && caster_level > 57) AddBuff(caster, 1580);
-										else if (level >= 54 && caster_level >= 54) AddBuff(caster, 1595, duration, 60);
-										else if (level >= 43 && caster_level >= 43) AddBuff(caster, 158, duration, 60);
-										else if (level >= 30 && caster_level >= 30) AddBuff(caster, 161, duration, 60);
-										else if (level >= 21 && caster_level >= 21) AddBuff(caster, 149, duration, 60);
-										else AddBuff(caster, 279, duration, 60);
-									}
+									AddBuff(caster, 278, duration, 60); //Spirit of wolf duration is based on natural stats										
 								}
+
+								if (rank > 0) { //STR
+									if (level > 57 && caster_level > 57) AddBuff(caster, 1581); //talisman of rhino 57
+									else if (level >= 46 && caster_level >= 46) AddBuff(caster, 159, duration, 60); //strength 46
+									else if (level >= 39 && caster_level >= 39) AddBuff(caster, 1727, duration, 60); //furious strength 39
+									else if (level >= 35 && caster_level >= 35) AddBuff(caster, 356, duration, 60); //tumulous strength 35
+									else if (level >= 28 && caster_level >= 28) AddBuff(caster, 432, duration, 60); //raging strength 28
+									else if (level >= 18 && caster_level >= 18) AddBuff(caster, 147, duration, 60); //spirit strength 18
+									else if (level >= 8 && caster_level >= 8) AddBuff(caster, 2521, duration, 60); //talisman of beast 8
+									else AddBuff(caster, 40, duration, 60); //strengthen
+								}
+
+								if (rank > 1) { //DEX
+									if (level > 58 && caster_level > 58) AddBuff(caster, 1583);
+									else if (level >= 48 && caster_level >= 48) AddBuff(caster, 157, duration, 60);
+									else if (level >= 39 && caster_level >= 39) AddBuff(caster, 152, duration, 60);
+									else if (level >= 25 && caster_level >= 25) AddBuff(caster, 349, duration, 60);
+									else if (level >= 21 && caster_level >= 21) AddBuff(caster, 146, duration, 60);
+									else AddBuff(caster, 266, duration, 60);
+								}
+
+								if (rank > 2) { //AGI
+									if (level > 57 && caster_level > 57) AddBuff(caster, 1579); 
+									else if (level >= 53 && caster_level >= 53) AddBuff(caster, 1594, duration, 60);
+									else if (level >= 41 && caster_level >= 41) AddBuff(caster, 154, duration, 60);
+									else if (level >= 31 && caster_level >= 31) AddBuff(caster, 160, duration, 60);
+									else if (level >= 18 && caster_level >= 18) AddBuff(caster, 147, duration, 60); 
+									else AddBuff(caster, 269, duration, 60);
+								}
+
+								if (rank > 3) { //STA
+									if (level > 57 && caster_level > 57) AddBuff(caster, 1580);
+									else if (level >= 54 && caster_level >= 54) AddBuff(caster, 1595, duration, 60);
+									else if (level >= 43 && caster_level >= 43) AddBuff(caster, 158, duration, 60);
+									else if (level >= 30 && caster_level >= 30) AddBuff(caster, 161, duration, 60);
+									else if (level >= 21 && caster_level >= 21) AddBuff(caster, 149, duration, 60);
+									else AddBuff(caster, 279, duration, 60);
+								}
+								if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
+								{
+									EQApplicationPacket *outapp = MakeBuffsPacket(false);
+									CastToClient()->FastQueuePacket(&outapp);
+								}
+							}
 
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD);
 							//Spirit of the Wood

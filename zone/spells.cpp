@@ -2782,17 +2782,12 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 	if (caster && caster->IsClient()) {
 
 		uint32 rank;
-		rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED);
-		if (rank > 0 && spell_id == 278) {
-			int bonusDuration = duration * 0.2f * rank;
-			caster->Message(MT_NonMelee, "Spirit of Speed increased duration by %i seconds.", bonusDuration);
-			duration += bonusDuration;
-		}
+		
 		rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDHASTE);
 		if (rank > 0 &&
 			(spell_id == 30 || spell_id == 39 || spell_id == 170 || spell_id == 1430 || spell_id == 171 || spell_id == 170)) {
 			int bonusDuration = duration * 0.3f * rank;
-			caster->Message(MT_NonMelee, "Extended Haste increased duration by %i seconds.", bonusDuration);
+			caster->Message(MT_NonMelee, "Extended Haste increased duration by %i seconds.", bonusDuration*6);
 			duration += bonusDuration;
 		}
 		rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FURY);
@@ -3273,7 +3268,9 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		Client * caster_client = caster->CastToClient();
 		rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED);
 		if (rank > 0 && spell_id == 278) {
-			duration += duration * 0.2f * rank;
+			int bonus_duration = duration * 0.2f * rank;
+			caster->Message(MT_NonMelee, "Spirit of Speed increased duration by %i seconds.", bonus_duration*6);
+			duration += bonus_duration;
 		}
 
 		rank = caster_client->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT);
