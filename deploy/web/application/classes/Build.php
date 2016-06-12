@@ -1061,7 +1061,7 @@ class Build {
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Bash of Death";
-			$newSkill->desc = 'When you bash a target, there is a <em data-base="2">2</em>% chance to cast harm touch<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you bash a target, there is a <em data-base="4">4</em>% chance to cast harm touch<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-bashofdeath.png";	
 			$skills[34] = $newSkill;
 		
