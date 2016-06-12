@@ -3442,7 +3442,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 					}
 				}
 				if (counters > 0) {
-					int coreDmg = int32(damage * 0.08 * counters);
+					int coreDmg = int32(damage * 0.08f * counters);
 					attacker->CastToClient()->Message(MT_NonMelee, "Rotten Core %u added %i bonus damage.", rank, coreDmg);
 					damage += coreDmg;
 				}
