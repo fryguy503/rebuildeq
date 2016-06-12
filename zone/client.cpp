@@ -9635,7 +9635,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 	//Pool size for randomizer
 	int pool = 0;
 	if (minimumRarity <= 0) {
-		pool += 250;
+		pool += 550;
 		rarityTable[pool] = 0;
 	}
 	if (minimumRarity <= 1) {
@@ -9643,7 +9643,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 		rarityTable[pool] = 1;
 	}
 	if (minimumRarity <= 2) {
-		pool += 100;
+		pool += 40;
 		rarityTable[pool] = 2;
 	}
 	if (minimumRarity <= 3) {
@@ -9941,7 +9941,7 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 	//Pool size for randomizer
 	int pool = 0;
 	if (minimumRarity <= 0) {
-		pool += 250;
+		pool += 550;
 		rarityTable[pool] = 0;
 	}
 	if (minimumRarity <= 1) {
@@ -9949,7 +9949,7 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 		rarityTable[pool] = 1;
 	}
 	if (minimumRarity <= 2) {
-		pool += 100;
+		pool += 40;
 		rarityTable[pool] = 2;
 	}
 	if (minimumRarity <= 3) {
