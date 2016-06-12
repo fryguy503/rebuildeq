@@ -5962,7 +5962,24 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true) {
 			multiplier = 26;
 		break;
 	}
-	
+
+	//AC Calculation
+	if (npctype->level >= 60) npctype->AC = 855;
+	else if (npctype->level >= 58) npctype->AC = 713;
+	else if (npctype->level >= 55) npctype->AC = 490;
+	else if (npctype->level >= 51) npctype->AC = 447;
+	else if (npctype->level >= 48) npctype->AC = 437;
+	else if (npctype->level >= 45) npctype->AC = 410;
+	else if (npctype->level >= 43) npctype->AC = 381;
+	else if (npctype->level >= 40) npctype->AC = 324;
+	else if (npctype->level >= 33) npctype->AC = 282;
+	else if (npctype->level >= 27) npctype->AC = 213;
+	else if (npctype->level >= 21) npctype->AC = 188;
+	else if (npctype->level >= 16) npctype->AC = 162;
+	else if (npctype->level >= 9) npctype->AC = 102;
+	else if (npctype->level >= 0) npctype->AC = 28;	
+
+	//Resist Calculation	
 	npctype->MR = npctype->level * 0.38f;
 	if (npctype->level < 5) npctype->MR += 1;
 	if (npctype->level < 10) npctype->MR += 2;
