@@ -6,10 +6,10 @@ import (
 	"github.com/xackery/eqemuconfig"
 	"net"
 	//"strconv"
-	"github.com/lunixbochs/struc"
-	//"strings"
 	"bytes"
+	"github.com/lunixbochs/struc"
 	"io"
+	"strings"
 	"time"
 )
 
@@ -28,16 +28,24 @@ var config eqemuconfig.Config
 }*/
 
 type ServerPacket struct {
-	Size    uint32 `struc:"uint32,little,sizeof=Buffer"` //uint32 size
-	Precode [1]byte
-	Opcode  uint16 `struc:"uint16,little"` //uint16 opcode
-	Buffer  string
-	/*Uchar        byte   //uchar  *pBuffer
-	Wpos         uint32 //uint32 _wpos
-	Rpos         uint32 //uint32 _rpos
-	Compressed   bool   //bool   compressed
-	InflatedSize uint32 //uint32 InflatedSize
-	Destination  uint32 //uint32 destination*/
+	Size         uint32 `struc:"uint32,little,sizeof=Buffer"` //uint32 size
+	Precode      [1]byte
+	Opcode       uint16 `struc:"uint16,little"` //uint16 opcode
+	Buffer       string
+	Wpos         uint32 `struc:"uint32,little"` //uint32 _wpos
+	Rpos         uint32 `struc:"uint32,little"` //uint32 _rpos
+	Compressed   bool   `struc:"bool,little"`   //bool   compressed
+	InflatedSize uint32 `struc:"uint32,little"` //uint32 InflatedSize
+	Destination  uint32 `struc:"uint32,little"` //uint32 destination*/
+}
+
+type ServerSpeechStruct struct {
+	To        string `struc:"[64]byte"`      //stringchar	to[64];
+	From      string `struct:"[64]byte"`     //char	from[64];
+	GuildBid  uint32 `struc:"uint32,little"` //uint32	guilddbid;
+	MinStatus int16  `struc:"int16,little"`  //int16	minstatus;
+	Type      uint32 `struc:"uint32,little"` //uint32	type;
+	Message   string //char	message[0];
 }
 
 /*
@@ -77,9 +85,10 @@ func main() {
 }
 
 func readInbound(conn net.Conn) {
-	fmt.Println("Looking for 0x4513 aka", 0x4513)
 	packet := make([]byte, 1024)
+	conn.Read(packet) //When this starts there's always a single echo back that can be discarded..
 	for {
+		time.Sleep(100 * time.Millisecond)
 		_, err := conn.Read(packet)
 		if err != nil {
 			if err == io.EOF {
@@ -91,10 +100,25 @@ func readInbound(conn net.Conn) {
 		var buf *bytes.Buffer
 		buf = bytes.NewBuffer(packet)
 		sp := &ServerPacket{}
-		struc.Unpack(buf, sp)
-		fmt.Printf("Size: %u, Opcode: %#x, Buffer: %s\n\n", sp.Size, sp.Opcode, sp.Buffer)
-		fmt.Printf("%#X - %s\n", packet, string(packet))
-		time.Sleep(100 * time.Millisecond)
+		err = struc.Unpack(buf, sp)
+		if err != nil {
+			fmt.Printf("Error unpacking server packet, Opcode: %#x: %s\n", sp.Opcode, err.Error())
+			//fmt.Printf("Size: %u, Opcode: %#x, Buffer: %s\n\n", sp.Size, sp.Opcode, sp.Buffer)
+			//fmt.Printf("%#X - %s\n", packet, string(packet))
+			continue
+		}
+		switch sp.Opcode {
+		case ServerOP_Speech:
+			fmt.Println("Speech", sp.Buffer)
+			speech := &ServerSpeechStruct{}
+			buf = bytes.NewBufferString(sp.Buffer)
+			err = struc.Unpack(buf, speech)
+			speech.From = strings.Trim(speech.From, "\x00")
+			speech.To = strings.Trim(speech.To, "\x00")
+			fmt.Printf("Speech struct: From %s, To %s, Message %s, Type: %u, Misc %v\n", speech.From, speech.To, speech.Message, speech.Type, speech)
+		default:
+			fmt.Printf("Unknown Packet Size: %u, Opcode: %#x, Buffer: %s\n\n", sp.Size, sp.Opcode, sp.Buffer)
+		}
 	}
 }
 
