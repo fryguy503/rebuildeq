@@ -4185,7 +4185,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 			uint16 rank;
 
-			if (caster->IsClient()) {
+			if (caster && caster->IsClient()) {
 
 
 				rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
