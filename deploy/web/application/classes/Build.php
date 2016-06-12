@@ -529,7 +529,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Nature's Boon";
-			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, giving the target (Level) hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="20">20</em>% of their max hitpoints<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, giving the target (Level*2)*0.2*rank hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="20">20</em>% of their max hitpoints<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[28] = $newSkill;
 

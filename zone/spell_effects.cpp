@@ -4223,7 +4223,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 				rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
 				if (rank > 0 && buff.spellid == 4796) {
 
-					int32 heal_amount = GetMaxHP() * 0.2f * rank; //figure out potential heal amount
+					int32 heal_amount = (GetLevel() * 2) * 0.2f * rank; //figure out potential heal amount
 					if (heal_amount < 1) heal_amount = 1;
 					int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
 					int32 amount_healed = 0; //this was real amount healed
@@ -4958,7 +4958,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 	if (p && p->IsClient() && buffs[slot].spellid == 4796 && p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON) > 0) {
 		
 		uint32 rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);		
-		int32 heal_amount = GetMaxHP() * 0.05f * rank; //figure out potential heal amount
+		int32 heal_amount = GetMaxHP() * 0.2f * rank; //figure out potential heal amount
 		if (heal_amount < 1) heal_amount = 1;
 		int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
 		int32 amount_healed = 0; //this was real amount healed
