@@ -373,11 +373,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
 							if (rank > 0 &&
 								(spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562)) { //spear spells
-								int festerDmg = (rank * casterClient->GetLevel());
-								festerDmg += int32((float)dmg * 0.1f * (float)rank);
-								if (festerDmg < rank) festerDmg = rank;
-								casterClient->Message(MT_NonMelee, "Festering Spear %u added %i bonus damage.", rank, festerDmg);
-								dmg -= festerDmg;
+								int bonus_damage = (rank * casterClient->GetLevel());
+								bonus_damage += int32((float)dmg * 0.1f * (float)rank);
+								if (bonus_damage < rank) bonus_damage = rank;
+								bool is_quad = false;
+								if (rank > 4 && zone->random.Roll(1)) {
+									bonus_damage *= 4;
+								}
+								casterClient->Message(MT_NonMelee, "Festering Spear %u added %i %s bonus damage.", rank, bonus_damage, (is_quad) ? "QUAD" : "");
+								dmg -= bonus_damage;
 							}
 
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);

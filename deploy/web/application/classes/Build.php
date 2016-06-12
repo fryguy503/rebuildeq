@@ -1019,7 +1019,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Festering Spear";
-			$newSkill->desc = 'Improve spear type spells by (level * <em data-base="1">1</em>) bonus damage, <em data-base="10">10</em>% damage, and <em data-base="1">1</em>% critical blast chance <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Improve spear type spells by (level * <em data-base="1">1</em>) bonus damage, <em data-base="10">10</em>% damage, and <em data-base="1">1</em>% critical blast chance. At max rank, it has a 1% chance to cause the bonus to deal quadruple the amount. <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-festeringspear.png";
 			$skills[18] = $newSkill;
 			
