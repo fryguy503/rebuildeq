@@ -1287,79 +1287,82 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		}
 
 
-		//Check for SHM fury proc
-		rank = GetBuildRank(SHAMAN, RB_SHM_FURY);
-		if (rank > 0) {
-			spellid = 271; //Fury spell
-			chance = 400;
-			proc_damage = GetLevel() * 5;
-			proc_damage = proc_damage * 0.25f * rank;
-			if (proc_damage < 20) {
-				proc_damage = 20;
-			}
-			//Check if they have fleeting fury on
-			int buff_count = GetMaxTotalSlots();
-			for (int i = 0; i < buff_count; i++)
-			{
-				if (buffs[i].spellid == spellid) {
-					is_proc = true;
-					break;
+		if (!IsFromSpell && skillinuse != EQEmu::skills::SkillBash && skillinuse != EQEmu::skills::SkillBackstab && skillinuse != EQEmu::skills::SkillKick) {
+			
+			//Check for SHM fury proc
+			rank = GetBuildRank(SHAMAN, RB_SHM_FURY);
+			if (rank > 0) {
+				spellid = 271; //Fury spell
+				chance = 400;
+				proc_damage = GetLevel() * 5;
+				proc_damage = proc_damage * 0.25f * rank;
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+				//Check if they have fleeting fury on
+				int buff_count = GetMaxTotalSlots();
+				for (int i = 0; i < buff_count; i++)
+				{
+					if (buffs[i].spellid == spellid) {
+						is_proc = true;
+						break;
+					}
 				}
 			}
-		}
 
-		rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
-		if (rank > 0) {
-			spellid = 271; //Fury spell
-			chance = 400;
-			proc_damage = GetLevel() * 5;
-			proc_damage = proc_damage * 0.25f * rank;
-			if (proc_damage < 20) {
-				proc_damage = 20;
-			}
-			//Check if they have fleeting fury on
-			int buff_count = GetMaxTotalSlots();
-			for (int i = 0; i < buff_count; i++)
-			{
-				if (buffs[i].spellid == spellid) {
-					is_proc = true;
-					break;
+			rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
+			if (rank > 0) {
+				spellid = 271; //Fury spell
+				chance = 300;
+				proc_damage = GetLevel() * 5;
+				proc_damage = proc_damage * 0.25f * rank;
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+				//Check if they have fleeting fury on
+				int buff_count = GetMaxTotalSlots();
+				for (int i = 0; i < buff_count; i++)
+				{
+					if (buffs[i].spellid == spellid) {
+						is_proc = true;
+						break;
+					}
 				}
 			}
-		}
 
-		//Check for BRD whistle
-		rank = GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE);
-		if (rank > 0) {
-			spellid = 734; //Song
-			chance = 400;
-			proc_damage = GetLevel() * 5;
-			proc_damage = proc_damage * 0.25f * rank;
-			if (proc_damage < 20) {
-				proc_damage = 20;
-			}
-			//Check if they have fleeting fury on
-			int buff_count = GetMaxTotalSlots();
-			for (int i = 0; i < buff_count; i++)
-			{
-				if (buffs[i].spellid == spellid) {
-					is_proc = true;
-					break;
+			//Check for BRD whistle
+			rank = GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE);
+			if (rank > 0) {
+				spellid = 734; //Song
+				chance = 300;
+				proc_damage = GetLevel() * 5;
+				proc_damage = proc_damage * 0.25f * rank;
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+				//Check if they have fleeting fury on
+				int buff_count = GetMaxTotalSlots();
+				for (int i = 0; i < buff_count; i++)
+				{
+					if (buffs[i].spellid == spellid) {
+						is_proc = true;
+						break;
+					}
 				}
 			}
-		}
 
-		//Now do proc calculations
+			//Now do proc calculations
 
-		if (is_proc) {
-			chance = GetProcChances(chance, Hand);
+			if (is_proc) {
+				chance = GetProcChances(chance, Hand);
 
-			if (Hand != EQEmu::legacy::SlotPrimary) //Is Archery intened to proc at 50% rate?
-				chance /= 2;
+				if (Hand != EQEmu::legacy::SlotPrimary) //Is Archery intened to proc at 50% rate?
+					chance /= 2;
 
-			if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance)) {				
-				other->Damage(this, proc_damage, 615, skillinuse, true, -1, false, special);
+				if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance)) {
+					other->Damage(this, proc_damage, 615, skillinuse, true, -1, false, special);
 
+				}
 			}
 		}
 	}

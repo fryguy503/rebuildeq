@@ -488,7 +488,7 @@ void NPC::AddCardTable() {
 	if (GetRace() == GNOME) { pool + 5; cardTable[pool] = 100132; } //Gnome Card
 	if (GetRace() == FROGLOK || GetRace() == FROGLOK2) { pool + 5; cardTable[pool] = 100133; } //Froglok Card
 	if (GetRace() == INVISIBLE_MAN || GetRace() == DERVISH) { pool += 10; cardTable[pool] = 100134; } //Shadowed Man Card
-	
+	if (GetRace() == IKSAR) { pool + 5; cardTable[pool] = 100135; } //Iksar Card
 
 	if (pool < 1) return;
 
