@@ -8822,6 +8822,10 @@ void Client::RefreshBuild() {
 				}
 			
 
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_BLOODOATH && n > 4 && GetAA(aa2HandBash) < 1) { //AA 428
+					TrainAARank(aa2HandBash);
+					Message(15, "You have unlocked the AA \"2 Hand Bash\"!");
+				}
 				
 				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
 					TrainAARank(aaDeathPeace2);
@@ -10139,7 +10143,7 @@ void Client::ResetBuild() {
 	if (!results.Success()) {
 		return;
 	}
-
+	
 	//poof pet if they reset.
 	if (HasPet()) {
 		this->GetPet()->Depop();

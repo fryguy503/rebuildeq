@@ -58,7 +58,7 @@ bool Mob::AttackAnimation(EQEmu::skills::SkillType &skillinuse, int Hand, const 
 		const EQEmu::Item_Struct* item = weapon->GetItem();
 
 		Log.Out(Logs::Detail, Logs::Attack, "Weapon skill : %i", item->ItemType);
-
+		
 		switch (item->ItemType) {
 		case EQEmu::item::ItemType1HSlash: // 1H Slashing
 			skillinuse = EQEmu::skills::Skill1HSlashing;
@@ -3364,8 +3364,8 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 		if(attacker) {			
 			if (attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH) > 0) {
 				if (attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
-					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt
-					
+					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt ||
+					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HPiercing					
 					) {
 					int oath_damage = int32((float)damage * 0.1f * (float)rank);
 					attacker->CastToClient()->Message(MT_NonMelee, "Blood Oath %u added %i bonus damage.", rank, oath_damage);
@@ -3375,7 +3375,8 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 			if (attacker->IsClient() && attacker->CastToClient()->GetBuildRank(PALADIN, RB_PAL_KNIGHTSADVANTAGE) > 0) {
 				if (attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
-					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt
+					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt ||
+					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HPiercing
 					) {
 					int kDamage = int32((float)damage * 0.05f * (float)rank);
 					attacker->CastToClient()->Message(MT_NonMelee, "Knight's Advantage %u added %i bonus damage.", rank, kDamage);
@@ -3656,7 +3657,15 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			// NPCs can stun with their bash/kick as soon as they receive it.
 			// Clients can stun mobs under level 56 with their kick when they get level 55 or greater.
 			// Clients have a chance to stun if the mob is 56+
-
+			/*if (skill_used == EQEmu::skills::SkillBash && attacker && 
+				attacker->IsClient() &&
+				attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH) < 5 && 
+				(attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
+				attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt ||
+				attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HPiercing)) {
+				Message(15, "You need to train blood oath to use bash with a 2 hand weapon");
+				return;
+			}*/
 			// Calculate the chance to stun
 			int stun_chance = 0;
 			if (!GetSpecialAbility(UNSTUNABLE)) {

@@ -1043,7 +1043,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Blood Oath";
-			$newSkill->desc = 'While using a 2 handed weapon, increases damage by <em data-base="10">10</em>%.';
+			$newSkill->desc = 'While using a 2 handed weapon, increases damage by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>. When the skill is rank 5, unlocks the 2 Hand Bash AA.';
 			$newSkill->image = "/images/builds/icons/rb-sk-bloodoath.png";	
 			$skills[26] = $newSkill;					
 		
