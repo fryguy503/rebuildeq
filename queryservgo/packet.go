@@ -34,6 +34,18 @@ type ServerPacketOut struct {
 	Buffer  []byte
 }
 
+type ServerWhoAll struct {
+	Admin    int16  `struc:"int16,little"`    //int16 admin;
+	FromId   int32  `struc:"uint32,little"`   //uint32 fromid;
+	From     string `struc:"[64]byte,little"` //char from[64];
+	Whom     string `struc:"[64]byte,little"` //char whom[64];
+	Race     uint16 `struc:"uint16,little"`   //uint16 wrace; // FF FF = no race
+	Class    uint16 `struc:"uint16,little"`   //uint16 wclass; // FF FF = no class
+	LvlLow   uint16 `struc:"uint16,little"`   //uint16 lvllow; // FF FF = no numbers
+	LvlHigh  uint16 `struc:"uint16,little"`   //uint16 lvlhigh; // FF FF = no numbers
+	GmLookup uint16 `struc:"uint16,little"`   //uint16 gmlookup; // FF FF = not doing /who all gm
+}
+
 type ServerSpeech struct {
 	To        string `struc:"[64]byte,little"`  //stringchar	to[64];
 	From      string `struc:"[64]byte,little"`  //char	from[64];
