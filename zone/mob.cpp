@@ -5963,6 +5963,10 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true) {
 		break;
 	}
 
+	//Nerfed special abilities
+	strcpy(npctype->special_abilities, "");
+		
+
 	//AC Calculation
 	if (npctype->level >= 60) npctype->AC = 855;
 	else if (npctype->level >= 58) npctype->AC = 713;
