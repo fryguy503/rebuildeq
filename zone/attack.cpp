@@ -1331,9 +1331,8 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			}
 
 			//Check for BRD whistle
-			rank = GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE);
+			rank = GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE);
 			if (rank > 0) {
-				spellid = 734; //Song
 				chance = 300;
 				proc_damage = GetLevel() * 5;
 				proc_damage = proc_damage * 0.25f * rank;
@@ -1344,7 +1343,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				int buff_count = GetMaxTotalSlots();
 				for (int i = 0; i < buff_count; i++)
 				{
-					if (buffs[i].spellid == spellid) {
+					if ((buffs[i].spellid == 734 || buffs[i].spellid == 749 || buffs[i].spellid == 1762)) {
 						is_proc = true;
 						break;
 					}

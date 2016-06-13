@@ -340,8 +340,8 @@ class Build {
 			
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Jonathon's Whistle";
-			$newSkill->desc = 'Jonathon\'s Whistling Warsong now also grants a proc line similar to puma that deals your level * <em data-base="1">1</em><span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Jonthon's Whistle";
+			$newSkill->desc = 'Jonthon\'s Self Haste Songs now also grant a proc line similar to puma that deals your level * <em data-base="1">1</em><span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-jonathonswhistle.png";	
 			$skills[18] = $newSkill;
 

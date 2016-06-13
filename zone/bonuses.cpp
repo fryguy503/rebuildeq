@@ -1644,8 +1644,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 						effect_value += (int)(CastToClient()->GetBuildRank(PALADIN, RB_PAL_PURPOSEOFMARR) * 10);
 					}
 
-					if (spell_id == 734 && IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE) > 0) {
-						effect_value += (int)(CastToClient()->GetBuildRank(BARD, RB_BRD_JONATHONSWHISTLE) * 10);
+					if ((spell_id == 734 || spell_id == 749 || spell_id == 1762) && IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE) > 0) {
+						effect_value += (int)(CastToClient()->GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE) * 10);
 					}
 
 					if ((effect_value - 100) > new_bonus->haste) {
