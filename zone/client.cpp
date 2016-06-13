@@ -10189,7 +10189,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_BRD_KATTASCONCORD) return "Katta's Concord";
 		else if (id == RB_BRD_RIZLONASPURPOSE) return "Rizlona's Purpose";
 		else if (id == RB_BRD_BARDSWISH) return "Bard's Wish";
-		else if (id == RB_BRD_JONATHONSWHISTLE) return "Jonthon's Whistle";
+		else if (id == RB_BRD_JONTHONSWHISTLE) return "Jonthon's Whistle";
 		else if (id == RB_BRD_OFFHANDATTACK) return "Offhand Attack";
 		else if (id == RB_BRD_INNATESONGBLADE) return "Innate Songblade";
 		else if (id == RB_BRD_WARSONGOFZEK) return "Warsong of Zek";
