@@ -461,7 +461,7 @@ sub DoVeliousArmorHandin {
 		("slot" => 18, "item" => 24946, "reward" => 31055), #legs
 		("slot" => 19, "item" => 24945, "reward" => 31056), #boots
 	);
-	$armor_list{115}{11} = ( #thurgadin dalgrim underbelly necromancer silk
+	$armor_list{115}{11} = ( #thurgadin dalgrim underbelly shadowknight plate
 		("slot" => 2, "item" => 24933, "reward" => 31000), #cap
 		("slot" => 17, "item" => 24928, "reward" => 31001), #bp
 		("slot" => 7, "item" => 24930, "reward" => 31002), #sleeves
@@ -533,15 +533,6 @@ sub DoVeliousArmorHandin {
 		("slot" => 12, "item" => 24934, "reward" => 31047), #gloves
 		("slot" => 18, "item" => 24929, "reward" => 31048), #legs
 		("slot" => 19, "item" => 24931, "reward" => 31049), #boots
-	);
-	$armor_list{115}{11} = ( #thurgadin lorekeeper zorik necromancer silk
-		("slot" => 2, "item" => 24933, "reward" => 31056), #cap
-		("slot" => 17, "item" => 24928, "reward" => 31057), #bp
-		("slot" => 7, "item" => 24930, "reward" => 31058), #sleeves
-		("slot" => 9, "item" => 24932, "reward" => 31059), #wrist
-		("slot" => 12, "item" => 24934, "reward" => 31060), #gloves
-		("slot" => 18, "item" => 24929, "reward" => 31061), #legs
-		("slot" => 19, "item" => 24931, "reward" => 31062), #boots
 	);
 	#thurgadin pearce icefang beastlord leather
 	$armor_list{115}{10} = ( #thurgadin terman underbelly shaman chain
