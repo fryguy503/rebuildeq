@@ -1574,7 +1574,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	}
 
 	bool LeftCorpse = false;
-
+	int total_exp_loss = exploss; //I snapshot this for sake of #return
 	// now we apply the exp loss, unmem their spells, and make a corpse
 	// unless they're a GM (or less than lvl 10
 	if(!GetGM())
@@ -1726,7 +1726,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	}
 
 	//don't continue if you didn't lose exp
-	if (exploss < 1 && this->GetLevel() > 10) {
+	if (total_exp_loss < 1 && this->GetLevel() > 10) {
 		return true;
 	}
 
