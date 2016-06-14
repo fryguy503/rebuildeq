@@ -8,7 +8,7 @@
 #18 leg
 #19 feet
 
-sub VeliousPricingBySlot {
+sub velious_pricing_by_slot {
 	my $price = 100;
 	my $slot = shift;
 	if ($slot == 2) { $price = 500; } #head
@@ -21,11 +21,47 @@ sub VeliousPricingBySlot {
 	return $price;
 }
 
-sub VeliousArmorHail {
-	return "Are you interested in armor that Velious has to offer? [ ".quest::saylink("head")."], [".quest::saylink("arms")."], [".quest::saylink("wrists")."], [".quest::saylink("hands")."], [".quest::saylink("chest")."], [".quest::saylink("legs")."], [".quest::saylink("feet")."]";
+sub velious_armor_hail {
+	my $text = shift;
+	my $zoneid = shift;
+	my $classid = shift;
+	if($text=~/armor/i) {
+        quest::say("Are you interested in armor that Velious has to offer? [ ".quest::saylink("head")."], [".quest::saylink("arms")."], [".quest::saylink("wrists")."], [".quest::saylink("hands")."], [".quest::saylink("chest")."], [".quest::saylink("legs")."], [".quest::saylink("feet")."]");
+    } elsif($text=~/head/i || $text=~/arms/i || $text=~/wrists/i || $text=~/hands/i || $text=~/chest/i || $text=~/legs/i || $text=~/feet/i) {
+       plugin::velious_armor_requirement($text, $zoneid, $classid);
+    }
+    return;
 }
 
-sub VeliousArmorRequirement {
+
+#Pass zoneid, get the slot of what handin was successful.
+sub velious_armor_handin {
+	my $zoneid = shift;
+	my $cash = shift;
+	my $classid = shift;
+	my $itemref = shift;
+	my $armor_list = plugin::velious_armor_list();
+		
+	for $x (0...6) {
+		$slot = $armor_list[$zoneid][$classid][$x]{slot};
+		$item = $armor_list[$zoneid][$classid][$x]{item};
+		$reward = $armor_list[$zoneid][$classid][$x]{reward};
+		quest::say("Looking for $slot in $item for reward $reward");		
+		if (plugin::check_handin(\%itemref, $item => 1)) {
+			quest::say("Got item!");
+			if ($cash >= (plugin::velious_pricing_by_slot($slot)*1000)) {
+				quest::summonitem($reward);
+				return 1;
+			} else { #fail!
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
+
+
+sub velious_armor_requirement {
 	my $slot = shift;
 	my $zoneid = shift;
 	my $classid = shift;
@@ -166,35 +202,14 @@ sub VeliousArmorRequirement {
 			else { $slotname = "Boots"; $slotid = 19;  }
 		}
 	}
-	$price = plugin::VeliousPricingBySlot($slotid);
-	return "Found in $location, I require a$armor_type $slotname and my fee of $price platinum to craft this item.";
+	$price = plugin::velious_pricing_by_slot($slotid);
+	quest::say("Found in $location, I require a$armor_type $slotname and my fee of $price platinum to craft this item.");
 }
 
-#Pass zoneid, get the slot of what handin was successful.
-sub DoVeliousArmorHandin {
-
-	my $armor_list;
-	$tmp_zone = 113;
-	$tmp_class = 9;
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31014}; #boots
-	
-	foreach my $entry ($armor_list[$zoneid][$class]) {
-		quest::say("Requires ".$entry);
-		if (plugin::check_handin(\%itemcount,$entry{item}) => 1 && 
-			$cash >= (plugin::VeliousPricingBySlot($entry{slot})*1000)) {
-			quest::summonitem($entry{reward});
-			return 1;
-		}
-	}
-	return 0;
-
-	my $zoneid = shift;
-	my $cash = shift;
-	my $class = shift;
-
+sub velious_armor_list {
 	my $armor_list;
 	###KAEL###
-
+ 
 	$tmp_zone = 113;
 	$tmp_class = 3;
 	#kael barlek stonefist paladin plate
@@ -339,6 +354,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24910, reward => 25362}; #boots
 	
 	###SKYSHRINE###
+	$tmp_zone = 114;
 	$tmp_class = 11;
 	#skyshrine abudan fe-dhar necro silk
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24982, reward => 31161}; #cap
@@ -483,6 +499,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24959, reward => 31139}; #boots
 	
 	###THURGADIN###
+	$tmp_zone = 115;
 	$tmp_class = 4;
 	#thurgadin argash ranger chain
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24940, reward => 31014}; #cap
@@ -625,14 +642,5 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31012}; #gloves
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24946, reward => 31013}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31014}; #boots
-	
-	foreach my $entry ($armor_list[$zoneid][$class]) {
-		quest::say("Requires ".$entry);
-		if (plugin::check_handin(\%itemcount,$entry{item}) => 1 && 
-			$cash >= (plugin::VeliousPricingBySlot($entry{slot})*1000)) {
-			quest::summonitem($entry{reward});
-			return 1;
-		}
-	}
-	return 0;
+	return $armor_list;
 }
