@@ -47,7 +47,7 @@ sub velious_armor_handin {
 		$item = $armor_list[$zoneid][$classid][$x]{item};
 		$reward = $armor_list[$zoneid][$classid][$x]{reward};
 		quest::say("Looking for $slot in $item for reward $reward");		
-		if (plugin::check_handin(\%itemref, $item => 1)) {
+		if (plugin::check_handin(\%{$itemref}, $item => 1)) {
 			quest::say("Got item!");
 			if ($cash >= (plugin::velious_pricing_by_slot($slot)*1000)) {
 				quest::summonitem($reward);
