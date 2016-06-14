@@ -787,7 +787,7 @@ class Build {
 			$skills[10] = $newSkill;
 			$newSkill = new stdClass();
 			$newSkill->title = "Vital Organs";
-			$newSkill->desc = 'Backstab now deals <em data-base="25">25</em>% more damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Backstab has a <em data-base="10">10</em>chance to deal <em data-base="25">25</em>% more damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-vitalorgans.png";
 			$skills[13] = $newSkill;
 
