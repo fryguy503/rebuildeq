@@ -8,8 +8,8 @@
 			<form class="well bs-component">
 				<div class="form-group">
 				<p class="text-center">
-		          <label class="control-label">Updates on Twitter</label><br>
-		         For the time being, we do updates via twitter. Follow us!</p>
+		          <label class="control-label">Updates on server. </label><br>
+		          There's two ways to get updates about the server. The <a href="https://github.com/rebuildeq/rebuildeq/wiki">changelog</a> has a very detailed list of changes, while highlights are noted on twitter. Follow us!</p>
 		        </div>
 		    </form>
 		</div>
