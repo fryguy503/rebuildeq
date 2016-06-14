@@ -34,7 +34,7 @@ sub VeliousArmorRequirement {
 	my $slotname = "";
 	my $location = "";
 	my $slotid = 0;
-	
+
 	if ($zoneid == 115) { #Thurgadin
 		$location = "the Arena of Kael Drakkel";
 
@@ -172,11 +172,27 @@ sub VeliousArmorRequirement {
 
 #Pass zoneid, get the slot of what handin was successful.
 sub DoVeliousArmorHandin {
+
+	my $armor_list;
+	$tmp_zone = 113;
+	$tmp_class = 9;
+	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31014}; #boots
+	
+	foreach my $entry ($armor_list[$zoneid][$class]) {
+		quest::say("Requires ".$entry);
+		if (plugin::check_handin(\%itemcount,$entry{item}) => 1 && 
+			$cash >= (plugin::VeliousPricingBySlot($entry{slot})*1000)) {
+			quest::summonitem($entry{reward});
+			return 1;
+		}
+	}
+	return 0;
+
 	my $zoneid = shift;
 	my $cash = shift;
 	my $class = shift;
 
-	my @armor_list;
+	my $armor_list;
 	###KAEL###
 
 	$tmp_zone = 113;
@@ -190,6 +206,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24901, reward => 25375}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24903, reward => 25376}; #boots
 
+	$tmp_class = 8;
 	#kael bygloirn omorden bard plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24905, reward => 25384}; #cap		
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24900, reward => 25385}; #bp
@@ -199,6 +216,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24901, reward => 25389}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24903, reward => 25390}; #boots
 	
+	$tmp_class = 7;
 	#kael dagron stonecutter monk leather
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24919, reward => 25440}; #cap		
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24914, reward => 25441}; #bp
@@ -208,6 +226,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24915, reward => 25445}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24917, reward => 25446}; #boots
 	
+	$tmp_class = 4;
 	#kael gragek mjlorkigar ranger chain
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24912, reward => 25363}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24907, reward => 25364}; #bp
@@ -217,6 +236,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24908, reward => 25368}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24910, reward => 25369}; #boots
 	
+	$tmp_class = 6;
 	#kael jaglorm ygorr druid leather
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24919, reward => 25398}; #cap		
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24914, reward => 25399}; #bp
@@ -226,6 +246,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24915, reward => 25403}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24917, reward => 25404}; #boots
 	
+	$tmp_class = 9;
 	#kael kelenek bluadfeth rogue chain
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24912, reward => 25377}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24907, reward => 25378}; #bp
@@ -235,6 +256,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24908, reward => 25382}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24910, reward => 25383}; #boots
 	
+	$tmp_class = 1;
 	#kael kragek thunderforge warrior plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24905, reward => 25433}; #cap		
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24900, reward => 25434}; #bp
@@ -244,6 +266,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24901, reward => 25438}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24903, reward => 25439}; #boots
 	
+	$tmp_class = 13;
 	#kael mjeldor felstorm magician silk
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24926, reward => 25419}; #cap		
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24921, reward => 25420}; #bp
@@ -252,9 +275,20 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24927, reward => 25423}; #gloves
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24922, reward => 25424}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24924, reward => 25425}; #boots
+
+	$tmp_class = 11;
+	#kael bjarorm mjlorn necro silk
+	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24926, reward => 25412}; #cap		
+	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24921, reward => 25413}; #bp
+	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24923, reward => 25414}; #sleeves
+	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24925, reward => 25415}; #wrist
+	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24927, reward => 25416}; #gloves
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24922, reward => 25417}; #legs
+	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24924, reward => 25418}; #boots
 	
 	#kael nerik wolfsoul beastlord leather
 	#kael regbor vallgerthon berserker chain
+	$tmp_class = 14;
 	#kael stoem lekbar enchanter silk
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24926, reward => 25426}; #cap		
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24921, reward => 25427}; #bp
@@ -264,7 +298,8 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24922, reward => 25431}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24924, reward => 25432}; #boots
 	
-	#kael ulkar jollkarek wziard silk
+	$tmp_class = 12;
+	#kael ulkar jollkarek wizard silk
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24926, reward => 25405}; #cap		
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24921, reward => 25406}; #bp
 	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24923, reward => 25407}; #sleeves
@@ -273,6 +308,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24922, reward => 25410}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24924, reward => 25411}; #boots
 	
+	$tmp_class = 5;
 	#kael veldern blackhammer shadowknight plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24905, reward => 25349}; #cap		
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24900, reward => 25350}; #bp
@@ -282,6 +318,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24901, reward => 25354}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24903, reward => 25355}; #boots
 	
+	$tmp_class = 2;
 	#kael vylleam vyaeltor cleric plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24905, reward => 25391}; #cap		
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24900, reward => 25392}; #bp
@@ -291,6 +328,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24901, reward => 25396}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24903, reward => 25397}; #boots
 	
+	$tmp_class = 10;
 	#kael yeeldan spiritcaller shaman chain
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24912, reward => 25356}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24907, reward => 25357}; #bp
@@ -301,6 +339,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24910, reward => 25362}; #boots
 	
 	###SKYSHRINE###
+	$tmp_class = 11;
 	#skyshrine abudan fe-dhar necro silk
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24982, reward => 31161}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24977, reward => 31162}; #bp
@@ -310,6 +349,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24978, reward => 31166}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24980, reward => 31167}; #boots
 	
+	$tmp_class = 3;
 	#skyshrine adwetram fe-dhar paladin plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24961, reward => 31119}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24956, reward => 31120}; #bp
@@ -319,6 +359,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24957, reward => 31124}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24959, reward => 31125}; #boots
 	
+	$tmp_class = 10;
 	#skyshrine asteinnon fe-dhar shaman chain
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24968, reward => 31105}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24963, reward => 31106}; #bp
@@ -328,6 +369,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24964, reward => 31110}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24966, reward => 31111}; #boots
 	
+	$tmp_class = 9;
 	#skyshrine crendeatha fe-dhar rogue chain
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24968, reward => 31126}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24963, reward => 31127}; #bp
@@ -337,6 +379,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24964, reward => 31131}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24966, reward => 31132}; #boots
 	
+	$tmp_class = 12;
 	#skyshrine elaend fe-dhar wizard silk
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24982, reward => 31154}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24977, reward => 31155}; #bp
@@ -346,6 +389,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24978, reward => 31159}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24980, reward => 31160}; #boots
 	
+	$tmp_class = 2;
 	#skyshrine fardonad fe-dhar cleric plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24961, reward => 31140}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24956, reward => 31141}; #bp
@@ -355,6 +399,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24957, reward => 31145}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24959, reward => 31146}; #boots
 	
+	$tmp_class = 1;
 	#skyshrine jendavudd fe-dhar warrior plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24961, reward => 31182}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24956, reward => 31183}; #bp
@@ -364,6 +409,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24957, reward => 31187}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24959, reward => 31188}; #boots
 	
+	$tmp_class = 7;
 	#skyshrine komawin fe-dhar monk leather
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24975, reward => 31189}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24970, reward => 31190}; #bp
@@ -375,6 +421,7 @@ sub DoVeliousArmorHandin {
 	
 	#skyshrine larquin fe-dhar beastlord leather
 	
+	$tmp_class = 14;
 	#skyshrine lothieder fe-dhar enchanter silk
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24982, reward => 31175}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24977, reward => 31176}; #bp
@@ -384,6 +431,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24978, reward => 31180}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24980, reward => 31181}; #boots
 	
+	$tmp_class = 4;
 	#skyshrine nalelin fe-dhar ranger chain
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24968, reward => 31112}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24963, reward => 31113}; #bp
@@ -393,6 +441,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24964, reward => 31117}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24966, reward => 31118}; #boots
 	
+	$tmp_class = 13;
 	#skyshrine ocoenydd fe-dhar magician silk
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24982, reward => 31168}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24977, reward => 31169}; #bp
@@ -402,6 +451,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24978, reward => 31173}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24980, reward => 31174}; #boots
 	
+	$tmp_class = 5;
 	#skyshrine onerind fe-dhar shadowknight plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24961, reward => 31098}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24956, reward => 31099}; #bp
@@ -411,6 +461,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24957, reward => 31103}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24959, reward => 31104}; #boots
 	
+	$tmp_class = 6;
 	#skyshrine qynydd fe-dhar druid leather
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24975, reward => 31147}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24970, reward => 31148}; #bp
@@ -421,6 +472,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24973, reward => 31153}; #boots
 	
 	#skyshrine roagar fe-dhar berserker chain
+	$tmp_class = 8;
 	#skyshrine umykith fe-dhar bard plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24961, reward => 31133}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24956, reward => 31134}; #bp
@@ -431,6 +483,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24959, reward => 31139}; #boots
 	
 	###THURGADIN###
+	$tmp_class = 4;
 	#thurgadin argash ranger chain
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24940, reward => 31014}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24935, reward => 31015}; #bp
@@ -440,6 +493,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24946, reward => 31019}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31020}; #boots
 	
+	$tmp_class = 3;
 	#thurgadin battlepriest daragor paladin plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31021}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31022}; #bp
@@ -449,6 +503,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31026}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31027}; #boots
 	
+	$tmp_class = 1;
 	#thurgadin captain njall warrior plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31085}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31086}; #bp
@@ -458,6 +513,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31090}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31091}; #boots
 	
+	$tmp_class = 6;
 	#thurgadin cobi frostbeard druid leather
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24942, reward => 31050}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24944, reward => 31051}; #bp
@@ -467,6 +523,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24946, reward => 31055}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24945, reward => 31056}; #boots
 	
+	$tmp_class = 5;
 	#thurgadin dalgrim underbelly shadowknight plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31000}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31001}; #bp
@@ -476,6 +533,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31005}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31006}; #boots
 	
+	$tmp_class = 9;
 	#thurgadin foreman felspar rogue chain
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24940, reward => 31028}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24935, reward => 31029}; #bp
@@ -486,6 +544,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31034}; #boots
 	
 	#thurgadin glatigi berserker chain
+	$tmp_class = 13;
 	#thurgadin kyla frostbeard magician silk
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31070}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31071}; #bp
@@ -495,6 +554,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31075}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31076}; #boots
 	
+	$tmp_class = 8;
 	#thurgadin leifur bard plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31036}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31037}; #bp
@@ -504,6 +564,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31041}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31042}; #boots
 	
+	$tmp_class = 14;
 	#thurgadin lorekeeper brita enchanter silk
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31077}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31078}; #bp
@@ -513,6 +574,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31082}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31083}; #boots
 	
+	$tmp_class = 7;
 	#thurgadin lorekeeper einar monk leather
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24942, reward => 31092}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24944, reward => 31093}; #bp
@@ -522,6 +584,7 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24946, reward => 31097}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24945, reward => 31098}; #boots
 	
+	$tmp_class = 11;
 	#thurgadin lorekeeper zorik necromancer silk
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31063}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31064}; #bp
@@ -530,7 +593,18 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31067}; #gloves
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31068}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31069}; #boots
+
+	$tmp_class = 12;
+	#thurgadin mauren frostbeard wizard silk
+	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31056}; #cap
+	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31057}; #bp
+	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31058}; #sleeves
+	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31059}; #wrist
+	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31060}; #gloves
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31061}; #legs
+	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31062}; #boots
 	
+	$tmp_class = 2;
 	#thurgadin loremaster dorinan cleric plate
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31043}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31044}; #bp
@@ -541,6 +615,8 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31049}; #boots
 	
 	#thurgadin pearce icefang beastlord leather
+
+	$tmp_class = 10;
 	#thurgadin terman underbelly shaman chain
 	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24940, reward => 31008}; #cap
 	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24935, reward => 31009}; #bp
@@ -550,10 +626,11 @@ sub DoVeliousArmorHandin {
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24946, reward => 31013}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31014}; #boots
 	
-	foreach my $key (keys %{ $armor_list{$zoneid}{$class} }) {
-		if (plugin::check_handin(\%itemcount,$armor_list[$zoneid][$class]{item}) => 1 && 
-			$cash >= (plugin::VeliousPricingBySlot($armor_list[$zoneid][$class]{slot})*1000)) {
-			quest::summonitem($armor_list[$zoneid][$class]{reward});
+	foreach my $entry ($armor_list[$zoneid][$class]) {
+		quest::say("Requires ".$entry);
+		if (plugin::check_handin(\%itemcount,$entry{item}) => 1 && 
+			$cash >= (plugin::VeliousPricingBySlot($entry{slot})*1000)) {
+			quest::summonitem($entry{reward});
 			return 1;
 		}
 	}
