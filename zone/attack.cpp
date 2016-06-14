@@ -3369,7 +3369,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt ||
 					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HPiercing					
 					) {
-					int oath_damage = int32((float)damage * 0.1f * (float)rank);
+					int oath_damage = int32((float)damage * 0.05f * (float)rank);
 					attacker->CastToClient()->Message(MT_NonMelee, "Blood Oath %u added %i bonus damage.", rank, oath_damage);
 					damage += oath_damage;
 				}
