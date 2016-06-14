@@ -640,8 +640,8 @@ void Mob::RogueBackstab(Mob* other, bool min_damage, int ReuseTime)
 	else{
 		ndamage = -5;
 	}
-
-	if (IsClient() && CastToClient()->GetBuildRank(ROGUE, RB_ROG_VITALORGANS) > 0) {
+	
+	if (IsClient() && CastToClient()->GetBuildRank(ROGUE, RB_ROG_VITALORGANS) > 0 && zone->random.Roll(10 * CastToClient()->GetBuildRank(ROGUE, RB_ROG_VITALORGANS))) {
 		ndamage += ndamage * 0.25f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_VITALORGANS);
 	}
 
