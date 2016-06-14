@@ -426,7 +426,7 @@ bool SharedDatabase::GetSharedBank(uint32 id, Inventory *inv, bool is_charid)
 	for (auto row = results.begin(); row != results.end(); ++row) {
 		int16 slot_id = (int16)atoi(row[0]);
 		uint32 item_id = (uint32)atoi(row[1]);
-		int8 charges = (int8)atoi(row[2]);
+		uint32 charges = (uint32)atoi(row[2]);
 
 		uint32 aug[EQEmu::legacy::ITEM_COMMON_SIZE];
 		aug[0] = (uint32)atoi(row[3]);
