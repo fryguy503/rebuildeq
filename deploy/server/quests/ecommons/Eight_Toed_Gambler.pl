@@ -58,8 +58,13 @@ sub EVENT_ITEM {
 	}
 	
 	#quest::say("You gave me $platinum $gold $silver $copper");
-	my $cash = $copper + $silver * 10 + $gold * 100 + $platinum * 1000;	
+	my $cash = $copper + ($silver * 10) + ($gold * 100) + ($platinum * 1000);
 	#quest::say("That's $cash total money");	
+	if ($cash > 10000) {
+		quest::say("I only take bets that equal up to 10 platinum");
+		 quest::givecash($copper, $silver, $gold, $platinum); 
+		 return;
+	}
 
 	if ($cash < 1) {
 		quest::say("I only accept money");
@@ -67,6 +72,7 @@ sub EVENT_ITEM {
 	}
 	quest::setglobal("roll", quest::ChooseRandom(1,2,3,4,5,6), 0, "F");
 	quest::setglobal("bet", $cash, 0, "F");
+
 	#quest::say("Bets are in!");
 	#quest::emote("shuffles the cups on the wooden box");
 	quest::say("[ ". quest::saylink("first")." ], [ ". quest::saylink("second")." ], [ ". quest::saylink("third")." ], [ ". quest::saylink("fourth")." ], [ ". quest::saylink("fifth")." ], [ ". quest::saylink("sixth")." ]");
