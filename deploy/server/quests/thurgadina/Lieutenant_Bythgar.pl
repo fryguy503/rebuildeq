@@ -2,9 +2,9 @@ sub EVENT_SAY {
   if ($faction <= 3) { # Require Warmly and greater faction    
     if($text=~/hail/i){ 
       quest::emote("speaks in a rumbling tone.");
-      quest::say("Greetings. I only wish to speak to a shaman. Are you a shaman?"); 
+      plugin::velious_armor_hail($text, $zoneid, $client->GetClass());
    }
-    plugin::velious_armor_hail($text, $zoneid, $client->GetClass());    
+    
   } else {
     quest::say("You must prove your dedication before I will speak to you.");
   }
