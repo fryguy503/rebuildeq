@@ -9,115 +9,45 @@ sub EVENT_SAY {
   if ($faction <= 3) {
     if ($text=~/hail/i) {
       quest::say("Greetin's, $name, you look like a $race who knows the value of a good bow when ye see one. I'll let ye in on a li'l secret, the bow is the greatest of all weapons as it allows you to inflict maximum punishment on yer foes with minimum risk. How can ye possibly go wrong? Or better yet, if'n ye be a ranger, I can see my way clear to making you a coif, tunic, sleeves, bracer, gauntlets, leggings, or boots that I'm sure ye would enjoy.");
-    }
-    if ($text=~/coif/i) {
-      quest::say("To create a piece of armor to protect your sensitive skull. I will require three pieces of crushed coral as well as a corroded chain coif.");
-    }
-    if ($text=~/tunic/i) {
-      quest::say("To forge a spectacular chain tunic I will require three flawless diamonds and a corroded chain tunic.  With the gems and my skills I may be able to draw out some of its magical powers.");
-    }
-    if ($text=~/sleeves/i) {
-      quest::say("Protection for your arms will come at the price of three flawed emeralds and a set of corroded chain sleeves.");
-    }
-    if ($text=~/bracer/i) {
-      quest::say("For the bracers, I will require a corroded chain bracer as well as three crushed flame emeralds.  Return to me when you find such things, $name.");
-    }
-    if ($text=~/gauntlets/i) {
-      quest::say("Protecting your hands is very important.  I can forge protection for your hands if you bring me a pair of corroded chain gauntlets and three crushed topaz.");
-    }
-    if ($text=~/leggings/i) {
-      quest::say("A set of corroded chain leggings might be salvageable if you were to find three flawed sea sapphires.  With the right techniques and ingredients almost anything is possible.");
-    }
-    if ($text=~/boots/i) {
-      quest::say("We use our feet so often, should not they be protected as well as any other portion of our bodies?  If you seek fine protection for your feet, return to me with three pieces of crushed black marble and a set of corroded chain boots.");
-    }
   }
-  else {
-    quest::say("I do not know you well enough to entrust you with such a quest, yet.");
+    plugin::velious_armor_hail($text, $zoneid, $client->GetClass());    
+  } else {
+    quest::say("You must prove your dedication before I will speak to you.");
   }
 }
 
 sub EVENT_ITEM {
-  if ($faction <= 3) {
-    if (plugin::check_handin(\%itemcount, 25831 => 3, 24940 => 1)) { # cap
-      quest::summonitem(31014);
-      quest::exp(100000);
-      quest::faction(49,20); # coldain
-      quest::faction(67,20); # Dain Frostreaver IV
-      quest::faction(188,-60); # Kromrif
-      quest::faction(189,-60); # Kromzek
-      quest::emote("smiles warmly as he hands you your reward.");
-      quest::say("You have done well.");
+  if ($faction == 1) { #req ally CoV 
+
+    my $cash = $copper + $silver * 10 + $gold * 100 + $platinum * 1000;
+    my @armor_list = plugin::velious_armor_list();
+    my $classid = $client->GetClass();
+
+    for $x (0...6) {
+      $slot = $armor_list[$zoneid][$classid][$x]{slot};
+      $item = $armor_list[$zoneid][$classid][$x]{item};
+      $reward = $armor_list[$zoneid][$classid][$x]{reward};
+      quest::say("Looking for $slot in $item for reward $reward");    
+      if ($cash >= (plugin::velious_pricing_by_slot($slot)*1000) && plugin::check_handin(\%itemcount, $item => 1)) {
+          quest::summonitem($reward);
+          quest::emote("smiles warmly as he hands you your reward.");
+          quest::say("Well done, $name.");
+          quest::exp(175000);
+          quest::faction(179,20); # King Tormax
+          quest::faction(189,20); # Kromzek
+          quest::faction(42,-20); # Claws of Veeshan
+          quest::faction(49,-60); # Coldain
+          return;       
+      }
     }
-    elsif (plugin::check_handin(\%itemcount, 25814 => 3, 24935 => 1)) { # bp
-      quest::summonitem(31015);
-      quest::exp(100000);
-      quest::faction(49,20); # coldain
-      quest::faction(67,20); # Dain Frostreaver IV
-      quest::faction(188,-60); # Kromrif
-      quest::faction(189,-60); # Kromzek
-      quest::emote("smiles warmly as he hands you your reward.");
-      quest::say("You have done well.");
-    }
-    elsif (plugin::check_handin(\%itemcount, 25821 => 3, 24937 => 1)) { # sleeves
-      quest::summonitem(31016);
-      quest::exp(100000);
-      quest::faction(49,20); # coldain
-      quest::faction(67,20); # Dain Frostreaver IV
-      quest::faction(188,-60); # Kromrif
-      quest::faction(189,-60); # Kromzek
-      quest::emote("smiles warmly as she hands you your reward.");
-      quest::say("You have done well.");
-    }
-    elsif (plugin::check_handin(\%itemcount, 25838 => 3, 24939 => 1)) { # wrist
-      quest::summonitem(31017);
-      quest::exp(100000);
-      quest::faction(49,20); # coldain
-      quest::faction(67,20); # Dain Frostreaver IV
-      quest::faction(188,-60); # Kromrif
-      quest::faction(189,-60); # Kromzek
-      quest::emote("smiles warmly as he hands you your reward.");
-      quest::say("You have done well.");
-    }
-    elsif (plugin::check_handin(\%itemcount, 25832 => 3, 24941 => 1)) { # gloves
-      quest::summonitem(31018);
-      quest::exp(100000);
-      quest::faction(49,20); # coldain
-      quest::faction(67,20); # Dain Frostreaver IV
-      quest::faction(188,-60); # Kromrif
-      quest::faction(189,-60); # Kromzek
-      quest::emote("smiles warmly as he hands you your reward.");
-      quest::say("You have done well.");
-    }
-    elsif (plugin::check_handin(\%itemcount, 25825 => 3, 24936 => 1)) { # legs
-      quest::summonitem(31019);
-      quest::exp(100000);
-      quest::faction(49,20); # coldain
-      quest::faction(67,20); # Dain Frostreaver IV
-      quest::faction(188,-60); # Kromrif
-      quest::faction(189,-60); # Kromzek
-      quest::emote("smiles warmly as he hands you your reward.");
-      quest::say("You have done well.");
-    }
-    elsif (plugin::check_handin(\%itemcount, 25833 => 3, 24938 => 1)) { # boots
-      quest::summonitem(31020);
-      quest::exp(100000);
-      quest::faction(49,20); # coldain
-      quest::faction(67,20); # Dain Frostreaver IV
-      quest::faction(188,-60); # Kromrif
-      quest::faction(189,-60); # Kromzek
-      quest::emote("smiles warmly as he hands you your reward.");
-      quest::say("You have done well.");
-    }
-    else {
-      plugin::return_items(\%itemcount); 
-      quest::say("These are not the pieces I need.");
-    }
+    quest::say("These items are not what I am looking for.");
+  } else {    
+    quest::say("I do not know you well enough to entrust such an item to you, yet.");
   }
-  else {
-    quest::say("I do not know you well enough to entrust you with such an item, yet.");
-  }
-}
+  quest::givecash($copper, $silver, $gold, $platinum);
+  plugin::return_items(\%itemcount);  
+  return;
+} 
 
 #END of FILE Zone: thurgadina  ID:115166 -- Argash
 

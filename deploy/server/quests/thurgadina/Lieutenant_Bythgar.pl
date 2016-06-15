@@ -1,12 +1,9 @@
-# enchanter thurgadin velium armor
-#
-
-
-sub EVENT_SAY {
-  if ($faction <= 3) { # Require warmly and greater faction
-    if ($text=~/hail/i) {
-      quest::say("Greetings to you.  I seek those who call themselves enchanters.  Are you an enchanter?");
-    }
+sub EVENT_SAY { 
+  if ($faction <= 3) { # Require Warmly and greater faction    
+    if($text=~/hail/i){ 
+      quest::emote("speaks in a rumbling tone.");
+      quest::say("Greetings. I only wish to speak to a shaman. Are you a shaman?"); 
+   }
     plugin::velious_armor_hail($text, $zoneid, $client->GetClass());    
   } else {
     quest::say("You must prove your dedication before I will speak to you.");
@@ -45,6 +42,3 @@ sub EVENT_ITEM {
   plugin::return_items(\%itemcount);  
   return;
 } 
-
-#END of FILE Zone: thurgadina ID:115152 -- Lorekeeper_Brita
-
