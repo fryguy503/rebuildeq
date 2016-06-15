@@ -1,14 +1,8 @@
-#Zone: Skyshrine
-#Short Name: skyshrine
-#Zone ID: 114
-#
-#NPC Name: Umykith Fe`Dhar
-#NPC ID: 114275
 
 sub EVENT_SAY {
-  if ($faction < 2) { #req ally CoV
-    if($text=~/Hail/i) {
-      quest::say("Hail! What news and stories have you from the New World? Perhaps if you are a bard you can spin me stories of those lands. Oh, I forget my manners. We shall exchange talk another time. You seek something, do you not? A new outfit perhaps?");
+  if ($faction == 1) { #req ally CoV
+    if($text=~/hail/i) {
+      quest::say("Greetings to you. I seek those who call themselves enchanters. Are you what I seek?");
    }
     plugin::velious_armor_hail($text, $zoneid, $client->GetClass());    
   } else {
@@ -47,5 +41,3 @@ sub EVENT_ITEM {
   plugin::return_items(\%itemcount);  
   return;
 } 
-
-#END of FILE Zone: skyshrine ID:114275 -- Umykith Fe`Dhar
