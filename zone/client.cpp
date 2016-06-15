@@ -9331,6 +9331,11 @@ void Client::EmoteEncounter() {
 	pool += 50;
 	encounterTable[pool] = EN_SPECTRE;
 
+	if (zoneid == 59) { //mistmoore
+		pool += 200;
+		encounterTable[pool] = EN_MISTMOORE;
+	
+	}
 	if ((zoneid == 129 || //thurgadinb
 		zoneid == 115 || //thurgadina
 		zoneid == 118 || //gd
