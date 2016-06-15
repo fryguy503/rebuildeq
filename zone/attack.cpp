@@ -1732,6 +1732,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	if (GetZoneID() == 124 //ToV
 		) {
 		Message(13, "The zone you died in is not eligible for #return");
+		return true;
 	}
 
 	//Update character_custom with return_zone
