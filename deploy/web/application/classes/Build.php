@@ -505,13 +505,13 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Convergence of Spirits";
 			$newSkill->desc = 'Grants the Convergence of Spirits AA, giving a heal over time that heals for <em data-base="0.5">0.5</em>% of the target\'s max health per tick for <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-dru=convergenceofspirits..png";	
+			$newSkill->image = "/images/builds/icons/rb-dru-convergenceofspirits..png";	
 			$skills[20] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lifeflow";
 			$newSkill->desc = 'While an ally has Covergence of Spirits or Nature\'s Boon buff on them, they are granted a <em data-base="1">1</em>% death save chance, healing when triggered for 8000 hitpoints<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-dru=lifeflow.png";	
+			$newSkill->image = "/images/builds/icons/rb-dru-lifeflow.png";	
 			$skills[22] = $newSkill;
 
 			$newSkill = new stdClass();
