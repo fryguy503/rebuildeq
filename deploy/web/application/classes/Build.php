@@ -505,7 +505,7 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Convergence of Spirits";
 			$newSkill->desc = 'Grants the Convergence of Spirits AA, giving a heal over time that heals for <em data-base="0.5">0.5</em>% of the target\'s max health per tick for <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-dru-convergenceofspirits..png";	
+			$newSkill->image = "/images/builds/icons/rb-dru-convergenceofspirits.png";	
 			$skills[20] = $newSkill;
 
 			$newSkill = new stdClass();
