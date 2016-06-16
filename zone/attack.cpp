@@ -3368,31 +3368,59 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 	if(damage > 0) {
 		//if there is some damage being done and theres an attacker involved
-		if(attacker) {			
-			if (attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH) > 0) {
-				if (attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
-					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt ||
-					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HPiercing					
-					) {
-					int oath_damage = int32((float)damage * 0.05f * (float)rank);
-					attacker->CastToClient()->Message(MT_NonMelee, "Blood Oath %u added %i bonus damage.", rank, oath_damage);
-					damage += oath_damage;
+		if (attacker) {
+			if (attacker->IsClient()) {
+				int bonus_damage;
+				Client * attacker_client = attacker->CastToClient();
+				rank = attacker_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH);
+				if (rank > 0) {
+					if (attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
+						attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt ||
+						attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HPiercing
+						) {
+						bonus_damage = damage * 0.05f * rank;
+						attacker_client->Message(MT_NonMelee, "Blood Oath %u added %i bonus damage.", rank, bonus_damage);
+						damage += bonus_damage;
+					}
 				}
-			}
 
-			if (attacker->IsClient() && attacker->CastToClient()->GetBuildRank(PALADIN, RB_PAL_KNIGHTSADVANTAGE) > 0) {
-				if (attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
-					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt ||
-					attacker->CastToClient()->GetPrimarySkillValue() == EQEmu::item::ItemType2HPiercing
-					) {
-					int kDamage = int32((float)damage * 0.05f * (float)rank);
-					attacker->CastToClient()->Message(MT_NonMelee, "Knight's Advantage %u added %i bonus damage.", rank, kDamage);
-					damage += kDamage;
+				rank = attacker_client->GetBuildRank(PALADIN, RB_PAL_KNIGHTSADVANTAGE);
+
+				if (rank > 0) {
+					if (attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
+						attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt ||
+						attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HPiercing
+						) {
+						bonus_damage = damage * 0.05f * rank;
+						attacker->CastToClient()->Message(MT_NonMelee, "Knight's Advantage %u added %i bonus damage.", rank, bonus_damage);
+						damage += bonus_damage;
+					}
+				}
+
+				rank = attacker_client->CastToClient()->GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
+				if (rank > 0) {
+
+					uint8 counters = attacker_client->GetRottenCoreCounters();
+					if (counters > 0) {
+						bonus_damage = damage * 0.05f * counters;
+						attacker_client->Message(MT_NonMelee, "Killing Spree %u added %i bonus damage with %u counters.", rank, bonus_damage, counters);
+						damage += bonus_damage;
+					}
+				}
+
+				rank = attacker_client->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
+				if (rank > 0) {
+					uint8 counters = attacker_client->GetRottenCoreCounters();
+					if (counters > 0) {
+						bonus_damage = damage * 0.03f * counters;
+						attacker_client->Message(MT_NonMelee, "Rotten Core %u added %i bonus damage with %u counters.", rank, bonus_damage, counters);
+						damage += bonus_damage;
+					}
 				}
 			}
 
 			// if spell is lifetap add hp to the caster
-			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell( spell_id )) {
+			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell(spell_id)) {
 				//Shin: If a lifetap and SK and have points into Soul Link
 				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) > 0) {
 					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
@@ -3402,7 +3430,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 				int healed = damage;
 				//Shin: Hungering Aura check
-				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA) > 0 && attacker->CastToClient()->GetAggroCount() > 0) {					
+				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA) > 0 && attacker->CastToClient()->GetAggroCount() > 0) {
 					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA);
 					int healBonus = int32((float)healed * 0.06f * (float)(attacker->CastToClient()->GetAggroCount() > rank) * attacker->CastToClient()->GetAggroCount());
 					if (healBonus > 0) {
@@ -3418,7 +3446,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 				//we used to do a message to the client, but its gone now.
 				// emote goes with every one ... even npcs
-				entity_list.MessageClose(this, true, 300, MT_Emote, "%s beams a smile at %s", attacker->GetCleanName(), this->GetCleanName() );
+				entity_list.MessageClose(this, true, 300, MT_Emote, "%s beams a smile at %s", attacker->GetCleanName(), this->GetCleanName());
 			}
 
 			if (attacker && attacker->GetBodyType() == BT_Undead &&
@@ -3430,28 +3458,8 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 					damage -= damageReduction;
 				}
 			}
-
-			//Shin: Rotten Core
-			if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE) > 0) {
-				
-				rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
-				uint32 counters = 0;
-				if (attacker->FindBuff(700)) {
-					Buffs_Struct *buffs = attacker->GetBuffs();
-					for (int buffCount = 0; buffCount <= BUFF_COUNT; buffCount++) {
-						if (buffs[buffCount].spellid != 700)
-							continue;
-						counters = buffs[buffCount].counters;
-						break;
-					}
-				}
-				if (counters > 0) {
-					int coreDmg = int32(damage * 0.08f * counters);
-					attacker->CastToClient()->Message(MT_NonMelee, "Rotten Core %u added %i bonus damage.", rank, coreDmg);
-					damage += coreDmg;
-				}
-			}
-
+		
+			
 			
 		}	//end `if there is some damage being done and theres anattacker person involved`
 		
@@ -3702,7 +3710,8 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			if (attacker->IsClient() &&
 				attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH) > 0 &&
 				zone->random.Roll((int)attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH))) {
-				attacker->Message(MT_NonMelee, "%s is hit by a Bash of Death.", this->GetCleanName());
+				entity_list.MessageClose(this, true, 300, MT_Emote, "%s hits %s with a Bash of Death!", attacker->GetCleanName(), this->GetCleanName());
+				//attacker->Message(MT_NonMelee, "%s is hit by a Bash of Death.", this->GetCleanName());
 				attacker->SpellFinished(13531, this); //Proc Harm Touch!
 			}
 

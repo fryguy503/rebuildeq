@@ -771,6 +771,12 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-rog-appraisal.png";
 			$skills[0] = $newSkill;
 			$newSkill = new stdClass();
+			$newSkill->title = "Killing Spree";
+			$newSkill->desc = 'Each time a creature is successfully killed, the rogue gains a killing spree counter. For a limited time, attacks deal an additional <em data-base="5">5</em>% damage per counter, with a cap of <em data-base="2">2</em> counters<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-appraisal.png";
+			$skills[2] = $newSkill;
+
+			$newSkill = new stdClass();
 			$newSkill->title = "Thief's Eyes";
 			$newSkill->desc = 'Increasing chance to hit by <em data-base="2">2</em>% with all skills <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-thiefseyes.png";			
@@ -1031,7 +1037,7 @@ class Build {
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Rotten Core";
-			$newSkill->desc = 'Increases attack by <em data-base="+8">+8</em>% for a short duration each time a target dies nearby with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Each time a creature is successfully killed, the knight gains a rotten core counter. For a limited time, attacks deal an additional <em data-base="3">3</em>% damage per counter, with a cap of <em data-base="1">1</em> counters<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-rottencore.png";	
 			$skills[22] = $newSkill;
 			

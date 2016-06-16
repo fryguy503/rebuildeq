@@ -9057,21 +9057,34 @@ void Client::AddRestedExperience(uint32 lastUpdate) {
 
 uint8 Client::GetRottenCoreCounters() {
 	if (m_epp.rotten_core_timeout < time(nullptr)) {
+		if (m_epp.rotten_core > 0) {
+			Message(MT_NonMelee, "Your counters have faded.");
+		}
 		m_epp.rotten_core = 0;
 	}
 	return m_epp.rotten_core;
 }
 
 void Client::AddRottenCoreCounter(uint8 amount) {
-
+	
 	if (m_epp.rotten_core_timeout < time(nullptr)) {
 		m_epp.rotten_core = 0;
 	}
 	m_epp.rotten_core += amount;
-	m_epp.rotten_core_timeout = time(nullptr) + 18;
-	if (m_epp.rotten_core > GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE)) {
-		m_epp.rotten_core = GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
+	//cap cores
+	uint8 rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
+	if (rank > 0) {
+		if (m_epp.rotten_core > rank) {
+			m_epp.rotten_core = rank;
+		}
 	}
+	rank = GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
+	if (rank > 0) {
+		if (m_epp.rotten_core > rank * 2) {
+			m_epp.rotten_core = rank * 2;
+		}
+	}
+	m_epp.rotten_core_timeout = time(nullptr) + 60 - (m_epp.rotten_core * 4);
 }
 
 //Return a class name based on most used class
@@ -10163,6 +10176,7 @@ std::string Client::GetBuildName(uint32 id) {
 	switch (this->GetClass()) {
 	case ROGUE:
 		if (id == RB_ROG_APPRAISAL) return "Appraisal";
+		else if (id == RB_ROG_KILLINGSPREE) return "Killing Spree";
 		else if (id == RB_ROG_THIEFSEYES) return "Thief's Eyes";
 		else if (id == RB_ROG_SINISTERSTRIKES) return "Sinister Strikes";
 		else if (id == RB_ROG_FOCUSEDSTAB) return "Focused Stab";
