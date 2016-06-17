@@ -775,7 +775,6 @@ class Build {
 			$newSkill->desc = 'Each time a creature is successfully killed, the rogue gains a killing spree counter. For a limited time, attacks deal an additional <em data-base="5">5</em>% damage per counter, with a cap of <em data-base="2">2</em> counters<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-appraisal.png";
 			$skills[2] = $newSkill;
-
 			$newSkill = new stdClass();
 			$newSkill->title = "Thief's Eyes";
 			$newSkill->desc = 'Increasing chance to hit by <em data-base="2">2</em>% with all skills <span class="perLevel"> per rank</span>.';
@@ -786,6 +785,11 @@ class Build {
 			$newSkill->desc = 'Increases offhand damage bonus by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-sinisterstrikes.png";	
 			$skills[6] = $newSkill;
+			$newSkill = new stdClass();
+			$newSkill->title = "Sneak Attack";
+			$newSkill->desc = 'If a rogue is hiding and sneaking and uses a backstab while not on any enemy hate list, their chance to hit with a backstab increases by <em data-base="2000">2000</em>% and critical chance increases by <em data-base="10">10</em>% <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-sinisterstrikes.png";	
+			$skills[8] = $newSkill;
 			$newSkill = new stdClass();
 			$newSkill->title = "Focused Stab";
 			$newSkill->desc = 'Backstab has a <em data-base="5">5</em>% better chance to hit<span class="perLevel"> per rank</span> and when maxxed, allows backstabs from front.';
