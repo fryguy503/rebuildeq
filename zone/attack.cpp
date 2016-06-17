@@ -274,17 +274,20 @@ bool Mob::CheckHitChance(Mob* other, EQEmu::skills::SkillType skillinuse, int Ha
 	if (skillinuse == EQEmu::skills::SkillArchery)
 		hitBonus -= hitBonus*RuleR(Combat, ArcheryHitPenalty);
 
-	if (attacker->IsClient() && 
-		attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB) > 0 &&
-		skillinuse == EQEmu::skills::SkillBackstab) {
-		hitBonus += hitBonus * 0.05f * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB);
-	}
+	if (attacker->IsClient()) {
+		Client * attacker_client = attacker->CastToClient();
 
-	if (attacker->IsClient() && 
-		attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEFSEYES) > 0) {
-		hitBonus += hitBonus * 0.01f * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEFSEYES);
-	}
+		uint8 rank = attacker_client->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB);
+		if (rank > 0 && skillinuse == EQEmu::skills::SkillBackstab) {
+			hitBonus += hitBonus * 0.05f * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSEDSTAB);
+		}
 
+		rank = attacker_client->GetBuildRank(ROGUE, RB_ROG_THIEFSEYES);
+		if (rank > 0) {
+			hitBonus += hitBonus * 0.01f * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEFSEYES);
+		}
+	}
+	
 	//Calculate final chance to hit
 	chancetohit += ((chancetohit * (hitBonus - avoidanceBonus)) / 100.0f);
 	Log.Out(Logs::Detail, Logs::Attack, "Chance to hit %.2f after accuracy calc %.2f and avoidance calc %.2f", chancetohit, hitBonus, avoidanceBonus);
