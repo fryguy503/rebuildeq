@@ -326,6 +326,12 @@ bool Mob::CheckHitChance(Mob* other, EQEmu::skills::SkillType skillinuse, int Ha
 
 	Log.Out(Logs::Detail, Logs::Attack, "Final hit chance: %.2f%%. Hit roll %.2f", chancetohit, tohit_roll);
 
+	//Evade once bonus mechanics
+	if (IsClient() && tohit_roll <= chancetohit && other && CastToClient()->DoEvadeOnce()) {
+		Message(MT_NonMelee, "At the last second, you evade %'s attack!", other->GetCleanName());
+		chancetohit = tohit_roll + 1;
+	}
+
 	return(tohit_roll <= chancetohit);
 }
 

@@ -787,7 +787,7 @@ class Build {
 			$skills[6] = $newSkill;
 			$newSkill = new stdClass();
 			$newSkill->title = "Sneak Attack";
-			$newSkill->desc = 'If a rogue is hiding and sneaking and uses a backstab while the mob is >90% hp, their chance to hit with a backstab increases by <em data-base="2000">2000</em>% and critical chance increases by <em data-base="10">10</em>% <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'If a rogue is hiding and sneaking and uses a backstab while the mob is greater than 90% hp, their chance to hit with a backstab increases by <em data-base="2000">2000</em>% and critical chance increases by <em data-base="10">10</em>% <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-sinisterstrikes.png";	
 			$skills[8] = $newSkill;
 			$newSkill = new stdClass();
@@ -806,6 +806,12 @@ class Build {
 			$newSkill->desc = 'Grants the Lesson of the Devoted AA, granting the assassins taint buff that grants triple backstab and a proc that causes skill taken damage to be increased by 7% and increases duration by <em data-base="12">12</em> seconds <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";	
 			$skills[16] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Sleight of Hand";
+			$newSkill->desc = 'When the rogue successfully pickpockets an enemy (even if they do not obtain an item), the enemy has a <em data-base="10">10</em> chance to be distracted for a short duration. The next time the enemy attacks the rogue it has a very high chance of missing. <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";	
+			$skills[18] = $newSkill;
 			break;
 			
 			//==================SHAMAN======================

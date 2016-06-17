@@ -488,8 +488,11 @@ void Client::SendZoneInPackets()
 		Message(0, "While less than level 10, you may wish to %s to a starting area.", CreateSayLink("#teleport", "#teleport").c_str());
 	}
 	if (IsBuildAvailable() && GetBuildUnspentPoints() > 0) {
-		Message(MT_Experience, "You have unspent build points. Visit %s to spend them.", CreateSayLink("#builds", "builds").c_str());
+		Message(MT_Experience, "You have unspent build points. Visit %s to spend them.", CreateSayLink("builds", "builds").c_str());
 	}
+	//Reset evade on zoning
+	m_epp.evade_mob_id =0;
+	m_epp.evade_mob_timeout = 0;
 }
 
 void Client::SendLogoutPackets() {
@@ -3916,6 +3919,11 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 	// if we do not send this packet the client will lock up and require the player to relog.
 	QueuePacket(outapp);
 	safe_delete(outapp);
+	uint8 rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFHAND);
+	if (rank > 0 && zone->random.Roll(rank * 10)) {
+		Message(MT_NonMelee, "Your Sleight of Hand %u distracts %s.", rank, from->GetCleanName());
+		EvadeOnce(this);
+	}
 }
 
 void Client::SetHoTT(uint32 mobid) {
@@ -10183,6 +10191,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ROG_FOCUSEDSTAB) return "Focused Stab";
 		else if (id == RB_ROG_VITALORGANS) return "Vital Organs";
 		else if (id == RB_ROG_ASSASSINSTAINT) return "Assassin's Taint";
+		else if (id == RB_ROG_SLEIGHTOFHAND) return "Sleight of Hand";
 		break;
 	case DRUID:
 		if (id == RB_DRU_REGENERATION) return "Regeneration";
@@ -10340,4 +10349,21 @@ FACTION_VALUE Client::FactionLevelRaw(int32 faction_id) {
 		return CalculateFaction(&fmods, GetCharacterFactionLevel(faction_id));
 	}
 	return(FACTION_INDIFFERENT);	
+}
+
+void Client::EvadeOnce(Mob *mob) {
+	if (mob == nullptr) {
+		return;
+	}
+	m_epp.evade_mob_id = mob->GetID();
+	m_epp.evade_mob_timeout = time(nullptr) + 30;
+}
+
+bool Client::DoEvadeOnce() {
+	if (m_epp.evade_mob_id > 0 && m_epp.evade_mob_timeout > time(nullptr)) {
+		m_epp.evade_mob_id = 0;
+		m_epp.evade_mob_timeout = 0;
+		return true;
+	}
+	return false;
 }

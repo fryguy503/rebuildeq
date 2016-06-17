@@ -1278,6 +1278,9 @@ public:
 	bool IsValidItem(int itemid);
 	void ResetBuild();
 	FACTION_VALUE FactionLevelRaw(int32 faction_id);
+	void EvadeOnce(Mob * mob);
+
+	bool DoEvadeOnce();
 
 protected:
 	friend class Mob;
