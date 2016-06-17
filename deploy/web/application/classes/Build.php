@@ -772,7 +772,7 @@ class Build {
 			$skills[0] = $newSkill;
 			$newSkill = new stdClass();
 			$newSkill->title = "Thief's Eyes";
-			$newSkill->desc = 'Increasing chance to hit by <em data-base="2">2</em>% with all skills <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases chance to hit by <em data-base="2">2</em>% with all skills <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-thiefseyes.png";			
 			$skills[4] = $newSkill;
 			$newSkill = new stdClass();
@@ -854,7 +854,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Cannibalize";
-			$newSkill->desc = 'Grants the Cannibalization AA, causing <em data-base="5">5</em>%<span class="perLevel">current HP loss in exchange for mana at <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Cannibalization AA, causing <em data-base="5">5</em>% current HP loss in exchange for mana at <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[18] = $newSkill;
 			
