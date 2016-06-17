@@ -10178,6 +10178,7 @@ std::string Client::GetBuildName(uint32 id) {
 		if (id == RB_ROG_APPRAISAL) return "Appraisal";
 		else if (id == RB_ROG_KILLINGSPREE) return "Killing Spree";
 		else if (id == RB_ROG_THIEFSEYES) return "Thief's Eyes";
+		else if (id == RB_ROG_SNEAKATTACK) return "Sneak Attack";
 		else if (id == RB_ROG_SINISTERSTRIKES) return "Sinister Strikes";
 		else if (id == RB_ROG_FOCUSEDSTAB) return "Focused Stab";
 		else if (id == RB_ROG_VITALORGANS) return "Vital Organs";

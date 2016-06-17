@@ -286,6 +286,12 @@ bool Mob::CheckHitChance(Mob* other, EQEmu::skills::SkillType skillinuse, int Ha
 		if (rank > 0) {
 			hitBonus += hitBonus * 0.01f * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEFSEYES);
 		}
+
+		rank = attacker_client->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);
+		if (rank > 0 && GetHPRatio() >= 0.9f && skillinuse == EQEmu::skills::SkillBackstab && attacker_client->hidden && attacker_client->sneaking) {
+			attacker_client->Message(MT_NonMelee, "Sneak Attack %u catches %s off guard.", rank, GetCleanName());
+			hitBonus += hitBonus * 20 * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);
+		}
 	}
 	
 	//Calculate final chance to hit
@@ -4429,6 +4435,12 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 				critChance += RuleI(Combat, BerserkBaseCritChance);
 			else
 				critChance += RuleI(Combat, WarBerBaseCritChance);
+		}
+
+		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);
+		if (rank > 0 && defender->GetHPRatio() >= 0.9f && skill == EQEmu::skills::SkillBackstab && CastToClient()->hidden && CastToClient()->sneaking) {
+			CastToClient()->Message(MT_NonMelee, "Sneak Attack %u (Crit) catches %s off guard.", rank, GetCleanName());
+			critChance += critChance * 0.1f * rank;
 		}
 	}
 
