@@ -4,8 +4,9 @@
 #include "../common/types.h"
 #include "../common/emu_tcp_connection.h"
 #include "../common/servertalk.h"
+#include "world_tcp_connection.h"
 
-class QueryServConnection
+class QueryServConnection : public WorldTCPConnection
 {
 public:
 	QueryServConnection();
