@@ -49,9 +49,9 @@ type ServerWhoAll struct {
 type ServerSpeech struct {
 	To        string `struc:"[64]byte,little"`  //stringchar	to[64];
 	From      string `struc:"[64]byte,little"`  //char	from[64];
-	GuildDBId uint   `struc:"uint32,little"`    //uint32	guilddbid;
-	MinStatus int    `struc:"int16,little"`     //int16	minstatus;
-	Type      uint   `struc:"uint32,little"`    //uint32	type;
+	GuildDBId int64  `struc:"uint32,little"`    //uint32	guilddbid;
+	MinStatus int64  `struc:"int16,little"`     //int16	minstatus;
+	Type      int64  `struc:"uint32,little"`    //uint32	type;
 	Message   string `struc:"[511]byte,little"` //char	message[0];
 }
 

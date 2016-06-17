@@ -96,7 +96,7 @@ func testMessage(conn net.Conn) {
 
 	var buf *bytes.Buffer
 	buf = bytes.NewBuffer(make([]byte, 1024))
-	packet := make([]byte, 1200)
+	packet := make([]byte, 1024)
 	err = struc.Pack(buf, payload)
 	if err != nil {
 		fmt.Println("Error packing payload", err.Error())
@@ -126,25 +126,33 @@ func testMessage(conn net.Conn) {
 		return
 	}
 
-	conn.Write(packet)
-	fmt.Println("Sent packet~")
+	n, err := conn.Write(packet)
+	if err != nil {
+		fmt.Println("Error writing packet", err.Error())
+	}
+	fmt.Println("Sent packet!", n)
 	//fmt.Printf("%#x", packet)
 }
 
 //Poll for inbound messages.
 func readInbound(conn net.Conn) {
+	var err error
+
 	packet := make([]byte, 1024)
 	conn.Read(packet) //When this starts there's always a single echo back that can be discarded..
 	for {
-		packet = make([]byte, 0, 1024)
-		_, err := conn.Read(packet)
+
+		packet := make([]byte, 1024)
+		_, err = conn.Read(packet)
 		if err != nil {
 			if err == io.EOF {
+				//fmt.Println("EOF")
 				continue
 			}
 			fmt.Println("Error reading packet:", err.Error())
 			return
 		}
+		fmt.Println(packet)
 
 		var buf *bytes.Buffer
 		buf = bytes.NewBuffer(packet)
@@ -159,7 +167,7 @@ func readInbound(conn net.Conn) {
 		}
 		switch sp.Opcode {
 		case 0x00:
-			fmt.Println("Ignoring 0 pad (this is an echo of PING is my theory, 07000000000000")
+			//fmt.Println("Ignoring 0 pad (this is an echo of PING is my theory, 07000000000000")
 		case ServerOP_Speech:
 			fmt.Println("Speech", sp.Buffer)
 			speech := &ServerSpeech{}
