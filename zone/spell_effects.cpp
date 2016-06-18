@@ -2170,6 +2170,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 #ifdef SPELL_EFFECT_SPAM
 				snprintf(effect_desc, _EDLEN, "Revive");	// heh the corpse won't see this
 #endif
+				Log.Out(Logs::Detail, Logs::Spells, "SE Revive: %i %i", IsCorpse(), (IsCorpse() ? CastToCorpse()->IsPlayerCorpse() : 0));
 				if (IsCorpse() && CastToCorpse()->IsPlayerCorpse()) {
 
 					if(caster)
@@ -4187,6 +4188,10 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 			if (caster && caster->IsClient()) {
 
+				rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
+				if (rank > 0) {
+					effect_value += effect_value * 0.2f * rank;
+				}
 
 				rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
 				if (rank > 0 && buff.spellid == 8190) {
