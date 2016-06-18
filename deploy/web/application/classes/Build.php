@@ -818,7 +818,15 @@ class Build {
 			$newSkill->desc = 'When the rogue successfully backstabs an enemy, they have a <em data-base="2">2</em> to cause the enemy to lose <em data-base="200">200</em> hate to all enemies except for the enemy he currently has focus on<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";	
 			$skills[20] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Confuse";
+			$newSkill->desc = 'When a rogue uses beg on an enemy, they has very small chance to cause the enemy to be mesmerized for 6 seconds.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[24] = $newSkill;
 			break;
+
+
 			
 			//==================SHAMAN======================
 			case "shaman":

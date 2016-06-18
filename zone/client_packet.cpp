@@ -3759,6 +3759,8 @@ void Client::Handle_OP_Begging(const EQApplicationPacket *app)
 
 	float ChanceToBeg = ((float)(CurrentSkill / 700.0f) + 0.15f) * 100;
 
+	uint8 rank;
+
 	if (RandomChance < ChanceToBeg)
 	{
 		brs->Amount = zone->random.Int(1, 10);
@@ -3774,6 +3776,19 @@ void Client::Handle_OP_Begging(const EQApplicationPacket *app)
 			AddMoneyToPP(brs->Amount * 10, false);
 		}
 
+		rank = GetBuildRank(ROGUE, RB_ROG_CONFUSE);
+		if (rank > 0 && zone->random.Roll(0.005f * rank) == 1) {
+			if (GetTarget()->GetSpecialAbility(UNMEZABLE)) {
+				Message(MT_NonMelee, "%s is immune to mesmerize effects.", GetTarget()->GetCleanName());
+			}
+			else if (GetTarget()->GetLevel() >= GetLevel()) {
+				Message(MT_NonMelee, "%s is too high for you to mesmerize.", GetTarget()->GetCleanName());
+			}
+			else {
+				GetTarget()->AddBuff(this, 292, 6);
+				Message(MT_NonMelee, "Confuse %u has worked on %s.", rank, GetTarget()->GetCleanName());
+			}
+		}
 	}
 	QueuePacket(outapp);
 	safe_delete(outapp);
