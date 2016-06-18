@@ -4212,9 +4212,13 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 						if (rank > 0) {
 							int32 mana_amount = amount_healed * (0.02f * rank);
 							if (mana_amount < 1) mana_amount = 1;
-							if (caster != this) caster->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+							if (caster != this) {
+								caster->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+								caster->SetMana(GetMana() + mana_amount);
+							}
 							Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 							SetMana(GetMana() + mana_amount);
+							
 						}
 					}
 					break;
@@ -4244,9 +4248,12 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 						if (rank > 0) {
 							int32 mana_amount = amount_healed * (0.01f * rank);
 							if (mana_amount < 1) mana_amount = 1;
-							if (caster != this) caster->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+							if (caster != this) {
+								caster->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+								caster->SetMana(GetMana() + mana_amount);
+							}
 							Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
-							SetMana(GetMana() + mana_amount);
+							SetMana(GetMana() + mana_amount);							
 						}
 					}
 					break;
@@ -4950,6 +4957,10 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 					if (mana_amount < 1) mana_amount = 1;
 					Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 					SetMana(GetMana() + mana_amount);
+					if (p != this) {
+						p->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+						p->SetMana(GetMana() + mana_amount);
+					}
 				}
 			}
 		}
@@ -4982,6 +4993,10 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 				if (mana_amount < 1) mana_amount = 1;
 				Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 				SetMana(GetMana() + mana_amount);
+				if (p != this) {
+					p->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+					p->SetMana(GetMana() + mana_amount);
+				}
 			}
 		}
 	}

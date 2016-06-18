@@ -535,7 +535,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Nature's Whisper";
-			$newSkill->desc = 'While a target is affected by Nature\'s Boon or Convergence of Spirits, they also regain <em data-base="2">2</em>% of any healing done from these spells as mana.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While a target is affected by Nature\'s Boon or Convergence of Spirits, the druid as well as the target regain <em data-base="2">2</em>% of any healing done from these spells as mana.<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-natureswhisper.png";	
 			$skills[31] = $newSkill;
 
@@ -835,7 +835,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Duelist";
-			$newSkill->desc = 'When the rogue is engaged with a single enemy, they gain improved evasion. Many factors decrease the effectiveness of this skill, such as the level of the enemy and how much health they have.';
+			$newSkill->desc = 'While engaged with a single enemy who is lesser level than them, the rogue gains improved evasion. Many factors decrease the effectiveness of this skill, such as the level of the enemy and how much health they have.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[31] = $newSkill;
 
@@ -885,7 +885,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Reinforce Torpor";
-			$newSkill->desc = 'Reduces the negative effects of Torpor by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Reduces the negative effects of Stoicism and Torpor by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
 			$skills[13] = $newSkill;
 			
