@@ -4505,7 +4505,7 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 		if (rank > 0 && defender->GetHPRatio() >= 90.0f && skill == EQEmu::skills::SkillBackstab && CastToClient()->sneaking) {
 			Log.Out(Logs::Detail, Logs::Attack, "Sneak Attack crit? %u %i %i skill : %i", rank, CastToClient()->hidden, CastToClient()->sneaking, skill);
 			CastToClient()->Message(MT_NonMelee, "Sneak Attack %u catches %s off guard.", rank, defender->GetCleanName());
-			critChance += critChance * 0.1f * rank;
+			critChance += 10 * rank;
 
 			CastToClient()->sneaking = false; //Disable sneak
 			CastToClient()->SendAppearancePacket(AT_Sneak, 0);
