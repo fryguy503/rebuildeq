@@ -183,7 +183,9 @@ sub velious_faction {
 	$zoneid = shift;
 	quest::exp(175000);
 	if ($zoneid == 113) { #SS
-
+		quest::faction(42,30); # CoV
+        quest::faction(362,30); # Yelinak
+        quest::faction(189,-60); # Kromzek
 	} elsif ($zoneid == 114) { #kael
         quest::faction(179,20); # King Tormax
         quest::faction(189,20); # Kromzek
