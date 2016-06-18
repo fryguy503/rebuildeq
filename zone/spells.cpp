@@ -2097,7 +2097,12 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 		spell_target = this;
 	}
 
-	if (IsBeneficialSpell(spell_id) && spell_target && !spell_target->IsPetOwnerClient() && !spell_target->IsClient()) {
+	if (IsBeneficialSpell(spell_id) && 
+		spell_target && 
+		!spell_target->IsPetOwnerClient() && 
+		!spell_target->IsClient() && 
+		!IsEffectInSpell(spell_id, SE_Revive) //Rezzes are beneficial spells, but need to target self.
+		) {
 		spell_target = this;
 	}
 
