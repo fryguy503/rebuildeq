@@ -454,7 +454,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 								if (rank > 4) { //HP/AC
 									if (level > 57 && caster_level > 57) AddBuff(caster, 2530);
-									else if (level >= 55 && caster_level >= 55) { AddBuff(caster, 1548, duration, 60); AddBuff(caster, 1585, duration, 60); }
+									else if (level >= 55 && caster_level >= 55) { AddBuff(caster, 1584, duration, 60); AddBuff(caster, 1585, duration, 60); }
 									else if (level >= 46 && caster_level >= 46) AddBuff(caster, 2525, duration, 60);
 									else if (level >= 40 && caster_level >= 40) { AddBuff(caster, 389, duration, 60); AddBuff(caster, 168, duration, 60); }
 									else if (level >= 32 && caster_level >= 32) { AddBuff(caster, 431, duration, 60); AddBuff(caster, 167, duration, 60); }
