@@ -179,6 +179,25 @@ sub velious_armor_requirement {
 	quest::say("Found in $location, I require a$armor_type $slotname and my fee of $price platinum to craft this item.");
 }
 
+sub velious_faction {
+	$zoneid = shift;
+	quest::exp(175000);
+	if ($zoneid == 113) { #SS
+
+	} elsif ($zoneid == 114) { #kael
+        quest::faction(179,20); # King Tormax
+        quest::faction(189,20); # Kromzek
+        quest::faction(42,-20); # Claws of Veeshan
+        quest::faction(49,-60); # Coldain
+	} else { #Thurg
+		quest::faction(49,20); # coldain
+		quest::faction(67,20); # Dain Frostreaver IV
+		quest::faction(188,-60); # Kromrif
+		quest::faction(189,-60); # Kromzek
+	}
+ 
+}
+
 sub velious_armor_list {
 	my @armor_list;
 	###KAEL###

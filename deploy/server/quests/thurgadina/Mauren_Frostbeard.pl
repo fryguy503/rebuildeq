@@ -21,11 +21,7 @@ sub EVENT_ITEM {
         quest::summonitem($reward);
         quest::emote("smiles warmly as he hands you your reward.");
         quest::say("Well done, $name.");
-        quest::exp(175000);
-        quest::faction(179,20); # King Tormax
-        quest::faction(189,20); # Kromzek
-        quest::faction(42,-20); # Claws of Veeshan
-        quest::faction(49,-60); # Coldain
+        plugin::velious_faction($zoneid);
         return;       
       }
     }
