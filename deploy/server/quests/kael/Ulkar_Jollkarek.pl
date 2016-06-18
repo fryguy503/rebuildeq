@@ -1,43 +1,28 @@
-#Zone: Kael Drakkal
-#Short Name: kael
-#Zone ID: 113
-#
-#NPC Name: Ulkar Jollkarek
-#NPC ID: 113159
-
-sub EVENT_SAY {
-  if ($faction == 1) { #requires ally Kromzek faction
-    if ($text=~/hail/i) {
-      quest::say("Greetings to you. I seek one that calls himself a wizard. What do you call yourself, manling?");
-    }
-    plugin::velious_armor_hail($text, $zoneid, $client->GetClass());    
+sub EVENT_SAY { 
+  if ($faction == 1) {     
+    plugin::velious_armor_hail($text, $zoneid, $client->GetClass());
   } else {
-    quest::say("You must prove your dedication to Kael Drakkal and the Kromzek clan before I will speak to you.");
+    quest::say("You must prove your dedication before I will speak to you.");
   }
 }
 
 sub EVENT_ITEM {
-  if ($faction == 1) { #req ally CoV 
-
+  if ($faction == 1) {
     my $cash = $copper + $silver * 10 + $gold * 100 + $platinum * 1000;
     my @armor_list = plugin::velious_armor_list();
     my $classid = $client->GetClass();
 
     for $x (0...6) {
-      $slot = $armor_list[$zoneid][$classid][$x]{slot};
-      $item = $armor_list[$zoneid][$classid][$x]{item};
-      $reward = $armor_list[$zoneid][$classid][$x]{reward};
-      quest::say("Looking for $slot in $item for reward $reward");    
+      my $slot = $armor_list[$zoneid][$classid][$x]{slot};
+      my $item = $armor_list[$zoneid][$classid][$x]{item};
+      my $reward = $armor_list[$zoneid][$classid][$x]{reward};
+      #quest::say("Looking for $slot in $item for reward $reward");    
       if ($cash >= (plugin::velious_pricing_by_slot($slot)*1000) && plugin::check_handin(\%itemcount, $item => 1)) {
-          quest::summonitem($reward);
-          quest::emote("smiles warmly as he hands you your reward.");
-          quest::say("Well done, $name.");
-          quest::exp(175000);
-          quest::faction(179,20); # King Tormax
-          quest::faction(189,20); # Kromzek
-          quest::faction(42,-20); # Claws of Veeshan
-          quest::faction(49,-60); # Coldain
-          return;       
+        quest::summonitem($reward);
+        quest::emote("smiles warmly as he hands you your reward.");
+        quest::say("Well done, $name.");
+        plugin::velious_faction($zoneid);
+        return;       
       }
     }
     quest::say("These items are not what I am looking for.");
@@ -47,7 +32,5 @@ sub EVENT_ITEM {
   quest::givecash($copper, $silver, $gold, $platinum);
   plugin::return_items(\%itemcount);  
   return;
+
 } 
-
-#END of FILE Zone: kael ID:113159 -- Ulkar_Jollkarek
-
