@@ -4190,7 +4190,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 				rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
 				if (rank > 0 && buff.spellid != 6241) {
-					effect_value += effect_value * 0.2f * rank;
+					effect_value += effect_value * 0.15f * rank;
 				}
 
 				rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);

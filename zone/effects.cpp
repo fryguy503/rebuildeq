@@ -343,7 +343,7 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 
 		if (IsClient() && CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING) > 0) {
 			uint32 rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
-			int healAmount = (int)(value * 0.2 * rank);
+			int healAmount = (int)(value * 0.15 * rank);
 			CastToClient()->Message(MT_Spells, "Spiritual Healing %u gave a bonus %i healing.", healAmount, rank);	
 			value += healAmount;
 		}
