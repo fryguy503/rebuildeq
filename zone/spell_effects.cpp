@@ -4189,7 +4189,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 			if (caster && caster->IsClient()) {
 
 				rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
-				if (rank > 0) {
+				if (rank > 0 && buff.spellid != 6241) {
 					effect_value += effect_value * 0.2f * rank;
 				}
 
@@ -4219,7 +4219,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							if (mana_amount < 1) mana_amount = 1;
 							if (caster != this) {
 								caster->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
-								caster->SetMana(GetMana() + mana_amount);
+								caster->SetMana(caster->GetMana() + mana_amount);
 							}
 							Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 							SetMana(GetMana() + mana_amount);
@@ -4255,7 +4255,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							if (mana_amount < 1) mana_amount = 1;
 							if (caster != this) {
 								caster->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
-								caster->SetMana(GetMana() + mana_amount);
+								caster->SetMana(caster->GetMana() + mana_amount);
 							}
 							Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 							SetMana(GetMana() + mana_amount);							

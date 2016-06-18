@@ -488,7 +488,7 @@ void Client::SendZoneInPackets()
 		Message(0, "While less than level 10, you may wish to %s to a starting area.", CreateSayLink("#teleport", "#teleport").c_str());
 	}
 	if (IsBuildAvailable() && GetBuildUnspentPoints() > 0) {
-		Message(MT_Experience, "You have unspent build points. Visit %s to spend them.", CreateSayLink("builds", "builds").c_str());
+		Message(MT_Experience, "You have unspent build points. Visit %s to spend them.", CreateSayLink("#builds", "#builds").c_str());
 	}
 	//Reset evade on zoning
 	m_epp.evade_mob_id =0;
@@ -9330,7 +9330,7 @@ void Client::EmoteEncounter() {
 
 
 	//Kodiaks can spawn anywhere
-	pool += 500;
+	pool += 50;
 	encounterTable[pool] = EN_KODIAK;
 	//Froglok anywhere, but only if your faction is low enough
 	
