@@ -144,6 +144,14 @@ void Mob::DoSpecialAttackDamage(Mob *who, EQEmu::skills::SkillType skill, int32 
 		}
 	}
 
+	if (skill == EQEmu::skills::SkillBackstab && IsClient()) {
+		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_JARRINGSTAB);
+		if (rank > 0 && zone->random.Roll(2 * rank)) {
+			int hate_count = who->hate_list.LoseHatredNearby(this, rank * 200, 200, who, 6);
+			entity_list.MessageClose(this, true, 300, MT_Emote, "%s causes %s to blink %i times.", GetCleanName(), who->GetCleanName(), hate_count);			
+		}
+	}
+
 	who->AddToHateList(this, hate, 0, false);
 	if (max_damage > 0 && aabonuses.SkillAttackProc[0] && aabonuses.SkillAttackProc[1] == skill &&
 	    IsValidSpell(aabonuses.SkillAttackProc[2])) {
@@ -647,6 +655,7 @@ void Mob::RogueBackstab(Mob* other, bool min_damage, int ReuseTime)
 		if (rank > 0 && zone->random.Roll((int)(10 * rank))) {
 			ndamage += ndamage * 0.25f * rank;
 		}
+		
 	}
 	ndamage = mod_backstab_damage(ndamage);
 

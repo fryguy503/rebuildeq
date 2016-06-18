@@ -749,3 +749,57 @@ int HateList::InfectNearby(Mob *caster, int32 spell_id, float range, Mob* ae_cen
 	}
 	return targetCount;
 }
+
+
+//Lower hatred of nearby enemies
+int HateList::LoseHatredNearby(Mob *caster, int hate_reduction, float range, Mob* ae_center, int32 maxTargets)
+{
+	if (!caster)
+		return 0;
+
+	Mob* center = caster;
+
+	if (ae_center)
+		center = ae_center;
+
+	int32 targetCount = 0;
+
+	//this is slower than just iterating through the list but avoids
+	//crashes when people kick the bucket in the middle of this call
+	//that invalidates our iterator but there's no way to know sadly
+	//So keep a list of entity ids and look up after
+	std::list<uint32> id_list;
+	range = range * range;
+	//float min_range2 = spells[spell_id].min_range * spells[spell_id].min_range;
+	float dist_targ = 0;
+	
+	Mob * most_hated = GetEntWithMostHateOnList();
+
+	auto iterator = list.begin();
+	while (iterator != list.end())
+	{
+		struct_HateList *h = (*iterator);
+		if (!h) continue;
+		if (h->entity_on_hatelist == most_hated) continue;
+
+		if (range > 0)
+		{
+			dist_targ = DistanceSquared(center->GetPosition(), h->entity_on_hatelist->GetPosition());
+			if (dist_targ <= range && (targetCount < maxTargets || maxTargets == 0))
+			{
+				
+				if (h && h->entity_on_hatelist != nullptr)
+				{
+					h->stored_hate_amount -= (hate_reduction > h->stored_hate_amount) ? h->stored_hate_amount : hate_reduction;
+					if (h->stored_hate_amount < 1) {
+						h->stored_hate_amount = 1;
+					}
+					
+					targetCount++;
+				}
+			}
+		}
+		++iterator;
+	}
+	return targetCount;
+}
