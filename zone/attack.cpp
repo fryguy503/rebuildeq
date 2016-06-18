@@ -1389,6 +1389,18 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				}
 			}
 
+			//Check for DRU spirit awakening
+			rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
+			if (rank > 0) {
+				chance = 300;
+				proc_damage = GetLevel() * 5;
+				proc_damage = proc_damage * 0.25f * rank;
+				proc_damage /= 2;
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+			}
+
 			//Check for BRD whistle
 			rank = GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE);
 			if (rank > 0) {

@@ -504,7 +504,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Convergence of Spirits";
-			$newSkill->desc = 'Grants the Convergence of Spirits AA, giving a heal over time that heals for <em data-base="0.5">0.5</em>% of the target\'s max health per tick for <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Convergence of Spirits AA, giving a heal over time that heals for <em data-base="0.5">0.5</em>% of the target\'s max health per tick for <em data-base="6">6</em> seconds. This also causes normal heals to be boosted by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-convergenceofspirits.png";	
 			$skills[20] = $newSkill;
 
@@ -523,13 +523,13 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Awakening";
-			$newSkill->desc = 'Any successful melee hit on an enemy by the druid grants <em data-base="1">1</em> mana<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Any successful melee hit on an enemy by the druid grants <em data-base="1">1</em> mana and now has a puma-like proc<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-spiritualawakening.png";
 			$skills[26] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Nature's Boon";
-			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, giving the target (Level*2)*0.2*rank hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="20">20</em>% of their max hitpoints<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, giving the target (Level*2)*0.2*rank hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="20">20</em>% of their max hitpoints. This also causes normal heals to be boosted by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-naturesboon.png";	
 			$skills[28] = $newSkill;
 
