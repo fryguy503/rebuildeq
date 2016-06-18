@@ -774,13 +774,19 @@ int HateList::LoseHatredNearby(Mob *caster, int hate_reduction, float range, Mob
 	float dist_targ = 0;
 	
 	Mob * most_hated = GetEntWithMostHateOnList();
-
+	if (most_hated == nullptr) return 0;
 	auto iterator = list.begin();
 	while (iterator != list.end())
 	{
 		struct_HateList *h = (*iterator);
-		if (!h) continue;
-		if (h->entity_on_hatelist == most_hated) continue;
+		if (!h) {
+			++iterator;
+			continue;
+		}
+		if (h->entity_on_hatelist->GetID() == most_hated->GetID()) {
+			++iterator; 
+			continue;
+		}
 
 		if (range > 0)
 		{

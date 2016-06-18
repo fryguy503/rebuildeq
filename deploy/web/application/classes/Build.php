@@ -811,15 +811,22 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Sleight of Hand";
-			$newSkill->desc = 'When the rogue successfully pickpockets an enemy (even if they do not obtain an item), the enemy has a <em data-base="10">10</em>% chance to be distracted for a short duration. The next time the enemy attacks the rogue it has a very high chance of missing. <span class="perLevel"> per rank</span>';
+			$newSkill->desc = 'When the rogue successfully pick pockets an enemy (even if they do not obtain an item), the enemy has a <em data-base="10">10</em>% chance to be distracted for a short duration. The next time the enemy attacks the rogue it has a very high chance of missing. <span class="perLevel"> per rank</span>';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";	
 			$skills[18] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jarring Stab";
-			$newSkill->desc = 'When the rogue successfully backstabs an enemy, they have a <em data-base="2">2</em>% chance to cause the enemy to lose <em data-base="200">200</em> hate to all grouped allies including themself except for the top hated ally<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When the rogue successfully backstabs an enemy, they have a <em data-base="2">2</em>% chance to cause the enemy to lose <em data-base="50">50</em> hate to all allies except for the top hated ally<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[20] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Untapped Potential";
+			$newSkill->desc = 'Pick pocket now gives the group <em data-base="100">100</em>mana on success<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[22] = $newSkill;
+
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Confuse";
@@ -873,7 +880,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Healing";
-			$newSkill->desc = 'Heals recover an additional <em data-base="20">20</em>% health<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Heals recover an additional <em data-base="15">15</em>% health<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
 			$skills[8] = $newSkill;
 

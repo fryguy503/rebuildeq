@@ -146,9 +146,9 @@ void Mob::DoSpecialAttackDamage(Mob *who, EQEmu::skills::SkillType skill, int32 
 
 	if (skill == EQEmu::skills::SkillBackstab && IsClient()) {
 		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_JARRINGSTAB);
-		if (rank > 0 && zone->random.Roll(2 * rank)) {
-			int hate_count = who->hate_list.LoseHatredNearby(this, rank * 200, 200, who, 6);
-			entity_list.MessageClose(this, true, 300, MT_Emote, "%s causes %s to blink %i times.", GetCleanName(), who->GetCleanName(), hate_count);			
+		if (rank > 0 && zone->random.Roll(2 * rank) && who) { //s/b 2
+			int hate_count = who->hate_list.LoseHatredNearby(this, (rank * 200), 200, who, 6);
+			entity_list.MessageClose(this, true, 300, MT_NonMelee, "%s causes %s to blink %i times.", GetCleanName(), who->GetCleanName(), hate_count);			
 		}
 	}
 

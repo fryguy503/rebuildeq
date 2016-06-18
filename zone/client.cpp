@@ -3925,6 +3925,56 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 			Message(MT_NonMelee, "Your Sleight of Hand %u distracts %s.", rank, from->GetCleanName());
 			EvadeOnce(this);
 		}
+		rank = GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);
+		if (rank > 0) {
+			int mana_bonus = rank * 100;
+			
+			if (this->IsGrouped()) {
+				Message(MT_Spells, "Untapped Potential %u gives the group %i mana.", rank, mana_bonus);
+				auto group = this->GetGroup(); //iterate group
+				for (int i = 0; i < 6; ++i) {
+					if (group->members[i] &&  //target grouped
+						group->members[i]->IsClient() && //Is a client												
+						this->GetID() != group->members[i]->GetID() && //not me
+						this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
+						!group->members[i]->CastToClient()->IsDead() //and not dead
+						) {
+
+						float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
+						float range2 = 100 * 100;
+						if (dist2 <= range2) {
+							group->members[i]->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
+
+						}
+					}
+				}
+			}
+			else if (this->IsRaidGrouped()) { //Raid healing
+				Message(MT_NonMelee, "Untapped Potential %u gives the raid group %i mana.", rank, mana_bonus);
+				auto raid = this->GetRaid();
+
+				uint32 gid = raid->GetGroup(this->CastToClient());
+				if (gid < 12) {
+					for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+						if (raid->members[i].member &&  //is raid member
+							raid->members[i].GroupNumber == gid && //in group
+							raid->members[i].member->IsClient() && //Is a client
+							raid->members[i].member != this && //not me
+							raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
+							!raid->members[i].member->IsDead() //and not dead
+							) {
+
+							float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
+							float range2 = 100 * 100;
+							if (dist2 <= range2) {
+								raid->members[i].member->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
+								raid->members[i].member->SetMana(raid->members[i].member->GetMana() + mana_bonus);
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -10197,6 +10247,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ROG_JARRINGSTAB) return "Jarring Stab";
 		else if (id == RB_ROG_GANGSTERSPARADISE) return "Gangster's Paradise";		
 		else if (id == RB_ROG_DUELIST) return "Duelist";
+		else if (id == RB_ROG_UNTAPPEDPOTENTIAL) return "Untapped Potential";
 		break;
 	case DRUID:
 		if (id == RB_DRU_REGENERATION) return "Regeneration";
