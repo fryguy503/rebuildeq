@@ -530,10 +530,17 @@ bool Client::Process() {
 			DoStaminaUpdate();
 			RefreshBuild();
 			DoEncounterCheck();
-			if (GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH) > 0) {
+			uint8 rank;
+			rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH);
+			if (rank > 0) {
 				if (GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash || GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt) {
 					m_epp.blood_oath_timeout = time(nullptr) + 18;
 				}
+			}
+			rank = GetBuildRank(ROGUE, RB_ROG_GANGSTERSPARADISE);
+			if (rank > 0 && hidden && !improved_hidden && GetAggroCount() < 1 && zone->random.Roll(1 * rank)) {
+				improved_hidden = true;
+				Message(MT_NonMelee, "You discover a Gangster's Paradise.");
 			}
 			DoRestedStatus();
 			if(tribute_timer.Check()) {

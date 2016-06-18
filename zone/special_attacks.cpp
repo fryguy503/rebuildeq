@@ -652,7 +652,7 @@ void Mob::RogueBackstab(Mob* other, bool min_damage, int ReuseTime)
 
 	if (IsClient() && ndamage > 0) {
 		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_VITALORGANS);
-		if (rank > 0 && zone->random.Roll((int)(10 * rank))) {
+		if (rank > 0 && zone->random.Roll((int)(5 * rank))) {
 			ndamage += ndamage * 0.25f * rank;
 		}
 		

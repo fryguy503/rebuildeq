@@ -3364,19 +3364,25 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 	}
 
 	if(attacker){
+		int32 hate_damage = damage;
 		if(attacker->IsClient()){
+			uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_GANGSTERSPARADISE);
+			if (rank > 0) {
+				hate_damage -= 10 * rank;
+			}
+			
 			if(!RuleB(Combat, EXPFromDmgShield)) {
 			// Damage shield damage shouldn't count towards who gets EXP
 				if(!attacker->CastToClient()->GetFeigned() && !FromDamageShield)
-					AddToHateList(attacker, 0, damage, true, false, iBuffTic, spell_id);
+					AddToHateList(attacker, 0, hate_damage, true, false, iBuffTic, spell_id);
 			}
 			else {
 				if(!attacker->CastToClient()->GetFeigned())
-					AddToHateList(attacker, 0, damage, true, false, iBuffTic, spell_id);
+					AddToHateList(attacker, 0, hate_damage, true, false, iBuffTic, spell_id);
 			}
 		}
 		else
-			AddToHateList(attacker, 0, damage, true, false, iBuffTic, spell_id);
+			AddToHateList(attacker, 0, hate_damage, true, false, iBuffTic, spell_id);
 	}
 
 	uint32 rank;
