@@ -2779,29 +2779,6 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 	formula = spells[spell_id].buffdurationformula;
 	duration = spells[spell_id].buffduration;
-	if (caster && caster->IsClient()) {
-
-		uint32 rank;
-		
-		rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDHASTE);
-		if (rank > 0 &&
-			(spell_id == 30 || spell_id == 39 || spell_id == 170 || spell_id == 1430 || spell_id == 171 || spell_id == 170)) {
-			int bonusDuration = duration * 0.3f * rank;
-			caster->Message(MT_NonMelee, "Extended Haste increased duration by %i seconds.", bonusDuration*6);
-			duration += bonusDuration;
-		}
-		rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FURY);
-		if (rank > 0 && spell_id == 271) {
-			int bonusDuration = (int)(duration * 0.3f * caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_FURY));
-			caster->Message(MT_NonMelee, "Fury increased duration by %i seconds.", bonusDuration);
-			duration += bonusDuration;
-		}
-		rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
-		if (rank > 0 && spell_id == 4796) {
-			duration = 14 - (rank * 2);
-		}
-
-	}
 	
 	int castlevel = caster->GetCasterLevel(spell_id);
 	if(caster_level_override > 0)
@@ -3263,63 +3240,224 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		return -2;	// no duration? this isn't a buff
 	}
 
-	uint8 rank;
+	// REBUILDEQ - BUFF MODIFIERS
 	if (caster && caster->IsClient()) {
 		Client * caster_client = caster->CastToClient();
-		rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED);
-		if (rank > 0 && spell_id == 278) {
-			int bonus_duration = duration * 0.2f * rank;
-			caster->Message(MT_NonMelee, "Spirit of Speed increased duration by %i seconds.", bonus_duration*6);
-			duration += bonus_duration;
+
+		// Bard
+		if (caster_client->GetClass() == BARD) {
+
+			// Lingering Twilight
+			{
+				static uint16 KELINS_LUCID_LULLABY = 724;
+				static uint16 CRISSONS_PIXIE_STRIKE = 741;
+				static uint16 SIONACHIES_DREAMS = 868;
+				static uint16 SONG_OF_TWILIGHT = 1753;
+				static uint16 DREAMS_OF_AYONAE = 1100;
+				static uint16 ANCIENT_LULLABY_OF_SHADOW = 1197;
+				const bool isAffected = spell_id == KELINS_LUCID_LULLABY ||
+					spell_id == CRISSONS_PIXIE_STRIKE ||
+					spell_id == SIONACHIES_DREAMS ||
+					spell_id == SONG_OF_TWILIGHT ||
+					spell_id == DREAMS_OF_AYONAE ||
+					spell_id == ANCIENT_LULLABY_OF_SHADOW;
+				const uint32 rank = caster_client->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT);
+
+				if (rank > 0 && isAffected) {
+					const int bonus = duration * 0.2f * rank;
+					caster->Message(MT_NonMelee, "Lingering Twilight %u improved mesmerize duration by %i seconds.", bonus * 6);
+					duration += bonus;
+				}
+			}
+
+			// Kinsong
+			{
+				static uint16 KINSONG = 6239;
+				const bool isAffected = spell_id == KINSONG;
+				const uint32 rank = caster_client->GetBuildRank(BARD, RB_BRD_KINSONG);
+
+				if (rank > 0 && isAffected) {
+					duration = 10 * 0.2f * rank;
+				}
+			}
 		}
 
-		rank = caster_client->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT);
-		if ((spell_id == 724 || spell_id == 741 || spell_id == 868 || spell_id == 1753 || spell_id == 1100 || spell_id == 1197) &&
-			rank > 0) {
-			caster->Message(MT_NonMelee, "Lingering Twilight %u improved mesmerize duration.", rank);
-			duration += duration * 0.2f * rank;
+		// Paladin
+		else if (caster_client->GetClass() == PALADIN) {
+
+			// Flames of Redemption
+			{
+				static uint16 FLAMES_OF_REDEMPTION = 6234;
+				const bool isAffected = spell_id == FLAMES_OF_REDEMPTION;
+				const uint32 rank = caster_client->GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION);
+
+				if (rank > 0 && isAffected) {
+					duration = 10 * 0.2f * rank;
+				}
+			}
 		}
 
-		rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
-		if (spell_id == 3274 && rank > 0) {
-			uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
-			duration = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
-			//caster->CastToClient()->Message(0, "Duration! %i", duration);
+		// Shadowknight
+		else if (caster_client->GetClass() == SHADOWKNIGHT) {
+
+			// Reaper's Strike
+			{
+				static uint16 REAPER_STRIKE_RECOURSE = 6299;
+				const bool isAffected = spell_id == REAPER_STRIKE_RECOURSE;
+				const uint32 rank = caster_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE);
+
+				if (rank > 0 && isAffected) {
+					duration = 10 * 0.2f * rank;
+				}
+			}
 		}
 
-		rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR);
-		if ((spell_id == 505 || spell_id == 506 || spell_id == 507 || spell_id == 1588 || spell_id == 2527 || spell_id == 1589) &&
-			rank > 0) {
-			uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR);
-			duration += duration * 0.05f * rank;
+		// Rogue
+		else if (caster_client->GetClass() == ROGUE) {
+
+			// Assassin's Taint
+			{
+				static uint16 ASSASSINS_TAINT = 6240;
+				const bool isAffected = spell_id == ASSASSINS_TAINT;
+				const uint32 rank = caster_client->GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT);
+
+				if (rank > 0 && isAffected) {
+					duration = 10 * 0.2f * rank;
+				}
+			}
 		}
-		rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON);
-		if (caster && caster->IsClient() && rank > 0 && spell_id == 6241) {
-			duration = 10 * 0.2f * rank;
+
+		// Shaman
+		else if (caster_client->GetClass() == SHAMAN) {
+
+			// Spirit of Speed
+			{
+				static uint16 SPIRIT_OF_WOLF = 278;
+				const bool isAffected = spell_id == SPIRIT_OF_WOLF;
+				const uint32 rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED);
+
+				if (rank > 0 && isAffected) {
+					const int bonus = duration * 0.2f * rank;
+					caster_client->Message(MT_NonMelee, "Spirit of Speed increased duration by %i seconds.", bonus * 6);
+					duration += bonus;
+				}
+			}
+
+			// Extended Haste
+			{
+				static uint16 QUICKNESS = 39;
+				static uint16 ALACRITY = 170;
+				static uint16 CELERITY = 171;
+				static uint16 SPIRIT_QUICKENING = 1430;
+				const bool isAffected = spell_id == QUICKNESS ||
+					spell_id == ALACRITY ||
+					spell_id == CELERITY ||
+					spell_id == SPIRIT_QUICKENING;
+				const uint32 rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDHASTE);
+
+				if (rank > 0 && isAffected) {
+					const int bonus = duration * 0.3f * rank;
+					caster_client->Message(MT_NonMelee, "Extended Haste increased duration by %i seconds.", bonus * 6);
+					duration += bonus;
+				}
+			}
+
+			// Virulent Paralysis
+			{
+				static uint16 VIRULENT_PARALYSIS = 3274;
+				const bool isAffected = spell_id == VIRULENT_PARALYSIS;
+				const uint32 rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
+				
+				if (rank > 0 && isAffected) {
+					uint32 rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
+					duration = caster_client->GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS);
+					//caster->CastToClient()->Message(0, "Duration! %i", duration);
+				}
+			}
+
+			// Fury
+			{
+				static uint16 FLEETING_FURY = 271;
+				const bool isAffected = spell_id == FLEETING_FURY;
+				const uint32 rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_FURY);
+
+				if (rank > 0 && isAffected) {
+					const int bonus = rank;
+					caster_client->Message(MT_NonMelee, "Fury increased duration by %i seconds.", bonus * 6);
+					duration += bonus;
+				}
+			}
+
+			// Extended Turgur
+			{
+				static uint16 WALKING_SLEEP = 505;
+				static uint16 TAGARS_INSECTS = 506;
+				static uint16 TOGORS_INSECTS = 507;
+				static uint16 TURGURS_INSECTS = 1588;
+				static uint16 PLAGUE_OF_INSECTS = 2527;
+				static uint16 TIGIRS_INSECTS = 1589;
+				const bool isAffected = spell_id == WALKING_SLEEP ||
+					spell_id == TAGARS_INSECTS ||
+					spell_id == TOGORS_INSECTS ||
+					spell_id == TURGURS_INSECTS ||
+					spell_id == PLAGUE_OF_INSECTS ||
+					spell_id == TIGIRS_INSECTS;
+				const uint32 rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR);
+
+				if (rank > 0 && isAffected) {
+					const int bonus = duration * 0.05f * rank;
+					caster_client->Message(MT_NonMelee, "Extended Turgur increased duration by %i seconds.", bonus * 6);
+					duration += bonus;
+				}
+			}
+
+			// Fateseer's Boon
+			{
+				static uint16 FATESEERS_BOON = 6241;
+				const bool isAffected = spell_id == FATESEERS_BOON;
+				const uint32 rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON);
+
+				if (rank > 0 && isAffected) {
+					duration = 10 * 0.2f * rank;
+				}
+			}
 		}
-		rank = caster->CastToClient()->GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT);
-		if (caster && caster->IsClient() && rank > 0 && spell_id == 6240) {
-			duration = 10 * 0.2f * rank;
-		}
-		rank = caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION);
-		if (caster && caster->IsClient() && rank > 0 && spell_id == 6234) {
-			duration = 10 * 0.2f * rank;
-		}
-		rank = caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE);
-		if (caster && caster->IsClient() && rank > 0 && spell_id == 6299) {
-			duration = 10 * 0.2f * rank;
-		}
-		rank = caster->CastToClient()->GetBuildRank(BARD, RB_BRD_KINSONG);
-		if (caster && caster->IsClient() && rank > 0 && spell_id == 6239) {
-			duration = 10 * 0.2f * rank;
-		}
-		rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT);
-		if (rank > 0 && spell_id == 6239) {
-			duration = 10 * 0.2f * rank;
-		}
-		rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
-		if (rank > 0 && spell_id == 8190) {
-			duration = 1 * rank;
+
+		// Druid
+		else if (caster_client->GetClass() == DRUID) {
+
+			// Nature's Boon
+			{
+				static uint16 NATURES_BOON = 4796;
+				const bool isAffected = spell_id == NATURES_BOON;
+				const uint32 rank = caster_client->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
+
+				if (rank > 0 && isAffected) {
+					duration = 14 - (rank * 2);
+				}
+			}
+
+			// Nature's Blight
+			{
+				static uint16 KINSONG = 6239;
+				const bool isAffected = spell_id == KINSONG;
+				const uint32 rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT);
+
+				if (rank > 0 && isAffected) {
+					duration = 10 * 0.2f * rank;
+				}
+			}
+
+			// Convergence of Spirits
+			{
+				static uint16 CONVERGENCE_OF_SPIRITS = 8190;
+				const bool isAffected = spell_id == CONVERGENCE_OF_SPIRITS;
+				const uint32 rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
+
+				if (rank > 0 && isAffected) {
+					duration = 1 * rank;
+				}
+			}
 		}
 	}
 
@@ -3327,8 +3465,6 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 	if (spell_id == 359) { //Vampiric Embrace
 		duration += 600;
 	}
-
-	
 
 	Log.Out(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",
 		spell_id, caster?caster->GetName():"UNKNOWN", caster_level, duration);
