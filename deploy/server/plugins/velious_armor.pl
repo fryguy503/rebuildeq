@@ -25,39 +25,12 @@ sub velious_armor_hail {
 	my $text = shift;
 	my $zoneid = shift;
 	my $classid = shift;
-	if($text=~/armor/i) {
+	if($text=~/armor/i || $text=~/hail/i) {
         quest::say("Are you interested in armor that Velious has to offer? [ ".quest::saylink("head")."], [".quest::saylink("arms")."], [".quest::saylink("wrists")."], [".quest::saylink("hands")."], [".quest::saylink("chest")."], [".quest::saylink("legs")."], [".quest::saylink("feet")."]");
     } elsif($text=~/head/i || $text=~/arms/i || $text=~/wrists/i || $text=~/hands/i || $text=~/chest/i || $text=~/legs/i || $text=~/feet/i) {
        plugin::velious_armor_requirement($text, $zoneid, $classid);
     }
     return;
-}
-
-
-#Pass zoneid, get the slot of what handin was successful.
-sub velious_armor_handin {
-	my $zoneid = shift;
-	my $cash = shift;
-	my $classid = shift;
-	my $itemref = shift;
-	my $armor_list = plugin::velious_armor_list();
-		
-	for $x (0...6) {
-		$slot = $armor_list[$zoneid][$classid][$x]{slot};
-		$item = $armor_list[$zoneid][$classid][$x]{item};
-		$reward = $armor_list[$zoneid][$classid][$x]{reward};
-		quest::say("Looking for $slot in $item for reward $reward");		
-		if (plugin::check_handin(\%{$itemref}, $item => 1)) {
-			quest::say("Got item!");
-			if ($cash >= (plugin::velious_pricing_by_slot($slot)*1000)) {
-				quest::summonitem($reward);
-				return 1;
-			} else { #fail!
-				return 0;
-			}
-		}
-	}
-	return 0;
 }
 
 
@@ -207,7 +180,7 @@ sub velious_armor_requirement {
 }
 
 sub velious_armor_list {
-	my $armor_list;
+	my @armor_list;
 	###KAEL###
  
 	$tmp_zone = 113;
@@ -642,5 +615,5 @@ sub velious_armor_list {
 	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31012}; #gloves
 	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24946, reward => 31013}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31014}; #boots
-	return $armor_list;
+	return @armor_list;
 }
