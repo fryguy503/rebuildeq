@@ -787,8 +787,8 @@ class Build {
 			$skills[6] = $newSkill;
 			$newSkill = new stdClass();
 			$newSkill->title = "Sneak Attack";
-			$newSkill->desc = 'If a rogue is hiding and sneaking and uses a backstab while the mob is greater than 90% hp, their chance to hit with a backstab increases by <em data-base="2000">2000</em>% and critical chance increases by <em data-base="10">10</em>% <span class="perLevel"> per rank</span>.';
-			
+			$newSkill->desc = 'If a rogue is sneaking and uses a backstab while an enemy is greater than 90% hp, their chance to hit with a backstab increases by <em data-base="2000">2000</em>% and critical chance increases by <em data-base="10">10</em>% <span class="perLevel"> per rank</span>.';
+
 			$newSkill->image = "/images/builds/icons/rb-rog-sinisterstrikes.png";	
 			$skills[8] = $newSkill;
 			$newSkill = new stdClass();
@@ -817,13 +817,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jarring Stab";
-			$newSkill->desc = 'When the rogue successfully backstabs an enemy, they have a <em data-base="2">2</em> to cause the enemy to lose <em data-base="200">200</em> hate to all enemies except for the enemy he currently has focus on<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";	
+			$newSkill->desc = 'When the rogue successfully backstabs an enemy, they have a <em data-base="2">2</em> to cause the enemy to lose <em data-base="200">200</em> hate to all grouped allies including themself except for the top hated ally<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[20] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Confuse";
-			$newSkill->desc = 'When a rogue uses beg on an enemy, they has very small chance to cause the enemy to be mesmerized for 6 seconds.';
+			$newSkill->desc = 'When a rogue uses beg on an enemy, there is a very small chance to cause the enemy to be mesmerized for 6 seconds.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[24] = $newSkill;
 
@@ -832,6 +832,13 @@ class Build {
 			$newSkill->desc = 'Rogue melee attacks passively cause <em data-base="10">10</em> less hate per attack, and when a rogue is out of combat and does not move for some time, they have a chance to gain a Shroud of Stealth like state. The chances of gaining Shroud of Stealth is increased when two rogues are grouped and near each other.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[26] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Duelist";
+			$newSkill->desc = 'When the rogue is engaged with a single enemy, they gain improved evasion. Many factors decrease the effectiveness of this skill, such as the level of the enemy and how much health they have.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[31] = $newSkill;
+
 			break;
 			
 			//==================SHAMAN======================

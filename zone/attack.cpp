@@ -288,8 +288,9 @@ bool Mob::CheckHitChance(Mob* other, EQEmu::skills::SkillType skillinuse, int Ha
 		}
 
 		rank = attacker_client->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);
-		if (rank > 0 && GetHPRatio() >= 0.9f && skillinuse == EQEmu::skills::SkillBackstab && attacker_client->hidden && attacker_client->sneaking) {
-			attacker_client->Message(MT_NonMelee, "Sneak Attack %u catches %s off guard.", rank, GetCleanName());
+		if (rank > 0 && GetHPRatio() >= 90.0f && skillinuse == EQEmu::skills::SkillBackstab && attacker_client->sneaking) {
+			Log.Out(Logs::Detail, Logs::Attack, "Sneak Attack? %u %i %i skill : %i", rank, attacker_client->hidden, attacker_client->sneaking, skillinuse);
+			//attacker_client->Message(MT_NonMelee, "Sneak Attack %u catches %s off guard.", rank, GetCleanName());
 			hitBonus += hitBonus * 20 * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);
 		}
 	}
@@ -324,11 +325,54 @@ bool Mob::CheckHitChance(Mob* other, EQEmu::skills::SkillType skillinuse, int Ha
 
 	float tohit_roll = zone->random.Real(0, 100);
 
-	Log.Out(Logs::Detail, Logs::Attack, "Final hit chance: %.2f%%. Hit roll %.2f", chancetohit, tohit_roll);
+	Log.Out(Logs::Detail, Logs::Attack, "Final hit chance: %.2f. Hit roll %.2f", chancetohit, tohit_roll);
+
+	
+	if (IsClient() && 
+		tohit_roll <= chancetohit //this normally would hit
+		&& other  //there is an enemy
+		&& CastToClient()->GetBuildRank(ROGUE,RB_ROG_DUELIST) > 0 &&  //has duelist ability
+		CastToClient()->GetAggroCount() == 1 &&
+		chancetohit > 19) { //only 1 mob on aggro list
+
+		float duelist_evasion = 0;
+		if (GetLevel() > other->GetLevel()) { //Duelist only applies to mobs lesser level than you.
+			//2 gap is 0.5x level
+			if (GetLevel() - other->GetLevel() <= 2) {
+				duelist_evasion += (GetLevel() - other->GetLevel() ) /2;
+			} //4+ gap is 1x level
+			else if (GetLevel() - other->GetLevel() <= 4) {
+				duelist_evasion += (GetLevel() - other->GetLevel() );
+			} //6+ gap is 2x level
+			else if (GetLevel() - other->GetLevel() <= 6) {
+				duelist_evasion += (GetLevel() - other->GetLevel()) * 2;
+			} //8+ gap is 3x level
+			else if (GetLevel() - other->GetLevel() <= 8) {
+				duelist_evasion += (GetLevel() - other->GetLevel()) * 3;
+			}
+
+			//Mob doesn't have much health
+			if ((GetMaxHP() /2) > other->GetMaxHP()) {
+				duelist_evasion += 10;
+			} else if ((GetMaxHP() ) > other->GetMaxHP()) {
+				duelist_evasion += 5;
+			} else if ((GetMaxHP() * 2) > other->GetMaxHP()) {
+				duelist_evasion += 2;
+			}
+		}
+		
+		if (chancetohit < 20) chancetohit = 20; //cap evasion to 20% min
+		chancetohit -= duelist_evasion; //lower chance to hit
+
+		Log.Out(Logs::Detail, Logs::Attack, "Duelist hit chance: %.2f. Hit roll %.2f", chancetohit, tohit_roll);
+		if (tohit_roll > chancetohit) {
+			Message(MT_NonMelee, "Duelist %u caused %s to miss.", CastToClient()->GetBuildRank(ROGUE, RB_ROG_DUELIST), other->GetCleanName());
+		}
+	}
 
 	//Evade once bonus mechanics
 	if (IsClient() && tohit_roll <= chancetohit && other && CastToClient()->DoEvadeOnce()) {
-		Message(MT_NonMelee, "At the last second, you evade %'s attack!", other->GetCleanName());
+		Message(MT_NonMelee, "At the last second, you evade %s's attack!", other->GetCleanName());
 		chancetohit = tohit_roll + 1;
 	}
 
@@ -2505,7 +2549,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 	if(other){
 
 		//This causes group and raid members to also aggro when an entity is placed on a hate list.
-		if (other->IsClient() && !other->CastToClient()->IsDead() && this->GetHPRatio() > 0.97) { //if a player and not dead
+		if (other->IsClient() && !other->CastToClient()->IsDead() && this->GetHPRatio() < 90.0f) { //if a player and not dead
 			if (other->IsGrouped()) { //if in a group
 				
 				//other->CastToClient()->Message(0, "You triggered a hate system!");
@@ -2516,7 +2560,8 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 						group->members[i]->IsClient() && //Is a client
 						other->GetID() != group->members[i]->GetID() && //not me
 						other->GetZoneID() == group->members[i]->GetZoneID() && //in same zone
-						!group->members[i]->CastToClient()->IsDead() //and not dead
+						!group->members[i]->CastToClient()->IsDead() && //not dead
+						DistanceSquared(GetPosition(), group->members[i]->GetPosition()) < (150 * 150) //and within range
 						) {
 						//group->members[i]->CastToClient()->Message(0, "You're being added to a hate list via group!");
 						//Find group member on hate list
@@ -2543,9 +2588,10 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 							raid->members[i].member->IsClient() && //Is a client
 							raid->members[i].member != other && //not me
 							raid->members[i].member->CastToMob()->GetZoneID() == other->GetZoneID() && //in same zone as aggro player
-							!raid->members[i].member->IsDead() //and not dead
+							!raid->members[i].member->IsDead() && //and not dead
+							DistanceSquared(GetPosition(), raid->members[i].member->GetPosition()) < (150 * 150) //and within range
 							) {
-							raid->members[i].member->CastToClient()->Message(0, "You're being added to a hate list via raid!");
+							//raid->members[i].member->CastToClient()->Message(0, "You're being added to a hate list via raid!");
 							//Find raid member on hate list
 							bool on_hatelist = CheckAggro(raid->members[i].member);
 							AddRampage(raid->members[i].member);
@@ -3424,7 +3470,10 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 					uint8 counters = attacker_client->GetRottenCoreCounters();
 					if (counters > 0) {
 						bonus_damage = damage * 0.05f * counters;
-						attacker_client->Message(MT_NonMelee, "Killing Spree %u added %i bonus damage with %u counters.", rank, bonus_damage, counters);
+						if (bonus_damage < 1) bonus_damage = 1;
+						if (bonus_damage > 100) {
+							attacker_client->Message(MT_NonMelee, "Killing Spree %u added %i bonus damage with %u counters.", rank, bonus_damage, counters);
+						}						
 						damage += bonus_damage;
 					}
 				}
@@ -3434,7 +3483,10 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 					uint8 counters = attacker_client->GetRottenCoreCounters();
 					if (counters > 0) {
 						bonus_damage = damage * 0.03f * counters;
-						attacker_client->Message(MT_NonMelee, "Rotten Core %u added %i bonus damage with %u counters.", rank, bonus_damage, counters);
+						if (bonus_damage < 1) bonus_damage = 1;
+						if (bonus_damage > 100) {
+							attacker_client->Message(MT_NonMelee, "Rotten Core %u added %i bonus damage with %u counters.", rank, bonus_damage, counters);
+						}
 						damage += bonus_damage;
 					}
 				}
@@ -4449,10 +4501,14 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 				critChance += RuleI(Combat, WarBerBaseCritChance);
 		}
 
-		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);
-		if (rank > 0 && defender->GetHPRatio() >= 0.9f && skill == EQEmu::skills::SkillBackstab && CastToClient()->hidden && CastToClient()->sneaking) {
-			CastToClient()->Message(MT_NonMelee, "Sneak Attack %u (Crit) catches %s off guard.", rank, GetCleanName());
+		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);		
+		if (rank > 0 && defender->GetHPRatio() >= 90.0f && skill == EQEmu::skills::SkillBackstab && CastToClient()->sneaking) {
+			Log.Out(Logs::Detail, Logs::Attack, "Sneak Attack crit? %u %i %i skill : %i", rank, CastToClient()->hidden, CastToClient()->sneaking, skill);
+			CastToClient()->Message(MT_NonMelee, "Sneak Attack %u catches %s off guard.", rank, defender->GetCleanName());
 			critChance += critChance * 0.1f * rank;
+
+			CastToClient()->sneaking = false; //Disable sneak
+			CastToClient()->SendAppearancePacket(AT_Sneak, 0);
 		}
 	}
 
