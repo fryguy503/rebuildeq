@@ -840,6 +840,12 @@ class Build {
 			$skills[26] = $newSkill;
 
 			$newSkill = new stdClass();
+			$newSkill->title = "Moss Stone";
+			$newSkill->desc = 'When throw stone is used on a creature with less than 20% health and is not snared, it has a <em data-base="20">20</em> chance to ensnare the enemy.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[28] = $newSkill;
+
+			$newSkill = new stdClass();
 			$newSkill->title = "Duelist";
 			$newSkill->desc = 'While engaged with a single enemy who is lesser level than them, the rogue gains improved evasion. Many factors decrease the effectiveness of this skill, such as the level of the enemy and how much health they have.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
