@@ -9,7 +9,7 @@ sub EVENT_SAY {
 		quest::say("Do you wish to [ ". quest::saylink("bind origin")." ], or [ ". quest::saylink("bind affinity")." ] yourself here?");
 	} elsif($text=~/bind origin/i) {
 	    quest::say("Binding your origin.");
-	    $client->SetStartZone(22, $client->GetX(), $client->GetY(), $client->GetZ()); 
+	    $client->SetStartZone(113, $client->GetX(), $client->GetY(), $client->GetZ()); 
 	} elsif($text=~/bind affinity/i) {
 	    quest::say("Binding your affinity.");
 	    quest::selfcast(2049);
