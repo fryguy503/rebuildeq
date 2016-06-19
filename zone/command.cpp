@@ -4428,7 +4428,9 @@ void command_buff(Client *c, const Seperator *sep) {
 
 		if (level > 30) target->AddBuff(target, 1693, duration);
 		else target->AddBuff(target, 174, duration);
-		target->AddBuff(target, 278, duration); //sow
+
+		c->SpellFinished(278, target);
+		//target->AddBuff(target, 278, duration); //sow
 
 		if (c->HasPet()) {
 			target = c->GetPet();
@@ -4469,7 +4471,8 @@ void command_buff(Client *c, const Seperator *sep) {
 
 			if (level > 30) target->AddBuff(target, 1693, duration);
 			else target->AddBuff(target, 174, duration);
-			target->AddBuff(target, 278, duration); //sow
+			//target->AddBuff(target, 278, duration); //sow
+			c->SpellFinished(278, target);
 		}
 		if (c->IsClient() && c->CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 		{

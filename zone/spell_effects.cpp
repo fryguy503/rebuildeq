@@ -460,7 +460,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									else if (level >= 32 && caster_level >= 32) { AddBuff(caster, 431, duration, 60); AddBuff(caster, 167, duration, 60); }
 									else { AddBuff(caster, 274, duration, 60);  AddBuff(caster, 267, duration, 60); }										
 										
-									AddBuff(caster, 278, duration, 60); //Spirit of wolf duration is based on natural stats										
+									//AddBuff(caster, 278, duration, 60); //Spirit of wolf duration is based on natural stats	
+									SpellFinished(278, this);
 								}
 
 								if (rank > 0) { //STR
@@ -520,7 +521,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									else if (level >= 27 && caster_level >= 27) AddBuff(caster, 129, duration); //shield of brambles 27
 									else if (level >= 17 && caster_level >= 17) AddBuff(caster, 273, duration); //shield of barbs 17
 									else AddBuff(caster, 256, duration, 60); //shield of thistles 7		
-									AddBuff(caster, 278, duration); //Spirit of wolf duration is based on natural stats
+									//AddBuff(caster, 278, duration); //Spirit of wolf duration is based on natural stats
+									SpellFinished(278, this);
 								}
 
 								if (rank > 3) { //HP
