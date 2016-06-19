@@ -787,7 +787,7 @@ class Build {
 			$skills[6] = $newSkill;
 			$newSkill = new stdClass();
 			$newSkill->title = "Sneak Attack";
-			$newSkill->desc = 'If a rogue is sneaking and uses a backstab while an enemy is greater than 90% hp, their chance to hit with a backstab increases by <em data-base="2000">2000</em>% and critical chance increases by <em data-base="10">10</em>% <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'If a rogue is sneaking and uses a backstab while an enemy is greater than 70% hp, their chance to hit with a backstab increases by <em data-base="2000">2000</em>% and critical chance increases by <em data-base="10">10</em>% <span class="perLevel"> per rank</span>.';
 
 			$newSkill->image = "/images/builds/icons/rb-rog-sinisterstrikes.png";	
 			$skills[8] = $newSkill;

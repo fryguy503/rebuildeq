@@ -288,7 +288,7 @@ bool Mob::CheckHitChance(Mob* other, EQEmu::skills::SkillType skillinuse, int Ha
 		}
 
 		rank = attacker_client->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);
-		if (rank > 0 && GetHPRatio() >= 90.0f && skillinuse == EQEmu::skills::SkillBackstab && attacker_client->sneaking) {
+		if (rank > 0 && GetHPRatio() >= 70.0f && skillinuse == EQEmu::skills::SkillBackstab && attacker_client->sneaking) {
 			Log.Out(Logs::Detail, Logs::Attack, "Sneak Attack? %u %i %i skill : %i", rank, attacker_client->hidden, attacker_client->sneaking, skillinuse);
 			//attacker_client->Message(MT_NonMelee, "Sneak Attack %u catches %s off guard.", rank, GetCleanName());
 			hitBonus += hitBonus * 20 * attacker->CastToClient()->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);
