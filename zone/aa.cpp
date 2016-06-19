@@ -1257,7 +1257,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	}
 
 	if (rank_id == aaHandofPiety) {
-		manacost = GetMaxMana() * 0.05f;
+		manacost = GetMaxMana() * 0.01f;
 	}
 	
 	if (rank_id == aaSpiritCall) {
