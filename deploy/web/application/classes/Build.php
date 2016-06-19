@@ -689,7 +689,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Stun";
-			$newSkill->desc = 'Grants the Divine Stun AA, causing a target to be stunned and marked with divine anger. Any time the Paladin casts a heal spell on a group member, the marked enemy gains an additional <em data-base="200">200</em>hatred<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Divine Stun AA, causing a target to be stunned and marked with divine anger. Any time the Paladin casts a heal spell on a group member, the marked enemy gains an additional <em data-base="200">200</em> hatred<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[26] = $newSkill;
 
@@ -823,10 +823,9 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Untapped Potential";
-			$newSkill->desc = 'Pick pocket now gives the group <em data-base="100">100</em>mana on success<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Pick pocket now gives the group <em data-base="20">20</em> mana on success<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[22] = $newSkill;
-
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Confuse";

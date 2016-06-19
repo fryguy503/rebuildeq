@@ -3927,7 +3927,7 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 		}
 		rank = GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);
 		if (rank > 0) {
-			int mana_bonus = rank * 100;
+			int mana_bonus = rank * 20;
 			
 			if (this->IsGrouped()) {
 				Message(MT_Spells, "Untapped Potential %u gives the group %i mana.", rank, mana_bonus);
