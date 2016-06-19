@@ -4971,7 +4971,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 					SetMana(GetMana() + mana_amount);
 					if (p != this) {
 						p->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
-						p->SetMana(GetMana() + mana_amount);
+						p->SetMana(p->GetMana() + mana_amount);
 					}
 				}
 			}
@@ -5007,7 +5007,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 				SetMana(GetMana() + mana_amount);
 				if (p != this) {
 					p->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
-					p->SetMana(GetMana() + mana_amount);
+					p->SetMana(p->GetMana() + mana_amount);
 				}
 			}
 		}
