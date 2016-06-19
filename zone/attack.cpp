@@ -1399,6 +1399,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				if (proc_damage < 20) {
 					proc_damage = 20;
 				}
+				is_proc = true;
 			}
 
 			//Check for BRD whistle
