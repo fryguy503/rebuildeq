@@ -441,6 +441,7 @@ void NPC::AddLootTable(uint32 ldid) {
 			AddItem(100006, 1, false); //elunium
 		}
 	  AddCardTable();
+	  AddTeleportTable();
 	  database.AddLootTableToNPC(this,ldid, &itemlist, &copper, &silver, &gold, &platinum);
 	}
 }
@@ -502,4 +503,16 @@ void NPC::AddCardTable() {
 
 	if (itemid < 1) return;
 	AddItem(itemid, 1, false);
+}
+
+
+void NPC::AddTeleportTable() {
+	if (npctype_id == 0) return;
+
+	if (GetZoneID() == 118 && zone->random.Roll(1)) AddItem(100008, 1, false); //GreatDivide
+	if (GetZoneID() == 119 && zone->random.Roll(1)) AddItem(100009, 1, false); //Wakening
+	if (GetZoneID() == 110 && zone->random.Roll(1)) AddItem(100010, 1, false); //Iceclad
+	if (GetZoneID() == 117 && zone->random.Roll(1)) AddItem(100011, 1, false); //CobaltScar
+	if (GetZoneID() == 91 && zone->random.Roll(1)) AddItem(100012, 1, false); //Skyfire
+	if (GetZoneID() == 94 && zone->random.Roll(1)) AddItem(100013, 1, false); //Emerald Jungle
 }

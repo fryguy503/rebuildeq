@@ -4221,7 +4221,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	static const int FreeLevel = 10;
 
 	struct Location {
-		explicit Location(std::string pZoneName, unsigned int pZoneID, float pX, float pY, float pZ, float pHeading, unsigned int pMinimumLevel) : ZoneName(pZoneName), ZoneID(pZoneID), X(pX), Y(pY), Z(pZ), Heading(pHeading), MinimumLevel(pMinimumLevel) {};
+		explicit Location(std::string pZoneName, unsigned int pZoneID, float pX, float pY, float pZ, float pHeading, unsigned int pMinimumLevel, unsigned int pItemID) : ZoneName(pZoneName), ZoneID(pZoneID), X(pX), Y(pY), Z(pZ), Heading(pHeading), MinimumLevel(pMinimumLevel), ItemID(pItemID) {};
 		std::string ZoneName;
 		unsigned int ZoneID;
 		float X;
@@ -4229,18 +4229,25 @@ void command_teleport(Client *c, const Seperator *sep) {
 		float Z;
 		float Heading;
 		unsigned int MinimumLevel;
+		unsigned int ItemID;
 		bool Bind; // Not in use currently.
 	};
 
-	static Location Locations[] = {
-		Location("gfaydark", 54, -411, -2023, -0.28, 47.8, 1),
-		Location("toxxulia", 414, -1656.96, -1502.43, 72.29, 58.2, 1),
-		Location("ecommons", 22, -73.06, -1787.51, 3.13, 51.8, 1),
-		Location("fieldofbone", 78, 2395.95, -2216.75, 30.63, 227.6, 1),
-		Location("sro", 35, 124.6, -1041.51, 9.45, 99.5, 10),
-		Location("commons", 21, 1839.84, 0.15, -15.61, 61.0, 10),
-		Location("northkarana", 13, 1205.91, -3685.44, -8.56, 126.6, 10),
-		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10),
+	static Location Locations[] = {				
+		Location("cobaltscar", 117, -1574.95, -1053.25, 307.74, 56.1, 10, 100011),
+		Location("commons", 21, 1839.84, 0.15, -15.61, 61.0, 10, 0),
+		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10, 0),
+		Location("ecommons", 22, -73.06, -1787.51, 3.13, 51.8, 1, 0),
+		Location("emeraldjungle", 94, 3474.83, -3123.34, -341.34, 1.5, 10, 100013),
+		Location("fieldofbone", 78, 2395.95, -2216.75, 30.63, 227.6, 1, 0),
+		Location("gfaydark", 54, -411, -2023, -0.28, 47.8, 1, 0),
+		Location("greatdivide", 118, 3654.25, -3826.56, -242.37, 136.3, 10, 100008),
+		Location("iceclad", 110, 4879.12, -604.28, 109.21, 214.3, 10, 100010),
+		Location("northkarana", 13, 1205.91, -3685.44, -8.56, 126.6, 10, 0),
+		Location("skyfire", 91, 783.57, -3097.01, -159.38, 1.8, 10, 100012),
+		Location("sro", 35, 124.6, -1041.51, 9.45, 99.5, 10, 0),
+		Location("toxxulia", 414, -1656.96, -1502.43, 72.29, 58.2, 1, 0),
+		Location("wakening", 119, -2980.7, -3020, 26.5, 42.9, 10, 100009)
 	};
 
 	auto search = [](const char * pZoneName) -> Location* {
@@ -4284,7 +4291,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 
 		// Handle: Invalid zone.
 		if (!location) {
-			c->Message(0, "That zone is not available to teleport");
+			c->Message(0, "That zone is not available to teleport to.");
 			return;
 		}
 		
@@ -4298,6 +4305,10 @@ void command_teleport(Client *c, const Seperator *sep) {
 		if (c->GetZoneID() == location->ZoneID) {
 			c->Message(0, "You are already in %s.", location->ZoneName.c_str());
 			return;
+		}
+
+		if (location->ItemID > 0 && !c->KeyRingCheck(location->ItemID)) {
+			c->Message(0, "That zone is not yet available to teleport to.");
 		}
 
 		// Calculate cost.
@@ -4343,7 +4354,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 
 	// Build message with available locations.
 	for (auto&& i : Locations) {
-		if (c->GetLevel() >= i.MinimumLevel)
+		if (c->GetLevel() >= i.MinimumLevel && c->GetZoneID() != i.ZoneID  && (i.ItemID == 0 || c->KeyRingCheck(i.ItemID)))
 			ss << " [ " << c->CreateSayLink(StringFormat("#teleport %s", i.ZoneName.c_str()).c_str(), i.ZoneName.c_str()) << " ] ";
 	}
 
