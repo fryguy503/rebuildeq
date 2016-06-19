@@ -841,7 +841,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Moss Stone";
-			$newSkill->desc = 'When throw stone is used on a creature with less than 20% health and is not snared, it has a <em data-base="20">20</em> chance to ensnare the enemy.';
+			$newSkill->desc = 'When throw stone is used on a creature with less than 20% health and is not snared, it has a <em data-base="20">20</em>% chance to ensnare the enemy.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[28] = $newSkill;
 

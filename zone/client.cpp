@@ -3944,7 +3944,7 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 						float range2 = 100 * 100;
 						if (dist2 <= range2) {
 							group->members[i]->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
-
+							group->members[i]->SetMana(group->members[i]->GetMana() + mana_bonus);
 						}
 					}
 				}
