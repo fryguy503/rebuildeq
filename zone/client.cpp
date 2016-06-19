@@ -490,6 +490,16 @@ void Client::SendZoneInPackets()
 	if (IsBuildAvailable() && GetBuildUnspentPoints() > 0) {
 		Message(MT_Experience, "You have unspent build points. Visit %s to spend them.", CreateSayLink("#builds", "#builds").c_str());
 	}
+
+	if ((GetZoneID() == 118 && !KeyRingCheck(100008)) ||
+		(GetZoneID() == 119 && !KeyRingCheck(100009)) ||
+		(GetZoneID() == 110 && !KeyRingCheck(100010)) ||
+		(GetZoneID() == 117 && !KeyRingCheck(100011)) ||
+		(GetZoneID() == 91 && !KeyRingCheck(100012)) ||
+		(GetZoneID() == 94 && !KeyRingCheck(100013))) {
+		Message(MT_Experience, "This area has a fragment to unlock #teleport to it that you have not yet discovered. Kill monsters to find it.");
+	}
+
 	//Reset evade on zoning
 	m_epp.evade_mob_id =0;
 	m_epp.evade_mob_timeout = 0;
