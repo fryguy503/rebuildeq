@@ -261,6 +261,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							Client * casterClient = caster->CastToClient();
 							uint8 caster_level = casterClient->GetLevel();
 
+							rank = casterClient->GetBuildRank(ROGUE, RB_ROG_MOSSSTONE);
+							if (rank > 0 && spell_id == 5225 && GetHPRatio() <= 20 && zone->random.Roll(20 * rank) && !HasSpellEffect(SE_MovementSpeed)) {
+								casterClient->Message(MT_NonMelee, "Moss Stone %u snares the target.", rank);
+								this->AddBuff(caster, 242, 2);
+							}
+
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH);
 							if (rank > 0 && spell_id == 13531) {
 								dmg -= zone->random.Real(10, 43) * rank * GetLevel();

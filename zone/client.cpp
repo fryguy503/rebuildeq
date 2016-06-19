@@ -10248,6 +10248,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ROG_GANGSTERSPARADISE) return "Gangster's Paradise";		
 		else if (id == RB_ROG_DUELIST) return "Duelist";
 		else if (id == RB_ROG_UNTAPPEDPOTENTIAL) return "Untapped Potential";
+		else if (id == RB_ROG_MOSSSTONE) return "Moss Stone";
 		break;
 	case DRUID:
 		if (id == RB_DRU_REGENERATION) return "Regeneration";
