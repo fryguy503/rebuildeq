@@ -1259,7 +1259,11 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	if (rank_id == aaHandofPiety) {
 		manacost = GetMaxMana() * 0.01f;
 	}
-	
+
+	if (rank_id == aaFadingMemories && GetBuildRank(BARD, RB_BRD_FADINGMEMORIES)) {
+		manacost = (GetMaxMana() * 0.5f) - ((GetMaxMana() * 0.3f) * 0.2f * GetBuildRank(BARD, RB_BRD_FADINGMEMORIES));
+	}
+
 	if (rank_id == aaSpiritCall) {
 		spellid = 164;
 		if (GetLevel() < 14) {
