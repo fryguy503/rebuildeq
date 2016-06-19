@@ -351,31 +351,36 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		{
 		case VAHSHIR:
 			npc_type->race = TIGER;
-			npc_type->size *= 0.8f;
+			npc_type->size = 2.5f;
+
 			break;
 		case TROLL:
 			npc_type->race = ALLIGATOR;
-			npc_type->size *= 2.5f;
+			npc_type->size *= 10.0f;
 			break;
 		case OGRE:
 			npc_type->race = BEAR;
 			npc_type->texture = 3;
 			npc_type->gender = 2;
+			npc_type->size = 2.5f;
 			break;
 		case BARBARIAN:
 			npc_type->race = WOLF;
 			npc_type->texture = 2;
+			npc_type->size = 2.5f;
 			break;
 		case IKSAR:
 			npc_type->race = WOLF;
 			npc_type->texture = 0;
 			npc_type->gender = 1;
-			npc_type->size *= 2.0f;
+			//npc_type->size *= 2.0f;
+			npc_type->size = 4;
 			npc_type->luclinface = 0;
 			break;
 		default:
 			npc_type->race = WOLF;
 			npc_type->texture = 0;
+			npc_type->size = 2.5f;
 		}
 	}
 
