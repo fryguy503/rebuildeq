@@ -384,13 +384,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg -= bonus_damage;
 							}
 
+							// Ancient Wrath
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
 							if (rank > 0) {
-								int festerDmg = (rank * casterClient->GetLevel());
-								festerDmg += int32((float)dmg * 0.1f * (float)rank);
-								if (festerDmg < rank) festerDmg = rank;
-								casterClient->Message(MT_NonMelee, "Ancient Wrath %u added %i bonus damage.", rank, festerDmg);
-								dmg -= festerDmg;
+								int bonus = dmg * 0.1f * rank * -1;
+								casterClient->Message(MT_NonMelee, "Ancient Wrath %u added %i bonus damage.", rank, bonus);
+								dmg -= bonus;
 							}
 
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
