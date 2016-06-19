@@ -66,6 +66,8 @@ int32 Mob::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 
 	uint16 rank;
 	if (IsClient()) {
+		Client* client = CastToClient();
+
 		rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
 		if (rank > 0) {
 			if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
@@ -75,6 +77,50 @@ int32 Mob::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_STINGINGAFFLICTION);
 		if (rank > 0) {
 			chance = rank;
+		}
+
+		// Shaman
+		if (GetClass() == SHAMAN) {
+
+			// Ancient Wrath
+			{
+				// Fire
+				static uint16 BURST_OF_FLAME = 93;
+				// Cold
+				static uint16 FROST_RIFT = 275;
+				static uint16 SPIRIT_STRIKE = 282;
+				static uint16 FROST_STRIKE = 508;
+				static uint16 WINTERS_ROAR = 509;
+				static uint16 BLIZZARD_BLAST = 510;
+				static uint16 ICE_STRIKE = 1586;
+				// Poison
+				static uint16 POISON_STORM = 437;
+				static uint16 SHOCK_OF_THE_TAINTED = 1427;
+				static uint16 GALE_OF_POISON = 438;
+				static uint16 BLAST_OF_POISON = 1429;
+				static uint16 SHOCK_OF_VENOM = 3573;
+				static uint16 BLAST_OF_VENOM = 3574;
+				static uint16 TORRENT_OF_POISON = 1587;
+				const bool isAffected = spell_id == BURST_OF_FLAME ||
+					spell_id == FROST_RIFT ||
+					spell_id == SPIRIT_STRIKE ||
+					spell_id == FROST_STRIKE ||
+					spell_id == WINTERS_ROAR ||
+					spell_id == BLIZZARD_BLAST ||
+					spell_id == ICE_STRIKE ||
+					spell_id == POISON_STORM ||
+					spell_id == SHOCK_OF_THE_TAINTED ||
+					spell_id == GALE_OF_POISON ||
+					spell_id == BLAST_OF_POISON ||
+					spell_id == SHOCK_OF_VENOM ||
+					spell_id == BLAST_OF_VENOM ||
+					spell_id == TORRENT_OF_POISON;
+				const uint32 rank = client->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
+
+				if (rank > 0 && isAffected) {
+					chance += rank; // Add 5% per rank.
+				}
+			}
 		}
 	}
 	//Crtical Hit Calculation pathway
@@ -105,6 +151,12 @@ int32 Mob::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 
 		if (IsClient() && GetClass() == WIZARD)
 			ratio += RuleI(Spells, WizCritRatio); //Default is zero
+
+		// REBUILDEQ - Ratio Changes.
+		if (IsClient()) {
+			// This will take all classes to 2x damage (minimum). Gear/AA/Focus etc additions are calculated above.
+			ratio += 100;
+		}
 
 		if (Critical){
 
