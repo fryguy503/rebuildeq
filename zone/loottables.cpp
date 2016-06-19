@@ -431,6 +431,7 @@ void NPC::AddItem(uint32 itemid, uint16 charges, bool equipitem) {
 void NPC::AddLootTable() {
 	if (npctype_id != 0) { // check if it's a GM spawn
 		AddCardTable();
+		AddTeleportTable();
 		database.AddLootTableToNPC(this,loottable_id, &itemlist, &copper, &silver, &gold, &platinum);
 	}
 }
