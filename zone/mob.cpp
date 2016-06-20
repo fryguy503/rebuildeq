@@ -6263,3 +6263,522 @@ float Mob::HealRotationExtendedHealFrequency()
 	return m_target_of_heal_rotation->ExtendedHealFrequency(this);
 }
 #endif
+
+
+const char* Mob::RaceName()
+{
+	uint16 race_id = GetRace();
+	if (race_id == HUMAN) return "Human";
+	if (race_id == BARBARIAN) return "Barbarian";
+	if (race_id == ERUDITE) return "Erudite";
+	if (race_id == WOOD_ELF)return  "Wood Elf";
+	if (race_id == HIGH_ELF)return  "High Elf";
+	if (race_id == DARK_ELF)return  "Dark Elf";
+	if (race_id == HALF_ELF)return  "Half Elf";
+	if (race_id == DWARF) return "Dwarf";
+	if (race_id == TROLL) return "Troll";
+	if (race_id == OGRE) return "Ogre";
+	if (race_id == HALFLING) return "Halfling";
+	if (race_id == GNOME) return "Gnome";
+	if (race_id == IKSAR) return "Iksar";
+	if (race_id == WEREWOLF) return "Werewolf";
+	if (race_id == SKELETON) return "Skeleton";
+	if (race_id == ELEMENTAL) return "Elemental";
+	if (race_id == EYE_OF_ZOMM) return " Eye of Zomm";
+	if (race_id == WOLF_ELEMENTAL) return  "Wolf Elemental";
+	if (race_id == IKSAR_SKELETON) return  "Iksar Skeleton";
+	if (race_id == VAHSHIR) return  "Vah Shir";
+	if (race_id == FROGLOK || race_id == FROGLOK2) return "Froglok";
+	if (race_id == DRAKKIN) return "Drakkin";
+
+	if ((GetRace() == 13)) return "Aviak";
+	if ((GetRace() == 14)) return "Werewolf";
+	if ((GetRace() == 15)) return "Brownie";
+	if ((GetRace() == 16)) return "Centaur";
+	if ((GetRace() == 17)) return "Golem";
+	if ((GetRace() == 18)) return "Giant";
+	if ((GetRace() == 19)) return "Trakanon";
+	if (GetRace() == 20) return "Venril Sathir";
+	if (GetRace() == 21) return "Evil Eye";
+	if (GetRace() == 22) return "Beetle";
+	if (GetRace() == 23) return "Kerra";
+	if (GetRace() == 24) return "Fish";
+	if (GetRace() == 25) return "Fairy";
+	if (GetRace() == 26) return "Froglok";
+	if (GetRace() == 27) return "Froglok Ghoul";
+	if (GetRace() == 28) return "Sporali";
+	if (GetRace() == 29) return "Gargoyle";
+	if (GetRace() == 30) return "Gasbag"; //evil eye
+	if (GetRace() == 31) return "Gelatinous Cube";
+	if (GetRace() == 32) return "Ghost";
+	if (GetRace() == 33) return "Ghoul";
+	if (GetRace() == 34) return "Giant Bat";
+	if (GetRace() == 35) return "Giant Eel";
+	if (GetRace() == 36) return "Giant Rat";
+	if (GetRace() == 37) return "Giant Snake";
+	if (GetRace() == 38) return "Giant Spider";
+	if (GetRace() == 39) return "Gnoll";
+	if (GetRace() == 40) return "Goblin";
+	if (GetRace() == 41) return "Gorilla";
+	if (GetRace() == 42) return "Wolf";
+	if (GetRace() == 43) return "Bear";
+	if (GetRace() == 44) return "Freeport Guard";
+	if (GetRace() == 45) return "Drusella Sathir";
+	if (GetRace() == 46) return "Imp";
+	if (GetRace() == 47) return "Griffin";
+	if (GetRace() == 48) return "Kobold";
+	if (GetRace() == 49) return "Lava Dragon";
+	if (GetRace() == 50) return "Lion";
+	if (GetRace() == 51) return "Lizard Man";
+	if (GetRace() == 52) return "Mimic";
+	if (GetRace() == 53) return "Minotaur";
+	if (GetRace() == 54) return "Orc";
+	if (GetRace() == 55) return "Human Beggar";
+	if (GetRace() == 56) return "Pixie";
+	if (GetRace() == 57) return "Drachnid";
+	if (GetRace() == 58) return "Solusek Ro";
+	if (GetRace() == 59) return "Bloodgill Goblin";
+	if (GetRace() == 60) return "Skeleton";
+	if (GetRace() == 61) return "Shark";
+	if (GetRace() == 62) return "Tunare";
+	if (GetRace() == 63) return "Tiger";
+	if (GetRace() == 64) return "Treant";
+	if (GetRace() == 65) return "Vampire";
+	if (GetRace() == 66) return "Rallos Zek";
+	if (GetRace() == 67) return "Highpass Citizen";
+	if (GetRace() == 68) return "Tentacle Monster";
+	if (GetRace() == 69) return "Will O Wisp";
+	if (GetRace() == 70) return "Zombie";
+	if (GetRace() == 71) return "Qeynos Citizen";
+	if (GetRace() == 72) return "Ship";
+	if (GetRace() == 73) return "Cabilis Boat";
+	if (GetRace() == 74) return "Piranha";
+	if (GetRace() == 75) return "Elemental";
+	if (GetRace() == 76) return "Puma";
+	if (GetRace() == 77) return "Neriak Citizen";
+	if (GetRace() == 78) return "Erudite Citizen";
+	if (GetRace() == 79) return "Bixie";
+	if (GetRace() == 80) return "Reanimated Hand";
+	if (GetRace() == 81) return "Rivervale Citizen";
+	if (GetRace() == 82) return "Scarecrow";
+	if (GetRace() == 83) return "Skunk";
+	if (GetRace() == 84) return "Snake";
+	if (GetRace() == 85) return "Spectre";
+	if (GetRace() == 86) return "Sphinx";
+	if (GetRace() == 87) return "Armadillo";
+	if (GetRace() == 88) return "Clockwork Gnome";
+	if (GetRace() == 89) return "Drake";
+	if (GetRace() == 90) return "Halas Citizen";
+	if (GetRace() == 91) return "Alligator";
+	if (GetRace() == 92) return "Grobb Citizen";
+	if (GetRace() == 93) return "Oggok Citizen";
+	if (GetRace() == 94) return "Kaladim Citizen";
+	if (GetRace() == 95) return "Cazic Thule";
+	if (GetRace() == 96) return "Cockatrice";
+	if (GetRace() == 97) return "Daisy Man";
+	if (GetRace() == 98) return "Elf Vampire";
+	if (GetRace() == 99) return "Amygdalan";
+	if (GetRace() == 100) return "Dervish";
+	if (GetRace() == 101) return "Efreeti";
+	if (GetRace() == 102) return "Froglok Tadpole";
+	if (GetRace() == 103) return "Kedge";
+	if (GetRace() == 104) return "Leech";
+	if (GetRace() == 105) return "Swordfish";
+	if (GetRace() == 106) return "Felwithe Guard";
+	if (GetRace() == 107) return "Elephant (Old)";
+	if (GetRace() == 108) return "Eye of Zomm";
+	if (GetRace() == 109) return "Wasp";
+	if (GetRace() == 110) return "Mermaid";
+	if (GetRace() == 111) return "Harpie";
+	if (GetRace() == 112) return "Kelethin Guard";
+	if (GetRace() == 113) return "Drixie";
+	if (GetRace() == 114) return "Ghost Ship";
+	if (GetRace() == 115) return "Clam";
+	if (GetRace() == 116) return "Sea Horse";
+	if (GetRace() == 117) return "Ghost Dwarf";
+	if (GetRace() == 118) return "Erudite Ghost";
+	if (GetRace() == 119) return "Sabertooth Cat";
+	if (GetRace() == 120) return "Spectral Wolf AKA Wolf Elemental(Luclin)";
+	if (GetRace() == 121) return "Gorgon";
+	if (GetRace() == 122) return "Dracoliche (Old)";
+	if (GetRace() == 123) return "Innoruuk";
+	if (GetRace() == 124) return "Unicorn (Old)";
+	if (GetRace() == 125) return "Pegasus";
+	if (GetRace() == 126) return "Djinn";
+	if (GetRace() == 127) return "Shadowed Man";
+	if (GetRace() == 128) return "Iksar";
+	if (GetRace() == 129) return "Scorpion (Old)";
+	if (GetRace() == 130) return "Vah Shir";
+	if (GetRace() == 131) return "Sarnak (Old)";
+	if (GetRace() == 132) return "Draglock";
+	if (GetRace() == 133) return "Drolvarg";
+	if (GetRace() == 134) return "Mosquito";
+	if (GetRace() == 135) return "Rhino";
+	if (GetRace() == 136) return "Xalgoz";
+	if (GetRace() == 137) return "Kunark Goblin";
+	if (GetRace() == 138) return "Yeti";
+	if (GetRace() == 139) return "Cabilis Citizen";
+	if (GetRace() == 140) return "Forest Giant";
+	if (GetRace() == 141) return "Boat (Personal Canoe)";
+	if (GetRace() == 142) return "Nearest Object (Minor Illusion)";
+	if (GetRace() == 143) return "Tree (New)";
+	if (GetRace() == 144) return "Burynai (Old)";
+	if (GetRace() == 145) return "Goo (Old)";
+	if (GetRace() == 146) return "Sarnak Ghost";
+	if (GetRace() == 147) return "Iksar Ghost (Old)";
+	if (GetRace() == 148) return "Kunark Fish";
+	if (GetRace() == 149) return "Iksar Scorpion";
+	if (GetRace() == 150) return "Erollisi Marr";
+	if (GetRace() == 151) return "Tribunal (Old)";
+	if (GetRace() == 152) return "Bertoxxulous";
+	if (GetRace() == 153) return "Bristlebane";
+	if (GetRace() == 154) return "Dragonfly Drake";
+	if (GetRace() == 155) return "Sarnak Skeleton";
+	if (GetRace() == 156) return "Ratman";
+	if (GetRace() == 157) return "Wyvern";
+	if (GetRace() == 158) return "Wurm";
+	if (GetRace() == 159) return "Devourer";
+	if (GetRace() == 160) return "Iksar Golem";
+	if (GetRace() == 161) return "Iksar Skeleton";
+	if (GetRace() == 162) return "Man Eating Plant";
+	if (GetRace() == 163) return "Raptor";
+	if (GetRace() == 164) return "Sarnak Golem";
+	if (GetRace() == 165) return "Water Dragon";
+	if (GetRace() == 166) return "Iksar Reanimated Hand";
+	if (GetRace() == 167) return "Succulent Cactus";
+	if (GetRace() == 168) return "Flying Monkey";
+	if (GetRace() == 169) return "Brontotherium";
+	if (GetRace() == 170) return "Snow Dervish";
+	if (GetRace() == 171) return "Dire Wolf";
+	if (GetRace() == 172) return "Manticore";
+	if (GetRace() == 173) return "Totem";
+	if (GetRace() == 174) return "Cold Spectre";
+	if (GetRace() == 175) return "Animated Armor (Old)";
+	if (GetRace() == 176) return "Bunny";
+	if (GetRace() == 177) return "Walrus";
+	if (GetRace() == 178) return "Geonid";
+	if (GetRace() == 179) return "Unknown179";
+	if (GetRace() == 180) return "Unknown180";
+	if (GetRace() == 181) return "Yak Man";
+	if (GetRace() == 182) return "Faun";
+	if (GetRace() == 183) return "Coldain";
+	if (GetRace() == 184) return "Velious Dragons";
+	if (GetRace() == 185) return "Hag";
+	if (GetRace() == 186) return "Hippograph";
+	if (GetRace() == 187) return "Siren (Old)";
+	if (GetRace() == 188) return "Frost Giant";
+	if (GetRace() == 189) return "Storm Giant";
+	if (GetRace() == 190) return "Otterman";
+	if (GetRace() == 191) return "Walrus Man";
+	if (GetRace() == 192) return "Clockwork Dragon (Old)";
+	if (GetRace() == 193) return "Tserrina";
+	if (GetRace() == 194) return "Turtle";
+	if (GetRace() == 195) return "Black and White Dragons";
+	if (GetRace() == 196) return "Ghost Dragon";
+	if (GetRace() == 198) return "Kerafyrm";
+	if (GetRace() == 199) return "Shik`Nar";
+	if (GetRace() == 200) return "Rockhopper";
+	if (GetRace() == 201) return "Underbulk";
+	if (GetRace() == 202) return "Grimling";
+	if (GetRace() == 203) return "Vacuum Worm";
+	if (GetRace() == 204) return "Evan Test";
+	if (GetRace() == 205) return "Sun Revenant";
+	if (GetRace() == 206) return "Owlbear";
+	if (GetRace() == 207) return "Rhino Beetle";
+	if (GetRace() == 208) return "Vampyre";
+	if (GetRace() == 209) return "Earth Elemental";
+	if (GetRace() == 210) return "Air Elemental";
+	if (GetRace() == 211) return "Water Elemental";
+	if (GetRace() == 212) return "Fire Elemental";
+	if (GetRace() == 213) return "Wetfang Minnow";
+	if (GetRace() == 214) return "Thought Horror";
+	if (GetRace() == 215) return "Tegi";
+	if (GetRace() == 216) return "Horse";
+	if (GetRace() == 217) return "Shissar";
+	if (GetRace() == 218) return "Fungal Fiend";
+	if (GetRace() == 219) return "Vampyre Volatalis";
+	if (GetRace() == 220) return "Stonegrabber";
+	if (GetRace() == 221) return "Scarlet Cheetah";
+	if (GetRace() == 222) return "Zelniak";
+	if (GetRace() == 223) return "Lightcrawler";
+	if (GetRace() == 224) return "Shade";
+	if (GetRace() == 225) return "Sunflower";
+	if (GetRace() == 226) return "Khati Shah";
+	if (GetRace() == 227) return "Shrieker";
+	if (GetRace() == 228) return "Galorian";
+	if (GetRace() == 229) return "Netherbian";
+	if (GetRace() == 230) return "Akhevan";
+	if (GetRace() == 231) return "Spire Spirit";
+	if (GetRace() == 232) return "Sonic Wolf";
+	if (GetRace() == 233) return "Ground Stalker";
+	if (GetRace() == 234) return "Vah Shir Skeleton";
+	if (GetRace() == 235) return "Mutant Human";
+	if (GetRace() == 236) return "Seru";
+	if (GetRace() == 237) return "Recuso";
+	if (GetRace() == 238) return "Vah Shir King";
+	if (GetRace() == 239) return "Vah Shir Guard";
+	if (GetRace() == 240) return "Teleport Man";
+	if (GetRace() == 241) return "Lujein";
+	if (GetRace() == 242) return "Naiad";
+	if (GetRace() == 243) return "Nymph";
+	if (GetRace() == 244) return "Treant (PoP)";
+	if (GetRace() == 245) return "Wrinnfly (Old)";
+	if (GetRace() == 246) return "Tarew Mar";
+	if (GetRace() == 247) return "Solusek Ro (PoP)";
+	if (GetRace() == 248) return "Clockwork Golem";
+	if (GetRace() == 249) return "Clockwork Brain";
+	if (GetRace() == 250) return "Spectral Banshee";
+	if (GetRace() == 251) return "Guardian of Justice";
+	if (GetRace() == 252) return "Plane of Mischief";
+	if (GetRace() == 253) return "Disease Boss";
+	if (GetRace() == 254) return "PoFire Guard";
+	if (GetRace() == 255) return "Bertoxxulous";
+	if (GetRace() == 256) return "Tribunal (PoP)";
+	if (GetRace() == 257) return "Terris Thule";
+	if (GetRace() == 258) return "Vegerog";
+	if (GetRace() == 259) return "Crocodile (PoP)";
+	if (GetRace() == 260) return "Bat (PoP)";
+	if (GetRace() == 261) return "Slarghilug";
+	if (GetRace() == 262) return "Tranquilion";
+	if (GetRace() == 263) return "Tin Soldier";
+	if (GetRace() == 264) return "Nightmare Wraith";
+	if (GetRace() == 265) return "Mosquito (PoP/Malarian)";
+	if (GetRace() == 266) return "Knight of Pestilance";
+	if (GetRace() == 267) return "Lepertoloth";
+	if (GetRace() == 268) return "Bubonian Boss";
+	if (GetRace() == 269) return "Bubonian Underling";
+	if (GetRace() == 270) return "Pusling";
+	if (GetRace() == 271) return "Water Mephit (PoP)";
+	if (GetRace() == 272) return "Stormrider";
+	if (GetRace() == 273) return "Junk Beast";
+	if (GetRace() == 274) return "Broken Clockwork";
+	if (GetRace() == 275) return "Giant Clockwork";
+	if (GetRace() == 276) return "Clockwork Beetle";
+	if (GetRace() == 277) return "Nightmare Goblin";
+	if (GetRace() == 278) return "Karana";
+	if (GetRace() == 279) return "Blood Raven";
+	if (GetRace() == 280) return "Nightmare Gargoyle";
+	if (GetRace() == 281) return "Mouth of Insanity";
+	if (GetRace() == 282) return "Skeletal Horse";
+	if (GetRace() == 283) return "Saryn";
+	if (GetRace() == 284) return "Fennin Ro";
+	if (GetRace() == 285) return "Tormentor";
+	if (GetRace() == 286) return "Necromancer Priest";
+	if (GetRace() == 287) return "Nightmare (PoP)";
+	if (GetRace() == 288) return "Ralos Zek (PoP)";
+	if (GetRace() == 289) return "Tallon Zek";
+	if (GetRace() == 290) return "Vallon Zek";
+	if (GetRace() == 291) return "Air Mephit (PoP)";
+	if (GetRace() == 292) return "Earth Mephit (PoP)";
+	if (GetRace() == 293) return "Fire Mephit (PoP)";
+	if (GetRace() == 294) return "Nightmare Mephit (PoP)";
+	if (GetRace() == 295) return "Zebuxoruk";
+	if (GetRace() == 296) return "Mithaniel Marr";
+	if (GetRace() == 297) return "Nightmare Rider";
+	if (GetRace() == 298) return "Rathe Councilman";
+	if (GetRace() == 299) return "Xegony";
+	if (GetRace() == 300) return "Balrog (PoP)";
+	if (GetRace() == 301) return "Test";
+	if (GetRace() == 302) return "Lobster Man";
+	if (GetRace() == 303) return "Pheonix";
+	if (GetRace() == 304) return "Quarm";
+	if (GetRace() == 305) return "Bear (PoP)";
+	if (GetRace() == 306) return "Earth Giant";
+	if (GetRace() == 307) return "Iron Giant";
+	if (GetRace() == 308) return "Storm Giant";
+	if (GetRace() == 309) return "Air Giant";
+	if (GetRace() == 310) return "Wood Giant";
+	if (GetRace() == 311) return "Fire Giant";
+	if (GetRace() == 312) return "Water Giant";
+	if (GetRace() == 313) return "Veiled Gargoyle";
+	if (GetRace() == 314) return "Wrulon (PoP)";
+	if (GetRace() == 315) return "Squid";
+	if (GetRace() == 316) return "Frog";
+	if (GetRace() == 317) return "Flying Serpant";
+	if (GetRace() == 318) return "Tactics Soldier";
+	if (GetRace() == 319) return "Armored Boar";
+	if (GetRace() == 320) return "Efreeti (PoP)";
+	if (GetRace() == 321) return "Boar";
+	if (GetRace() == 322) return "Knight of Marr";
+	if (GetRace() == 323) return "Animated Armor (PoP/HoT)";
+	if (GetRace() == 324) return "Nightmare Knight";
+	if (GetRace() == 325) return "Rallos Ogre";
+	if (GetRace() == 326) return "Spider (PoP)";
+	if (GetRace() == 327) return "Crystal Spider";
+	if (GetRace() == 328) return "Tower Model (Zebuxoruk’s Cage)";
+	if (GetRace() == 329) return "Portal (BoT/SSRA Portal model)";
+	if (GetRace() == 330) return "Guktan";
+	if (GetRace() == 331) return "Troll Pirate";
+	if (GetRace() == 332) return "Pirate Deckhand";
+	if (GetRace() == 333) return "Broken Skull Pirate";
+	if (GetRace() == 334) return "Pirate Ghost";
+	if (GetRace() == 335) return "One Armed Pirate";
+	if (GetRace() == 336) return "Nadox";
+	if (GetRace() == 337) return "Broken Skull Taskmaster";
+	if (GetRace() == 338) return "Gnome Pirate";
+	if (GetRace() == 339) return "Dark Elf Pirate";
+	if (GetRace() == 340) return "Ogre Pirate";
+	if (GetRace() == 341) return "Human Pirate";
+	if (GetRace() == 342) return "Erudite Pirate";
+	if (GetRace() == 343) return "Frog";
+	if (GetRace() == 344) return "Undead Pirate";
+	if (GetRace() == 345) return "Luggald";
+	if (GetRace() == 346) return "Armored Luggald";
+	if (GetRace() == 347) return "Robed Luggald";
+	if (GetRace() == 348) return "Drogmor";
+	if (GetRace() == 349) return "Guktan Skeleton";
+	if (GetRace() == 350) return "Guktan Zombie";
+	if (GetRace() == 351) return "PoHate Dark Elf Knight";
+	if (GetRace() == 352) return "PoHate Dark Elf Warlock";
+	if (GetRace() == 353) return "Highborn Noble";
+	if (GetRace() == 354) return "Highborn Diviner";
+	if (GetRace() == 355) return "Highborn Crusader";
+	if (GetRace() == 356) return "Scaled Wolf (Kunark/LoY)";
+	/*if (GetRace() == 357) return "Undead Drogmor
+	if (GetRace() == 358) return "Undea
+	if (GetRace() == 359) return "Undead Vampire";
+	if (GetRace() == 360) return "Vampire (LDoN)";
+	if (GetRace() == 361) return "Orc (LDoN)
+	if (GetRace() == 362) return "Decaying Mutant
+	if (GetRace() == 363) return "Prismatic Spirit
+	if (GetRace() == 364) return "Sand Elf (LDoN)";
+	if (GetRace() == 365) return "Master Vampire (LDoN)
+	if (GetRace() == 366) return "Master Orc (LDoN)
+	if (GetRace() == 367) return "Skeleton (LDoN)
+	if (GetRace() == 368) return "Mummy (LDoN)
+	if (GetRace() == 369) return "Goblin (LDoN)
+	if (GetRace() == 370) return "Burrower Bug
+	if (GetRace() == 371) return "Guktan Ghost
+	if (GetRace() == 372) return "Dervish (LDoN)
+	if (GetRace() == 373) return "Shadow Man
+	if (GetRace() == 374) return "Golem (LdoN/PoR)";
+	if (GetRace() == 375) return "Evil Eye (LDoN)
+	if (GetRace() == 376) return "Box
+	if (GetRace() == 377) return "Barrel
+	if (GetRace() == 378) return "Treasure Chest";
+	if (GetRace() == 379) return "Clay Vase
+	if (GetRace() == 380) return "Frozen Table
+	if (GetRace() == 381) return "Weapons Rack
+	if (GetRace() == 382) return "Coffin
+	if (GetRace() == 383) return "Skull Mounted on Bone Triangle
+	if (GetRace() == 384) return "Plane of Mischief Jester
+	Gates of Discord:
+	if (GetRace() == 385) return "Taelosian Native";
+	if (GetRace() == 386) return "Taelosian Evoker (GoD)";
+	if (GetRace() == 387) return "Taelosian Golem
+	if (GetRace() == 388) return "Hynid
+	if (GetRace() == 389) return "Turepta Turtle
+	if (GetRace() == 390) return "Cragbeast
+	if (GetRace() == 391) return "Mite
+	if (GetRace() == 392) return "Ukun
+	if (GetRace() == 393) return "Ixt
+	if (GetRace() == 394) return "Ikaav
+	if (GetRace() == 395) return "Aneuk (GoD/SoD)";
+	if (GetRace() == 396) return "Kyv
+	if (GetRace() == 397) return "Noc
+	if (GetRace() == 398) return "Ra’Tuk
+	if (GetRace() == 399) return "Tunat Muram
+	if (GetRace() == 400) return "Huvul
+	if (GetRace() == 401) return
+	if (GetRace() == 402) return "Mastruq
+	Omens of War:
+	if (GetRace() == 403) return "Male Taelosian Evoker (OoW)";
+	if (GetRace() == 404) return
+	if (GetRace() == 405) return "Taelosian Golem (OoW)";
+	if (GetRace() == 406) return "Mata Muram";
+	if (GetRace() == 407) return "Lightning Warrior";
+	if (GetRace() == 408) return "Pyrilen (Normal Audio)";
+	if (GetRace() == 409) return "Bazu";
+	if (GetRace() == 410) return "Feran";
+	if (GetRace() == 411) return "Pyrilen (Human Audio. All in";
+	if (GetRace() == 412) return "Chimera";
+	if (GetRace() == 413) return "Dragorn";
+	if (GetRace() == 414) return "Murkglider";
+	if (GetRace() == 415) return "Rat (OoW)";
+	if (GetRace() == 416) return "Bat (OoW)";
+	if (GetRace() == 417) return "Gelidran";
+	if (GetRace() == 418) return "Discordling";
+	if (GetRace() == 419) return "Girplan";
+	if (GetRace() == 420) return "Hanvar";
+	if (GetRace() == 421) return "Emblem Box";
+	if (GetRace() == 422) return "Muramite Orb";
+	if (GetRace() == 423) return "Dragon Bones";
+	if (GetRace() == 424) return "Lightning Warrior Armor Pile";
+	if (GetRace() == 425) return "Crystal";
+	if (GetRace() == 426) return "Jagged Portal – pr
+	Dragons of Norrath:
+	if (GetRace() == 427) return "Large Purse";
+	if (GetRace() == 428) return "Rock Pile";
+	if (GetRace() == 429) return "Blue Goop";
+	if (GetRace() == 430) return "Undead Dragon";
+	if (GetRace() == 431) return "Dervish (New)";
+	if (GetRace() == 432) return "Drake (New)";
+	if (GetRace() == 433) return "Goblin (New)";
+	if (GetRace() == 434) return "Kirin";
+	if (GetRace() == 435) return "Lava Dragon";
+	if (GetRace() == 436) return "Basilisk (New)";
+	if (GetRace() == 437) return "Asian Dragon";
+	if (GetRace() == 438) return "Storm Dragon";
+	if (GetRace() == 439) return "Puma (New)";
+	if (GetRace() == 440) return "Spider (New)";
+	if (GetRace() == 441) return "Spider Queen";
+	if (GetRace() == 442) return "Living Statue";
+	if (GetRace() == 443) return
+	if (GetRace() == 444) return
+	if (GetRace() == 445) return "Dragon Egg";
+	if (GetRace() == 446) return "Crystal Dragon";
+	if (GetRace() == 447) return "Smoldering Orb";
+	if (GetRace() == 448) return "Sparkling Hands Statue";
+	if (GetRace() == 449) return "Spider Egg Pile";
+	if (GetRace() == 450) return "Lava Spider";
+	if (GetRace() == 451) return "Lava Spider Queen";
+	if (GetRace() == 452) return "Shadow Dragon";
+	if (GetRace() == 453) return "Frost Giant (New)";
+	Depths of Darkhollow:
+	if (GetRace() == 454) return "Werewolf (New)";
+	if (GetRace() == 455) return "Kobold";
+	if (GetRace() == 456) return "Sporali (New)";
+	if (GetRace() == 457) return "Gnomework/Steamwork";
+	if (GetRace() == 458) return "Orc (New)";
+	if (GetRace() == 459) return "Corathus";
+	if (GetRace() == 460) return "Coral";
+	if (GetRace() == 461) return "Drachnid (New)";
+	if (GetRace() == 462) return "Cocoon";
+	if (GetRace() == 463) return "Mushroom";
+	if (GetRace() == 464) return "Gargoyle (New)";
+	if (GetRace() == 465) return "Witheran";
+	if (GetRace() == 466) return "Mayong Mistmoore (New)";
+	if (GetRace() == 467) return "Shiliskin";
+	if (GetRace() == 468) return "Snake (New)";
+	if (GetRace() == 469) return "Evil Eye (Bump Mapped LdoN model)";
+	if (GetRace() == 470) return "Hanvar (Same as OoW but without axe)";
+	if (GetRace() == 471) return "Zombie (New)";
+	if (GetRace() == 472) return "Roboboar";
+	if (GetRace() == 473) return "Fairy (New)";
+	if (GetRace() == 474) return "Black Witheran – kr*/
+
+	if ((GetRace() == 39)) return "Gnoll";
+	if ((GetRace() == 38)) return "Spider";
+	if ((GetRace() == 54)) return "Orc";
+	if ((GetRace() == 28 || GetRace() == 456)) return "Fungus";
+	if ((GetRace() == 40)) return "Goblin";
+	if ((GetRace() == INVISIBLE_MAN || GetRace() == DERVISH)) return "Shadowed Man";
+
+	//Body types are fallback
+	if ((GetBodyType() == BT_Monster)) return "Evil Eye";	
+	if (GetBodyType() == BT_VeliousDragon) return "Dragon";
+	if ((GetBodyType() == BT_Insect)) return "Insert";
+	if ((GetBodyType() == BT_Animal)) return "Animal";
+	if ((GetBodyType() == BT_Construct)) return "Construct";
+	if ((GetBodyType() == BT_Extraplanar)) return "Extra Planar";
+	if ((GetBodyType() == BT_Giant || GetBodyType() == BT_RaidGiant || GetBodyType() == BT_Zek)) return "Zek Giant";
+	if ((GetBodyType() == BT_Humanoid)) return "Humanoid";
+	if ((GetBodyType() == BT_Lycanthrope)) return "Lycanthrope";
+	if ((GetBodyType() == BT_Magical)) return "Magical";
+	if ((GetBodyType() == BT_Monster)) return "Monster";
+	if ((GetBodyType() == BT_Plant)) return "Plant";
+	if ((GetBodyType() == BT_Summoned || GetBodyType() == BT_Summoned2 || GetBodyType() == BT_Summoned3 || GetBodyType() == BT_SummonedUndead)) return "Summoned";
+	if ((GetBodyType() == BT_Undead || GetBodyType() == BT_SummonedUndead || GetBodyType() == BT_Vampire)) return "Undead";
+	//if ((GetBodyType() == BT_Dragon || GetBodyType() == BT_Dragon3 ) return "Wyvern";
+	return "Unknown";
+}

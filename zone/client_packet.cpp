@@ -791,7 +791,7 @@ void Client::CompleteConnect()
 		uint32 unclaimed_rewards = 0;
 		uint32 next_daily_claim = time(nullptr) + 72000;
 		//make sure account custom is set
-		std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
+		std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim, use_new_con, use_self_target FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
 
 		auto results = database.QueryDatabase(query);
 		if (results.Success()) {
@@ -799,6 +799,8 @@ void Client::CompleteConnect()
 				auto row = results.begin();
 				unclaimed_rewards = atoi(row[0]);
 				next_daily_claim = atoi(row[1]);
+				m_epp.use_new_con = atoi(row[2]);
+				m_epp.use_self_target = atoi(row[3]);
 			}
 			else {
 				std::string query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", AccountID(), next_daily_claim);
@@ -1721,6 +1723,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 			pet->CalcBonuses();
 			pet->SetHP(m_petinfo.HP);
 			pet->SetMana(m_petinfo.Mana);
+			pet->SetTaunting(m_epp.use_pet_taunt);
 		}
 		m_petinfo.SpellID = 0;
 	}
@@ -4837,13 +4840,75 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 		con->faction = FACTION_DUBIOUS;
 	}
 
+	uint32 color = 0;
 	mod_consider(tmob, con);
+	if (m_epp.use_new_con == 0) {
+		QueuePacket(outapp);
+	}
+	else {
+		std::string con_text;
+		switch (con->faction) {
+		case FACTION_ALLY:
+			con_text = "regards you an ally";
+			break;
+		case FACTION_AMIABLE:
+			con_text = "regards you amiably";
+			break;
+		case FACTION_APPREHENSIVE:
+			con_text = "regards you apprensively";
+			break;
+		case FACTION_DUBIOUS:
+			con_text = "glowers at you dubiously";
+			break;
+		case FACTION_INDIFFERENT:
+			con_text = "regards you indifferently";
+			break;
+		case FACTION_KINDLY:
+			con_text = "regards you kindly";
+			break;
+		case FACTION_SCOWLS:
+			con_text = "scowls at you, ready to attack";
+			break;
+		case FACTION_THREATENLY:
+			con_text = "glares at you threateningly";
+			break;
+		}
+		std::string level_text;
+		if (tmob->GetLevel() >= GetLevel() + 4) {
+			level_text = "what would you like your tombstone to say?";
+			color = 13;
+		}
+		else if (tmob->GetLevel() > GetLevel()) {
+			level_text = "looks like he would wipe the floor with you!";
+			color = 15;
+		}
+		else if (tmob->GetLevel() == GetLevel()) {
+			level_text = "looks like quite a gamble.";
+			color = 10;
+		}
+		else if (tmob->GetLevel() > GetLevel() - 6) {
+			level_text = "he appears to be quite formiddable.";
+			color = 4;
+		}
+		else if (tmob->GetLevel() > GetLevel() - 11) {
+			level_text = "looks kind of dangerous.";
+			color = 7;
+		}
+		else if (tmob->GetLevel() > GetLevel() - 20) {
+			level_text = "You would probably win this fight... it's not certain though.";
+			color = 2;
+		}
+		else {
+			level_text = "You could probably win this fight.";
+			color = 6;
+		}
 
-	QueuePacket(outapp);
+
+		SendColoredText(color, StringFormat("%s [%u] (%s) %s -- %s", tmob->GetCleanName(), tmob->GetLevel(), tmob->RaceName(), con_text.c_str(), level_text.c_str()));
+	}
 	// only wanted to check raid target once
 	// and need con to still be around so, do it here!
 	if (tmob->IsRaidTarget()) {
-		uint32 color = 0;
 		switch (con->level) {
 		case CON_GREEN:
 			color = 2;

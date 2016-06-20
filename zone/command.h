@@ -306,6 +306,7 @@ void command_timers(Client *c, const Seperator *sep);
 void command_timezone(Client *c, const Seperator *sep);
 void command_title(Client *c, const Seperator *sep);
 void command_titlesuffix(Client *c, const Seperator *sep);
+void command_toggle(Client *c, const Seperator *sep);
 void command_traindisc(Client *c, const Seperator *sep);
 void command_tune(Client *c, const Seperator *sep);
 void command_undye(Client *c, const Seperator *sep);

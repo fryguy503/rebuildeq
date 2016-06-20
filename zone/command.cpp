@@ -396,6 +396,7 @@ int command_init(void)
 		command_add("title", "[text] [1 = create title table row] - Set your or your player target's title", 50, command_title) ||
 		command_add("titlesuffix", "[text] [1 = create title table row] - Set your or your player target's title suffix", 50, command_titlesuffix) ||
 		command_add("traindisc", "[level] - Trains all the disciplines usable by the target, up to level specified. (may freeze client for a few seconds)", 150, command_traindisc) ||
+		command_add("toggle", " - Toggle server options", 0, command_toggle) ||
 		command_add("tune",  "Calculate ideal statical values related to combat.",  100, command_tune) ||
 		command_add("undyeme", "- Remove dye from all of your armor slots", 50, command_undyeme) ||
 		command_add("unfreeze", "- Unfreeze your target", 80, command_unfreeze) ||
@@ -8715,6 +8716,60 @@ void command_reloadtitles(Client *c, const Seperator *sep)
 	worldserver.SendPacket(pack);
 	safe_delete(pack);
 	c->Message(15, "Player Titles Reloaded.");
+
+}
+
+void command_toggle(Client *c, const Seperator *sep)
+{	
+
+	if (sep->arg[1][0] == '\0' || !strcasecmp(sep->arg[1], "help")) {
+		c->Message(0, "Syntax: #toggle [option].");
+		c->Message(0, "-- Options --");
+		c->Message(0, "...newcon [%s] - Use new consider system", ((c->GetEPP().use_new_con) ? "ON" : "OFF"));
+		c->Message(0, "...healtarget [%s] - Cast beneficial spells on %s instead of an enemy target", ((c->GetEPP().use_self_target) ? "Self" : "Target's Target"), ((c->GetEPP().use_self_target) ? "self" : "target's target"));
+		c->Message(0, "...pettaunt [%s] - Set default option for pet taunting", ((c->GetEPP().use_pet_taunt) ? "ON" : "OFF"));
+		return;
+	}
+	
+
+	if (!strcasecmp(sep->arg[1], "newcon")) {
+		c->GetEPP().use_new_con = 1 - c->GetEPP().use_new_con;
+		std::string query = StringFormat("UPDATE account_custom SET use_new_con = %i WHERE account_id = %u", c->GetEPP().use_new_con, c->AccountID());
+		auto results = database.QueryDatabase(query);
+		if (!results.Success()) {
+			c->Message(13, "Setting option failed. The devs have been notified.");
+			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			return;
+		}
+		c->Message(0, "You have %s the new consider system.", ((c->GetEPP().use_new_con) ? "enabled" : "disabled"));
+		return;
+	}
+
+	if (!strcasecmp(sep->arg[1], "healtarget")) {
+		c->GetEPP().use_self_target = 1 - c->GetEPP().use_self_target;
+		std::string query = StringFormat("UPDATE account_custom SET use_self_target = %i WHERE account_id = %u", c->GetEPP().use_self_target, c->AccountID());
+		auto results = database.QueryDatabase(query);
+		if (!results.Success()) {
+			c->Message(13, "Setting option failed. The devs have been notified.");
+			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			return;
+		}
+		c->Message(0, "You will now cast beneficial spells on %s instead of an enemy target.", ((c->GetEPP().use_self_target) ? "self" : "target's target"));
+		return;
+	}
+
+	if (!strcasecmp(sep->arg[1], "pettaunt")) {
+		c->GetEPP().use_self_target = 1 - c->GetEPP().use_self_target;
+		std::string query = StringFormat("UPDATE account_custom SET use_pet_taunt = %i WHERE account_id = %u", c->GetEPP().use_pet_taunt, c->AccountID());
+		auto results = database.QueryDatabase(query);
+		if (!results.Success()) {
+			c->Message(13, "Setting option failed. The devs have been notified.");
+			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			return;
+		}
+		c->Message(0, "Pet taunting is now %s by default.", ((c->GetEPP().use_pet_taunt) ? "enabled" : "disabled"));
+		return;
+	}
 
 }
 

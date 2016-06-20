@@ -70,9 +70,12 @@ struct ExtendedProfile_Struct {
 	uint32				rotten_core_timeout; //SK only skill, timeout for temp buff	
 	uint16				evade_mob_id; //Evade once mechanic id
 	uint32				evade_mob_timeout; //Evade once mechanic timeout
-	int sworn_enemy_timeout; //SK only skill, timeout for sworn enemy
-	uint16 sworn_enemy_id; //SK only skill, target of sworn enemy
-	int blood_oath_timeout; //SK only skill, timeout for blood oath effect cooldown
+	bool				use_new_con; //Use new con system?
+	bool				use_self_target; //Use self target system?
+	bool				use_pet_taunt; //Use pet taunt by default?
+	int					sworn_enemy_timeout; //SK only skill, timeout for sworn enemy
+	uint16				sworn_enemy_id; //SK only skill, target of sworn enemy
+	int					blood_oath_timeout; //SK only skill, timeout for blood oath effect cooldown
 };
 
 #pragma pack()

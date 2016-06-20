@@ -2103,7 +2103,16 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 		!spell_target->IsClient() && 
 		!IsEffectInSpell(spell_id, SE_Revive) //Rezzes are beneficial spells, but need to target self.
 		) {
-		spell_target = this;
+		if (IsClient() && 
+			!CastToClient()->GetEPP().use_self_target && //self target is disabled
+			spell_target->GetTarget() != nullptr && //enemy has a target
+			spell_target->GetTarget()->IsClient() //it's a client
+			) {
+			spell_target = spell_target->GetTarget();
+		}
+		else {
+			spell_target = this;
+		}
 	}
 
 	
