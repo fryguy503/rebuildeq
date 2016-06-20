@@ -4250,8 +4250,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 		Location("skyfire", 91, 783.57, -3097.01, -159.38, 1.8, 10, 100012),
 		Location("sro", 35, 124.6, -1041.51, 9.45, 99.5, 10, 0),
 		Location("toxxulia", 414, -1656.96, -1502.43, 72.29, 58.2, 1, 0),
-		Location("wakening", 119, -2980.7, -3020, 26.5, 42.9, 10, 100009),
-		
+		Location("wakening", 119, -2980.7, -3020, 26.5, 42.9, 10, 100009)		
 	};
 
 	auto search = [](const char * pZoneName) -> Location* {
