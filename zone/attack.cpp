@@ -345,10 +345,10 @@ bool Mob::CheckHitChance(Mob* other, EQEmu::skills::SkillType skillinuse, int Ha
 				duelist_evasion += (GetLevel() - other->GetLevel() );
 			} //6+ gap is 2x level
 			else if (GetLevel() - other->GetLevel() <= 6) {
-				duelist_evasion += (GetLevel() - other->GetLevel()) * 2;
+				duelist_evasion += (GetLevel() - other->GetLevel()) * 3;
 			} //8+ gap is 3x level
 			else if (GetLevel() - other->GetLevel() <= 8) {
-				duelist_evasion += (GetLevel() - other->GetLevel()) * 3;
+				duelist_evasion += (GetLevel() - other->GetLevel()) * 6;
 			}
 
 			//Mob doesn't have much health
