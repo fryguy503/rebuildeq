@@ -695,7 +695,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Act of Valor";
-			$newSkill->desc = 'Grants the Act of Valor AA, summoning a squire that will dutifully assist the Paladin, casting stuns and healing himself. Each rank increases his stats and power by <em data-base="20">20</em>% efficiency<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Act of Valor AA, summoning a squire that will dutifully assist the Paladin, casting stuns and healing themself. Each rank increases his stats and power by <em data-base="20">20</em>% efficiency<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[28] = $newSkill;
 

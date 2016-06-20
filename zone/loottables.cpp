@@ -450,60 +450,43 @@ void NPC::AddLootTable(uint32 ldid) {
 //Adds Card Drops to NPC
 void NPC::AddCardTable() {
 	if (npctype_id == 0) return;
-	uint32 itemid = 0;
-	std::map <int, int> cardTable;
-	int pool = 0;
-	pool += 50000; cardTable[pool] = 0; //Buffer.
-	if (GetBodyType() == BT_Dragon || GetBodyType() == BT_Dragon3 || GetBodyType() == BT_VeliousDragon) { pool += 5; cardTable[pool] = 100100; } //Dragon Card
-	if (GetBodyType() == BT_Insect) { pool += 5; cardTable[pool] = 100101; } //Insect Card
-	if (GetBodyType() == BT_Animal) { pool += 5; cardTable[pool] = 100102; } //Animal Card
-	if (GetBodyType() == BT_Construct) { pool += 5; cardTable[pool] = 100103; } //Construct Card
-	if (GetBodyType() == BT_Extraplanar) { pool += 5; cardTable[pool] = 100104; } //Extra Planar Card
-	if (GetBodyType() == BT_Giant || GetBodyType() == BT_RaidGiant || GetBodyType() == BT_Zek) { pool += 5; cardTable[pool] = 100105; } //Giant Card
-	if (GetBodyType() == BT_Humanoid) { pool += 5; cardTable[pool] = 100106; } //Humanoid Card
-	if (GetBodyType() == BT_Lycanthrope) { pool += 5; cardTable[pool] = 100107; } //Lycanthrope Card
-	if (GetBodyType() == BT_Magical) { pool += 500; cardTable[pool] = 100108; } //Magical Card 50mana
-	if (GetBodyType() == BT_Monster) { pool += 5; cardTable[pool] = 100109; } //Monster Card
-	if (GetBodyType() == BT_Plant) { pool += 5; cardTable[pool] = 100110; } //Plant Card
-	if (GetBodyType() == BT_Summoned || GetBodyType() == BT_Summoned2 || GetBodyType() == BT_Summoned3 || GetBodyType() == BT_SummonedUndead) { pool += 5; cardTable[pool] = 100111; } //Summoned Card
-	if (GetBodyType() == BT_Undead || GetBodyType() == BT_SummonedUndead || GetBodyType() == BT_Vampire) { pool += 5; cardTable[pool] = 100112; } //Undead Card
 
-	if (GetRace() == 39) { pool += 500; cardTable[pool] = 100113; } //Gnoll Card 50hp
-	if (GetRace() == 13) { pool += 5; cardTable[pool] = 100114; } //Aviak Card
-	if (GetRace() == 14) { pool += 5; cardTable[pool] = 100115; } //Werewolf Card
-	if (GetRace() == 38) { pool += 5; cardTable[pool] = 100116; } //Spider Card
-	if (GetRace() == 54) { pool += 250; cardTable[pool] = 100117; } //Orc Card 15ac	
-	if (GetRace() == 28 || GetRace() == 456) { pool += 5; cardTable[pool] = 100118; } //Fungus Card
-	if (GetRace() == 40) { pool += 250; cardTable[pool] = 100119; } //Goblin Card	
-	if (GetBodyType() == BT_Monster) { pool += 50; cardTable[pool] = 100120; } //Evil Eye Card
-	if (GetRace() == HUMAN) { pool + 5; cardTable[pool] = 100121; } //Human Card
-	if (GetRace() == BARBARIAN) { pool + 5; cardTable[pool] = 100122; } //Barbarian Card
-	if (GetRace() == ERUDITE) { pool + 5; cardTable[pool] = 100123; } //Erudite Card
-	if (GetRace() == WOOD_ELF) { pool + 5; cardTable[pool] = 100124; } //Wood Elf Card
-	if (GetRace() == HIGH_ELF) { pool + 5; cardTable[pool] = 100125; } //High Elf Card
-	if (GetRace() == DARK_ELF) { pool + 5; cardTable[pool] = 100126; } //Dark Elf Card
-	if (GetRace() == HALF_ELF) { pool + 5; cardTable[pool] = 100127; } //Half Elf Card
-	if (GetRace() == DWARF) { pool + 5; cardTable[pool] = 100128; } //Dwarf Card
-	if (GetRace() == TROLL) { pool + 5; cardTable[pool] = 100129; } //Troll Card
-	if (GetRace() == OGRE) { pool + 5; cardTable[pool] = 100130; } //Ogre Card
-	if (GetRace() == HALFLING) { pool + 5; cardTable[pool] = 100131; } //Halfling Card
-	if (GetRace() == GNOME) { pool + 5; cardTable[pool] = 100132; } //Gnome Card
-	if (GetRace() == FROGLOK || GetRace() == FROGLOK2) { pool + 5; cardTable[pool] = 100133; } //Froglok Card
-	if (GetRace() == INVISIBLE_MAN || GetRace() == DERVISH) { pool += 10; cardTable[pool] = 100134; } //Shadowed Man Card
-	if (GetRace() == IKSAR) { pool + 5; cardTable[pool] = 100135; } //Iksar Card
-
-	if (pool < 1) return;
-
-	int dice = zone->random.Int(1, pool);
-
-	for (auto entry = cardTable.begin(); entry != cardTable.end(); ++entry) {
-		if (dice > entry->first) continue;
-		itemid = entry->second;
-		break;
-	}
-
-	if (itemid < 1) return;
-	AddItem(itemid, 1, false);
+	if ((GetBodyType() == BT_Dragon || GetBodyType() == BT_Dragon3 || GetBodyType() == BT_VeliousDragon) && zone->random.Roll(0.5f)) AddItem(100100, 1, false); //Dragon Card
+	if ((GetBodyType() == BT_Insect) && zone->random.Roll(0.5f)) AddItem(100101, 1, false); //Insect Card
+	if ((GetBodyType() == BT_Animal) && zone->random.Roll(0.5f)) AddItem(100102, 1, false); //Animal Card
+	if ((GetBodyType() == BT_Construct) && zone->random.Roll(0.5f)) AddItem(100103, 1, false); //Construct Card
+	if ((GetBodyType() == BT_Extraplanar) && zone->random.Roll(0.5f)) AddItem(100104, 1, false); //Extra Planar Card
+	if ((GetBodyType() == BT_Giant || GetBodyType() == BT_RaidGiant || GetBodyType() == BT_Zek) && zone->random.Roll(0.5f)) AddItem(100105, 1, false); //Giant Card
+	if ((GetBodyType() == BT_Humanoid) && zone->random.Roll(0.5f)) AddItem(100106, 1, false); //Humanoid Card
+	if ((GetBodyType() == BT_Lycanthrope) && zone->random.Roll(0.5f)) AddItem(100107, 1, false); //Lycanthrope Card
+	if ((GetBodyType() == BT_Magical) && zone->random.Roll(0.5f)) AddItem(100108, 1, false); //Magical Card 50mana
+	if ((GetBodyType() == BT_Monster) && zone->random.Roll(0.5f)) AddItem(100109, 1, false); //Monster Card
+	if ((GetBodyType() == BT_Plant) && zone->random.Roll(0.5f)) AddItem(100110, 1, false); //Plant Card
+	if ((GetBodyType() == BT_Summoned || GetBodyType() == BT_Summoned2 || GetBodyType() == BT_Summoned3 || GetBodyType() == BT_SummonedUndead) && zone->random.Roll(0.5f)) AddItem(100111, 1, false); //Summoned Card
+	if ((GetBodyType() == BT_Undead || GetBodyType() == BT_SummonedUndead || GetBodyType() == BT_Vampire) && zone->random.Roll(0.5f)) AddItem(100112, 1, false); //Undead Card
+	if ((GetRace() == 39) && zone->random.Roll(0.5f)) AddItem(100113, 1, false); //Gnoll Card 50hp
+	if ((GetRace() == 13) && zone->random.Roll(0.5f)) AddItem(100114, 1, false); //Aviak Card
+	if ((GetRace() == 14) && zone->random.Roll(0.5f)) AddItem(100115, 1, false); //Werewolf Card
+	if ((GetRace() == 38) && zone->random.Roll(0.5f)) AddItem(100116, 1, false); //Spider Card
+	if ((GetRace() == 54) && zone->random.Roll(0.5f)) AddItem(100117, 1, false); //Orc Card 15ac	
+	if ((GetRace() == 28 || GetRace() == 456) && zone->random.Roll(0.5f)) AddItem(100118, 1, false); //Fungus Card
+	if ((GetRace() == 40) && zone->random.Roll(0.5f)) AddItem(100119, 1, false); //Goblin Card	
+	if ((GetBodyType() == BT_Monster) && zone->random.Roll(0.5f)) AddItem(100120, 1, false); //Evil Eye Card
+	if ((GetRace() == HUMAN) && zone->random.Roll(0.5f)) AddItem(100121, 1, false); //Human Card
+	if ((GetRace() == BARBARIAN) && zone->random.Roll(0.5f)) AddItem(100122, 1, false); //Barbarian Card
+	if ((GetRace() == ERUDITE) && zone->random.Roll(0.5f)) AddItem(100123, 1, false); //Erudite Card
+	if ((GetRace() == WOOD_ELF) && zone->random.Roll(0.5f)) AddItem(100124, 1, false); //Wood Elf Card
+	if ((GetRace() == HIGH_ELF) && zone->random.Roll(0.5f)) AddItem(100125, 1, false); //High Elf Card
+	if ((GetRace() == DARK_ELF) && zone->random.Roll(0.5f)) AddItem(100126, 1, false); //Dark Elf Card
+	if ((GetRace() == HALF_ELF) && zone->random.Roll(0.5f)) AddItem(100127, 1, false); //Half Elf Card
+	if ((GetRace() == DWARF) && zone->random.Roll(0.5f)) AddItem(100128, 1, false); //Dwarf Card
+	if ((GetRace() == TROLL) && zone->random.Roll(0.5f)) AddItem(100129, 1, false); //Troll Card
+	if ((GetRace() == OGRE) && zone->random.Roll(0.5f)) AddItem(100130, 1, false); //Ogre Card
+	if ((GetRace() == HALFLING) && zone->random.Roll(0.5f)) AddItem(100131, 1, false); //Halfling Card
+	if ((GetRace() == GNOME) && zone->random.Roll(0.5f)) AddItem(100132, 1, false); //Gnome Card
+	if ((GetRace() == FROGLOK || GetRace() == FROGLOK2) && zone->random.Roll(0.5f)) AddItem(100133, 1, false); //Froglok Card
+	if ((GetRace() == INVISIBLE_MAN || GetRace() == DERVISH) && zone->random.Roll(0.5f)) AddItem(100134, 1, false); //Shadowed Man Card
+	return;
 }
 
 
