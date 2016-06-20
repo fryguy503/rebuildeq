@@ -501,7 +501,7 @@ sub velious_armor_list {
 	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24937, reward => 31016}; #sleeves
 	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24939, reward => 31017}; #wrist
 	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31018}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24946, reward => 31019}; #legs
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24936, reward => 31019}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31020}; #boots
 	
 	$tmp_class = 3;
@@ -551,7 +551,7 @@ sub velious_armor_list {
 	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24937, reward => 31030}; #sleeves
 	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24939, reward => 31031}; #wrist
 	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31032}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24946, reward => 31033}; #legs
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24936, reward => 31033}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31034}; #boots
 	
 	#thurgadin glatigi berserker chain
@@ -634,7 +634,7 @@ sub velious_armor_list {
 	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24937, reward => 31010}; #sleeves
 	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24939, reward => 31011}; #wrist
 	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31012}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24946, reward => 31013}; #legs
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24936, reward => 31013}; #legs
 	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31014}; #boots
 	return @armor_list;
 }
