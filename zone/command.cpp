@@ -4233,7 +4233,8 @@ void command_teleport(Client *c, const Seperator *sep) {
 		bool Bind; // Not in use currently.
 	};
 
-	static Location Locations[] = {				
+	static Location Locations[] = {
+		Location("airplane", 71, 614, 1415, -663.62, 55.8, 46, 10094),
 		Location("cobaltscar", 117, -1574.95, -1053.25, 307.74, 56.1, 10, 100011),
 		Location("commons", 21, 1839.84, 0.15, -15.61, 61.0, 10, 0),
 		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10, 0),
@@ -4242,12 +4243,14 @@ void command_teleport(Client *c, const Seperator *sep) {
 		Location("fieldofbone", 78, 2395.95, -2216.75, 30.63, 227.6, 1, 0),
 		Location("gfaydark", 54, -411, -2023, -0.28, 47.8, 1, 0),
 		Location("greatdivide", 118, 3654.25, -3826.56, -242.37, 136.3, 10, 100008),
+		Location("hateplaneb", 186, -393, 656, 3.13, 187.6, 46, 10092),
 		Location("iceclad", 110, 4879.12, -604.28, 109.21, 214.3, 10, 100010),
 		Location("northkarana", 13, 1205.91, -3685.44, -8.56, 126.6, 10, 0),
 		Location("skyfire", 91, 783.57, -3097.01, -159.38, 1.8, 10, 100012),
 		Location("sro", 35, 124.6, -1041.51, 9.45, 99.5, 10, 0),
 		Location("toxxulia", 414, -1656.96, -1502.43, 72.29, 58.2, 1, 0),
-		Location("wakening", 119, -2980.7, -3020, 26.5, 42.9, 10, 100009)
+		Location("wakening", 119, -2980.7, -3020, 26.5, 42.9, 10, 100009),
+		
 	};
 
 	auto search = [](const char * pZoneName) -> Location* {
@@ -4329,7 +4332,16 @@ void command_teleport(Client *c, const Seperator *sep) {
 				safe_delete_array(hacker_str);
 				return;
 			}
+			if (location->ItemID == 10092 || location->ItemID == 10094) {
 
+				int16 inv_slot_id = c->GetInv().HasItem(location->ItemID, 1, invWhereWorn | invWherePersonal);
+				if (inv_slot_id != -1) {
+					c->DeleteItemInInventory(inv_slot_id, 1, true);
+				} else {
+					c->Message(13, "You must have the proper reagent to teleport to %s.", location->ZoneName.c_str());
+					return;
+				}
+			}
 			c->Message(0, "You paid %s to teleport to %s.", StringFormat("%u platinum", (cost / 1000)).c_str(), location->ZoneName.c_str());
 		}
 		else {
@@ -4354,8 +4366,10 @@ void command_teleport(Client *c, const Seperator *sep) {
 
 	// Build message with available locations.
 	for (auto&& i : Locations) {
-		if (c->GetLevel() >= i.MinimumLevel && c->GetZoneID() != i.ZoneID  && (i.ItemID == 0 || c->KeyRingCheck(i.ItemID)))
-			ss << " [ " << c->CreateSayLink(StringFormat("#teleport %s", i.ZoneName.c_str()).c_str(), i.ZoneName.c_str()) << " ] ";
+		if (c->GetLevel() < i.MinimumLevel) continue;
+		if (c->GetZoneID() == i.ZoneID) continue;
+		if (i.ItemID > 0 && !c->KeyRingCheck(i.ItemID) && c->GetInv().HasItem(i.ItemID, 1, invWhereWorn | invWherePersonal) < 1) continue;
+		ss << " [ " << c->CreateSayLink(StringFormat("#teleport %s", i.ZoneName.c_str()).c_str(), i.ZoneName.c_str()) << " ] ";
 	}
 
 	c->Message(0, ss.str().c_str());
