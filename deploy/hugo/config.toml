@@ -1,4 +1,4 @@
-baseurl = "http://xackery.com/"
+baseurl = "http://rebuildeq.com/"
 languageCode = "en-us"
 title = "RebuildEQ"
 # Enable comments by entering your Disqus shortname
@@ -15,13 +15,14 @@ theme = "rebuildeq"
 
 
 [params]
+    disable_profile = true
     # Tell me who you are
     author = "Shin Noir"
-    bio = "Blogger - Programmer - Gopher"
-    location = "Seattle, WA"
+    bio = "RebuildEQ"
+    location = ""
     site_description = "Rebuild EQ is an Everquest Private Server Project based on classic Everquest rebuilt to give a new enhanced experience."
     copyright  = "No real copyrights, except those expressed by the content posted."
-    avatar = "css/images/avatar.png"
+    avatar = ""
 
     # Format dates with Go's time formatting
     date_format = "2006-01-02"
@@ -56,7 +57,7 @@ theme = "rebuildeq"
 # Add your social network accounts to the profile section on the left
 # by entering your username. The links to your account will be
 # create automatically.
-    github          = "xackery"
+    github          = ""
     bitbucket       = ""
     jsfiddle        = ""
     codepen         = ""
@@ -66,28 +67,28 @@ theme = "rebuildeq"
     behance         = ""
     flickr          = ""
     instagram       = ""
-    youtube         = "plazmaice"
+    youtube         = ""
     vimeo           = ""
     vine            = ""
     medium          = ""
     wordpress       = ""
-    tumblr          = "xackery"
+    tumblr          = ""
     xing            = ""
     linkedin        = ""
     slideshare      = ""
     stackoverflow   = ""
-    reddit          = "xackery"
+    reddit          = ""
     pinterest       = ""
     googleplus      = ""
-    facebook        = "xackeryx"
+    facebook        = ""
     facebook_admin  = ""
     twitter_domain  = ""
-    twitter         = "xackery"
-    twitch          = "xackery"
+    twitter         = ""
+    twitch          = ""
 
 # Enable and disable widgets for the right sidebar
 [params.widgets]
     recent_articles = true
     categories = true
     tags = true
-    tag_cloud = true
+    tag_cloud = false

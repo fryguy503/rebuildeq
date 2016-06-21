@@ -3,8 +3,7 @@
 <div id="container">
     {{ partial "header" . }}
     <div class="outer">
-        {{ partial "profile" . }}
-        <section id="main">
+        <section id="main" class="full-width">
             <section class="archives-wrap">
                 <div class="archive-category-wrap">
                     <span class="archive-category">{{ .Title }}</span>
@@ -18,7 +17,6 @@
             </section>
             {{ partial "pagination" . }}
         </section>
-        {{ partial "sidebar" . }}
     </div>
 </div>
 
