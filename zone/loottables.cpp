@@ -438,7 +438,7 @@ void NPC::AddLootTable() {
 
 void NPC::AddLootTable(uint32 ldid) {
 	if (npctype_id != 0) { // check if it's a GM spawn
-		if (GetLevel() >= 55 && zone->random.Roll(1)) {
+		if (GetLevel() >= 55 && zone->random.Int(1, 100) == 1) {
 			AddItem(100006, 1, false); //elunium
 		}
 	  AddCardTable();
@@ -494,11 +494,12 @@ void NPC::AddCardTable() {
 void NPC::AddTeleportTable() {
 	if (npctype_id == 0) return;
 
-	if (GetZoneID() == 118 && zone->random.Int(1,100) == 1) AddItem(100008, 1, false); //GreatDivide
+	if (GetZoneID() == 118 && zone->random.Int(1, 100) == 1) AddItem(100008, 1, false); //GreatDivide
 	if (GetZoneID() == 119 && zone->random.Int(1, 100) == 1) AddItem(100009, 1, false); //Wakening
 	if (GetZoneID() == 110 && zone->random.Int(1, 100) == 1) AddItem(100010, 1, false); //Iceclad
 	if (GetZoneID() == 117 && zone->random.Int(1, 100) == 1) AddItem(100011, 1, false); //CobaltScar
 	if (GetZoneID() == 91 && zone->random.Int(1, 100) == 1) AddItem(100012, 1, false); //Skyfire
 	if (GetZoneID() == 94 && zone->random.Int(1, 100) == 1) AddItem(100013, 1, false); //Emerald Jungle
 	if (GetZoneID() == 89 && zone->random.Int(1, 1000) == 1) AddItem(100014, 1, false); //Sebilis
+	if (GetZoneID() == 27 && zone->random.Int(1, 1000) == 1) AddItem(100015, 1, false); //Lavastorm
 }
