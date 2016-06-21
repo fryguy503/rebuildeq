@@ -1,0 +1,390 @@
+# Change Log
+
+
+2016-06-07
+---
+* Overthere, Firiona Vie, Skyshrine, Kael, and Thurgadin are now rested EXP zones if your faction is > dubious.
+* Overthere, Firiona Vie, Skyshrine, Kael, and Thurgadin offer Origin Binding features near the banks if your faction > dubious.
+* Added a new command, #exp. This is for 60+.
+* Bard's Jonathon's Whistle had some typos in the build description (due to me copy pasting shaman description).
+* Encounters now respect factions of the encounter triggerer, e.g. if in east commons and you're not glare+ to freeport guards, they will not be an encounter to fight.
+* Low level zombies, mummies, etc (lvl 24 and lower) no longer cast disease due to how detrimental it is with the convenience commands.
+* Pets also gain #buff effects.
+* #encounter now works as an alias for #encounters
+* #build now works as an alias for #builds
+* #experience now works as an alias for #exp
+* #rest now works as an alias for #rested
+
+2016-06-06
+---
+* Skillup Rate changed from 100% to 200%.
+* Translocator Ionie at Nro docks now will assist players looking to adventure to Velious.
+* Shaman Cannibalization AA is no longer usable when the rank is reset.
+* Pets no longer persist after zoning if you no longer have the the build skill.
+* Pets have a minimum hp threshold, i need to test this more, be patient with them.
+* Pets poof now when you #builds reset
+* Fixed Named Spawns so they actually spawn if they had a fabled PH
+
+2016-06-05
+---
+* Goblin Card is now a shrink clicky.
+* Orcs no longer will drop Goblin Cards.
+* Removed Trakanon Idol requirement for Sebilis access. Later I'll write an alternative quest to obtain key since I don't require players to have a tracker.
+* Added Shadowed Man Card. (Casts gather shadows). rarity is really rare, as a balancing aspect.
+* Shadowknight's Siphon Death skill will also include Vampiric Embrace.
+
+2016-06-04
+---
+* Certain encounters will no longer spawn in innothule if the model isn't supported.
+* Rogue skills now have better icons.
+
+2016-06-03
+---
+* Shadowknight's Summon Dead now makes a pet properly changed visually.
+* Shadowknight's Banshee's Mirror now similarly to Ward of Tunare.
+* Disabled teleporting to post-velious zones, like no more PoK access.
+* Paladin's Hand of Piety now costs 5% of paladin's max mana to cast. (Before it was free.)
+* Boosted Ghoulbane.
+* Chosen should be more accurate.
+* Cleaned up text about the new epic click descriptions.
+
+2016-06-02
+---
+* I did a major code change that may have side effects. If you heal or cast any beneficial effects on an NPC not owned by a player, the spell will instead be applied to you. This means paladins can heal themselves while keeping their enemy targeted.
+* Fleeting Fury is now a self only buff, even if the spell gem is red.
+* Shadowknight's Aura of Vampirism renamed to Reaper's Strike. It should work now!
+* Reduced daily login bonus cooldown from 24 hours to 20 hours.
+* Moved Bard's Wish from Virtuoso (16) to Swordsinger (34) final skill. 
+* Removed Bard's Double Attack build skill
+* Added Bard's Kinsong to Virtuoso final skill.
+* Jonathon's Whistling Warsong build bonus now also grants a puma-like DD proc.
+* Paladin's Resist temptation changed to Flames of Redemption
+* Shaman's Fateseer's Boon renamed from "Fateseelers" and fixed.
+* Rogues will now autotrain Backstab, Double Attack, and a few other missed skills when they become available.
+* Rogue has the new build skill, Appraisal
+* Rogue has the new build skill, Thief's Eyes
+* Rogue has the new build skill, Sinister Strikes
+* Rogue has the new build skill, Focused Stab
+* Rogue has the new build skill, Vital Organs
+* Rogue has the new build skill, Assassin's Taint
+* Doubled chances of Bash of Death procing.
+
+2016-06-01 
+---
+* Fixed a typo with Boastful Bellow in game
+* #builds now shows the reset reminder in chat at all levels it's eligible (for testing, that's all levels)
+* Repaired some issues with #rez.
+* Added daily login reward.
+* Added /who system to include Identity.
+* Box open announcements are now itemlinks.
+
+2016-05-31
+---
+* Fixed an issue with #encounter claiming where some times you didn't get a reward.
+* Madmen no longer spawn in encounters in in EC.
+* Another pass of removing the pesky defiant drops was done.
+* Encounters are easier now for levels 11-20 (half hp of before).
+
+2016-05-30
+---
+* Extended Haste now only applies to shaman haste spells.
+* Reduced spawn rate of the 3 entrance mobs of Kurn's Tower.
+* Rare/Legendary weapon box opens are now broadcasted.
+* No more local echo cast time on spell casts.
+* Dance of Blades cooldown reduced for 3 minutes for time being.
+* Flame of Light is now better at properly dealing damage as stated.
+* Cleaned up OOC related issues even more.
+* Players testing no longer get the *GM* tag on their name.
+* #teleport was revamped, let me know if any newfound issues.
+* A set of out of era items reported are being removed.
+* Fury for shaman now works (partially), causing the proc.
+
+2016-05-29
+---
+* Encounter rewards are now account-wide, meaning you can collect encounters on each character, then choose to claim on a single one you feel is needs it most. (Great for when you're level 60 and fully geared, you can still claim encounter gear for alts).
+* Fixed an issue with encounters, spectres should not be nearly as common.
+* Spectres no longer spectre stun when spawned via an encounter.
+* Added #identity, for now you can type it to see your own identity, any time you talk in OOC, your account-wide identity name will echo out for others to identify you across alts.
+* Added a kobold encounter in warrens.
+* Shell game gives 5x reward, and tells you so.
+* When you're less than level 10, encounter mobs are adjusted to be significantly less challenging.
+
+2016-05-28
+---
+* Purification won't be usable after untraining it.
+* Origin Binder also offers Bind Affinity abilities as well.
+* Fixed teleport to Sro.
+* Cleaned up dialog while talking to a squire.
+* Applied fixes to Shaman pet.
+* Added Shell Game quest script.
+* Gender (opposite of you) and Race cloning are added to squire pet.
+* Added racial cards (Troll, Dark Elf, Human, etc)
+* While testing, I've increased RestRegenPercent from 3% to 10%. NOTE: This will be reduced/removed when I introduce more mana regen abilities to each class.
+* Added Cannibalize.
+* Added Poison.
+* Added Extended Turgur.
+* Added Ancient Wrath
+* siphon of death, lingering pain, ancient wrath, festering spear, flame of light, and chosen all do a minimum dmg or recourse of the rank level.
+
+2016-05-27
+---
+* Removed Gellrazz Scalerunner from FM. (era)
+* Removed Collector's items across server. (era)
+* Festering Wound and Chant Cycle now have a minimum dmg of BuildRank *2, more noticeable at earlier levels.
+* Spirit Call now summons a pet scaled based on your rank. Races are based on BST, we'll have to talk about options.
+* Removed Glowing Othni Wristband, Shimmering Black Pearl. (era)
+* Level 1 spells and skills should automatically train on first login.
+* Flagged EC Tunnel NPCs as non-killable.
+* Added Eight Toed Gambler in EC tunnel, who plays the shell game.
+* Added Vulius Athale in EC Tunnel, who sells and buys artifacts.
+* Bubar in EC Tunnel now sells Satchels.
+* Evil Eye Card now drops.
+* Spectres no longer stun when they're an encounter spawned entity.
+* Adjusted pricing for convienence commands.
+
+2016-05-26
+---
+* #teleport now shows the options of ecommons and fieldofbone at all levels.
+* A Shady Swashbuckler is now more talkative about what has happened in the east commonlands tunnel.
+* Lay on Hands, if used on an enemy NPC, will now heal the paladin who used it instead of being wasted.
+* EXP Loss now displays % properly.
+* Encounter trigger grace period changed from 6 minutes to 12 minutes.
+* Old Armor Boxes and Old Weapon Boxes display icon should be supported by all clients now.
+* Boastful bellow should be memorizable now for bards.
+* #return works when less than level 10, even if no exp was lost.
+
+2016-05-25
+---
+* We are now in sync with the latest of eqemu/server. Be sure to #issue <message> any challenges you face, as we are testing the latest code builds from the eqemu dev team.
+* Renamed Old Blue Box to Old Armor Box.
+* Renamed Old Red Box to Shining Old Armor Box.
+* Renamed Old Violet Box to Glistening Old Armor Box.
+* Revamped #encounter to now give the options of armor and weapon, so you can choose your reward type.
+* A dialog now nags you when an encounter happens nearby, making it more obvious.
+* Freeport guards no longer spawn in events if your faction is Non-Kos.
+* The website now has landing pages for each build skill.
+
+2016-05-24
+---
+* #return is now added, after a death you are given the ability to return to your last death's location.
+* Modified pricing of #return, #rez, #teleport, and #buff to be more reasonable.
+* When using above commands, it will first check the character's inventory. If there isn't enough money, it will check your bank and deduct the amount from there instead.
+* Removed additional trick or treat npcs
+* Iksars, Ogres, and Trolls should now know common tongue properly.
+* Removed any rulesets > 1, as they were just messy and distracting.
+* Players now heal on level up.
+* Disabled shadowrest
+* Enabled Discovered Items
+* Wizards get critical blasts changed from level 12 to 30.
+* Buy Cost Mod for Merchants changes from 0.95 to 0.65
+* Disabled voice macros.
+* Death Item Loss Level changed from 10 to 40
+* Changed SayPauseTimeInSec from 10 to 3
+* Changed ItemHealthRegenCap and ItemManaRegenCap from 15 to 25
+* Changed DeathExpLossMultiplier from 3 to 2
+
+
+2016-03-13
+---
+* Bard's Wish is now properly reducing cast time.
+* Fixed an issue with session timestamp conversions
+
+2016-03-12
+---
+* Cleared up Hand of Piety's Description
+* Hand of Piety recast time increased from 5 seconds to 15 seconds.
+
+2016-03-09
+---
+* Brell's Blessing is being revised to work under the spell Courage.
+* Tweaked an encounter related to Kael.
+
+2016-03-08
+---
+* Repaired an encounter delay timer issue, fixing how often they happen to a more realistic number.
+* Opening Rare/Legendary Boxes is now broadcasted to server.
+
+2016-03-07
+---
+* Tweaked default encounter faction to not cause a hit.
+* Added new encounter emotes for sro/oasis.
+
+2016-03-06
+---
+* Adjusted encounter system to pool instead of RNG, allowing me to create more-rare style encounters.
+* #loc now tells zone id and instance.
+* Added some prelim cleric changes.
+
+2016-03-05
+---
+* Optimized how encounters work so they aren't so expensive DB call wise.
+
+2016-03-04
+---
+* Cleaned up some text issues on site with bard.
+
+2016-02-29
+---
+* Bard Double Attack has been worked on to work better.
+* Started working on a new paladin build ability, Brell's Barrier, the first item build skill.
+
+2016-02-28
+---
+* Added Goblin Card and Fungus Card
+* Fixed Purpose of Marr, now gives haste.
+* Added All bard abilites into game. 
+* Fixed a bug with build spending.
+
+2016-02-27
+---
+* Added Bard skills to website.
+
+2016-02-26
+---
+* Fixed a DB related issue with time being out of sync, which should fix encounter triggering issues.
+* Added Gnoll Card, Orc Card, and Magical Card.
+* Fixed purification skill up to not say "Unknown"
+* Added Paladin build abilities: Resist Temptation, Zealot's Fervor, Knight's Advantage, Chosen, Purpose of Marr, Flame of Light, Dismiss Evil, Frail.
+
+2016-02-25
+---
+* Removed Augments from drops.
+* Tweaked encounters, seeing if I can get them to stop triggering all the time.
+* Paladin pets (and npcs) no longer proc sunbeam.
+* Paladin Ward of Tunare increased chance to proc from 3% per rank to 5%, reduced raw healing from 100 hp per rank to 40 hp and 5% max hp per rank.
+* Added Card System.
+
+2016-02-24 (Patch)
+---
+* Reduced Character:DeathExpLossLevel from 10 to 5
+* Rested EXP consumption reduced from 10% to 5% per player in group/raid (this causes a total of 30% bonus with full group), and reduced solo rested EXP consumption from 5% to 2.5%
+* Adjust various spells and builds that have been not working as intended. (Vampiric Embrace, Holy Servant).
+* Removed double #builds nag on level up.
+
+2016-02-23
+---
+* Worked on play testing, ensuring SK/Paladin feels proper.
+
+2016-02-22
+---
+* Experience gained with rested now properly go into experience channel.
+
+2016-02-21
+---
+* Added Nola Z`Ret, the first origin binder NPC in game.
+* Rested EXP is now 10% instead of double per group member.
+* Changed how last logged in message displays.
+* Removed appearance/stun effect components to zombie encounters.
+* Fixed level adjustment code for encounters to properly adjust per level.
+* Rarity rolls and loot table has had significant addition and changes.
+* Squire needed some grammar fixes.
+
+2016-02-20
+---
+* Added Old Weapon Box
+* Fixed zombie moans.
+* Build driven AAs now disable if you reset your build.
+* Fixed a typo in #teleport
+* Encounters are now less frequent.
+
+2016-02-19
+---
+* Repaired a bug with Zevfeer's Bite
+* Repaired Act of Valor to properly summon a squire
+* Removed 0 dmg message from Holy Servant
+* Added Ward of Tunare
+* Boosted Armor of Faith
+
+2016-02-18
+---
+* Heavily worked on encounter system, creating the first proof of concept
+
+2016-02-17
+---
+* Added Old Blue Box mechanics, and initial loot table system
+
+2016-02-16
+---
+* Fixed crashes that sprouted up.
+* Worked on PlayMP3/PlaySound mechanic to prepare for encounter system
+
+2016-02-15
+---
+* Worked on making pets able to share tint and model of owner
+* Added #builds reset
+* Squire added, a gender flipped clone of Paladin
+
+2016-02-14
+---
+* Added Divine Stun
+* Added many Crusader-line Paladin build skills
+* Rested will stop happening while you're in combat
+* Worked on making Rested EXP system
+
+2016-02-13
+---
+* Added many mechanics to assist in builds being detected and worked on
+* Added Shaman and Paladin build ranks
+
+2016-02-11
+---
+* Added a hidden feature that lets you test the build system in game.
+
+2016-02-10
+---
+* Added shaman build descriptions
+* Added favicon
+
+2016-02-08
+---
+* Worked on a new tool called ShinShop, that is used for admin related tasks. It ate up a lot of time, but is worthwhile since it has some features I'd love to bring in for features of the server.
+
+
+2016-02-07
+---
+* Removed Priest of Discords
+* Added Icons for SK builds
+
+2016-02-06
+---
+* SK Build ability Crippling Pain renamed to Siphon of Death
+* SK Build ability Deathbringer renamed to Suspended Minion
+* SK Build ability Mini Minion renamed to Steadfast Servant
+
+2016-02-05
+---
+* Festering Spear damage added a base dmg component to help with lower levels.
+* Added shaman build perks.
+* Added early level zoning reminder about #teleport if you are still bound in your home city, until you ding level 2.
+
+2016-02-04
+---
+* Spells no longer are lost on death.
+* Hungering Aura now stacks the healing modifier based on number of mobs, e.g. 30% max is now 150%
+* Harm Touch and Death Peace AAs are unlocked.
+* Cannibalize is now only obtainable via AA (build unlock).
+
+2016-01-18
+---
+### Source Changes:
+* Added to Gain/Loss EXP messages to inform the amount
+* Removed soulbinders
+
+2016-01-17
+---
+### Rule Changes:
+* Max Level Set to 60
+* Max Clients per IP set to 2, (1 is forced, 2 is absolute max)
+* Enable NPC Quest Journal set to false
+* Enable Tutorial Button: False
+* MaxEXPLevel set to 60
+* Disabled Mail System
+* Enabled logging of NPC Merchant sell/buy
+* Disabled Racial/Class EXP Penalties
+* QueryServ:PlayerLogHandins true
+* QueryServ:MerchantLogTransactions true
+* Manually added World:UseClientBasedExpansionSettings : false in rule_values (annoying)
+
+### Variable Changes:
+* Changed Expansion to Velious maximum
+* Set loglevels from 0000 to 1111
