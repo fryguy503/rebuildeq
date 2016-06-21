@@ -5881,20 +5881,20 @@ void command_exp(Client *c, const Seperator *sep)
 
 
 	if (!strcasecmp(sep->arg[1], "fill")) {
-		auto inst = c->GetInv()[EQEmu::legacy::SlotCursor];
-		if (!inst) { 
-			c->Message(0, "You need 1 empty bottle of experience on your cursor for this command."); 
-			return;
-		}
-		auto item = inst->GetItem();
-		
-		if (!item || item->ID != 100000) {
-			c->Message(0, "You need 1 empty bottle of experience on your cursor for this command.");
+		if (bottles < 1) {
+			c->Message(0, "You need more experience in order to fill a bottle.");
 			return;
 		}
 
-		if (inst->GetTotalItemCount() != 1) {
-			c->Message(0, "You need exactly 1 empty bottle of experience on cursor for this command.");
+		int16 inv_slot_id = c->GetInv().HasItem(100000, 1, invWhereWorn | invWherePersonal);
+		if (inv_slot_id <= 0) {
+			c->Message(0, "You need an empty bottle of experience to use this command.");
+			return;
+		}
+
+		auto inst = c->GetInv()[EQEmu::legacy::SlotCursor];
+		if (inst) { 
+			c->Message(0, "Your cursor needs to be empty to run this command."); 
 			return;
 		}
 
@@ -5913,8 +5913,13 @@ void command_exp(Client *c, const Seperator *sep)
 			safe_delete_array(hacker_str);
 			return;
 		}
-		c->DeleteItemInInventory(EQEmu::legacy::SlotCursor, 1, true);
+
+		std::string query = StringFormat("UPDATE character_custom SET exp_pool = exp_pool - %i WHERE character_id = %i", RuleI(AA, ExpPerPoint), c->CharacterID());
+		auto results = database.QueryDatabase(query);
+
+		c->DeleteItemInInventory(inv_slot_id, 1, true);
 		c->SummonItem(100001, 1);
+
 		c->Message(MT_Experience, "You have paid 500 platinum to fill a bottle of experience.");
 		return;
 	}
