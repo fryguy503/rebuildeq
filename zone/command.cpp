@@ -4389,7 +4389,10 @@ void command_buff(Client *c, const Seperator *sep) {
 	std::string displayCost;
 	uint64 cost = 0;
 	
-	cost = (uint64)((float)(40 * (float)((float)c->GetLevel() / (float)60)) * 1000);
+	cost = (uint64)((float)(40 * (float)((float)c->GetLevel() / (float)60)) * 1000);	
+	if (c->GetLevel() >= 50) {
+		cost += (c->GetLevel() / 1.5f) * 1000;
+	}
 	if (cost < 1000) {
 		cost = 1000;
 	}
@@ -4561,6 +4564,9 @@ void command_return(Client *c, const Seperator *sep) {
 	std::string displayCost;
 	uint64 cost = 0;
 	cost = (uint64)((float)(40 * (float)((float)c->GetLevel() / (float)60)) * 1000);
+	if (c->GetLevel() >= 50) {
+		cost += (c->GetLevel() / 1.5f) * 1000;
+	}
 	cost /= 2;
 	if (cost < 1000) {
 		cost = 1000;
@@ -4611,6 +4617,9 @@ void command_rez(Client *c, const Seperator *sep) {
 	std::string displayCost;
 	uint64 cost = 0;
 	cost = (uint64)((float)(40 * (float)((float)c->GetLevel() / (float)60)) * 1000);
+	if (c->GetLevel() >= 50) {
+		cost += (c->GetLevel() / 1.5f) * 1000;
+	}
 	if (cost < 1000) {
 		cost = 1000;
 	}
@@ -5852,6 +5861,7 @@ void command_exp(Client *c, const Seperator *sep)
 		c->Message(0, "When a player reaches level %u and fills their experience bar, any excess experience goes into a pool reserve. This reserve can be drawn from on death as well as placed into experience bottles.");
 		return;
 	}
+
 	int exp_pool = 0;
 	auto query = StringFormat("SELECT exp_pool FROM character_custom WHERE character_id = %i", c->CharacterID());
 	auto results = database.QueryDatabase(query);
@@ -5860,7 +5870,53 @@ void command_exp(Client *c, const Seperator *sep)
 		exp_pool = atoi(row[0]);
 	}
 	int bottles = exp_pool / RuleI(AA, ExpPerPoint);
-	c->Message(0, "You currently have %i experience stored in reserve, which equates to %i experience bottles.", exp_pool, bottles);
+	
+
+
+	if (sep->arg[1][0] == '\0' || !strcasecmp(sep->arg[1], "help")) {
+		c->Message(0, "You currently have %i experience stored in reserve, which equates to %i experience bottles. If you hold an empty experience bottle on cursor, you can [ %s ] it for 500 platinum.", exp_pool, bottles, c->CreateSayLink("#exp fill", "fill").c_str());
+		return;
+	}
+
+
+	if (!strcasecmp(sep->arg[1], "fill")) {
+		auto inst = c->GetInv()[EQEmu::legacy::SlotCursor];
+		if (!inst) { 
+			c->Message(0, "You need 1 empty bottle of experience on your cursor for this command."); 
+			return;
+		}
+		auto item = inst->GetItem();
+		
+		if (!item || item->ID != 1001) {
+			c->Message(0, "You need 1 empty bottle of experience on your cursor for this command.");
+			return;
+		}
+
+		if (inst->GetTotalItemCount() != 1) {
+			c->Message(0, "You need exactly 1 empty bottle of experience on cursor for this command.");
+			return;
+		}
+
+		int64 cost = 500000;
+		// Handle: Not enough money.
+		if (!c->HasMoneyInInvOrBank(cost)) {
+			c->Message(0, "Not enough money to fill the bottle.");
+			return;
+		}
+
+		// FYI This is not needed. If it triggers there is a bug in HasMoneyInInvOrBank..
+		if (!c->TakeMoneyFromPPOrBank(cost, true)) {
+			char *hacker_str = nullptr;
+			MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
+			database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+			safe_delete_array(hacker_str);
+			return;
+		}
+		c->DeleteItemInInventory(EQEmu::legacy::SlotCursor, 1, true);
+		c->SummonItem(1002, 1);
+		c->Message(MT_Experience, "You have paid 500 platinum to fill a bottle of experience.");
+		return;
+	}
 }
 
 void command_face(Client *c, const Seperator *sep)
