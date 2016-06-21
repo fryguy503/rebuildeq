@@ -4247,7 +4247,8 @@ void command_teleport(Client *c, const Seperator *sep) {
 		Location("hateplaneb", 186, -393, 656, 3.13, 187.6, 46, 10092),
 		Location("iceclad", 110, 4879.12, -604.28, 109.21, 214.3, 10, 100010),
 		Location("northkarana", 13, 1205.91, -3685.44, -8.56, 126.6, 10, 0),
-		Location("skyfire", 91, 783.57, -3097.01, -159.38, 1.8, 10, 100012),
+		Location("sebilis", 89, 0, 250, 39.13, 125.0, 30, 100014),
+		Location("skyfire", 91, 783.57, -3097.01, -159.38, 1.8, 10, 100012),		
 		Location("sro", 35, 124.6, -1041.51, 9.45, 99.5, 10, 0),
 		Location("toxxulia", 414, -1656.96, -1502.43, 72.29, 58.2, 1, 0),
 		Location("wakening", 119, -2980.7, -3020, 26.5, 42.9, 10, 100009)		

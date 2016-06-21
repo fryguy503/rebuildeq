@@ -500,6 +500,10 @@ void Client::SendZoneInPackets()
 		Message(MT_Experience, "This area has a fragment to unlock #teleport to it that you have not yet discovered. Kill monsters to find it.");
 	}
 
+	if ((GetZoneID() == 89 && !KeyRingCheck(100014))) {
+		Message(MT_Experience, "This area has a RARE fragment to unlock #teleport to it that you have not yet discovered. Kill monsters to find it.");
+	}
+
 	//Reset evade on zoning
 	m_epp.evade_mob_id =0;
 	m_epp.evade_mob_timeout = 0;
