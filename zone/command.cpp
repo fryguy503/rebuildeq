@@ -4238,7 +4238,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 		Location("airplane", 71, 614, 1415, -663.62, 55.8, 46, 10094),
 		Location("cobaltscar", 117, -1574.95, -1053.25, 307.74, 56.1, 10, 100011),
 		Location("commons", 21, 1839.84, 0.15, -15.61, 61.0, 10, 0),
-		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10, 0),
+		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10, 100016),
 		Location("ecommons", 22, -73.06, -1787.51, 3.13, 51.8, 1, 0),
 		Location("emeraldjungle", 94, 3474.83, -3123.34, -341.34, 1.5, 10, 100013),
 		Location("fieldofbone", 78, 2395.95, -2216.75, 30.63, 227.6, 1, 0),
