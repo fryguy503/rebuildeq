@@ -20,6 +20,8 @@
 					<div class="form-group">
 						<div class="text-center"><img src="/images/guide/build-guide.gif" border="1"></span>
 					</div>
+					Each time you level up, you gain a build point and are presented with an in game dialog, linking you to this website's build section.
+					Choose a build to place your points.
 				</form>
 			</div>
 

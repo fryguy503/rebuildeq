@@ -5,13 +5,7 @@
 
 	<div class="row" style="margin-top:60px;">
 
-		<div class="row">
-	        	<ul class="breadcrumb">
-	          		<li><a href="/builds">Builds</a></li>
-	          		<li><a href="/builds/{$class}">{$class|capitalize}</a></li>
-	          		<li class="active">{$skill->title}</li>
-	        	</ul>
-	    </div>
+		
 
 	    {if !empty($errorMessage)}
  		<div class="row">
@@ -44,18 +38,29 @@
 		    </form>
 		</div>
 
+		<div class="row" style="text-align:left;">
+	        	<ul class="breadcrumb">
+	          		<li><a href="/builds">Builds</a></li>
+	          		<li><a href="/builds/{$class}">{$class|capitalize}</a></li>
+	          		<li class="active">{$skill->title}</li>
+	        	</ul>
+	    </div>
 
 		<div class="row">
 			<form class="well bs-component">
 				<div class="form-group" style="height: 400px; padding: 20px; text-align: center;">
-					<div class="skill-card">
-		          	<label class="control-label">{$skill->title}</label><br>
-		         	<img src="{$skill->image}">
+					<div class="col-md-2">
+						<div class="skill-card">
+			          		<label class="control-label">{$skill->title}</label><br>
+			         		<img src="{$skill->image}">
+		         		</div>
 		         	</div>
-		         	<div class="skill-card">
-						<div class="description">{$skill->desc}</div>
-						<iframe style="display:block; margin: 0 auto;" width="560" height="315" src="https://www.youtube.com/embed/x9enpEIFzJk" frameborder="0" allowfullscreen></iframe>
+					<div class="col-md-10">
+			         	<div class="skill-card">
+							<div class="description">{$skill->desc}</div>							
+						</div>
 					</div>
+					<iframe style="display:block; margin: 0 auto;" width="560" height="315" src="https://www.youtube.com/embed/x9enpEIFzJk" frameborder="0" allowfullscreen></iframe>
 		        </div>
 		    </form>
 		</div>

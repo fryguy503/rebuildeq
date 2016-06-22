@@ -6,15 +6,7 @@
 
 	<div class="row" style="margin-top:60px;">
 
-		<div class="row">
-	        	<ul class="breadcrumb">
-	          		<li><a href="/builds">Builds</a></li>
-	          		{if empty($character)}<li class="active">{$fullName}</li>
-	          		{else}<li class="active">{$character->name}</li>
-	          		{/if}
-	        	</ul>
-	    </div>
-
+		
 	    {if !empty($errorMessage)}
  		<div class="row">
 			<form class="well bs-component">
@@ -47,9 +39,15 @@
 		    </form>
 		</div>
 
-	    <div class="row">
-			<form class="well bs-component">
+		<div class="row">	        	
+			<form class="well bs-component" style="text-align: center;">
 				<div class="form-group">
+				<ul class="breadcrumb"  style="text-align: left;">
+	          		<li><a href="/builds">Builds</a></li>
+	          		{if empty($character)}<li class="active">{$fullName}</li>
+	          		{else}<li class="active">{$character->name}</li>
+	          		{/if}
+	        	</ul>
 				<p>
 		          <label class="control-label">{$classDescription}</label><br>
 		         Required Level To Obtain: <span class="charLevel">0</span>

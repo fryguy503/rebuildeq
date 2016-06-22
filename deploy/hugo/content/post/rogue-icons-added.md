@@ -1,0 +1,14 @@
++++
+banner = "post/images/site.jpg"
+categories = ["changelog"]
+date = "2016-06-04T01:19:18-07:00"
+description = "Artifact Merchants Now Sell"
+images = ["post/images/site.jpg"]
+menu = ""
+tags = ["rogue"]
+title = "Rogue Icons Added"
+
++++
+* Certain encounters will no longer spawn in innothule if the model isn't supported.
+* Rogue skills now have better icons.
+<!--more-->

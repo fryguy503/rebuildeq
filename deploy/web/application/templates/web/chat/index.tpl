@@ -6,7 +6,8 @@
 	  		<div class="row">
 				<form class="well bs-component" action="/player/search" method="GET">
 					<div class="form-group text-center">
-			          <label class="control-label">Join our discord channel to chat</label>
+			         <h2>Become a tester</h2><br>
+			         To become a tester click connect on discord below and join our server channel. Talk in #General to learn the steps to gain access.
 			          <div class="input-group text-center">
 			            <iframe src="https://discordapp.com/widget?id=138438371700637696&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0"></iframe>
 			          </div>

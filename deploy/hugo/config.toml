@@ -1,4 +1,4 @@
-baseurl = "http://rebuildeq.com/"
+baseurl = "/updates/"
 languageCode = "en-us"
 title = "RebuildEQ"
 # Enable comments by entering your Disqus shortname
