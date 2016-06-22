@@ -274,7 +274,7 @@ class Build {
 			$build->fullName = "Shadow Knight";
 			$build->monogram = 5;
 			
-			$build->desc = "Shadow Knights are fighters with necromancer powers.<br><font color='#41974D'>Bloodreaver</font> specializes in tanking and lifetaps.<br> <font color='#2A87C7'>Defiler</font> focus on dealing damage.<br> <font color='#A93640'>Revenant</font> excel at pulling.";
+			$build->desc = "Shadow Knights are fighters with necromancer powers.<br><font color='#41974D'>Bloodreaver</font> specializes in tanking and lifetaps.<br> <font color='#2A87C7'>Defiler</font> focus on dealing damage.<br> <font color='#A93640'>Revenant</font> excel at pulling.<br><br>Shadow Knights do not get Lifetaps or Pets via normal spells, instead it is via build trees.";
 			$build->styles[0] = "Bloodreaver";
 			$build->styles[1] = "Defiler";
 			$build->styles[2] = "Revenant";
@@ -1022,7 +1022,7 @@ class Build {
 			//0
 			$newSkill = new stdClass();
 			$newSkill->title = "Leech Touch";
-			$newSkill->desc = 'Grants the Leech Touch AA, improves lifetap damage by <em data-base="4">4</em>% and <em data-base="1">1</em>% chance to critical heal<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Leech Touch AA, which replaces all normal Knight lifetaps. It will use your best lifetap, curved up, as well as improves all lifetap damage by <em data-base="4">4</em>% and grants a <em data-base="1">1</em>% chance to critical heal<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-leechtouch.png";	
 			$skills[0] = $newSkill;
 			
