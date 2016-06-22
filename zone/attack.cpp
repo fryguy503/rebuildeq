@@ -3560,26 +3560,24 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 		
 		if (IsClient() && attacker && attacker->IsNPC()) { //If the attacked player is in a group, and being attacked by an NPC
 
+			uint32 heal_amount = (uint32)(GetMaxHP() * rank * 0.01f) + (uint32)(40 * rank);
+
 			rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BANSHEESMIRROR);
 			if (rank > 0 && 
 				GetTarget() == attacker &&
+				damage > (heal_amount / 4) &&
 				zone->random.Roll((int)(5 * rank))) {
-
-				uint32 healAmount =  (uint32)(GetMaxHP() * rank * 0.01f) + (uint32)(40 * rank);
-				CastToClient()->Message(MT_Spells, "Banshee's Mirror %u healed you for %i.", rank, healAmount);
-				HealDamage(healAmount, this);
+				CastToClient()->Message(MT_Spells, "Banshee's Mirror %u healed you for %i.", rank, heal_amount);
+				HealDamage(heal_amount, this);
 			}
 
-
 			rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_WARDOFTUNARE);
-
 			if (rank > 0 && 
 				GetTarget() == attacker &&
+				damage > (heal_amount / 4) &&
 				zone->random.Roll((int)(5 * rank))) {
-
-				uint32 healAmount =  (uint32)(GetMaxHP() * rank * 0.01f) + (uint32)(40 * rank);
-				CastToClient()->Message(MT_Spells, "Ward of Tunare %u healed you for %i.", rank, healAmount);
-				HealDamage(healAmount, this);
+				CastToClient()->Message(MT_Spells, "Ward of Tunare %u healed you for %i.", rank, heal_amount);
+				HealDamage(heal_amount, this);
 			}
 
 			//Holy Servant
