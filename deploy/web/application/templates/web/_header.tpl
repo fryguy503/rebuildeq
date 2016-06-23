@@ -18,11 +18,11 @@
             </div>
             <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav pull-right">
-                <li><a class="signup" href="/about/">About</a></li>                
-                <li><a class="signup" href="/builds">Builds</a></li>
-                <li><a class="signup" href="/chat">Sign Up</a></li>
-                <li><a class="hidden-sm login" href="/changelog">Changelog</a></li>
-                <li><a class="signup" href="/donate">Donate</a></li>
+                <li>{if $page != "about"}<a class="signup" href="/about/">About</a>{else}<a>About</a>{/if}</li>
+                <li>{if $page != "builds"}<a class="signup" href="/builds/">Builds</a>{else}<a>Builds</a>{/if}</li>
+                <li>{if $page != "chat"}<a class="signup" href="/chat/">Chat</a>{else}<a>Chat</a>{/if}</li>
+                <li>{if $page != "changelog"}<a class="signup" href="/changelog/">Changelog</a>{else}<a>Changelog</a>{/if}</li>
+                <li>{if $page != "donate"}<a class="signup" href="/donate/">Donate</a>{else}<a>Donate</a>{/if}</li>                
               </ul>
             </div>
           </div>
