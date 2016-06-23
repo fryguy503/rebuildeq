@@ -9134,7 +9134,7 @@ void Client::AddRestedExperience(uint32 lastUpdate) {
 uint8 Client::GetRottenCoreCounters() {
 	if (m_epp.rotten_core_timeout < time(nullptr)) {
 		if (m_epp.rotten_core > 0) {
-			Message(MT_NonMelee, "Your counters have faded.");
+			Message(MT_WornOff, "Your counters have faded.");
 		}
 		m_epp.rotten_core = 0;
 	}
