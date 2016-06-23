@@ -5859,7 +5859,7 @@ void command_exp(Client *c, const Seperator *sep)
 	uint8 maxlevel = 60;
 	
 	if (c->GetLevel() < maxlevel) {
-		c->Message(0, "When a player reaches level %u and fills their experience bar, any excess experience goes into a pool reserve. This reserve can be drawn from on death as well as placed into experience bottles.");
+		c->Message(0, "When a player reaches level %u and fills their experience bar, any excess experience goes into a pool reserve. This reserve can be drawn from on death as well as placed into experience bottles.", maxlevel);
 		return;
 	}
 
