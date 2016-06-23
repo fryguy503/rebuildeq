@@ -1,6 +1,5 @@
 +++
 banner = "post/images/site.jpg"
-categories = ["changelog"]
 date = "2016-06-08T01:19:18-07:00"
 description = "Discord OOC Chat Added"
 images = ["post/images/site.jpg"]

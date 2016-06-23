@@ -1,35 +1,30 @@
 {{ partial "head" . }}
 
-<div id="container">
-    {{ partial "header" . }}
-    <div class="container">
+{{ partial "header" . }}
 
-  <div class="row" style="margin-top:60px;">
-      <div class="col-md-8 col-md-offset-2">
-        <div class="row">
-        <form class="well bs-component">
-          <div class="form-group">
-                <p class="text-center">
-                <label class="control-label">Changelog</label>
-                </p>
-                {{ range $name, $items := .Site.Taxonomies.tags }}
-            <li class="category-list-item">
-                <a class="category-list-link" href="{{ $.Site.BaseURL }}tags/{{ $name | urlize | lower }}">
-                    {{ $name }}
-                </a>
-                <span class="category-list-count">{{ len $items }}</span>
-            </li>
+<div id="intro">
+ <section id="pricing" class="dark">
+  <div class="container">
+        <div class="row" style="margin-top:60px;">
+        <div class="col-md-8 col-md-offset-2">
+        <div class="row text-center">
+               <h2>Changelog</h2>
+               <p>
+             {{ range $name, $items := .Site.Taxonomies.tags }}
+                <a class="category-list-link" href="{{ $.Site.BaseURL }}tags/{{ $name | urlize | lower }}">{{ $name }} [{{ len $items }}]</a> &middot;
             {{ end }}
-              </div>
-          </form>
-      </div>
-      
-    {{ partial "article_list" . }}
+            </p>
+            </div>
+        </div>
+        </div>
     </div>
   </div>
   </div>
-
+  </section>
 </div>
+
+
+{{ partial "article_list" . }}
 
 {{ partial "footer" . }}
 </body>

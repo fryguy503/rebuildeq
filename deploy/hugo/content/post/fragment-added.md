@@ -1,6 +1,5 @@
 +++
 banner = "post/images/site.jpg"
-categories = ["changelog"]
 date = "2016-06-18T01:19:18-07:00"
 description = "Fragment and Teleport Cleanups"
 images = ["post/images/site.jpg"]

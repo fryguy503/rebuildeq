@@ -1,6 +1,5 @@
 +++
 banner = "post/images/site.jpg"
-categories = ["changelog"]
 date = "2016-06-01T01:19:18-07:00"
 description = "Daily Login Reward Added"
 images = ["post/images/site.jpg"]

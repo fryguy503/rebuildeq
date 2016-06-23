@@ -1,6 +1,5 @@
 +++
 banner = "post/images/site.jpg"
-categories = ["changelog"]
 date = "2016-05-31T01:19:18-07:00"
 description = "Encounters Easier 20 And Below"
 images = ["post/images/site.jpg"]

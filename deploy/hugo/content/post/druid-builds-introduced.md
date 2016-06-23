@@ -1,6 +1,5 @@
 +++
 banner = "post/images/site.jpg"
-categories = ["changelog"]
 date = "2016-06-09T01:19:18-07:00"
 description = "Druid Builds Introduced"
 images = ["post/images/site.jpg"]

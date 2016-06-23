@@ -1,6 +1,5 @@
 +++
 banner = "post/images/site.jpg"
-categories = ["changelog"]
 date = "2016-06-19T01:19:18-07:00"
 description = "Card Distiller can now be purchased"
 images = ["post/images/site.jpg"]

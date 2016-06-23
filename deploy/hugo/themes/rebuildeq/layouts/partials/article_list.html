@@ -1,18 +1,22 @@
- {{ $paginator := .Paginate (where .Site.Pages "Type" "post") }}
+{{ $paginator := .Paginate (where .Site.Pages "Type" "post") }}
+{{ range $paginator.Pages }}
 
-    {{ range $paginator.Pages }}
-<div class="row">
-    <form class="well bs-component">
-        <div class="form-group">
-        {{ if and (isset .Params "banner") (not (eq .Params.banner "")) }}
+<article>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3 text-center">
+      {{ if and (isset .Params "banner") (not (eq .Params.banner "")) }}
             <a href="{{ .Permalink }}" itemprop="url">
                 {{if or (in (substr .Params.banner 0 7) "http://") (in (substr .Params.banner 0 8) "https://")}}
-                <img src="{{ .Params.banner }}" class="article-banner">
+                <img class="margin-top img-responsive" src="{{ .Params.banner }}" class="article-banner">
                 {{ else }}
-                <img src="{{ .Site.BaseURL }}{{ .Params.banner }}" class="article-banner">
+                <img class="margin-top img-responsive" src="{{ .Site.BaseURL }}{{ .Params.banner }}" class="article-banner">
                 {{end}}
             {{ end }}
             </a>
+      </div>
+      <div class="col-sm-7 col-sm-offset-1">
+          
             <p class="text-center">
              <label class="control-label">{{ partial "article_header" . }}</label>
              </p>
@@ -25,6 +29,7 @@
                 </p>
             </p>
       </div>
-   </form>
-</div>
-    {{ end }}
+    </div>
+  </div>
+</article>
+{{ end }}

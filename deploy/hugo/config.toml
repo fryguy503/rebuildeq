@@ -1,4 +1,4 @@
-baseurl = "/updates/"
+baseurl = "/changelog/"
 languageCode = "en-us"
 title = "RebuildEQ"
 # Enable comments by entering your Disqus shortname
