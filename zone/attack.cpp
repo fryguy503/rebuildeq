@@ -2574,6 +2574,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 						other->GetID() != group->members[i]->GetID() && //not me
 						other->GetZoneID() == group->members[i]->GetZoneID() && //in same zone
 						!group->members[i]->CastToClient()->IsDead() && //not dead
+						!group->members[i]->CastToClient()->feigned && //not feigned
 						DistanceSquared(GetPosition(), group->members[i]->GetPosition()) < (150 * 150) //and within range
 						) {
 						//group->members[i]->CastToClient()->Message(0, "You're being added to a hate list via group!");
