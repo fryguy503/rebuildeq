@@ -1,21 +1,71 @@
-{include file="../_header.tpl"}
-  <div class="container">
 
-	<div class="row" style="margin-top:60px;">
-	  	<div class="col-md-8 col-md-offset-2">
-	  		<div class="row">
-				<form class="well bs-component">
-					<div class="form-group">
-			          <p class="text-center">
-			          <label class="control-label">Rebuilt Everquest</label><br>
-			          A new storyline for Norrath.<br>
-			          Luclin was never discovered.<br>
-			          The Plane of Knowledge never existed.<br>
-			          Classes uniquely <a href="/builds">built</a>.<br>
-			          </p>
-			        </div>
-			    </form>
-			</div>
+{include file="../_header.tpl"}
+    <!-- Hero Banner
+    ================================================== -->
+    <div id="intro">
+        <div class="item background-cover" style="background: url('/web/public/prestige/img/cobia/globe.png')">
+          <div class="container">
+            <div class="row">
+              <div class="carousel-caption-center colour-white">
+              <h2>Take away the bad parts</h2>
+              <h1>Rebuild It</h1>
+              <p>Retell the story of Norrath in a way never experienced before.</p>
+              <a class="btn btn-lg btn-primary" href="/about" role="button">More Info</a></p>
+              </div>
+            </div>
+          </div>
+          <div class="overlay-bg"></div>
+        </div>
+    </div>
+
+
+     <!-- About Section
+    ================================================== -->
+    <section id="about" class="content text-center light">
+
+      <div class="container">
+        <!-- Three columns of text below the carousel -->
+        <div class="row">
+          <div class="col-lg-12 overlay-text">
+            <h2>Norrath never felt so good</h2>
+          </div><!-- /.col-lg-12 -->
+        </div><!-- /.row -->
+
+        <div class="row">
+          <div class="col-sm-4 text-center overlay-text icons">
+          <a href="/builds" class="icon-link">
+	            <div class="icon-wrapper">
+	              <i class="fa fa-key icon-large"></i>
+	            </div>
+	            <h3>Specialize Yourself</h3>
+            </a>
+            <p>Take <a href="/builds">builds</a> for a spin to make every level matter.</p>
+          </div>
+          <div class="col-sm-4 text-center overlay-text icons">
+          <a href="/encounter" class="icon-link">
+	            <div class="icon-wrapper">
+	              <i class="fa fa-dollar icon-large"></i>
+	            </div>
+	            <h3>Encounter New Rewards</h3>
+            </a>
+            <p>Spread across Norrath are random <a href="/encounter">encounters</a>, with old boxes to open and gain rare items.</p>
+          </div>
+          <div class="col-sm-4 text-center overlay-text icons">
+          <a href="/rested" class="icon-link">
+	            <div class="icon-wrapper">
+	              <i class="fa fa-lightbulb-o icon-large"></i>
+	            </div>
+	            <h3>Gain Experience Offline</h3>
+	       </a>
+            <p>When you <a href="/rested">rest</a> in certain cities, you pool bonus experience the next run</p>
+          </div>
+        </div><!-- /.row -->
+      </div>
+
+      <div class="overlay-bg light"></div>
+
+    </section>
+
 
 			<div class="row">
 				<form class="well bs-component">

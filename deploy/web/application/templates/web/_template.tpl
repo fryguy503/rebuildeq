@@ -1,5 +1,7 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#" xmlns:fb="https://www.facebook.com/2008/fbml"><head>
-  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <head>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <meta property="og:title" content="{$site->title}">
@@ -14,49 +16,45 @@
       <meta name="description" content="{$site->description}">
       <meta name="author" content="Shin Noir, @rebuildeq">
     <title>{$site->title} | RebuildEQ</title>
-    {*
-    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-precomposed.gif">
-    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-72x72-precomposed.gif">
-    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-114x114-precomposed.gif">
-    <link rel="apple-touch-icon-precomposed" href="apple-touch-icon-144x144-precomposed.gif">
-    *}
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="/css/jquery-ui.theme.min.css">
-    
-    
-    
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    
+
+    <!-- Bootstrap core CSS -->
+    <link href="/public/prestige/css/bootstrap.css" rel="stylesheet">
+    <link href="/public/prestige/css/theme.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/public/prestige/css/magnific-popup.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="/public/prestige/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    	<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
-    	<script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.2.0/respond.js"></script>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
     <![endif]-->
-    
-        
-        <!-- Favicon -->
-        <!--link rel="shortcut icon" href="/favicon.ico"-->
-        <!-- Template JS -->
-        {if !empty($jsTopTemplate)}{$jsTopTemplate}{/if}
-        <!-- Page JS -->
-        {if !empty($jsTopPage)}{$jsTopPage}{/if}
+
+    <script src="/public/prestige/js/modernizr.custom.js"></script>
+
+
     </head>
     
     <body>
-      
-    
-        {$content}
-        
-        
-        {*<span class="totop"><a href="#"><i class="fa fa-angle-up bg-color"></i></a></span>*}
-        
+            
+            <!-- Main content starts -->
+            {$content}
+            <!-- Main content ends -->
+
+
         <!-- Template JS -->
         {if !empty($jsBotTemplate)}{$jsBotTemplate}{/if}
         <!-- Page JS -->
         {if !empty($jsBotPage)}{$jsBotPage}{/if}
-    </body>
+
+    </body> 
+
 
       <footer class="bs-footer" role="contentinfo">
     <div class="container">
@@ -65,6 +63,4 @@
   Except where otherwise noted, this site is licensed under a Creative Commons License.
     </div>
   </footer>
-
 </html>
-
