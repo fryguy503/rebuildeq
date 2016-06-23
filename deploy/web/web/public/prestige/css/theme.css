@@ -1548,10 +1548,7 @@ section.dark p {
   color: white;
   letter-spacing: 0.5px;
 }
-section.dark ul li {
-  color: white;
-  letter-spacing: 0.5px;
-}
+
 section.content h1 {
   font-size: 3em;
 }
@@ -2485,6 +2482,9 @@ footer.footer .icon {
   }
   .navbar-collapse {
     background-color: rgba(43, 45, 53, 0.9);
+  }
+  .navbar-transparent {
+    opacity: 0.5;
   }
   .navbar-collapse ul {
     width: 100%;

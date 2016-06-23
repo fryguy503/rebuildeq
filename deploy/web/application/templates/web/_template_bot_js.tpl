@@ -16,21 +16,21 @@
   <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="public/prestige/js/jquery-1.10.2.min.js"></script>
-    <script src="public/prestige/js/bootstrap.min.js"></script>
-    <script src="public/prestige/js/classie.js"></script>
-		<script src="public/prestige/js/cbpAnimatedHeader.min.js"></script>
-    <script src="public/prestige/js/owl.carousel.min.js"></script>
-    <script src="public/prestige/js/scrollReveal.js"></script>
-    <script src="public/prestige/js/jquery.scrollTo.js" defer="defer"></script>
-    <script src="public/prestige/js/jquery.nav.js" defer="defer"></script>
-    <script src="public/prestige/js/imagesloaded.pkgd.min.js" defer="defer"></script>
-    <script src="public/prestige/js/isotope.min.js" defer="defer"></script>
-    <script src="public/prestige/js/jquery.magnific-popup.min.js" defer="defer"></script>
-    <script src="public/prestige/js/jqBootstrapValidation.js" defer="defer"></script>
-    <script src="public/prestige/js/custom.js"></script>
+    <script src="/public/prestige/js/jquery-1.10.2.min.js"></script>
+    <script src="/public/prestige/js/bootstrap.min.js"></script>
+    <script src="/public/prestige/js/classie.js"></script>
+		<script src="/public/prestige/js/cbpAnimatedHeader.min.js"></script>
+    <script src="/public/prestige/js/owl.carousel.min.js"></script>
+    <script src="/public/prestige/js/scrollReveal.js"></script>
+    <script src="/public/prestige/js/jquery.scrollTo.js" defer="defer"></script>
+    <script src="/public/prestige/js/jquery.nav.js" defer="defer"></script>
+    <script src="/public/prestige/js/imagesloaded.pkgd.min.js" defer="defer"></script>
+    <script src="/public/prestige/js/isotope.min.js" defer="defer"></script>
+    <script src="/public/prestige/js/jquery.magnific-popup.min.js" defer="defer"></script>
+    <script src="/public/prestige/js/jqBootstrapValidation.js" defer="defer"></script>
+    <script src="/public/prestige/js/custom.js"></script>
 
-    <script src="public/prestige/js/less-1.6.1.min.js"></script>
+    <script src="/public/prestige/js/less-1.6.1.min.js"></script>
 
     <script>
 

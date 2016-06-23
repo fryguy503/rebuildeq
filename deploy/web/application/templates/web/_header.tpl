@@ -18,9 +18,9 @@
             </div>
             <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav pull-right">
-                <li><a href="/about/">About</a></li>                
-                <li><a href="/builds">Builds</a></li>
-                <li><a href="/chat">Sign Up</a></li>
+                <li><a class="signup" href="/about/">About</a></li>                
+                <li><a class="signup" href="/builds">Builds</a></li>
+                <li><a class="signup" href="/chat">Sign Up</a></li>
                 <li><a class="hidden-sm login" href="/changelog">Changelog</a></li>
                 <li><a class="signup" href="/donate">Donate</a></li>
               </ul>
