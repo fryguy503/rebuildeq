@@ -1525,14 +1525,10 @@ section.dark {
   background: #2b2d35;
 }
 section.dark.with-bg {
-  background: url('../img/cobia/bg-featuredapp1.jpg') center center no-repeat;
+  background: url('../img/bg/ak.jpg') center center no-repeat;
   background-size: cover;
 }
 
-section.dark.with-bg-2 {
-  background: url('../img/cobia/serverroom.jpg') center center no-repeat;
-  background-size: cover;
-}
 section.dark h1,
 section.dark h2,
 section.dark h4,

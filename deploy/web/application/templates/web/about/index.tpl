@@ -2,7 +2,7 @@
 
 
 <div id="intro">
-        <div class="item background-cover" style="background: url('/public/prestige/img/bg/ec.png')">
+        <div class="item background-cover" style="background: url('/public/prestige/img/bg/ec.jpg')">
           <div class="container">
             <div class="row">
               <div class="carousel-caption-center colour-white">

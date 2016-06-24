@@ -3,7 +3,7 @@
     <!-- Hero Banner
     ================================================== -->
     <div id="intro">
-        <div class="item background-cover" style="background: url('/public/prestige/img/bg/ec.png')">
+        <div class="item background-cover" style="background: url('/public/prestige/img/bg/ve.jpg')">
           <div class="container">
             <div class="row">
               <div class="carousel-caption-center colour-white">
@@ -102,35 +102,36 @@
           <div class="col-md-12">
             <div id="owl-example" class="owl-carousel">
               <div class="item">
-                <a href="/public/prestige/img/thumbs/thumb1.jpg" class="popup-gallery">
-                  <img src="/public/prestige/img/thumbs/thumb1.jpg" alt="Prestige Portfolio Thumbnail Image">
+                <a href="/public/prestige/img/gallery/trakanon.jpg" class="popup-gallery">
+                  <img src="/public/prestige/img/gallery/trakanon_thumb.jpg" alt="Prestige Portfolio Thumbnail Image">
                 </a>
               </div>
               <div class="item">
-                <a href="public/prestige/img/thumbs/thumb2.jpg" class="popup-gallery">
-                  <img src="public/prestige/img/thumbs/thumb2.jpg" alt="Prestige Portfolio Thumbnail Image">
+                <a href="public/prestige/img/gallery/karnors.jpg" class="popup-gallery">
+                  <img src="public/prestige/img/gallery/karnors_thumb.jpg" alt="Prestige Portfolio Thumbnail Image">
                 </a>
               </div>
               <div class="item">
-                <a href="public/prestige/img/thumbs/thumb3.jpg" class="popup-gallery">
-                  <img src="public/prestige/img/thumbs/thumb3.jpg" alt="Prestige Portfolio Thumbnail Image">
+                <a href="public/prestige/img/gallery/ntov.jpg" class="popup-gallery">
+                  <img src="public/prestige/img/gallery/ntov_thumb.jpg" alt="Prestige Portfolio Thumbnail Image">
                 </a>
               </div>
               <div class="item">
-                <a href="public/prestige/img/thumbs/thumb4.jpg" class="popup-gallery">
-                  <img src="public/prestige/img/thumbs/thumb4.jpg" alt="Prestige Portfolio Thumbnail Image">
+                <a href="public/prestige/img/gallery/venril.jpg" class="popup-gallery">
+                  <img src="public/prestige/img/gallery/venril_thumb.jpg" alt="Prestige Portfolio Thumbnail Image">
                 </a>
               </div>
               <div class="item">
-                <a href="public/prestige/img/thumbs/thumb5.jpg" class="popup-gallery">
-                  <img src="public/prestige/img/thumbs/thumb5.jpg" alt="Prestige Portfolio Thumbnail Image">
+                <a href="public/prestige/img/gallery/sebilis.jpg" class="popup-gallery">
+                  <img src="public/prestige/img/gallery/sebilis_thumb.jpg" alt="Prestige Portfolio Thumbnail Image">
                 </a>
               </div>
               <div class="item">
-                <a href="public/prestige/img/thumbs/thumb6.jpg" class="popup-gallery">
-                  <img src="public/prestige/img/thumbs/thumb6.jpg" alt="Prestige Portfolio Thumbnail Image">
+                <a href="public/prestige/img/gallery/lodizal.jpg" class="popup-gallery">
+                  <img src="public/prestige/img/gallery/lodizal_thumb.jpg" alt="Prestige Portfolio Thumbnail Image">
                 </a>
               </div>
+              
 
             </div>
           </div>
