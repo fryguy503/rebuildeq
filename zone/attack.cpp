@@ -3454,28 +3454,17 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				int bonus_damage;
 				Client * attacker_client = attacker->CastToClient();
 				rank = attacker_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH);
-				if (rank > 0) {
-					if (attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
-						attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt ||
-						attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HPiercing
-						) {
-						bonus_damage = damage * 0.05f * rank;
-						attacker_client->Message(MT_NonMelee, "Blood Oath %u added %i bonus damage.", rank, bonus_damage);
-						damage += bonus_damage;
-					}
+				if (rank > 0 && (skill_used == EQEmu::skills::Skill2HBlunt || skill_used == EQEmu::skills::Skill2HPiercing || skill_used ==  EQEmu::skills::Skill2HSlashing)) {
+					bonus_damage = damage * 0.05f * rank;
+					attacker_client->Message(MT_NonMelee, "Blood Oath %u added %i bonus damage.", rank, bonus_damage);
+					damage += bonus_damage;
 				}
 
 				rank = attacker_client->GetBuildRank(PALADIN, RB_PAL_KNIGHTSADVANTAGE);
-
-				if (rank > 0) {
-					if (attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash ||
-						attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt ||
-						attacker_client->GetPrimarySkillValue() == EQEmu::item::ItemType2HPiercing
-						) {
-						bonus_damage = damage * 0.05f * rank;
-						attacker->CastToClient()->Message(MT_NonMelee, "Knight's Advantage %u added %i bonus damage.", rank, bonus_damage);
-						damage += bonus_damage;
-					}
+				if (rank > 0 && (skill_used == EQEmu::skills::Skill2HBlunt || skill_used == EQEmu::skills::Skill2HPiercing || skill_used == EQEmu::skills::Skill2HSlashing)) {
+					bonus_damage = damage * 0.05f * rank;
+					attacker->CastToClient()->Message(MT_NonMelee, "Knight's Advantage %u added %i bonus damage.", rank, bonus_damage);
+					damage += bonus_damage;
 				}
 
 				rank = attacker_client->CastToClient()->GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
