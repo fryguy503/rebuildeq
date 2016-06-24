@@ -6,8 +6,23 @@
     <description>Recent content in Encounter on RebuildEQ</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 15 Jun 2016 01:19:18 -0700</lastBuildDate>
+    <lastBuildDate>Tue, 21 Jun 2016 01:19:18 -0700</lastBuildDate>
     <atom:link href="/changelog/tags/encounter/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Ward of Tunare Nerfed</title>
+      <link>/changelog/2016/06/21/ward-of-tunare-nerfed</link>
+      <pubDate>Tue, 21 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/21/ward-of-tunare-nerfed</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Paladin Ward of Tunare and Shadowknight Banshee Mirror was nerfed. In order for it to proc, you must receive damage exceeding 1/4ths the amount it heals for. This will get another adjustment after testing.&lt;/li&gt;
+&lt;li&gt;Working on shifting Change Log to a post-friendly style, on the website, so you can link highlights and categorize them more.&lt;/li&gt;
+&lt;li&gt;Did a prep pass of eqcleanup (item cleanup), needs some TLC since some items get removed i dont&amp;rsquo; want gone like new&lt;/li&gt;
+&lt;li&gt;The previous patch is major, still doing work on it.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Mistmoore Encounter Added</title>
@@ -52,6 +67,26 @@
 &lt;li&gt;Added /who system to include Identity.&lt;/li&gt;
 &lt;li&gt;Box open announcements are now itemlinks.&lt;/li&gt;
 &lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Hotzone Tweaks</title>
+      <link>/changelog/2016/06/01/hotzone-tweaks</link>
+      <pubDate>Wed, 01 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/01/hotzone-tweaks</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Added Sebilis as a Hotzone, removed Wakening lands. I&amp;rsquo;ll get more official with hotzones later.&lt;/li&gt;
+&lt;li&gt;Trakanon no longer banishes&lt;/li&gt;
+&lt;li&gt;Feign death will not get aggro from other allies via the shared aggro mechanic.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Hotzones are planned to cycle more frequently, especially after I get things more figured out.&lt;/p&gt;
+
+&lt;p&gt;All death touching mobs and banishing will be nerfed, and likely have their stats adjusted since most were lesser due to the components noted.&lt;/p&gt;
+
+&lt;p&gt;Before, when you used feign death, it would fail if another ally was fighting nearby and grouped.&lt;/p&gt;
 </description>
     </item>
     

@@ -6,8 +6,38 @@
     <description>Recent content in Posts on RebuildEQ</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 20 Jun 2016 01:19:18 -0700</lastBuildDate>
+    <lastBuildDate>Thu, 23 Jun 2016 01:19:18 -0700</lastBuildDate>
     <atom:link href="/changelog/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>No More Free Mage Epic</title>
+      <link>/changelog/2016/06/23/no-more-free-mage-epic</link>
+      <pubDate>Thu, 23 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/23/no-more-free-mage-epic</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Grom Shives removed from Nektulous (A trick or treat npc).&lt;/li&gt;
+&lt;li&gt;Mages no longer get Orb Sphere on level up.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We found out from a tester that mages were getting a free epic 1.0 click. oops! We got that taken out.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Ward of Tunare Nerfed</title>
+      <link>/changelog/2016/06/21/ward-of-tunare-nerfed</link>
+      <pubDate>Tue, 21 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/21/ward-of-tunare-nerfed</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Paladin Ward of Tunare and Shadowknight Banshee Mirror was nerfed. In order for it to proc, you must receive damage exceeding 1/4ths the amount it heals for. This will get another adjustment after testing.&lt;/li&gt;
+&lt;li&gt;Working on shifting Change Log to a post-friendly style, on the website, so you can link highlights and categorize them more.&lt;/li&gt;
+&lt;li&gt;Did a prep pass of eqcleanup (item cleanup), needs some TLC since some items get removed i dont&amp;rsquo; want gone like new&lt;/li&gt;
+&lt;li&gt;The previous patch is major, still doing work on it.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Fragment Cleanup</title>
@@ -264,40 +294,6 @@
 &lt;li&gt;#build now works as an alias for #builds&lt;/li&gt;
 &lt;li&gt;#experience now works as an alias for #exp&lt;/li&gt;
 &lt;li&gt;#rest now works as an alias for #rested&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Skillup Rate Doubled</title>
-      <link>/changelog/2016/06/06/skillup-rate-doubled</link>
-      <pubDate>Mon, 06 Jun 2016 01:19:18 -0700</pubDate>
-      
-      <guid>/changelog/2016/06/06/skillup-rate-doubled</guid>
-      <description>&lt;ul&gt;
-&lt;li&gt;Skillup Rate changed from 100% to 200%.&lt;/li&gt;
-&lt;li&gt;Translocator Ionie at Nro docks now will assist players looking to adventure to Velious.&lt;/li&gt;
-&lt;li&gt;Shaman Cannibalization AA is no longer usable when the rank is reset.&lt;/li&gt;
-&lt;li&gt;Pets no longer persist after zoning if you no longer have the the build skill.&lt;/li&gt;
-&lt;li&gt;Pets have a minimum hp threshold, i need to test this more, be patient with them.&lt;/li&gt;
-&lt;li&gt;Pets poof now when you #builds reset&lt;/li&gt;
-&lt;li&gt;Fixed Named Spawns so they actually spawn if they had a fabled PH&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Goblin Card Added</title>
-      <link>/changelog/2016/06/05/goblin-card-added</link>
-      <pubDate>Sun, 05 Jun 2016 01:19:18 -0700</pubDate>
-      
-      <guid>/changelog/2016/06/05/goblin-card-added</guid>
-      <description>&lt;ul&gt;
-&lt;li&gt;Goblin Card is now a shrink clicky.&lt;/li&gt;
-&lt;li&gt;Orcs no longer will drop Goblin Cards.&lt;/li&gt;
-&lt;li&gt;Removed Trakanon Idol requirement for Sebilis access. Later I&amp;rsquo;ll write an alternative quest to obtain key since I don&amp;rsquo;t require players to have a tracker.&lt;/li&gt;
-&lt;li&gt;Added Shadowed Man Card. (Casts gather shadows). rarity is really rare, as a balancing aspect.&lt;/li&gt;
-&lt;li&gt;Shadowknight&amp;rsquo;s Siphon Death skill will also include Vampiric Embrace.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
