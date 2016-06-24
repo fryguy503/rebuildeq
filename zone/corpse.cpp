@@ -1172,7 +1172,7 @@ void Corpse::LootItem(Client* client, const EQApplicationPacket* app) {
 		parse->EventItem(EVENT_LOOT, client, inst, this, buf, 0);
 
 		//Fragment of <Zone> code
-		if (inst->GetItem()->ID < 100014 && inst->GetItem()->ID > 100007){
+		if (inst->GetItem()->ID < 100017 && inst->GetItem()->ID > 100007){
 			if (!client->KeyRingCheck(inst->GetItem()->ID)) {
 				client->KeyRingAdd(inst->GetItem()->ID);
 				client->Message(MT_Experience, "You have unlocked the ability to #teleport to %s!", zone->GetLongName());
