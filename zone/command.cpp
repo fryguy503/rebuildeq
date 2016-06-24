@@ -4368,10 +4368,14 @@ void command_teleport(Client *c, const Seperator *sep) {
 
 	// Build message with available locations.
 	for (auto&& i : Locations) {
-		if (c->GetLevel() < i.MinimumLevel) continue;
-		if (c->GetZoneID() == i.ZoneID) continue;
+		if (c->GetLevel() < i.MinimumLevel) continue;		
 		if (i.ItemID > 0 && !c->KeyRingCheck(i.ItemID) && c->GetInv().HasItem(i.ItemID, 1, invWhereWorn | invWherePersonal) < 1) continue;
-		ss << " [ " << c->CreateSayLink(StringFormat("#teleport %s", i.ZoneName.c_str()).c_str(), i.ZoneName.c_str()) << " ] ";
+		if (c->GetZoneID() == i.ZoneID) {
+			ss << " [ " << i.ZoneName.c_str() << " ] ";
+		}
+		else {
+			ss << " [ " << c->CreateSayLink(StringFormat("#teleport %s", i.ZoneName.c_str()).c_str(), i.ZoneName.c_str()) << " ] ";
+		}
 	}
 
 	c->Message(0, ss.str().c_str());
