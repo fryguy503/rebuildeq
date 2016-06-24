@@ -1,8 +1,8 @@
 +++
-banner = "post/images/site.jpg"
+banner = "post/images/site.png"
 date = "2016-06-02T01:19:18-07:00"
 description = "Beneficial Heals Self Target"
-images = ["post/images/site.jpg"]
+images = ["post/images/site.png"]
 menu = ""
 tags = ["rogue"]
 title = "First Rogue Pass"

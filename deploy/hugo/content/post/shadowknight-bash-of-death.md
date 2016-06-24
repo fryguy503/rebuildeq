@@ -1,9 +1,9 @@
 +++
-banner = "post/images/site.jpg"
+banner = "post/images/site.png"
 categories = ["changelog"]
 date = "2016-06-12T01:19:18-07:00"
 description = "Shadowknight Bash of Death"
-images = ["post/images/site.jpg"]
+images = ["post/images/site.png"]
 menu = ""
 tags = ["shadowknight"]
 title = "Shadowknight Bash of Death"

@@ -1,8 +1,8 @@
 +++
-banner = "post/images/site.jpg"
+banner = "post/images/site.png"
 date = "2016-06-09T01:19:18-07:00"
 description = "Druid Builds Introduced"
-images = ["post/images/site.jpg"]
+images = ["post/images/site.png"]
 menu = ""
 tags = ["druid"]
 title = "Druid Builds Introduced"

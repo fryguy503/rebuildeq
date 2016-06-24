@@ -1,8 +1,8 @@
 +++
-banner = "post/images/site.jpg"
+banner = "post/images/site.png"
 date = "2016-06-11T01:19:18-07:00"
 description = "Artifact Merchants Now Sell"
-images = ["post/images/site.jpg"]
+images = ["post/images/site.png"]
 menu = ""
 tags = ["artifact"]
 title = "Artifact Merchants Now Sell"

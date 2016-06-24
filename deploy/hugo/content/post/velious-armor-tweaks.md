@@ -1,9 +1,9 @@
 +++
-banner = "post/images/site.jpg"
+banner = "post/images/site.png"
 categories = ["changelog"]
 date = "2016-06-13T01:19:18-07:00"
 description = "Velious Armor Tweaks"
-images = ["post/images/site.jpg"]
+images = ["post/images/site.png"]
 menu = ""
 tags = ["armor"]
 title = "Velious Armor Tweaks"

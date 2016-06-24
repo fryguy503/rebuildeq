@@ -1,8 +1,8 @@
 +++
-banner = "post/images/site.jpg"
+banner = "post/images/site.png"
 date = "2016-06-01T01:19:18-07:00"
 description = "Daily Login Reward Added"
-images = ["post/images/site.jpg"]
+images = ["post/images/site.png"]
 menu = ""
 tags = ["encounter"]
 title = "Daily Login Reward Added"

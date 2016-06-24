@@ -1,9 +1,9 @@
 +++
-banner = "post/images/site.jpg"
+banner = "post/images/site.png"
 categories = ["changelog"]
 date = "2016-06-04T01:19:18-07:00"
 description = "Artifact Merchants Now Sell"
-images = ["post/images/site.jpg"]
+images = ["post/images/site.png"]
 menu = ""
 tags = ["rogue"]
 title = "Rogue Icons Added"

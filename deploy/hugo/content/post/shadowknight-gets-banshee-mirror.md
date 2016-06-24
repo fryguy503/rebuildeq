@@ -1,9 +1,9 @@
 +++
-banner = "post/images/site.jpg"
+banner = "post/images/site.png"
 categories = ["changelog"]
 date = "2016-06-03T01:19:18-07:00"
 description = "Shadowknights Get Banshee Mirror"
-images = ["post/images/site.jpg"]
+images = ["post/images/site.png"]
 menu = ""
 tags = ["rogue"]
 title = "Shadowknight Gets Banshee Mirror"
