@@ -1,11 +1,11 @@
 
 
 +++
-banner = "post/images/site.png"
+banner = "post/images/rogue-skills.png"
 categories = ["changelog"]
 date = "2016-06-16T01:19:18-07:00"
 description = "Rogue Skills Added"
-images = ["post/images/site.png"]
+images = ["post/images/rogue-skills.png"]
 menu = ""
 tags = ["rogue"]
 title = "Rogue Skills"

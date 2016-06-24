@@ -1,9 +1,9 @@
 +++
-banner = "post/images/site.png"
+banner = "post/images/rogue-deceiver.png"
 categories = ["changelog"]
 date = "2016-06-17T01:19:18-07:00"
 description = "Rogue Deceiver Builds Added"
-images = ["post/images/site.png"]
+images = ["post/images/rogue-deceiver.png"]
 menu = ""
 tags = ["rogue"]
 title = "Rogue Deceiver"

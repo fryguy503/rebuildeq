@@ -1,8 +1,8 @@
 +++
-banner = "post/images/site.png"
+banner = "post/images/card-distiller.png"
 date = "2016-06-19T01:19:18-07:00"
 description = "Card Distiller can now be purchased"
-images = ["post/images/site.png"]
+images = ["post/images/card-distiller.png"]
 menu = ""
 tags = ["card"]
 title = "Card Distiller Added"

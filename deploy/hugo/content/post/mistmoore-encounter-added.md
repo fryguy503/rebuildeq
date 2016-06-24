@@ -1,9 +1,9 @@
 +++
-banner = "post/images/site.png"
+banner = "post/images/mistmoore.png"
 categories = ["changelog"]
 date = "2016-06-15T01:19:18-07:00"
 description = "Mistmoore encounter added"
-images = ["post/images/site.png"]
+images = ["post/images/mistmoore.png"]
 menu = ""
 tags = ["encounter"]
 title = "Mistmoore Encounter Added"
