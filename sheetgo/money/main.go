@@ -23,25 +23,28 @@ var srv *sheets.Service
 var db *sqlx.DB
 
 func main() {
-
-	fmt.Println("init")
+	//get config
 	config, err := eqemuconfig.GetConfig()
 	if err != nil {
 		fmt.Println("Error getting config:", err.Error())
 		return
 	}
 
+	//connect to db
 	db, err = connectDB(config)
 	if err != nil {
 		fmt.Println("Error connecting to DB:", err.Error())
 		return
 	}
 
+	//prepare google sheet service
 	srv, err = sheet.NewService()
 	if err != nil {
 		fmt.Println("error starting service", err.Error())
 		return
 	}
+
+	//get the first empty row in A2 column
 	resp, err := srv.Spreadsheets.Values.Get(sheetId, "Money!A2:A366").Do()
 	if err != nil {
 		fmt.Println("Unable to get data:", err.Error())
@@ -58,6 +61,8 @@ func main() {
 			break
 		}
 	}
+
+	//prep pages
 	grandTotalMoney := 0
 	valueRange := &sheets.ValueRange{
 		MajorDimension: "ROWS",
@@ -65,6 +70,7 @@ func main() {
 		//Range:          "B4",
 	}
 
+	//get ranges of levels
 	row := 2
 	for i := 5; i < 61; i = i + 5 {
 		newMoney := getMoneyTotal((i - 4), i)
@@ -74,8 +80,10 @@ func main() {
 		grandTotalMoney += newMoney
 		row++
 	}
+	//upgrade grand total line
 	valueRange.Values[0][1] = grandTotalMoney
 
+	//update sheet
 	_, err = srv.Spreadsheets.Values.Update(sheetId, fmt.Sprintf("A%d", newIndex), valueRange).ValueInputOption("USER_ENTERED").Do()
 	if err != nil {
 		fmt.Println("Error updating:", err.Error())
