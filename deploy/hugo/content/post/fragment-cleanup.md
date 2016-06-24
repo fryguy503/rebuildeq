@@ -1,8 +1,8 @@
 +++
-banner = "post/images/site.png"
+banner = "post/images/newcon.png"
 date = "2016-06-20T01:19:18-07:00"
 description = "Fragment and Teleport Cleanups"
-images = ["post/images/site.png"]
+images = ["post/images/newcon.png"]
 menu = ""
 tags = ["fragment", "teleport", "card"]
 title = "Fragment Cleanup"
