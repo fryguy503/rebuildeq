@@ -416,8 +416,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH);
 							if ((spell_id == 2718 || spell_id == 1471 || spell_id == 359) &&
 								rank > 0) {
-								int mana_amount = (int)(dmg * 0.05f * rank);
-								if (dmg > 0 && mana_amount < rank) mana_amount = rank;
+								int mana_amount = -dmg * 0.05f * rank;
+								if (mana_amount < rank) mana_amount = rank;
 								caster->Message(MT_NonMelee, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}							
