@@ -1,7 +1,7 @@
 +++
 banner = "post/images/squire-lives.png"
 categories = ["changelog"]
-date = "2016-06-12T24:19:18-07:00"
+date = "2016-06-24T01:19:18-07:00"
 description = "The squire lives trakanon fight, only to find a new death."
 images = ["post/images/squire-lives.png"]
 menu = ""
