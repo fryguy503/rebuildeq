@@ -332,7 +332,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								static const float BaseDamageBonus = 0.25f;		// 25% per rank
 
 								int bonusDamage = rank * BaseDamageBonus * dmg;
-								if (bonusDamage < 1) bonusDamage = 1;
 								casterClient->Message(MT_NonMelee, "Chosen %u added %i bonus damage.", rank, -bonusDamage);
 
 								dmg -= bonusDamage;
