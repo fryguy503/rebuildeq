@@ -3561,9 +3561,10 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 		
 		if (IsClient() && attacker && attacker->IsNPC()) { //If the attacked player is in a group, and being attacked by an NPC
 
-			uint32 heal_amount = (uint32)(GetMaxHP() * rank * 0.01f) + (uint32)(40 * rank);
+			uint32 heal_amount;
 
 			rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BANSHEESMIRROR);
+			heal_amount = (uint32)(GetMaxHP() * rank * 0.01f) + (uint32)(40 * rank);
 			if (rank > 0 && 
 				GetTarget() == attacker &&
 				damage > (heal_amount / 4) &&
@@ -3573,6 +3574,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			}
 
 			rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_WARDOFTUNARE);
+			heal_amount = (uint32)(GetMaxHP() * rank * 0.01f) + (uint32)(40 * rank);
 			if (rank > 0 && 
 				GetTarget() == attacker &&
 				damage > (heal_amount / 4) &&
