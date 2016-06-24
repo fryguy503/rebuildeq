@@ -1,8 +1,8 @@
 +++
-banner = "post/images/site.png"
+banner = "post/images/ward-nerf.png"
 date = "2016-06-21T01:19:18-07:00"
 description = "Ward of Tunare Nerfed"
-images = ["post/images/site.png"]
+images = ["post/images/ward-nerf.png"]
 menu = ""
 tags = ["encounter", "site", "eqcleanup"]
 title = "Ward of Tunare Nerfed"
