@@ -1,6 +1,5 @@
 {include file="../_header.tpl"}
 
-<div id="intro">
  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
 <script src="/js/builds/skillManager.js"></script>
 	<link href="/css/builds/builds.css" rel="stylesheet" type="text/css">
@@ -643,7 +642,6 @@
 			
 		</div>
 	  </div>
-  </div>
 </section>
 </div>
 {*include file="../_footer.tpl"*}
