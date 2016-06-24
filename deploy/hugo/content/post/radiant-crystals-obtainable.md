@@ -1,7 +1,7 @@
 +++
 banner = "post/images/radiant-crystals.png"
 categories = ["changelog"]
-date = "2016-06-07T01:19:18-07:00"
+date = "2016-06-14T01:19:18-07:00"
 description = "Radiant Crystals Obtainable"
 images = ["post/images/radiant-crystals.png"]
 menu = ""
