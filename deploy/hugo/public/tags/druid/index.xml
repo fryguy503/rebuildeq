@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Druid on RebuildEQ</title>
+    <link>/changelog/tags/druid/</link>
+    <description>Recent content in Druid on RebuildEQ</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 09 Jun 2016 01:19:18 -0700</lastBuildDate>
+    <atom:link href="/changelog/tags/druid/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Druid Builds Introduced</title>
+      <link>/changelog/2016/06/09/druid-builds-introduced</link>
+      <pubDate>Thu, 09 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/09/druid-builds-introduced</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Druid is now in! Note druid is still very touchy and I&amp;rsquo;ll be doing more changes tomorrow night.&lt;/li&gt;
+&lt;li&gt;Exp Loss starts at level 10, where before it was level 5&lt;/li&gt;
+&lt;li&gt;Dance of Blades and Cacophony are no longer usable after you reset them.&lt;/li&gt;
+&lt;li&gt;Froglok encounter is now more rare to happen.&lt;/li&gt;
+&lt;li&gt;Veksar, Kurn, and Thurgadinb have safer safe spots.&lt;/li&gt;
+&lt;li&gt;Shadowknight Blood Oath healing reduction was removed.&lt;/li&gt;
+&lt;li&gt;Veksar, Cazic Thule, Nurga, Droga, Jaggedpine, Paw, ChardokC, SolDungc is now disabled. Until a rebalance happens, it&amp;rsquo;s too powerful.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

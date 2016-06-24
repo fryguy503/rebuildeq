@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rogue on RebuildEQ</title>
+    <link>/changelog/tags/rogue/</link>
+    <description>Recent content in Rogue on RebuildEQ</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 17 Jun 2016 01:19:18 -0700</lastBuildDate>
+    <atom:link href="/changelog/tags/rogue/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Rogue Deceiver</title>
+      <link>/changelog/2016/06/17/rogue-deceiver</link>
+      <pubDate>Fri, 17 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/17/rogue-deceiver</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Fixed Revive spells. (It was due to the self target beneficial logic).&lt;/li&gt;
+&lt;li&gt;Rogue now have the build Sleight of Hand.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Jarring Stab.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Confuse.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Gangster&amp;rsquo;s Paradise.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Duelist.&lt;/li&gt;
+&lt;li&gt;Shaman&amp;rsquo;s Spiritual Healing should now also affect Torpor/Stoicism.&lt;/li&gt;
+&lt;li&gt;Shaman duration build skills were worked on.&lt;/li&gt;
+&lt;li&gt;Druid Nature&amp;rsquo;s Whisper now always benefits the druid as well as the target when it heals.&lt;/li&gt;
+&lt;li&gt;Aggro mechanic for group, while most dislike, was significantly nerfed for player&amp;rsquo;s benefit. Aggro should not share to group until the mob is &amp;lt;90% hp, and only with players within 150m range of the mob.&lt;/li&gt;
+&lt;li&gt;Fear on players no longer lasts longer than 1 tick (6 seconds).&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rogue Skills</title>
+      <link>/changelog/2016/06/16/rogue-skills</link>
+      <pubDate>Thu, 16 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/16/rogue-skills</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Rotten Core now has a new description, revamp, and should be working better.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Killing Spree, counters are added on each mob kill you contribute to.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Sneak Attack.&lt;/li&gt;
+&lt;li&gt;NPC OOC Regen changed from 1x to 10x. (They recover health a lot faster)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rogue Icons Added</title>
+      <link>/changelog/2016/06/04/rogue-icons-added</link>
+      <pubDate>Sat, 04 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/04/rogue-icons-added</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Certain encounters will no longer spawn in innothule if the model isn&amp;rsquo;t supported.&lt;/li&gt;
+&lt;li&gt;Rogue skills now have better icons.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shadowknight Gets Banshee Mirror</title>
+      <link>/changelog/2016/06/03/shadowknight-gets-banshee-mirror</link>
+      <pubDate>Fri, 03 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/03/shadowknight-gets-banshee-mirror</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Summon Dead now makes a pet properly changed visually.&lt;/li&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Banshee&amp;rsquo;s Mirror now similarly to Ward of Tunare.&lt;/li&gt;
+&lt;li&gt;Disabled teleporting to post-velious zones, like no more PoK access.&lt;/li&gt;
+&lt;li&gt;Paladin&amp;rsquo;s Hand of Piety now costs 5% of paladin&amp;rsquo;s max mana to cast. (Before it was free.)&lt;/li&gt;
+&lt;li&gt;Boosted Ghoulbane.&lt;/li&gt;
+&lt;li&gt;Chosen should be more accurate.&lt;/li&gt;
+&lt;li&gt;Cleaned up text about the new epic click descriptions.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>First Rogue Pass</title>
+      <link>/changelog/2016/06/02/first-rogue-pass</link>
+      <pubDate>Thu, 02 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/02/first-rogue-pass</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;I did a major code change that may have side effects. If you heal or cast any beneficial effects on an NPC not owned by a player, the spell will instead be applied to you. This means paladins can heal themselves while keeping their enemy targeted.&lt;/li&gt;
+&lt;li&gt;Fleeting Fury is now a self only buff, even if the spell gem is red.&lt;/li&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Aura of Vampirism renamed to Reaper&amp;rsquo;s Strike. It should work now!&lt;/li&gt;
+&lt;li&gt;Reduced daily login bonus cooldown from 24 hours to 20 hours.&lt;/li&gt;
+&lt;li&gt;Moved Bard&amp;rsquo;s Wish from Virtuoso (16) to Swordsinger (34) final skill.&lt;/li&gt;
+&lt;li&gt;Removed Bard&amp;rsquo;s Double Attack build skill&lt;/li&gt;
+&lt;li&gt;Added Bard&amp;rsquo;s Kinsong to Virtuoso final skill.&lt;/li&gt;
+&lt;li&gt;Jonathon&amp;rsquo;s Whistling Warsong build bonus now also grants a puma-like DD proc.&lt;/li&gt;
+&lt;li&gt;Paladin&amp;rsquo;s Resist temptation changed to Flames of Redemption&lt;/li&gt;
+&lt;li&gt;Shaman&amp;rsquo;s Fateseer&amp;rsquo;s Boon renamed from &amp;ldquo;Fateseelers&amp;rdquo; and fixed.&lt;/li&gt;
+&lt;li&gt;Rogues will now autotrain Backstab, Double Attack, and a few other missed skills when they become available.&lt;/li&gt;
+&lt;li&gt;Rogue has the new build skill, Appraisal&lt;/li&gt;
+&lt;li&gt;Rogue has the new build skill, Thief&amp;rsquo;s Eyes&lt;/li&gt;
+&lt;li&gt;Rogue has the new build skill, Sinister Strikes&lt;/li&gt;
+&lt;li&gt;Rogue has the new build skill, Focused Stab&lt;/li&gt;
+&lt;li&gt;Rogue has the new build skill, Vital Organs&lt;/li&gt;
+&lt;li&gt;Rogue has the new build skill, Assassin&amp;rsquo;s Taint&lt;/li&gt;
+&lt;li&gt;Doubled chances of Bash of Death procing.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

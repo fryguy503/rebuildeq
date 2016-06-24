@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Armor on RebuildEQ</title>
+    <link>/changelog/tags/armor/</link>
+    <description>Recent content in Armor on RebuildEQ</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 13 Jun 2016 01:19:18 -0700</lastBuildDate>
+    <atom:link href="/changelog/tags/armor/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Velious Armor Tweaks</title>
+      <link>/changelog/2016/06/13/velious-armor-tweaks</link>
+      <pubDate>Mon, 13 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/13/velious-armor-tweaks</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Corroded Armor will become non-lore, as well ancient tarnished etc. However, I plan to remove MQ-ability of them. Part of the experience is farming the items with allies for when it drops, not farming massive loads of it and gearing the entire server. &lt;strong&gt;Once we confirm a fix on Heirlooms, I plan to make them tradable to your alts on your account via shared bank. I won&amp;rsquo;t enable this until some eqemu/master bugs are addressed.&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Fixed Typo with Jonathon&amp;rsquo;s Whistle (should be Jonthon)&lt;/li&gt;
+&lt;li&gt;Jonthon&amp;rsquo;s Whistle will now work with all 3 jonthon songs, instead of just whistling warsong.&lt;/li&gt;
+&lt;li&gt;Removed Special Abilities from encounter mobs.&lt;/li&gt;
+&lt;li&gt;Howling Stones (Charassis) no longer requires key to enter. Also, zone in is now safer so you can #return.&lt;/li&gt;
+&lt;li&gt;Rogue&amp;rsquo;s Vital Organs now has a 10*rank% chance to trigger the damage&lt;/li&gt;
+&lt;li&gt;Skyshrine to Cobalt Scar no longer requires a key.&lt;/li&gt;
+&lt;li&gt;Level 60&amp;rsquo;s who lose EXP from pool will now see it clearer.&lt;/li&gt;
+&lt;li&gt;Level 60&amp;rsquo;s when they die should now be able to use #return&lt;/li&gt;
+&lt;li&gt;Siren&amp;rsquo;s Grotto safe point is now on Cobalt Scar side, and is more safe.&lt;/li&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Blood Oath reduced from 10% per rank to 5% per rank. (After healing effectiveness was removed, it was too good).&lt;/li&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Bash of Death was way too frequently procing with the new damage, nerfed from 4*rank % to rank %. Damage is still left in tact.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

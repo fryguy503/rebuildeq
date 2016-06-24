@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Shadowknight on RebuildEQ</title>
+    <link>/changelog/tags/shadowknight/</link>
+    <description>Recent content in Shadowknight on RebuildEQ</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 12 Jun 2016 01:19:18 -0700</lastBuildDate>
+    <atom:link href="/changelog/tags/shadowknight/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Shadowknight Bash of Death</title>
+      <link>/changelog/2016/06/12/shadowknight-bash-of-death</link>
+      <pubDate>Sun, 12 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/12/shadowknight-bash-of-death</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Fixed a bug that was causing zone crashes if you had a heal over time on you after zoning.&lt;/li&gt;
+&lt;li&gt;Did a large pass of removing out of era items from drops. They may still linger, obviously #issue out of era items.&lt;/li&gt;
+&lt;li&gt;Druid&amp;rsquo;s Nature Boon was nerfed, complete healing every tick was not intended. :P Tweaked the regen per tick on NB to be level * 2, instead of level, with an efficiency based on rank.&lt;/li&gt;
+&lt;li&gt;Rogue&amp;rsquo;s Appraisal, Bard&amp;rsquo;s Jonathon&amp;rsquo;s Whistle, and Shaman&amp;rsquo;s Fury all were slightly reduced proc rate and some other sanity checks.&lt;/li&gt;
+&lt;li&gt;Shadow Knight&amp;rsquo;s Bash of Death&amp;rsquo;s trigger rate went from 10% max rank to 20% max rank.&lt;/li&gt;
+&lt;li&gt;Shadow Knight&amp;rsquo;s Festering Spear got a quad dmg to bonus low chance perk at max rank.&lt;/li&gt;
+&lt;li&gt;Fixed encounter MR/DR/CR/FR/PR resist formula (Troll Guards shouldn&amp;rsquo;t be as difficult)&lt;/li&gt;
+&lt;li&gt;Fixed encounter AC formula (Troll Guards shouldn&amp;rsquo;t be as difficult)&lt;/li&gt;
+&lt;li&gt;Bard&amp;rsquo;s Shield of Notes and Song of Stone should now be unusable when reset.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

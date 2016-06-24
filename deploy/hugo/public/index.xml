@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>RebuildEQ</title>
+    <link>/changelog/</link>
+    <description>Recent content on RebuildEQ</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 20 Jun 2016 01:19:18 -0700</lastBuildDate>
+    <atom:link href="/changelog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Fragment Cleanup</title>
+      <link>/changelog/2016/06/20/fragment-cleanup</link>
+      <pubDate>Mon, 20 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/20/fragment-cleanup</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Added Plane of Hate and Plane of Sky as #teleport destinations. They only appear as options after you collect the proper stone reagents wizards normally needed to teleport there, and will consume reagents on use. #return currently works in the planes however.&lt;/li&gt;
+&lt;li&gt;Added a new #toggle command with 3 handy options.&lt;/li&gt;
+&lt;li&gt;Improved drop rate of cards. I still need to add functionality to them, KEEP them until then.&lt;/li&gt;
+&lt;li&gt;A fragment can drop in Sebilis, however it is much rarer than other fragments.&lt;/li&gt;
+&lt;li&gt;A fragment can drop in Lavastorm.&lt;/li&gt;
+&lt;li&gt;A fragment can drop in Dreadlands. It is no longer automatically unlocked at level 10.&lt;/li&gt;
+&lt;li&gt;#rez, #return, and #buff are more expensive now at 50+, #teleport is still same price.&lt;/li&gt;
+&lt;li&gt;When mobs flee, they should be a lot easier to hit.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Card Distiller Added</title>
+      <link>/changelog/2016/06/19/card-distiller-added</link>
+      <pubDate>Sun, 19 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/19/card-distiller-added</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Card Distiller can be purchased from a Shady Swashbuckler to remove cards from augments.&lt;/li&gt;
+&lt;li&gt;Magical Card now is usable and has been formed properly.&lt;/li&gt;
+&lt;li&gt;When you enter a zone that has fragments to unlock teleports and you have not yet collected it, you now get a message informing you.&lt;/li&gt;
+&lt;li&gt;Fixed a bug with Nature&amp;rsquo;s boon where you could click it off prematurely.&lt;/li&gt;
+&lt;li&gt;Origin binders in thurg/kael/skyshrine should now actually bind you properly.&lt;/li&gt;
+&lt;li&gt;Did another pass of out of era item cleanup.&lt;/li&gt;
+&lt;li&gt;Rogue&amp;rsquo;s Sneak Attack is usable from 70%+, instead of 90%+&lt;/li&gt;
+&lt;li&gt;The water portion of the Siren&amp;rsquo;s Grotto run is now significantly easier, invisibility is still needed for the tunnel portion after.&lt;/li&gt;
+&lt;li&gt;Duelist formula will be getting many tweaks, it&amp;rsquo;s a hard skill to figure out, but if the mob is &amp;lt; 7 levels of you, evasion rate should be better now.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Fragment Added</title>
+      <link>/changelog/2016/06/18/fragment-added</link>
+      <pubDate>Sat, 18 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/18/fragment-added</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;New #teleport destinations are in! Looting a fragment (zone wide random drop) unlocks the #teleport point.&lt;/li&gt;
+&lt;li&gt;Kodiaks are less often an encounter.&lt;/li&gt;
+&lt;li&gt;Fixed a bug with the Nature&amp;rsquo;s Whisper change.&lt;/li&gt;
+&lt;li&gt;Shaman&amp;rsquo;s Healing Spirit was reduced from 100% to 75% at max, and no longer works with Fateseer&amp;rsquo;s Boon&lt;/li&gt;
+&lt;li&gt;Added Rogue build Untapped Potential.&lt;/li&gt;
+&lt;li&gt;Added Rogue build Moss Stone.&lt;/li&gt;
+&lt;li&gt;Fixed a zone crash related to Jarring Stab&lt;/li&gt;
+&lt;li&gt;Did a pass of fixing Thurgadin/Kael/Skyshrine armor quests, let&amp;rsquo;s see how they look.&lt;/li&gt;
+&lt;li&gt;Druid&amp;rsquo;s Nature&amp;rsquo;s Boon and Convergence of Spirits now give 5% bonus healing per rank each, making 50% max.&lt;/li&gt;
+&lt;li&gt;Druid&amp;rsquo;s Spiritual Awakening now also has a puma-like proc.&lt;/li&gt;
+&lt;li&gt;Shaman&amp;rsquo;s Stoicism and Torpor no longer snare the target. (I plan to revamp the Torpor build skill that does this).&lt;/li&gt;
+&lt;li&gt;Skyshrine Origin Binder is more obvious&lt;/li&gt;
+&lt;li&gt;Paladin&amp;rsquo;s Hand of Piety mana cost reduced from 5% to 1% max mana.&lt;/li&gt;
+&lt;li&gt;Bard&amp;rsquo;s Fading Memories has a new mana formula, not heavily tested yet.&lt;/li&gt;
+&lt;li&gt;Shaman&amp;rsquo;s Ancient Wrath had some fixes applies to it.&lt;/li&gt;
+&lt;li&gt;Shaman&amp;rsquo;s pets default sizes are now more reasonable.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rogue Deceiver</title>
+      <link>/changelog/2016/06/17/rogue-deceiver</link>
+      <pubDate>Fri, 17 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/17/rogue-deceiver</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Fixed Revive spells. (It was due to the self target beneficial logic).&lt;/li&gt;
+&lt;li&gt;Rogue now have the build Sleight of Hand.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Jarring Stab.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Confuse.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Gangster&amp;rsquo;s Paradise.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Duelist.&lt;/li&gt;
+&lt;li&gt;Shaman&amp;rsquo;s Spiritual Healing should now also affect Torpor/Stoicism.&lt;/li&gt;
+&lt;li&gt;Shaman duration build skills were worked on.&lt;/li&gt;
+&lt;li&gt;Druid Nature&amp;rsquo;s Whisper now always benefits the druid as well as the target when it heals.&lt;/li&gt;
+&lt;li&gt;Aggro mechanic for group, while most dislike, was significantly nerfed for player&amp;rsquo;s benefit. Aggro should not share to group until the mob is &amp;lt;90% hp, and only with players within 150m range of the mob.&lt;/li&gt;
+&lt;li&gt;Fear on players no longer lasts longer than 1 tick (6 seconds).&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rogue Skills</title>
+      <link>/changelog/2016/06/16/rogue-skills</link>
+      <pubDate>Thu, 16 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/16/rogue-skills</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Rotten Core now has a new description, revamp, and should be working better.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Killing Spree, counters are added on each mob kill you contribute to.&lt;/li&gt;
+&lt;li&gt;Rogues now have the build Sneak Attack.&lt;/li&gt;
+&lt;li&gt;NPC OOC Regen changed from 1x to 10x. (They recover health a lot faster)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Mistmoore Encounter Added</title>
+      <link>/changelog/2016/06/15/mistmoore-encounter-added</link>
+      <pubDate>Wed, 15 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/15/mistmoore-encounter-added</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Added mistmoore encounter.&lt;/li&gt;
+&lt;li&gt;Added Druid Icons&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Velious Armor Tweaks</title>
+      <link>/changelog/2016/06/13/velious-armor-tweaks</link>
+      <pubDate>Mon, 13 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/13/velious-armor-tweaks</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Corroded Armor will become non-lore, as well ancient tarnished etc. However, I plan to remove MQ-ability of them. Part of the experience is farming the items with allies for when it drops, not farming massive loads of it and gearing the entire server. &lt;strong&gt;Once we confirm a fix on Heirlooms, I plan to make them tradable to your alts on your account via shared bank. I won&amp;rsquo;t enable this until some eqemu/master bugs are addressed.&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Fixed Typo with Jonathon&amp;rsquo;s Whistle (should be Jonthon)&lt;/li&gt;
+&lt;li&gt;Jonthon&amp;rsquo;s Whistle will now work with all 3 jonthon songs, instead of just whistling warsong.&lt;/li&gt;
+&lt;li&gt;Removed Special Abilities from encounter mobs.&lt;/li&gt;
+&lt;li&gt;Howling Stones (Charassis) no longer requires key to enter. Also, zone in is now safer so you can #return.&lt;/li&gt;
+&lt;li&gt;Rogue&amp;rsquo;s Vital Organs now has a 10*rank% chance to trigger the damage&lt;/li&gt;
+&lt;li&gt;Skyshrine to Cobalt Scar no longer requires a key.&lt;/li&gt;
+&lt;li&gt;Level 60&amp;rsquo;s who lose EXP from pool will now see it clearer.&lt;/li&gt;
+&lt;li&gt;Level 60&amp;rsquo;s when they die should now be able to use #return&lt;/li&gt;
+&lt;li&gt;Siren&amp;rsquo;s Grotto safe point is now on Cobalt Scar side, and is more safe.&lt;/li&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Blood Oath reduced from 10% per rank to 5% per rank. (After healing effectiveness was removed, it was too good).&lt;/li&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Bash of Death was way too frequently procing with the new damage, nerfed from 4*rank % to rank %. Damage is still left in tact.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shadowknight Bash of Death</title>
+      <link>/changelog/2016/06/12/shadowknight-bash-of-death</link>
+      <pubDate>Sun, 12 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/12/shadowknight-bash-of-death</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Fixed a bug that was causing zone crashes if you had a heal over time on you after zoning.&lt;/li&gt;
+&lt;li&gt;Did a large pass of removing out of era items from drops. They may still linger, obviously #issue out of era items.&lt;/li&gt;
+&lt;li&gt;Druid&amp;rsquo;s Nature Boon was nerfed, complete healing every tick was not intended. :P Tweaked the regen per tick on NB to be level * 2, instead of level, with an efficiency based on rank.&lt;/li&gt;
+&lt;li&gt;Rogue&amp;rsquo;s Appraisal, Bard&amp;rsquo;s Jonathon&amp;rsquo;s Whistle, and Shaman&amp;rsquo;s Fury all were slightly reduced proc rate and some other sanity checks.&lt;/li&gt;
+&lt;li&gt;Shadow Knight&amp;rsquo;s Bash of Death&amp;rsquo;s trigger rate went from 10% max rank to 20% max rank.&lt;/li&gt;
+&lt;li&gt;Shadow Knight&amp;rsquo;s Festering Spear got a quad dmg to bonus low chance perk at max rank.&lt;/li&gt;
+&lt;li&gt;Fixed encounter MR/DR/CR/FR/PR resist formula (Troll Guards shouldn&amp;rsquo;t be as difficult)&lt;/li&gt;
+&lt;li&gt;Fixed encounter AC formula (Troll Guards shouldn&amp;rsquo;t be as difficult)&lt;/li&gt;
+&lt;li&gt;Bard&amp;rsquo;s Shield of Notes and Song of Stone should now be unusable when reset.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Artifact Merchants Now Sell</title>
+      <link>/changelog/2016/06/11/artifact-merchants-now-sell</link>
+      <pubDate>Sat, 11 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/11/artifact-merchants-now-sell</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Artifact Merchant can now BUY/SELL. Enjoy!&lt;/li&gt;
+&lt;li&gt;The Hole no longer needs the old dusty key to get in (well, in theory, this isn&amp;rsquo;t fully tested).&lt;/li&gt;
+&lt;li&gt;Druid&amp;rsquo;s Spirit of the Wood was adjusted so duration is caster&amp;rsquo;s level * 6 ticks, e.g. at level 60 it lasts 60 minutes.&lt;/li&gt;
+&lt;li&gt;Druid&amp;rsquo;s Spirit of the Wood when maxxed also casts SoW.&lt;/li&gt;
+&lt;li&gt;Druid&amp;rsquo;s Covenant of Spirits mana cost reduced. CoS is now 2% instead of 5% mana.&lt;/li&gt;
+&lt;li&gt;Druid&amp;rsquo;s Nature&amp;rsquo;s Boon is now a 20% max hp heal per rank instead of 5%.&lt;/li&gt;
+&lt;li&gt;Druid&amp;rsquo;s Nature&amp;rsquo;s Whisper increased mana from 1% to 2% per rank.&lt;/li&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Bash of Death has had a significant damage boost. Formula is something like, base HT + random(10,58) * rank * Level&lt;/li&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Blood Oath now grants 2 hand bash at rank 5.&lt;/li&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s blood oath works with 2 hand piercers now.&lt;/li&gt;
+&lt;li&gt;Shadowed Man Card drops off Dervishes as well, such as snow dervish in iceclad. (They&amp;rsquo;re invisible, right?)&lt;/li&gt;
+&lt;li&gt;Shaman&amp;rsquo;s Ancestral Aid is more in line with Spirit of the Wood, improving it.&lt;/li&gt;
+&lt;li&gt;Shaman&amp;rsquo;s Spirit of Speed now works.&lt;/li&gt;
+&lt;li&gt;Fixed any usage of &amp;ldquo;Eligable&amp;rdquo; to &amp;ldquo;Eligible&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Paladin&amp;rsquo;s Knight&amp;rsquo;s Advantage should work with 2 hand piercers now.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Encounter Cooldown Tweaks</title>
+      <link>/changelog/2016/06/10/encounter-cooldown-tweaks</link>
+      <pubDate>Fri, 10 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/10/encounter-cooldown-tweaks</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;When you create alts, encounters no longer are eligible until at least 24 hours.&lt;/li&gt;
+&lt;li&gt;Harmony is no longer flagged as beneficial, meaning it should work as intended.&lt;/li&gt;
+&lt;li&gt;Shaman&amp;rsquo;s Invis, Haste, and Slow spells are now available. The next time you level up you should get any previously missing spells.&lt;/li&gt;
+&lt;li&gt;Elunium now drops off 55+ mobs. Keep this rare item for future armor upgrades.&lt;/li&gt;
+&lt;li&gt;Druid offense line is now in.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Druid Builds Introduced</title>
+      <link>/changelog/2016/06/09/druid-builds-introduced</link>
+      <pubDate>Thu, 09 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/09/druid-builds-introduced</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Druid is now in! Note druid is still very touchy and I&amp;rsquo;ll be doing more changes tomorrow night.&lt;/li&gt;
+&lt;li&gt;Exp Loss starts at level 10, where before it was level 5&lt;/li&gt;
+&lt;li&gt;Dance of Blades and Cacophony are no longer usable after you reset them.&lt;/li&gt;
+&lt;li&gt;Froglok encounter is now more rare to happen.&lt;/li&gt;
+&lt;li&gt;Veksar, Kurn, and Thurgadinb have safer safe spots.&lt;/li&gt;
+&lt;li&gt;Shadowknight Blood Oath healing reduction was removed.&lt;/li&gt;
+&lt;li&gt;Veksar, Cazic Thule, Nurga, Droga, Jaggedpine, Paw, ChardokC, SolDungc is now disabled. Until a rebalance happens, it&amp;rsquo;s too powerful.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Discord OOC Chat Added</title>
+      <link>/changelog/2016/06/08/discord-ooc-chat-added</link>
+      <pubDate>Wed, 08 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/08/discord-ooc-chat-added</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Discord &amp;lt;&amp;gt; EQ chat is now available in the OOC channel.&lt;/li&gt;
+&lt;li&gt;#buff was nerfed for lower levels, boosted for higher levels. It now is in line with druid buffs of your level-ish. (DS at level 1 still, just not as powerful. Scales as you level). Duration is based on level as well.&lt;/li&gt;
+&lt;li&gt;#buff now buffs your pet, too!&lt;/li&gt;
+&lt;li&gt;Added experience system. At level 60+ I have code that lets excess EXP overflow into a buffer accessed via #exp. This is in preparation for the potion mechanic. It&amp;rsquo;s still very early testing state.&lt;/li&gt;
+&lt;li&gt;Fixed a visual glitch with Appraisal where the buff did not appear.&lt;/li&gt;
+&lt;li&gt;Bards have new updated icons for builds.&lt;/li&gt;
+&lt;li&gt;If you are set to AFK, encounters will no longer spawn for you until you return.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Origin Binders added to Kunark and Velious</title>
+      <link>/changelog/2016/06/07/origin-binders-added-to-kunark-and-velious</link>
+      <pubDate>Tue, 07 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/07/origin-binders-added-to-kunark-and-velious</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Overthere, Firiona Vie, Skyshrine, Kael, and Thurgadin are now rested EXP zones if your faction is &amp;gt; dubious.&lt;/li&gt;
+&lt;li&gt;Overthere, Firiona Vie, Skyshrine, Kael, and Thurgadin offer Origin Binding features near the banks if your faction &amp;gt; dubious.&lt;/li&gt;
+&lt;li&gt;Added a new command, #exp. This is for 60+.&lt;/li&gt;
+&lt;li&gt;Bard&amp;rsquo;s Jonathon&amp;rsquo;s Whistle had some typos in the build description (due to me copy pasting shaman description).&lt;/li&gt;
+&lt;li&gt;Encounters now respect factions of the encounter triggerer, e.g. if in east commons and you&amp;rsquo;re not glare+ to freeport guards, they will not be an encounter to fight.&lt;/li&gt;
+&lt;li&gt;Low level zombies, mummies, etc (lvl 24 and lower) no longer cast disease due to how detrimental it is with the convenience commands.&lt;/li&gt;
+&lt;li&gt;Pets also gain #buff effects.&lt;/li&gt;
+&lt;li&gt;#encounter now works as an alias for #encounters&lt;/li&gt;
+&lt;li&gt;#build now works as an alias for #builds&lt;/li&gt;
+&lt;li&gt;#experience now works as an alias for #exp&lt;/li&gt;
+&lt;li&gt;#rest now works as an alias for #rested&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Skillup Rate Doubled</title>
+      <link>/changelog/2016/06/06/skillup-rate-doubled</link>
+      <pubDate>Mon, 06 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/06/skillup-rate-doubled</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Skillup Rate changed from 100% to 200%.&lt;/li&gt;
+&lt;li&gt;Translocator Ionie at Nro docks now will assist players looking to adventure to Velious.&lt;/li&gt;
+&lt;li&gt;Shaman Cannibalization AA is no longer usable when the rank is reset.&lt;/li&gt;
+&lt;li&gt;Pets no longer persist after zoning if you no longer have the the build skill.&lt;/li&gt;
+&lt;li&gt;Pets have a minimum hp threshold, i need to test this more, be patient with them.&lt;/li&gt;
+&lt;li&gt;Pets poof now when you #builds reset&lt;/li&gt;
+&lt;li&gt;Fixed Named Spawns so they actually spawn if they had a fabled PH&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Goblin Card Added</title>
+      <link>/changelog/2016/06/05/goblin-card-added</link>
+      <pubDate>Sun, 05 Jun 2016 01:19:18 -0700</pubDate>
+      
+      <guid>/changelog/2016/06/05/goblin-card-added</guid>
+      <description>&lt;ul&gt;
+&lt;li&gt;Goblin Card is now a shrink clicky.&lt;/li&gt;
+&lt;li&gt;Orcs no longer will drop Goblin Cards.&lt;/li&gt;
+&lt;li&gt;Removed Trakanon Idol requirement for Sebilis access. Later I&amp;rsquo;ll write an alternative quest to obtain key since I don&amp;rsquo;t require players to have a tracker.&lt;/li&gt;
+&lt;li&gt;Added Shadowed Man Card. (Casts gather shadows). rarity is really rare, as a balancing aspect.&lt;/li&gt;
+&lt;li&gt;Shadowknight&amp;rsquo;s Siphon Death skill will also include Vampiric Embrace.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

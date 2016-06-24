@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>News on Xackery</title>
+    <link>http://xackery.com/tags/news/</link>
+    <description>Recent content in News on Xackery</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 23 Apr 2016 01:19:18 -0700</lastBuildDate>
+    <atom:link href="http://xackery.com/tags/news/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>New Xackery Is Now Up</title>
+      <link>http://xackery.com/2016/04/23/new-xackery-is-now-up</link>
+      <pubDate>Sat, 23 Apr 2016 01:19:18 -0700</pubDate>
+      
+      <guid>http://xackery.com/2016/04/23/new-xackery-is-now-up</guid>
+      <description>&lt;p&gt;Welcome to the new and improved xackery.com! This site will be changed more often and be more awesomer.&lt;/p&gt;
+
+&lt;p&gt;With all the new features added, it should make keeping interest easier.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,252 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:og="http://ogp.me/ns#" xmlns:fb="https://www.facebook.com/2008/fbml"><head>
+  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta property="og:title" content="Rogue">
+      <meta property="og:type" content="website">
+      <meta property="twitter:account_id" content="4777423195">
+      <meta itemprop="name" content="RebuildEQ">
+      <meta itemprop="description" content="Rebuild EQ - A private Everquest server">
+      <meta property="og:url" content="http://rebuildeq.com">
+      <meta property="og:image" content="http://rebuildeq.com/images/monograms/9.gif">
+      <meta property="og:site_name" content="RebuildEQ.com">
+      <meta property="og:description" content="Rogues are thieves who specialize in deception.<br> Their 3 styles focus on dealing damage, being an evasive tank, or stealing.">
+      <meta name="description" content="Rogues are thieves who specialize in deception.<br> Their 3 styles focus on dealing damage, being an evasive tank, or stealing.">
+      <meta name="author" content="Shin Noir, @rebuildeq">
+    <title>Rogue | RebuildEQ</title>
+    
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="../css/jquery-ui.theme.min.css">
+    
+    
+    
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    	<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
+    	<script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.2.0/respond.js"></script>
+    <![endif]-->
+    
+        
+        <!-- Favicon -->
+        <!--link rel="shortcut icon" href="/favicon.ico"-->
+        <!-- Template JS -->
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+        <!-- Page JS -->
+            </head>
+    
+    <body>
+      
+    
+        <nav class="navbar navbar-fixed-top navbar-bootsnipp animate">
+  <div class="container-fluid" style="background-color: #222222">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="../index.html" class="navbar-brand">RebuildEQ</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="nav-header">
+      <ul class="nav navbar-nav">
+        <li><a href="../about"><span class="glyphicon glyphicon-info-sign"></span> About</a></li>
+
+        <li><a href="../builds"><span class="glyphicon glyphicon-tasks"></span> Builds</a></li>
+      </ul>
+     
+      <ul class="nav navbar-nav navbar-right">
+     
+      <li><a href="http://rebuildeq.com/forum"><span class="glyphicon glyphicon-globe"></span> Forums</a></li>
+        <li><a href="../chat"><span class="glyphicon glyphicon-user"></span> Chat</a></li>
+        <li><a href="../updates"><span class="glyphicon glyphicon-bullhorn"></span> Updates</a></li>
+        <li><a href="../donate"><span class="glyphicon glyphicon-apple"></span> Donate</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+<script src="../js/builds/skillManager.js"></script>
+<link href="../css/builds/builds.css" rel="stylesheet" type="text/css">
+  <div class="container">
+
+	<div class="row" style="margin-top:60px;">
+
+		<div class="row">
+	        	<ul class="breadcrumb">
+	          		<li><a href="../builds">Builds</a></li>
+	          		<li class="active">Rogue</li>
+	          			        	</ul>
+	    </div>
+
+	    
+	    	     <div class="row">
+			<form class="well bs-component">
+				<div class="form-group">
+					<a href="bard"><img class="classicon" src="../images/classicons/brd.png"/></a>
+					<a href="cleric"><img class="classicon" src="../images/classicons/clr.png"/></a>
+					<a href="druid"><img class="classicon" src="../images/classicons/dru.png"/></a>
+					<a href="enchanter"><img class="classicon" src="../images/classicons/enc.png"/></a>
+					<a href="magician"><img class="classicon" src="../images/classicons/mag.png"/></a>
+					<a href="monk"><img class="classicon" src="../images/classicons/mnk.png"/></a>
+					<a href="necromancer"><img class="classicon" src="../images/classicons/nec.png"/></a>
+					<a href="paladin"><img class="classicon" src="../images/classicons/pal.png"/></a>
+					<a href="ranger"><img class="classicon" src="../images/classicons/rng.png"/></a>
+					<a href="rogue"><img class="classicon" src="../images/classicons/rog.png"/></a>
+					<a href="shadowknight"><img class="classicon" src="../images/classicons/shd.png"/></a>
+					<a href="shaman"><img class="classicon" src="../images/classicons/shm.png"/></a>
+					<a href="warrior"><img class="classicon" src="../images/classicons/war.png"/></a>
+					<a href="wizard"><img class="classicon" src="../images/classicons/wiz.png"/></a>
+		        </div>
+		    </form>
+		</div>
+
+	    <div class="row">
+			<form class="well bs-component">
+				<div class="form-group">
+				<p>
+		          <label class="control-label">Rogues are thieves who specialize in deception.<br> Their 3 styles focus on dealing damage, being an evasive tank, or stealing.</label><br>
+		         Required Level To Obtain: <span class="charLevel">0</span>
+		          </p>
+		        </div>
+		    </form>
+		</div>
+		
+  		<div class="row">
+			<form class="well bs-component">
+				<div class="form-group">
+		<img unselectable="on" class="portrait" src="../images/monograms/9.gif" style="left: 30%;margin-left: -30%;">
+		<div class="treeCollection">
+		<div class="treewrapper green">
+			<div class="bglayer gray"></div>
+			<div class="bglayer color" style="height: 80px;"></div>
+			<div class="tree" id="tree-1">
+				<div class="tier" data-level="0" data-invested="0" data-total="0">
+																									
+															
+														</div>
+				<div class="tier" data-level="1" data-invested="0" data-total="0">
+																				
+																
+																								</div>
+				<div class="tier" data-level="2" data-invested="0" data-total="0">
+																																																							
+				</div>
+				<div class="tier" data-level="3" data-invested="0" data-total="0">
+																																														
+				</div>
+				<div class="tier" data-level="4" data-invested="0" data-total="0">
+																																																	</div>
+				<div class="tier" data-level="5" data-invested="0" data-total="0">
+																																																		
+				</div>				
+				<div class="totalPoints">
+					<span class="totalPoints">0</span>
+				</div>
+				<legend>Assassin</legend>
+			</div>
+		</div>
+
+		<div class="treewrapper blue">
+			<div class="bglayer gray"></div>
+			<div class="bglayer color" style="height: 80px;"></div>
+			<div class="tree" id="tree-2">
+				<div class="tier" data-level="0" data-invested="0" data-total="0">
+																																																	</div>
+				<div class="tier" data-level="1" data-invested="0" data-total="0">
+																																																
+					
+				</div>
+				<div class="tier" data-level="2" data-invested="0" data-total="0">
+																																														
+				</div>
+				<div class="tier" data-level="3" data-invested="0" data-total="0">
+																																														
+				</div>
+				<div class="tier" data-level="4" data-invested="0" data-total="0">
+																																																	</div>
+				<div class="tier" data-level="5" data-invested="0" data-total="0">					
+																																																	</div>
+				<div class="column3 totalPoints">
+					<span class="totalPoints">0</span>
+				</div>
+				<legend>Deceiver</legend>
+			</div>
+		</div>
+
+		<div class="treewrapper red">
+			<div class="bglayer gray"></div>
+			<div class="bglayer color" style="height: 80px;"></div>
+			<div class="tree" id="tree-3" unselectable="on">
+				<div class="tier" data-level="0" data-invested="0" data-total="0">
+																																																	</div>
+				<div class="tier" data-level="1" data-invested="0" data-total="0">
+																																																	</div>
+				<div class="tier" data-level="2" data-invested="0" data-total="0">
+																																																	</div>
+				<div class="tier" data-level="3" data-invested="0" data-total="0">
+																																																	</div>
+				<div class="tier" data-level="4" data-invested="0" data-total="0">
+																																																	</div>
+				<div class="tier" data-level="5" data-invested="0" data-total="0">
+																																																	</div>
+				<div class="column3 totalPoints">
+					<span class="totalPoints">0</span>
+				</div>
+				<legend>Bandit</legend>
+			</div>
+		</div>
+		</div>
+
+
+		
+		<script type="text/javascript">
+		var classLevel = 60;
+		var isTest = true;
+		var session = "";
+						</script>
+		
+	</div>
+  </div>
+ </div>
+		    </form>
+		</div>
+
+        
+        
+        
+        
+        <!-- Template JS -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-72548849-1', 'auto');
+  ga('send', 'pageview');
+
+</script>        <!-- Page JS -->
+            </body>
+
+      <footer class="bs-footer" role="contentinfo">
+    <div class="container">
+  Everquest is a registered trademark of Daybreak Game Company LLC.
+  RebuildEQ.com is not associated or affiliated in any way with Daybreak Game Company LLC.
+  Except where otherwise noted, this site is licensed under a Creative Commons License.
+    </div>
+  </footer>
+
+</html>
+
