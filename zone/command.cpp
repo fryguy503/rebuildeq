@@ -4565,10 +4565,11 @@ void command_return(Client *c, const Seperator *sep) {
 	std::string displayCost;
 	uint64 cost = 0;
 	cost = (uint64)((float)(40 * (float)((float)c->GetLevel() / (float)60)) * 1000);
+
+	cost /= 2;	
 	if (c->GetLevel() >= 50) {
 		cost += (c->GetLevel() / 1.5f) * 1000;
 	}
-	cost /= 2;
 	if (cost < 1000) {
 		cost = 1000;
 	}
