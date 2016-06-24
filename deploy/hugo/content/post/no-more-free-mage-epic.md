@@ -1,8 +1,8 @@
 +++
-banner = "post/images/site.png"
+banner = "post/images/mag-epic.png"
 date = "2016-06-23T01:19:18-07:00"
 description = "No More Free Mage Epic"
-images = ["post/images/site.png"]
+images = ["post/images/mag-epic.png"]
 tags = ["mage", "eqcleanup"]
 title = "No More Free Mage Epic"
 +++
