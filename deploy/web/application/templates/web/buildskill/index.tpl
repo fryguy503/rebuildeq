@@ -8,6 +8,12 @@
   <div class="container">
 
 	<div class="row" style="margin-top:60px;">
+	{if !empty($errorMessage)}
+		<div class="row">				
+		<p style="color: #FF5533;">{$errorMessage}</p>			    
+	</div>
+    {/if}
+		    
 	  	<div class="col-md-8 col-md-offset-2">
 			    <div class="row">
 					<a href="/builds/bard"><img class="classicon {if $class eq 'bard'}classicon-active{/if}" src="/images/classicons/brd.png"/></a>

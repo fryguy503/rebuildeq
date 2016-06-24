@@ -2729,3 +2729,11 @@ filter:alpha(opacity=100);
   -khtml-opacity: 1;
   opacity: 1;
 }
+
+.nav-online-count {
+  color: #33AA00 !important;
+}
+
+.build-legend {
+  border-bottom: none;
+}

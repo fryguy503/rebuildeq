@@ -10,12 +10,8 @@
 		<div class="row" style="margin-top:60px;">
 			
 		    {if !empty($errorMessage)}
-	 		<div class="row">
-				<form class="well bs-component">
-					<div class="form-group">
-					<p>{$errorMessage}</p>
-			        </div>
-			    </form>
+	 		<div class="row">				
+				<p style="color: #FF5533;">{$errorMessage}</p>			    
 			</div>
 		    {/if}
 
@@ -252,7 +248,7 @@
 					<div class="totalPoints">
 						<span class="totalPoints">0</span>
 					</div>
-					<legend>{$styles[0]}</legend>
+					<legend class="build-legend">{$styles[0]}</legend>
 				</div>
 			</div>
 
@@ -432,7 +428,7 @@
 					<div class="column3 totalPoints">
 						<span class="totalPoints">0</span>
 					</div>
-					<legend>{$styles[1]}</legend>
+					<legend class="build-legend">{$styles[1]}</legend>
 				</div>
 			</div>
 
@@ -611,14 +607,14 @@
 					<div class="column3 totalPoints">
 						<span class="totalPoints">0</span>
 					</div>
-					<legend>{$styles[2]}</legend>
+					<legend class="build-legend">{$styles[2]}</legend>
 				</div>
 			</div>
 			</div>
 
 			<div class="row" style="text-align: left;">
 						
-			          	<div style="text-align: center;"><label class="control-label">{$class|capitalize} Skill List</label><br></div>
+			          	<div style="text-align: center;"><label class="control-label" style="color: white">{$class|capitalize} Skill List</label><br></div>
 			          	<ul class="build-list">
 			          	{foreach from=$skills item=skill key=s}
 				          	<li>

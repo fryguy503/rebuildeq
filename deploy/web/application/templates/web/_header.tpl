@@ -22,7 +22,9 @@
                 <li>{if $page != "builds"}<a class="signup" href="/builds/">Builds</a>{else}<a>Builds</a>{/if}</li>
                 <li>{if $page != "chat"}<a class="signup" href="/chat/">Chat</a>{else}<a>Chat</a>{/if}</li>
                 <li>{if $page != "changelog"}<a class="signup" href="/changelog/">Changelog</a>{else}<a>Changelog</a>{/if}</li>
-                <li>{if $page != "donate"}<a class="signup" href="/donate/">Donate</a>{else}<a>Donate</a>{/if}</li>                
+                <li>{if $page != "donate"}<a class="signup" href="/donate/">Donate</a>{else}<a>Donate</a>{/if}</li>
+                {*<li><a class="nav-online-count" href="/online/">{$characterCount} Players</a></li>*}
+
               </ul>
             </div>
           </div>
