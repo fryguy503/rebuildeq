@@ -1,8 +1,8 @@
 +++
-banner = "post/images/site.png"
-date = "2016-06-01T01:19:18-07:00"
+banner = "post/images/hot-zone.png"
+date = "2016-06-2T01:19:18-07:00"
 description = "Hotzone Tweaks"
-images = ["post/images/site.png"]
+images = ["post/images/hot-zone.png"]
 menu = ""
 tags = ["encounter", "site", "eqcleanup"]
 title = "Hotzone Tweaks"
