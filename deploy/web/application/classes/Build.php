@@ -341,7 +341,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jonthon's Whistle";
-			$newSkill->desc = 'Jonthon\'s Self Haste Songs now also grant a proc line similar to puma that deals your level * <em data-base="1">1</em><span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Jonthon\'s Self Haste Songs have improved haste, as well as grants a proc line similar to puma that deals your level * <em data-base="1">1</em> damage<span class="perLevel"> per rank</span>. If you do not use a jonthon whistle, it still deals half damage procs.';
 			$newSkill->image = "/images/builds/icons/rb-brd-jonathonswhistle.png";	
 			$skills[18] = $newSkill;
 
@@ -958,7 +958,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fury";
-			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma that deals your level * 5 damage at <em data-base="20">20</em>% effectiveness and increases duration by <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma that deals your level * 5 damage at <em data-base="20">20</em>% effectiveness and increases duration by <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>. If Fury is not on, it still deals half proc damage.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[36] = $newSkill;
 			

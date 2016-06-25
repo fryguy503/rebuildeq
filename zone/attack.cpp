@@ -1367,6 +1367,12 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 						break;
 					}
 				}
+				//If you don't have buff up, it still does half damage.
+				if (!is_proc) {
+					proc_damage /= 2;
+					if (proc_damage < 1) proc_damage = 1;
+					is_proc = true;
+				}
 			}
 
 			rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
@@ -1419,6 +1425,12 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 						is_proc = true;
 						break;
 					}
+				}
+				//If you aren't playing song, it still does half damage.
+				if (!is_proc) {
+					proc_damage /= 2;
+					if (proc_damage < 1) proc_damage = 1;
+					is_proc = true;
 				}
 			}
 
