@@ -2587,6 +2587,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 						other->GetZoneID() == group->members[i]->GetZoneID() && //in same zone
 						!group->members[i]->CastToClient()->IsDead() && //not dead
 						!group->members[i]->CastToClient()->feigned && //not feigned
+						!group->members[i]->CastToClient()->hidden && //not hiding
 						DistanceSquared(GetPosition(), group->members[i]->GetPosition()) < (150 * 150) //and within range
 						) {
 						//group->members[i]->CastToClient()->Message(0, "You're being added to a hate list via group!");
@@ -2615,6 +2616,8 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 							raid->members[i].member != other && //not me
 							raid->members[i].member->CastToMob()->GetZoneID() == other->GetZoneID() && //in same zone as aggro player
 							!raid->members[i].member->IsDead() && //and not dead
+							!raid->members[i].member->feigned && //not feigned
+							!raid->members[i].member->hidden && //not hiding
 							DistanceSquared(GetPosition(), raid->members[i].member->GetPosition()) < (150 * 150) //and within range
 							) {
 							//raid->members[i].member->CastToClient()->Message(0, "You're being added to a hate list via raid!");
