@@ -8990,6 +8990,12 @@ void Client::RefreshBuild() {
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+
+				if (GetClass() == ROGUE && i == RB_ROG_ESCAPE && GetAA(aaEscape) < 1) {
+					TrainAARank(aaEscape);
+					Message(15, "You have unlocked the AA \"Escape\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 			}
 		}
 		/*if (GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING)> 0) {
@@ -10261,10 +10267,11 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ROG_ASSASSINSTAINT) return "Assassin's Taint";
 		else if (id == RB_ROG_SLEIGHTOFHAND) return "Sleight of Hand";
 		else if (id == RB_ROG_JARRINGSTAB) return "Jarring Stab";
-		else if (id == RB_ROG_GANGSTERSPARADISE) return "Gangster's Paradise";		
+		else if (id == RB_ROG_GANGSTERSPARADISE) return "Gangster's Paradise";
 		else if (id == RB_ROG_DUELIST) return "Duelist";
 		else if (id == RB_ROG_UNTAPPEDPOTENTIAL) return "Untapped Potential";
 		else if (id == RB_ROG_MOSSSTONE) return "Moss Stone";
+		else if (id == RB_ROG_ESCAPE) return "Escape";
 		break;
 	case DRUID:
 		if (id == RB_DRU_REGENERATION) return "Regeneration";

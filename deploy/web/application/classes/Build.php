@@ -851,6 +851,12 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[31] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Escape";
+			$newSkill->desc = 'Grants the Escape AA, allowing the rogue to escape combat instantly for 50% of your endurance bar. Endurance cost is reduced by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[34] = $newSkill;
+
 			break;
 			
 			//==================SHAMAN======================

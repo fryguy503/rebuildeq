@@ -1265,6 +1265,11 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		manacost = (GetMaxMana() * 0.5f) - ((GetMaxMana() * 0.3f) * 0.2f * GetBuildRank(BARD, RB_BRD_FADINGMEMORIES));
 	}
 
+	if (rank_id == aaEscape && GetBuildRank(ROGUE, RB_ROG_ESCAPE)) {
+		//manacost = (GetMaxEndurance() * 0.5f) - ((GetMaxEndurance() * 0.3f) * 0.2f * GetBuildRank(ROGUE, RB_ROG_ESCAPE));
+		//TODO: Figure out endurance cost calculation prior to this executing
+	}
+
 	if (rank_id == aaSpiritCall) {
 		spellid = 164;
 		if (GetLevel() < 14) {

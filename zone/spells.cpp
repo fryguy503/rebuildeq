@@ -2416,11 +2416,19 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 			TryTriggerOnValueAmount(false, true);
 		}
 	}
+
+	int end_cost = spells[spell_id].EndurCost;
+	if (spell_id == 5244 && IsClient()) {
+		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_ESCAPE);
+		if (rank > 0) {
+			end_cost = (CastToClient()->GetMaxEndurance() * 0.5f) - (CastToClient()->GetMaxEndurance() * 0.1f * rank);
+		}
+	}
+
 	// one may want to check if this is a disc or not, but we actually don't, there are non disc stuff that have end cost
 	// lets not consume end for custom items that have disc procs.
 	// One might also want to filter out USE_ITEM_SPELL_SLOT, but DISCIPLINE_SPELL_SLOT are both #defined to the same thing ...
-	if (spells[spell_id].EndurCost && !isproc) {
-		auto end_cost = spells[spell_id].EndurCost;
+	if (end_cost && !isproc) {
 		if (mgb)
 			end_cost *= 2;
 		SetEndurance(GetEndurance() - EQEmu::ClampUpper(end_cost, GetEndurance()));
