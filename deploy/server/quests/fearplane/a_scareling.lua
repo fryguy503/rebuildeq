@@ -12,16 +12,6 @@ function event_signal(e)
 	end
 end
 
-function event_death_complete(e)
-	
-	
-	local spawn = math.random(100);
-	if(spawn > 66) then
-		
-		eq.spawn2(72108,0,0,e.self:GetX(),e.self:GetY(),e.self:GetZ(),0);
-	end
-end
-
 
 --Submitted by: Jim Mills
 --add on function event_death_complete(e) for berserker epic spawn, 33% chance on death.
