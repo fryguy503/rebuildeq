@@ -182,7 +182,7 @@ sub velious_armor_requirement {
 sub velious_faction {
 	$zoneid = shift;
 	quest::exp(175000);
-	if ($zoneid == 113) { #SS
+	if ($zoneid == 114) { #SS
 		quest::faction(42,30); # CoV
         quest::faction(362,30); # Yelinak
         quest::faction(189,-60); # Kromzek
@@ -557,13 +557,13 @@ sub velious_armor_list {
 	#thurgadin glatigi berserker chain
 	$tmp_class = 13;
 	#thurgadin kyla frostbeard magician silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31070}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31071}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31072}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31073}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31074}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31075}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31076}; #boots
+	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 25837, reward => 31070}; #cap
+	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 25807, reward => 31071}; #bp
+	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 25818, reward => 31072}; #sleeves
+	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 25841, reward => 31073}; #wrist
+	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 25832, reward => 31074}; #gloves
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 25816, reward => 31075}; #legs
+	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24950, reward => 31076}; #boots
 	
 	$tmp_class = 8;
 	#thurgadin leifur bard plate
@@ -577,13 +577,13 @@ sub velious_armor_list {
 	
 	$tmp_class = 14;
 	#thurgadin lorekeeper brita enchanter silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31077}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31078}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31079}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31080}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31081}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31082}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31083}; #boots
+	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 25837, reward => 31077}; #cap
+	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 25807, reward => 31078}; #bp
+	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 25818, reward => 31079}; #sleeves
+	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 25841, reward => 31080}; #wrist
+	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 25832, reward => 31081}; #gloves
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 25816, reward => 31082}; #legs
+	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24950, reward => 31083}; #boots
 	
 	$tmp_class = 7;
 	#thurgadin lorekeeper einar monk leather
@@ -597,23 +597,23 @@ sub velious_armor_list {
 	
 	$tmp_class = 11;
 	#thurgadin lorekeeper zorik necromancer silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31063}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31064}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31065}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31066}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31067}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31068}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31069}; #boots
+	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 25837, reward => 31063}; #cap
+	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 25807, reward => 31064}; #bp
+	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 25818, reward => 31065}; #sleeves
+	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 25841, reward => 31066}; #wrist
+	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 25832, reward => 31067}; #gloves
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 25816, reward => 31068}; #legs
+	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24950, reward => 31069}; #boots
 
 	$tmp_class = 12;
 	#thurgadin mauren frostbeard wizard silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31056}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31057}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31058}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31059}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31060}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31061}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31062}; #boots
+	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 25837, reward => 31056}; #cap
+	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 25807, reward => 31057}; #bp
+	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 25818, reward => 31058}; #sleeves
+	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 25841, reward => 31059}; #wrist
+	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 25832, reward => 31060}; #gloves
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 25816, reward => 31061}; #legs
+	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24950, reward => 31062}; #boots
 	
 	$tmp_class = 2;
 	#thurgadin loremaster dorinan cleric plate
