@@ -4071,7 +4071,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 				auto row = results.begin();
 				unclaimed_rewards = atoi(row[0]);
 				uint32 unclaimed_rewards_total = atoi(row[1]);
-				c->Message(0, "[GM] %s [%s] (%u) has %u unclaimed rewards and %u total rewards ever", c->GetTarget()->CastToClient()->GetCleanName(), c->GetTarget()->CastToClient()->Identity(), c->GetTarget()->CastToClient()->AccountID(), unclaimed_rewards, unclaimed_rewards_total);
+				c->Message(0, "[GM] %s [%s] (%u) has %u unclaimed rewards and %u total rewards ever, and next encounter is: %u", c->GetTarget()->CastToClient()->GetCleanName(), c->GetTarget()->CastToClient()->Identity(), c->GetTarget()->CastToClient()->AccountID(), unclaimed_rewards, unclaimed_rewards_total, c->GetEPP().next_encounter_time);
 			} else {
 				c->Message(0, "Target failed to get a record result");
 			}
@@ -4314,6 +4314,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 
 		if (location->ItemID > 0 && !c->KeyRingCheck(location->ItemID)) {
 			c->Message(0, "That zone is not yet available to teleport to.");
+			return;
 		}
 
 		// Calculate cost.
