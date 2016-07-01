@@ -391,7 +391,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							// Ancient Wrath
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
-							if (rank > 0) {
+							if (rank > 0 && caster != this) { // Ancient Wrath does not affect spells cast on self.
 								int bonus = dmg * 0.1f * rank * -1;
 								casterClient->Message(MT_NonMelee, "Ancient Wrath %u added %i bonus damage.", rank, bonus);
 								dmg -= bonus;
