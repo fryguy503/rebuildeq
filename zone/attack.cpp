@@ -3521,6 +3521,23 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell(spell_id)) {
 				//Shin: If a lifetap and SK and have points into Soul Link
 				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) > 0) {
+					//Ratio base damage based on new curve.
+					int scale_damage = 0;
+					int attacker_level = attacker->GetLevel();
+					if (attacker_level <= 10) {
+						scale_damage = 10 + (attacker_level - 2);
+					}
+					else if (attacker_level <= 20) {
+						scale_damage = 18 + (attacker_level - 10) * (attacker_level - 10);
+					}
+					else if (attacker_level <= 60) {
+						scale_damage = 118 + ((attacker_level - 20) * 5);
+					}
+					Log.Out(Logs::General, Logs::Spells, "Applying lifetap scale for SHD: %i to %i", damage, scale_damage);
+					if (scale_damage > damage) {
+						damage = scale_damage;
+					}
+
 					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
 					attacker->CastToClient()->Message(MT_NonMelee, "Leech Touch %u added %i bonus damage.", rank, int32((float)damage * 0.04 * (float)rank));
 					damage += int32((float)damage * 0.04f * (float)rank);
