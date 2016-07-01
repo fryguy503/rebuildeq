@@ -1,5 +1,5 @@
 +++
-banner = "post/images/goblin-card-model.png"
+banner = "post/images/barbarian-polar-bear.png"
 date = "2016-07-01T01:19:18-07:00"
 description = "Barbarian Polar Bear"
 images = ["post/images/barbarian-polar-bear.png"]
