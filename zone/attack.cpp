@@ -1412,6 +1412,11 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			rank = GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE);
 			if (rank > 0) {
 				chance = 300;
+				rank = GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY);
+				if (rank > 0) { //Chance boost from harmonic affinity on jonthon whistle
+					chance += chance * 0.1f * rank;
+				}
+
 				proc_damage = GetLevel() * 5;
 				proc_damage = proc_damage * 0.25f * rank;
 				if (proc_damage < 20) {
@@ -1426,6 +1431,8 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 						break;
 					}
 				}
+				
+
 				//If you aren't playing song, it still does half damage.
 				if (!is_proc) {
 					proc_damage /= 2;
