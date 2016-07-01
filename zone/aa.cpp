@@ -1197,30 +1197,30 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 
 	if (rank_id == aaLeechTouch) {
 		if (GetLevel() < 15) { //lifetap
-			spellid = 341; 
+			spellid = 341;  //10
 			manacost = 8;
 			cooldown = 4;
 		}
 		else if (GetLevel() < 29) { //lifespike
-			spellid = 502;
+			spellid = 502; //19
 			manacost = 13;
 			cooldown = 4;
 		} else if (GetLevel() < 51) { //lifedraw
-			spellid = 445;
+			spellid = 445; //195
 			manacost = 86;
 			cooldown = 4;
 		} else if (GetLevel() < 55) { //siphon life
-			spellid = 446;
+			spellid = 446; //250
 			manacost = 115;
 			cooldown = 4;
 		}
-		else if (GetLevel() < 60) { //spirit tap
-			spellid = 524;
+		else if (GetLevel() < 60) { //drain spirit
+			spellid = 525; //514
 			manacost = 152;
 			cooldown = 4;
 		}
 		else { //drain soul
-			spellid = 447;
+			spellid = 447; // 656
 			manacost = 248;
 			cooldown = 4;
 		}	
