@@ -778,6 +778,25 @@ void Client::CompleteConnect()
 	SendDisciplineTimers();
 
 	parse->EventPlayer(EVENT_ENTER_ZONE, this, "", 0);
+	uint32 unclaimed_rewards = 0;
+	uint32 next_daily_claim = time(nullptr) + 72000;
+	//make sure account custom is set
+	std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim, use_new_con, use_self_target FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
+
+	auto results = database.QueryDatabase(query);
+	if (results.Success()) {
+		if (results.RowCount() > 0) {
+			auto row = results.begin();
+			unclaimed_rewards = atoi(row[0]);
+			next_daily_claim = atoi(row[1]);
+			m_epp.use_new_con = atoi(row[2]);
+			m_epp.use_self_target = atoi(row[3]);
+		}
+		else {
+			std::string query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", AccountID(), next_daily_claim);
+			auto results = database.QueryDatabase(query);
+		}
+	}
 
 	/* This sub event is for if a player logs in for the first time since entering world. */
 	if (firstlogon == 1){
@@ -788,25 +807,7 @@ void Client::CompleteConnect()
 			QServ->PlayerLogEvent(Player_Log_Connect_State, this->CharacterID(), event_desc);
 		}
 
-		uint32 unclaimed_rewards = 0;
-		uint32 next_daily_claim = time(nullptr) + 72000;
-		//make sure account custom is set
-		std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim, use_new_con, use_self_target FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
-
-		auto results = database.QueryDatabase(query);
-		if (results.Success()) {
-			if (results.RowCount() > 0) {
-				auto row = results.begin();
-				unclaimed_rewards = atoi(row[0]);
-				next_daily_claim = atoi(row[1]);
-				m_epp.use_new_con = atoi(row[2]);
-				m_epp.use_self_target = atoi(row[3]);
-			}
-			else {
-				std::string query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", AccountID(), next_daily_claim);
-				auto results = database.QueryDatabase(query);
-			}
-		}
+		
 
 		//Do account_custom check and also give daily rewards
 		if (next_daily_claim < time(nullptr)) {
