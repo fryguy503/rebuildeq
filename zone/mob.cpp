@@ -6284,13 +6284,15 @@ const char* Mob::RaceName()
 	if (race_id == WEREWOLF) return "Werewolf";
 	if (race_id == SKELETON) return "Skeleton";
 	if (race_id == ELEMENTAL) return "Elemental";
-	if (race_id == EYE_OF_ZOMM) return " Eye of Zomm";
+	if (race_id == EYE_OF_ZOMM) return "Eye of Zomm";
 	if (race_id == WOLF_ELEMENTAL) return  "Wolf Elemental";
 	if (race_id == IKSAR_SKELETON) return  "Iksar Skeleton";
 	if (race_id == VAHSHIR) return  "Vah Shir";
 	if (race_id == FROGLOK || race_id == FROGLOK2) return "Froglok";
-	if (race_id == DRAKKIN) return "Drakkin";
+	
+	//Unused IDS
 
+	if (race_id == DRAKKIN) return "-Drakkin";
 	if ((GetRace() == 13)) return "Aviak";
 	if ((GetRace() == 14)) return "Werewolf";
 	if ((GetRace() == 15)) return "Brownie";

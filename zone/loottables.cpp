@@ -470,7 +470,7 @@ void NPC::AddCardTable() {
 	if ((GetRace() == 38) && zone->random.Int(1,500) == 1) AddItem(100116, 1, false); //Spider Card
 	if ((GetRace() == 54) && zone->random.Int(1,500) == 1) AddItem(100117, 1, false); //Orc Card 15ac	
 	if ((GetRace() == 28 || GetRace() == 456) && zone->random.Int(1,500) == 1) AddItem(100118, 1, false); //Fungus Card
-	if ((GetRace() == 40) && zone->random.Int(1,500) == 1) AddItem(100119, 1, false); //Goblin Card	
+	if ((GetRace() == 40 || GetRace() == 433) && zone->random.Int(1,500) == 1) AddItem(100119, 1, false); //Goblin Card	
 	if ((GetBodyType() == BT_Monster) && zone->random.Int(1,500) == 1) AddItem(100120, 1, false); //Evil Eye Card
 	if ((GetRace() == HUMAN) && zone->random.Int(1,500) == 1) AddItem(100121, 1, false); //Human Card
 	if ((GetRace() == BARBARIAN) && zone->random.Int(1,500) == 1) AddItem(100122, 1, false); //Barbarian Card
