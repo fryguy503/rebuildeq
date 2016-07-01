@@ -365,7 +365,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			npc_type->size = 2.5f;
 			break;
 		case BARBARIAN:
-			npc_type->race = WOLF;
+			npc_type->race = BEAR;
 			npc_type->texture = 2;
 			npc_type->size = 2.5f;
 			break;
