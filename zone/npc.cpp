@@ -639,6 +639,9 @@ bool NPC::Process()
 			SetMana(GetMana()+mana_regen+bonus);
 		}
 
+		if (dps.size() > 0 && GetHP() >= GetMaxHP()) {
+			EngageReset();
+		}
 
 		if(zone->adv_data && !p_depop)
 		{
@@ -2615,7 +2618,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		if (i.item_id == 100139 && (GetRace() == 43)) loot_list.push_back(i); //Bear card
 		if (i.item_id == 100140 && (GetRace() == 33)) loot_list.push_back(i); //Ghoul card
 		if (i.item_id == 100141 && (GetRace() == 70)) loot_list.push_back(i); //Zombie card
-		if (i.item_id == 100142 && (GetRace() == 367)) loot_list.push_back(i); //Skeleton card
+		if (i.item_id == 100142 && (GetRace() == 367 || GetRace() == 161)) loot_list.push_back(i); //Skeleton card
 	}
 	
 	return loot_list;

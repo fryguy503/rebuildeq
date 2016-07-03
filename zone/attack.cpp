@@ -1514,6 +1514,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	if(!spell)
 		spell = SPELL_UNKNOWN;
 
+	engage_end = time(nullptr);
 	char buffer[48] = { 0 };
 	snprintf(buffer, 47, "%d %d %d %d", killerMob ? killerMob->GetID() : 0, damage, spell, static_cast<int>(attack_skill));
 	if(parse->EventPlayer(EVENT_DEATH, this, buffer, 0) != 0) {
@@ -2432,6 +2433,9 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 		entity_list.LimitRemoveNPC(this);
 		entity_list.AddCorpse(corpse, GetID());
 
+		corpse->CastToMob()->SetEngageEnd(time(nullptr));
+		corpse->CastToMob()->dps = dps; //copy dps from mob
+		
 		entity_list.UnMarkNPC(GetID());
 		entity_list.RemoveNPC(GetID());
 		this->SetID(0);
@@ -3746,6 +3750,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 		}
 
 		//final damage has been determined.
+		AddDPS(attacker, damage);
 
 		SetHP(GetHP() - damage);
 

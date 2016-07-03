@@ -53,6 +53,15 @@ namespace EQEmu
 	struct Item_Struct;
 }
 
+struct DPS_Struct {
+	explicit DPS_Struct(uint32 engage_start, int character_id, std::string character_name, float dps, int total_damage) : engage_start(engage_start), character_id(character_id), character_name(character_name), dps(dps), total_damage(total_damage) {};
+	uint32 engage_start;
+	int character_id;
+	std::string character_name;
+	float dps;
+	int total_damage;
+};
+
 class Mob : public Entity {
 public:
 	enum CLIENT_CONN_STATUS { CLIENT_CONNECTING, CLIENT_CONNECTED, CLIENT_LINKDEAD,
@@ -136,6 +145,14 @@ public:
 	inline virtual bool InZone() const { return true; }
 
 	//Somewhat sorted: needs documenting!
+	void AddDPS(Mob *other, int damage);
+	std::vector<DPS_Struct> DPS();
+	uint32 EngageDuration();
+	void EngageReset();
+	uint32 EngageEnd();
+	void EngageFlushOnNextEngage();
+	void SetEngageEnd(uint32 time);
+	std::vector<DPS_Struct> dps;
 
 	//Attack
 	virtual void RogueBackstab(Mob* other, bool min_damage = false, int ReuseTime = 10);
@@ -1399,10 +1416,12 @@ protected:
 	std::unordered_map<uint32, std::pair<uint32, uint32>> aa_ranks;
 	Timer aa_timers[aaTimerMax];
 
+	uint32 engage_end;
+	bool engage_flush_on_next_engage;
+
 private:
 	void _StopSong(); //this is not what you think it is
 	Mob* target;
-
 #ifdef BOTS
 	std::shared_ptr<HealRotation> m_target_of_heal_rotation;
 #endif

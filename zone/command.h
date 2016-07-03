@@ -90,6 +90,7 @@ void command_disablerecipe(Client *c, const Seperator *sep);
 void command_disarmtrap(Client *c, const Seperator *sep);
 void command_distance(Client *c, const Seperator *sep);
 void command_doanim(Client *c, const Seperator *sep);
+void command_dps(Client *c, const Seperator *sep);
 void command_emote(Client *c, const Seperator *sep);
 void command_emotesearch(Client* c, const Seperator *sep);
 void command_emoteview(Client* c, const Seperator *sep);

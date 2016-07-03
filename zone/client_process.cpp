@@ -518,6 +518,10 @@ bool Client::Process() {
 		}
 
 		if (tic_timer.Check() && !dead) {
+			if (dps.size() > 0 && GetAggroCount() == 0) {
+				EngageFlushOnNextEngage();
+				EngageEnd();
+			}
 			CalcMaxHP();
 			CalcMaxMana();
 			CalcATK();

@@ -6784,3 +6784,67 @@ const char* Mob::RaceName()
 	//if ((GetBodyType() == BT_Dragon || GetBodyType() == BT_Dragon3 ) return "Wyvern";
 	return "Unknown";
 }
+
+//Retrieve the vector of DPS
+std::vector<DPS_Struct> Mob::DPS() {
+	if (!IsCorpse() && //for non corpses,
+		!engage_flush_on_next_engage) { //if we're still in battle
+		SetEngageEnd(time(nullptr)); //set it's ending to now for updating DPS. This will be called again when it dies, or #dps is called again.
+	}
+	return dps;
+}
+
+
+
+//Add a mob's damage to the DPS counter system
+void Mob::AddDPS(Mob *other, int damage) {
+	if (other == nullptr) return;
+	if (damage < 1) return;
+
+	//When a client loses all aggro and take damage after, this triggers a flush
+	if (engage_flush_on_next_engage) { 
+		EngageReset();
+	}
+
+	//since damage is being dealt, engage_end is at minimum now.
+	engage_end = time(nullptr);
+	
+	int character_id = other->GetID();
+	std::string character_name = other->GetCleanName();
+
+	//Pets are attributed to their owners. Keep it simple.
+	if (other->IsPet() && other->IsPetOwnerClient() && other->GetOwner() != nullptr) {
+		character_id = other->GetOwnerID();
+		character_name = other->GetOwner()->GetCleanName();
+	}
+
+	//see if entry already is being tracked
+	for (auto&& d : dps) {		
+		if (d.character_id != character_id) continue;
+		d.total_damage += damage;
+		return;
+	}
+
+	//new entry
+	dps.push_back(DPS_Struct(time(nullptr), character_id, character_name, damage, damage));
+}
+
+uint32 Mob::EngageEnd() {
+	return engage_end;
+}
+
+//Resets the engage, this is triggered when a mob hits full health.
+void Mob::EngageReset() {
+	engage_end = 0;	
+	dps.clear();
+}
+
+//sets an engagement end, called on corpse generation
+void Mob::SetEngageEnd(uint32 time) {
+	engage_end = time;
+}
+
+void Mob::EngageFlushOnNextEngage() {
+	engage_flush_on_next_engage = true;
+}
+

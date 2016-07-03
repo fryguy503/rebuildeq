@@ -194,6 +194,7 @@ int command_init(void)
 		command_add("disarmtrap",  "Analog for ldon disarm trap for the newer clients since we still don't have it working.", 80, command_disarmtrap) ||
 		command_add("distance", "- Reports the distance between you and your target.",  80, command_distance) ||
 		command_add("doanim", "[animnum] [type] - Send an EmoteAnim for you or your target", 50, command_doanim) ||
+		command_add("dps", "- Get a report of DPS on target", 0, command_dps) ||
 		command_add("emote", "['name'/'world'/'zone'] [type] [message] - Send an emote message", 80, command_emote) ||
 		command_add("emotesearch", "Searches NPC Emotes", 80, command_emotesearch) ||
 		command_add("emoteview", "Lists all NPC Emotes", 80, command_emoteview) ||
@@ -5830,6 +5831,42 @@ void command_zonestatus(Client *c, const Seperator *sep)
 		worldserver.SendPacket(pack);
 		delete pack;
 	}
+}
+
+void command_dps(Client *c, const Seperator *sep)
+{
+	if (!c->GetTarget()) {
+		c->Message(0, "You must target something to use this command.");
+		return;
+	}
+
+	Mob *target = c->GetTarget();
+
+	if (!target->IsCorpse()) {
+		c->Message(0, "Invalid Target type (Not corpse), bypassing for now");
+	}
+
+	if (target->DPS().size() < 1) {
+		c->Message(0, "Target %s not engaged.", (target->IsCorpse() ? "was" : "is"));		
+		return;
+	}
+
+	float dps;
+	int total_damage = 0;
+	uint32 engage_start = target->EngageEnd() - 1;
+
+	c->Message(0, "-----DPS-----");
+	for (auto&& d : target->DPS()) {
+		if ((target->EngageEnd() - d.engage_start) > 1) dps = (float)((float)d.total_damage / (target->EngageEnd() - d.engage_start));
+		else dps = d.total_damage;
+		total_damage += d.total_damage;
+
+		if (engage_start > d.engage_start) engage_start = d.engage_start;
+		c->Message(0, "%s: Total Damage: %i, Engaged Duration: %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), dps);
+	}	
+	if ((target->EngageEnd() - engage_start) > 1) dps = (float)((float)total_damage / (target->EngageEnd() - engage_start));
+	else dps = total_damage;
+	c->Message(0, "%s: Total Received: %i, Engaged Duration: %is, (%.2f RDPS)", target->GetCleanName(), total_damage, ((target->EngageEnd() - engage_start) < 1) ? 1 : (target->EngageEnd() - engage_start), dps);
 }
 
 void command_doanim(Client *c, const Seperator *sep)
