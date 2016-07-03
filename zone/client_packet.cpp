@@ -4903,9 +4903,19 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 			level_text = "You could probably win this fight.";
 			color = 6;
 		}
+		std::string race_name;
+		if (tmob->IsNPC()) {
+			auto loot_list = tmob->CastToNPC()->SpecialLoot(true);
+			Log.Out(Logs::General, Logs::Client_Server_Packet, "Size of SpecialLoot: %i", loot_list.size());
+			for (auto&& i : loot_list) race_name += ", "+i.name;
+			if (race_name.length() > 3) race_name = race_name.substr(2).c_str();
+			else race_name = "Unknown";
+		}
+		else {
+			race_name = tmob->RaceName();
+		}
 
-
-		SendColoredText(color, StringFormat("%s [%u] (%s) %s -- %s", tmob->GetCleanName(), tmob->GetLevel(), tmob->RaceName(), con_text.c_str(), level_text.c_str()));
+		SendColoredText(color, StringFormat("%s [%u] (%s) %s -- %s", tmob->GetCleanName(), tmob->GetLevel(), race_name.c_str(), con_text.c_str(), level_text.c_str()));
 	}
 	// only wanted to check raid target once
 	// and need con to still be around so, do it here!

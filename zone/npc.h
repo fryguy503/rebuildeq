@@ -85,6 +85,13 @@ struct AISpellsVar_Struct {
 	uint8	idle_beneficial_chance;
 };
 
+struct SpecialLoot_Struct {
+	explicit SpecialLoot_Struct(uint32 item_id, std::string name, uint32 chance) {};
+	uint32 item_id;
+	std::string name;
+	uint32 chance;
+};
+
 class AA_SwarmPetInfo;
 class Client;
 class Group;
@@ -416,7 +423,8 @@ public:
 	void	SetHeroForgeModel(uint32 model) { herosforgemodel = model; }
 
 	bool IsRaidTarget() const { return raid_target; };
-	void ResetHPUpdateTimer() { sendhpupdate_timer.Start(); }
+	void ResetHPUpdateTimer() { sendhpupdate_timer.Start(); }	
+	std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only);
 
 protected:
 

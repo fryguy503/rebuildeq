@@ -2521,3 +2521,86 @@ void NPC::DepopSwarmPets()
 		}
 	}
 }
+
+std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
+	static SpecialLoot_Struct SpecialLoots[] = {
+		SpecialLoot_Struct(100100, "Dragon", 500),
+		SpecialLoot_Struct(100101, "Insect", 500),
+		SpecialLoot_Struct(100102, "Animal", 500),
+		SpecialLoot_Struct(100103, "Construct", 500),
+		SpecialLoot_Struct(100104, "Extra Planar", 500),
+		SpecialLoot_Struct(100105, "Giant", 500),
+		SpecialLoot_Struct(100106, "Humanoid", 500),
+		SpecialLoot_Struct(100107, "Lycanthrope", 500),
+		SpecialLoot_Struct(100108, "Magical", 500),
+		SpecialLoot_Struct(100109, "Monster", 500),
+		SpecialLoot_Struct(100110, "Plant", 500),
+		SpecialLoot_Struct(100111, "Summoned", 500),
+		SpecialLoot_Struct(100112, "Undead", 500),
+		SpecialLoot_Struct(100113, "Gnoll", 500),
+		SpecialLoot_Struct(100114, "Aviak", 500),
+		SpecialLoot_Struct(100115, "Werewolf", 500),
+		SpecialLoot_Struct(100116, "Spider", 500),
+		SpecialLoot_Struct(100117, "Orc Card", 500),
+		SpecialLoot_Struct(100118, "Fungus", 500),
+		SpecialLoot_Struct(100119, "Goblin", 500),
+		SpecialLoot_Struct(100120, "Evil Eye", 500),
+		SpecialLoot_Struct(100121, "Human", 500),
+		SpecialLoot_Struct(100122, "Barbarian", 500),
+		SpecialLoot_Struct(100123, "Erudite", 500),
+		SpecialLoot_Struct(100124, "Wood Elf", 500),
+		SpecialLoot_Struct(100125, "High Elf", 500),
+		SpecialLoot_Struct(100126, "Dark Elf", 500),
+		SpecialLoot_Struct(100127, "Half Elf", 500),
+		SpecialLoot_Struct(100128, "Dwarf", 500),
+		SpecialLoot_Struct(100129, "Troll", 500),
+		SpecialLoot_Struct(100130, "Ogre", 500),
+		SpecialLoot_Struct(100131, "Halfling", 500),
+		SpecialLoot_Struct(100132, "Gnome", 500),
+		SpecialLoot_Struct(100133, "Froglok", 500),
+		SpecialLoot_Struct(100134, "Shadowed Man", 500),
+	};
+	
+	std::vector<SpecialLoot_Struct> loot_list;
+	
+	for (auto&& i : SpecialLoots) {
+		Log.Out(Logs::General, Logs::Client_Server_Packet, "ID: %i, String: %s, Race: %i", i.item_id, i.name, GetRace());
+		if (i.item_id == 100100 && GetBodyType() == BT_VeliousDragon) loot_list.push_back(i); //Dragon Card
+		if (i.item_id == 100101 && GetBodyType() == BT_Insect) loot_list.push_back(i); //Insect Card
+		if (i.item_id == 100102 && GetBodyType() == BT_Animal) loot_list.push_back(i); //Animal Card
+		if (i.item_id == 100103 && GetBodyType() == BT_Construct) loot_list.push_back(i); //Construct Card
+		if (i.item_id == 100104 && GetBodyType() == BT_Extraplanar) loot_list.push_back(i); //Extra Planar Card
+		if (i.item_id == 100105 && GetBodyType() == BT_Giant || GetBodyType() == BT_RaidGiant || GetBodyType() == BT_Zek) loot_list.push_back(i); //Giant Card
+		if (i.item_id == 100106 && GetBodyType() == BT_Humanoid) loot_list.push_back(i); //Humanoid Card
+		if (i.item_id == 100107 && GetBodyType() == BT_Lycanthrope) loot_list.push_back(i); //Lycanthrope Card
+		if (i.item_id == 100108 && GetBodyType() == BT_Magical) loot_list.push_back(i); //Magical Card 50mana
+		if (i.item_id == 100109 && GetBodyType() == BT_Monster) loot_list.push_back(i); //Monster Card
+		if (i.item_id == 100110 && GetBodyType() == BT_Plant) loot_list.push_back(i); //Plant Card
+		if (i.item_id == 100111 && GetBodyType() == BT_Summoned || GetBodyType() == BT_Summoned2 || GetBodyType() == BT_Summoned3 || GetBodyType() == BT_SummonedUndead) loot_list.push_back(i); //Summoned Card
+		if (i.item_id == 100112 && GetBodyType() == BT_Undead || GetBodyType() == BT_SummonedUndead || GetBodyType() == BT_Vampire) loot_list.push_back(i); //Undead Card
+		if (i.item_id == 100113 && GetRace() == 39) loot_list.push_back(i); //Gnoll Card 50hp
+		if (i.item_id == 100114 && GetRace() == 13) loot_list.push_back(i); //Aviak Card
+		if (i.item_id == 100115 && GetRace() == 14) loot_list.push_back(i); //Werewolf Card
+		if (i.item_id == 100116 && GetRace() == 38) loot_list.push_back(i); //Spider Card
+		if (i.item_id == 100117 && GetRace() == 54) loot_list.push_back(i); //Orc Card 15ac	
+		if (i.item_id == 100118 && GetRace() == 28 || GetRace() == 456) loot_list.push_back(i); //Fungus Card
+		if (i.item_id == 100119 && GetRace() == 40 || GetRace() == 433) loot_list.push_back(i); //Goblin Card	
+		if (i.item_id == 100120 && GetBodyType() == BT_Monster) loot_list.push_back(i); //Evil Eye Card
+		if (i.item_id == 100121 && GetRace() == HUMAN) loot_list.push_back(i); //Human Card
+		if (i.item_id == 100122 && GetRace() == BARBARIAN) loot_list.push_back(i); //Barbarian Card
+		if (i.item_id == 100123 && GetRace() == ERUDITE) loot_list.push_back(i); //Erudite Card
+		if (i.item_id == 100124 && GetRace() == WOOD_ELF) loot_list.push_back(i); //Wood Elf Card
+		if (i.item_id == 100125 && GetRace() == HIGH_ELF) loot_list.push_back(i); //High Elf Card
+		if (i.item_id == 100126 && GetRace() == DARK_ELF) loot_list.push_back(i); //Dark Elf Card
+		if (i.item_id == 100127 && GetRace() == HALF_ELF) loot_list.push_back(i); //Half Elf Card
+		if (i.item_id == 100128 && GetRace() == DWARF) loot_list.push_back(i); //Dwarf Card
+		if (i.item_id == 100129 && GetRace() == TROLL) loot_list.push_back(i); //Troll Card
+		if (i.item_id == 100130 && GetRace() == OGRE) loot_list.push_back(i); //Ogre Card
+		if (i.item_id == 100131 && GetRace() == HALFLING) loot_list.push_back(i); //Halfling Card
+		if (i.item_id == 100132 && GetRace() == GNOME) loot_list.push_back(i); //Gnome Card
+		if (i.item_id == 100133 && GetRace() == FROGLOK || GetRace() == FROGLOK2) loot_list.push_back(i); //Froglok Card
+		if (i.item_id == 100134 && GetRace() == INVISIBLE_MAN || GetRace() == DERVISH) loot_list.push_back(i); //Shadowed Man Card
+	}
+	
+	return loot_list;
+}
