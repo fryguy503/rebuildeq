@@ -2562,7 +2562,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		SpecialLoot_Struct(100135, "Spider", 500),
 		SpecialLoot_Struct(100136, "Beetle", 500),
 		SpecialLoot_Struct(100137, "Snake", 500),
-		SpecialLoot_Struct(100138, "Wolf", 500),
+		SpecialLoot_Struct(100138, "Wolf", 50000), //super rare since it gives sow
 		SpecialLoot_Struct(100139, "Bear", 500),
 		SpecialLoot_Struct(100140, "Ghoul", 500),
 		SpecialLoot_Struct(100141, "Zombie", 500),
@@ -2581,7 +2581,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		if (i.item_id == 100105 && (GetBodyType() == BT_Giant || GetBodyType() == BT_RaidGiant || GetBodyType() == BT_Zek)) loot_list.push_back(i); //Giant Card
 		if (i.item_id == 100106 && GetBodyType() == BT_Humanoid) loot_list.push_back(i); //Humanoid Card
 		if (i.item_id == 100107 && GetBodyType() == BT_Lycanthrope) loot_list.push_back(i); //Lycanthrope Card
-		if (i.item_id == 100108 && GetBodyType() == BT_Magical) loot_list.push_back(i); //Magical Card 50mana
+		if (i.item_id == 100108 && GetBodyType() == BT_Magical) loot_list.push_back(i); //Magical Card
 		if (i.item_id == 100109 && GetBodyType() == BT_Monster) loot_list.push_back(i); //Monster Card
 		if (i.item_id == 100110 && GetBodyType() == BT_Plant) loot_list.push_back(i); //Plant Card
 		if (i.item_id == 100111 && (GetBodyType() == BT_Summoned || GetBodyType() == BT_Summoned2 || GetBodyType() == BT_Summoned3 || GetBodyType() == BT_SummonedUndead)) loot_list.push_back(i); //Summoned Card
@@ -2589,11 +2589,11 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		if (i.item_id == 100113 && GetRace() == 39) loot_list.push_back(i); //Gnoll Card 50hp
 		if (i.item_id == 100114 && GetRace() == 13) loot_list.push_back(i); //Aviak Card
 		if (i.item_id == 100115 && GetRace() == 14) loot_list.push_back(i); //Werewolf Card
-		if (i.item_id == 100116 && GetRace() == 38) loot_list.push_back(i); //Spider Card
+		if (i.item_id == 100116 && GetRace() == 48) loot_list.push_back(i); //Kobold Card
 		if (i.item_id == 100117 && GetRace() == 54) loot_list.push_back(i); //Orc Card 15ac	
 		if (i.item_id == 100118 && (GetRace() == 28 || GetRace() == 456)) loot_list.push_back(i); //Fungus Card
 		if (i.item_id == 100119 && (GetRace() == 40 || GetRace() == 433)) loot_list.push_back(i); //Goblin Card	
-		if (i.item_id == 100120 && GetBodyType() == BT_Monster) loot_list.push_back(i); //Evil Eye Card
+		if (i.item_id == 100120 && (GetRace() == 21)) loot_list.push_back(i); //Evil Eye Card
 		if (i.item_id == 100121 && (GetRace() == HUMAN || GetRace() == 44 /*Freeport Guard*/ || GetRace() == 71 /*InnKeeper*/)) loot_list.push_back(i); //Human Card
 		if (i.item_id == 100122 && GetRace() == BARBARIAN) loot_list.push_back(i); //Barbarian Card
 		if (i.item_id == 100123 && GetRace() == ERUDITE) loot_list.push_back(i); //Erudite Card
@@ -2608,7 +2608,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		if (i.item_id == 100132 && GetRace() == GNOME) loot_list.push_back(i); //Gnome Card
 		if (i.item_id == 100133 && (GetRace() == FROGLOK || GetRace() == FROGLOK2)) loot_list.push_back(i); //Froglok Card
 		if (i.item_id == 100134 && (GetRace() == INVISIBLE_MAN || GetRace() == DERVISH || GetRace() == 431 /*Rock Derivsh*/)) loot_list.push_back(i); //Shadowed Man Card
-		if (i.item_id == 100135 && (GetRace() == 440 /*NewSpider*/ || GetRace() == 450 /*Lavaspinnder*/)) loot_list.push_back(i); //Spider card
+		if (i.item_id == 100135 && (GetRace() == 38 || GetRace() == 440 /*NewSpider*/ || GetRace() == 450 /*Lavaspinnder*/)) loot_list.push_back(i); //Spider Card
 		if (i.item_id == 100136 && (GetRace() == 22)) loot_list.push_back(i); //Beetle card
 		if (i.item_id == 100137 && (GetRace() == 37)) loot_list.push_back(i); //Snake card
 		if (i.item_id == 100138 && (GetRace() == 42)) loot_list.push_back(i); //Wolf card

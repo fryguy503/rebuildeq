@@ -424,7 +424,7 @@ public:
 
 	bool IsRaidTarget() const { return raid_target; };
 	void ResetHPUpdateTimer() { sendhpupdate_timer.Start(); }	
-	std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only);
+	std::vector<SpecialLoot_Struct> SpecialLoot(bool card_only);
 
 protected:
 
