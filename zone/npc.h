@@ -86,7 +86,7 @@ struct AISpellsVar_Struct {
 };
 
 struct SpecialLoot_Struct {
-	explicit SpecialLoot_Struct(uint32 item_id, std::string name, uint32 chance) {};
+	explicit SpecialLoot_Struct(uint32 item_id, std::string name, uint32 chance) : item_id(item_id), name(name), chance(chance) {};
 	uint32 item_id;
 	std::string name;
 	uint32 chance;
