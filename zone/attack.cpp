@@ -2249,7 +2249,8 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 			++iterator;
 			continue;
 		}
-		c->Message(0, "-----DPS-----");
+
+		c->Message(MT_CritMelee, "-----DPS for %s-----", GetCleanName());
 		for (auto&& d : DPS()) {
 			if ((EngageEnd() - d.engage_start) > 1) dps = (float)((float)d.total_damage / (EngageEnd() - d.engage_start));
 			else dps = d.total_damage;
@@ -2257,12 +2258,12 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 
 			if (engage_start > d.engage_start) engage_start = d.engage_start;
 			if (!c->GetEPP().use_full_dps && c->GetID() != d.character_id) continue; //Don't show DPS if self only is flagged
-			c->Message(0, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((EngageEnd() - d.engage_start) < 1) ? 1 : (EngageEnd() - d.engage_start), dps);
+			c->Message(MT_CritMelee, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((EngageEnd() - d.engage_start) < 1) ? 1 : (EngageEnd() - d.engage_start), dps);
 		}
 
 		if ((EngageEnd() - engage_start) > 1) dps = (float)((float)total_damage / (EngageEnd() - engage_start));
 		else dps = total_damage;
-		c->Message(0, "%s %i taken over %is (%.2f RDPS)", GetCleanName(), total_damage, ((EngageEnd() - engage_start) < 1) ? 1 : (EngageEnd() - engage_start), dps);
+		c->Message(MT_CritMelee, "%s %i taken over %is (%.2f RDPS)", GetCleanName(), total_damage, ((EngageEnd() - engage_start) < 1) ? 1 : (EngageEnd() - engage_start), dps);
 		++iterator;
 	}
 

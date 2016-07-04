@@ -5859,18 +5859,18 @@ void command_dps(Client *c, const Seperator *sep)
 	int total_damage = 0;
 	uint32 engage_start = target->EngageEnd() - 1;
 
-	c->Message(0, "-----DPS for %s-----", target->GetCleanName());
+	c->Message(MT_CritMelee, "-----DPS for %s-----", target->GetCleanName());
 	for (auto&& d : target->DPS()) {
 		if ((target->EngageEnd() - d.engage_start) > 1) dps = (float)((float)d.total_damage / (target->EngageEnd() - d.engage_start));
 		else dps = d.total_damage;
 		total_damage += d.total_damage;
 
 		if (engage_start > d.engage_start) engage_start = d.engage_start;
-		c->Message(0, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), dps);
+		c->Message(MT_CritMelee, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), dps);
 	}
 	if ((target->EngageEnd() - engage_start) > 1) dps = (float)((float)total_damage / (target->EngageEnd() - engage_start));
 	else dps = total_damage;
-	c->Message(0, "%s %i taken over %is (%.2f RDPS)", target->GetCleanName(), total_damage, ((target->EngageEnd() - engage_start) < 1) ? 1 : (target->EngageEnd() - engage_start), dps);
+	c->Message(MT_CritMelee, "%s %i taken over %is (%.2f RDPS)", target->GetCleanName(), total_damage, ((target->EngageEnd() - engage_start) < 1) ? 1 : (target->EngageEnd() - engage_start), dps);
 }
 
 void command_doanim(Client *c, const Seperator *sep)
