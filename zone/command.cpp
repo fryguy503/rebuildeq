@@ -4427,88 +4427,88 @@ void command_buff(Client *c, const Seperator *sep) {
 		}
 		duration *= 10;
 
-		if (level < 35) target->AddBuff(target, 144, duration); //regeneration 34
-		else if (level < 40) target->AddBuff(target, 137, duration); //pack regen 39
-		else if (level < 43) target->AddBuff(target, 145, duration); //chloro 42
-		else if (level < 46) target->AddBuff(target, 138, duration); //pack chloro 45
-		else if (level < 55) target->AddBuff(target, 1568, duration); //regrowuth 54
-		else if (level < 59) target->AddBuff(target, 1569, duration); //regrowth of grove 58 /grpp
-		else target->AddBuff(target, 2520, duration); //nature's recov - 60
+		if (level < 35) target->QuickBuff(target, 144, duration); //regeneration 34
+		else if (level < 40) target->QuickBuff(target, 137, duration); //pack regen 39
+		else if (level < 43) target->QuickBuff(target, 145, duration); //chloro 42
+		else if (level < 46) target->QuickBuff(target, 138, duration); //pack chloro 45
+		else if (level < 55) target->QuickBuff(target, 1568, duration); //regrowuth 54
+		else if (level < 59) target->QuickBuff(target, 1569, duration); //regrowth of grove 58 /grpp
+		else target->QuickBuff(target, 2520, duration); //nature's recov - 60
 
-		if (level < 2) target->AddBuff(target, 26, duration); //skin like wood 1
-		else if (level < 10) target->AddBuff(target, 2511, duration); //prot of wood 9
-		else if (level < 15) target->AddBuff(target, 263, duration); //skin like rock 14
-		else if (level < 20) target->AddBuff(target, 2512, duration); //prot of rock 19
-		else if (level < 25) target->AddBuff(target, 421, duration); //skin like steel 24
-		else if (level < 28) target->AddBuff(target, 2513, duration); //prot like steel 27
-		else if (level < 37) target->AddBuff(target, 422, duration); //skin like diamond 36
-		else if (level < 40) target->AddBuff(target, 2514, duration); //prot diamond 39
-		else if (level < 47) target->AddBuff(target, 423, duration); //skin like nature 46
-		else if (level < 50) target->AddBuff(target, 2515, duration); //prot of nature 49
-		else if (level < 58) target->AddBuff(target, 1559, duration); //natureskin 57
-		else if (level < 60) target->AddBuff(target, 2188, duration); //prot cabbage 59
-		else target->AddBuff(target, 1442, duration); //prot glades 60
+		if (level < 2) target->QuickBuff(target, 26, duration); //skin like wood 1
+		else if (level < 10) target->QuickBuff(target, 2511, duration); //prot of wood 9
+		else if (level < 15) target->QuickBuff(target, 263, duration); //skin like rock 14
+		else if (level < 20) target->QuickBuff(target, 2512, duration); //prot of rock 19
+		else if (level < 25) target->QuickBuff(target, 421, duration); //skin like steel 24
+		else if (level < 28) target->QuickBuff(target, 2513, duration); //prot like steel 27
+		else if (level < 37) target->QuickBuff(target, 422, duration); //skin like diamond 36
+		else if (level < 40) target->QuickBuff(target, 2514, duration); //prot diamond 39
+		else if (level < 47) target->QuickBuff(target, 423, duration); //skin like nature 46
+		else if (level < 50) target->QuickBuff(target, 2515, duration); //prot of nature 49
+		else if (level < 58) target->QuickBuff(target, 1559, duration); //natureskin 57
+		else if (level < 60) target->QuickBuff(target, 2188, duration); //prot cabbage 59
+		else target->QuickBuff(target, 1442, duration); //prot glades 60
 
-		if (level < 8) target->AddBuff(target, 256, duration); //shield of thistles 7
-		else if (level < 18) target->AddBuff(target, 273, duration); //shield of barbs 17
-		else if (level < 28) target->AddBuff(target, 129, duration); //shield of brambles 27
-		else if (level < 38) target->AddBuff(target, 432, duration); //shield of spikes 37
-		else if (level < 47) target->AddBuff(target, 356, duration); //shield of thorns 47
-		else if (level < 50) target->AddBuff(target, 1727, duration); //legacy of spike 49
-		else if (level < 58) target->AddBuff(target, 1560, duration); //shield of blades 58
-		else target->AddBuff(target, 1561, duration); //legacy of thorns 59
+		if (level < 8) target->QuickBuff(target, 256, duration); //shield of thistles 7
+		else if (level < 18) target->QuickBuff(target, 273, duration); //shield of barbs 17
+		else if (level < 28) target->QuickBuff(target, 129, duration); //shield of brambles 27
+		else if (level < 38) target->QuickBuff(target, 432, duration); //shield of spikes 37
+		else if (level < 47) target->QuickBuff(target, 356, duration); //shield of thorns 47
+		else if (level < 50) target->QuickBuff(target, 1727, duration); //legacy of spike 49
+		else if (level < 58) target->QuickBuff(target, 1560, duration); //shield of blades 58
+		else target->QuickBuff(target, 1561, duration); //legacy of thorns 59
 
-		if (level < 2) target->AddBuff(target, 268, duration); //str of earth 1
-		else if (level < 35) target->AddBuff(target, 429, duration); //str of stone 34
-		else target->AddBuff(target, 430, duration); //storm str 44
+		if (level < 2) target->QuickBuff(target, 268, duration); //str of earth 1
+		else if (level < 35) target->QuickBuff(target, 429, duration); //str of stone 34
+		else target->QuickBuff(target, 430, duration); //storm str 44
 
-		if (level > 30) target->AddBuff(target, 1693, duration);
-		else target->AddBuff(target, 174, duration);
+		if (level > 30) target->QuickBuff(target, 1693, duration);
+		else target->QuickBuff(target, 174, duration);
 
-		c->SpellFinished(278, target);
-		//target->AddBuff(target, 278, duration); //sow
+		c->QuickBuff(target, 278, duration);
+		//target->QuickBuff(target, 278, duration); //sow
 
 		if (c->HasPet()) {
 			target = c->GetPet();
-			if (level < 35) target->AddBuff(target, 144, duration); //regeneration 34
-			else if (level < 40) target->AddBuff(target, 137, duration); //pack regen 39
-			else if (level < 43) target->AddBuff(target, 145, duration); //chloro 42
-			else if (level < 46) target->AddBuff(target, 138, duration); //pack chloro 45
-			else if (level < 55) target->AddBuff(target, 1568, duration); //regrowuth 54
-			else if (level < 59) target->AddBuff(target, 1569, duration); //regrowth of grove 58 /grpp
-			else target->AddBuff(target, 2520, duration); //nature's recov - 60
+			if (level < 35) target->QuickBuff(target, 144, duration); //regeneration 34
+			else if (level < 40) target->QuickBuff(target, 137, duration); //pack regen 39
+			else if (level < 43) target->QuickBuff(target, 145, duration);  //chloro 42
+			else if (level < 46) target->QuickBuff(target, 138, duration); //pack chloro 45
+			else if (level < 55) target->QuickBuff(target, 1568, duration); //regrowuth 54
+			else if (level < 59) target->QuickBuff(target, 1569, duration); //regrowth of grove 58 /grpp
+			else target->QuickBuff(target, 2520, duration); //nature's recov - 60
 
-			if (level < 2) target->AddBuff(target, 26, duration); //skin like wood 1
-			else if (level < 10) target->AddBuff(target, 2511, duration); //prot of wood 9
-			else if (level < 15) target->AddBuff(target, 263, duration); //skin like rock 14
-			else if (level < 20) target->AddBuff(target, 2512, duration); //prot of rock 19
-			else if (level < 25) target->AddBuff(target, 421, duration); //skin like steel 24
-			else if (level < 28) target->AddBuff(target, 2513, duration); //prot like steel 27
-			else if (level < 37) target->AddBuff(target, 422, duration); //skin like diamond 36
-			else if (level < 40) target->AddBuff(target, 2514, duration); //prot diamond 39
-			else if (level < 47) target->AddBuff(target, 423, duration); //skin like nature 46
-			else if (level < 50) target->AddBuff(target, 2515, duration); //prot of nature 49
-			else if (level < 58) target->AddBuff(target, 1559, duration); //natureskin 57
-			else if (level < 60) target->AddBuff(target, 2188, duration); //prot cabbage 59
-			else target->AddBuff(target, 1442, duration); //prot glades 60
+			if (level < 2) target->QuickBuff(target, 26, duration); //skin like wood 1
+			else if (level < 10) target->QuickBuff(target, 2511, duration); //prot of wood 9
+			else if (level < 15) target->QuickBuff(target, 263, duration); //skin like rock 14
+			else if (level < 20) target->QuickBuff(target, 2512, duration); //prot of rock 19
+			else if (level < 25) target->QuickBuff(target, 421, duration); //skin like steel 24
+			else if (level < 28) target->QuickBuff(target, 2513, duration); //prot like steel 27
+			else if (level < 37) target->QuickBuff(target, 422, duration); //skin like diamond 36
+			else if (level < 40) target->QuickBuff(target, 2514, duration); //prot diamond 39
+			else if (level < 47) target->QuickBuff(target, 423, duration); //skin like nature 46
+			else if (level < 50) target->QuickBuff(target, 2515, duration); //prot of nature 49
+			else if (level < 58) target->QuickBuff(target, 1559, duration); //natureskin 57
+			else if (level < 60) target->QuickBuff(target, 2188, duration); //prot cabbage 59
+			else target->QuickBuff(target, 1442, duration); //prot glades 60
 
-			if (level < 8) target->AddBuff(target, 256, duration); //shield of thistles 7
-			else if (level < 18) target->AddBuff(target, 273, duration); //shield of barbs 17
-			else if (level < 28) target->AddBuff(target, 129, duration); //shield of brambles 27
-			else if (level < 38) target->AddBuff(target, 432, duration); //shield of spikes 37
-			else if (level < 47) target->AddBuff(target, 356, duration); //shield of thorns 47
-			else if (level < 50) target->AddBuff(target, 1727, duration); //legacy of spike 49
-			else if (level < 58) target->AddBuff(target, 1560, duration); //shield of blades 58
-			else target->AddBuff(target, 1561, duration); //legacy of thorns 59
+			if (level < 8) target->QuickBuff(target, 256, duration); //shield of thistles 7
+			else if (level < 18) target->QuickBuff(target, 273, duration); //shield of barbs 17
+			else if (level < 28) target->QuickBuff(target, 129, duration); //shield of brambles 27
+			else if (level < 38) target->QuickBuff(target, 432, duration); //shield of spikes 37
+			else if (level < 47) target->QuickBuff(target, 356, duration); //shield of thorns 47
+			else if (level < 50) target->QuickBuff(target, 1727, duration); //legacy of spike 49
+			else if (level < 58) target->QuickBuff(target, 1560, duration); //shield of blades 58
+			else target->QuickBuff(target, 1561, duration); //legacy of thorns 59
 
-			if (level < 2) target->AddBuff(target, 268, duration); //str of earth 1
-			else if (level < 35) target->AddBuff(target, 429, duration); //str of stone 34
-			else target->AddBuff(target, 430, duration); //storm str 44
+			if (level < 2) target->QuickBuff(target, 268, duration); //str of earth 1
+			else if (level < 35) target->QuickBuff(target, 429, duration); //str of stone 34
+			else target->QuickBuff(target, 430, duration); //storm str 44
 
-			if (level > 30) target->AddBuff(target, 1693, duration);
-			else target->AddBuff(target, 174, duration);
+			if (level > 30) target->QuickBuff(target, 1693, duration);
+			else target->QuickBuff(target, 174, duration);
 			//target->AddBuff(target, 278, duration); //sow
-			c->SpellFinished(278, target);
+			c->QuickBuff(target, 278, duration);
 		}
 		if (c->IsClient() && c->CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 		{

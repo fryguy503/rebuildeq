@@ -652,7 +652,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Brell's Blessing";
-			$newSkill->desc = 'Grants the item Brell\'s Blessing, which casts Paladin type buffs<br>Rank 1: +AC at 1/5ths of level<br>Rank 2: +HP Line 1 at 1/4ths of level<br>Rank 3: +HP Line 2 at 1/3ths of level<br>Rank 4: All buffs at 1/2ths of level<br>Rank 5: All buffs of equal level.';
+			$newSkill->desc = 'Courage now grants Paladin buffs<br>Rank 1: AC<br>Rank 2: HP Line 1<br>Rank 3: HP Symbol Line<br>Rank 4: HP Line 2 (Brell)<br>Rank 5: Double duration.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[13] = $newSkill;
 
