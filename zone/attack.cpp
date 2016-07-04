@@ -2872,25 +2872,34 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 		spellid = 2166;
 	}
 
-	if (this->IsClient() && this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_GOUGINGSKIN) > 0) {
-		
-		//This wonky code is because depending on item or spell ds, it stacks oddly.
-		DS += ((spell_ds) ? 1 : -1) *  4 * this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_GOUGINGSKIN);
-		if (attacker->IsNPC()) {
-			attacker->AddToHateList(this, uint32(10 * this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_GOUGINGSKIN)));
+	if (this->IsClient()) {
+		uint32 rank;
+		rank = this->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_GOUGINGSKIN);
+		if (rank > 0) {
+			DS += ((spell_ds) ? 1 : -1) * 4 * rank;
+			if (attacker->IsNPC()) {
+				attacker->AddToHateList(this, uint32(10 * rank));
+			}
+		}
+
+		rank = this->CastToClient()->GetBuildRank(DRUID, RB_DRU_REGENERATION);
+		if (rank > 0) {
+			DS += ((spell_ds) ? 1 : -1) * 2 * rank;
+			if (attacker->IsNPC()) {
+				attacker->AddToHateList(this, uint32(10 * rank));
+			}
+		}
+		rank = this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SHIELDOFNIFE);
+		if (rank > 0 && attacker->GetBodyType() == BT_Undead) {
+
+			//This wonky code is because depending on item or spell ds, it stacks oddly.
+			DS += ((spell_ds) ? 1 : -1) * 7 * rank;
+			if (attacker->IsNPC()) {
+				attacker->AddToHateList(this, uint32(10 * rank));
+			}
 		}
 	}
 
-	if (this->IsClient() && 
-		attacker->GetBodyType() == BT_Undead &&
-		this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SHIELDOFNIFE) > 0) {
-
-		//This wonky code is because depending on item or spell ds, it stacks oddly.
-		DS += ((spell_ds) ? 1 : -1) * 7 * this->CastToClient()->GetBuildRank(PALADIN , RB_PAL_SHIELDOFNIFE);
-		if (attacker->IsNPC()) {
-			attacker->AddToHateList(this, uint32(10 * this->CastToClient()->GetBuildRank(PALADIN , RB_PAL_SHIELDOFNIFE)));
-		}
-	}
 
 
 	if(DS == 0 && rev_ds == 0)
