@@ -2219,6 +2219,52 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 	if (respawn2) {
 		respawn2->DeathReset(1);
 	}
+	//Give DPS report to people with value toggled.
+	auto iterator = hate_list.GetHateList().begin();	
+	while (iterator != hate_list.GetHateList().end())
+	{
+		if (DPS().size() < 1) { //don't need to dps report an empty dps mob
+			break;
+		}
+
+		struct_HateList *h = (*iterator);
+		if (!h) {
+			++iterator;
+			continue;
+		}
+		if (h->entity_on_hatelist == nullptr ||  //if it doesn't exist
+			!h->entity_on_hatelist->IsClient() || //if it's not a client
+			(!h->entity_on_hatelist->CastToClient()->GetEPP().use_self_dps && !h->entity_on_hatelist->CastToClient()->GetEPP().use_full_dps)) { //if they don't have the dps flags on
+			++iterator;
+			continue;
+		}
+
+
+		float dps;
+		int total_damage = 0;
+		uint32 engage_start = EngageEnd() - 1;
+
+		Client *c = h->entity_on_hatelist->CastToClient();
+		if (c == nullptr) {
+			++iterator;
+			continue;
+		}
+		c->Message(0, "-----DPS-----");
+		for (auto&& d : DPS()) {
+			if ((EngageEnd() - d.engage_start) > 1) dps = (float)((float)d.total_damage / (EngageEnd() - d.engage_start));
+			else dps = d.total_damage;
+			total_damage += d.total_damage;
+
+			if (engage_start > d.engage_start) engage_start = d.engage_start;
+			if (!c->GetEPP().use_full_dps && c->GetID() != d.character_id) continue; //Don't show DPS if self only is flagged
+			c->Message(0, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((EngageEnd() - d.engage_start) < 1) ? 1 : (EngageEnd() - d.engage_start), dps);
+		}
+
+		if ((EngageEnd() - engage_start) > 1) dps = (float)((float)total_damage / (EngageEnd() - engage_start));
+		else dps = total_damage;
+		c->Message(0, "%s %i taken over %is (%.2f RDPS)", GetCleanName(), total_damage, ((EngageEnd() - engage_start) < 1) ? 1 : (EngageEnd() - engage_start), dps);
+		++iterator;
+	}
 
 	if (killer_mob && GetClass() != LDON_TREASURE)
 		hate_list.AddEntToHateList(killer_mob, damage);

@@ -6825,6 +6825,7 @@ void Mob::AddDPS(Mob *other, int damage) {
 		return;
 	}
 
+	Log.Out(Logs::General, Logs::Combat, "Added new DPS entry for %s", character_name.c_str());
 	//new entry
 	dps.push_back(DPS_Struct(time(nullptr), character_id, character_name, damage, damage));
 }
@@ -6835,7 +6836,9 @@ uint32 Mob::EngageEnd() {
 
 //Resets the engage, this is triggered when a mob hits full health.
 void Mob::EngageReset() {
+	Log.Out(Logs::General, Logs::Combat, "Resetting DPS for %s", GetCleanName());
 	engage_end = 0;	
+	engage_flush_on_next_engage = false;
 	dps.clear();
 }
 

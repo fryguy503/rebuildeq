@@ -147,7 +147,6 @@ public:
 	//Somewhat sorted: needs documenting!
 	void AddDPS(Mob *other, int damage);
 	std::vector<DPS_Struct> DPS();
-	uint32 EngageDuration();
 	void EngageReset();
 	uint32 EngageEnd();
 	void EngageFlushOnNextEngage();

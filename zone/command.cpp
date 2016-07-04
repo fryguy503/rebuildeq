@@ -5835,16 +5835,20 @@ void command_zonestatus(Client *c, const Seperator *sep)
 
 void command_dps(Client *c, const Seperator *sep)
 {
-	if (!c->GetTarget()) {
-		c->Message(0, "You must target something to use this command.");
+	Mob *target = c->GetTarget();
+
+	if (!strcasecmp(sep->arg[1], "self")) {
+		target = c;		
+	}
+
+	if (!target) {
+		c->Message(0, "You must target something to use this command, or type #dps self to get your received dps so far.");
 		return;
 	}
 
-	Mob *target = c->GetTarget();
-
-	if (!target->IsCorpse()) {
+	/*if (!target->IsCorpse()) {
 		c->Message(0, "Invalid Target type (Not corpse), bypassing for now");
-	}
+	}*/
 
 	if (target->DPS().size() < 1) {
 		c->Message(0, "Target %s not engaged.", (target->IsCorpse() ? "was" : "is"));		
@@ -5855,18 +5859,18 @@ void command_dps(Client *c, const Seperator *sep)
 	int total_damage = 0;
 	uint32 engage_start = target->EngageEnd() - 1;
 
-	c->Message(0, "-----DPS-----");
+	c->Message(0, "-----DPS for %s-----", target->GetCleanName());
 	for (auto&& d : target->DPS()) {
 		if ((target->EngageEnd() - d.engage_start) > 1) dps = (float)((float)d.total_damage / (target->EngageEnd() - d.engage_start));
 		else dps = d.total_damage;
 		total_damage += d.total_damage;
 
 		if (engage_start > d.engage_start) engage_start = d.engage_start;
-		c->Message(0, "%s: Total Damage: %i, Engaged Duration: %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), dps);
-	}	
+		c->Message(0, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), dps);
+	}
 	if ((target->EngageEnd() - engage_start) > 1) dps = (float)((float)total_damage / (target->EngageEnd() - engage_start));
 	else dps = total_damage;
-	c->Message(0, "%s: Total Received: %i, Engaged Duration: %is, (%.2f RDPS)", target->GetCleanName(), total_damage, ((target->EngageEnd() - engage_start) < 1) ? 1 : (target->EngageEnd() - engage_start), dps);
+	c->Message(0, "%s %i taken over %is (%.2f RDPS)", target->GetCleanName(), total_damage, ((target->EngageEnd() - engage_start) < 1) ? 1 : (target->EngageEnd() - engage_start), dps);
 }
 
 void command_doanim(Client *c, const Seperator *sep)
@@ -8833,6 +8837,8 @@ void command_toggle(Client *c, const Seperator *sep)
 		c->Message(0, "...newcon [%s] - Use new consider system", ((c->GetEPP().use_new_con) ? "ON" : "OFF"));
 		c->Message(0, "...healtarget [%s] - Cast beneficial spells on %s instead of an enemy target", ((c->GetEPP().use_self_target) ? "Self" : "Target's Target"), ((c->GetEPP().use_self_target) ? "self" : "target's target"));
 		c->Message(0, "...pettaunt [%s] - Set default option for pet taunting", ((c->GetEPP().use_pet_taunt) ? "ON" : "OFF"));
+		c->Message(0, "...dpsfull [%s] - When a mob you dealt damage on dies, reports all DPS", ((c->GetEPP().use_full_dps) ? "ON" : "OFF"));
+		c->Message(0, "...dpsself [%s] - When a mob you dealt damage on dies, reports your DPS", ((c->GetEPP().use_self_dps) ? "ON" : "OFF"));
 		return;
 	}
 	
@@ -8873,6 +8879,32 @@ void command_toggle(Client *c, const Seperator *sep)
 			return;
 		}
 		c->Message(0, "Pet taunting is now %s by default.", ((c->GetEPP().use_pet_taunt) ? "enabled" : "disabled"));
+		return;
+	}
+
+	if (!strcasecmp(sep->arg[1], "dpsfull")) {
+		c->GetEPP().use_full_dps = 1 - c->GetEPP().use_full_dps;
+		std::string query = StringFormat("UPDATE account_custom SET use_full_dps = %i WHERE account_id = %u", c->GetEPP().use_full_dps, c->AccountID());
+		auto results = database.QueryDatabase(query);
+		if (!results.Success()) {
+			c->Message(13, "Setting option failed. The devs have been notified.");
+			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			return;
+		}
+		c->Message(0, "Full DPS is now %s by default.", ((c->GetEPP().use_full_dps) ? "enabled" : "disabled"));
+		return;
+	}
+
+	if (!strcasecmp(sep->arg[1], "dpsself")) {
+		c->GetEPP().use_self_dps = 1 - c->GetEPP().use_self_dps;
+		std::string query = StringFormat("UPDATE account_custom SET use_self_dps = %i WHERE account_id = %u", c->GetEPP().use_self_dps, c->AccountID());
+		auto results = database.QueryDatabase(query);
+		if (!results.Success()) {
+			c->Message(13, "Setting option failed. The devs have been notified.");
+			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			return;
+		}
+		c->Message(0, "Self DPS is now %s by default.", ((c->GetEPP().use_self_dps) ? "enabled" : "disabled"));
 		return;
 	}
 
