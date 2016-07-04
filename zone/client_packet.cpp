@@ -4814,6 +4814,8 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 			con->pvpcon = tmob->CastToClient()->GetPVP();
 	}
 
+
+
 	// Mongrel: If we're feigned show NPC as indifferent
 	if (tmob->IsNPC())
 	{
@@ -4850,7 +4852,10 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 	}
 	else {
 		std::string con_text;
-		switch (con->faction) {
+
+		int factionlvl = GetFactionLevel(CharacterID(), tmob->CastToNPC()->GetNPCTypeID(), GetRace(), GetClass(), GetDeity(), tmob->CastToNPC()->GetPrimaryFaction(), tmob);		
+
+		switch (factionlvl) {
 		case FACTION_ALLY:
 			con_text = "regards you an ally";
 			break;
@@ -4876,28 +4881,35 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 			con_text = "glares at you threateningly";
 			break;
 		}
+
+		con->level = GetLevelCon(GetLevel(), tmob->GetLevel());
 		std::string level_text;
-		if (tmob->GetLevel() >= GetLevel() + 4) {
+		//if (tmob->GetLevel() >= GetLevel() + 4) {
+		if (con->level == CON_RED) {
 			level_text = "what would you like your tombstone to say?";
 			color = 13;
 		}
-		else if (tmob->GetLevel() > GetLevel()) {
+		//else if (tmob->GetLevel() > GetLevel()) {
+		else if (con->level == CON_YELLOW) {
 			level_text = "looks like he would wipe the floor with you!";
 			color = 15;
 		}
-		else if (tmob->GetLevel() == GetLevel()) {
+		else if (tmob->GetLevel() == GetLevel()) { //CON_WHITE doesn't work always for some reason
 			level_text = "looks like quite a gamble.";
 			color = 10;
 		}
-		else if (tmob->GetLevel() > GetLevel() - 6) {
+		//else if (tmob->GetLevel() > GetLevel() - 6) {
+		else if (con->level == CON_BLUE) {
 			level_text = "he appears to be quite formiddable.";
 			color = 4;
 		}
-		else if (tmob->GetLevel() > GetLevel() - 11) {
+		//else if (tmob->GetLevel() > GetLevel() - 11) {
+		else if (con->level == CON_GREEN && (tmob->GetLevel() > GetLevel() - 11)) { //for some reason green was coming up early.
 			level_text = "looks kind of dangerous.";
 			color = 7;
 		}
-		else if (tmob->GetLevel() > GetLevel() - 20) {
+		//else if (tmob->GetLevel() > GetLevel() - 20) {
+		else if (con->level == CON_LIGHTBLUE) {
 			level_text = "You would probably win this fight... it's not certain though.";
 			color = 2;
 		}
