@@ -9530,7 +9530,7 @@ void Client::EmoteEncounter() {
 			encounterTable[pool] = EN_WISP;
 			pool += 200;
 		}
-		if (zoneid != 22) {
+		if (zoneid != 22 && zoneid != 20) {
 			pool += 200;
 			encounterTable[pool] = EN_SANDGIANT;
 		}
