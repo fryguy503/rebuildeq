@@ -515,7 +515,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									else if (level >= 46 && caster_level >= 46) QuickBuff(caster, 2525, duration);
 									else if (level >= 40 && caster_level >= 40) { QuickBuff(caster, 389, duration); QuickBuff(caster, 168, duration); }
 									else if (level >= 32 && caster_level >= 32) { QuickBuff(caster, 431, duration); QuickBuff(caster, 167, duration); }
-									else { QuickBuff(caster, 274, duration);  QuickBuff(caster, 267, duration); }										
+									else { QuickBuff(caster, 274, duration); }										
 									
 									QuickBuff(caster, 278, duration); //Spirit of wolf duration is based on natural stats	
 									//SpellFinished(278, this);
@@ -603,8 +603,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									else if (level >= 54 && caster_level >= 54) QuickBuff(caster, 1568, duration); //regrowuth 54
 									else if (level >= 45 && caster_level >= 45) QuickBuff(caster, 138, duration); //pack chloro 45
 									else if (level >= 42 && caster_level >= 42) QuickBuff(caster, 145, duration); //chloro 42
-									else if (level >= 39 && caster_level >= 39) QuickBuff(caster, 137, duration); //pack regen 39									
-									else QuickBuff(caster, 144, duration); //regeneration 34									
+									else if (level >= 39 && caster_level >= 39) QuickBuff(caster, 137, duration); //pack regen 39		
+									else QuickBuff(caster, 144, duration); //regeneration 34			
 								}
 								if (rank > 1) { //cold/fire resist
 									if (level >= 51 && caster_level >= 51) {
@@ -630,7 +630,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 										QuickBuff(caster, 228, duration); //endure magic 34
 									}
 								}
-								if (rank > 0) { //STR								
+								if (rank > 0) { //STR
 									if (level >= 44 && caster_level >= 44) QuickBuff(caster, 430, duration); //storm str 44
 									else if (level >= 34 && caster_level >= 34) QuickBuff(caster, 429, duration); //str of stone 34
 									else QuickBuff(caster, 268, duration); //str of earth 1
