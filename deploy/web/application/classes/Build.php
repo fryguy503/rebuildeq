@@ -341,7 +341,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jonthon's Whistle";
-			$newSkill->desc = 'Jonthon\'s Self Haste Songs have improved haste, as well as grants a proc line similar to puma that deals your level * <em data-base="1">1</em> damage<span class="perLevel"> per rank</span>. If you do not use a jonthon whistle, it still deals half damage procs.';
+			$newSkill->desc = 'Jonthon\'s Self Haste Songs have improved haste, as well as grants a proc line similar to puma that deals your level * 2.5<span class="perLevel"> per rank</span>. If you do not use a jonthon whistle, it still deals half damage procs.';
 			$newSkill->image = "/images/builds/icons/rb-brd-jonathonswhistle.png";	
 			$skills[18] = $newSkill;
 
@@ -523,7 +523,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Awakening";
-			$newSkill->desc = 'Any successful melee hit on an enemy by the druid grants <em data-base="1">1</em> mana and now has a puma-like proc<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Any successful melee hit on an enemy by the druid grants <em data-base="1">1</em> mana and now has a puma-like proc for level * 1.25<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-spiritualawakening.png";
 			$skills[26] = $newSkill;
 
@@ -767,7 +767,7 @@ class Build {
 			case "rogue":
 			$newSkill = new stdClass();
 			$newSkill->title = "Appraisal";
-			$newSkill->desc = 'Grants the Appraisal AA, granting a self buff that will give a puma-like proc for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Appraisal AA, granting a self buff that will give a puma-like proc dealing level * 2.5 damage for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-appraisal.png";
 			$skills[0] = $newSkill;
 			$newSkill = new stdClass();
@@ -964,7 +964,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fury";
-			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma that deals your level * 5 damage at <em data-base="20">20</em>% effectiveness and increases duration by <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>. If Fury is not on, it still deals half proc damage.';
+			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma that deals your level * 2.5 damage at <em data-base="20">20</em>% effectiveness and increases duration by <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>. If Fury is not on, it still deals half proc damage.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[36] = $newSkill;
 			

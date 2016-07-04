@@ -1353,7 +1353,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			if (rank > 0) {
 				spellid = 271; //Fury spell
 				chance = 400;
-				proc_damage = GetLevel() * 5;
+				proc_damage = GetLevel() * 2.5f;
 				proc_damage = proc_damage * 0.25f * rank;
 				if (proc_damage < 20) {
 					proc_damage = 20;
@@ -1379,7 +1379,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			if (rank > 0) {
 				spellid = 271; //Fury spell
 				chance = 300;
-				proc_damage = GetLevel() * 5;
+				proc_damage = GetLevel() * 2.5f;
 				proc_damage = proc_damage * 0.25f * rank;
 				if (proc_damage < 20) {
 					proc_damage = 20;
@@ -1399,7 +1399,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
 			if (rank > 0) {
 				chance = 300;
-				proc_damage = GetLevel() * 5;
+				proc_damage = GetLevel() * 2.5f;
 				proc_damage = proc_damage * 0.25f * rank;
 				proc_damage /= 2;
 				if (proc_damage < 20) {
@@ -1417,7 +1417,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					chance += chance * 0.1f * rank;
 				}
 
-				proc_damage = GetLevel() * 5;
+				proc_damage = GetLevel() * 2.5f;
 				proc_damage = proc_damage * 0.25f * rank;
 				if (proc_damage < 20) {
 					proc_damage = 20;
