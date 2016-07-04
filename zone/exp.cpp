@@ -1051,6 +1051,20 @@ void Client::UpdateSkillsAndSpells() {
 		}
 	}
 
+	if (GetSkill(EQEmu::skills::SkillTripleAttack) == 0) {
+		if (
+			(GetClass() == SHADOWKNIGHT && GetLevel() >= 54) ||
+			(GetClass() == PALADIN && GetLevel() >= 54) ||
+			(GetClass() == WARRIOR && GetLevel() >= 46) ||
+			(GetClass() == MONK && GetLevel() >= 46) ||
+			(GetClass() == ROGUE && GetLevel() >= 46)
+			//(GetClass() == BARD && GetLevel() >= 46)
+			//(GetClass() == SHADOWKNIGHT && GetLevel() >= 54)
+			) {
+			SetSkill(EQEmu::skills::SkillTripleAttack, 1);
+		}
+	}
+
 	if (GetSkill(EQEmu::skills::SkillApplyPoison) == 0) {
 		if (
 			(GetClass() == ROGUE && GetLevel() >= 18)
