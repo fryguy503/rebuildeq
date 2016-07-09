@@ -8837,8 +8837,8 @@ void command_toggle(Client *c, const Seperator *sep)
 		c->Message(0, "...newcon [%s] - Use new consider system", ((c->GetEPP().use_new_con) ? "ON" : "OFF"));
 		c->Message(0, "...healtarget [%s] - Cast beneficial spells on %s instead of an enemy target", ((c->GetEPP().use_self_target) ? "Self" : "Target's Target"), ((c->GetEPP().use_self_target) ? "self" : "target's target"));
 		c->Message(0, "...pettaunt [%s] - Set default option for pet taunting", ((c->GetEPP().use_pet_taunt) ? "ON" : "OFF"));
-		c->Message(0, "...dpsfull [%s] - When a mob you dealt damage on dies, reports all DPS", ((c->GetEPP().use_full_dps) ? "ON" : "OFF"));
-		c->Message(0, "...dpsself [%s] - When a mob you dealt damage on dies, reports your DPS", ((c->GetEPP().use_self_dps) ? "ON" : "OFF"));
+		c->Message(0, "...dpsfull [%s] - When a mob dies you hurted, shows report of all DPS", ((c->GetEPP().use_full_dps) ? "ON" : "OFF"));
+		c->Message(0, "...dpsself [%s] - When a mob dies you hurted, shows reports your DPS", ((c->GetEPP().use_self_dps) ? "ON" : "OFF"));
 		return;
 	}
 	
