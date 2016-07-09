@@ -4462,7 +4462,7 @@ void command_buff(Client *c, const Seperator *sep) {
 		else if (level < 35) target->QuickBuff(target, 429, duration); //str of stone 34
 		else target->QuickBuff(target, 430, duration); //storm str 44
 
-		if (level > 30) target->QuickBuff(target, 1693, duration);
+		if (level > 40) target->QuickBuff(target, 1693, duration);
 		else target->QuickBuff(target, 174, duration);
 
 		c->QuickBuff(target, 278, duration);
