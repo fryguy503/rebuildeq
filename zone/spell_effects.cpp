@@ -230,6 +230,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if (caster) {
 					if (caster->IsClient()) { //Ensure caster is client for these mechanics
 						Client * casterClient = caster->CastToClient();
+						uint8 level = GetLevel();
+						uint8 caster_level = casterClient->GetLevel();
 
 						rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN);
 						if (rank > 0 && spell_id == 8193 && IsClient()) { //This only works on player characters.
@@ -247,6 +249,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				// for offensive spells check if we have a spell rune on
 				int32 dmg = effect_value;
 				Log.Out(Logs::General, Logs::Spells, "Current HP trigger for spell %i and dmg %i", spell_id, dmg);
+
 				if(dmg < 0)
 				{
 					if (!PassCastRestriction(false, spells[spell_id].base2[i], true))
@@ -441,69 +444,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							Client * casterClient = caster->CastToClient();
 							uint8 level = GetLevel();
 							uint8 caster_level = casterClient->GetLevel();
-
-							rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN);
-							if (rank > 0 && spell_id == 8193 && IsClient()) { //This only works on player characters.
-								int32 mana_amount = casterClient->GetMana() * (0.01f * rank);
-								if (mana_amount < 1) mana_amount = 1;
-								if (casterClient != this) casterClient->Message(MT_NonMelee, "Nature's Guardian %u gifted %i mana to %s.", rank, mana_amount, GetCleanName());
-								Message(MT_NonMelee, "%s's Nature's Guardian %u gifted %i mana.", casterClient->GetCleanName(), rank, mana_amount);
-								SetMana(GetMana() + mana_amount);
-								break;
-							}
-
-
-							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
-							if (spell_id == 202 && rank > 0) {
-								Log.Out(Logs::General, Logs::Spells, "Applying Courage buff");
-								int duration = caster_level * 6;
-								if (rank < 5 ) duration /= 2;
-								//4065 blessing of austerity
-								//3578
-
-								if (level > 59 && caster_level > 59) {
-									if (rank > 3) caster->QuickBuff(this, 1456, duration); //divine str
-									if (rank > 2) caster->QuickBuff(this, 20, duration); //shield of words
-									if (rank > 1) caster->QuickBuff(this, 314, duration); //resolution
-								}
-								else if (level > 57 && caster_level > 57) {
-									if (rank > 3) caster->QuickBuff(this, 1288, duration); //Divine Glory
-									if (rank > 2) caster->QuickBuff(this, 488, duration); //Naltron									
-									if (rank > 1) caster->QuickBuff(this, 312, duration); //Valor
-									caster->QuickBuff(this, 19, duration); //Armor of Faith
-								}
-								else if (level > 54 && caster_level > 54) {
-									if (rank > 1) caster->QuickBuff(this, 4064, duration); //Austerity
-									if (rank > 3) caster->QuickBuff(this, 1288, duration); //Divine Glory
-								}
-								else if (level > 48 && caster_level > 48) {
-									caster->QuickBuff(this, 19, duration); //Armor of Faith
-									if (rank > 1) caster->QuickBuff(this, 312, duration); //Valor
-									if (rank > 3) caster->QuickBuff(this, 3578, duration); //Divine Vigor
-									caster->QuickBuff(this, 487, duration); //Symbol of pinzarn
-								}
-								else if (level > 45 && caster_level > 45) {
-									caster->QuickBuff(this, 19, duration); //Armor of Faith
-									if (rank > 1) caster->QuickBuff(this, 312, duration); //Valor
-									if (rank > 3) caster->QuickBuff(this, 2584, duration); //Divine Vigor
-									if (rank > 2) caster->QuickBuff(this, 487, duration); //Symbol of pinzarn
-								}
-								else if (level > 32 && caster_level > 32) {
-									if (rank > 3) caster->QuickBuff(this, 2584, duration); //Divine Vigor
-									if (rank > 1) caster->QuickBuff(this, 89, duration); //Daring
-									caster->QuickBuff(this, 18, duration); //Guard
-									if (rank > 2) caster->QuickBuff(this, 486, duration); //Symbol of Ryltan
-								}
-								else if (level > 19 && caster_level > 19) {
-									if (rank > 1) caster->QuickBuff(this, 219, duration); //Center
-									if (rank > 2) caster->QuickBuff(this, 485, duration); //Transal
-									caster->QuickBuff(this, 368, duration); //Spirit Armor
-								}
-								else {
-									if (rank > 1) caster->QuickBuff(this, 202, duration); //Courage
-									caster->QuickBuff(this, 11, duration); //Holy Armor
-								}
-							}
 
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID);
 							if (spell_id == 267 && rank > 0) {
@@ -3626,8 +3566,66 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			case SE_SkillProc:
 			case SE_SkillProcSuccess:
 			{
+				
+
 				if (caster && caster->IsClient()) {
 					Client * casterClient = caster->CastToClient();					
+					uint8 level = GetLevel();
+					uint8 caster_level = casterClient->GetLevel();
+					
+					rank = casterClient->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
+					if (spell_id == 202 && rank > 0) {
+						Log.Out(Logs::General, Logs::Spells, "Applying Courage buff");
+						int duration = caster_level * 6;
+						if (rank < 5) duration /= 2;
+						//4065 blessing of austerity
+						//3578
+
+						if (level > 59 && caster_level > 59) {
+							if (rank > 3) caster->QuickBuff(this, 1456, duration); //divine str
+							if (rank > 2) caster->QuickBuff(this, 20, duration); //shield of words
+							if (rank > 1) caster->QuickBuff(this, 314, duration); //resolution
+						}
+						else if (level > 57 && caster_level > 57) {
+							if (rank > 3) caster->QuickBuff(this, 1288, duration); //Divine Glory
+							if (rank > 2) caster->QuickBuff(this, 488, duration); //Naltron									
+							if (rank > 1) caster->QuickBuff(this, 312, duration); //Valor
+							caster->QuickBuff(this, 19, duration); //Armor of Faith
+						}
+						else if (level > 54 && caster_level > 54) {
+							if (rank > 1) caster->QuickBuff(this, 4064, duration); //Austerity
+							if (rank > 3) caster->QuickBuff(this, 1288, duration); //Divine Glory
+						}
+						else if (level > 48 && caster_level > 48) {
+							caster->QuickBuff(this, 19, duration); //Armor of Faith
+							if (rank > 1) caster->QuickBuff(this, 312, duration); //Valor
+							if (rank > 3) caster->QuickBuff(this, 3578, duration); //Divine Vigor
+							caster->QuickBuff(this, 487, duration); //Symbol of pinzarn
+						}
+						else if (level > 45 && caster_level > 45) {
+							caster->QuickBuff(this, 19, duration); //Armor of Faith
+							if (rank > 1) caster->QuickBuff(this, 312, duration); //Valor
+							if (rank > 3) caster->QuickBuff(this, 2584, duration); //Divine Vigor
+							if (rank > 2) caster->QuickBuff(this, 487, duration); //Symbol of pinzarn
+						}
+						else if (level > 32 && caster_level > 32) {
+							if (rank > 3) caster->QuickBuff(this, 2584, duration); //Divine Vigor
+							if (rank > 1) caster->QuickBuff(this, 89, duration); //Daring
+							caster->QuickBuff(this, 18, duration); //Guard
+							if (rank > 2) caster->QuickBuff(this, 486, duration); //Symbol of Ryltan
+						}
+						else if (level > 19 && caster_level > 19) {
+							if (rank > 1) caster->QuickBuff(this, 219, duration); //Center
+							if (rank > 2) caster->QuickBuff(this, 485, duration); //Transal
+							caster->QuickBuff(this, 368, duration); //Spirit Armor
+						}
+						else {
+							//if (rank > 1) caster->QuickBuff(this, 202, duration); //Courage is casted by this spell
+							caster->QuickBuff(this, 11, duration); //Holy Armor
+						}
+					}
+
+
 					rank = casterClient->GetBuildRank(DRUID, RB_DRU_BLESSINGOFRO);
 					if (rank > 0 && zone->random.Roll(5 * rank)) {		
 						int infect_count = caster->hate_list.InfectNearby(caster, spell_id, (10 * rank), this, 10);
