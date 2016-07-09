@@ -2595,7 +2595,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		if (i.item_id == 100116 && GetRace() == 48) loot_list.push_back(i); //Kobold Card
 		if (i.item_id == 100117 && GetRace() == 54) loot_list.push_back(i); //Orc Card 15ac	
 		if (i.item_id == 100118 && (GetRace() == 28 || GetRace() == 456)) loot_list.push_back(i); //Fungus Card
-		if (i.item_id == 100119 && (GetRace() == 40 || GetRace() == 433)) loot_list.push_back(i); //Goblin Card	
+		if (i.item_id == 100119 && (GetRace() == 40 || GetRace() == 433 || GetRace() == 137)) loot_list.push_back(i); //Goblin Card	
 		if (i.item_id == 100120 && (GetRace() == 21)) loot_list.push_back(i); //Evil Eye Card
 		if (i.item_id == 100121 && (GetRace() == HUMAN || GetRace() == 44 /*Freeport Guard*/ || GetRace() == 71 /*InnKeeper*/)) loot_list.push_back(i); //Human Card
 		if (i.item_id == 100122 && GetRace() == BARBARIAN) loot_list.push_back(i); //Barbarian Card
