@@ -7,4 +7,8 @@ tags = ["mage", "eqcleanup"]
 title = "No More Rotting Corpses"
 +++
 * Corpses rott time changed from 12 hours to 7 days.
+<<<<<<< HEAD
 <!--more-->
+=======
+<!--more-->
+>>>>>>> 8151fa3e30571bcaec11766f5ede18d76f6d0d71
