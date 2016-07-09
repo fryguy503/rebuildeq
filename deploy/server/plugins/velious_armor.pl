@@ -567,13 +567,13 @@ sub velious_armor_list {
 	
 	$tmp_class = 8;
 	#thurgadin leifur bard plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31036}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31037}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31038}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31039}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31040}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31041}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31042}; #boots
+	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31035}; #cap
+	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31036}; #bp
+	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31037}; #sleeves
+	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31038}; #wrist
+	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31039}; #gloves
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31040}; #legs
+	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31041}; #boots
 	
 	$tmp_class = 14;
 	#thurgadin lorekeeper brita enchanter silk

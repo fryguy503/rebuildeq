@@ -1,6 +1,6 @@
 +++
 banner = "post/images/paladin-buffs.png"
-date = "2016-07-05T01:19:18-07:00"
+date = "2016-07-06T01:19:18-07:00"
 description = "Shaman Buffs"
 images = ["post/images/paladin-buff.png"]
 menu = ""
