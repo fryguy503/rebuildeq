@@ -4191,24 +4191,24 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 					uint16 rank = caster_client->GetBuildRank(DRUID, RB_DRU_FOCUSEDSWARM);
 					if (rank > 0) {
 						float dist2 = DistanceSquared(m_Position, caster->GetPosition());						
-						float multiplier = 0.5f;
+						float multiplier = 1.0f;
 						if (dist2 <= (50 * 50)) {
-							multiplier = 0.5f;
+							multiplier = 1.0f;
 						}
 						else if (dist2 <= (100 * 100)) {
-							multiplier = 0.4f;
+							multiplier = 0.9f;
 						}
 						else if (dist2 <= (150 * 150)) {
-							multiplier = 0.3f;
+							multiplier = 0.8f;
 						}
 						else if (dist2 <= (200 * 200)) {
-							multiplier = 0.2f;
+							multiplier = 0.7f;
 						}
 						else if (dist2 <= (250 * 250)) {
-							multiplier = 0.4f;
+							multiplier = 0.6f;
 						}
 						else {
-							multiplier = 0;
+							multiplier = 0.5f;
 						}
 						if (multiplier > 0) {
 							int bonus_damage = effect_value * multiplier * 0.2f * rank;
@@ -4218,7 +4218,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 						}
 					}
 					rank = caster_client->GetBuildRank(DRUID, RB_DRU_INTENSITY);
-					if (rank > 0 && zone->random.Roll(1 * rank)) {
+					if (rank > 0 && zone->random.Roll(3 * rank)) {
 						int bonus_damage = effect_value * 3;
 						if (bonus_damage > 0) bonus_damage = -1;
 						caster_client->Message(MT_DoTDamage, "Intensity %u caused %i bonus damage to %s.", rank, -bonus_damage, GetCleanName());

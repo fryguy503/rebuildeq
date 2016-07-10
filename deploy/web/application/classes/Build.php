@@ -548,7 +548,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Intensity";
-			$newSkill->desc = 'When an enemy is affected by a damage over time, there is a <em data-base="1">1</em>% chance the DoT will do triple damage on a single tick.';
+			$newSkill->desc = 'When an enemy is affected by a damage over time, there is a <em data-base="3">3</em>% chance the DoT will do triple damage on a single tick.';
 			$newSkill->image = "/images/builds/icons/rb-dru-intensity.png";	
 			$skills[36] = $newSkill;
 
@@ -560,7 +560,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Focused Swarm";
-			$newSkill->desc = 'When standing nearby a mob, DoTs now deal <em data-base="10">10</em>% more damage. This damage bonus reduces by 10% for every 50m you\'re away from an enemy.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When standing nearby a mob, DoTs now deal <em data-base="20">20</em>% more damage. This damage bonus reduces by 10% for every 50m you\'re away from an enemy, with a minimum of <em data-base="10">10</em>% more damage.<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-focusedswarm.png";	
 			$skills[40] = $newSkill;
 
