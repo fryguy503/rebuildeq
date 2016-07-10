@@ -377,6 +377,11 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			npc_type->size = 4;
 			npc_type->luclinface = 0;
 			break;
+		case WOOD_ELF:
+			npc_type->race = BEAR;
+			npc_type->texture = 1;
+			npc_type->helmtexture = 2;
+			npc_type->size = 2.5f;
 		case DARK_ELF:
 			npc_type->race = WOLF;
 			npc_type->texture = 1;
