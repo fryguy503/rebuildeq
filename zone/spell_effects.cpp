@@ -235,7 +235,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 						rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN);
 						if (rank > 0 && spell_id == 8193 && IsClient()) { //This only works on player characters.
-							int32 mana_amount = casterClient->GetMana() * (0.03f * rank);
+							int32 mana_amount = casterClient->GetMaxMana() * (0.03f * rank);
 							if (mana_amount < 1) mana_amount = 1;
 							if (casterClient != this) casterClient->Message(MT_NonMelee, "Nature's Guardian %u gifted %i mana to %s.", rank, mana_amount, GetCleanName());
 							Message(MT_NonMelee, "%s's Nature's Guardian %u gifted %i mana.", casterClient->GetCleanName(), rank, mana_amount);

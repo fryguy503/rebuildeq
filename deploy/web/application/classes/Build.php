@@ -541,7 +541,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Nature's Guardian";
-			$newSkill->desc = 'Grants the Nature\'s Guardian AA, where <em data-base="3">3</em>% of the caster\'s current mana is infused by nature and can be transferred to a target or to the caster<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Nature\'s Guardian AA, where <em data-base="3">3</em>% of the caster\'s max mana is infused by nature and can be transferred to a target or to the caster<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-naturesguardian.png";	
 			$skills[34] = $newSkill;
 
