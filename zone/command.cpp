@@ -1002,6 +1002,30 @@ void command_summon(Client *c, const Seperator *sep)
 
 	if(sep->arg[1][0] != 0)		// arg specified
 	{
+		if (strcasecmp(sep->arg[1], "eid") == 0) {
+			if (!sep->arg[2]) {
+				c->Message(0, "Usage: #summon eid #");
+				return;
+			}
+			uint8 eid = atoi(sep->arg[2]);
+			if (eid < 1) {
+				c->Message(0, "Invalid eid: %s", sep->arg[2]);
+				return;
+			}
+		
+			NPC *t = entity_list.GetNPCByID(eid);
+			if (t == nullptr) {
+				c->Message(0, "NPC not found: %u", eid);
+				return;
+			}
+
+			c->Message(0, "Summoning NPC %s to %1.1f, %1.1f, %1.1f", t->GetName(), c->GetX(), c->GetY(), c->GetZ());
+			t->CastToNPC()->GMMove(c->GetX(), c->GetY(), c->GetZ(), c->GetHeading());
+			t->CastToNPC()->SaveGuardSpot(true);
+			return;
+		}
+
+
 		Client* client = entity_list.GetClientByName(sep->arg[1]);
 		if (client != 0)	// found player in zone
 			t=client->CastToMob();
@@ -1488,11 +1512,40 @@ void command_npcstats(Client *c, const Seperator *sep)
 	else if (!c->GetTarget()->IsNPC())
 		c->Message(0, "ERROR: Target is not a NPC!");
 	else {
+		float dps;
+		//attack delay = 29,
+		//min 168 max 404
+		
+		std::string specials = "";
+		int num_hits = 1;
+		if (c->GetTarget()->GetLevel() > 10) {
+			num_hits = 2;
+		}
+
+		if (c->GetTarget()->CastToNPC()->GetSpecialAbility(SPECATK_TRIPLE)) {
+			specials += "TRIP ";
+			num_hits = 3;
+		}
+
+		if (c->GetTarget()->CastToNPC()->GetSpecialAbility(SPECATK_QUAD)) {
+			num_hits = 4;
+			specials += "QUAD ";
+		}
+
+		if (c->GetTarget()->CastToNPC()->GetSpecialAbility(SPECATK_FLURRY)) specials += "FLUR ";
+		
+		if (c->GetTarget()->CastToNPC()->GetSpecialAbility(UNSLOWABLE)) specials += "!SLOW ";
+		if (c->GetTarget()->CastToNPC()->GetSpecialAbility(FLEE_PERCENT)) specials += "FLEE ";
+
+		dps = c->GetTarget()->CastToNPC()->GetMaxDamage() * num_hits*(100/c->GetTarget()->CastToNPC()->GetAttackDelay()) / 20.0f;
+
 		c->Message(0, "NPC Stats:");
-		c->Message(0, "Name: %s   NpcID: %u",  c->GetTarget()->GetName(), c->GetTarget()->GetNPCTypeID());
+		c->Message(0, "Name: %s   NpcID: %u, EntityID: %i",  c->GetTarget()->GetName(), c->GetTarget()->GetNPCTypeID(), c->GetTarget()->GetID());
 		c->Message(0, "Race: %i  Level: %i  Class: %i  Material: %i",  c->GetTarget()->GetRace(), c->GetTarget()->GetLevel(), c->GetTarget()->GetClass(), c->GetTarget()->GetTexture());
-		c->Message(0, "Current HP: %i  Max HP: %i",  c->GetTarget()->GetHP(), c->GetTarget()->GetMaxHP());
+		c->Message(0, "Current HP: %i  Max HP: %i",  c->GetTarget()->GetHP(), c->GetTarget()->GetMaxHP());		
+		c->Message(0, "Specials: %s", specials.c_str());
 		c->Message(0, "Min Damage: %i Max Damage: %i", c->GetTarget()->CastToNPC()->GetMinDamage(), c->GetTarget()->CastToNPC()->GetMaxDamage());
+		c->Message(0, "Attack Delay: %u, Theory DPS: %.2f", c->GetTarget()->CastToNPC()->GetAttackDelay(), dps);
 		//c->Message(0, "Weapon Item Number: %s", c->GetTarget()->GetWeapNo());
 		c->Message(0, "Gender: %i  Size: %f  Bodytype: %d",  c->GetTarget()->GetGender(), c->GetTarget()->GetSize(), c->GetTarget()->GetBodyType());
 		c->Message(0, "Runspeed: %.3f  Walkspeed: %.3f",  static_cast<float>(0.025f * c->GetTarget()->GetRunspeed()), static_cast<float>(0.025f * c->GetTarget()->GetWalkspeed()));
