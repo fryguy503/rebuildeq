@@ -6001,6 +6001,12 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true) {
 	if (npctype->level < 21 && !keepSpells) { //keepspells is only disabled for encounters, so, i'm nerfing hp
 		hp /= 2; //let's just cut it in half.
 	}
+
+	//Bonus HP when >= 55
+	if (hp < 6000 && npctype->level >= 55) {
+		hp = 6000 + (200 * (npctype->level - 55));
+	}
+
 	npctype->cur_hp = hp;
 	npctype->max_hp = hp;
 	npctype->runspeed = 1.25;
@@ -6028,16 +6034,18 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true) {
 	int AC_adjust = 12;
 
 	if (npctype->level >= 66) {
-		npctype->min_dmg = 220;
-		npctype->max_dmg = ((((99000)*(npctype->level - 64)) / 400)*AC_adjust / 10);
+		npctype->min_dmg = 100;
+		npctype->max_dmg = ((((99000)*(npctype->level - 64)) / 400)*AC_adjust / 10);		
 	}
 	else if (npctype->level >= 60 && npctype->level <= 65) {
 		npctype->min_dmg = (npctype->level + (npctype->level / 3));
 		npctype->max_dmg = (npctype->level * 3)*AC_adjust / 10;
+		if (npctype->max_dmg < 307) npctype->max_dmg = 307;
 	}
 	else if (npctype->level >= 51 && npctype->level <= 59) {
 		npctype->min_dmg = (npctype->level + (npctype->level / 3));
 		npctype->max_dmg = (npctype->level * 3)*AC_adjust / 10;
+		if (npctype->max_dmg < 207) npctype->max_dmg = 207;
 	}
 	else if (npctype->level >= 40 && npctype->level <= 50) {
 		npctype->min_dmg = npctype->level;
