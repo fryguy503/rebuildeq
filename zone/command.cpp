@@ -5987,7 +5987,7 @@ void command_exp(Client *c, const Seperator *sep)
 		}
 
 		int16 inv_slot_id = c->GetInv().HasItem(100000, 1, invWhereWorn | invWherePersonal);
-		if (inv_slot_id <= 0) {
+		if (inv_slot_id == -1) {
 			c->Message(0, "You need an empty bottle of experience to use this command.");
 			return;
 		}
@@ -6017,7 +6017,7 @@ void command_exp(Client *c, const Seperator *sep)
 		std::string query = StringFormat("UPDATE character_custom SET exp_pool = exp_pool - %i WHERE character_id = %i", RuleI(AA, ExpPerPoint), c->CharacterID());
 		auto results = database.QueryDatabase(query);
 
-		c->DeleteItemInInventory(inv_slot_id, 1, true);
+		c->DeleteItemInInventory(inv_slot_id, 1, true, true);
 		c->SummonItem(100001, 1);
 
 		c->Message(MT_Experience, "You have paid 500 platinum to fill a bottle of experience.");
