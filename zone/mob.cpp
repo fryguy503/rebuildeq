@@ -5877,7 +5877,7 @@ int Mob::CheckBaneDamage(const ItemInst *item)
 
 
 //Adjusts an NPC's stats based on properties provided
-NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true, isPet = false) {
+NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true, bool isPet = false) {
 
 	//===== HITPOINTS ======
 	//Stolen from Client::GetMaxHP...
