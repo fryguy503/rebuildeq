@@ -12765,6 +12765,18 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 	if (vendor == 0 || !vendor->IsNPC() || vendor->GetClass() != MERCHANT)
 		return;
 
+	if (vendor->GetLastName() == "Origin Binder") {
+		EQApplicationPacket* outapp = new EQApplicationPacket(OP_ShopPlayerSell, sizeof(Merchant_Purchase_Struct));
+ 		Merchant_Purchase_Struct* mco = (Merchant_Purchase_Struct*)outapp->pBuffer;
+ 		mco->npcid = vendor->GetID();
+ 		mco->itemslot = -1;
+ 		mco->quantity = 0;
+ 		mco->price = 0;
+ 		QueuePacket(outapp);
+ 		safe_delete(outapp);
+ 		return;
+	}
+
 	//you have to be somewhat close to them to be properly using them
 	if (DistanceSquared(m_Position, vendor->GetPosition()) > USE_NPC_RANGE2)
 		return;
