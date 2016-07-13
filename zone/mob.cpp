@@ -5877,7 +5877,7 @@ int Mob::CheckBaneDamage(const ItemInst *item)
 
 
 //Adjusts an NPC's stats based on properties provided
-NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true) {
+NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true, isPet = false) {
 
 	//===== HITPOINTS ======
 	//Stolen from Client::GetMaxHP...
@@ -6003,7 +6003,7 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true) {
 	}
 
 	//Bonus HP when >= 55
-	if (hp < 6000 && npctype->level >= 55) {
+	if (!isPet && hp < 6000 && npctype->level >= 55) {
 		hp = 6000 + (200 * (npctype->level - 55));
 	}
 
@@ -6040,12 +6040,12 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true) {
 	else if (npctype->level >= 60 && npctype->level <= 65) {
 		npctype->min_dmg = (npctype->level + (npctype->level / 3));
 		npctype->max_dmg = (npctype->level * 3)*AC_adjust / 10;
-		if (npctype->max_dmg < 307) npctype->max_dmg = 307;
+		if (!isPet && npctype->max_dmg < 307) npctype->max_dmg = 307;
 	}
 	else if (npctype->level >= 51 && npctype->level <= 59) {
 		npctype->min_dmg = (npctype->level + (npctype->level / 3));
 		npctype->max_dmg = (npctype->level * 3)*AC_adjust / 10;
-		if (npctype->max_dmg < 207) npctype->max_dmg = 207;
+		if (!isPet && npctype->max_dmg < 207) npctype->max_dmg = 207;
 	}
 	else if (npctype->level >= 40 && npctype->level <= 50) {
 		npctype->min_dmg = npctype->level;

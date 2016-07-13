@@ -336,7 +336,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		else {
 			npc_type->level = (CastToClient()->GetLevel() - (4 - rank));
 		}
-		npc_type = this->AdjustNPC(npc_type, true);
+		npc_type = this->AdjustNPC(npc_type, true, true);
 		//Now that we generated base HP, let's nerf it on a new formula
 		npc_type->max_hp = (npc_type->max_hp * 0.2 * rank); //50 % of normal hp
 		if (npc_type->max_hp < 50) {
@@ -403,7 +403,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 
 		//Nerf level, since that's used as a factor for HP/Dmg calculation
 		npc_type->level = (CastToClient()->GetLevel() - (10 - rank));
-		npc_type = this->AdjustNPC(npc_type, true);
+		npc_type = this->AdjustNPC(npc_type, true, true);
 
 		//Now that we generated base HP, let's nerf it on a new formula
 		npc_type->max_hp = (npc_type->max_hp * 0.1 * rank); //50 % of normal hp
@@ -465,7 +465,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		uint32 rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR);
 		//Nerf level, since that's used as a factor for HP/Dmg calculation
 		npc_type->level = (CastToClient()->GetLevel() - (10 - rank));
-		npc_type = this->AdjustNPC(npc_type, true);
+		npc_type = this->AdjustNPC(npc_type, true, true);
 
 		//Now that we generated base HP, let's nerf it on a new formula
 		npc_type->max_hp = (npc_type->max_hp * 0.15 * rank); //75 % of normal hp
