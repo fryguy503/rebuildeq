@@ -1874,9 +1874,7 @@ void Client::CalcRestState() {
 	// This method calculates rest state HP and mana regeneration.
 	// The client must have been out of combat for RuleI(Character, RestRegenTimeToActivate) seconds,
 	// must be sitting down, and must not have any detrimental spells affecting them.
-	//
-	if(!RuleI(Character, RestRegenPercent))
-		return;
+	//	
 
 	RestRegenHP = RestRegenMana = RestRegenEndurance = 0;
 
@@ -1895,12 +1893,51 @@ void Client::CalcRestState() {
 		}
 	}
 
-	RestRegenHP = (GetMaxHP() * RuleI(Character, RestRegenPercent) / 100);
+	int rest_regen_percent = 10;
+	int group_size = 0;
+	if (this->IsGrouped()) {
+		auto group = this->GetGroup(); //iterate group
+		for (int i = 0; i < 6; ++i) {
+			if (group->members[i] &&  //target grouped
+				group->members[i]->IsClient() && //Is a client
+				this->GetID() != group->members[i]->GetID() && //not me
+				this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
+				!group->members[i]->CastToClient()->IsDead() //and not dead
+				) {
+				
+				if (DistanceSquared(m_Position, group->members[i]->GetPosition()) > (100 * 100)) continue; //Not within 100m				
+				group_size++;
+			}
+		}
+	}
+	else if (this->IsRaidGrouped()) { //Raid healing
+		auto raid = this->GetRaid();
 
-	RestRegenMana = (GetMaxMana() * RuleI(Character, RestRegenPercent) / 100);
+		uint32 gid = raid->GetGroup(this->CastToClient());
+		if (gid < 12) {
+			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+				if (raid->members[i].member &&  //is raid member
+					raid->members[i].GroupNumber == gid && //in group
+					raid->members[i].member->IsClient() && //Is a client
+					raid->members[i].member != this && //not me
+					raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
+					!raid->members[i].member->IsDead() //and not dead
+					) {
 
-	if(RuleB(Character, RestRegenEndurance))
-		RestRegenEndurance = (GetMaxEndurance() * RuleI(Character, RestRegenPercent) / 100);
+					if (DistanceSquared(m_Position, raid->members[i].member->GetPosition()) > (100 * 100)) continue; //Not within 100m
+
+					group_size++;
+				}
+			}
+		}
+	}
+	if (group_size < 1) group_size = 1;
+	rest_regen_percent = rest_regen_percent * group_size;
+	RestRegenHP = (GetMaxHP() * rest_regen_percent / 100);
+
+	RestRegenMana = (GetMaxMana() * rest_regen_percent / 100);
+	
+	RestRegenEndurance = (GetMaxEndurance() * rest_regen_percent / 100);
 }
 
 void Client::DoTracking()
