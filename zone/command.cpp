@@ -4366,7 +4366,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 			return;
 		}
 
-		if (location->ItemID > 0 && !c->KeyRingCheck(location->ItemID && location->ItemID != 10092 && location->ItemID != 10094) {
+		if (location->ItemID > 0 && !c->KeyRingCheck(location->ItemID) && location->ItemID != 10092 && location->ItemID != 10094) {
 			c->Message(0, "That zone is not yet available to teleport to.");
 			return;
 		}
