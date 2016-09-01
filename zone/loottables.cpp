@@ -473,7 +473,7 @@ void NPC::AddTeleportTable() {
 	if (GetZoneID() == 117 && zone->random.Int(1, 100) == 1) AddItem(100011, 1, false); //CobaltScar
 	if (GetZoneID() == 91 && zone->random.Int(1, 100) == 1) AddItem(100012, 1, false); //Skyfire
 	if (GetZoneID() == 94 && zone->random.Int(1, 100) == 1) AddItem(100013, 1, false); //Emerald Jungle
-	if (GetZoneID() == 89 && zone->random.Int(1, 1000) == 1) AddItem(100014, 1, false); //Sebilis
+	if (GetZoneID() == 89 && zone->random.Int(1, 250) == 1) AddItem(100014, 1, false); //Sebilis
 	if (GetZoneID() == 27 && zone->random.Int(1, 100) == 1) AddItem(100015, 1, false); //Lavastorm
 	if (GetZoneID() == 86 && zone->random.Int(1, 100) == 1) AddItem(100016, 1, false); //Dreadlands
 }
