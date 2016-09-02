@@ -1874,6 +1874,8 @@ void Client::CalcRestState() {
 	// This method calculates rest state HP and mana regeneration.
 	// The client must have been out of combat for RuleI(Character, RestRegenTimeToActivate) seconds,
 	// must be sitting down, and must not have any detrimental spells affecting them.
+	if(!RuleI(Character, RestRegenPercent))
+		return;
 	//	
 
 	RestRegenHP = RestRegenMana = RestRegenEndurance = 0;
@@ -1893,7 +1895,7 @@ void Client::CalcRestState() {
 		}
 	}
 
-	int rest_regen_percent = 10;
+	int rest_regen_percent = RuleI(Character, RestRegenPercent);
 	int group_size = 0;
 	if (this->IsGrouped()) {
 		auto group = this->GetGroup(); //iterate group
