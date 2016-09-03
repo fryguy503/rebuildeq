@@ -1903,7 +1903,7 @@ void Client::CalcRestState() {
 
 
 	float rest_regen_percent = RuleI(Character, RestRegenPercent);
-	int group_size = 0;
+	int group_size = 1; //start at 1, it's me.
 	if (this->IsGrouped()) {
 		auto group = this->GetGroup(); //iterate group
 		for (int i = 0; i < 6; ++i) {
