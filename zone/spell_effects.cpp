@@ -2112,7 +2112,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						CastToClient()->SetFeigned(true);
 						//Shin: Embrace Death Perk
 						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH) > 0) {
-							uint32 healAmount = GetMaxHP()* (0.02 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH));
+							uint32 healAmount = GetMaxHP()* (0.02f * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH));
 							Message(MT_NonMelee, "Embrace Death has healed you for %i.", healAmount);
 							if (healAmount < 0 || healAmount > 50000) {
 								healAmount = 1;

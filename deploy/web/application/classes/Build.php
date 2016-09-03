@@ -1122,13 +1122,13 @@ class Build {
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Bash of Death";
-			$newSkill->desc = 'When you bash a target, there is a <em data-base="4">4</em>% chance to cast harm touch<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you bash a target, if the enemy is at <em data-base="10">10</em>% or less total health there is a <em data-base="1">1</em>% chance to cast harm touch<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-bashofdeath.png";	
 			$skills[34] = $newSkill;
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Embrace Death";
-			$newSkill->desc = 'Grants you the Death Peace AA, giving the ability to feign death as well as heal you for <em data-base="+2">+2</em>% maximum health on use<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants you the Death Peace AA, giving the ability to feign death as well as heal you for <em data-base="0.5">0.5</em>% maximum health on use<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-embracedeath.png";	
 			$skills[36] = $newSkill;
 			

@@ -2526,6 +2526,9 @@ void NPC::DepopSwarmPets()
 }
 
 std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
+
+	std::string mob_name = GetCleanName();
+
 	static SpecialLoot_Struct SpecialLoots[] = {
 		SpecialLoot_Struct(100100, "Dragon", 500),
 		SpecialLoot_Struct(100101, "Insect", 500),
@@ -2570,6 +2573,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		SpecialLoot_Struct(100140, "Ghoul", 500),
 		SpecialLoot_Struct(100141, "Zombie", 500),
 		SpecialLoot_Struct(100142, "Skeleton", 500),
+		SpecialLoot_Struct(100143, "Chromadrac", 500),
 	};
 
 	std::vector<SpecialLoot_Struct> loot_list;
@@ -2619,6 +2623,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		if (i.item_id == 100140 && (GetRace() == 33)) loot_list.push_back(i); //Ghoul card
 		if (i.item_id == 100141 && (GetRace() == 70)) loot_list.push_back(i); //Zombie card
 		if (i.item_id == 100142 && (GetRace() == 367 || GetRace() == 161)) loot_list.push_back(i); //Skeleton card
+		if (i.item_id == 100143 && (GetRace() == 154) && mob_name.find("chroma") != std::string::npos) loot_list.push_back(i); //Chromadrac Card
 	}
 	
 	return loot_list;

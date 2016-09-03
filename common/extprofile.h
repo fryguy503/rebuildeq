@@ -78,6 +78,7 @@ struct ExtendedProfile_Struct {
 	int					sworn_enemy_timeout; //SK only skill, timeout for sworn enemy
 	uint16				sworn_enemy_id; //SK only skill, target of sworn enemy
 	int					blood_oath_timeout; //SK only skill, timeout for blood oath effect cooldown
+	int					ooc_last_expiration; //When OOC Regen triggers, this timestamp is snapshotted. If zero, it's assumed to reset to now
 };
 
 #pragma pack()

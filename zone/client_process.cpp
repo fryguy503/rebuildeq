@@ -1876,10 +1876,15 @@ void Client::CalcRestState() {
 	// must be sitting down, and must not have any detrimental spells affecting them.
 	if(!RuleI(Character, RestRegenPercent))
 		return;
-	//	
-
+	
+	if ((AggroCount || !rest_timer.Check(false)) && this->m_epp.ooc_last_expiration > 0) {
+		this->m_epp.ooc_last_expiration = 0; //unset ooc if it's set and aggro count is > 0
+	}
+	else if (this->m_epp.ooc_last_expiration <= 0) {
+		this->m_epp.ooc_last_expiration = time(nullptr); //set ooc snapshot to NOW if it's not set and aggro count <= 0
+	}
 	RestRegenHP = RestRegenMana = RestRegenEndurance = 0;
-
+	
 	if(AggroCount || !IsSitting())
 		return;
 
@@ -1894,8 +1899,10 @@ void Client::CalcRestState() {
 					return;
 		}
 	}
+	
 
-	int rest_regen_percent = RuleI(Character, RestRegenPercent);
+
+	float rest_regen_percent = RuleI(Character, RestRegenPercent);
 	int group_size = 0;
 	if (this->IsGrouped()) {
 		auto group = this->GetGroup(); //iterate group
@@ -1934,12 +1941,30 @@ void Client::CalcRestState() {
 		}
 	}
 	if (group_size < 1) group_size = 1;
-	rest_regen_percent = rest_regen_percent * group_size;
+
+	
+
+	//step is group_size +1 * 0.1, aka 0.3 to 0.7
+	float step = ((float)(group_size+1) * 0.2f);
+	
+	//How many ticks player has been out of combat regen eligable
+	int ooc_tick = ((time(nullptr) - this->m_epp.ooc_last_expiration) / 6);
+	Log.Out(Logs::Detail, Logs::LogCategory::OOC, "OOC tick: %i, regen: %f, step: %f, group size: %i", ooc_tick, rest_regen_percent, step, group_size);
+	
+	rest_regen_percent = (step * ooc_tick) + (rest_regen_percent + group_size);
+	
+	//Clamp
+	if (rest_regen_percent > 15) rest_regen_percent = 15;	
+	if (rest_regen_percent < 2) rest_regen_percent = 2;
+
+	
+
 	RestRegenHP = (GetMaxHP() * rest_regen_percent / 100);
 
 	RestRegenMana = (GetMaxMana() * rest_regen_percent / 100);
 	
 	RestRegenEndurance = (GetMaxEndurance() * rest_regen_percent / 100);
+	Log.Out(Logs::General, Logs::LogCategory::OOC, "OOC Regen: %f, HP: %i, MP: %i, EP: %i", rest_regen_percent, RestRegenHP, RestRegenMana, RestRegenEndurance);
 }
 
 void Client::DoTracking()
