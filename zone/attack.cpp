@@ -4296,11 +4296,16 @@ void Mob::TryWeaponProc(const ItemInst *inst, const EQEmu::Item_Struct *weapon, 
 	float ProcChance = GetProcChances(ProcBonus, hand);
 
 	if (hand != EQEmu::legacy::SlotPrimary) //Is Archery intened to proc at 50% rate?
-ProcChance /= 2;
+	ProcChance /= 2;
 
-if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY) > 0) { //Proc chance increases with this skill
-	ProcChance += (ProcChance * 0.1f * CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
-}
+	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY) > 0) { //Proc chance increases with this skill
+		ProcChance += (ProcChance * 0.1f * CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
+	}
+
+	if (IsClient() &&
+		CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSED_AFFINITY) > 0) {
+		ProcChance += (ProcChance * 0.1f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSED_AFFINITY));
+	}
 
 // Try innate proc on weapon
 // We can proc once here, either weapon or one aug
