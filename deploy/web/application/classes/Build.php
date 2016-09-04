@@ -901,7 +901,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Hidden Dagger";
-			$newSkill->desc = 'If an enemy is not engaged, and is hit by a dagger thrown by a rogue sneaking, it will break sneak, and has a <em data-base="20">20</em>% chance to not be social<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'If an enemy is not engaged, and is hit by a dagger thrown by a rogue sneaking, it will break sneak, and has a <em data-base="15">15</em>% chance to not be social<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[52] = $newSkill;
 			break;
