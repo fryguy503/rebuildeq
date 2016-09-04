@@ -1447,7 +1447,7 @@ void Client::ThrowingAttack(Mob* other, bool CanDoubleAttack) { //old was 51
 	CommonBreakInvisibleFromCombat();
 }
 
-void Mob::DoThrowingAttackDmg(Mob* other, const ItemInst* RangeWeapon, const EQEmu::Item_Struct* AmmoItem, uint16 weapon_damage, int16 chance_mod,int16 focus, int ReuseTime, uint32 range_id, int AmmoSlot, float speed)
+void Mob::DoThrowingAttackDmg(Mob* other, const ItemInst* RangeWeapon, const EQEmu::Item_Struct* AmmoItem, uint16 weapon_damage, int16 chance_mod, int16 focus, int ReuseTime, uint32 range_id, int AmmoSlot, float speed)
 {
 	if ((other == nullptr ||
 		((IsClient() && CastToClient()->dead) ||
@@ -1455,7 +1455,7 @@ void Mob::DoThrowingAttackDmg(Mob* other, const ItemInst* RangeWeapon, const EQE
 		HasDied() ||
 		(!IsAttackAllowed(other)) ||
 		(other->GetInvul() ||
-		other->GetSpecialAbility(IMMUNE_MELEE))))
+			other->GetSpecialAbility(IMMUNE_MELEE))))
 	{
 		return;
 	}
@@ -1472,19 +1472,19 @@ void Mob::DoThrowingAttackDmg(Mob* other, const ItemInst* RangeWeapon, const EQE
 	bool ProjectileImpact = false;
 	bool ProjectileMiss = false;
 
-	if (RuleB(Combat, ProjectileDmgOnImpact)){
+	if (RuleB(Combat, ProjectileDmgOnImpact)) {
 
 		if (AmmoItem)
 			LaunchProjectile = true;
-		else{
-			if (!RangeWeapon && range_id){
+		else {
+			if (!RangeWeapon && range_id) {
 
 				ProjectileImpact = true;
 
 				if (weapon_damage == 0)
 					ProjectileMiss = true; //This indicates that MISS was originally calculated.
 
-				if (IsClient()){
+				if (IsClient()) {
 
 					_RangeWeapon = CastToClient()->m_inv[AmmoSlot];
 					if (_RangeWeapon && _RangeWeapon->GetItem() && _RangeWeapon->GetItem()->ID != range_id)
@@ -1498,26 +1498,27 @@ void Mob::DoThrowingAttackDmg(Mob* other, const ItemInst* RangeWeapon, const EQE
 	else if (AmmoItem)
 		SendItemAnimation(other, AmmoItem, EQEmu::skills::SkillThrowing);
 
-	if (ProjectileMiss || (!ProjectileImpact && !other->CheckHitChance(this, EQEmu::skills::SkillThrowing, EQEmu::legacy::SlotPrimary, chance_mod))){
+	if (ProjectileMiss || (!ProjectileImpact && !other->CheckHitChance(this, EQEmu::skills::SkillThrowing, EQEmu::legacy::SlotPrimary, chance_mod))) {
 		Log.Out(Logs::Detail, Logs::Combat, "Ranged attack missed %s.", other->GetName());
-		if (LaunchProjectile){
+		if (LaunchProjectile) {
 			TryProjectileAttack(other, AmmoItem, EQEmu::skills::SkillThrowing, 0, RangeWeapon, nullptr, AmmoSlot, speed);
 			return;
 		}
 		else
 			other->Damage(this, 0, SPELL_UNKNOWN, EQEmu::skills::SkillThrowing);
-	} else {
+	}
+	else {
 		Log.Out(Logs::Detail, Logs::Combat, "Throwing attack hit %s.", other->GetName());
 
 		int16 WDmg = 0;
 
-		if (!weapon_damage){
+		if (!weapon_damage) {
 			if (IsClient() && RangeWeapon)
 				WDmg = GetWeaponDamage(other, RangeWeapon);
 			else if (AmmoItem)
 				WDmg = GetWeaponDamage(other, AmmoItem);
 
-			if (LaunchProjectile){
+			if (LaunchProjectile) {
 				TryProjectileAttack(other, AmmoItem, EQEmu::skills::SkillThrowing, WDmg, RangeWeapon, nullptr, AmmoSlot, speed);
 				return;
 			}
@@ -1526,7 +1527,7 @@ void Mob::DoThrowingAttackDmg(Mob* other, const ItemInst* RangeWeapon, const EQE
 			WDmg = weapon_damage;
 
 		if (focus) //From FcBaseEffects
-			WDmg += WDmg*focus/100;
+			WDmg += WDmg*focus / 100;
 
 		int32 TotalDmg = 0;
 
@@ -1534,9 +1535,19 @@ void Mob::DoThrowingAttackDmg(Mob* other, const ItemInst* RangeWeapon, const EQE
 		if (GetClass() == ROGUE && (BehindMob(other, GetX(), GetY())))
 			Assassinate_Dmg = TryAssassinate(other, EQEmu::skills::SkillThrowing, ranged_timer.GetDuration());
 
-		if(WDmg > 0){
+		if (WDmg > 0) {
 			int minDmg = 1;
+			if (IsClient() &&
+				CastToClient()->GetBuildRank(ROGUE, RB_ROG_THROWING_PRECISION) > 0) {
+				minDmg += (minDmg * 0.1f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_THROWING_PRECISION));
+			}
+
 			uint16 MaxDmg = GetThrownDamage(WDmg, TotalDmg, minDmg);
+
+			if (IsClient() &&
+				CastToClient()->GetBuildRank(ROGUE, RB_ROG_DEADLY_DAGGER) > 0) {
+				MaxDmg += (MaxDmg * 0.2f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_DEADLY_DAGGER));
+			}
 
 			if (Assassinate_Dmg) {
 				TotalDmg = Assassinate_Dmg;
