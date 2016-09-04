@@ -1431,8 +1431,8 @@ uint32 NPC::GetMaxDamage(uint8 tlevel)
 
 void NPC::PickPocket(Client* thief)
 {
-	thief->CheckIncreaseSkill(EQEmu::skills::SkillPickPockets, nullptr, 5);
 
+	thief->CheckIncreaseSkill(EQEmu::skills::SkillPickPockets, nullptr, 5);
 	//make sure were allowed to target them:
 	int over_level = GetLevel();
 	if(over_level > (thief->GetLevel() + THIEF_PICKPOCKET_OVER)) {
@@ -1442,9 +1442,28 @@ void NPC::PickPocket(Client* thief)
 		return;
 	}
 
+	//5 % chance caught no matter what
 	if(zone->random.Roll(5)) {
 		AddToHateList(thief, 50);
-		//Say("Stop thief!");
+		//Talk if you're a playable NPC race
+		if (GetRace() == DARK_ELF ||
+			GetRace() == HIGH_ELF ||
+			GetRace() == HUMAN ||
+			GetRace() == BARBARIAN ||
+			GetRace() == FROGLOK ||
+			GetRace() == VAHSHIR ||
+			GetRace() == TROLL ||
+			GetRace() == OGRE ||
+			GetRace() == HALF_ELF ||
+			GetRace() == DRAKKIN ||
+			GetRace() == GNOME ||
+			GetRace() == DWARF ||
+			GetRace() == ERUDITE ||
+			GetRace() == WOOD_ELF ||
+			GetRace() == HALFLING) {
+			Say("Stop thief!");
+		}
+
 		thief->Message(13, "You are noticed trying to steal!");
 		thief->SendPickPocketResponse(this, 0, PickPocketFailed);
 		return;
@@ -1457,6 +1476,11 @@ void NPC::PickPocket(Client* thief)
 	uint32 money[6] = { 0, ((steal_skill >= 125) ? (GetPlatinum()) : (0)), ((steal_skill >= 60) ? (GetGold()) : (0)), GetSilver(), GetCopper(), 0 };
 	bool has_coin = ((money[PickPocketPlatinum] | money[PickPocketGold] | money[PickPocketSilver] | money[PickPocketCopper]) != 0);
 	bool steal_item = (steal_skill >= steal_chance && (zone->random.Roll(50) || !has_coin));
+	if (steal_item && 
+		thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH) > 0 && 
+		zone->random.Roll((int)(thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH) * 2))) {
+		AddBuff(thief, 1598, (thief->GetLevel() / 10) + 1); //Duration is level / 10 +1 ticks, 2 / 10 = 0 (int conversion), so 1 tick minimum , 7 ticks max (420s)
+	}
 
 	// still needs to have FindFreeSlot vs PutItemInInventory issue worked out
 	while (steal_item) {
