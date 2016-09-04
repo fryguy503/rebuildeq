@@ -12765,6 +12765,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 	if (vendor == 0 || !vendor->IsNPC() || vendor->GetClass() != MERCHANT)
 		return;
 
+	//This isn't working for some reason
 	if (vendor->GetLastName() == "Origin Binder") {
 		EQApplicationPacket* outapp = new EQApplicationPacket(OP_ShopPlayerSell, sizeof(Merchant_Purchase_Struct));
  		Merchant_Purchase_Struct* mco = (Merchant_Purchase_Struct*)outapp->pBuffer;
@@ -12810,6 +12811,11 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 		price = (int)((item->Price*cost_quantity)*(RuleR(Merchant, BuyCostMod))*Client::CalcPriceMod(vendor, true) + 0.5); // need to round up, because client does it automatically when displaying price
 	else
 		price = (int)((item->Price*cost_quantity)*(RuleR(Merchant, BuyCostMod)) + 0.5);
+
+	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
+		price = (int)(price * 0.2f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
+	}
+
 	AddMoneyToPP(price, false);
 
 	if (inst->IsStackable() || inst->IsCharged())
@@ -12992,6 +12998,12 @@ void Client::Handle_OP_ShopRequest(const EQApplicationPacket *app)
 	}
 	else
 		mco->rate = 1 / (RuleR(Merchant, BuyCostMod));
+
+	//This likely isn't going to work, 
+	//needs testing to verify if the packet for appraising price on click is same as actual buy price
+	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
+		mco->rate += (float)(mco->rate * 0.2f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
+	}
 
 	outapp->priority = 6;
 	QueuePacket(outapp);
