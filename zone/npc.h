@@ -538,6 +538,8 @@ protected:
 
 	bool raid_target;
 	uint8	probability;
+	//Stores how many times the NPC has been triggered by hidden stash
+	int hidden_stash_counter;
 
 private:
 	uint32	loottable_id;
