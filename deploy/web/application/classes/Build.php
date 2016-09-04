@@ -870,7 +870,7 @@ class Build {
 			$skills[38] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Haggle";
+			$newSkill->title = "Hidden Stash";
 			$newSkill->desc = 'When a rogue pickpockets, they have a <em data-base="2">2</em>% chance to find a hidden stash of coin<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[40] = $newSkill;
@@ -880,12 +880,6 @@ class Build {
 			$newSkill->desc = 'Increases the minimum damage of throwing daggers by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[42] = $newSkill;
-
-			$newSkill = new stdClass();
-			$newSkill->title = "Mugging Shot";
-			$newSkill->desc = 'Adds a special proc based on the offhand wielded by the rogue, has a <em data-base="100">100</em> proc rate<span class="perLevel"> per rank</span>.<br>Mace: Lowers aggro by <em data-base="50">50</em> hate.<br>	Sword: Applies an AC debuff and deals <em data-base="5">5</em> damage. Dagger: Drains mana by <em data-base="100">100</em> and deals <em data-base="2">2</em> damage.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
-			$skills[44] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Mugging Shot";
