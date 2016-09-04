@@ -857,6 +857,59 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[34] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Sleight of Shiv";
+			$newSkill->desc = 'When the rogue successfully pick pockets, there is a <em data-base="2">2</em>%<span class="perLevel"> chance they will obtain a shiv as well as gain an avatar-like buff<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[36] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Haggle";
+			$newSkill->desc = 'When a rogue sells or buys items, the price is improved by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[38] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Haggle";
+			$newSkill->desc = 'When a rogue pickpockets, they have a <em data-base="2">2</em>% chance to find a hidden stash of coin<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[40] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Throwing Precision";
+			$newSkill->desc = 'Increases the minimum damage of throwing daggers by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[42] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Mugging Shot";
+			$newSkill->desc = 'Adds a special proc based on the offhand wielded by the rogue, has a <em data-base="100">100</em> proc rate<span class="perLevel"> per rank</span>.<br>Mace: Lowers aggro by <em data-base="50">50</em> hate.<br>	Sword: Applies an AC debuff and deals <em data-base="5">5</em> damage. Dagger: Drains mana by <em data-base="100">100</em> and deals <em data-base="2">2</em> damage.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[44] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Mugging Shot";
+			$newSkill->desc = 'Adds a special proc based on the offhand wielded by the rogue, has a <em data-base="100">100</em> proc rate<span class="perLevel"> per rank</span>.<br>Mace: Lowers aggro by <em data-base="50">50</em> hate.<br>	Sword: Applies an AC debuff and deals <em data-base="5">5</em> damage. Dagger: Drains mana by <em data-base="100">100</em> and deals <em data-base="2">2</em> damage.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[44] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Deadly Dagger";
+			$newSkill->desc = 'Increases the maximum damage of throwing daggers by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[46] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Focused Affinity";
+			$newSkill->desc = 'Increases proc chance of innate and card weapon procs by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[49] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Hidden Dagger";
+			$newSkill->desc = 'If an enemy is not engaged, and is hit by a dagger thrown by a rogue sneaking, it will break sneak, and has a <em data-base="20">20</em>% chance to not be social<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$skills[52] = $newSkill;
 			break;
 			
 			//==================SHAMAN======================
