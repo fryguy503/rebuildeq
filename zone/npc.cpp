@@ -1534,6 +1534,7 @@ void NPC::PickPocket(Client* thief)
 		thief->GetBuildRank(ROGUE, RB_ROG_HIDDEN_STASH) > 0 && //has hidden stash trained
 		zone->random.Roll((int)thief->GetBuildRank(ROGUE, RB_ROG_HIDDEN_STASH) * 2) &&  //random roll from 0 to X, based on skill
 		this->hidden_stash_counter <= 2) { //if the npc hasn't been stolen from yet with this special counter
+
 		uint32 coin_amount = zone->random.Int(1, (steal_skill / 25) + 1);
 		int coin_type = PickPocketPlatinum;
 		while (coin_type <= PickPocketCopper) {
@@ -1550,17 +1551,17 @@ void NPC::PickPocket(Client* thief)
 			switch (coin_type) {
 			case PickPocketPlatinum:
 				SetPlatinum(GetPlatinum() - coin_amount);
-				thief->AddMoneyToPP(0, 0,0, money[PickPocketPlatinum], false);
+				thief->AddMoneyToPP(0, 0, 0, money[PickPocketPlatinum], false);
 				amount = money[PickPocketPlatinum];
 				cash_type = "platinum";
 				break;
 			case PickPocketGold:
-				thief->AddMoneyToPP(0, 0, money[PickPocketGold],0, false);
+				thief->AddMoneyToPP(0, 0, money[PickPocketGold], 0, false);
 				amount = money[PickPocketPlatinum];
 				cash_type = "gold";
 				break;
 			case PickPocketSilver:
-				thief->AddMoneyToPP(0, money[PickPocketSilver], 0, 0, false);				
+				thief->AddMoneyToPP(0, money[PickPocketSilver], 0, 0, false);
 				amount = money[PickPocketPlatinum];
 				cash_type = "silver";
 				break;
@@ -1571,6 +1572,7 @@ void NPC::PickPocket(Client* thief)
 				break;
 			}
 			thief->Message(MT_Skills, "Hidden Stash Rank %u has stolen %i %s.", thief->GetBuildRank(ROGUE, RB_ROG_HIDDEN_STASH), amount, cash_type.c_str());
+			this->hidden_stash_counter++;
 		}
 	}
 

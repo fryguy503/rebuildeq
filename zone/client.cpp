@@ -10271,7 +10271,15 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ROG_DUELIST) return "Duelist";
 		else if (id == RB_ROG_UNTAPPEDPOTENTIAL) return "Untapped Potential";
 		else if (id == RB_ROG_MOSSSTONE) return "Moss Stone";
-		else if (id == RB_ROG_ESCAPE) return "Escape";
+		else if (id == RB_ROG_SLEIGHT_OF_STRENGTH) return "Sleight of Strength";
+		else if (id == RB_ROG_HAGGLE) return "Haggle";
+		else if (id == RB_ROG_HIDDEN_STASH) return "Hidden Stash";
+		else if (id == RB_ROG_THROWING_PRECISION) return "Throwing Precision";
+		else if (id == RB_ROG_MUGGING_SHOT) return "Mugging Shot";
+		else if (id == RB_ROG_DEADLY_DAGGER) return "Deadly Dagger";
+		else if (id == RB_ROG_FOCUSED_AFFINITY) return "Focused Affinity";
+		else if (id == RB_ROG_HIDDEN_DAGGER) return "Hidden Dagger";
+
 		break;
 	case DRUID:
 		if (id == RB_DRU_REGENERATION) return "Regeneration";
@@ -10290,7 +10298,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_DRU_STINGINGAFFLICTION) return "Stinging Affliction";
 		else if (id == RB_DRU_DEEPROOTS) return "Deep Roots";
 		else if (id == RB_DRU_NATURESBLIGHT) return "Natures Blight";
-
+		break;
 	case BARD:
 		if (id == RB_BRD_ELEMENTALHARMONY) return "Elemental Harmony";
 		else if (id == RB_BRD_HEALINGTREBLE) return "Healing Treble";
