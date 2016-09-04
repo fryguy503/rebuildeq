@@ -1395,6 +1395,48 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				}
 			}
 
+			rank = GetBuildRank(ROGUE, RB_ROG_MUGGING_SHOT);
+			if (rank > 0) {
+				chance = rank * 100;
+				bool is_interrupt = false;
+				if (Hand == EQEmu::legacy::SlotSecondary) { //Get offhand
+					switch (skillinuse) {
+					case EQEmu::skills::Skill1HBlunt:
+						spellid = 1741; //jolt
+						proc_damage = 0;
+						is_interrupt = true;
+						break;
+					case EQEmu::skills::Skill1HSlashing:
+						spellid = 39915; //cripple for now
+						proc_damage = 5 * rank;
+						break;
+					case EQEmu::skills::Skill1HPiercing:
+						spellid = 943; //Mana Drain
+						proc_damage = 2 * rank;
+					default:
+						break;
+				}
+
+				chance = GetProcChances(chance, Hand);
+				//cut it in half since it's offhand
+				chance /= 2;
+
+				if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance)) {
+
+					//Deal damage
+					if (proc_damage > 0) other->Damage(this, proc_damage, 615, skillinuse, true, -1, false, special);
+					//interrupt					
+					if (is_interrupt &&
+						other->IsCasting()
+						) {
+						other->InterruptSpell(); //This may be too powerful, may need nerf
+					}
+					//cast spell
+					ExecWeaponProc(weapon, spellid, other);
+				}
+				
+			}
+
 			//Check for DRU spirit awakening
 			rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
 			if (rank > 0) {
