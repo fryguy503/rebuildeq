@@ -1477,8 +1477,8 @@ void NPC::PickPocket(Client* thief)
 	bool has_coin = ((money[PickPocketPlatinum] | money[PickPocketGold] | money[PickPocketSilver] | money[PickPocketCopper]) != 0);
 	bool steal_item = (steal_skill >= steal_chance && (zone->random.Roll(50) || !has_coin));
 	if (steal_item && 
-		thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH) > 0 && 
-		zone->random.Roll((int)(thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH) * 2))) {
+		thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTIONTH) > 0 &&
+		zone->random.Roll((int)(thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTIONTH) * 2))) {
 		AddBuff(thief, 1598, (thief->GetLevel() / 10) + 1); //Duration is level / 10 +1 ticks, 2 / 10 = 0 (int conversion), so 1 tick minimum , 7 ticks max (420s)
 	}
 

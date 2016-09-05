@@ -810,7 +810,7 @@ class Build {
 			$skills[16] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Sleight of Hand";
+			$newSkill->title = "Sleight Distraction";
 			$newSkill->desc = 'When the rogue successfully pick pockets an enemy (even if they do not obtain an item), the enemy has a <em data-base="10">10</em>% chance to be distracted for a short duration. The next time the enemy attacks the rogue it has a very high chance of missing. <span class="perLevel"> per rank</span>';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";	
 			$skills[18] = $newSkill;

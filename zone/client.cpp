@@ -3936,9 +3936,9 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 	QueuePacket(outapp);
 	safe_delete(outapp);
 	if (type != PickPocketFailed) {
-		uint8 rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH);
+		uint8 rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTIONON);
 		if (rank > 0 && zone->random.Roll(rank * 10)) {
-			Message(MT_NonMelee, "Your Sleight of Hand %u distracts %s.", rank, from->GetCleanName());
+			Message(MT_NonMelee, "Your Sleight Distraction %u distracts %s.", rank, from->GetCleanName());
 			EvadeOnce(this);
 		}
 		rank = GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);
@@ -10265,13 +10265,13 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ROG_FOCUSEDSTAB) return "Focused Stab";
 		else if (id == RB_ROG_VITALORGANS) return "Vital Organs";
 		else if (id == RB_ROG_ASSASSINSTAINT) return "Assassin's Taint";
-		else if (id == RB_ROG_SLEIGHTOFSTRENGTH) return "Sleight of Hand";
+		else if (id == RB_ROG_SLEIGHTDISTRACTIONON) return "Sleight Distraction";
 		else if (id == RB_ROG_JARRINGSTAB) return "Jarring Stab";
 		else if (id == RB_ROG_GANGSTERSPARADISE) return "Gangster's Paradise";
 		else if (id == RB_ROG_DUELIST) return "Duelist";
 		else if (id == RB_ROG_UNTAPPEDPOTENTIAL) return "Untapped Potential";
 		else if (id == RB_ROG_MOSSSTONE) return "Moss Stone";
-		else if (id == RB_ROG_SLEIGHT_OF_STRENGTH) return "Sleight of Strength";
+		else if (id == RB_ROG_SLEIGHTOFSTRENGTH) return "Sleight of Strength";
 		else if (id == RB_ROG_HAGGLE) return "Haggle";
 		else if (id == RB_ROG_HIDDEN_STASH) return "Hidden Stash";
 		else if (id == RB_ROG_THROWING_PRECISION) return "Throwing Precision";

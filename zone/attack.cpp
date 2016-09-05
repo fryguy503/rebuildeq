@@ -1551,27 +1551,27 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQEmu::skills::Sk
 
 bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::SkillType attack_skill)
 {
-	if(!ClientFinishedLoading())
+	if (!ClientFinishedLoading())
 		return false;
 
-	if(dead)
+	if (dead)
 		return false;	//cant die more than once...
 
-	if(!spell)
+	if (!spell)
 		spell = SPELL_UNKNOWN;
 
 	engage_end = time(nullptr);
 	char buffer[48] = { 0 };
 	snprintf(buffer, 47, "%d %d %d %d", killerMob ? killerMob->GetID() : 0, damage, spell, static_cast<int>(attack_skill));
-	if(parse->EventPlayer(EVENT_DEATH, this, buffer, 0) != 0) {
-		if(GetHP() < 0) {
+	if (parse->EventPlayer(EVENT_DEATH, this, buffer, 0) != 0) {
+		if (GetHP() < 0) {
 			SetHP(0);
 		}
 		return false;
 	}
 
-	if(killerMob && killerMob->IsClient() && (spell != SPELL_UNKNOWN) && damage > 0) {
-		char val1[20]={0};
+	if (killerMob && killerMob->IsClient() && (spell != SPELL_UNKNOWN) && damage > 0) {
+		char val1[20] = { 0 };
 		entity_list.MessageClose_StringID(this, false, 100, MT_NonMelee, HIT_NON_MELEE,
 			killerMob->GetCleanName(), GetCleanName(), ConvertArray(damage, val1));
 	}
@@ -1600,7 +1600,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	Death_Struct* d = (Death_Struct*)app.pBuffer;
 	d->spawn_id = GetID();
 	d->killer_id = killerMob ? killerMob->GetID() : 0;
-	d->corpseid=GetID();
+	d->corpseid = GetID();
 	d->bindzoneid = m_pp.binds[0].zoneId;
 	d->spell_id = spell == SPELL_UNKNOWN ? 0xffffffff : spell;
 	d->attack_skill = spell != SPELL_UNKNOWN ? 0xe7 : attack_skill;
@@ -1617,7 +1617,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	SetHorseId(0);
 	dead = true;
 
-	if(GetMerc()) {
+	if (GetMerc()) {
 		GetMerc()->Suspend();
 	}
 
@@ -1629,12 +1629,12 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 			mod_client_death_npc(killerMob);
 
 			uint16 emoteid = killerMob->GetEmoteID();
-			if(emoteid != 0)
-				killerMob->CastToNPC()->DoNPCEmote(KILLEDPC,emoteid);
-			killerMob->TrySpellOnKill(killed_level,spell);
+			if (emoteid != 0)
+				killerMob->CastToNPC()->DoNPCEmote(KILLEDPC, emoteid);
+			killerMob->TrySpellOnKill(killed_level, spell);
 		}
 
-		if(killerMob->IsClient() && (IsDueling() || killerMob->CastToClient()->IsDueling())) {
+		if (killerMob->IsClient() && (IsDueling() || killerMob->CastToClient()->IsDueling())) {
 			SetDueling(false);
 			SetDuelTarget(0);
 			if (killerMob->IsClient() && killerMob->CastToClient()->IsDueling() && killerMob->CastToClient()->GetDuelTarget() == GetID())
@@ -1642,14 +1642,15 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 				//if duel opponent killed us...
 				killerMob->CastToClient()->SetDueling(false);
 				killerMob->CastToClient()->SetDuelTarget(0);
-				entity_list.DuelMessage(killerMob,this,false);
+				entity_list.DuelMessage(killerMob, this, false);
 
 				mod_client_death_duel(killerMob);
 
-			} else {
+			}
+			else {
 				//otherwise, we just died, end the duel.
 				Mob* who = entity_list.GetMob(GetDuelTarget());
-				if(who && who->IsClient()) {
+				if (who && who->IsClient()) {
 					who->CastToClient()->SetDueling(false);
 					who->CastToClient()->SetDuelTarget(0);
 				}
@@ -1669,41 +1670,41 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	*/
 
 	// figure out if they should lose exp
-	if(RuleB(Character, UseDeathExpLossMult)){
-		float GetNum [] = {0.005f,0.015f,0.025f,0.035f,0.045f,0.055f,0.065f,0.075f,0.085f,0.095f,0.110f };
+	if (RuleB(Character, UseDeathExpLossMult)) {
+		float GetNum[] = { 0.005f,0.015f,0.025f,0.035f,0.045f,0.055f,0.065f,0.075f,0.085f,0.095f,0.110f };
 		int Num = RuleI(Character, DeathExpLossMultiplier);
-		if((Num < 0) || (Num > 10))
+		if ((Num < 0) || (Num > 10))
 			Num = 3;
 		float loss = GetNum[Num];
-		exploss=(int)((float)GetEXP() * (loss)); //loose % of total XP pending rule (choose 0-10)
+		exploss = (int)((float)GetEXP() * (loss)); //loose % of total XP pending rule (choose 0-10)
 	}
 
-	if(!RuleB(Character, UseDeathExpLossMult)){
+	if (!RuleB(Character, UseDeathExpLossMult)) {
 		exploss = (int)(GetLevel() * (GetLevel() / 18.0) * 12000);
 	}
 
-	if( (GetLevel() < RuleI(Character, DeathExpLossLevel)) || (GetLevel() > RuleI(Character, DeathExpLossMaxLevel)) || IsBecomeNPC() )
+	if ((GetLevel() < RuleI(Character, DeathExpLossLevel)) || (GetLevel() > RuleI(Character, DeathExpLossMaxLevel)) || IsBecomeNPC())
 	{
 		exploss = 0;
 	}
-	else if( killerMob )
+	else if (killerMob)
 	{
-		if( killerMob->IsClient() )
+		if (killerMob->IsClient())
 		{
 			exploss = 0;
 		}
-		else if( killerMob->GetOwner() && killerMob->GetOwner()->IsClient() )
+		else if (killerMob->GetOwner() && killerMob->GetOwner()->IsClient())
 		{
 			exploss = 0;
 		}
 	}
 
-	if(spell != SPELL_UNKNOWN)
+	if (spell != SPELL_UNKNOWN)
 	{
 		uint32 buff_count = GetMaxTotalSlots();
-		for(uint16 buffIt = 0; buffIt < buff_count; buffIt++)
+		for (uint16 buffIt = 0; buffIt < buff_count; buffIt++)
 		{
-			if(buffs[buffIt].spellid == spell && buffs[buffIt].client)
+			if (buffs[buffIt].spellid == spell && buffs[buffIt].client)
 			{
 				exploss = 0;	// no exp loss for pvp dot
 				break;
@@ -1715,7 +1716,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	int total_exp_loss = exploss; //I snapshot this for sake of #return
 	// now we apply the exp loss, unmem their spells, and make a corpse
 	// unless they're a GM (or less than lvl 10
-	if(!GetGM())
+	if (!GetGM())
 	{
 		//the exp buffer mechanics come into play first, before we determine loss from level.
 		if (GetLevel() >= 60 && exploss > 0) { //if we're 60+ (max level and later, if player cap raises, we still check pool)
@@ -1742,13 +1743,14 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 			}
 		}
 
-		if(exploss > 0) {
+		if (exploss > 0) {
 
 			int32 newexp = GetEXP();
-			if(exploss > newexp) {
+			if (exploss > newexp) {
 				//lost more than we have... wtf..
 				newexp = 1;
-			} else {
+			}
+			else {
 				newexp -= exploss;
 			}
 			SetEXP(newexp, GetAAXP());
@@ -1758,43 +1760,43 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 		//this generates a lot of 'updates' to the client that the client does not need
 		BuffFadeNonPersistDeath();
 		if (RuleB(Character, UnmemSpellsOnDeath)) {
-			if((ClientVersionBit() & EQEmu::versions::bit_SoFAndLater) && RuleB(Character, RespawnFromHover))
+			if ((ClientVersionBit() & EQEmu::versions::bit_SoFAndLater) && RuleB(Character, RespawnFromHover))
 				UnmemSpellAll(true);
 			else
 				UnmemSpellAll(false);
 		}
 
-		if((RuleB(Character, LeaveCorpses) && GetLevel() >= RuleI(Character, DeathItemLossLevel)) || RuleB(Character, LeaveNakedCorpses))
+		if ((RuleB(Character, LeaveCorpses) && GetLevel() >= RuleI(Character, DeathItemLossLevel)) || RuleB(Character, LeaveNakedCorpses))
 		{
 			// creating the corpse takes the cash/items off the player too
 			auto new_corpse = new Corpse(this, exploss);
 
 			std::string tmp;
 			database.GetVariable("ServerType", tmp);
-			if(tmp[0] == '1' && tmp[1] == '\0' && killerMob != nullptr && killerMob->IsClient()){
+			if (tmp[0] == '1' && tmp[1] == '\0' && killerMob != nullptr && killerMob->IsClient()) {
 				database.GetVariable("PvPreward", tmp);
 				int reward = atoi(tmp.c_str());
-				if(reward==3){
+				if (reward == 3) {
 					database.GetVariable("PvPitem", tmp);
 					int pvpitem = atoi(tmp.c_str());
-					if(pvpitem>0 && pvpitem<200000)
+					if (pvpitem > 0 && pvpitem < 200000)
 						new_corpse->SetPlayerKillItemID(pvpitem);
 				}
-				else if(reward==2)
+				else if (reward == 2)
 					new_corpse->SetPlayerKillItemID(-1);
-				else if(reward==1)
+				else if (reward == 1)
 					new_corpse->SetPlayerKillItemID(1);
 				else
 					new_corpse->SetPlayerKillItemID(0);
-				if(killerMob->CastToClient()->isgrouped) {
+				if (killerMob->CastToClient()->isgrouped) {
 					Group* group = entity_list.GetGroupByClient(killerMob->CastToClient());
-					if(group != 0)
+					if (group != 0)
 					{
-						for(int i=0;i<6;i++)
+						for (int i = 0; i < 6; i++)
 						{
-							if(group->members[i] != nullptr)
+							if (group->members[i] != nullptr)
 							{
-								new_corpse->AllowPlayerLoot(group->members[i],i);
+								new_corpse->AllowPlayerLoot(group->members[i], i);
 							}
 						}
 					}
@@ -1809,7 +1811,8 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 
 			LeftCorpse = true;
 		}
-	} else {
+	}
+	else {
 		BuffFadeDetrimental();
 	}
 
@@ -1820,7 +1823,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 		from these and overwrite what we set in pp anyway
 	*/
 
-	if(LeftCorpse && (ClientVersionBit() & EQEmu::versions::bit_SoFAndLater) && RuleB(Character, RespawnFromHover))
+	if (LeftCorpse && (ClientVersionBit() & EQEmu::versions::bit_SoFAndLater) && RuleB(Character, RespawnFromHover))
 	{
 		ClearDraggedCorpses();
 		RespawnFromHoverTimer.Start(RuleI(Character, RespawnFromHoverTimer) * 1000);
@@ -1828,16 +1831,16 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	}
 	else
 	{
-		if(isgrouped)
+		if (isgrouped)
 		{
 			Group *g = GetGroup();
-			if(g)
+			if (g)
 				g->MemberZoned(this);
 		}
 
 		Raid* r = entity_list.GetRaidByClient(this);
 
-		if(r)
+		if (r)
 			r->MemberZoned(this);
 
 		dead_timer.Start(5000, true);
@@ -1849,9 +1852,9 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	}
 
 	/* QS: PlayerLogDeaths */
-	if (RuleB(QueryServ, PlayerLogDeaths)){
+	if (RuleB(QueryServ, PlayerLogDeaths)) {
 		const char * killer_name = "";
-		if (killerMob && killerMob->GetCleanName()){ killer_name = killerMob->GetCleanName(); }
+		if (killerMob && killerMob->GetCleanName()) { killer_name = killerMob->GetCleanName(); }
 		std::string event_desc = StringFormat("Died in zoneid:%i instid:%i by '%s', spellid:%i, damage:%i", this->GetZoneID(), this->GetInstanceID(), killer_name, spell, damage);
 		QServ->PlayerLogEvent(Player_Log_Deaths, this->CharacterID(), event_desc);
 	}
