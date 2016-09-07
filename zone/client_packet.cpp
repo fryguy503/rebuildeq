@@ -12594,6 +12594,13 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 	else
 		SinglePrice = (item->Price * (RuleR(Merchant, SellCostMod)) * item->SellRate);
 
+	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
+		uint32 haggle = (int)(SinglePrice * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
+		Message(MT_NonMelee, "Haggle Rank %u reduced buy price by %u copper.", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
+		SinglePrice -= haggle;
+	}
+
+
 	if (item->MaxCharges > 1)
 		mpo->price = SinglePrice;
 	else
@@ -12813,7 +12820,9 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 		price = (int)((item->Price*cost_quantity)*(RuleR(Merchant, BuyCostMod)) + 0.5);
 
 	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
-		price = (int)(price * 0.2f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
+		uint32 haggle = (int)(price * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
+		Message(MT_NonMelee, "Haggle Rank %u improved sell price by %u copper", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
+		price -= haggle;
 	}
 
 	AddMoneyToPP(price, false);
@@ -13002,8 +13011,9 @@ void Client::Handle_OP_ShopRequest(const EQApplicationPacket *app)
 	//This likely isn't going to work, 
 	//needs testing to verify if the packet for appraising price on click is same as actual buy price
 	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
-		mco->rate += (float)(mco->rate * 0.2f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
+		mco->rate += (float)(mco->rate * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));		
 	}
+
 
 	outapp->priority = 6;
 	QueuePacket(outapp);

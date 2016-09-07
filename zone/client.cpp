@@ -3936,7 +3936,7 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 	QueuePacket(outapp);
 	safe_delete(outapp);
 	if (type != PickPocketFailed) {
-		uint8 rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTIONON);
+		uint8 rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTION);
 		if (rank > 0 && zone->random.Roll(rank * 10)) {
 			Message(MT_NonMelee, "Your Sleight Distraction %u distracts %s.", rank, from->GetCleanName());
 			EvadeOnce(this);
@@ -10265,7 +10265,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ROG_FOCUSEDSTAB) return "Focused Stab";
 		else if (id == RB_ROG_VITALORGANS) return "Vital Organs";
 		else if (id == RB_ROG_ASSASSINSTAINT) return "Assassin's Taint";
-		else if (id == RB_ROG_SLEIGHTDISTRACTIONON) return "Sleight Distraction";
+		else if (id == RB_ROG_SLEIGHTDISTRACTION) return "Sleight Distraction";
 		else if (id == RB_ROG_JARRINGSTAB) return "Jarring Stab";
 		else if (id == RB_ROG_GANGSTERSPARADISE) return "Gangster's Paradise";
 		else if (id == RB_ROG_DUELIST) return "Duelist";
