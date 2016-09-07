@@ -950,7 +950,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Reinforce Torpor";
-			$newSkill->desc = 'Reduces the negative effects of Stoicism and Torpor by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = '- NOT IMPLEMENTED - Reduces the negative effects of Stoicism and Torpor by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
 			$skills[13] = $newSkill;
 			
