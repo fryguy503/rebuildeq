@@ -5978,7 +5978,32 @@ void command_exp(Client *c, const Seperator *sep)
 		c->Message(0, "You currently have %i experience stored in reserve, which equates to %i experience bottles. If you hold an empty experience bottle on cursor, you can [ %s ] it for 500 platinum.", exp_pool, bottles, c->CreateSayLink("#exp fill", "fill").c_str());
 		return;
 	}
-
+	if (!strcasecmp(sep->arg[1], "limit")) {
+		if (sep->arg[2] && sep->IsNumber(2)) {
+			int limit = atoi(sep->arg[2]);
+			if (limit > 0 && limit <= 100){
+				std::string query = StringFormat("UPDATE character_custom SET exp_limit = %i WHERE character_id = %i", limit, c->CharacterID());
+				auto results = database.QueryDatabase(query);
+				c->Message(0, "Your experience limit is now set to %i%%.", limit);
+				return;
+			}
+			else {
+				c->Message(0, "Invalid value for limit: %i", limit);
+				return;
+			}
+		}
+	
+		auto query = StringFormat("SELECT exp_limit FROM character_custom WHERE character_id = %i", c->CharacterID());
+		auto results = database.QueryDatabase(query);
+		if (results.Success() && results.RowCount() != 0) {
+			auto row = results.begin();
+			int limit = atoi(row[0]);
+			c->Message(0, "Your experience limit is set to %i%%. Usage: #exp limit ##, where ## is the % of exp to limit gains.", limit);
+			return;
+		}
+		c->Message(0, "Usage: #exp limit ##, where ## is the % of exp to limit gains.");	
+		return;		
+	}
 
 	if (!strcasecmp(sep->arg[1], "fill")) {
 		if (bottles < 1) {

@@ -338,6 +338,18 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 		Message(13, "Error in Client::SetEXP. EXP not set.");
 		return; // Must be invalid class/race
 	}
+
+	auto query = StringFormat("SELECT exp_limit FROM character_custom WHERE character_id = %i", CharacterID());
+	auto results = database.QueryDatabase(query);
+	if (results.Success() && results.RowCount() != 0) {
+		auto row = results.begin();
+		int limit = atoi(row[0]);
+		if (limit > 0 && limit < 100) {
+			set_exp *= (float)(limit / 100);
+			if (set_exp < 1) set_exp = 1;
+		}
+	}
+
 	uint32 i = 0;
 	uint32 membercount = 0;
 	if(GetGroup())
