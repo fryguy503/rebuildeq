@@ -10307,6 +10307,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_DRU_EXODUS) return "Exodus";
 		else if (id == RB_DRU_CALLOFTHEWILD) return "Call of the Wild";
 		else if (id == RB_DRU_SECONDARYRECALL) return "Secondary Recall";
+		else if (id == RB_DRU_RINGAFFINITY) return "Ring Affinity";
 		else if (id == RB_DRU_REGENERATION) return "Regeneration";
 		else if (id == RB_DRU_CONVERGENCEOFSPIRITS) return "Convergence of Spirits";
 		else if (id == RB_DRU_LIFEFLOW) return "Lifeflow";
