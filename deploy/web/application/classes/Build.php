@@ -509,6 +509,12 @@ class Build {
 			$skills[4] = $newSkill;
 			
 			$newSkill = new stdClass();
+			$newSkill->title = "Exodus";
+			$newSkill->desc = 'Grants the Exodus AA. Each rank reduces casting time.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[6] = $newSkill;
+
+			$newSkill = new stdClass();
 			$newSkill->title = "Regeneration";
 			$newSkill->desc = 'Grants the druid an innate hp regeneration of Level * 0.2 hitpoints (minimum 2) per tick, a self only damage shield of <em data-base="2">2</em>,  as well as any duration regeneration spells casted by the druid give <em data-base="20">20</em>% additional hitpoint regeneration per tick while in the same zone as the druid<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-regeneration.png";	
