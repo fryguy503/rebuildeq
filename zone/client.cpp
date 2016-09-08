@@ -8882,6 +8882,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Exodus\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == DRUID && i == RB_DRU_CALLOFTHEWILD  && GetAA(aaCalloftheWild) < 1) {
+					TrainAARank(aaCalloftheWild);
+					Message(15, "You have unlocked the AA \"Call of the Wild\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == DRUID && i == RB_DRU_CONVERGENCEOFSPIRITS  && GetAA(aaConvergenceofSpirits) < 1) {
 					TrainAARank(aaConvergenceofSpirits);
 					Message(15, "You have unlocked the AA \"Convergence of Spirits\"! Find the hotkey in your Alternate Advancement Window.");
@@ -10295,6 +10300,7 @@ std::string Client::GetBuildName(uint32 id) {
 		if (id == RB_DRU_TREEFORM) return "Tree Form";
 		else if (id == RB_DRU_TELEPORTBIND) return "Teleport Bind";
 		else if (id == RB_DRU_EXODUS) return "Exodus";
+		else if (id == RB_DRU_CALLOFTHEWILD) return "Call of the Wild";
 		else if (id == RB_DRU_REGENERATION) return "Regeneration";
 		else if (id == RB_DRU_CONVERGENCEOFSPIRITS) return "Convergence of Spirits";
 		else if (id == RB_DRU_LIFEFLOW) return "Lifeflow";
