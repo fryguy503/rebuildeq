@@ -10282,7 +10282,8 @@ std::string Client::GetBuildName(uint32 id) {
 
 		break;
 	case DRUID:
-		if (id == RB_DRU_REGENERATION) return "Regeneration";
+		if (id == RB_DRU_TREEFORM) return "Tree Form";
+		else if (id == RB_DRU_REGENERATION) return "Regeneration";
 		else if (id == RB_DRU_CONVERGENCEOFSPIRITS) return "Convergence of Spirits";
 		else if (id == RB_DRU_LIFEFLOW) return "Lifeflow";
 		else if (id == RB_DRU_SPIRITOFTHEWOOD) return "Spirit of the Wood";
