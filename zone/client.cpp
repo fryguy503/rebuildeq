@@ -8892,6 +8892,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Secondary Recall\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == DRUID && i == RB_DRU_DIRECHARM  && GetAA(aaDireCharm) < 1) {
+					TrainAARank(aaDireCharm);
+					Message(15, "You have unlocked the AA \"Dire Charm\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == DRUID && i == RB_DRU_CONVERGENCEOFSPIRITS  && GetAA(aaConvergenceofSpirits) < 1) {
 					TrainAARank(aaConvergenceofSpirits);
 					Message(15, "You have unlocked the AA \"Convergence of Spirits\"! Find the hotkey in your Alternate Advancement Window.");
@@ -10308,6 +10313,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_DRU_CALLOFTHEWILD) return "Call of the Wild";
 		else if (id == RB_DRU_SECONDARYRECALL) return "Secondary Recall";
 		else if (id == RB_DRU_RINGAFFINITY) return "Ring Affinity";
+		else if (id == RB_DRU_DIRECHARM) return "Dire Charm";
 		else if (id == RB_DRU_REGENERATION) return "Regeneration";
 		else if (id == RB_DRU_CONVERGENCEOFSPIRITS) return "Convergence of Spirits";
 		else if (id == RB_DRU_LIFEFLOW) return "Lifeflow";
