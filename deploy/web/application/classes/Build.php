@@ -497,6 +497,48 @@ class Build {
 			//==================DRUID======================
 			case "druid":
 			$newSkill = new stdClass();
+			$newSkill->title = "Tree Form";
+			$newSkill->desc = 'Treeform summons a tree that lulls nearby enemies, higher ranks give higher radius.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[0] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Teleport Bind";
+			$newSkill->desc = 'Grants the teleport bind AA.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[4] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Exodus";
+			$newSkill->desc = 'Grants the Exodus AA. Each rank reduces casting time.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[6] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Call of the Wild";
+			$newSkill->desc = 'Grants the Call of the Wild AA, causing enemies within a proximity to be dealt DoT dmg.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[8] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Secondary Recall";
+			$newSkill->desc = 'Grants Secondary Recall AA.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[10] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Ring Affinity";
+			$newSkill->desc = 'Ring spells cast 5% faster and cost 10% less mana.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[13] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Dire Charm";
+			$newSkill->desc = 'Can charm mobs up to your level, however once charmed, lose half their health.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[16] = $newSkill;
+
+			$newSkill = new stdClass();
 			$newSkill->title = "Regeneration";
 			$newSkill->desc = 'Grants the druid an innate hp regeneration of Level * 0.2 hitpoints (minimum 2) per tick, a self only damage shield of <em data-base="2">2</em>,  as well as any duration regeneration spells casted by the druid give <em data-base="20">20</em>% additional hitpoint regeneration per tick while in the same zone as the druid<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-regeneration.png";	
