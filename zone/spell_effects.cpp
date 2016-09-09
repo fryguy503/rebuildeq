@@ -508,7 +508,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD);
 							//Spirit of the Wood
 							if (spell_id == 3277 && rank > 0) {								
-								int duration = caster_level * 6;
+								int duration = caster_level * 10;
 								if (rank > 4) { //Damage shield
 									if (level > 58 && caster_level > 58) caster->QuickBuff(this, 1561, duration); //legacy of thorns 59
 									else if (level >= 58 && caster_level >= 58) caster->QuickBuff(this, 1560, duration); //shield of blades 58
@@ -3576,7 +3576,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					rank = casterClient->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
 					if (spell_id == 202 && rank > 0) {
 						Log.Out(Logs::General, Logs::Spells, "Applying Courage buff");
-						int duration = caster_level * 6;
+						int duration = caster_level * 10;
 						if (rank < 5) duration /= 2;
 						//4065 blessing of austerity
 						//3578
