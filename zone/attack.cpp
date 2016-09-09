@@ -1398,7 +1398,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				}
 			}
 
-			rank = GetBuildRank(ROGUE, RB_ROG_MUGGING_SHOT);
+			rank = GetBuildRank(ROGUE, RB_ROG_MUGGINGSHOT);
 			if (rank > 0) {
 				chance = rank * 100;
 				bool is_interrupt = false;
@@ -4370,8 +4370,8 @@ void Mob::TryWeaponProc(const ItemInst *inst, const EQEmu::Item_Struct *weapon, 
 	}
 
 	if (IsClient() &&
-		CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEVES_AFFINITY) > 0) {
-		ProcChance += (ProcChance * 0.1f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEVES_AFFINITY));
+		CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) {
+		ProcChance += (ProcChance * 0.1f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
 	}
 
 // Try innate proc on weapon
@@ -4698,7 +4698,7 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 		deadlyChance = RuleI(Combat, RogueDeadlyStrikeChance);
 		deadlyMod = RuleI(Combat, RogueDeadlyStrikeMod);
 
-		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_HIDDEN_DAGGER);
+		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_HIDDENDAGGER);
 		if (rank > 0 && defender->GetHPRatio() == 100.0f && CastToClient()->sneaking) {
 
 			CastToClient()->sneaking = false; //Disable sneak

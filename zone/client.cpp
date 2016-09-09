@@ -10298,12 +10298,12 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ROG_MOSSSTONE) return "Moss Stone";
 		else if (id == RB_ROG_SLEIGHTOFSTRENGTH) return "Sleight of Strength";
 		else if (id == RB_ROG_HAGGLE) return "Haggle";
-		else if (id == RB_ROG_HIDDEN_STASH) return "Hidden Stash";
-		else if (id == RB_ROG_THROWING_PRECISION) return "Throwing Precision";
-		else if (id == RB_ROG_MUGGING_SHOT) return "Mugging Shot";
-		else if (id == RB_ROG_DEADLY_DAGGER) return "Deadly Dagger";
-		else if (id == RB_ROG_THIEVES_AFFINITY) return "Thieves' Affinity";
-		else if (id == RB_ROG_HIDDEN_DAGGER) return "Hidden Dagger";
+		else if (id == RB_ROG_HIDDENSTASH) return "Hidden Stash";
+		else if (id == RB_ROG_THROWINGPRECISION) return "Throwing Precision";
+		else if (id == RB_ROG_MUGGINGSHOT) return "Mugging Shot";
+		else if (id == RB_ROG_DEADLYDAGGER) return "Deadly Dagger";
+		else if (id == RB_ROG_THIEVESAFFINITY) return "Thieves' Affinity";
+		else if (id == RB_ROG_HIDDENDAGGER) return "Hidden Dagger";
 
 		break;
 	case DRUID:

@@ -1538,15 +1538,15 @@ void Mob::DoThrowingAttackDmg(Mob* other, const ItemInst* RangeWeapon, const EQE
 		if (WDmg > 0) {
 			int minDmg = 1;
 			if (IsClient() &&
-				CastToClient()->GetBuildRank(ROGUE, RB_ROG_THROWING_PRECISION) > 0) {
-				minDmg += (minDmg * 0.1f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_THROWING_PRECISION));
+				CastToClient()->GetBuildRank(ROGUE, RB_ROG_THROWINGPRECISION) > 0) {
+				minDmg += (minDmg * 0.1f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_THROWINGPRECISION));
 			}
 
 			uint16 MaxDmg = GetThrownDamage(WDmg, TotalDmg, minDmg);
 
 			if (IsClient() &&
-				CastToClient()->GetBuildRank(ROGUE, RB_ROG_DEADLY_DAGGER) > 0) {
-				MaxDmg += (MaxDmg * 0.2f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_DEADLY_DAGGER));
+				CastToClient()->GetBuildRank(ROGUE, RB_ROG_DEADLYDAGGER) > 0) {
+				MaxDmg += (MaxDmg * 0.2f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_DEADLYDAGGER));
 			}
 
 			if (Assassinate_Dmg) {
