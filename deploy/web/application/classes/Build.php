@@ -377,7 +377,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Harmonic Affinity";
-			$newSkill->desc = 'Allows the bard to gain affinity with their weapons, causing never before seen proc rates at <em data-base="10">10</em>% effectiveness<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases proc chance of innate and card weapon procs by <em data-base="10">10</em>% effectiveness<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-harmonicaffinity.png";	
 			$skills[31] = $newSkill;
 
@@ -936,7 +936,7 @@ class Build {
 			$skills[46] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Focused Affinity";
+			$newSkill->title = "Thieves' Affinity";
 			$newSkill->desc = 'Increases proc chance of innate and card weapon procs by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[49] = $newSkill;

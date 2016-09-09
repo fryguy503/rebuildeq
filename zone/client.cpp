@@ -10302,7 +10302,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ROG_THROWING_PRECISION) return "Throwing Precision";
 		else if (id == RB_ROG_MUGGING_SHOT) return "Mugging Shot";
 		else if (id == RB_ROG_DEADLY_DAGGER) return "Deadly Dagger";
-		else if (id == RB_ROG_FOCUSED_AFFINITY) return "Focused Affinity";
+		else if (id == RB_ROG_THIEVES_AFFINITY) return "Thieves' Affinity";
 		else if (id == RB_ROG_HIDDEN_DAGGER) return "Hidden Dagger";
 
 		break;

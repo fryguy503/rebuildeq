@@ -4370,8 +4370,8 @@ void Mob::TryWeaponProc(const ItemInst *inst, const EQEmu::Item_Struct *weapon, 
 	}
 
 	if (IsClient() &&
-		CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSED_AFFINITY) > 0) {
-		ProcChance += (ProcChance * 0.1f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_FOCUSED_AFFINITY));
+		CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEVES_AFFINITY) > 0) {
+		ProcChance += (ProcChance * 0.1f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEVES_AFFINITY));
 	}
 
 // Try innate proc on weapon
