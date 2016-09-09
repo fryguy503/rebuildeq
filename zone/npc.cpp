@@ -1559,8 +1559,8 @@ void NPC::PickPocket(Client* thief)
 	}
 
 	if (steal_item || 
-		thief->GetBuildRank(ROGUE, RB_ROG_HIDDEN_STASH) < 1 ||
-		!zone->random.Roll((int)thief->GetBuildRank(ROGUE, RB_ROG_HIDDEN_STASH) * 2) ||
+		thief->GetBuildRank(ROGUE, RB_ROG_HIDDENSTASH) < 1 ||
+		!zone->random.Roll((int)thief->GetBuildRank(ROGUE, RB_ROG_HIDDENSTASH) * 2) ||
 		this->hidden_stash_counter > 2) {
 		thief->SendPickPocketResponse(this, 0, PickPocketFailed);
 		return;
@@ -1603,7 +1603,7 @@ void NPC::PickPocket(Client* thief)
 			break;
 		}
 		this->hidden_stash_counter++;
-		thief->Message(MT_Skills, "Hidden Stash Rank %u has stolen %i %s. (%s has been stolen %i times);", thief->GetBuildRank(ROGUE, RB_ROG_HIDDEN_STASH), amount, cash_type.c_str(), this->hidden_stash_counter);		
+		thief->Message(MT_Skills, "Hidden Stash Rank %u has stolen %i %s. (%s has been stolen %i times);", thief->GetBuildRank(ROGUE, RB_ROG_HIDDENSTASH), amount, cash_type.c_str(), this->hidden_stash_counter);		
 	}
 
 	//thief->Message(0, "This target's pockets are empty");
