@@ -103,14 +103,14 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			{
 				if(caster)
 				{
-					buffslot = caster->AddBuff(caster, spell_id);
+					buffslot = caster->AddBuff(caster, spell_id, (duration_override != 0 ? duration_override : 0));
 				}
 				else
 					buffslot = -1;
 			}
 			else
 			{
-				buffslot = AddBuff(caster, spell_id);
+				buffslot = AddBuff(caster, spell_id, (duration_override != 0 ? duration_override : 0));
 			}
 			if(buffslot == -1)	// stacking failure
 				return false;
