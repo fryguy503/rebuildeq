@@ -901,7 +901,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Sleight of Strength";
-			$newSkill->desc = 'When the rogue successfully pick pockets, there is a <em data-base="2">2</em>%<span class="perLevel"> chance they will obtain an avatar-like buff<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When the rogue successfully pick pockets, there is a <em data-base="2">2</em>%<span class="perLevel"> chance they will obtain a random beneficial buff for a short duration <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[36] = $newSkill;
 

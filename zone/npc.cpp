@@ -1477,10 +1477,37 @@ void NPC::PickPocket(Client* thief)
 	uint32 money[6] = { 0, ((steal_skill >= 125) ? (GetPlatinum()) : (0)), ((steal_skill >= 60) ? (GetGold()) : (0)), GetSilver(), GetCopper(), 0 };
 	bool has_coin = ((money[PickPocketPlatinum] | money[PickPocketGold] | money[PickPocketSilver] | money[PickPocketCopper]) != 0);
 	bool steal_item = (steal_skill >= steal_chance && (zone->random.Roll(50) || !has_coin));
-	if (steal_item &&
-		thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH) > 0 &&
+	if (thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH) > 0 &&
 		zone->random.Roll((int)(thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH) * 2))) {
-		thief->AddBuff(thief, 1598, (thief->GetLevel() / 10) + 1); //Duration is level / 10 +1 ticks, 2 / 10 = 0 (int conversion), so 1 tick minimum , 7 ticks max (420s)
+		switch (zone->random.Int(1, 9)) {			
+		case 1:
+			thief->QuickBuff(thief, 880, zone->random.Int(1,5)); //dulsehound (str/regen)
+			break;
+		case 2:
+			thief->QuickBuff(thief, 885, zone->random.Int(1, 5)); //graveyard dust (str/agi/atkspeed)
+			break;
+		case 3:
+			thief->QuickBuff(thief, 884, zone->random.Int(1, 5)); //calimony (hp regen, hp buff)
+			break;
+		case 4:
+			thief->QuickBuff(thief, 1331, zone->random.Int(1, 5)); //skin of flame ds
+			break;
+		case 5:
+			thief->QuickBuff(thief, 883, zone->random.Int(1, 5)); //potion of assailing (str/agi/atk)
+			break;
+		case 6:
+			thief->QuickBuff(thief, 879, zone->random.Int(1, 5)); //troll's essence (str/regen)
+			break;
+		case 7:
+			thief->QuickBuff(thief, 1166, zone->random.Int(1, 5)); //draconic rage (150 dd)
+			break;
+		case 8:
+			thief->QuickBuff(thief, 6914, zone->random.Int(1, 5)); //potion of healing V
+			break;
+		case 9:
+			thief->QuickBuff(thief, 2434, zone->random.Int(1, 5)); //avatar
+			break;
+		}
 	}
 
 	// still needs to have FindFreeSlot vs PutItemInInventory issue worked out
