@@ -434,6 +434,9 @@ void EntityList::AIYellForHelp(Mob* sender, Mob* attacker) {
 	if (sender->HasAssistAggro())
 		return;
 
+	if (sender->IsMuffled())
+		return; //Muffled is a new special status that certain skills gives, disabling the yell for help mechanic
+
 	for (auto it = npc_list.begin(); it != npc_list.end(); ++it) {
 		NPC *mob = it->second;
 		if (!mob)

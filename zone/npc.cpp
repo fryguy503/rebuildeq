@@ -617,6 +617,7 @@ bool NPC::Process()
 		int32 OOCRegen = 0;
 		if(oocregen > 0){ //should pull from Mob class
 			OOCRegen += GetMaxHP() * oocregen / 100;
+			if (IsMuffled()) SetMuffled(false);
 			}
 		//Lieka Edit:Fixing NPC regen.NPCs should regen to full during a set duration, not based on their HPs.Increase NPC's HPs by % of total HPs / tick.
 		if((GetHP() < GetMaxHP()) && !IsPet()) {

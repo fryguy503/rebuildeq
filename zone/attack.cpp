@@ -4700,14 +4700,20 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 
 		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_HIDDEN_DAGGER);
 		if (rank > 0 && defender->GetHPRatio() == 100.0f && CastToClient()->sneaking) {
+
 			CastToClient()->sneaking = false; //Disable sneak
 			CastToClient()->SendAppearancePacket(AT_Sneak, 0);
 
-			Log.Out(Logs::Detail, Logs::Attack, "Sneak Attack %u, hidden dagger skill: %i", rank, skill);
-			if (zone->random.Roll(rank * 15)) {
-				//Have defender quickly cast harmony on itself.. Lol.
-				defender->SpellFinished(3601, defender);
-				CastToClient()->Message(MT_NonMelee, "Hidden Dagger %u catches %s off guard.", rank, defender->GetCleanName());
+			Log.Out(Logs::Detail, Logs::Build, "HIDDEN_DAGGER: Sneak Attack %u, throwing skill: %i", rank, skill);
+			if (zone->random.Roll(rank * 15) &&
+				GetLevel() >= defender->GetLevel()) {
+				//Harmony = 3601
+				//defender->SpellFinished(3601, defender);								
+				CastToClient()->Message(MT_NonMelee, "Hidden Dagger %u muffles %s.", rank, defender->GetCleanName());
+				Log.Out(Logs::Detail, Logs::LogCategory::Build, "HIDDEN_DAGGER: Failed chance roll or too low level");
+			}
+			else {
+				Log.Out(Logs::Detail, Logs::LogCategory::Build, "HIDDEN_DAGGER: Failed chance roll or too low level");
 			}
 		}
 	}
@@ -5602,4 +5608,10 @@ void Mob::DoOffHandAttackRounds(Mob *target, ExtraAttackOptions *opts, int speci
 			}
 		}
 	}
+}
+
+void Mob::SetMuffled(bool muffled)
+{
+	this->is_muffled = muffled;
+	Log.Out(Logs::Detail, Logs::Build, "Muffled status is now %d", muffled);
 }

@@ -84,6 +84,7 @@ namespace Logs {
 		Client_Server_Packet_With_Dump,
 		Login_Server,
 		OOC,
+		Build,
 		MaxCategoryID,	/* Don't Remove this*/
 	};
 
@@ -133,7 +134,8 @@ namespace Logs {
 		"Packet :: Server -> Client (Dump)",
 		"Packet :: Client -> Server (Dump)",
 		"Login Server",
-		"OOC"
+		"OOC",
+		"Build"
 	};
 }
 

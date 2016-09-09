@@ -154,6 +154,7 @@ public:
 	std::vector<DPS_Struct> dps;
 
 	//Attack
+	void SetMuffled(bool is_muffled);
 	virtual void RogueBackstab(Mob* other, bool min_damage = false, int ReuseTime = 10);
 	virtual void RogueAssassinate(Mob* other);
 	float MobAngle(Mob *other = 0, float ourx = 0.0f, float oury = 0.0f) const;
@@ -538,6 +539,7 @@ public:
 	bool IsEngaged() { return(!hate_list.IsHateListEmpty()); }
 	bool HasPrimaryAggro() { return PrimaryAggro; }
 	bool HasAssistAggro() { return AssistAggro; }
+	bool IsMuffled() { return is_muffled;  }
 	void SetPrimaryAggro(bool value) { PrimaryAggro = value; if (value) AssistAggro = false; }
 	void SetAssistAggro(bool value) { AssistAggro = value; if (PrimaryAggro) AssistAggro = false; }
 	bool HateSummon();
@@ -1353,6 +1355,7 @@ protected:
 
 	bool PrimaryAggro;
 	bool AssistAggro;
+	bool is_muffled;
 	int npc_assist_cap;
 	Timer assist_cap_timer; // clear assist cap so more nearby mobs can be called for help
 
