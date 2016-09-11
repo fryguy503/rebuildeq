@@ -1184,6 +1184,26 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	int spellid = rank->spell;
 	int manacost = -1;
 	int cooldown = 0;
+	if (rank_id == aaEntrap && GetBuildRank(DRUID, RB_DRU_ENTRAP) > 0) {
+		uint8 rank = GetBuildRank(DRUID, RB_DRU_ENTRAP);
+		if (rank == 1) spellid = 3614;
+		else if (rank == 2) spellid = 12610;
+		else if (rank == 3) spellid = 23551;
+		else if (rank == 4) spellid = 30682;
+		else spellid = 30682;
+		
+		if (GetLevel() < 15) manacost = 8;
+		else if (GetLevel() < 29) manacost = 13;
+		else if (GetLevel() < 51) manacost = 86;
+		else if (GetLevel() < 55) manacost = 115;
+		else if (GetLevel() < 60) manacost = 152;
+		else manacost = 248;
+
+		if (rank >= 5) rank = 8;
+		manacost /= (0.4f * rank);
+		
+
+	}
 
 	if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
 		

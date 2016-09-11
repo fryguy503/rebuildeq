@@ -497,10 +497,21 @@ class Build {
 			//==================DRUID======================
 			case "druid":
 			$newSkill = new stdClass();
+			$newSkill->title = "Entrap";
+			$newSkill->desc = 'Grants the Entrap AA, snaring the target. Mana cost increases across levels. <br>
+			Rank 1 Snares by 41%-96%, 0 resist adjustment, 0.4% mana cost reduction.<br>
+			Rank 2 Snares by 57%-121%, -50 resist adjustment, 0.8% mana cost reduction.<br>
+			Rank 3 Snares by 57%-141%, -50 resist adjustment, 1.2% mana cost reduction.<br>
+			Rank 4 Snares by 57%-141%, -85 resist adjustment, 1.6% mana cost reduction.<br>
+			Rank 5 Snares by 57%-141%, -85 resist adjustment, 3.2% mana cost reduction.<br>';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$skills[0] = $newSkill;
+
+			$newSkill = new stdClass();
 			$newSkill->title = "Tree Form";
 			$newSkill->desc = 'Treeform summons a tree that lulls nearby enemies, higher ranks give higher radius.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
-			$skills[0] = $newSkill;
+			$skills[2] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Teleport Bind";

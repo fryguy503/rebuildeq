@@ -8872,6 +8872,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Cacophony\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == DRUID && i == RB_DRU_ENTRAP  && GetAA(aaEntrap) < 1) {
+					TrainAARank(aaEntrap);
+					Message(15, "You have unlocked the AA \"Entrap\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == DRUID && i == RB_DRU_TELEPORTBIND  && GetAA(aaTeleportBind) < 1) {
 					TrainAARank(aaTeleportBind);
 					Message(15, "You have unlocked the AA \"Teleport Bind\"! Find the hotkey in your Alternate Advancement Window.");
@@ -10307,7 +10312,8 @@ std::string Client::GetBuildName(uint32 id) {
 
 		break;
 	case DRUID:
-		if (id == RB_DRU_TREEFORM) return "Tree Form";
+		if (id == RB_DRU_ENTRAP) return "Entrap";
+		else if (id == RB_DRU_TREEFORM) return "Tree Form";
 		else if (id == RB_DRU_TELEPORTBIND) return "Teleport Bind";
 		else if (id == RB_DRU_EXODUS) return "Exodus";
 		else if (id == RB_DRU_CALLOFTHEWILD) return "Call of the Wild";
