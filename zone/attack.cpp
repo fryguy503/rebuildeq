@@ -1410,7 +1410,6 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 						is_interrupt = true;
 						break;
 					case EQEmu::skills::Skill1HSlashing:
-						spellid = 39915; //cripple for now
 						proc_damage = 5 * rank;
 						break;
 					case EQEmu::skills::Skill1HPiercing:
