@@ -1152,11 +1152,12 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaDanceofBlades && GetBuildRank(BARD, RB_BRD_DANCEOFBLADES) < 1 ||
 		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
 		rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) < 1 ||
-		rank_id == aaTeleportBind && GetBuildRank(SHAMAN, RB_DRU_TELEPORTBIND) < 1 ||
-		rank_id == aaExodus && GetBuildRank(SHAMAN, RB_DRU_EXODUS) < 1 ||
-		rank_id == aaCalloftheWild && GetBuildRank(SHAMAN, RB_DRU_CALLOFTHEWILD) < 1 ||
-		rank_id == aaSecondaryRecall && GetBuildRank(SHAMAN, RB_DRU_SECONDARYRECALL) < 1 ||
-		rank_id == aaDireCharm && GetBuildRank(SHAMAN, RB_DRU_DIRECHARM) < 1 ||
+		rank_id == aaTeleportBind && GetBuildRank(DRUID, RB_DRU_TELEPORTBIND) < 1 ||
+		rank_id == aaEntrap && GetBuildRank(DRUID, RB_DRU_ENTRAP) < 1 ||
+		rank_id == aaExodus && GetBuildRank(DRUID, RB_DRU_EXODUS) < 1 ||
+		rank_id == aaCalloftheWild && GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) < 1 ||
+		rank_id == aaSecondaryRecall && GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL) < 1 ||
+		rank_id == aaDireCharm && GetBuildRank(DRUID, RB_DRU_DIRECHARM) < 1 ||
 		rank_id == aaConvergenceofSpirits && GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) < 1 ||
 		rank_id == aaSpiritoftheWood && GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) < 1 ||
 		rank_id == aaNaturesBoon && GetBuildRank(DRUID, RB_DRU_NATURESBOON) < 1 ||
