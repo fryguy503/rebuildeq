@@ -8897,8 +8897,8 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Secondary Recall\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == DRUID && i == RB_DRU_DIRECHARM  && GetAA(aaDireCharm) < 1) {
-					TrainAARank(aaDireCharm);
+				if (GetClass() == DRUID && i == RB_DRU_DIRECHARM  && GetAA(aaDireCharm2) < 1) {
+					TrainAARank(aaDireCharm2);
 					Message(15, "You have unlocked the AA \"Dire Charm\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
