@@ -515,7 +515,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Teleport Bind";
-			$newSkill->desc = 'Grants the teleport bind AA.';
+			$newSkill->desc = 'Grants the teleport bind AA. Costs <em data-base="85">85</em>% of maximumum mana. Each additional rank decreases the mana cost by 15%.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[4] = $newSkill;
 			
