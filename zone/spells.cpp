@@ -442,7 +442,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 			{
 				mana_cost = 0;
 			} else {
-				Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana spell=%d mymana=%d cost=%d\n", GetName(), spell_id, my_curmana, mana_cost);
+				Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana %s spell=%d mymana=%d cost=%d\n", GetName(), spell_id, my_curmana, mana_cost);
 				if(IsClient()) {
 					//clients produce messages... npcs should not for this case
 					Message_StringID(13, INSUFFICIENT_MANA);
@@ -467,8 +467,8 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		Log.Out(Logs::Detail, Logs::Spells, "Teleport Bind (Rank %d) Mana Cost %d and Casting Time %d", rank, mana_cost, cast_time);
 
 		if(mana_cost > GetMana()) {
-			Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana spell=%d mymana=%d cost=%d\n", GetName(), spell_id, GetMana(), mana_cost);
-                        Message_StringID(13, INSUFFICIENT_MANA);
+                        Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana %s spell=%d mymana=%d cost=%d\n", GetName(), spell_id, my_curmana, mana_cost);
+			Message_StringID(13, INSUFFICIENT_MANA);
                         InterruptSpell();
 		}
 	}	
