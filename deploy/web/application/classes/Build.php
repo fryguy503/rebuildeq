@@ -521,7 +521,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Exodus";
-			$newSkill->desc = 'Grants the Exodus AA. Each rank reduces casting time.';
+			$newSkill->desc = 'Grants the Exodus AA. <em data-base="5">5</em> second cast time. Each rank reduces casting time by 1 second.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[6] = $newSkill;
 
