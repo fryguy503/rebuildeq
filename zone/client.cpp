@@ -8816,7 +8816,7 @@ void Client::RefreshBuild() {
 		for (auto row = results.begin(); row != results.end(); ++row) {
 			strcpy(m_epp.build, row[0]);
 		}
-
+		bool is_updated = false;
 		if (strcmp(oldBuild.c_str(), m_epp.build) != 0) {
 			for (uint32 i = 0; i < 53; i++) {
 				/*if (sizeof(m_epp.build) < i || sizeof(oldBuild.c_str()) < i) {
@@ -8830,6 +8830,7 @@ void Client::RefreshBuild() {
 					continue; //ignore bad fields, or fields that are not trained
 				}
 				if (n > o) {
+					is_updated = true;
 					std::string message = "You have become better at ";
 					message.append(GetBuildName(i));
 					message.append(StringFormat("! (%u)", n));
@@ -9028,6 +9029,10 @@ void Client::RefreshBuild() {
 
 			}
 		}
+
+		//Sync AA table if changes caused it to be modified.
+		if (is_updated) SendAlternateAdvancementTable();
+		
 		/*if (GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING)> 0) {
 			const Item_Struct* item = database.GetItem(100500);
 			if (item && !CheckLoreConflict(item)) { //if the item exists and it isn't lore conflicting
@@ -10280,6 +10285,8 @@ void Client::ResetBuild() {
 	if (HasPet()) {
 		this->GetPet()->Depop();
 	}
+	
+	SendAlternateAdvancementTable();
 
 	Message(0, "Your build has been successfully reset!");
 }
