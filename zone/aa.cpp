@@ -860,7 +860,14 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 	aai->type = ability->type;
 	aai->spell = rank->spell;
 	aai->spell_type = rank->spell_type;
-	aai->spell_refresh = rank->recast_time;
+	
+	int rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
+        if (rb_rank > 0 && rank->id == aaCalloftheWild) {
+		aai->spell_refresh = 1800 - (rb_rank-1) * 300;
+	} else {
+		aai->spell_refresh = rank->recast_time;
+	}
+	
 	aai->classes = ability->classes;
 	aai->level_req = rank->level_req;
 	aai->current_level = level;
@@ -1205,6 +1212,14 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 
 	}
 
+        if (rank_id == aaCalloftheWild) {
+                uint8 rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
+		if(rb_rank > 0) {
+			spellid = 958;
+			cooldown = 1800 - (rb_rank-1) * 300;
+		}
+        }
+	
 	if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
 		
 		AddBuff(this, 271, GetBuildRank(ROGUE, RB_ROG_APPRAISAL));
@@ -1477,7 +1492,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	}
 
 	CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
-	SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
+	SendAlternateAdvancementTimer(rank->spell_type, 0, cooldown);
 }
 
 int Mob::GetAlternateAdvancementCooldownReduction(AA::Rank *rank_in) {
