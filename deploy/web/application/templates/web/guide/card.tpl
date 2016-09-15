@@ -27,7 +27,7 @@
       <table class="table table-striped">
       <thead>
         <tr>
-        <th>Picture</th>
+        {*<th>Picture</th>*}
         <th>Card Name</th>
         <th>Lore</th>
         </tr>
@@ -35,7 +35,7 @@
       <tbody>
         {foreach from=$cards item=card key=c}
         <tr>
-          <td><img src="/images/cards/{$card->id}.png" alt="{$card->name}" class="img-responsive" height="150px"></td>
+         {* <td><img src="/images/cards/{$card->id}.png" alt="{$card->name}" class="img-responsive" height="150px"></td>*}
           <td>{$card->name}</td>
           <td>{$card->lore}</td>
         </tr>
