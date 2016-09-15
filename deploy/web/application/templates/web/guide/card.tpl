@@ -29,6 +29,7 @@
         <tr>
         {*<th>Picture</th>*}
         <th>Card Name</th>
+        <th>Slot</th>
         <th>Lore</th>
         </tr>
       </thead>
@@ -36,7 +37,13 @@
         {foreach from=$cards item=card key=c}
         <tr>
          {* <td><img src="/images/cards/{$card->id}.png" alt="{$card->name}" class="img-responsive" height="150px"></td>*}
+
           <td>{$card->name}</td>
+          <td>{if $card->slots == 131072}Chest{/if}
+          {if $card->slots == 8192}Weapon{/if}
+          {if $card->slots == 98304}Finger{/if}
+          {if $card->slots == 262144}Legs{/if}
+          </td>
           <td>{$card->lore}</td>
         </tr>
         {/foreach}
