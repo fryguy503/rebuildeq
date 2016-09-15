@@ -48,7 +48,7 @@ class Template_Web_Core extends Controller_Template {
 		$this->template->user = $this->user;
 		$this->template->copyright = date('Y');
 		$this->template->page = strtolower($this->request->controller());
-		
+		$this->template->action = strtolower($this->request->action());
 	}
 
 	/**
