@@ -1492,7 +1492,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	}
 
 	CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
-	SendAlternateAdvancementTimer(rank->spell_type, 0, cooldown);
+	SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
 }
 
 int Mob::GetAlternateAdvancementCooldownReduction(AA::Rank *rank_in) {
