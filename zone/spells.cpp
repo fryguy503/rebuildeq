@@ -466,8 +466,8 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 
 		Log.Out(Logs::Detail, Logs::Spells, "Teleport Bind (Rank %d) Mana Cost %d and Casting Time %d", rank, mana_cost, cast_time);
 
-		if(mana_cost > GetMana()) {
-                        Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana %s spell=%d mymana=%d cost=%d\n", GetName(), spell_id, my_curmana, mana_cost);
+		if (mana_cost > GetMana()) {
+			Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana spell=%d mymana=%d cost=%d\n", GetName(), spell_id, GetMana(), mana_cost);
 			Message_StringID(13, INSUFFICIENT_MANA);
                         InterruptSpell();
 		}
@@ -511,20 +511,20 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
         }
 
 
-	// Druid Teleport Bind
-	rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TELEPORTBIND);
-        if (rank > 0 && spell_id == 5953) {
-		// 85% Mana at Rank 1, minus 15% per rank: 85,70,55,40,25
-		mana_cost = GetMaxMana() * (1 - rank * 0.15f);
+		// Druid Teleport Bind
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TELEPORTBIND);
+		if (rank > 0 && spell_id == 5953) {
+			// 85% Mana at Rank 1, minus 15% per rank: 85,70,55,40,25
+			mana_cost = GetMaxMana() * (1 - rank * 0.15f);
 
-		Log.Out(Logs::Detail, Logs::Spells, "Teleport Bind (Rank %d) Mana Cost %d and Casting Time %d", rank, mana_cost, cast_time);
+			Log.Out(Logs::Detail, Logs::Spells, "Teleport Bind (Rank %d) Mana Cost %d and Casting Time %d", rank, mana_cost, cast_time);
 
-		if(mana_cost > GetMana()) {
-			Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana spell=%d mymana=%d cost=%d\n", GetName(), spell_id, GetMana(), mana_cost);
-                        Message_StringID(13, INSUFFICIENT_MANA);
-                        InterruptSpell();
+			if (mana_cost > GetMana()) {
+				Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana spell=%d mymana=%d cost=%d\n", GetName(), spell_id, GetMana(), mana_cost);
+				Message_StringID(13, INSUFFICIENT_MANA);
+				InterruptSpell();
+			}
 		}
-	}	
 
 	// Druid Exodus
 	rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_EXODUS);
