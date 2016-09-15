@@ -496,7 +496,7 @@ class Build {
 
 			//==================DRUID======================
 			case "druid":
-			$newSkill = new stdClass();
+			/*$newSkill = new stdClass();
 			$newSkill->title = "Entrap";
 			$newSkill->desc = 'Grants the Entrap AA, snaring the target. Mana cost increases across levels. <br>
 			Rank 1 Snares by 41%-96%, 0 resist adjustment, 0.4% mana cost reduction.<br>
@@ -548,7 +548,7 @@ class Build {
 			$newSkill->desc = 'Can charm mobs up to your level, however once charmed, lose half their health.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[16] = $newSkill;
-
+*/
 			$newSkill = new stdClass();
 			$newSkill->title = "Regeneration";
 			$newSkill->desc = 'Grants the druid an innate hp regeneration of Level * 0.2 hitpoints (minimum 2) per tick, a self only damage shield of <em data-base="2">2</em>,  as well as any duration regeneration spells casted by the druid give <em data-base="20">20</em>% additional hitpoint regeneration per tick while in the same zone as the druid<span class="perLevel"> per rank</span>.';
@@ -909,7 +909,7 @@ class Build {
 			$newSkill->desc = 'Grants the Escape AA, allowing the rogue to escape combat instantly for 50% of your endurance bar. Endurance cost is reduced by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[34] = $newSkill;
-
+/*
 			$newSkill = new stdClass();
 			$newSkill->title = "Sleight of Strength";
 			$newSkill->desc = 'When the rogue successfully pick pockets, there is a <em data-base="2">2</em>%<span class="perLevel"> chance they will obtain a random beneficial buff for a short duration <span class="perLevel"> per rank</span>.';
@@ -958,7 +958,7 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[52] = $newSkill;
 			break;
-			
+			*/
 			//==================SHAMAN======================
 			case "shaman":
 			//0
