@@ -526,6 +526,14 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		}
 	}	
 
+	// Druid Exodus
+	rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_EXODUS);
+	if(rank > 0 && spell_id == 2771) {
+                // 5 second cast time, 1 less second per rank: 5000ms/4000ms/3000ms/2000ms/1000ms
+		int cast_time_new = 6000 - (rank * 1000);
+		Log.Out(Logs::Detail, Logs::Spells, "Exodus (Rank %d) Casting Time %d", rank, cast_time_new);
+        	cast_time = cast_time_new;
+	}
 
 	if(mana_cost > GetMana())
 		mana_cost = GetMana();
