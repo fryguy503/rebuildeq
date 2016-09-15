@@ -4,36 +4,55 @@
  <section id="pricing" class="dark">
   <div class="container">
 
-	<div class="row" style="margin-top:60px;">
-	  	<div class="col-md-8 col-md-offset-2">
-	  		<div class="row">
-				
-			          <h2>Setting Up</h2>
-			    	<p>      
-			         Aww, you shouldn't have! There is no donation system up currently, however the server is commited to never allow competitive advantage by donating.<br><br>
-			         Never, ever will there be pay to win. Illusions and convienence is all donations might reward.<br><br>
-			         PM a Guide on discord if you're interested in showing your support, but note at this time no donations are accepted.
-			         </p>
-			 </div>
-		</div>
-	</div>
+  <div class="row" style="margin-top:60px;">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="row">
+        
+                <h2>Card Augments</h2>
+            <p>      
+               Rebuild EQ introduces a new style of augmenting inspired by Ragnarok Online. When you consider an NPC, you will see special tags associated with them, such as Dark Elf, Summoned, etc. These represent what the creature has a chance to drop.
+               </p>
+       </div>
+    </div>
+  </div>
   </div>
   </section>
+</div>
+
+
+
+<section id="featured2" class="featured">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="row">
+      <table class="table table-striped">
+      <thead>
+        <tr>
+        <th>Picture</th>
+        <th>Card Name</th>
+        <th>Lore</th>
+        </tr>
+      </thead>
+      <tbody>
+        {foreach from=$cards item=card key=c}
+        <tr>
+          <td><img src="/images/cards/{$card->id}.png" alt="{$card->name}" class="img-responsive" height="150px"></td>
+          <td>{$card->name}</td>
+          <td>{$card->lore}</td>
+        </tr>
+        {/foreach}
+      </tbody>
+      </table>
+    </div>
   </div>
+</section>
 
-
-
-    <section id="featured2" class="featured">
-
-      <div class="container">
+    <section id="gallery">
         <div class="row">
-          <div class="col-sm-5 text-center">
-            <img class="margin-top img-responsive" src="/images/guide/build-guide.gif" alt="Generic placeholder image" data-sr="enter left, hustle 20px" width="429">
-          </div>
-          <div class="col-sm-5 col-sm-offset-1">
+          <div class="col-sm-12 text-center">
             <div class="vertical-align">
-              <h2>Where do donations go?</h2>
-              <p>Donations, once they're in, is only for server costs. When the server pre-pays for cloud hosting we get huge discounts, so pooling up for the costs helps ensure the best quality hardware for price.</p>
+              <h2>Apply for Beta today</h2>
+              <p>Join discord and talk to the GMs to apply for the beta.</p>
+              <a class="btn btn-lg btn-primary signup" href="/chat" role="button">Apply For Beta</a></p>
             </div>
           </div>
         </div>
@@ -41,62 +60,6 @@
 
     </section>
 
-
-  <!-- Pricing
-    ================================================== -->
-    <section id="pricing" class="dark">
-
-      <div class="page-header text-center">
-        <h3>Donations</h3>
-        <p>
-        NOTE: These are not available, the server is just brainstorming possible ideas
-        </p>
-      </div>
-
-      <div class="container">
-        <div class="row">
-          <div class="plans">
-              <div class="col-xs-12 col-sm-6 col-md-6">
-                <div class="plan featured" data-sr="enter over 1s">
-                  <div class="plan-title">
-                    <h2>Basic</h2>
-                    <h3><sup>$</sup>5<sub>/ choose only one</sub></h3>
-                  </div>
-
-                  <ul class="plan-features">
-                    <li>Identity Change</li>
-                    <li>Guild Name Change</li>
-                    <li>Old Illusion Box</li>
-                    <li>Custom Title</li>
-                  </ul>
-                  <div class="plan-cta">
-                    <p class="plan-buy"><a href="#" class="btn">Select</a></p>
-                 </div>
-                </div>
-              </div>
-
-              <div class="col-xs-12 col-sm-6 col-md-6">
-                <div class="plan featured" data-sr="enter over 1s">
-                  <div class="plan-title">
-                    <h2>Advanced</h2>
-                    <h3><sup>$</sup>50<sub>/ choose only one</sub></h3>
-                  </div>
-
-                  <ul class="plan-features">
-                    <li>Permanent Legal Race Change</li>
-                    <li>Ornament for Weapon</li>
-                    <li>Custom Pet Model Change</li>
-                    <li>Custom Pet Name</li>
-                  </ul>
-                  <div class="plan-cta">
-                    <p class="plan-buy"><a href="#" class="btn">Select</a></p>
-                 </div>
-                </div>
-              </div>
-            </div>
-        </div>
-      </div>
-
-    </section>
+  </div>
     
 {*include file="../_footer.tpl"*}
