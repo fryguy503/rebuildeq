@@ -1506,6 +1506,12 @@ bool Mob::DetermineSpellTargets(uint16 spell_id, Mob *&spell_target, Mob *&ae_ce
 
 	bodyType target_bt = BT_Humanoid;
 	SpellTargetType targetType = spells[spell_id].targettype;
+	
+	int rb_rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
+        if (rb_rank > 0 && spell_id == 958) {	
+		targetType = ST_AECaster;
+	}
+	
 	bodyType mob_body = spell_target ? spell_target->GetBodyType() : BT_Humanoid;
 
 	if(IsPlayerIllusionSpell(spell_id)

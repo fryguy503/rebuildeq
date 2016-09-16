@@ -1189,6 +1189,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							caster->SpellFinished(230, this);
 						}
 
+						if(spell_id == 958 && 
+							caster->IsClient() &&  //Casted by a druid client
+                                                        caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0 && //Has call of the wild skill
+							IsNPC() //target is an NPC
+							) {
+							int rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
+							effect_value = 2000 * rank;
+						}
+
 						Stun(effect_value);
 					} else {
 						if (IsClient())
