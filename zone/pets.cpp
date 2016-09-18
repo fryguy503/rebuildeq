@@ -250,6 +250,12 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
 			return;
 		}
+
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
+                if (spell_id == 2760 && rank < 1) {
+                        Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
+                        return;
+                }
 	}
 
 	int16 act_power = 0; // The actual pet power we'll use.
@@ -395,6 +401,38 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		}
 	}
 
+	if (spell_id == 2760 && this->IsClient() && CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM)  > 0) {
+			
+		rank = CastToClient()->GetBuildRank(SHAMAN, RB_DRU_DIRECHARM);
+		//Nerf level, since that's used as a factor for HP/Dmg calculation
+
+		if (CastToClient()->GetLevel() < 6) {
+			if (CastToClient()->GetLevel() < rank) {
+				npc_type->level = rank;
+			}
+			else {
+				npc_type->level = CastToClient()->GetLevel();
+			}
+		}
+		else {
+			npc_type->level = (CastToClient()->GetLevel() - (4 - rank));
+		}
+		npc_type = this->AdjustNPC(npc_type, true, true);
+		//Now that we generated base HP, let's nerf it on a new formula
+		npc_type->max_hp = (npc_type->max_hp * 0.2 * rank); //50 % of normal hp
+		if (npc_type->max_hp < 50) {
+			npc_type->max_hp = 50;
+		}
+		npc_type->AC = (npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
+		npc_type->size = rank * (GetLevel() / 50); //1.04 to 7.4
+		npc_type->max_dmg = npc_type->max_dmg * 0.1 * rank; //50% dmg at max
+
+		//Turn it into a pet
+		npc_type->race = BEAR;
+                npc_type->texture = 3;
+                npc_type->gender = 2;
+                npc_type->size = 2.5f;
+	}
 	
 	//Shin: Pet buff system
 	if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) > 0 &&
@@ -518,8 +556,12 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	// 3 - Random name if client, `s pet for others
 	// 4 - Keep DB name
 
-
-	if (petname != nullptr) {
+	if(spell_id == 2760 && IsClient()) {
+		// RB_DRU_SHM -- Change this to the target's name
+		strcpy(npc_type->name, this->GetCleanName());
+                npc_type->name[25] = '\0';
+                strcat(npc_type->name, "`s_pet");
+	} else if (petname != nullptr) {
 		// Name was provided, use it.
 		strn0cpy(npc_type->name, petname, 64);
 	} else if (record.petnaming == 0) {

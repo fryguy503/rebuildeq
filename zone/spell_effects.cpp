@@ -1211,6 +1211,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_Charm:
 			{
+				
 #ifdef SPELL_EFFECT_SPAM
 				snprintf(effect_desc, _EDLEN, "Charm: %+i (up to lvl %d)", effect_value, spell.max[i]);
 #endif
@@ -1293,6 +1294,19 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				{
 					if(buffs[buffslot].ticsremaining > RuleI(Character, MaxCharmDurationForPlayerCharacter))
 						buffs[buffslot].ticsremaining = RuleI(Character, MaxCharmDurationForPlayerCharacter);
+				}
+
+				Log.Out(Logs::General, Logs::Spells, "SE_Charm Spell ID: %di, IsClient(): %d", spell_id, IsClient());
+
+				// RB_DRU_DIRECHARM Override
+				if(spell_id == 2760 && caster->IsClient()) {
+					int rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
+					if(rank > 0) {
+						Kill();
+						caster->CastToClient()->MakePet(spell_id, "RB_DRU_DIRECHARM");
+					} else {
+						Message(0, "You must train Dire Charm for this effect to work.");
+					}
 				}
 
 				break;
