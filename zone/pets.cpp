@@ -427,11 +427,13 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->size = rank * (GetLevel() / 50); //1.04 to 7.4
 		npc_type->max_dmg = npc_type->max_dmg * 0.1 * rank; //50% dmg at max
 
-		//Turn it into a pet
-		npc_type->race = BEAR;
-                npc_type->texture = 3;
-                npc_type->gender = 2;
-                npc_type->size = 2.5f;
+		Mob *target = GetTarget();
+
+		//Turn it into the target
+		npc_type->race = target->GetRace();
+                npc_type->gender = target->GetGender();
+                npc_type->size = target->GetSize();
+		
 	}
 	
 	//Shin: Pet buff system
@@ -557,10 +559,8 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	// 4 - Keep DB name
 
 	if(spell_id == 2760 && IsClient()) {
-		// RB_DRU_SHM -- Change this to the target's name
-		strcpy(npc_type->name, this->GetCleanName());
-                npc_type->name[25] = '\0';
-                strcat(npc_type->name, "`s_pet");
+		// RB_DRU_SHM -- Change pet name to the client target's name
+		strcpy(npc_type->name, GetTarget()->GetCleanName());
 	} else if (petname != nullptr) {
 		// Name was provided, use it.
 		strn0cpy(npc_type->name, petname, 64);
@@ -719,6 +719,11 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		}
 		else
 			npc->Kill(); //On live casts spell 892 Unsummon (Kayen - Too limiting to use that for emu since pet can have more than 20k HP)
+	}
+
+	if (spell_id == 2760 && this->IsClient() && CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM)  > 0) {
+		Mob *target = GetTarget();
+		npc->GMMove(target->GetX(), target->GetY(), target->GetZ(), target->GetHeading(), true);	
 	}
 }
 /* This is why the pets ghost - pets were being spawned too far away from its npc owner and some
