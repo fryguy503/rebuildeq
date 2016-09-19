@@ -4604,8 +4604,20 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster)
 			// check level limit of charm spell
 			effect_index = GetSpellEffectIndex(spell_id, SE_Charm);
 			assert(effect_index >= 0);
-			if(GetLevel() > spells[spell_id].max[effect_index] && spells[spell_id].max[effect_index] != 0)
-			{
+			if(spell_id == 2760 && caster->IsClient()) {
+				int rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
+				if((rank == 1 && GetLevel() > caster->CastToClient()->GetLevel() - 10) ||
+			 	   (rank == 2 && GetLevel() > caster->CastToClient()->GetLevel() - 8) ||
+				   (rank == 3 && GetLevel() > caster->CastToClient()->GetLevel() - 7) ||
+				   (rank == 4 && GetLevel() > caster->CastToClient()->GetLevel() - 6) ||
+				   (rank == 5 && GetLevel() > caster->CastToClient()->GetLevel() - 5)
+				) {
+					Log.Out(Logs::Detail, Logs::Spells, "Our level (%d) is higher than the limit of this Charm spell (%d)", GetLevel(), spells[spell_id].max[effect_index]);
+                                	caster->Message_StringID(MT_Shout, CANNOT_CHARM_YET);
+                                	return true;
+				}
+
+			} else if(GetLevel() > spells[spell_id].max[effect_index] && spells[spell_id].max[effect_index] != 0) {
 				Log.Out(Logs::Detail, Logs::Spells, "Our level (%d) is higher than the limit of this Charm spell (%d)", GetLevel(), spells[spell_id].max[effect_index]);
 				caster->Message_StringID(MT_Shout, CANNOT_CHARM_YET);
 				return true;
