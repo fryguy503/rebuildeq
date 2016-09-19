@@ -403,37 +403,25 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 
 	if (spell_id == 2760 && this->IsClient() && CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM)  > 0) {
 			
-		rank = CastToClient()->GetBuildRank(SHAMAN, RB_DRU_DIRECHARM);
-		//Nerf level, since that's used as a factor for HP/Dmg calculation
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
+		Mob *target = GetTarget();
 
-		if (CastToClient()->GetLevel() < 6) {
-			if (CastToClient()->GetLevel() < rank) {
-				npc_type->level = rank;
-			}
-			else {
-				npc_type->level = CastToClient()->GetLevel();
-			}
-		}
-		else {
-			npc_type->level = (CastToClient()->GetLevel() - (4 - rank));
-		}
+		npc_type->level = target->GetLevel();
 		npc_type = this->AdjustNPC(npc_type, true, true);
-		//Now that we generated base HP, let's nerf it on a new formula
-		npc_type->max_hp = (npc_type->max_hp * 0.2 * rank); //50 % of normal hp
-		if (npc_type->max_hp < 50) {
-			npc_type->max_hp = 50;
-		}
+		
 		npc_type->AC = (npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
 		npc_type->size = rank * (GetLevel() / 50); //1.04 to 7.4
 		npc_type->max_dmg = npc_type->max_dmg * 0.1 * rank; //50% dmg at max
-
-		Mob *target = GetTarget();
+                
+		npc_type->max_hp = (target->GetMaxHP() * 0.1 * rank); //50 % of normal hp
+                if (npc_type->max_hp < 50) {
+                        npc_type->max_hp = 50;
+                }
 
 		//Turn it into the target
 		npc_type->race = target->GetRace();
                 npc_type->gender = target->GetGender();
                 npc_type->size = target->GetSize();
-		
 	}
 	
 	//Shin: Pet buff system
@@ -724,7 +712,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	if (spell_id == 2760 && this->IsClient() && CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM)  > 0) {
 		Mob *target = GetTarget();
 		npc->GMMove(target->GetX(), target->GetY(), target->GetZ(), target->GetHeading(), true);	
-		npc->Depop();
+		target->Depop();
 	}
 }
 /* This is why the pets ghost - pets were being spawned too far away from its npc owner and some

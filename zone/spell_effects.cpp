@@ -1219,6 +1219,20 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if (!caster)	// can't be someone's pet unless we know who that someone is
 					break;
 
+				 // RB_DRU_DIRECHARM Override
+				if(spell_id == 2760 && caster->IsClient()) {
+					int rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
+					if(rank > 0) {
+						// Need to manually set target so that we can access it in the MakePet method
+						caster->SetTarget(this);
+						caster->CastToClient()->MakePet(spell_id, "RB_DRU_DIRECHARM");
+					} else {
+						Message(0, "You must train Dire Charm for this effect to work.");
+					}
+					break;
+				}
+
+
 				if(IsNPC())
 				{
 					CastToNPC()->SaveGuardSpotCharm();
@@ -1294,18 +1308,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				{
 					if(buffs[buffslot].ticsremaining > RuleI(Character, MaxCharmDurationForPlayerCharacter))
 						buffs[buffslot].ticsremaining = RuleI(Character, MaxCharmDurationForPlayerCharacter);
-				}
-
-				// RB_DRU_DIRECHARM Override
-				if(spell_id == 2760 && caster->IsClient()) {
-					int rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
-					if(rank > 0) {
-						// Need to manually set target so that we can access it in the MakePet method
-						caster->SetTarget(this);
-						caster->CastToClient()->MakePet(spell_id, "RB_DRU_DIRECHARM");
-					} else {
-						Message(0, "You must train Dire Charm for this effect to work.");
-					}
 				}
 
 				break;
