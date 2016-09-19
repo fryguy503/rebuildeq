@@ -32,18 +32,4 @@
 
     <script src="/public/prestige/js/less-1.6.1.min.js"></script>
 
-    <script>
-
-      $.each(['css/theme.less'], function (index, fileName) {
-          var $sheet = $('<link />', {
-              href: fileName,
-              rel: 'stylesheet/less',
-              type: 'text/css'
-          }).appendTo('head');
-          less.sheets.push($sheet[0]);
-      });
-      less.refresh();
-
-    </script>
-
 {/literal}
