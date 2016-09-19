@@ -959,6 +959,7 @@ class Build {
 			$skills[52] = $newSkill;
 			break;
 			*/
+			break;
 			//==================SHAMAN======================
 			case "shaman":
 			//0
