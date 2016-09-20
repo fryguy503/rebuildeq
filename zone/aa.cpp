@@ -861,12 +861,24 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 	aai->spell = rank->spell;
 	aai->spell_type = rank->spell_type;
 	
-	int rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
-        if (rb_rank > 0 && rank->id == aaCalloftheWild) {
+        if (rank->id == aaCalloftheWild && GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0) {
+		int rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 		aai->spell_refresh = 1800 - (rb_rank-1) * 300;
+	} else if (rank->id == aaSecondaryRecall && GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL) > 0) {
+		int rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
+		if(rb_rank == 1)
+			aai->spell_refresh = 86400; // 24 hours
+		else if(rb_rank == 2)
+			aai->spell_refresh = 64800; // 18 hours
+		else if(rb_rank == 3)
+			aai->spell_refresh = 43200; // 12 hours
+		else if(rb_rank == 4)
+			aai->spell_refresh = 21600; // 6 hours
+		else if(rb_rank == 5)
+			aai->spell_refresh = 10800; // 3 hours
 	} else {
 		aai->spell_refresh = rank->recast_time;
-	}
+	}	
 	
 	aai->classes = ability->classes;
 	aai->level_req = rank->level_req;
@@ -1219,7 +1231,21 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			cooldown = 1800 - (rb_rank-1) * 300;
 		}
         }
-	
+
+	if(rank_id == aaSecondaryRecall) {
+		int rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
+                if(rb_rank == 1)
+                        cooldown = 86400; // 24 hours
+                else if(rb_rank == 2)
+                        cooldown = 64800; // 18 hours
+                else if(rb_rank == 3)
+                        cooldown = 43200; // 12 hours
+                else if(rb_rank == 4)
+                        cooldown = 21600; // 6 hours
+                else if(rb_rank == 5)
+                        cooldown = 10800; // 3 hours
+	}
+
 	if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
 		
 		AddBuff(this, 271, GetBuildRank(ROGUE, RB_ROG_APPRAISAL));
