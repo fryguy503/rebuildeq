@@ -6,6 +6,7 @@ deploy/server/eqemu_update.pl
 deploy/server/backups/
 deploy/server/db_update/
 deploy/server/db_dumper.pl
+deploy/server/login.ini
 
 #logs are ignored for versioning
 *.log
