@@ -4856,30 +4856,33 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 		int factionlvl = GetFactionLevel(CharacterID(), tmob->CastToNPC()->GetNPCTypeID(), GetRace(), GetClass(), GetDeity(), tmob->CastToNPC()->GetPrimaryFaction(), tmob);		
 
 		switch (factionlvl) {
-		case FACTION_ALLY:
-			con_text = "regards you an ally";
-			break;
-		case FACTION_AMIABLE:
-			con_text = "regards you amiably";
-			break;
-		case FACTION_APPREHENSIVE:
-			con_text = "regards you apprensively";
-			break;
-		case FACTION_DUBIOUS:
-			con_text = "glowers at you dubiously";
-			break;
-		case FACTION_INDIFFERENT:
-			con_text = "regards you indifferently";
-			break;
-		case FACTION_KINDLY:
-			con_text = "regards you kindly";
-			break;
-		case FACTION_SCOWLS:
-			con_text = "scowls at you, ready to attack";
-			break;
-		case FACTION_THREATENLY:
-			con_text = "glares at you threateningly";
-			break;
+			case FACTION_ALLY:
+				con_text = "regards you an ally";
+				break;
+			case FACTION_WARMLY:
+				con_text = "regards you warmly";
+	                        break;
+			case FACTION_KINDLY:
+	                        con_text = "regards you kindly";
+	                        break;
+			case FACTION_AMIABLE:
+				con_text = "regards you amiably";
+				break;
+			case FACTION_INDIFFERENT:
+	                        con_text = "regards you indifferently";
+	                        break;
+			case FACTION_APPREHENSIVE:
+				con_text = "regards you apprensively";
+				break;
+			case FACTION_DUBIOUS:
+				con_text = "glowers at you dubiously";
+				break;
+			case FACTION_THREATENLY:
+				con_text = "glares at you threateningly";
+				break;
+			case FACTION_SCOWLS:
+	                        con_text = "scowls at you, ready to attack";
+	                        break;
 		}
 
 		con->level = GetLevelCon(GetLevel(), tmob->GetLevel());
