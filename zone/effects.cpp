@@ -410,7 +410,7 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 		if (IsClient() && CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON) > 0) {
 			uint32 rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
 			int healAmount = (int)(value * 0.05 * rank);
-			CastToClient()->Message(MT_Spells, "Convergence of Spirits %u gave a bonus %i healing.", rank, healAmount);
+			CastToClient()->Message(MT_Spells, "Nature's Boon %u gave a bonus %i healing.", rank, healAmount);
 			value += healAmount;
 		}
 
