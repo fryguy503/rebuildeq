@@ -16,6 +16,7 @@ title = "Preserver Added"
 * Fixed a combine issue with shaman epic.
 * Nola in EC Tunnel now sells the affinity sound for secondary bind.
 * Rogue Bandit skills should be more in, and complete.
-
+* Fixed faction related challenges where certain characters could not go above warmly.
+* With newcon, fixed a display error with faction (warmly-related).
 <!--more-->
 
