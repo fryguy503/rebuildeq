@@ -2948,6 +2948,32 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 			}
 		}
 
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TREEFORM);
+		if (rank > 0 && zone->random.Roll((int)(rank))) {
+
+			int heal_amount = 0;
+			int mana_amount = 0;
+
+			switch(zone->random.Int(0,2)) {
+				case 0:
+					heal_amount = (uint32)(GetMaxHP() * rank * 0.02f);
+					CastToClient()->Message(MT_Spells, "Treeform %u healed you for %i.", rank, heal_amount);
+					HealDamage(heal_amount, this);
+					break;
+				case 1:
+					mana_amount = (uint32)(GetMaxMana() * rank * 0.02f);
+					CastToClient()->Message(MT_Spells, "Treeform %u gave you %i mana.", rank, mana_amount);
+					SetMana((GetMana() + mana_amount));
+					CastToClient()->SendManaUpdate();
+					break;
+				case 2:
+					int damage_amount = (uint32)(GetMaxHP() * rank * 0.02f);
+					CastToClient()->Message(MT_Spells, "Treeform %u damaged %s for %i.", rank, attacker->GetCleanName(), damage_amount);
+					DS += ((spell_ds) ? 1 : -1) * damage_amount;
+					break;
+			}
+		}		
+
 		rank = this->CastToClient()->GetBuildRank(DRUID, RB_DRU_REGENERATION);
 		if (rank > 0) {
 			DS += ((spell_ds) ? 1 : -1) * 2 * rank;
