@@ -187,6 +187,13 @@ Route::set('builds', 'builds(/<class>(/<session>))')
 		'action'     => 'index',
 	));
 
+	Route::set('account', 'account(/<action>(/<session>))')
+	->defaults(array(
+		'directory' => 'Web',
+		'controller' => 'Account',
+		'action'     => 'index',
+	));
+
 Route::set('default', '(<controller>(/<action>(/<id>(/<sort>))))')
 	->defaults(array(
 		'directory' => 'Web',
