@@ -2650,7 +2650,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		if (i.item_id == 100113 && GetRace() == 39) loot_list.push_back(i); //Gnoll Card 50hp
 		if (i.item_id == 100114 && GetRace() == 13) loot_list.push_back(i); //Aviak Card
 		if (i.item_id == 100115 && GetRace() == 14) loot_list.push_back(i); //Werewolf Card
-		if (i.item_id == 100116 && (GetRace() == 48 || GetRace() == 455) loot_list.push_back(i); //Kobold Card
+		if (i.item_id == 100116 && (GetRace() == 48 || GetRace() == 455)) loot_list.push_back(i); //Kobold Card
 		if (i.item_id == 100117 && GetRace() == 54) loot_list.push_back(i); //Orc Card 15ac	
 		if (i.item_id == 100118 && (GetRace() == 28 || GetRace() == 456)) loot_list.push_back(i); //Fungus Card
 		if (i.item_id == 100119 && (GetRace() == 40 || GetRace() == 433 || GetRace() == 137)) loot_list.push_back(i); //Goblin Card	
