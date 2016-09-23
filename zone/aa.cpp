@@ -1196,7 +1196,9 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		Message(13, "You cannot use this ability until you unlock it via %s.", CreateSayLink("#builds", "#builds").c_str());
 		return;
 	}
-
+	
+	// Break Invis when activating abilities
+	CastToClient()->BreakInvisibleSpells();
 
 	if(CastToClient()->IsSitting() || CastToClient()->GetFeigned()) {
 		Message(13, "You must be standing to use an ability.");
