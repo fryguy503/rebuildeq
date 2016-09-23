@@ -4000,7 +4000,7 @@ void command_builds(Client *c, const Seperator *sep)
 	windowText.append(c->GetBuildReport());
 	c->SendPopupToClient(windowTitle, windowText.c_str());
 	if (c->GetLevel() < level_req) {
-		c->Message(0, "You are eligble to %s your build choices.", c->CreateSayLink("#builds reset", "reset").c_str());
+		c->Message(0, "You are eligible to %s your build choices.", c->CreateSayLink("#builds reset", "reset").c_str());
 	}
 
 
