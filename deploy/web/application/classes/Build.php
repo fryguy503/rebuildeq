@@ -533,7 +533,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Secondary Recall";
-			$newSkill->desc = 'Grants Secondary Recall AA.';
+			$newSkill->desc = 'Grants Secondary Recall AA. Each rank reduces the recast time substantially.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[10] = $newSkill;
 
@@ -959,7 +959,6 @@ class Build {
 			$skills[52] = $newSkill;
 			break;
 			*/
-			break;
 			//==================SHAMAN======================
 			case "shaman":
 			//0
