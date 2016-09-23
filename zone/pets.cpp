@@ -250,6 +250,12 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
 			return;
 		}
+
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
+                if (spell_id == 2760 && rank < 1) {
+                        Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
+                        return;
+                }
 	}
 
 	int16 act_power = 0; // The actual pet power we'll use.
@@ -395,6 +401,28 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		}
 	}
 
+	if (spell_id == 2760 && this->IsClient() && CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM)  > 0) {
+			
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
+		Mob *target = GetTarget();
+
+		npc_type->level = target->GetLevel();
+		npc_type = this->AdjustNPC(npc_type, true, true);
+		
+		npc_type->AC = (npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
+		npc_type->size = rank * (GetLevel() / 50); //1.04 to 7.4
+		npc_type->max_dmg = npc_type->max_dmg * 0.1 * rank; //50% dmg at max
+                
+                npc_type->max_hp = (npc_type->max_hp * 0.2 * rank); //50 % of normal hp
+		if (npc_type->max_hp < 50) {
+                        npc_type->max_hp = 50;
+                }
+
+		//Turn it into the target
+		npc_type->race = target->GetRace();
+                npc_type->gender = target->GetGender();
+                npc_type->size = target->GetSize();
+	}
 	
 	//Shin: Pet buff system
 	if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) > 0 &&
@@ -518,8 +546,10 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	// 3 - Random name if client, `s pet for others
 	// 4 - Keep DB name
 
-
-	if (petname != nullptr) {
+	if(spell_id == 2760 && IsClient()) {
+		// RB_DRU_SHM -- Change pet name to the client target's name
+		strcpy(npc_type->name, GetTarget()->GetCleanName());
+	} else if (petname != nullptr) {
 		// Name was provided, use it.
 		strn0cpy(npc_type->name, petname, 64);
 	} else if (record.petnaming == 0) {
@@ -677,6 +707,12 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		}
 		else
 			npc->Kill(); //On live casts spell 892 Unsummon (Kayen - Too limiting to use that for emu since pet can have more than 20k HP)
+	}
+
+	if (spell_id == 2760 && this->IsClient() && CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM)  > 0) {
+		Mob *target = GetTarget();
+		npc->GMMove(target->GetX(), target->GetY(), target->GetZ(), target->GetHeading(), true);	
+		target->Depop();
 	}
 }
 /* This is why the pets ghost - pets were being spawned too far away from its npc owner and some
