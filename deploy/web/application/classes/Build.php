@@ -496,7 +496,7 @@ class Build {
 
 			//==================DRUID======================
 			case "druid":
-			/*$newSkill = new stdClass();
+			$newSkill = new stdClass();
 			$newSkill->title = "Entrap";
 			$newSkill->desc = 'Grants the Entrap AA, snaring the target. Mana cost increases across levels. <br>
 			Rank 1 Snares by 41%-96%, 0 resist adjustment, 0.4% mana cost reduction.<br>
@@ -509,7 +509,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Tree Form";
-			$newSkill->desc = 'Treeform summons a tree that lulls nearby enemies, higher ranks give higher radius.';
+			$newSkill->desc = 'Treeform grants defense proc, where each time you are hit there is a <em data-base="1">1</em> chance to either: Be healed for <em data-base="2">2</em>% of your max health, gain mana for <em data-base="2">2</em>% of your max mana, or deal <em data-base="2">2</em>% of your max health as damage to the attacker<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[2] = $newSkill;
 
@@ -521,25 +521,25 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Exodus";
-			$newSkill->desc = 'Grants the Exodus AA. <em data-base="5">5</em> second cast time. Each rank reduces casting time by 1 second.';
+			$newSkill->desc = 'Grants the Exodus AA, which has a base 5 second cast time. Each rank reduces casting time by 1 second.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[6] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Call of the Wild";
-			$newSkill->desc = 'Grants the Call of the Wild AA, causing enemies within a proximity to be dealt DoT dmg.';
+			$newSkill->desc = 'Grants the Call of the Wild AA, causing enemies nearby to be stunned. Each rank reduces recast time by 300 seconds.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[8] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Secondary Recall";
-			$newSkill->desc = 'Grants Secondary Recall AA. Each rank reduces the recast time substantially.';
+			$newSkill->desc = 'Grants Secondary Recall AA. Each rank reduces the recast time substantially, 1: 24hrs, 2: 18 hrs, 3: 12hrs, 4: 6hrs, 5: 3hrs.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[10] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Ring Affinity";
-			$newSkill->desc = 'Ring spells cast 5% faster and cost 10% less mana.';
+			$newSkill->desc = 'Ring spells cast <em data-base="5">5</em>% faster and cost <em data-base="10">10</em>%% less mana.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[13] = $newSkill;
 
@@ -548,7 +548,7 @@ class Build {
 			$newSkill->desc = 'Can charm mobs up to your level, however once charmed, lose half their health.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[16] = $newSkill;
-*/
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Regeneration";
 			$newSkill->desc = 'Grants the druid an innate hp regeneration of Level * 0.2 hitpoints (minimum 2) per tick, a self only damage shield of <em data-base="2">2</em>,  as well as any duration regeneration spells casted by the druid give <em data-base="20">20</em>% additional hitpoint regeneration per tick while in the same zone as the druid<span class="perLevel"> per rank</span>.';
@@ -909,7 +909,7 @@ class Build {
 			$newSkill->desc = 'Grants the Escape AA, allowing the rogue to escape combat instantly for 50% of your endurance bar. Endurance cost is reduced by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[34] = $newSkill;
-/*
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Sleight of Strength";
 			$newSkill->desc = 'When the rogue successfully pick pockets, there is a <em data-base="2">2</em>%<span class="perLevel"> chance they will obtain a random beneficial buff for a short duration <span class="perLevel"> per rank</span>.';
@@ -958,7 +958,7 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[52] = $newSkill;
 			break;
-			*/
+			
 			//==================SHAMAN======================
 			case "shaman":
 			//0
