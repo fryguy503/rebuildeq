@@ -2948,6 +2948,32 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 			}
 		}
 
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TREEFORM);
+		if (rank > 0 && zone->random.Roll((int)(rank))) {
+
+			int heal_amount = 0;
+			int mana_amount = 0;
+
+			switch(zone->random.Int(0,2)) {
+				case 0:
+					heal_amount = (uint32)(GetMaxHP() * rank * 0.02f);
+					CastToClient()->Message(MT_Spells, "Treeform %u healed you for %i.", rank, heal_amount);
+					HealDamage(heal_amount, this);
+					break;
+				case 1:
+					mana_amount = (uint32)(GetMaxMana() * rank * 0.02f);
+					CastToClient()->Message(MT_Spells, "Treeform %u gave you %i mana.", rank, mana_amount);
+					SetMana((GetMana() + mana_amount));
+					CastToClient()->SendManaUpdate();
+					break;
+				case 2:
+					int damage_amount = (uint32)(GetMaxHP() * rank * 0.02f);
+					CastToClient()->Message(MT_Spells, "Treeform %u damaged %s for %i.", rank, attacker->GetCleanName(), damage_amount);
+					DS += ((spell_ds) ? 1 : -1) * damage_amount;
+					break;
+			}
+		}		
+
 		rank = this->CastToClient()->GetBuildRank(DRUID, RB_DRU_REGENERATION);
 		if (rank > 0) {
 			DS += ((spell_ds) ? 1 : -1) * 2 * rank;
@@ -3735,41 +3761,6 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				zone->random.Roll((int)(5 * rank))) {
 				CastToClient()->Message(MT_Spells, "Ward of Tunare %u healed you for %i.", rank, heal_amount);
 				HealDamage(heal_amount, this);
-			}
-
-			rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TREEFORM);
-			if (rank > 0 && zone->random.Roll((int)(rank))) {
-
-				int mana_amount = 0;
-	
-				switch(zone->random.Int(0,2)) {
-					case 0:
-						heal_amount = (uint32)(GetMaxHP() * rank * 0.02f);
-						CastToClient()->Message(MT_Spells, "Treeform %u healed you for %i.", rank, heal_amount);
-						HealDamage(heal_amount, this);
-						break;
-					case 1:
-						mana_amount = (uint32)(GetMaxMana() * rank * 0.02f);
-						CastToClient()->Message(MT_Spells, "Treeform %u gave you %i mana.", rank, mana_amount);
-						SetMana(GetMana() + mana_amount);
-						CastToClient()->SendManaUpdate();
-						break;
-					case 2:
-						int damage_amount = (uint32)(GetMaxHP() * rank * 0.02f);
-						CastToClient()->Message(MT_Spells, "Treeform %u damaged %s for %i.", rank, attacker->GetCleanName(), damage_amount);
-						attacker->Damage(this, -damage_amount, 0, EQEmu::skills::SkillAbjuration/*hackish*/, false);
-						//we can assume there is a spell now
-						auto outapp = new EQApplicationPacket(OP_Damage, sizeof(CombatDamage_Struct));
-						CombatDamage_Struct* cds = (CombatDamage_Struct*)outapp->pBuffer;
-						cds->target = attacker->GetID();
-						cds->source = GetID();
-						cds->type = spellbonuses.DamageShieldType;
-						cds->spellid = 0x0;
-						cds->damage = damage_amount;
-						entity_list.QueueCloseClients(this, outapp);
-						safe_delete(outapp);
-						break;
-				}
 			}
 
 			//Holy Servant
