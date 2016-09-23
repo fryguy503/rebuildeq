@@ -345,8 +345,12 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 		auto row = results.begin();
 		int limit = atoi(row[0]);
 		if (limit > 0 && limit < 100) {
-			set_exp *= (float)(limit / 100);
-			if (set_exp < 1) set_exp = 1;
+			if (set_exp > m_pp.exp) {
+				int i = set_exp - m_pp.exp;
+				i *= (float)(limit / 100);
+				if (i < 1) i = 1;
+				set_exp = m_pp.exp + i;
+			}
 		}
 	}
 
