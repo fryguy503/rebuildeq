@@ -1185,6 +1185,11 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		return;
 	}
 
+
+	if(CastToClient()->IsSitting() || CastToClient()->GetFeigned()) {
+		Message(13, "You must be standing to use an ability.");
+		return;
+	}
 	
 
 	//Shin: set spell Id override
