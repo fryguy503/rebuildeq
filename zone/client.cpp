@@ -7908,6 +7908,12 @@ void Client::SetFactionLevel(uint32 char_id, uint32 npc_id, uint8 char_class, ui
 		UpdatePersonalFaction(char_id, npc_value[i], faction_id[i], &current_value, temp[i], this_faction_min, this_faction_max);
 
 		//Message(14, "Min(%d) Max(%d) Before(%d), After(%d)\n", this_faction_min, this_faction_max, faction_before_hit, current_value);
+		if (npc_value[i] > 0) {
+			npc_value[i] *= RuleR(Character, FactionGainMultiplier);
+		}
+		else if (npc_value[i] < 0) {
+			npc_value[i] *= RuleR(Character, FactionLossMultiplier);
+		}
 
 		SendFactionMessage(npc_value[i], faction_id[i], faction_before_hit, current_value, temp[i], this_faction_min, this_faction_max);
 	}
