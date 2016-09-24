@@ -545,7 +545,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Dire Charm";
-			$newSkill->desc = 'Can charm mobs up to your level, however once charmed, lose half their health.';
+			$newSkill->desc = 'Charm animals from -10 to -5 of your level, based on rank. They get a pet-like adjusted stats, this is an experiment for future mage pet AI improvements.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
 			$skills[16] = $newSkill;
 
