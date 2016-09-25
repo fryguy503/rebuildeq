@@ -4614,6 +4614,7 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster)
 				) {
 					Log.Out(Logs::Detail, Logs::Spells, "Our level (%d) is higher than the limit of this Charm spell (%d)", GetLevel(), spells[spell_id].max[effect_index]);
                                 	caster->Message_StringID(MT_Shout, CANNOT_CHARM_YET);
+                                	caster->CastToClient()->ResetAlternateAdvancementTimer(aaDireCharm);
                                 	return true;
 				}
 
