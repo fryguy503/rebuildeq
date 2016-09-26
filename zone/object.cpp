@@ -448,6 +448,21 @@ void Object::RandomSpawn(bool send_packet) {
 
 	m_data.x = zone->random.Real(m_min_x, m_max_x);
 	m_data.y = zone->random.Real(m_min_y, m_max_y);
+	
+	if (zone->zonemap != nullptr)
+	{
+		glm::vec3 me;
+		me.x = m_data.x;
+		me.y = m_data.y;
+		me.z = m_z;
+		glm::vec3 hit;
+		float best_z = zone->zonemap->FindClosestZ(me, &hit);
+		if (best_z != BEST_Z_INVALID)
+		{
+			m_data.z = best_z;
+		}
+	}
+	
 	respawn_timer.Disable();
 
 	if(send_packet) {
