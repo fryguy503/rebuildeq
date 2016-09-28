@@ -266,6 +266,7 @@ int command_init(void)
 		command_add("logs",  "Manage anything to do with logs",  250, command_logs) ||
 		command_add("logtest",  "Performs log performance testing.",  250, command_logtest) ||
 		command_add("makepet", "[level] [class] [race] [texture] - Make a pet", 50, command_makepet) ||
+		command_add("makepettwo", "npc_id level - Make a secondary pet", 250, command_makepet2) ||
 		command_add("mana", "- Fill your or your target's mana", 50, command_mana) ||
 		command_add("maxskills", "Maxes skills for you.", 200, command_max_all_skills) ||
 		command_add("memspell", "[slotid] [spellid] - Memorize spellid in the specified slot", 50, command_memspell) ||
@@ -2423,6 +2424,14 @@ void command_makepet(Client *c, const Seperator *sep)
 		c->Message(0, "Usage: #makepet pet_type_name (will not survive across zones)");
 	else
 		c->MakePet(0, sep->arg[1]);
+}
+
+void command_makepet2(Client *c, const Seperator *sep)
+{
+	if (sep->arg[1][0] == '\0')
+		c->Message(0, "Usage: #makepet2 npc_type_id (will not survive across zones)");
+	else
+		c->MakePet2((uint16)atoi(sep->arg[1]), c->GetLevel());
 }
 
 void command_level(Client *c, const Seperator *sep)

@@ -595,6 +595,7 @@ bool NPC::Process()
 			// owner->SetPetID(0);
 			this->ownerid = 0;
 			this->petid = 0;
+			this->pet2id = 0;
 		}
 		return false;
 	}

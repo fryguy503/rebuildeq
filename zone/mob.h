@@ -580,6 +580,7 @@ public:
 	uint16 GetSkillByItemType(int ItemType);
 	uint8 GetItemTypeBySkill(EQEmu::skills::SkillType skill);
 	virtual void MakePet(uint16 spell_id, const char* pettype, const char *petname = nullptr);
+	virtual void MakePet2(uint16 npc_type, uint8 level);	
 	virtual void MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower, const char *petname = nullptr, float in_size = 0.0f);
 	bool IsWarriorClass() const;
 	char GetCasterClass() const;
@@ -747,6 +748,7 @@ public:
 	virtual Mob* GetOwnerOrSelf();
 	Mob* GetUltimateOwner();
 	void SetPetID(uint16 NewPetID);
+	void SetPet2ID(uint16 NewPetID);
 	inline uint16 GetPetID() const { return petid; }
 	inline PetType GetPetType() const { return typeofpet; }
 	void SetPetType(PetType p) { typeofpet = p; }
@@ -1125,6 +1127,7 @@ protected:
 	StatBonuses spellbonuses;
 	StatBonuses aabonuses;
 	uint16 petid;
+	uint16 pet2id; //secondary pet
 	uint16 ownerid;
 	PetType typeofpet;
 	int16 petpower;
