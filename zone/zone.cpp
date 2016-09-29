@@ -100,9 +100,6 @@ bool Zone::Bootup(uint32 iZoneID, uint32 iInstanceID, bool iStaticZone) {
 		worldserver.SetZoneData(0);
 		return false;
 	}
-	zone->zonemap = Map::LoadMapFile(zone->map_name);
-	zone->watermap = WaterMap::LoadWaterMapfile(zone->map_name);
-	zone->pathing = PathManager::LoadPathFile(zone->map_name);
 
 	std::string tmp;
 	if (database.GetVariable("loglevel", tmp)) {
@@ -875,6 +872,23 @@ Zone::~Zone() {
 bool Zone::Init(bool iStaticZone) {
 	SetStaticZone(iStaticZone);
 
+	//load the zone config file.
+        if (!LoadZoneCFG(zone->GetShortName(), zone->GetInstanceVersion(), true)) // try loading the zone name...
+                LoadZoneCFG(zone->GetFileName(), zone->GetInstanceVersion()); // if that fails, try the file name, then load defaults
+
+        if(RuleManager::Instance()->GetActiveRulesetID() != default_ruleset)
+        {
+                std::string r_name = RuleManager::Instance()->GetRulesetName(&database, default_ruleset);
+                if(r_name.size() > 0)
+                {
+                        RuleManager::Instance()->LoadRules(&database, r_name.c_str());
+                }
+        }
+
+	zone->zonemap = Map::LoadMapFile(zone->map_name);
+	zone->watermap = WaterMap::LoadWaterMapfile(zone->map_name);
+	zone->pathing = PathManager::LoadPathFile(zone->map_name);
+
 	Log.Out(Logs::General, Logs::Status, "Loading spawn conditions...");
 	if(!spawn_conditions.LoadSpawnConditions(short_name, instanceid)) {
 		Log.Out(Logs::General, Logs::Error, "Loading spawn conditions failed, continuing without them.");
@@ -965,19 +979,6 @@ bool Zone::Init(bool iStaticZone) {
 
 	petition_list.ClearPetitions();
 	petition_list.ReadDatabase();
-
-	//load the zone config file.
-	if (!LoadZoneCFG(zone->GetShortName(), zone->GetInstanceVersion(), true)) // try loading the zone name...
-		LoadZoneCFG(zone->GetFileName(), zone->GetInstanceVersion()); // if that fails, try the file name, then load defaults
-
-	if(RuleManager::Instance()->GetActiveRulesetID() != default_ruleset)
-	{
-		std::string r_name = RuleManager::Instance()->GetRulesetName(&database, default_ruleset);
-		if(r_name.size() > 0)
-		{
-			RuleManager::Instance()->LoadRules(&database, r_name.c_str());
-		}
-	}
 
 	Log.Out(Logs::General, Logs::Status, "Loading timezone data...");
 	zone->zone_time.setEQTimeZone(database.GetZoneTZ(zoneid, GetInstanceVersion()));
