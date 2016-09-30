@@ -448,7 +448,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID);
               						if (spell_id == 267 && rank > 0) {
               							int duration = caster_level * 10;
-               							int str, dex = 0;
+               							int str = 0;
+								int dex = 0;
 
               							if (rank > 4) { //HP/AC
               								if (level >= 60 && caster_level >= 60) { caster->QuickBuff(this, 2530, duration);       //kura's focusing 60
@@ -470,16 +471,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
               								caster->QuickBuff(this, 278, duration);                                                 //spirit of wolf
               							}
 
-              							if (rank > 0 && !str) { //STR
+              							if (rank > 0 && str == 0) { //STR
               								if (level >= 57 && caster_level >= 57) caster->QuickBuff(this, 1593, duration);         //maniacal strength 57
               								else if (level >= 46 && caster_level >= 46) caster->QuickBuff(this, 159, duration);     //strength 46
               								else if (level >= 39 && caster_level >= 39) caster->QuickBuff(this, 153, duration);     //furious strength 39
-              								else if (level >= 28 && caster_level >= 28) caster->QuickBuff(this, 432, duration);     //raging strength 28
+              								else if (level >= 28 && caster_level >= 28) caster->QuickBuff(this, 151, duration);     //raging strength 28
               								else if (level >= 18 && caster_level >= 18) caster->QuickBuff(this, 147, duration);     //spirit strength 18
               								else caster->QuickBuff(this, 40, duration);                                             //strengthen
               							}
 
-              							if (rank > 1 && !str) { //DEX
+              							if (rank > 1 && dex == 0) { //DEX
               								if (level >= 58 && caster_level >= 58) caster->QuickBuff(this, 1583, duration);         //mortal deftness 58
               								else if (level >= 48 && caster_level >= 48) caster->QuickBuff(this, 157, duration);     //dexterity 48
               								else if (level >= 39 && caster_level >= 39) caster->QuickBuff(this, 152, duration);     //deftness 39
@@ -498,7 +499,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
               							}
 
               							if (rank > 3) { //STA
-              								else if (level >= 54 && caster_level >= 54) caster->QuickBuff(this, 1595, duration);    //riotous health 54
+              								if (level >= 54 && caster_level >= 54) caster->QuickBuff(this, 1595, duration);    //riotous health 54
               								else if (level >= 43 && caster_level >= 43) caster->QuickBuff(this, 158, duration);     //stamina 43
               								else if (level >= 30 && caster_level >= 30) caster->QuickBuff(this, 161, duration);     //health 30
               								else if (level >= 21 && caster_level >= 21) caster->QuickBuff(this, 149, duration);     //spirit of ox 21
