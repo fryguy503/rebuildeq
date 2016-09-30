@@ -12775,8 +12775,8 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 	if (vendor == 0 || !vendor->IsNPC() || vendor->GetClass() != MERCHANT)
 		return;
 
-	//This isn't working for some reason
-	if (vendor->GetLastName() == "Origin Binder") {
+	// Don't let players sell items to Origin Binders
+	if (strcmp(vendor->GetLastName(), "Origin Binder") == 0) {
 		EQApplicationPacket* outapp = new EQApplicationPacket(OP_ShopPlayerSell, sizeof(Merchant_Purchase_Struct));
  		Merchant_Purchase_Struct* mco = (Merchant_Purchase_Struct*)outapp->pBuffer;
  		mco->npcid = vendor->GetID();
