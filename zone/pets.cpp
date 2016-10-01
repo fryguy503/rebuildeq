@@ -239,6 +239,7 @@ void Mob::MakePet2(uint16 npc_type, uint8 level) {
 	strcpy(enpc->name, "");
 	enpc->level = level;
 	enpc = AdjustNPC(enpc, false, false);
+	enpc->bodytype = BT_NoTarget; //NoTarget
 	enpc->npc_faction_id = 0; // No faction		
 	strcpy(enpc->special_abilities, "19,1^20,1^24,1");
 	
