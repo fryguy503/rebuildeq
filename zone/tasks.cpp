@@ -34,6 +34,7 @@ Copyright (C) 2001-2008 EQEMu Development Team (http://eqemulator.net)
 #include "client.h"
 #include "entity.h"
 #include "mob.h"
+#include "string_ids.h"
 
 #include "queryserv.h"
 #include "quest_parser_collection.h"
@@ -1871,7 +1872,10 @@ void ClientTaskState::IncrementDoneCount(Client *c, TaskInformation* Task, int T
 			// If Experience and/or cash rewards are set, reward them from the task even if RewardMethod is METHODQUEST
 			RewardTask(c, Task);
 			//RemoveTask(c, TaskIndex);
-
+			if (TaskIndex == FEAT_PETDISCIPLINE) {
+				c->TrainAARank(aaPetDiscipline);				
+				c->Message(15, "You have unlocked the passive AA \"Pet Discipline\"! Find more information in you Alternate Advancement Window.");
+			}
 		}
 
 	}
@@ -3038,16 +3042,17 @@ void ClientTaskState::AcceptNewTask(Client *c, int TaskID, int NPCID, bool enfor
 
 	char *buf = 0;
 	MakeAnyLenString(&buf, "%d", TaskID);
-
-	NPC *npc = entity_list.GetID(NPCID)->CastToNPC();
-	if(!npc) {
-		c->Message(clientMessageYellow, "Task Giver ID is %i", NPCID);
-		c->Message(clientMessageError, "Unable to find NPC to send EVENT_TASKACCEPTED to. Report this bug.");
-		safe_delete_array(buf);
-		return;
-	}
 	taskmanager->SaveClientState(c, this);
-	parse->EventNPC(EVENT_TASK_ACCEPTED, npc, c, buf, 0);
+	if (NPCID != 0) {
+		NPC *npc = entity_list.GetID(NPCID)->CastToNPC();
+		if (!npc) {
+			c->Message(clientMessageYellow, "Task Giver ID is %i", NPCID);
+			c->Message(clientMessageError, "Unable to find NPC to send EVENT_TASKACCEPTED to. Report this bug.");
+			safe_delete_array(buf);
+			return;
+		}
+		parse->EventNPC(EVENT_TASK_ACCEPTED, npc, c, buf, 0);
+	}
 	safe_delete_array(buf);
 
 }

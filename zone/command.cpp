@@ -6099,7 +6099,7 @@ void command_face(Client *c, const Seperator *sep)
 void command_feat(Client *c, const Seperator *sep)
 {
 	if (!sep->arg[1] || strlen(sep->arg[1]) < 1 || !sep->arg[1][0]) {
-		c->Message(0, "Choose the type of feats to display: [ %s ] [ %s ] [ %s ]",
+		c->Message(0, "Choose the type of feats to display: [ %s ] [ %s ] [ %s ] [ %s ].",
 			c->CreateSayLink("#feat aa", "aa").c_str(),
 			c->CreateSayLink("#feat class", "class").c_str(),
 			c->CreateSayLink("#feat general", "general").c_str(),
@@ -6114,38 +6114,42 @@ void command_feat(Client *c, const Seperator *sep)
 		std::string FeatName;
 		std::string FeatShort;
 		int AAID;
-		uint8 FeatClass;
+		uint32 FeatClass;
 		int TaskID;
-		explicit Feat(std::string pFeatType, std::string pFeatName, std::string pFeatShort, int pTaskID, uint8 pFeatClass, int pAAID) : FeatType(pFeatType), FeatName(pFeatName),FeatShort(pFeatShort), TaskID(pTaskID), FeatClass(pFeatClass), AAID(pAAID) {};
+		explicit Feat(std::string pFeatType, std::string pFeatName, std::string pFeatShort, int pTaskID, uint32 pFeatClass, int pAAID) : FeatType(pFeatType), FeatName(pFeatName),FeatShort(pFeatShort), TaskID(pTaskID), FeatClass(pFeatClass), AAID(pAAID) {};
 	};
 
 	static Feat Feats[] = {
-		Feat("pet", "Pet Naming", "naming", 300, 0, 0),
-		Feat("pet", "Pet Discipline", "discipline", 301, 0, aaPetDiscipline),
+		Feat("pet", "Pet Naming", "naming", 300, 65535, 0),
+		Feat("pet", "Pet Discipline", "discipline", 301, 65535, aaPetDiscipline),
 		Feat("class", "True Form of Defense", "defense", 302, 21, 0),
-		Feat("general", "Rallos Zek's Gift", "rallos", 303, 0, 0),
-		Feat("general", "Cursed Fragments", "cursed", 304, 0, 0)
+		Feat("general", "Rallos Zek's Gift", "rallos", 303, 65535, 0),
+		Feat("general", "Cursed Fragments", "cursed", 304, 65535, 0)
 	};
 
 	if (sep->arg[2]) { //if 2nd argument passed
 		for (auto&& feat : Feats) {
 			if (stricmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
 			if (stricmp(sep->arg[2], feat.FeatShort.c_str()) != 0) continue; //Only matching argument shortname			
-			if (feat.FeatClass !=0 && !GetPlayerClassBit(c->GetClass()) & feat.FeatClass) continue; //Class bit filter
-
-			std::string message = StringFormat("Feat %s %s.", feat.FeatName);
+			if (!(GetPlayerClassBit(c->GetClass()) & feat.FeatClass)) continue; //Class bit filter
+			
+			std::string message = StringFormat("Feat %s ", feat.FeatName.c_str());
 			if (!c->IsTaskCompleted(feat.TaskID)) {
 				if (!c->IsTaskActive(feat.TaskID)) {
 					c->AssignTask(feat.TaskID, 0);
 					return;
 				}
 				else {
-					message.append("is already in progress");
+					message.append("is already in progress.");
 				}
 			}
 			else {
-				message.append("has already been completed");
-				//if (feat.AAID > 0) c->GrantAlternateAdvancementAbility()
+				message.append("has already been completed.");
+			
+				if (feat.AAID > 0 && (feat.AAID) < 1) {
+					c->TrainAARank(feat.AAID);
+					c->Message(15, "You have been granted a new AA!");
+				}
 			}
 			c->Message(0, message.c_str());
 			return;
@@ -6157,15 +6161,15 @@ void command_feat(Client *c, const Seperator *sep)
 	for (auto&& feat : Feats) {		
 		if (stricmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
 		if (feat.FeatClass != 0 && !GetPlayerClassBit(c->GetClass()) & feat.FeatClass) continue; //Class bit filter
-
+		c->Message(0, "%u %u", GetPlayerClassBit(c->GetClass()), feat.FeatClass);
 		featCount++;
-		std::string message = StringFormat("%s: ", feat.FeatName);
+		std::string message = StringFormat("%s: ", feat.FeatName.c_str());
 		if (!c->IsTaskCompleted(feat.TaskID)) {
 			if (c->IsTaskActive(feat.TaskID)) message.append("In Progress");
-			else message.append(StringFormat("[ %s ]", c->CreateSayLink(StringFormat("#feat %s %s", feat.FeatType.c_str(), feat.FeatShort).c_str(), "Get Task").c_str()));
+			else message.append(StringFormat("[ %s ]", c->CreateSayLink(StringFormat("#feat %s %s", feat.FeatType.c_str(), feat.FeatShort.c_str()).c_str(), "Get Task").c_str()));
 		}
 		else {
-			message.append(StringFormat("[ %s ]", c->CreateSayLink(StringFormat("#feat %s %s", feat.FeatType.c_str(), feat.FeatShort).c_str(), "Completed").c_str()));
+			message.append(StringFormat("[ %s ]", c->CreateSayLink(StringFormat("#feat %s %s", feat.FeatType.c_str(), feat.FeatShort.c_str()).c_str(), "Completed").c_str()));
 		}
 		c->Message(0, message.c_str());
 	}
