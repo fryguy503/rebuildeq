@@ -4300,6 +4300,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	static Location Locations[] = {
 		Location("airplane", 71, 614, 1415, -663.62, 55.8, 46, 10094),
 		Location("cobaltscar", 117, -1574.95, -1053.25, 307.74, 56.1, 10, 100011),
+		Location("chardok", 103, 865.17, 23.58, 103.72, 188.8, 10, 100018),
 		//Location("commons", 21, 1839.84, 0.15, -15.61, 61.0, 10, 0),
 		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10, 100016),
 		Location("ecommons", 22, -73.06, -1787.51, 3.13, 51.8, 1, 0),
@@ -4314,9 +4315,9 @@ void command_teleport(Client *c, const Seperator *sep) {
 		Location("sebilis", 89, 0, 250, 39.13, 125.0, 30, 100014),
 		Location("skyfire", 91, 783.57, -3097.01, -159.38, 1.8, 10, 100012),
 		Location("sro", 35, 124.6, -1041.51, 9.45, 99.5, 10, 0),
+		Location("timorous", 96, 4351.98, -12257.01, -278.9, 64.1, 10, 100017),
 		Location("toxxulia", 414, -1656.96, -1502.43, 72.29, 58.2, 1, 0),
-		Location("wakening", 119, -2980.7, -3020, 26.5, 42.9, 10, 100009),
-		Location("timorous", 96, 4351.98, -12257.01, -278.9, 64.1, 10, 100017)
+		Location("wakening", 119, -2980.7, -3020, 26.5, 42.9, 10, 100009)
 	};
 
 	auto search = [](const char * pZoneName) -> Location* {
