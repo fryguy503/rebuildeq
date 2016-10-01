@@ -3996,10 +3996,11 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				}
 
 				// frontal stun check for ogres/bonuses
-				if ((IsClient() && CastToClient()->IsTaskCompleted(FEAT_RALLOSZEKSGIFT)) ||
-					(GetBaseRace() == OGRE && IsClient()) ||
-						(frontal_stun_resist && zone->random.Roll(frontal_stun_resist))) &&
-						!attacker->BehindMob(this, attacker->GetX(), attacker->GetY())) {
+				if ((
+						(IsClient() && CastToClient()->IsTaskCompleted(FEAT_RALLOSZEKSGIFT)) ||
+						(GetBaseRace() == OGRE && IsClient()) ||
+						(frontal_stun_resist && zone->random.Roll(frontal_stun_resist))
+					) && !attacker->BehindMob(this, attacker->GetX(), attacker->GetY())) {
 					Log.Out(Logs::Detail, Logs::Combat, "Frontal stun resisted. %d chance.", frontal_stun_resist);
 
 				} else {

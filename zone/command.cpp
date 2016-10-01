@@ -6113,17 +6113,18 @@ void command_feat(Client *c, const Seperator *sep)
 		std::string FeatType;
 		std::string FeatName;
 		std::string FeatShort;
+		int AAID;
 		uint8 FeatClass;
 		int TaskID;
-		explicit Feat(std::string pFeatType, std::string pFeatName, std::string pFeatShort, int pTaskID, uint8 pFeatClass) : FeatType(pFeatType), FeatName(pFeatName),FeatShort(pFeatShort), TaskID(pTaskID), FeatClass(pFeatClass) {};
+		explicit Feat(std::string pFeatType, std::string pFeatName, std::string pFeatShort, int pTaskID, uint8 pFeatClass, int pAAID) : FeatType(pFeatType), FeatName(pFeatName),FeatShort(pFeatShort), TaskID(pTaskID), FeatClass(pFeatClass), AAID(pAAID) {};
 	};
 
 	static Feat Feats[] = {
-		Feat("pet", "Pet Naming", "naming", 300, 0),
-		Feat("pet", "Pet Discipline", "discipline", 301, 0),
-		Feat("class", "True Form of Defense", "defense", 302, 21),
-		Feat("general", "Rallos Zek's Gift", "rallos", 303, 0),
-		Feat("general", "Cursed Fragments", "cursed", 304, 0)
+		Feat("pet", "Pet Naming", "naming", 300, 0, 0),
+		Feat("pet", "Pet Discipline", "discipline", 301, 0, aaPetDiscipline),
+		Feat("class", "True Form of Defense", "defense", 302, 21, 0),
+		Feat("general", "Rallos Zek's Gift", "rallos", 303, 0, 0),
+		Feat("general", "Cursed Fragments", "cursed", 304, 0, 0)
 	};
 
 	if (sep->arg[2]) { //if 2nd argument passed
@@ -6132,18 +6133,19 @@ void command_feat(Client *c, const Seperator *sep)
 			if (stricmp(sep->arg[2], feat.FeatShort.c_str()) != 0) continue; //Only matching argument shortname			
 			if (feat.FeatClass !=0 && !GetPlayerClassBit(c->GetClass()) & feat.FeatClass) continue; //Class bit filter
 
-			std::string message = StringFormat("Feat %s is already %s.", feat.FeatName);
+			std::string message = StringFormat("Feat %s %s.", feat.FeatName);
 			if (!c->IsTaskCompleted(feat.TaskID)) {
 				if (!c->IsTaskActive(feat.TaskID)) {
 					c->AssignTask(feat.TaskID, 0);
 					return;
 				}
 				else {
-					message.append("in progress");
+					message.append("is already in progress");
 				}
 			}
 			else {
-				message.append("completed");
+				message.append("has already been completed");
+				//if (feat.AAID > 0) c->GrantAlternateAdvancementAbility()
 			}
 			c->Message(0, message.c_str());
 			return;
@@ -6163,7 +6165,7 @@ void command_feat(Client *c, const Seperator *sep)
 			else message.append(StringFormat("[ %s ]", c->CreateSayLink(StringFormat("#feat %s %s", feat.FeatType.c_str(), feat.FeatShort).c_str(), "Get Task").c_str()));
 		}
 		else {
-			message.append("Completed");
+			message.append(StringFormat("[ %s ]", c->CreateSayLink(StringFormat("#feat %s %s", feat.FeatType.c_str(), feat.FeatShort).c_str(), "Completed").c_str()));
 		}
 		c->Message(0, message.c_str());
 	}
