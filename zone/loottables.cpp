@@ -476,4 +476,6 @@ void NPC::AddTeleportTable() {
 	if (GetZoneID() == 89 && zone->random.Int(1, 250) == 1) AddItem(100014, 1, false); //Sebilis
 	if (GetZoneID() == 27 && zone->random.Int(1, 100) == 1) AddItem(100015, 1, false); //Lavastorm
 	if (GetZoneID() == 86 && zone->random.Int(1, 100) == 1) AddItem(100016, 1, false); //Dreadlands
+	if (GetZoneID() == 96 && zone->random.Int(1, 100) == 1) AddItem(100017, 1, false); //Timorous Deep
+
 }

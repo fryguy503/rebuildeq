@@ -4300,7 +4300,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 	static Location Locations[] = {
 		Location("airplane", 71, 614, 1415, -663.62, 55.8, 46, 10094),
 		Location("cobaltscar", 117, -1574.95, -1053.25, 307.74, 56.1, 10, 100011),
-		Location("commons", 21, 1839.84, 0.15, -15.61, 61.0, 10, 0),
+		//Location("commons", 21, 1839.84, 0.15, -15.61, 61.0, 10, 0),
 		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10, 100016),
 		Location("ecommons", 22, -73.06, -1787.51, 3.13, 51.8, 1, 0),
 		Location("emeraldjungle", 94, 3474.83, -3123.34, -341.34, 1.5, 10, 100013),
@@ -4312,10 +4312,11 @@ void command_teleport(Client *c, const Seperator *sep) {
 		Location("lavastorm", 27, -25, 182, -73.26, 252.3, 10, 100015),
 		Location("northkarana", 13, 1205.91, -3685.44, -8.56, 126.6, 10, 0),
 		Location("sebilis", 89, 0, 250, 39.13, 125.0, 30, 100014),
-		Location("skyfire", 91, 783.57, -3097.01, -159.38, 1.8, 10, 100012),		
+		Location("skyfire", 91, 783.57, -3097.01, -159.38, 1.8, 10, 100012),
 		Location("sro", 35, 124.6, -1041.51, 9.45, 99.5, 10, 0),
 		Location("toxxulia", 414, -1656.96, -1502.43, 72.29, 58.2, 1, 0),
-		Location("wakening", 119, -2980.7, -3020, 26.5, 42.9, 10, 100009)
+		Location("wakening", 119, -2980.7, -3020, 26.5, 42.9, 10, 100009),
+		Location("timorous", 96, 4351.98, -12257.01, -278.9, 64.1, 10, 100017)
 	};
 
 	auto search = [](const char * pZoneName) -> Location* {
