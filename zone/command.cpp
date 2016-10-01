@@ -202,6 +202,7 @@ int command_init(void)
 		command_add("equipitem", "[slotid(0-21)] - Equip the item on your cursor into the specified slot", 50, command_equipitem) ||
 		command_add("exp", "- Get current exp pool buffer. (60+)", 0, command_exp) ||
 		command_add("face", "- Change the face of your target", 80, command_face) ||
+		command_add("feat", "- Display unlockable feats", 80, command_feat) ||
 		command_add("faq", "- Read the server FAQs", 0, command_faq) ||
 		command_add("findaliases", "[search term]- Searches for available command aliases, by alias or command", 50, command_findaliases) ||
 		command_add("findnpctype", "[search criteria] - Search database NPC types", 100, command_findnpctype) ||
@@ -6092,6 +6093,81 @@ void command_face(Client *c, const Seperator *sep)
 
 		c->Message(0,"Face = %i",  atoi(sep->arg[1]));
 	}
+}
+
+
+void command_feat(Client *c, const Seperator *sep)
+{
+	if (!sep->arg[1] || strlen(sep->arg[1]) < 1 || !sep->arg[1][0]) {
+		c->Message(0, "Choose the type of feats to display: [ %s ] [ %s ] [ %s ]",
+			c->CreateSayLink("#feat aa", "aa").c_str(),
+			c->CreateSayLink("#feat class", "class").c_str(),
+			c->CreateSayLink("#feat general", "general").c_str(),
+			c->CreateSayLink("#feat pet", "pet").c_str()	
+		);
+		if (c->GetLevel() < 40) c->Message(0, "Note: Feats are difficult, and will take a significant amount of time!");
+		return;
+	}
+		
+	struct Feat {
+		std::string FeatType;
+		std::string FeatName;
+		std::string FeatShort;
+		uint8 FeatClass;
+		int TaskID;
+		explicit Feat(std::string pFeatType, std::string pFeatName, std::string pFeatShort, int pTaskID, uint8 pFeatClass) : FeatType(pFeatType), FeatName(pFeatName),FeatShort(pFeatShort), TaskID(pTaskID), FeatClass(pFeatClass) {};
+	};
+
+	static Feat Feats[] = {
+		Feat("pet", "Pet Naming", "naming", 300, 0),
+		Feat("pet", "Pet Discipline", "discipline", 301, 0),
+		Feat("class", "True Form of Defense", "defense", 302, 21),
+		Feat("general", "Rallos Zek's Gift", "rallos", 303, 0),
+		Feat("general", "Cursed Fragments", "cursed", 304, 0)
+	};
+
+	if (sep->arg[2]) { //if 2nd argument passed
+		for (auto&& feat : Feats) {
+			if (stricmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
+			if (stricmp(sep->arg[2], feat.FeatShort.c_str()) != 0) continue; //Only matching argument shortname			
+			if (feat.FeatClass !=0 && !GetPlayerClassBit(c->GetClass()) & feat.FeatClass) continue; //Class bit filter
+
+			std::string message = StringFormat("Feat %s is already %s.", feat.FeatName);
+			if (!c->IsTaskCompleted(feat.TaskID)) {
+				if (!c->IsTaskActive(feat.TaskID)) {
+					c->AssignTask(feat.TaskID, 0);
+					return;
+				}
+				else {
+					message.append("in progress");
+				}
+			}
+			else {
+				message.append("completed");
+			}
+			c->Message(0, message.c_str());
+			return;
+		}
+	}
+
+	//2nd argument failed or wasn't passed, display all feats of type.
+	int featCount = 0;
+	for (auto&& feat : Feats) {		
+		if (stricmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
+		if (feat.FeatClass != 0 && !GetPlayerClassBit(c->GetClass()) & feat.FeatClass) continue; //Class bit filter
+
+		featCount++;
+		std::string message = StringFormat("%s: ", feat.FeatName);
+		if (!c->IsTaskCompleted(feat.TaskID)) {
+			if (c->IsTaskActive(feat.TaskID)) message.append("In Progress");
+			else message.append(StringFormat("[ %s ]", c->CreateSayLink(StringFormat("#feat pet %s", feat.FeatShort).c_str(), "Get Task").c_str()));
+		}
+		else {
+			message.append("Completed");
+		}
+		c->Message(0, message.c_str());
+	}
+	if (featCount == 0) c->Message(0, "No feats are available for this type: %s", sep->arg[1]);
 }
 
 void command_findaliases(Client *c, const Seperator *sep)
