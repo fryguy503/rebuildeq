@@ -6160,7 +6160,7 @@ void command_feat(Client *c, const Seperator *sep)
 		std::string message = StringFormat("%s: ", feat.FeatName);
 		if (!c->IsTaskCompleted(feat.TaskID)) {
 			if (c->IsTaskActive(feat.TaskID)) message.append("In Progress");
-			else message.append(StringFormat("[ %s ]", c->CreateSayLink(StringFormat("#feat pet %s", feat.FeatShort).c_str(), "Get Task").c_str()));
+			else message.append(StringFormat("[ %s ]", c->CreateSayLink(StringFormat("#feat %s %s", feat.FeatType.c_str(), feat.FeatShort).c_str(), "Get Task").c_str()));
 		}
 		else {
 			message.append("Completed");
