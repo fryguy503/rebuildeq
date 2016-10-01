@@ -2781,11 +2781,11 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 		}
 	}
 
-	if(IsPet() && GetOwner() && GetOwner()->GetAA(aaPetDiscipline) && IsHeld() && !IsFocused()) { //ignore aggro if hold and !focus
+	if(IsPet() && GetOwner() && (GetOwner()->GetAA(aaPetDiscipline) || GetOwner()->IsFeatUnlocked(FEAT_PETDISCIPLINE)) && IsHeld() && !IsFocused()) { //ignore aggro if hold and !focus
 		return;
 	}
 
-	if(IsPet() && GetOwner() && GetOwner()->GetAA(aaPetDiscipline) && IsHeld() && GetOwner()->GetAA(aaAdvancedPetDiscipline) >= 1 && IsFocused()) {
+	if(IsPet() && GetOwner() && (GetOwner()->GetAA(aaPetDiscipline) || GetOwner()->IsFeatUnlocked(FEAT_PETDISCIPLINE)) && IsHeld() && GetOwner()->GetAA(aaAdvancedPetDiscipline) >= 1 && IsFocused()) {
 		if (!targetmob)
 			return;
 	}
@@ -2888,7 +2888,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 		}
 	}
 
-	if (mypet && (!(GetAA(aaPetDiscipline) && mypet->IsHeld()))) { // I have a pet, add other to it
+	if (mypet && (!((GetAA(aaPetDiscipline) || IsFeatUnlocked(FEAT_PETDISCIPLINE)) && mypet->IsHeld()))) { // I have a pet, add other to it
 		if(!mypet->IsFamiliar() && !mypet->GetSpecialAbility(IMMUNE_AGGRO))
 			mypet->hate_list.AddEntToHateList(other, 0, 0, bFrenzy);
 	} else if (myowner) { // I am a pet, add other to owner if it's NPC/LD

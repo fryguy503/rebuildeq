@@ -1024,6 +1024,7 @@ public:
 
 	//aa new
 	uint32 GetAA(uint32 rank_id, uint32 *charges = nullptr) const;
+	bool IsFeatUnlocked(int feat_id);
 	uint32 GetAAByAAID(uint32 aa_id, uint32 *charges = nullptr) const;
 	bool SetAA(uint32 rank_id, uint32 new_value, uint32 charges = 0);
 	void ClearAAs() { aa_ranks.clear(); }

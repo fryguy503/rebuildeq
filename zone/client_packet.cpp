@@ -10496,7 +10496,7 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		break;
 	}
 	case PET_HOLD: {
-		if (GetAA(aaPetDiscipline) && mypet->IsNPC()){
+		if ((GetAA(aaPetDiscipline) || IsFeatUnlocked(FEAT_PETDISCIPLINE)) && mypet->IsNPC()){
 			if (mypet->IsFeared())
 				break; //could be exploited like PET_BACKOFF
 
@@ -10520,7 +10520,7 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		break;
 	}
 	case PET_HOLD_ON: {
-		if (GetAA(aaPetDiscipline) && mypet->IsNPC() && !mypet->IsHeld()) {
+		if ((GetAA(aaPetDiscipline) || IsFeatUnlocked(FEAT_PETDISCIPLINE)) && mypet->IsNPC() && !mypet->IsHeld()) {
 			if (mypet->IsFeared())
 				break; //could be exploited like PET_BACKOFF
 
@@ -10537,7 +10537,7 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		break;
 	}
 	case PET_HOLD_OFF: {
-		if (GetAA(aaPetDiscipline) && mypet->IsNPC() && mypet->IsHeld())
+		if ((GetAA(aaPetDiscipline) || IsFeatUnlocked(FEAT_PETDISCIPLINE)) && mypet->IsNPC() && mypet->IsHeld())
 			mypet->SetHeld(false);
 		break;
 	}

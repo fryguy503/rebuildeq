@@ -1687,6 +1687,11 @@ uint32 Mob::GetAA(uint32 rank_id, uint32 *charges) const {
 	return 0;
 }
 
+bool Mob::IsFeatUnlocked(int feat_id) {
+	if (!IsClient()) return false;
+	return (CastToClient()->IsTaskCompleted(feat_id));
+}
+
 uint32 Mob::GetAAByAAID(uint32 aa_id, uint32 *charges) const {
 	if(zone) {
 		AA::Ability *ability = zone->GetAlternateAdvancementAbility(aa_id);
