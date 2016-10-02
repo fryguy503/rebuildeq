@@ -467,10 +467,10 @@ void NPC::AddCardTable() {
 
 void NPC::AddFeatTable() {
 	if (npctype_id == 0) return;
-	if ((GetRace() == OGRE) && zone->random.Int(1, 250) == 1) AddItem(100041, 1, false); //Doctrine, Ch. 1: Ogre
-	if ((GetBodyType() == BT_Giant || GetBodyType() == BT_RaidGiant || GetBodyType() == BT_Zek) && zone->random.Int(1, 250) == 1) AddItem(100042, 1, false); //Doctrine, Ch. 2: Giant
-	if ((GetRace() == 54) && zone->random.Int(1, 250) == 1) AddItem(100043, 1, false); //Doctrine, Ch. 3: Orc
-	if ((GetRace() == 40 || GetRace() == 433 || GetRace() == 137) && zone->random.Int(1, 250) == 1) AddItem(100044, 1, false) ; //Doctrine, Ch. 4: Goblin	
+	if ((GetRace() == OGRE) && zone->random.Int(1, 700) == 1) AddItem(100041, 1, false); //Doctrine, Ch. 1: Ogre
+	if ((GetBodyType() == BT_Giant || GetBodyType() == BT_RaidGiant || GetBodyType() == BT_Zek) && zone->random.Int(1, 700) == 1) AddItem(100042, 1, false); //Doctrine, Ch. 2: Giant
+	if ((GetRace() == 54) && zone->random.Int(1, 700) == 1) AddItem(100043, 1, false); //Doctrine, Ch. 3: Orc
+	if ((GetRace() == 40 || GetRace() == 433 || GetRace() == 137) && zone->random.Int(1, 700) == 1) AddItem(100044, 1, false) ; //Doctrine, Ch. 4: Goblin	
 }
 
 void NPC::AddTeleportTable() {
