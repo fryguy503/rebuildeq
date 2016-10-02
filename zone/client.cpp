@@ -499,8 +499,7 @@ void Client::SendZoneInPackets()
 		(GetZoneID() == 94 && !KeyRingCheck(100013)) ||
 		(GetZoneID() == 27 && !KeyRingCheck(100015)) ||
 		(GetZoneID() == 86 && !KeyRingCheck(100016)) ||
-		(GetZoneID() == 96 && !KeyRingCheck(100017)) ||
-		(GetZoneID() == 103 && !KeyRingCheck(100018))) {
+		(GetZoneID() == 96 && !KeyRingCheck(100017))) {
 		Message(MT_Experience, "This area has a fragment to unlock #teleport to it that you have not yet discovered. Kill monsters to find it.");
 	}
 
