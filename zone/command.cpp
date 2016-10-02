@@ -6132,8 +6132,8 @@ void command_feat(Client *c, const Seperator *sep)
 
 	if (sep->arg[2]) { //if 2nd argument passed
 		for (auto&& feat : Feats) {
-			if (stricmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
-			if (stricmp(sep->arg[2], feat.FeatShort.c_str()) != 0) continue; //Only matching argument shortname			
+			if (strcmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
+			if (strcmp(sep->arg[2], feat.FeatShort.c_str()) != 0) continue; //Only matching argument shortname			
 			if ((GetPlayerClassBit(c->GetClass()) & feat.FeatClass) != GetPlayerClassBit(c->GetClass())) continue; //Class bit filter
 			
 			std::string message = StringFormat("Feat %s ", feat.FeatName.c_str());
@@ -6171,7 +6171,7 @@ void command_feat(Client *c, const Seperator *sep)
 	//2nd argument failed or wasn't passed, display all feats of type.
 	int featCount = 0;
 	for (auto&& feat : Feats) {		
-		if (stricmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
+		if (strcmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
 		if ((GetPlayerClassBit(c->GetClass()) & feat.FeatClass) != GetPlayerClassBit(c->GetClass())) continue; //Class bit filter
 
 		featCount++;
