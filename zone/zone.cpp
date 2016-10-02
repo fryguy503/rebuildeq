@@ -966,7 +966,7 @@ bool Zone::Init(bool iStaticZone) {
 	zone->GetMerchantDataForZoneLoad();
 
 	//Load temporary merchant data
-	zone->LoadTempMerchantData();
+	//zone->LoadTempMerchantData();
 
 	// Merc data
 	if (RuleB(Mercs, AllowMercs)) {
