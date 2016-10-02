@@ -17,4 +17,5 @@ title = "Feat System Added"
 * Fixed a bug related to List of Qeynos Most Wanted quest.
 * Marl Kastane in Tox is now in Kerra Ridge (for shadowknight epic)
 * Fixed a text display glitch for Convergence of Spirits and Nature's Boon.
+* Nerfed Lhranc, his old DPS was around 600-1000, now it is 400-800, putting it more in line with other epic fights.
 <!--more-->
