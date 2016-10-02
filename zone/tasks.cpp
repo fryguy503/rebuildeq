@@ -1872,10 +1872,6 @@ void ClientTaskState::IncrementDoneCount(Client *c, TaskInformation* Task, int T
 			// If Experience and/or cash rewards are set, reward them from the task even if RewardMethod is METHODQUEST
 			RewardTask(c, Task);
 			//RemoveTask(c, TaskIndex);
-			if (TaskIndex == FEAT_PETDISCIPLINE) {
-				c->TrainAARank(aaPetDiscipline);				
-				c->Message(15, "You have unlocked the passive AA \"Pet Discipline\"! Find more information in you Alternate Advancement Window.");
-			}
 		}
 
 	}

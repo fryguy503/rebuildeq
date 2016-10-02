@@ -1,19 +1,36 @@
 sub EVENT_SAY {
   if($text=~/hail/i) {
-    quest::say("You $name. We hear of you. We need help. You [help Crakneks] or you [help self]?");
+    quest::say("You $name. We hear of you. We need help. You [ ". quest::saylink("help Crakneks"). " ] or you [ ".quest::saylink("help self") ." ]?");
   }
   if($text=~/help crakneks/i) {
     quest::say("Ha!! We hear of great adventurer. You?!! Me no think so. You prove self to Crakneks before you help us. Go to Innoth.. Innotu.. Innooth.. Arghh!! You go to outside Oggok. Find fat alligator bit Lork brother in two. Bring brother, Nork, body back. Then me know you strong.");
   }
   if($text=~/help self/i) {
-    quest::say("You help self to leave Oggok before me bash you. We no need cowards.");
+    quest::say("You help self by get better with Rallos Zek. Find me missing chapters for [ ". quest::saylink("book"). " ], me help you.");
   }
   if ($text=~/uglan/i) {
    quest::say("Uglan brave warrior of Oggok. He now in Neriak. Work for dark elves. He NO LIKE dark elves!! He work because we make him. He spy for Crakneks.");
   }
+  if ($text=~/book/i) {
+    quest::say("Book lost all over. Doctrine, lost chapters, Rallos made many creatures you know? Ogres first, Giants next. Orcs be third. 4th uhm.. I forget. Oh!! Goblins. Go find me chapters. You get Doctrine.");
+  }
 }
 
 sub EVENT_ITEM {
+  if(plugin::check_handin(\%itemcount, 100041 => 1, 100042 => 1, 100043 => 1, 100044 => 1)) {
+    quest::say("Ay danks. Doctrine all yours.");    
+    quest::exp(1000);
+    quest::summonitem(100040);
+  }
+
+  if(plugin::check_handin(\%itemcount, 100001 => 1)) {
+    return;
+  }
+  if(plugin::check_handin(\%itemcount, 100040 => 1)) {
+    return;
+  }
+
+
   if(plugin::check_handin(\%itemcount, 20523 => 1)) {
     quest::say("Ay danks. Take dis to Uglan.");
     quest::summonitem(16547);

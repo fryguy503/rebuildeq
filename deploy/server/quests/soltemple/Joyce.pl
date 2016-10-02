@@ -46,7 +46,7 @@ sub EVENT_ITEM {
     quest::faction("291","-15");
     if (quest::istaskactivityactive(301,5)) {
       quest::updatetaskactivity(301,5);
-      quest::say("Excellent! You have completed the Clay Braclet.");
+      quest::say("Excellent! You have completed the Clay Bracelet.");
     }
   }
   #boots

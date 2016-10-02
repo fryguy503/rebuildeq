@@ -6027,7 +6027,7 @@ void command_exp(Client *c, const Seperator *sep)
 
 		int16 inv_slot_id = c->GetInv().HasItem(100000, 1, invWhereWorn | invWherePersonal);
 		if (inv_slot_id == -1) {
-			c->Message(0, "You need an empty bottle of experience to use this command.");
+			c->Message(0, "You need an empty bottle of experience in your inventory to use this command.");
 			return;
 		}
 
@@ -6123,7 +6123,7 @@ void command_feat(Client *c, const Seperator *sep)
 		Feat("pet", "Pet Naming", "naming", 300, 65535, 0),
 		Feat("pet", "Pet Discipline", "discipline", 301, 65535, aaPetDiscipline),
 		Feat("class", "True Form of Defense", "defense", 302, 21, 0),
-		Feat("general", "Rallos Zek's Gift", "rallos", 303, 65535, 0),
+		Feat("general", "Frontal Stun Immunity", "stun", 303, 65535, 0),
 		Feat("general", "Cursed Fragments", "cursed", 304, 65535, 0)
 	};
 
@@ -6131,7 +6131,7 @@ void command_feat(Client *c, const Seperator *sep)
 		for (auto&& feat : Feats) {
 			if (stricmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
 			if (stricmp(sep->arg[2], feat.FeatShort.c_str()) != 0) continue; //Only matching argument shortname			
-			if (!(GetPlayerClassBit(c->GetClass()) & feat.FeatClass)) continue; //Class bit filter
+			if ((GetPlayerClassBit(c->GetClass()) & feat.FeatClass) != GetPlayerClassBit(c->GetClass())) continue; //Class bit filter
 			
 			std::string message = StringFormat("Feat %s ", feat.FeatName.c_str());
 			if (!c->IsTaskCompleted(feat.TaskID)) {
@@ -6160,8 +6160,8 @@ void command_feat(Client *c, const Seperator *sep)
 	int featCount = 0;
 	for (auto&& feat : Feats) {		
 		if (stricmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
-		if (feat.FeatClass != 0 && !GetPlayerClassBit(c->GetClass()) & feat.FeatClass) continue; //Class bit filter
-		c->Message(0, "%u %u", GetPlayerClassBit(c->GetClass()), feat.FeatClass);
+		if ((GetPlayerClassBit(c->GetClass()) & feat.FeatClass) != GetPlayerClassBit(c->GetClass())) continue; //Class bit filter
+
 		featCount++;
 		std::string message = StringFormat("%s: ", feat.FeatName.c_str());
 		if (!c->IsTaskCompleted(feat.TaskID)) {
