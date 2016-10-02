@@ -7893,13 +7893,13 @@ void Client::SetFactionLevel(uint32 char_id, uint32 npc_id, uint8 char_class, ui
 			else if (npc_value[i] < 0)
 				npc_value[i] = abs(npc_value[i]);
 		}
-		Log.Out(Logs::General, Logs::Combat, "Faction of %i before/after", npc_value[i]);
+		/*Log.Out(Logs::General, Logs::Combat, "Faction of %i before/after", npc_value[i]);
 		if (npc_value[i] > 0) {
 			npc_value[i] = (int32)((float)npc_value[i] * (1.0f - (RuleR(Character, FactionGainMultiplier))));
 		}
 		else if (npc_value[i] < 0) {
 			npc_value[i] = (int32)((float)npc_value[i] * (1.0f - (RuleR(Character, FactionLossMultiplier))));
-		}
+		}*/
 		// Adjust the amount you can go up or down so the resulting range
 		// is PERSONAL_MAX - PERSONAL_MIN
 		//
