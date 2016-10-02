@@ -6114,17 +6114,20 @@ void command_feat(Client *c, const Seperator *sep)
 		std::string FeatName;
 		std::string FeatShort;
 		int AAID;
+		uint32 AARank;
 		uint32 FeatClass;
 		int TaskID;
-		explicit Feat(std::string pFeatType, std::string pFeatName, std::string pFeatShort, int pTaskID, uint32 pFeatClass, int pAAID) : FeatType(pFeatType), FeatName(pFeatName),FeatShort(pFeatShort), TaskID(pTaskID), FeatClass(pFeatClass), AAID(pAAID) {};
+		int ItemID;
+		explicit Feat(std::string pFeatType, std::string pFeatName, std::string pFeatShort, int pTaskID, uint32 pFeatClass, int pAAID, uint32 pAARank, int pItemID) : FeatType(pFeatType), FeatName(pFeatName),FeatShort(pFeatShort), TaskID(pTaskID), FeatClass(pFeatClass), AAID(pAAID), AARank(pAARank), ItemID(pItemID) {};
 	};
 
 	static Feat Feats[] = {
-		Feat("pet", "Pet Naming", "naming", 300, 65535, 0),
-		Feat("pet", "Pet Discipline", "discipline", 301, 65535, aaPetDiscipline),
-		Feat("class", "True Form of Defense", "defense", 302, 21, 0),
-		Feat("general", "Frontal Stun Immunity", "stun", 303, 65535, 0),
-		Feat("general", "Cursed Fragments", "cursed", 304, 65535, 0)
+		//Feat("pet", "Pet Naming", "naming", FEAT_PETNAMING, 65535, 0, 0, 0),		
+		Feat("pet", "Pet Discipline", "discipline", FEAT_PETDISCIPLINE, 65535, aaPetDiscipline, 1, 0),
+		Feat("class", "Charm of Defense", "defense", FEAT_CHARMOFDEFENSE, 21, 0, 0, 100045),
+		Feat("general", "Frontal Stun Immunity", "stun", FEAT_RALLOSZEKSGIFT, 65535, 0, 0, 0),
+		//Feat("general", "Cursed Fragments", "cursed", FEAT_CURSEDFRAGMENTS, 65535, 0, 0, 0),
+		Feat("aa", "Innate Runspeed", "runspeed", FEAT_INNATERUNSPEED, 65535, aaInnateRunSpeed, 3, 0)
 	};
 
 	if (sep->arg[2]) { //if 2nd argument passed
@@ -6145,10 +6148,19 @@ void command_feat(Client *c, const Seperator *sep)
 			}
 			else {
 				message.append("has already been completed.");
+
+				if (feat.ItemID > 0 && c->IsValidItem(feat.ItemID)) {
+					c->Message(15, "A new copy of %s has been given to you.", feat.FeatName.c_str());
+					c->SummonItem(feat.ItemID);
+				}
 			
-				if (feat.AAID > 0 && (feat.AAID) < 1) {
-					c->TrainAARank(feat.AAID);
-					c->Message(15, "You have been granted a new AA!");
+				if (feat.AAID > 0 && c->GetAA(feat.AAID) < feat.AARank) {
+					c->SetAA(feat.AAID, feat.AARank, 0);
+					c->SendAlternateAdvancementPoints();
+					c->SendAlternateAdvancementStats();
+					c->CalcBonuses();
+					c->SaveAA();					
+					c->Message(15, "You have been granted the AA for %s!", feat.FeatName.c_str());
 				}
 			}
 			c->Message(0, message.c_str());

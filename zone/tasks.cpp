@@ -1872,6 +1872,26 @@ void ClientTaskState::IncrementDoneCount(Client *c, TaskInformation* Task, int T
 			// If Experience and/or cash rewards are set, reward them from the task even if RewardMethod is METHODQUEST
 			RewardTask(c, Task);
 			//RemoveTask(c, TaskIndex);
+			if (TaskIndex == FEAT_PETDISCIPLINE) {
+				c->SetAA(aaPetDiscipline, 1, 0);
+				c->SendAlternateAdvancementPoints();
+				c->SendAlternateAdvancementStats();
+				c->CalcBonuses();
+				c->SaveAA();
+				c->Message(15, "You have been granted the pet discipline AA!");
+			}
+			if (TaskIndex == FEAT_INNATERUNSPEED) {
+				c->SetAA(aaInnateRunSpeed, 3, 0);
+				c->SendAlternateAdvancementPoints();
+				c->SendAlternateAdvancementStats();
+				c->CalcBonuses();
+				c->SaveAA();
+				c->Message(15, "You have been granted the innate runspeed AA!");
+			}
+			if (TaskIndex == FEAT_CHARMOFDEFENSE && c->IsValidItem(100045)) {
+				c->Message(15, "You have obtained the Charm of Defense! Use #feats to summon a new copy if you ever need another.");
+				c->SummonItem(100045);
+			}
 		}
 
 	}
@@ -1887,7 +1907,7 @@ void ClientTaskState::RewardTask(Client *c, TaskInformation *Task) {
 
 	const EQEmu::Item_Struct* Item;
 	std::vector<int> RewardList;
-
+	
 	switch(Task->RewardMethod) {
 
 		case METHODSINGLEID:
