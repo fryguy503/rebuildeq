@@ -1891,6 +1891,7 @@ void ClientTaskState::IncrementDoneCount(Client *c, TaskInformation* Task, int T
 			if (TaskIndex == FEAT_CHARMOFDEFENSE && c->IsValidItem(100045)) {
 				c->Message(15, "You have obtained the Charm of Defense! Use #feats to summon a new copy if you ever need another.");
 				c->SummonItem(100045);
+				
 			}
 		}
 

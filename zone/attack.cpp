@@ -3997,7 +3997,7 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 
 				// frontal stun check for ogres/bonuses
 				if ((
-						(IsClient() && CastToClient()->IsTaskCompleted(FEAT_RALLOSZEKSGIFT)) ||
+						(IsClient() && CastToClient()->IsTaskCompleted(FEAT_FRONTSTUN)) ||
 						(GetBaseRace() == OGRE && IsClient()) ||
 						(frontal_stun_resist && zone->random.Roll(frontal_stun_resist))
 					) && !attacker->BehindMob(this, attacker->GetX(), attacker->GetY())) {
