@@ -6044,21 +6044,17 @@ void command_exp(Client *c, const Seperator *sep)
 			c->Message(0, "Not enough money to fill the bottle.");
 			return;
 		}
-
-		// FYI This is not needed. If it triggers there is a bug in HasMoneyInInvOrBank..
 		if (!c->TakeMoneyFromPPOrBank(cost, true)) {
-			char *hacker_str = nullptr;
-			MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
-			database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
-			safe_delete_array(hacker_str);
+			c->Message(0, "Something went wrong when getting enough money to fill the bottle.");
 			return;
 		}
 
-		std::string query = StringFormat("UPDATE character_custom SET exp_pool = exp_pool - %i WHERE character_id = %i", RuleI(AA, ExpPerPoint), c->CharacterID());
-		auto results = database.QueryDatabase(query);
-
+		//Handle item move
 		c->DeleteItemInInventory(inv_slot_id, 1, true);
 		c->SummonItem(100001, 1);
+
+		std::string query = StringFormat("UPDATE character_custom SET exp_pool = exp_pool - %i WHERE character_id = %i", RuleI(AA, ExpPerPoint), c->CharacterID());
+		auto results = database.QueryDatabase(query);
 
 		c->Message(MT_Experience, "You have paid 500 platinum to fill a bottle of experience.");
 		return;
