@@ -8844,8 +8844,7 @@ void Client::RefreshBuild() {
 					Message(270, message.c_str());
 				}
 
-
-				if (GetClass() == BARD && (i == RB_BRD_KINSONG || i == RB_BRD_KINSONG ) && GetAA(aaLessonoftheDevoted) < 1) {					
+				if (GetClass() == BARD && i == RB_BRD_KINSONG && GetAA(aaLessonoftheDevoted) < 1) {					
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
@@ -8934,40 +8933,50 @@ void Client::RefreshBuild() {
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
-			
 
-				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_BLOODOATH && n > 4 && GetAA(aa2HandBash) < 1) { //AA 428
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_BLOODOATH && n > 4 && GetAA(aa2HandBash) < 1) {
 					TrainAARank(aa2HandBash);
 					Message(15, "You have unlocked the AA \"2 Hand Bash\"!");
 				}
 				
-				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) { //AA 428
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) {
 					TrainAARank(aaDeathPeace2);
-					Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");						
+					Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");					
 				}
-				if (GetClass() == SHADOWKNIGHT && (i == RB_SHD_LEECHTOUCH || i == RB_SHD_HUNGERINGAURA ) && GetAA(aaLeechTouch) < 1) { //AA 87						
+				
+				if (GetClass() == SHADOWKNIGHT && (i == RB_SHD_LEECHTOUCH || i == RB_SHD_HUNGERINGAURA ) && GetAA(aaLeechTouch) < 1) {
 					TrainAARank(aaLeechTouch);
 					Message(15, "You have unlocked the AA \"Leech Touch\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+				
 				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_STEADFASTSERVANT && GetAA(aaSteadfastServant) < 1) {
 					TrainAARank(aaSteadfastServant);
 					Message(15, "You have unlocked the AA \"Steadfast Servant\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+				
 				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_CLOAKOFSHADOWS && GetAA(aaCloakofShadows) < 1) {
 					TrainAARank(aaCloakofShadows);
 					Message(15, "You have unlocked the AA \"Cloak of Shadows\"! Find the hotkey in your Alternate Advancement Window.");
 				}
-				if (GetClass() == SHADOWKNIGHT && (i == RB_SHD_REAPERSSTRIKE || i == RB_SHD_REAPERSSTRIKE ) && GetAA(aaLessonoftheDevoted) < 1) { //AA 87						
+
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_REAPERSSTRIKE && GetAA(aaLessonoftheDevoted) < 1) {
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+
 				if (GetClass() == SHAMAN && i == RB_SHM_PURIFYSOUL && GetAA(aaPurifySoul) < 1) {
 					TrainAARank(aaPurifySoul);
 					Message(15, "You have unlocked the AA \"Purify Soul\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+				
 				if (GetClass() == SHAMAN && i == RB_SHM_ANCESTRALAID && GetAA(aaAncestralAid) < 1) {
 					TrainAARank(aaAncestralAid);
 					Message(15, "You have unlocked the AA \"Ancestral Aid\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+				
+				if (GetClass() == SHAMAN && i == RB_SHM_COVENANTOFSPIRIT && GetAA(aaCovenantofSpirit) < 1) {
+					TrainAARank(aaCovenantofSpirit);
+					Message(15, "You have unlocked the AA \"Covenant of Spirit\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
 				if (GetClass() == SHAMAN && i == RB_SHM_CANNIBALIZE && GetAA(aaCannibalization) < 1) {
@@ -8992,7 +9001,12 @@ void Client::RefreshBuild() {
 
 				if (GetClass() == SHAMAN && i == RB_SHM_FATESEERSBOON && GetAA(aaLessonoftheDevoted) < 1) {						
 					TrainAARank(aaLessonoftheDevoted);
-					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
+					Message(15, "You have unlocked the AA \"Fateseer's Boon\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHAMAN && i == RB_SHM_CALLOFTHEANCIENTS && GetAA(aaCalloftheAncients) < 1) {
+					TrainAARank(aaCalloftheAncients);
+					Message(15, "You have unlocked the AA \"Call of the Ancients\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
 				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
@@ -9014,6 +9028,7 @@ void Client::RefreshBuild() {
 					TrainAARank(aaActOfValor);
 					Message(15, "You have unlocked the AA \"Act of Valor\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+				
 				if (GetClass() == PALADIN && i == RB_PAL_FLAMESOFREDEMPTION && GetAA(aaLessonoftheDevoted) < 1) {						
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
