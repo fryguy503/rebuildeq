@@ -1150,6 +1150,9 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	if (!ability) {
 		return;
 	}
+	if (rank_id == aaOrigin) {
+		if (IsTaskActivityActive(307, 11)) UpdateTaskActivity(307, 11, 1);
+	}
 
 	if (rank_id == aaLeechTouch && GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) < 1 ||
 		rank_id == aaActOfValor && GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) < 1 ||

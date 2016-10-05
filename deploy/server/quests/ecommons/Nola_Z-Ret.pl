@@ -2,6 +2,9 @@ sub EVENT_SAY {
 	if($text=~/hail/i){
 		quest::say("Do you wish to [ ". quest::saylink("bind origin")." ], or [ ". quest::saylink("bind affinity")." ] yourself here? This is a good place to attune yourself with how thick the [ ".quest::saylink("winds")."] are.");
 	} elsif($text=~/bind origin/i) {
+        if (quest::istaskactivityactive(307,2)) {
+            quest::updatetaskactivity(307,2);    
+        }
 	    quest::say("Binding your origin.");
 	    $client->SetStartZone(22, $client->GetX(), $client->GetY(), $client->GetZ()); 
 	} elsif($text=~/bind affinity/i) {

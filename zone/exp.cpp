@@ -619,6 +619,18 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 		char val1[20]={0};
 		if (level_increase)
 		{
+			if (IsTaskActivityActive(307, 15) && check_level >= 30) UpdateTaskActivity(307, 15, 1);
+			if (IsTaskActivityActive(307, 18) && check_level >= 39) UpdateTaskActivity(307, 18, 1);
+			if ((IsTaskActivityActive(307, 19) || IsTaskActivityActive(307, 21)) && check_level >= 46) {
+				UpdateTaskActivity(307, 19, 1);
+				UpdateTaskActivity(307, 20, 1);
+			}
+
+			if ((IsTaskActivityActive(307, 21) || IsTaskActivityActive(307, 22)) && check_level >= 60) {
+				UpdateTaskActivity(307, 21, 1);
+				UpdateTaskActivity(307, 22, 1);
+			}
+
 			if (level_count == 1)
 				Message_StringID(MT_Experience, GAIN_LEVEL, ConvertArray(check_level, val1));
 			else

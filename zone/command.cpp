@@ -694,6 +694,8 @@ void command_resetaa(Client* c,const Seperator *sep) {
 
 void command_help(Client *c, const Seperator *sep)
 {
+	if (!c->IsTaskCompleted(307) && !c->IsTaskActive(307)) c->AssignTask(307, 0);
+	if (c->IsTaskActivityActive(307,0)) c->UpdateTaskActivity(307,0,1);
 	int commands_shown=0;
 
 	c->Message(0, "Available EQEMu commands:");
@@ -3962,6 +3964,7 @@ void command_bind(Client *c, const Seperator *sep)
 //List all available builds
 void command_builds(Client *c, const Seperator *sep)
 {
+	if (c->IsTaskActivityActive(307, 7)) c->UpdateTaskActivity(307, 7, 1);
 	uint8 level_req = 75;
 	if (!c->IsBuildAvailable()) {
 		c->Message(0, "This class does not yet have builds available. It will be coming soon!");
@@ -4100,7 +4103,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 		c->SpawnEncounter(false, c->GetEPP().encounter_type);
 		return;
 	}
-
+	if (c->IsTaskActivityActive(307, 3)) c->UpdateTaskActivity(307, 3, 1);
 	//GM: emote an encounter for targetted player
 	if (c->Admin() >= 200 && sep->arg[1] && strcasecmp(sep->arg[1], "emote") == 0) {
 		if (c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
@@ -4188,6 +4191,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "claim") == 0) {
+		if (c->IsTaskActivityActive(307, 4)) c->UpdateTaskActivity(307, 4, 1);
 		if (unclaimed_rewards == 0) {
 			c->Message(13, "You have no unclaimed rewards.");
 			return;
@@ -4411,6 +4415,8 @@ void command_teleport(Client *c, const Seperator *sep) {
 					return;
 				}
 			}
+			if (c->IsTaskActivityActive(307, 1) && location->ZoneName.find("ecommons") != std::string::npos) c->UpdateTaskActivity(307, 1, 1);
+			if (c->IsTaskActivityActive(307, 9) && location->ZoneName.find("fieldofbone") != std::string::npos) c->UpdateTaskActivity(307, 9, 1);
 			c->Message(0, "You paid %s to teleport to %s.", StringFormat("%u platinum", (cost / 1000)).c_str(), location->ZoneName.c_str());
 		}
 		else {
@@ -4457,6 +4463,7 @@ void command_buff(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work until full health.");
 		return;
 	}
+	if (c->IsTaskActivityActive(307, 12)) c->UpdateTaskActivity(307, 12, 1);
 
 	std::string displayCost;
 	uint64 cost = 0;
@@ -4608,6 +4615,8 @@ void command_return(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
+
+	if (c->IsTaskActivityActive(307, 14)) c->UpdateTaskActivity(307, 14, 1);
 
 	std::string returnZoneName;
 
@@ -5916,6 +5925,7 @@ void command_dps(Client *c, const Seperator *sep)
 	/*if (!target->IsCorpse()) {
 		c->Message(0, "Invalid Target type (Not corpse), bypassing for now");
 	}*/
+	if (target->IsCorpse() && c->IsTaskActivityActive(307, 13)) c->UpdateTaskActivity(307, 13, 1);
 
 	if (target->DPS().size() < 1) {
 		c->Message(0, "Target %s not engaged.", (target->IsCorpse() ? "was" : "is"));		
@@ -5970,6 +5980,7 @@ void command_randomfeatures(Client *c, const Seperator *sep)
 
 void command_exp(Client *c, const Seperator *sep) 
 {
+	if (c->IsTaskActivityActive(307, 23)) c->UpdateTaskActivity(307, 23, 1);
 	uint8 maxlevel = 60;
 	
 	if (c->GetLevel() < maxlevel) {
@@ -6095,6 +6106,7 @@ void command_face(Client *c, const Seperator *sep)
 
 void command_feat(Client *c, const Seperator *sep)
 {
+	if (c->IsTaskActivityActive(307, 16)) c->UpdateTaskActivity(307, 16, 1);
 	if (!sep->arg[1] || strlen(sep->arg[1]) < 1 || !sep->arg[1][0]) {
 		c->Message(0, "Choose the type of feats to display: [ %s ] [ %s ] [ %s ] [ %s ].",
 			c->CreateSayLink("#feat aa", "aa").c_str(),
