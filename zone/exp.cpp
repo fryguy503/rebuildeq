@@ -618,8 +618,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 	if ((GetLevel() != check_level) && !(check_level >= maxlevel)) {
 		char val1[20]={0};
 		if (level_increase)
-		{
-			if (IsTaskActivityActive(307, 15) && check_level >= 30) UpdateTaskActivity(307, 15, 1);
+		{			
 			if (IsTaskActivityActive(307, 18) && check_level >= 39) UpdateTaskActivity(307, 18, 1);
 			if ((IsTaskActivityActive(307, 19) || IsTaskActivityActive(307, 21)) && check_level >= 46) {
 				UpdateTaskActivity(307, 19, 1);

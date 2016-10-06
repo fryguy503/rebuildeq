@@ -695,7 +695,7 @@ void command_resetaa(Client* c,const Seperator *sep) {
 void command_help(Client *c, const Seperator *sep)
 {
 	if (!c->IsTaskCompleted(307) && !c->IsTaskActive(307)) c->AssignTask(307, 0);
-	if (c->IsTaskActivityActive(307,0)) c->UpdateTaskActivity(307,0,1);
+	if (c->IsTaskActivityActive(307, 0)) c->UpdateTaskActivity(307, 0, 1);
 	int commands_shown=0;
 
 	c->Message(0, "Available EQEMu commands:");
@@ -4415,8 +4415,8 @@ void command_teleport(Client *c, const Seperator *sep) {
 					return;
 				}
 			}
-			if (c->IsTaskActivityActive(307, 1) && location->ZoneName.find("ecommons") != std::string::npos) c->UpdateTaskActivity(307, 1, 1);
-			if (c->IsTaskActivityActive(307, 9) && location->ZoneName.find("fieldofbone") != std::string::npos) c->UpdateTaskActivity(307, 9, 1);
+			if (c->IsTaskActivityActive(307, 1)) c->UpdateTaskActivity(307, 1, 1);
+			if (c->IsTaskActivityActive(307, 9)) c->UpdateTaskActivity(307, 9, 1);
 			c->Message(0, "You paid %s to teleport to %s.", StringFormat("%u platinum", (cost / 1000)).c_str(), location->ZoneName.c_str());
 		}
 		else {
@@ -5980,13 +5980,15 @@ void command_randomfeatures(Client *c, const Seperator *sep)
 
 void command_exp(Client *c, const Seperator *sep) 
 {
-	if (c->IsTaskActivityActive(307, 23)) c->UpdateTaskActivity(307, 23, 1);
+	
 	uint8 maxlevel = 60;
 	
 	if (c->GetLevel() < maxlevel) {
 		c->Message(0, "When a player reaches level %u and fills their experience bar, any excess experience goes into a pool reserve. This reserve can be drawn from on death as well as placed into experience bottles.", maxlevel);
 		return;
 	}
+
+	if (!c->IsTaskCompleted(307)) c->SendTaskComplete(307);
 
 	int exp_pool = 0;
 	auto query = StringFormat("SELECT exp_pool FROM character_custom WHERE character_id = %i", c->CharacterID());
@@ -6106,7 +6108,7 @@ void command_face(Client *c, const Seperator *sep)
 
 void command_feat(Client *c, const Seperator *sep)
 {
-	if (c->IsTaskActivityActive(307, 16)) c->UpdateTaskActivity(307, 16, 1);
+	if (c->IsTaskActivityActive(307, 15)) c->UpdateTaskActivity(307, 15, 1);
 	if (!sep->arg[1] || strlen(sep->arg[1]) < 1 || !sep->arg[1][0]) {
 		c->Message(0, "Choose the type of feats to display: [ %s ] [ %s ] [ %s ] [ %s ].",
 			c->CreateSayLink("#feat aa", "aa").c_str(),
