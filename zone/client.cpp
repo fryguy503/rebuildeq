@@ -9042,7 +9042,7 @@ void Client::RefreshBuild() {
 		//Sync AA table if changes caused it to be modified.
 		if (is_updated) {
 			SendAlternateAdvancementTable();
-			if (IsTaskActivityActive(307, 8)) UpdateTaskActivity(307, 8, 1);
+			if (IsTaskActivityActive(307, 8)) UpdateTaskActivity(FEAT_GETTINGSTARTED, 8, 1);
 		}
 		
 		
@@ -9779,7 +9779,7 @@ uint32 Client::GetEncounterNPCID() {
 
 //Gives a Box Reward randomly. MinimumRarity by default is 0
 int Client::GiveBoxReward(int minimumRarity) {
-	if (IsTaskActivityActive(307, 5)) UpdateTaskActivity(307, 5, 1);
+	if (IsTaskActivityActive(307, 5)) UpdateTaskActivity(FEAT_GETTINGSTARTED, 5, 1);
 	if (Admin() >= 200) Message(0, "[GM] GiveBoxReward");	
 	//Rarity table
 	std::map <int, int> rarityTable;
@@ -10086,7 +10086,7 @@ int Client::GiveBoxReward(int minimumRarity) {
 
 //Gives a Weapon Box Reward randomly. MinimumRarity by default is 0
 int Client::GiveWeaponBoxReward(int minimumRarity) {
-	if (IsTaskActivityActive(307, 5)) UpdateTaskActivity(307, 5, 1);
+	if (IsTaskActivityActive(307, 5)) UpdateTaskActivity(FEAT_GETTINGSTARTED, 5, 1);
 	if (Admin() >= 200) Message(0, "[GM] GiveWeaponBoxReward");
 	//Rarity table
 	std::map <int, int> rarityTable;

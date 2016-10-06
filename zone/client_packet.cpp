@@ -4931,7 +4931,7 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 		else {
 			race_name = tmob->RaceName();
 		}
-		if (IsTaskActivityActive(307, 10)) UpdateTaskActivity(307, 10, 1);
+		if (IsTaskActivityActive(307, 10)) UpdateTaskActivity(FEAT_GETTINGSTARTED, 10, 1);
 		SendColoredText(color, StringFormat("%s [%u] (%s) %s -- %s", tmob->GetCleanName(), tmob->GetLevel(), race_name.c_str(), con_text.c_str(), level_text.c_str()));
 	}
 	// only wanted to check raid target once
