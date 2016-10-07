@@ -313,7 +313,7 @@ int command_init(void)
 		command_add("petitioninfo", "[petition number] - Get info about a petition", 50, command_petitioninfo) ||
 		command_add("pf", "- Display additional mob coordinate and wandering data", 50, command_pf) ||
 		command_add("picklock",  "Analog for ldon pick lock for the newer clients since we still don't have it working.",  100, command_picklock) ||
-		command_add("playsound", "Play a sound", 200, command_playsound) ||
+		command_add("playsound", "Play a sound", 150, command_playsound) ||
 #ifdef EQPROFILE
 		command_add("profiledump", "- Dump profiling info to logs", 250, command_profiledump) ||
 		command_add("profilereset", "- Reset profiling info", 250, command_profilereset) ||
@@ -380,6 +380,7 @@ int command_init(void)
 		command_add("spawn", "[name] [race] [level] [material] [hp] [gender] [class] [priweapon] [secweapon] [merchantid] - Spawn an NPC", 10, command_spawn) ||
 		command_add("spawnfix", "- Find targeted NPC in database based on its X/Y/heading and update the database to make it spawn at your current location/heading.", 170, command_spawnfix) ||
 		command_add("spawnstatus", "- Show respawn timer status", 100, command_spawnstatus) ||
+		command_add("spelleffect", "Play a sound", 150, command_spelleffect) ||
 		command_add("spellinfo", "[spellid] - Get detailed info about a spell", 50, command_spellinfo) ||
 		command_add("spoff", "- Sends OP_ManaChange", 80, command_spoff) ||
 		command_add("spon", "- Sends OP_MemorizeSpell", 80, command_spon) ||
@@ -11406,14 +11407,45 @@ void command_sensetrap(Client *c, const Seperator *sep)
 
 //Play a sound
 void command_playsound(Client *c, const Seperator *sep) {
-	if (sep->arg[1]) {
-		c->PlayMP3(sep->arg[1]);
-		c->Message(13, "Playing %s", sep->arg[1]);
+	if (!sep->arg[1]) {
+		c->Message(13, "Usage: #playsound <filename>, e.g. bowdraw.mp3");
+		return;
 	}
-	else {
-		c->Message(13, "Usage: #playsound <filename>");
+	c->Message(13, "Playing %s to all players in zone.", sep->arg[1]);
+
+	std::list<Client*> client_list;
+	entity_list.GetClientList(client_list);
+	auto iter = client_list.begin();
+
+	while (iter != client_list.end()) {
+		Client *entry = (*iter);
+		if (entry->IsLD()) continue;
+		entry->PlayMP3(sep->arg[1]);
 	}
 }
+
+void command_spelleffect(Client *c, const Seperator *sep) {
+	if (!sep->arg[1]) {
+		c->Message(13, "Usage: #spelleffect #");
+		return;
+	}
+	if (!c->GetTarget()) {
+		c->Message(13, "You must have a target.");
+		return;
+	}
+
+	uint32		effectid = (uint32)atoi(sep->arg[1]);
+	uint32		duration = 5000;
+	uint32		finish_delay = 0;
+	bool		zone_wide = true;
+	uint32		unk20 = 3000;
+	bool		perm_effect = false;	
+
+	c->Message(13, "Sending spell effect %u on %s", effectid, c->GetTarget()->GetCleanName());
+	c->GetTarget()->SendSpellEffect(effectid, duration, finish_delay, zone_wide, unk20, perm_effect, nullptr);
+
+}
+
 
 void command_picklock(Client *c, const Seperator *sep)
 {
