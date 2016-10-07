@@ -2601,7 +2601,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		SpecialLoot_Struct(100113, "Gnoll", 500),
 		SpecialLoot_Struct(100114, "Aviak", 500),
 		SpecialLoot_Struct(100115, "Werewolf", 500),
-		SpecialLoot_Struct(100116, "Spider", 500),
+		SpecialLoot_Struct(100116, "Kobold", 500),
 		SpecialLoot_Struct(100117, "Orc", 500),
 		SpecialLoot_Struct(100118, "Fungus", 500),
 		SpecialLoot_Struct(100119, "Goblin", 500),
