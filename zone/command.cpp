@@ -6173,10 +6173,10 @@ void command_feat(Client *c, const Seperator *sep)
 			
 				if (feat.AAID > 0 && c->GetAA(feat.AAID) < feat.AARank) {
 					c->SetAA(feat.AAID, feat.AARank, 0);
+					c->SaveAA();
 					c->SendAlternateAdvancementPoints();
 					c->SendAlternateAdvancementStats();
 					c->CalcBonuses();
-					c->SaveAA();					
 					c->Message(15, "You have been granted the AA for %s!", feat.FeatName.c_str());
 				}
 			}

@@ -1874,18 +1874,20 @@ void ClientTaskState::IncrementDoneCount(Client *c, TaskInformation* Task, int T
 			//RemoveTask(c, TaskIndex);
 			if (TaskIndex == FEAT_PETDISCIPLINE) {
 				c->SetAA(aaPetDiscipline, 1, 0);
+				c->SaveAA();
 				c->SendAlternateAdvancementPoints();
 				c->SendAlternateAdvancementStats();
 				c->CalcBonuses();
-				c->SaveAA();
+				
 				c->Message(15, "You have been granted the pet discipline AA!");
 			}
 			if (TaskIndex == FEAT_INNATERUNSPEED) {
 				c->SetAA(aaInnateRunSpeed, 3, 0);
+				c->SaveAA();
 				c->SendAlternateAdvancementPoints();
 				c->SendAlternateAdvancementStats();
 				c->CalcBonuses();
-				c->SaveAA();
+				
 				c->Message(15, "You have been granted an AA!");
 			}
 			if (TaskIndex == FEAT_CHARMOFDEFENSE && c->IsValidItem(100045)) {
