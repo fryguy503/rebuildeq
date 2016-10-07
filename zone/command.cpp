@@ -694,7 +694,7 @@ void command_resetaa(Client* c,const Seperator *sep) {
 
 void command_help(Client *c, const Seperator *sep)
 {
-	if (!c->IsTaskCompleted(307) && !c->IsTaskActive(307)) c->AssignTask(FEAT_GETTINGSTARTED, 0);
+	if (!c->IsTaskCompleted(FEAT_GETTINGSTARTED) && !c->IsTaskActive(307)) c->AssignTask(FEAT_GETTINGSTARTED, 0);
 	if (c->IsTaskActivityActive(307, 0)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 0, 1);
 	int commands_shown=0;
 
@@ -4415,14 +4415,15 @@ void command_teleport(Client *c, const Seperator *sep) {
 					return;
 				}
 			}
-			if (c->IsTaskActivityActive(307, 1)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 1, 1);
-			if (c->IsTaskActivityActive(307, 9)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 9, 1);
 			c->Message(0, "You paid %s to teleport to %s.", StringFormat("%u platinum", (cost / 1000)).c_str(), location->ZoneName.c_str());
 		}
 		else {
 			c->Message(0, "You are being teleported and bound to %s for free due to being below level %i.", location->ZoneName.c_str(), FreeLevel);
 			c->SetBindPoint(0, location->ZoneID, 0, glm::vec3(location->X, location->Y, location->Z));
 		}
+
+		if (c->IsTaskActivityActive(307, 1)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 1, 1);
+		if (c->IsTaskActivityActive(307, 9)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 9, 1);
 
 		// Finally, Teleport!
 		c->MovePC(location->ZoneID, location->X, location->Y, location->Z, location->Heading, (uint8)'\000', ZoneSolicited);
@@ -5988,7 +5989,11 @@ void command_exp(Client *c, const Seperator *sep)
 		return;
 	}
 
-	if (!c->IsTaskCompleted(307)) c->SendTaskComplete(307);
+	if (!c->IsTaskCompleted(FEAT_GETTINGSTARTED)) {
+		for (int i = 0; i < 20; i++) {
+			c->UpdateTaskActivity(FEAT_GETTINGSTARTED, i, 1);
+		}
+	}
 
 	int exp_pool = 0;
 	auto query = StringFormat("SELECT exp_pool FROM character_custom WHERE character_id = %i", c->CharacterID());

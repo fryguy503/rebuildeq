@@ -834,6 +834,7 @@ void Client::CompleteConnect()
 		}
 
 		if (m_pp.birthday > time(nullptr) - 120) { //If they're less than 2 minutes old
+			if (!IsTaskActive(FEAT_GETTINGSTARTED)) AssignTask(FEAT_GETTINGSTARTED, 0);
 			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome %s to the server!", display_name.c_str()).c_str());
 			UpdateSkillsAndSpells();
 			std::string query = StringFormat("SELECT id FROM character_data WHERE account_id = %i", AccountID());
