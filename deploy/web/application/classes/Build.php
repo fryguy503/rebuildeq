@@ -870,7 +870,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jarring Stab";
-			$newSkill->desc = 'When the rogue successfully backstabs an enemy, they have a <em data-base="2">2</em>% chance to cause the enemy to lose <em data-base="50">50</em> hate to all allies except for the top hated ally<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When the rogue successfully backstabs an enemy, they have a <em data-base="2">2</em>% chance to cause all enemies that are hated by the rogue to <em data-base="20">20</em> hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[20] = $newSkill;
 
