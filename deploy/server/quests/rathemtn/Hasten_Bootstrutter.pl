@@ -20,18 +20,16 @@ sub EVENT_SAY {
 
 sub EVENT_ITEM {
 
-  if (quest::istaskactivityactive(30501) && plugin::check_handin(\%itemcount, 2300 => 1)) {
-      quest::updatetaskactivity(305,0);
-      quest::say("Why, those are quite nice, let me give them back to you now.");
-      quest::summonitem(2300);
-      return;
+  if (quest::istaskactivityactive(305, 0) && plugin::check_handin(\%itemcount, 2300 => 1)) {
+    #quest::summonitem(2300);
+    quest::updatetaskactivity(305,0);      
+    return;
   }
 
   if (quest::istaskactivityactive(305,0) && plugin::check_handin(\%itemcount, 101015 => 1)) {
-      quest::updatetaskactivity(305,0);
-      quest::say("Why, those are quite nice, let me give them back to you now.");
-      quest::summonitem(101015);
-      return;
+    quest::updatetaskactivity(305,0);
+    #quest::summonitem(101015);
+    return;
   }
 
    if (quest::istaskactivityactive(305,1) && plugin::check_handin(\%itemcount, 100001 => 1)) {
@@ -40,7 +38,7 @@ sub EVENT_ITEM {
   }
 
   my $cash = (($platinum * 10) + $gold); #Only accept platinum and gold 
- 
+
   if ($cash >= 3250) { #Gold/platinum equivalent of 325pp
     if (plugin::check_handin(\%itemcount, 12268 => 1, 7100 => 1)) {
       quest::say("The time to trade has come!! I am now rich and you are now fast. Take the Journeyman Boots and run like the wind.");
