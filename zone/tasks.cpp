@@ -1886,7 +1886,7 @@ void ClientTaskState::IncrementDoneCount(Client *c, TaskInformation* Task, int T
 				c->SendAlternateAdvancementStats();
 				c->CalcBonuses();
 				c->SaveAA();
-				c->Message(15, "You have been granted the innate runspeed AA!");
+				c->Message(15, "You have been granted an AA!");
 			}
 			if (TaskIndex == FEAT_CHARMOFDEFENSE && c->IsValidItem(100045)) {
 				c->Message(15, "You have obtained the Charm of Defense! Use #feats to summon a new copy if you ever need another.");
