@@ -1,4 +1,9 @@
 sub EVENT_ITEM {
+	 if (!quest::istaskactivityactive(301,5)) {
+	 	plugin::return_items(\%itemcount);
+	 	return;
+    }
+    
 	if(plugin::check_handin(\%itemcount, 13977 =>1)) { #carrot
 		quest::emote("enjoys the treat.");
 		return;		
