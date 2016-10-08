@@ -4115,9 +4115,9 @@ void command_npc(Client *c, const Seperator *sep) {
 			return;
 		}
 
-		if (strcasecmp(sep->arg[2], "info") == 0) { //#npc entity info
-			if (strcasecmp(sep->arg[3], "help") == 0) { //#npc entity info help
-				c->Message(0, "Help: #npc entity info [option] values include:");
+		if (strcasecmp(sep->arg[2], "list") == 0) { //#npc entity list
+			if (strcasecmp(sep->arg[3], "help") == 0) { //#npc entity list help
+				c->Message(0, "Help: #npc entity list [option] values include:");
 				c->Message(0, "target: (default) target entity");
 				c->Message(0, "id #: provided entity id");
 				c->Message(0, "range # #: search for entites between # to #, inclusive");
@@ -4126,7 +4126,7 @@ void command_npc(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			if (!sep->arg[3] || strcasecmp(sep->arg[3], "target") == 0) { //#npc entity info target
+			if (!sep->arg[3] || strcasecmp(sep->arg[3], "target") == 0) { //#npc entity list target
 				if (!c->GetTarget()) {
 					c->Message(13, "#npc entity info: No target provided.");
 					return;
@@ -4139,7 +4139,7 @@ void command_npc(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			if (strcasecmp(sep->arg[3], "range") == 0) {//#npc entity info range
+			if (strcasecmp(sep->arg[3], "range") == 0) {//#npc entity list range
 				if (!sep->arg[4] || !sep->IsNumber(4) || !sep->arg[5] || !sep->IsNumber(5)) {
 					c->Message(13, "#npc entity info: both range values not provided or invalid.");
 					return;
@@ -4154,7 +4154,7 @@ void command_npc(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			if (strcasecmp(sep->arg[3], "search") == 0) {//#npc entity info range
+			if (strcasecmp(sep->arg[3], "search") == 0) {//#npc entity list range
 				if (!sep->arg[4]) {
 					c->Message(13, "#npc entity info: no search term provided.");
 					return;
@@ -4163,7 +4163,7 @@ void command_npc(Client *c, const Seperator *sep) {
 				return;
 			}
 
-			if (strcasecmp(sep->arg[3], "id") == 0) { //#npc entity info id
+			if (strcasecmp(sep->arg[3], "id") == 0) { //#npc entity list id
 				if (!sep->arg[4] || !sep->IsNumber(4)) {
 					c->Message(13, "#npc entity info: id not provided or invalid.");
 					return;
@@ -4177,7 +4177,7 @@ void command_npc(Client *c, const Seperator *sep) {
 				return;
 			}			
 
-			if (!sep->arg[3] || strcasecmp(sep->arg[3], "all") == 0) { //#npc entity info all		
+			if (!sep->arg[3] || strcasecmp(sep->arg[3], "all") == 0) { //#npc entity list all		
 				entity_list.ListNPCs(c, "all", "", 0);
 				return;
 			}
@@ -11529,8 +11529,10 @@ void command_playsound(Client *c, const Seperator *sep) {
 
 	while (iter != client_list.end()) {
 		Client *entry = (*iter);
-		if (entry->IsLD()) continue;
-		entry->PlayMP3(sep->arg[1]);
+		if (!entry->IsLD()) {
+			entry->PlayMP3(sep->arg[1]);
+		}
+		iter++;
 	}
 }
 
