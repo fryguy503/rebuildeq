@@ -582,8 +582,8 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Nature's Boon";
-			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, giving the target (Level*2)*0.2*rank hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="20">20</em>% of their max hitpoints. This also causes normal heals to be boosted by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-dru-naturesboon.png";	
+			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, duration reduced by <em data-base="12">12</em> seconds due to rank. When the buff fades, the target is healed for <em data-base="20">20</em>% of the druid\'s max mana. If Nature\'s Boon is removed early, it will heal for a portion based on duration buff lasted. This also causes normal heals to be boosted by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>. ';
+			$newSkill->image = "/images/builds/icons/rb-dru-naturesboon.png";
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();

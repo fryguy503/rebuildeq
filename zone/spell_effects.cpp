@@ -5052,39 +5052,45 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 		}
 	}
 
-	if (p && p->IsClient() && buffs[slot].spellid == 4796 && p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON) > 0) {
+	if (p && p->IsClient() && buffs[slot].spellid == 4796 && p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON) > 0) {		
+		uint32 rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
+		int32 heal_amount = p->GetMaxMana() * 0.2f * rank; //figure out potential heal amount
+		if (heal_amount < 1) heal_amount = 1;
+		int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
+		int32 amount_healed = 0; //this was real amount healed
+
+		if (amount_to_heal <= heal_amount) {
+			amount_healed = amount_to_heal;
+		}
+		else {
+			amount_healed = heal_amount;
+		}
+
+		int max_duration = 14 - (rank * 2);
+		float reducer = 1; //This is a throttle if the buff is prematurely clicked off
 		if (buffs[slot].ticsremaining > 0) {
-			Message(MT_WornOff, "Nature's Boon %u faded before running it's course.", p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON));
-		} else {
-			uint32 rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
-			int32 heal_amount = GetMaxHP() * 0.2f * rank; //figure out potential heal amount
-			if (heal_amount < 1) heal_amount = 1;
-			int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
-			int32 amount_healed = 0; //this was real amount healed
+			int elapsed = max_duration - buffs[slot].ticsremaining;
+			reducer = (float)elapsed / (float)max_duration;
+			Message(MT_WornOff, "Nature's Boon %u faded before running it's course, healing only for %.3f%% percent of it's potential.", p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON), reducer);
+		}
 
-			if (amount_to_heal <= heal_amount) {
-				amount_healed = amount_to_heal;
-			}
-			else {
-				amount_healed = heal_amount;
-			}
+		amount_healed *= reducer;
 
-			if (amount_healed > 0) { //if any healing was done, display
-				if (p != this) p->Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
-				Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
-				HealDamage(amount_healed, p);
+		if (amount_healed > 0) { //if any healing was done, display
+			if (p != this) p->Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+			Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+			HealDamage(amount_healed, p);
 
-				rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
-				if (rank > 0) {
+			rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
+			if (rank > 0) {
 
-					int32 mana_amount = amount_healed * (0.01f * rank);
-					if (mana_amount < 1) mana_amount = 1;
-					Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
-					SetMana(GetMana() + mana_amount);
-					if (p != this) {
-						p->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
-						p->SetMana(p->GetMana() + mana_amount);
-					}
+				int32 mana_amount = amount_healed * (0.01f * rank);
+				if (mana_amount < 1) mana_amount = 1;
+				Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+				SetMana(GetMana() + mana_amount);
+				if (p != this) {
+					p->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+					p->SetMana(p->GetMana() + mana_amount);
 				}
 			}
 		}
