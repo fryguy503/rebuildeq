@@ -283,6 +283,7 @@ int command_init(void)
 		command_add("name", "[newname] - Rename your player target", 150, command_name) ||
 		command_add("netstats", "- Gets the network stats for a stream.", 200, command_netstats) ||
 		command_add("encounter", "- Learn more about encounters, or claim rewards.", 0, command_encounter) ||
+		command_add("npc", "[help] - NPC editor", 200, command_npc) ||
 		command_add("npccast", "[targetname/entityid] [spellid] - Causes NPC target to cast spellid on targetname/entityid", 80, command_npccast) ||
 		command_add("npcedit", "[column] [value] - Mega NPC editing command", 100, command_npcedit) ||
 		command_add("npcemote", "[message] - Make your NPC target emote a message.", 150, command_npcemote) ||
@@ -4090,6 +4091,115 @@ void command_setbuild(Client *c, const Seperator *sep) {
 
 	// Trigger refresh on target.
 	cTarget->RefreshBuild();
+}
+
+void command_npc(Client *c, const Seperator *sep) {
+	if (!sep->arg[1]) {
+		c->Message(0, "Usage: #npc [option], (help, entity, type)");
+		return;
+	}
+	if (strcasecmp(sep->arg[1], "help") == 0) { //#npc help
+		c->Message(0, "Help: #npc [option] values include:");
+		c->Message(0, "entity: active npc instances in entity list manager");
+		c->Message(0, "type: npc base type data manager");
+		return;
+	}
+
+	if (strcasecmp(sep->arg[1], "entity") == 0) { //#npc entity
+		if (!sep->arg[2] || strcasecmp(sep->arg[2], "help") == 0) { //#npc entity help
+			c->Message(0, "Help: #npc entity [option] values include:");
+			c->Message(0, "info: learn information about npc");
+			c->Message(0, "loot: learn loot about npc");
+			c->Message(0, "faction: learn faction data about npc");
+			c->Message(0, "spawn: learn spawn data about npc");
+			return;
+		}
+
+		if (strcasecmp(sep->arg[2], "info") == 0) { //#npc entity info
+			if (strcasecmp(sep->arg[3], "help") == 0) { //#npc entity info help
+				c->Message(0, "Help: #npc entity info [option] values include:");
+				c->Message(0, "target: (default) target entity");
+				c->Message(0, "id #: provided entity id");
+				c->Message(0, "range # #: search for entites between # to #, inclusive");
+				c->Message(0, "search [a-Z_]+: first match to search");
+				c->Message(0, "all: truncated list of all entities in zone");
+				return;
+			}
+
+			if (!sep->arg[3] || strcasecmp(sep->arg[3], "target") == 0) { //#npc entity info target
+				if (!c->GetTarget()) {
+					c->Message(13, "#npc entity info: No target provided.");
+					return;
+				}
+				if (!c->GetTarget()->IsNPC()) {
+					c->Message(13, "#npc entity info: Target must be NPC.");
+					return;
+				}
+				entity_list.ListNPCs(c, StringFormat("%u", c->GetTarget()->GetName()).c_str(), StringFormat("%u", c->GetTarget()->GetID()).c_str(), 1);
+				return;
+			}
+
+			if (strcasecmp(sep->arg[3], "range") == 0) {//#npc entity info range
+				if (!sep->arg[4] || !sep->IsNumber(4) || !sep->arg[5] || !sep->IsNumber(5)) {
+					c->Message(13, "#npc entity info: both range values not provided or invalid.");
+					return;
+				}
+				int id = atoi(sep->arg[4]);
+				int id2 = atoi(sep->arg[5]);
+				if (id < 1 || id2 < 1) {
+					c->Message(13, "#npc entity info: both range values must be greater than 0.");
+					return;
+				}
+				entity_list.ListNPCs(c, StringFormat("%i", id).c_str(), StringFormat("%i", id2).c_str(), 2);
+				return;
+			}
+
+			if (strcasecmp(sep->arg[3], "search") == 0) {//#npc entity info range
+				if (!sep->arg[4]) {
+					c->Message(13, "#npc entity info: no search term provided.");
+					return;
+				}
+				entity_list.ListNPCs(c, "all", sep->arg[4], 0);
+				return;
+			}
+
+			if (strcasecmp(sep->arg[3], "id") == 0) { //#npc entity info id
+				if (!sep->arg[4] || !sep->IsNumber(4)) {
+					c->Message(13, "#npc entity info: id not provided or invalid.");
+					return;
+				}
+				int id = atoi(sep->arg[4]);
+				if (id < 1) {
+					c->Message(13, "#npc entity info: id must be greater than 0.");
+					return;
+				}
+				entity_list.ListNPCs(c, StringFormat("%i", id).c_str(), StringFormat("%i", id).c_str(), 2);
+				return;
+			}			
+
+			if (!sep->arg[3] || strcasecmp(sep->arg[3], "all") == 0) { //#npc entity info all		
+				entity_list.ListNPCs(c, "all", "", 0);
+				return;
+			}
+
+			c->Message(13, "Command is not yet supported.");
+			return;
+		}
+
+
+	}
+
+	if (strcasecmp(sep->arg[1], "type")) { //#npc type
+		if (!sep->arg[2] || strcasecmp(sep->arg[2], "help")) { //#npc type help
+			c->Message(0, "Help: #npc type [option] values include:");
+			c->Message(0, "info: learn information about npc");
+			c->Message(0, "loot: learn loot about npc");
+			c->Message(0, "faction: learn faction data about npc");
+			c->Message(0, "spawn: learn spawn data about npc");
+			return;
+		}
+
+	}
 }
 
 //Spawns an encounter, if a valid timing
