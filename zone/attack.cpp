@@ -4646,28 +4646,51 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 
 	float critChance = 0.0f;
 	bool IsBerskerSPA = false;
+	int32 SlayRateBonus = aabonuses.SlayUndead[0] + itembonuses.SlayUndead[0] + spellbonuses.SlayUndead[0];
+
+	//Add slayratebonus if player has RB_PAL
+	if (this->IsClient() &&
+		defender &&
+		defender->GetLevel() <= GetLevel() &&
+		this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) > 0) {
+		SlayRateBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) * 200;
+		if (SlayRateBonus) {
+			float slayChance = static_cast<float>(SlayRateBonus) / 10000.0f;
+			if (zone->random.Roll(slayChance)) {
+				int32 SlayDmgBonus = aabonuses.SlayUndead[1] + itembonuses.SlayUndead[1] + spellbonuses.SlayUndead[1];
+
+				if (this->IsClient() &&
+					this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) > 0) {
+					SlayDmgBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) * 620;
+				}
+
+				damage = (damage * SlayDmgBonus * 2.25f) / 100;
+				if (GetGender() == 1) // female
+					entity_list.FilteredMessageClose_StringID(this, false, 200,
+						MT_CritMelee, FilterMeleeCrits, FEMALE_SLAYUNDEAD,
+						GetCleanName(), itoa(damage));
+				else // males and neuter I guess
+					entity_list.FilteredMessageClose_StringID(this, false, 200,
+						MT_CritMelee, FilterMeleeCrits, MALE_SLAYUNDEAD,
+						GetCleanName(), itoa(damage));
+				return;
+			}
+		}
+		SlayRateBonus = 0;
+	}
+	
 
 	//1: Try Slay Undead
 	if (defender && (defender->GetBodyType() == BT_Undead ||
-				defender->GetBodyType() == BT_SummonedUndead || defender->GetBodyType() == BT_Vampire)) {
-		int32 SlayRateBonus = aabonuses.SlayUndead[0] + itembonuses.SlayUndead[0] + spellbonuses.SlayUndead[0];
-
-		//Add slayratebonus if player has RB_PAL
-		if (this->IsClient() && 
-			defender && 
-			defender->GetBodyType() == BT_Undead &&
-			this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYUNDEAD) > 0) {
-			SlayRateBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYUNDEAD) * 200;
-		}
-
+				defender->GetBodyType() == BT_SummonedUndead || defender->GetBodyType() == BT_Vampire)) {	
 		if (SlayRateBonus) {
 			float slayChance = static_cast<float>(SlayRateBonus) / 10000.0f;
 			if (zone->random.Roll(slayChance)) {
 				int32 SlayDmgBonus = aabonuses.SlayUndead[1] + itembonuses.SlayUndead[1] + spellbonuses.SlayUndead[1];
 				
 				if (this->IsClient() && 
-					this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYUNDEAD) > 0) {
-					SlayDmgBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYUNDEAD) * 620;
+					this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) > 0) {
+					SlayDmgBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) * 620;
 				}
 
 				damage = (damage * SlayDmgBonus * 2.25f) / 100;

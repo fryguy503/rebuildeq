@@ -10409,7 +10409,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_PAL_FLAMEOFLIGHT) return "Flame of Light";
 		else if (id == RB_PAL_DISMISSEVIL) return "Dismiss Evil";
 		else if (id == RB_PAL_FRAIL) return "Frail";
-		else if (id == RB_PAL_SLAYUNDEAD) return "Slay Undead";
+		else if (id == RB_PAL_SLAYER) return "Slayer";
 		break;
 	case SHADOWKNIGHT:
 		if (id == RB_SHD_LEECHTOUCH) return "Leech Touch";
