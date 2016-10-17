@@ -1719,7 +1719,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	{
 		//the exp buffer mechanics come into play first, before we determine loss from level.
 		if (GetLevel() >= 60 && exploss > 0) { //if we're 60+ (max level and later, if player cap raises, we still check pool)
-			int32 exp_pool;
+			uint64 exp_pool = 0;
 			auto query = StringFormat("SELECT exp_pool FROM character_custom WHERE character_id = %i", CharacterID());
 			auto results = database.QueryDatabase(query);
 			if (results.Success() && results.RowCount() != 0) {
@@ -1735,7 +1735,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 					exp_pool = 0; //set to 0, to prep for update
 					pool_loss -= exploss;
 				}
-				Message(13, "Your experience pool has taken %i experience.", exploss);
+				Message(13, "Your experience pool has lost %i experience.", exploss);
 
 				auto query = StringFormat("UPDATE character_custom SET exp_pool = %i WHERE character_id = %i", exp_pool, CharacterID());
 				auto results = database.QueryDatabase(query);

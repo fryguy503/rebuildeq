@@ -6105,8 +6105,8 @@ void command_exp(Client *c, const Seperator *sep)
 			c->UpdateTaskActivity(FEAT_GETTINGSTARTED, i, 1);
 		}
 	}
-
-	int exp_pool = 0;
+	
+	uint64 exp_pool = 0;
 	auto query = StringFormat("SELECT exp_pool FROM character_custom WHERE character_id = %i", c->CharacterID());
 	auto results = database.QueryDatabase(query);
 	if (results.Success() && results.RowCount() != 0) {
@@ -6114,11 +6114,9 @@ void command_exp(Client *c, const Seperator *sep)
 		exp_pool = atoi(row[0]);
 	}
 	int bottles = exp_pool / RuleI(AA, ExpPerPoint);
-	
-
 
 	if (sep->arg[1][0] == '\0' || !strcasecmp(sep->arg[1], "help")) {
-		c->Message(0, "You currently have %i experience stored in reserve, which equates to %i experience bottles. If you hold an empty experience bottle on cursor, you can [ %s ] it for 500 platinum.", exp_pool, bottles, c->CreateSayLink("#exp fill", "fill").c_str());
+		c->Message(0, "You currently have %i experience bottles in reserve, each representing %i experience. Buy empty bottles from Nola Z`Ret in East Commonlands, and then you can [ %s ] it for 500 platinum.", bottles, RuleI(AA, ExpPerPoint), c->CreateSayLink("#exp fill", "fill").c_str());
 		return;
 	}
 	if (!strcasecmp(sep->arg[1], "limit")) {
