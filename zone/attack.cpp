@@ -4650,36 +4650,27 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 	float critChance = 0.0f;
 	bool IsBerskerSPA = false;
 	int32 SlayRateBonus = aabonuses.SlayUndead[0] + itembonuses.SlayUndead[0] + spellbonuses.SlayUndead[0];
-
+	uint8 rank = this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER);
 	//Add slayratebonus if player has RB_PAL
 	if (this->IsClient() &&
 		defender &&
 		defender->GetLevel() <= GetLevel() &&
-		this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) > 0) {
-		SlayRateBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) * 200;
-		if (SlayRateBonus) {
-			float slayChance = static_cast<float>(SlayRateBonus) / 10000.0f;
-			if (zone->random.Roll(slayChance)) {
-				int32 SlayDmgBonus = aabonuses.SlayUndead[1] + itembonuses.SlayUndead[1] + spellbonuses.SlayUndead[1];
+		rank > 0 &&
+		zone->random.Roll(100) <= rank) {
 
-				if (this->IsClient() &&
-					this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) > 0) {
-					SlayDmgBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) * 620;
-				}
-
-				damage = (damage * SlayDmgBonus * 2.25f) / 100;
-				if (GetGender() == 1) // female
-					entity_list.FilteredMessageClose_StringID(this, false, 200,
-						MT_CritMelee, FilterMeleeCrits, FEMALE_SLAYUNDEAD,
-						GetCleanName(), itoa(damage));
-				else // males and neuter I guess
-					entity_list.FilteredMessageClose_StringID(this, false, 200,
-						MT_CritMelee, FilterMeleeCrits, MALE_SLAYUNDEAD,
-						GetCleanName(), itoa(damage));
-				return;
-			}
-		}
-		SlayRateBonus = 0;
+		int32 SlayDmgBonus = aabonuses.SlayUndead[1] + itembonuses.SlayUndead[1] + spellbonuses.SlayUndead[1];
+		SlayDmgBonus += rank * 50;
+		
+		damage = (damage * SlayDmgBonus * 2.25f) / 100;
+		if (GetGender() == 1) // female
+			entity_list.FilteredMessageClose_StringID(this, false, 200,
+				MT_CritMelee, FilterMeleeCrits, FEMALE_SLAYUNDEAD,
+				GetCleanName(), itoa(damage));
+		else // males and neuter I guess
+			entity_list.FilteredMessageClose_StringID(this, false, 200,
+				MT_CritMelee, FilterMeleeCrits, MALE_SLAYUNDEAD,
+				GetCleanName(), itoa(damage));
+		return;
 	}
 	
 
