@@ -4690,7 +4690,7 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 				
 				if (this->IsClient() && 
 					this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) > 0) {
-					SlayDmgBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) * 620;
+					SlayDmgBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) * 50;
 				}
 
 				damage = (damage * SlayDmgBonus * 2.25f) / 100;
