@@ -12601,7 +12601,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 
 	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
 		uint32 haggle = (int)(SinglePrice * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
-		Message(MT_Channel10, "Haggle Rank %u reduced buy price by %u copper.", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
+		Message(MT_FocusEffect, "Haggle Rank %u reduced buy price by %u copper.", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
 		SinglePrice -= haggle;
 	}
 
@@ -12826,7 +12826,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 
 	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
 		uint32 haggle = (int)(price * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
-		Message(MT_Channel10, "Haggle Rank %u improved sell price by %u copper", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
+		Message(MT_FocusEffect, "Haggle Rank %u improved sell price by %u copper", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
 		price -= haggle;
 	}
 

@@ -3940,7 +3940,7 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 	if (type != PickPocketFailed) {
 		uint8 rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTION);
 		if (rank > 0 && zone->random.Roll(rank * 10)) {
-			Message(MT_Channel10, "Your Sleight Distraction %u distracts %s.", rank, from->GetCleanName());
+			Message(MT_FocusEffect, "Your Sleight Distraction %u distracts %s.", rank, from->GetCleanName());
 			EvadeOnce(this);
 		}
 		rank = GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);
@@ -3948,7 +3948,7 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 			int mana_bonus = rank * 20;
 			
 			if (this->IsGrouped()) {
-				Message(MT_Channel10, "Untapped Potential %u gives the group %i mana.", rank, mana_bonus);
+				Message(MT_FocusEffect, "Untapped Potential %u gives the group %i mana.", rank, mana_bonus);
 				auto group = this->GetGroup(); //iterate group
 				for (int i = 0; i < 6; ++i) {
 					if (group->members[i] &&  //target grouped
@@ -3968,7 +3968,7 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 				}
 			}
 			else if (this->IsRaidGrouped()) { //Raid healing
-				Message(MT_Channel10, "Untapped Potential %u gives the raid group %i mana.", rank, mana_bonus);
+				Message(MT_FocusEffect, "Untapped Potential %u gives the raid group %i mana.", rank, mana_bonus);
 				auto raid = this->GetRaid();
 
 				uint32 gid = raid->GetGroup(this->CastToClient());
