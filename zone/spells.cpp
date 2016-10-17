@@ -3319,7 +3319,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 
 				if (rank > 0 && isAffected) {
 					const int bonus = duration * 0.2f * rank;
-					caster->Message(MT_NonMelee, "Lingering Twilight %u improved mesmerize duration by %i seconds.", bonus * 6);
+					caster->Message(MT_Channel10, "Lingering Twilight %u improved mesmerize duration by %i seconds.", bonus * 6);
 					duration += bonus;
 				}
 			}
@@ -3392,7 +3392,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 
 				if (rank > 0 && isAffected) {
 					const int bonus = duration * 0.2f * rank;
-					caster_client->Message(MT_NonMelee, "Spirit of Speed increased duration by %i seconds.", bonus * 6);
+					caster_client->Message(MT_Channel10, "Spirit of Speed increased duration by %i seconds.", bonus * 6);
 					duration += bonus;
 				}
 			}
@@ -3411,7 +3411,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 
 				if (rank > 0 && isAffected) {
 					const int bonus = duration * 0.3f * rank;
-					caster_client->Message(MT_NonMelee, "Extended Haste increased duration by %i seconds.", bonus * 6);
+					caster_client->Message(MT_Channel10, "Extended Haste increased duration by %i seconds.", bonus * 6);
 					duration += bonus;
 				}
 			}
@@ -3437,7 +3437,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 
 				if (rank > 0 && isAffected) {
 					const int bonus = rank;
-					caster_client->Message(MT_NonMelee, "Fury increased duration by %i seconds.", bonus * 6);
+					caster_client->Message(MT_Channel10, "Fury increased duration by %i seconds.", bonus * 6);
 					duration += bonus;
 				}
 			}
@@ -3460,7 +3460,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 
 				if (rank > 0 && isAffected) {
 					const int bonus = duration * 0.05f * rank;
-					caster_client->Message(MT_NonMelee, "Extended Turgur increased duration by %i seconds.", bonus * 6);
+					caster_client->Message(MT_Channel10, "Extended Turgur increased duration by %i seconds.", bonus * 6);
 					duration += bonus;
 				}
 			}

@@ -630,7 +630,7 @@ void HateList::OnDeathTrigger()
 				uint32 counters = mobHated->CastToClient()->GetRottenCoreCounters();
 				mobHated->CastToClient()->AddRottenCoreCounter(1);
 				if (counters < mobHated->CastToClient()->GetRottenCoreCounters()) {
-					mobHated->Message(MT_NonMelee, "Rotten Core %u increased to %u counters.", rank, mobHated->CastToClient()->GetRottenCoreCounters());
+					mobHated->Message(MT_Channel10, "Rotten Core %u increased to %u counters.", rank, mobHated->CastToClient()->GetRottenCoreCounters());
 				}
 			}
 			rank = mobHated->CastToClient()->GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
@@ -638,7 +638,7 @@ void HateList::OnDeathTrigger()
 				uint32 counters = mobHated->CastToClient()->GetRottenCoreCounters();
 				mobHated->CastToClient()->AddRottenCoreCounter(1);
 				if (counters < mobHated->CastToClient()->GetRottenCoreCounters()) {
-					mobHated->Message(MT_NonMelee, "Killing Spree %u increased to %u counters.", rank, mobHated->CastToClient()->GetRottenCoreCounters());
+					mobHated->Message(MT_Channel10, "Killing Spree %u increased to %u counters.", rank, mobHated->CastToClient()->GetRottenCoreCounters());
 				}
 			}
 		}

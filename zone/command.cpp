@@ -9148,10 +9148,27 @@ void command_toggle(Client *c, const Seperator *sep)
 		c->Message(0, "...healtarget [%s] - Cast beneficial spells on %s instead of an enemy target", ((c->GetEPP().use_self_target) ? "Self" : "Target's Target"), ((c->GetEPP().use_self_target) ? "self" : "target's target"));
 		c->Message(0, "...pettaunt [%s] - Set default option for pet taunting", ((c->GetEPP().use_pet_taunt) ? "ON" : "OFF"));
 		c->Message(0, "...dpsfull [%s] - When a mob dies you hurted, shows report of all DPS", ((c->GetEPP().use_full_dps) ? "ON" : "OFF"));
-		c->Message(0, "...dpsself [%s] - When a mob dies you hurted, shows reports your DPS", ((c->GetEPP().use_self_dps) ? "ON" : "OFF"));
+		c->Message(0, "...dpsself [%s] - When a mob dies you hurted, shows your DPS in report", ((c->GetEPP().use_self_dps) ? "ON" : "OFF"));
+		c->Message(0, "...buildecho [%s] - Display verbose build debug information, breaking down how builds work", ((c->GetEPP().use_self_dps) ? "ON" : "OFF"));
 		return;
 	}
 	
+	if (!strcasecmp(sep->arg[1], "buildecho") || 
+		!strcasecmp(sep->arg[1], "echobuild") || 
+		!strcasecmp(sep->arg[1], "buildsecho") || 
+		!strcasecmp(sep->arg[1], "echobuilds")) {
+		c->GetEPP().show_rb_echo = 1 - c->GetEPP().show_rb_echo;
+		std::string query = StringFormat("UPDATE account_custom SET show_rb_echo = %i WHERE account_id = %u", c->GetEPP().show_rb_echo, c->AccountID());
+		auto results = database.QueryDatabase(query);
+		if (!results.Success()) {
+			c->Message(13, "Setting option failed. The devs have been notified.");
+			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			return;
+		}
+		c->Message(0, "You have %s verbose build echos.", ((c->GetEPP().show_rb_echo) ? "enabled" : "disabled"));
+		return;
+	}
+
 
 	if (!strcasecmp(sep->arg[1], "newcon")) {
 		c->GetEPP().use_new_con = 1 - c->GetEPP().use_new_con;

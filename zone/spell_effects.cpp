@@ -237,8 +237,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (rank > 0 && spell_id == 8193 && IsClient()) { //This only works on player characters.
 							int32 mana_amount = casterClient->GetMaxMana() * (0.03f * rank);
 							if (mana_amount < 1) mana_amount = 1;
-							if (casterClient != this) casterClient->Message(MT_NonMelee, "Nature's Guardian %u gifted %i mana to %s.", rank, mana_amount, GetCleanName());
-							Message(MT_NonMelee, "%s's Nature's Guardian %u gifted %i mana.", casterClient->GetCleanName(), rank, mana_amount);
+							if (casterClient != this) casterClient->Message(MT_Channel10, "Nature's Guardian %u gifted %i mana to %s.", rank, mana_amount, GetCleanName());
+							Message(MT_Channel10, "%s's Nature's Guardian %u gifted %i mana.", casterClient->GetCleanName(), rank, mana_amount);
 							SetMana(GetMana() + mana_amount);
 							break;
 						}
@@ -280,7 +280,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							if (rank > 0 && spells[spell_id].classes[DRUID] > (GetLevel() - 15) &&
 								(spell_id == 239 || spell_id == 93 || spell_id == 92 || spell_id == 252 || spell_id == 91 || spell_id == 419 || spell_id == 52 || spell_id == 405 || spell_id == 27 || spell_id == 115 || spell_id == 217 || spell_id == 1439 || spell_id == 406 || spell_id == 418 || spell_id == 664 || spell_id == 57 || spell_id == 1436 || spell_id == 29 || spell_id == 420 || spell_id == 433 || spell_id == 671 || spell_id == 1603 || spell_id == 1529 || spell_id == 1605 || spell_id == 2518 || spell_id == 1606 || spell_id == 1607 || spell_id == 2126 || spell_id == 2877 || spell_id == 1740)) {
 								if (zone->random.Roll(3 * rank)) {
-									caster->Message(MT_NonMelee, "Lingering Pain %i activated.", rank);
+
+									if (caster->ShowBuildEcho()) caster->Message(MT_Channel10, "Lingering Pain %i activated.", rank);
 									if (caster_level > 54) AddBuff(caster, 4105, 2);
 									else if (caster_level > 50) AddBuff(caster, 1601, 2);
 									else if (caster_level > 45) AddBuff(caster, 1600, 2);
@@ -314,7 +315,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 											stun_resist += aabonuses.StunResist;
 
 										if (stun_resist <= 0 || zone->random.Int(0, 99) >= stun_resist) {
-											caster->Message(MT_NonMelee, "Whirling Disaster %u stunned %s.", rank, GetCleanName());
+											caster->Message(MT_Channel10, "Whirling Disaster %u stunned %s.", rank, GetCleanName());
 											Stun(2);
 										}
 									}
@@ -336,7 +337,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								static const float BaseDamageBonus = 0.25f;		// 25% per rank
 
 								int bonusDamage = rank * BaseDamageBonus * dmg;
-								casterClient->Message(MT_NonMelee, "Chosen %u added %i bonus damage.", rank, -bonusDamage);
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_Channel10, "Chosen %u added %i bonus damage.", rank, -bonusDamage);
 
 								dmg -= bonusDamage;
 							}
@@ -359,7 +360,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									if (healAmount < 1) healAmount = 1;
 									if (manaAmount < 1) manaAmount = 1;
 
-									casterClient->Message(MT_NonMelee, "Elixir of Might %u gifted %i health and %i mana.", rank, healAmount, manaAmount);
+									if (casterClient->ShowBuildEcho()) casterClient->Message(MT_Channel10, "Elixir of Might %u gifted %i health and %i mana.", rank, healAmount, manaAmount);
 
 									casterClient->HealDamage(healAmount, caster);
 									casterClient->SetMana(casterClient->GetMana() + manaAmount);
@@ -373,7 +374,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 								int bonusDamage = rank * BaseBonusDamage * dmg;
 								if (bonusDamage < 1) bonusDamage = 1;
-								casterClient->Message(MT_NonMelee, "Flame of Light %u added %i bonus damage.", rank, -bonusDamage);
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_Channel10, "Flame of Light %u added %i bonus damage.", rank, -bonusDamage);
 
 								dmg += bonusDamage;
 							}
@@ -389,7 +390,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								if (rank > 4 && zone->random.Roll(1)) {
 									bonus_damage *= 4;
 								}
-								casterClient->Message(MT_NonMelee, "Festering Spear %u added %i %s bonus damage.", rank, bonus_damage, (is_quad) ? "QUAD" : "");
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_Channel10, "Festering Spear %u added %i %s bonus damage.", rank, bonus_damage, (is_quad) ? "QUAD" : "");
 								dmg -= bonus_damage;
 							}
 
@@ -397,7 +398,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
 							if (rank > 0 && caster != this) { // Ancient Wrath does not affect spells cast on self.
 								int bonus = dmg * 0.1f * rank * -1;
-								casterClient->Message(MT_NonMelee, "Ancient Wrath %u added %i bonus damage.", rank, bonus);
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_Channel10, "Ancient Wrath %u added %i bonus damage.", rank, bonus);
 								dmg -= bonus;
 							}
 
@@ -422,7 +423,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								rank > 0) {
 								int mana_amount = -dmg * 0.05f * rank;
 								if (mana_amount < rank) mana_amount = rank;
-								caster->Message(MT_NonMelee, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
+								if (caster->ShowBuildEcho()) caster->Message(MT_Channel10, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}							
 						}
@@ -1020,10 +1021,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					if (caster->CastToClient()->GetAggroCount() > 0) {
 						if (zone->random.Roll((int)(5 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_CLOAKOFSHADOWS)))) {
 							caster->CastToClient()->Escape();
-							caster->Message(MT_NonMelee, "You successfuly evaded your enemies by stepping into the shadows.");
+							caster->Message(MT_Channel10, "You successfuly evaded your enemies by stepping into the shadows.");
 						}
 						else {
-							caster->Message(MT_NonMelee, "You failed to evade your enemies by stepping into the shadows.");
+							caster->Message(MT_Channel10, "You failed to evade your enemies by stepping into the shadows.");
 						}
 					}					
 				}
@@ -2137,7 +2138,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						//Shin: Embrace Death Perk
 						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH) > 0) {
 							uint32 healAmount = GetMaxHP()* (0.01f * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH));
-							Message(MT_NonMelee, "Embrace Death has healed you for %i.", healAmount);
+							Message(MT_Channel10, "Embrace Death has healed you for %i.", healAmount);
 							if (healAmount < 0 || healAmount > 50000) {
 								healAmount = 1;
 							}
@@ -3654,7 +3655,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					if (rank > 0 && zone->random.Roll(5 * rank)) {		
 						int infect_count = caster->hate_list.InfectNearby(caster, spell_id, (10 * rank), this, 10);
 						if (infect_count > 0) {
-							caster->Message(MT_NonMelee, "Blessing of Ro %u spread to %i nearby enemies.", rank, infect_count);
+							caster->Message(MT_Channel10, "Blessing of Ro %u spread to %i nearby enemies.", rank, infect_count);
 						}
 					}
 
@@ -4291,7 +4292,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 					if (amount_healed > 0) { //if any healing was done, display
 						if (caster != this) caster->Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
-						Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
+						Message(MT_Channel10, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
 						HealDamage(amount_healed, caster);
 
 						rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
@@ -4299,10 +4300,10 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							int32 mana_amount = amount_healed * (0.02f * rank);
 							if (mana_amount < 1) mana_amount = 1;
 							if (caster != this) {
-								caster->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+								caster->Message(MT_Channel10, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}
-							Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+							Message(MT_Channel10, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 							SetMana(GetMana() + mana_amount);
 							
 						}
@@ -4327,7 +4328,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 					if (amount_healed > 0) { //if any healing was done, display
 						if (caster != this) caster->Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
-						Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+						Message(MT_Channel10, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
 						HealDamage(amount_healed, caster);
 
 						rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
@@ -4335,10 +4336,10 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							int32 mana_amount = amount_healed * (0.01f * rank);
 							if (mana_amount < 1) mana_amount = 1;
 							if (caster != this) {
-								caster->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+								caster->Message(MT_Channel10, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}
-							Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+							Message(MT_Channel10, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 							SetMana(GetMana() + mana_amount);							
 						}
 					}
@@ -5032,8 +5033,8 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 			}
 
 			if (amount_healed > 0) { //if any healing was done, display
-				if (p != this) p->Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
-				Message(MT_NonMelee, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
+				if (p != this) p->Message(MT_Channel10, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
+				Message(MT_Channel10, "Convergence of Spirits %u healed for %i points of damage.", rank, amount_healed);
 				HealDamage(amount_healed, p);
 
 				rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
@@ -5041,10 +5042,10 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 
 					int32 mana_amount = amount_healed * (0.01f * rank);
 					if (mana_amount < 1) mana_amount = 1;
-					Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+					Message(MT_Channel10, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 					SetMana(GetMana() + mana_amount);
 					if (p != this) {
-						p->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+						p->Message(MT_Channel10, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 						p->SetMana(p->GetMana() + mana_amount);
 					}
 				}
@@ -5077,8 +5078,8 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 		amount_healed *= reducer;
 
 		if (amount_healed > 0) { //if any healing was done, display
-			if (p != this) p->Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
-			Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+			if (p != this) p->Message(MT_Channel10, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+			Message(MT_Channel10, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
 			HealDamage(amount_healed, p);
 
 			rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
@@ -5086,10 +5087,10 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 
 				int32 mana_amount = amount_healed * (0.01f * rank);
 				if (mana_amount < 1) mana_amount = 1;
-				Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+				Message(MT_Channel10, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 				SetMana(GetMana() + mana_amount);
 				if (p != this) {
-					p->Message(MT_NonMelee, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+					p->Message(MT_Channel10, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 					p->SetMana(p->GetMana() + mana_amount);
 				}
 			}

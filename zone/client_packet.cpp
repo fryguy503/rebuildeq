@@ -781,7 +781,7 @@ void Client::CompleteConnect()
 	uint32 unclaimed_rewards = 0;
 	uint32 next_daily_claim = time(nullptr) + 72000;
 	//make sure account custom is set
-	std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim, use_new_con, use_self_target, use_full_dps, use_self_dps FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
+	std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim, use_new_con, use_self_target, use_full_dps, use_self_dps, show_rb_echo FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
 
 	auto results = database.QueryDatabase(query);
 	if (results.Success()) {
@@ -793,6 +793,7 @@ void Client::CompleteConnect()
 			m_epp.use_self_target = atoi(row[3]);
 			m_epp.use_full_dps = atoi(row[4]);
 			m_epp.use_self_dps = atoi(row[5]);
+			m_epp.show_rb_echo = atoi(row[6]);
 		}
 		else {
 			std::string query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", AccountID(), next_daily_claim);
@@ -12600,7 +12601,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 
 	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
 		uint32 haggle = (int)(SinglePrice * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
-		Message(MT_NonMelee, "Haggle Rank %u reduced buy price by %u copper.", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
+		Message(MT_Channel10, "Haggle Rank %u reduced buy price by %u copper.", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
 		SinglePrice -= haggle;
 	}
 
@@ -12825,7 +12826,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 
 	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
 		uint32 haggle = (int)(price * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
-		Message(MT_NonMelee, "Haggle Rank %u improved sell price by %u copper", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
+		Message(MT_Channel10, "Haggle Rank %u improved sell price by %u copper", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
 		price -= haggle;
 	}
 
