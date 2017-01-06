@@ -33,6 +33,7 @@
                     <li><a href="/guide/encounter/" class="external {if $page == 'guide' and $action == 'encounter'}signup{/if}">Encounter Events</a></li>
                     <li><a href="/guide/rested/" class="external {if $page == 'guide' and $action == 'rested'}signup{/if}">Rested Experience</a></li>*}
                     <li><a href="/changelog/" class="external {if $page == 'changelog'}signup{/if}">Changelog</a></li>
+                    <li><a href="/guide/zone/" class="external {if $page == 'zone'}signup{/if}">Zones</a></li>
                     {*<li><a href="/online/" class="external {if $page == 'changelog'}signup{/if}">Who is Online</a></li>*}
                     <li><a href="/donate/" class="external {if $page == 'donate'}signup{/if}">Donate</a></li>
                   </ul>

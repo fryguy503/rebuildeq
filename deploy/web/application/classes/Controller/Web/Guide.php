@@ -10,6 +10,12 @@ class Controller_Web_Guide extends Template_Web_Core {
 		$this->template->site->description = "Learn how to play Rebuild EQ by following these guides.";
 	}
 
+    public function action_zone() {
+        parent::before();
+        $this->template->site->title = "Zone List";
+        $this->template->site->description = "List of zones disabled on RebuildEQ.";
+    }
+
 	public function action_index() {
 
 	}
