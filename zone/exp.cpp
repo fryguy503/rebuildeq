@@ -907,7 +907,7 @@ void Client::UpdateSkillsAndSpells() {
 	}
 	if (GetSkill(EQEmu::skills::SkillIntimidation) == 0) {
 		if (
-			(GetClass() == BARD && GetLevel() >=166) ||
+			(GetClass() == BARD && GetLevel() >=16) ||
 			(GetClass() == MONK && GetLevel() >= 18) ||
 			(GetClass() == ROGUE && GetLevel() >= 22)
 			) {
@@ -1030,7 +1030,7 @@ void Client::UpdateSkillsAndSpells() {
 			SetSkill(EQEmu::skills::SkillDisarmTraps, 1);
 		}
 	}
-	if (GetSkill(EQEmu::skills::Ski30Tracking) == 0) {
+	if (GetSkill(EQEmu::skills::SkillTracking) == 0) {
 		if (
 			(GetClass() == BARD && GetLevel() >= 35) ||
 			(GetClass() == DRUID && GetLevel() >= 20) ||
