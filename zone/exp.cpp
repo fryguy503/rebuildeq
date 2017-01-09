@@ -928,7 +928,7 @@ void Client::UpdateSkillsAndSpells() {
 	}
 	if (GetSkill(EQEmu::skills::SkillRiposte) == 0) {
 		if (
-			(GetClass() == BARD && GetLevel() >= 58) ||
+			(GetClass() == BARD && GetLevel() >= 30) ||
 			(GetClass() == WARRIOR && GetLevel() >= 25) ||
 			(GetClass() == ROGUE && GetLevel() >= 30) ||
 			(GetClass() == PALADIN && GetLevel() >= 30) ||
