@@ -1,5 +1,5 @@
 +++
-banner = "post/images/site.png"
+banner = "post/images/fashionably-late.png"
 date = "2017-01-10T01:19:18-07:00"
 description = "Artifact Merchants Now Sell"
 images = ["post/images/fashionably-late.png"]
