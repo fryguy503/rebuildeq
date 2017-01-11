@@ -344,7 +344,7 @@ int command_init(void)
 		command_add("resetaa", "- Resets a Player's AA in their profile and refunds spent AA's to unspent, may disconnect player.", 200, command_resetaa) ||
 		command_add("resetaa_timer", "Command to reset AA cooldown timers.", 200, command_resetaa_timer) ||
 		command_add("return", "- Return to the safe point of the last zone you died", 0, command_return) ||
-		command_add("rez", "- Pay platinum to summon and ressurect corpses in your current zone", 0, command_rez) ||
+		command_add("rez", "- Pay platinum to summon and resurrect corpses in your current zone", 0, command_rez) ||
 		command_add("revoke", "[charname] [1/0] - Makes charname unable to talk on OOC", 200, command_revoke) ||
 		command_add("rules", "(subcommand) - Manage server rules", 250, command_rules) ||
 		command_add("save", "- Force your player or player corpse target to be saved to the database", 50, command_save) ||
