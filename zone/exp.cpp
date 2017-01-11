@@ -907,7 +907,7 @@ void Client::UpdateSkillsAndSpells() {
 	}
 	if (GetSkill(EQEmu::skills::SkillIntimidation) == 0) {
 		if (
-			(GetClass() == BARD && GetLevel() >= 25) ||
+			(GetClass() == BARD && GetLevel() >=16) ||
 			(GetClass() == MONK && GetLevel() >= 18) ||
 			(GetClass() == ROGUE && GetLevel() >= 22)
 			) {
@@ -916,7 +916,7 @@ void Client::UpdateSkillsAndSpells() {
 	}
 	if (GetSkill(EQEmu::skills::SkillParry) == 0) {
 		if (
-			(GetClass() == BARD && GetLevel() >= 53) ||
+			(GetClass() == BARD && GetLevel() >= 25) ||
 			(GetClass() == PALADIN && GetLevel() >= 17) ||
 			(GetClass() == SHADOWKNIGHT && GetLevel() >= 17) ||
 			(GetClass() == RANGER && GetLevel() >= 18) ||
@@ -928,7 +928,7 @@ void Client::UpdateSkillsAndSpells() {
 	}
 	if (GetSkill(EQEmu::skills::SkillRiposte) == 0) {
 		if (
-			(GetClass() == BARD && GetLevel() >= 58) ||
+			(GetClass() == BARD && GetLevel() >= 30) ||
 			(GetClass() == WARRIOR && GetLevel() >= 25) ||
 			(GetClass() == ROGUE && GetLevel() >= 30) ||
 			(GetClass() == PALADIN && GetLevel() >= 30) ||
@@ -997,7 +997,7 @@ void Client::UpdateSkillsAndSpells() {
 	}
 	if (GetSkill(EQEmu::skills::SkillSenseTraps) == 0) {
 		if (
-			(GetClass() == BARD && GetLevel() >= 20) ||
+			(GetClass() == BARD && GetLevel() >= 15) ||
 			(GetClass() == ROGUE && GetLevel() >= 10)
 			) {
 			SetSkill(EQEmu::skills::SkillSenseTraps, 1);
@@ -1005,7 +1005,7 @@ void Client::UpdateSkillsAndSpells() {
 	}
 	if (GetSkill(EQEmu::skills::SkillSafeFall) == 0) {
 		if (
-			(GetClass() == BARD && GetLevel() >= 24) ||
+			(GetClass() == BARD && GetLevel() >= 20) ||
 			(GetClass() == MONK && GetLevel() >= 3) ||
 			(GetClass() == ROGUE && GetLevel() >= 12)
 			) {
@@ -1024,7 +1024,7 @@ void Client::UpdateSkillsAndSpells() {
 	}
 	if (GetSkill(EQEmu::skills::SkillDisarmTraps) == 0) {
 		if (
-			(GetClass() == BARD && GetLevel() >= 30) ||
+			(GetClass() == BARD && GetLevel() >= 20) ||
 			(GetClass() == ROGUE && GetLevel() >= 21)
 			) {
 			SetSkill(EQEmu::skills::SkillDisarmTraps, 1);
@@ -1041,7 +1041,7 @@ void Client::UpdateSkillsAndSpells() {
 	}
 	if (GetSkill(EQEmu::skills::SkillPickLock) == 0) {
 		if (
-			(GetClass() == BARD && GetLevel() >= 40) ||
+			(GetClass() == BARD && GetLevel() >= 10) ||
 			(GetClass() == ROGUE && GetLevel() >= 6)
 			) {
 			SetSkill(EQEmu::skills::SkillPickLock, 1);
@@ -1118,7 +1118,7 @@ void Client::UpdateSkillsAndSpells() {
 			(GetClass() == ROGUE && GetLevel() >= 30) ||
 			(GetClass() == MONK && GetLevel() >= 35) ||
 			(GetClass() == RANGER && GetLevel() >= 35) ||
-			(GetClass() == BARD && GetLevel() >= 58)
+			(GetClass() == BARD && GetLevel() >= 30)
 			) {
 			SetSkill(EQEmu::skills::SkillRiposte, 1);
 		}
