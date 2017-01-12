@@ -10,8 +10,7 @@ title = "Getting Started Has Never Been Easier"
 +++
 * Added Getting Started Task. If you are level 60, simply type #exp to have it removed.
 * Fixes were applied to help giving AAs after finishing feats.
-* #teleport commons is no longer an option.
-
+* \#teleport commons is no longer an option.
 * Merchants will no longer sell temporary (misc) clutter items.
 * Renamed Velius Athale (Artifact Merchant) to Vulis_Athale.
 * Kobolds no longer come up as spiders in newcon.
