@@ -1,7 +1,7 @@
 +++
 banner = "post/images/ping-fuzzlecutter.png"
-date = "2016-09-06T01:19:18-07:00"
-description = "Buff Duration Repair"
+date = "2017-01-11T01:19:18-07:00"
+description = "Ping Fuzzlecutter"
 images = ["post/images/ping-fuzzlecutter.png"]
 menu = ""
 tags = ["npc"]
