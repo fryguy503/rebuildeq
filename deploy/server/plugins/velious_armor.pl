@@ -629,12 +629,12 @@ sub velious_armor_list {
 
 	$tmp_class = 10;
 	#thurgadin terman underbelly shaman chain
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24940, reward => 31008}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24935, reward => 31009}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24937, reward => 31010}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24939, reward => 31011}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31012}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24936, reward => 31013}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31014}; #boots
+	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24940, reward => 31007}; #cap
+	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24935, reward => 31008}; #bp
+	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24937, reward => 31009}; #sleeves
+	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24939, reward => 31010}; #wrist
+	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31011}; #gloves
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24936, reward => 31012}; #legs
+	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31013}; #boots
 	return @armor_list;
 }
