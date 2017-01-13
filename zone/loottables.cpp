@@ -436,7 +436,7 @@ void NPC::AddItem(uint32 itemid, uint16 charges, bool equipitem) {
 
 void NPC::AddLootTable() {
 	if (npctype_id != 0) { // check if it's a GM spawn
-		if (GetLevel() >= 55 && zone->random.Int(1, 300) == 1) {
+		if (GetLevel() >= 55 && zone->random.Int(1, 100) == 1) {
 			AddItem(100006, 1, false); //elunium
 		}
 		AddCardTable();
@@ -448,7 +448,7 @@ void NPC::AddLootTable() {
 
 void NPC::AddLootTable(uint32 ldid) {
 	if (npctype_id != 0) { // check if it's a GM spawn
-		if (GetLevel() >= 55 && zone->random.Int(1, 300) == 1) {
+		if (GetLevel() >= 55 && zone->random.Int(1, 100) == 1) {
 			AddItem(100006, 1, false); //elunium
 		}
 		AddCardTable();
