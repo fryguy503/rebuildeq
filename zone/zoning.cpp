@@ -232,15 +232,15 @@ void Client::Handle_OP_ZoneChange(const EQApplicationPacket *app) {
 
 			//999999 is a placeholder for 'same as where they were from'
 			if(zone_point->target_x == 999999)
-				dest_x = GetX();
+				dest_x = GetX() + zone_point->target_x_offset;
 			else
 				dest_x = zone_point->target_x;
 			if(zone_point->target_y == 999999)
-				dest_y = GetY();
+				dest_y = GetY() + zone_point->target_y_offset;
 			else
 				dest_y = zone_point->target_y;
 			if(zone_point->target_z == 999999)
-				dest_z=GetZ();
+				dest_z=GetZ() + zone_point->target_z_offset;
 			else
 				dest_z = zone_point->target_z;
 			if(zone_point->target_heading == 999)

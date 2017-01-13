@@ -1661,7 +1661,7 @@ bool ZoneDatabase::LoadStaticZonePoints(LinkedList<ZonePoint*>* zone_point_list,
 	zone_point_list->Clear();
 	zone->numzonepoints = 0;
 	std::string query = StringFormat("SELECT x, y, z, target_x, target_y, "
-					 "target_z, target_zone_id, heading, target_heading, "
+					 "target_z, target_x_offset, target_y_offset, target_z_offset, target_zone_id, heading, target_heading, "
 					 "number, target_instance, client_version_mask "
 					 "FROM zone_points WHERE zone='%s' AND (version=%i OR version=-1) "
 					 "ORDER BY number",
@@ -1680,12 +1680,15 @@ bool ZoneDatabase::LoadStaticZonePoints(LinkedList<ZonePoint*>* zone_point_list,
 		zp->target_x = atof(row[3]);
 		zp->target_y = atof(row[4]);
 		zp->target_z = atof(row[5]);
-		zp->target_zone_id = atoi(row[6]);
-		zp->heading = atof(row[7]);
-		zp->target_heading = atof(row[8]);
-		zp->number = atoi(row[9]);
-		zp->target_zone_instance = atoi(row[10]);
-		zp->client_version_mask = (uint32)strtoul(row[11], nullptr, 0);
+		zp->target_x_offset = atof(row[6]);
+                zp->target_y_offset = atof(row[7]);
+                zp->target_z_offset = atof(row[8]);
+		zp->target_zone_id = atoi(row[9]);
+		zp->heading = atof(row[10]);
+		zp->target_heading = atof(row[11]);
+		zp->number = atoi(row[12]);
+		zp->target_zone_instance = atoi(row[13]);
+		zp->client_version_mask = (uint32)strtoul(row[14], nullptr, 0);
 
 		zone_point_list->Insert(zp);
 
