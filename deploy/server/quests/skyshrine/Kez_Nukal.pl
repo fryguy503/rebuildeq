@@ -1,13 +1,13 @@
 sub EVENT_SAY { 
-  #if ($faction == 1) {     
+  if ($faction == 1) {     
     plugin::velious_armor_hail($text, $zoneid, $client->GetClass());
-  #} else {
-  #  quest::say("You must prove your dedication before I will speak to you.");
-  #}
+  } else {
+    quest::say("You must prove your dedication before I will speak to you.");
+  }
 }
 
 sub EVENT_ITEM {
- # if ($faction == 1) {
+  if ($faction == 1) {
 
     my $cash = $copper + $silver * 10 + $gold * 100 + $platinum * 1000;
     my @armor_list = plugin::velious_armor_list();
@@ -227,9 +227,9 @@ sub EVENT_ITEM {
         }
       }
     quest::say("These items are not what I am looking for.");
- #  } else {    
- #   quest::say("I do not know you well enough to entrust such an item to you, yet.");
- # }
+   } else {    
+    quest::say("I do not know you well enough to entrust such an item to you, yet.");
+  }
   quest::givecash($copper, $silver, $gold, $platinum);
   plugin::return_items(\%itemcount);  
   return;
