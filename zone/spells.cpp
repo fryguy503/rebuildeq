@@ -455,33 +455,10 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		}
 	}
 	
+	const SPDat_Spell_Struct &spell = spells[spell_id];
+	
 	// RebuildEQ Rank for Calculations
 	int rank = 0;
-
-	// Druid Teleport Bind
-	rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TELEPORTBIND);
-        if (rank > 0 && spell_id == 5953) {
-		// 85% Mana at Rank 1, minus 15% per rank: 85,70,55,40,25
-		mana_cost = GetMaxMana() * (1 - rank * 0.15f);
-
-		Log.Out(Logs::Detail, Logs::Spells, "Teleport Bind (Rank %d) Mana Cost %d and Casting Time %d", rank, mana_cost, cast_time);
-
-		if (mana_cost > GetMana()) {
-			Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana spell=%d mymana=%d cost=%d\n", GetName(), spell_id, GetMana(), mana_cost);
-			Message_StringID(13, INSUFFICIENT_MANA);
-                        InterruptSpell();
-		}
-	}	
-
-	// Druid Exodus
-	rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_EXODUS);
-	if(rank > 0 && spell_id == 2771) {
-                // 5 second cast time, 1 less second per rank: 5000ms/4000ms/3000ms/2000ms/1000ms
-		int cast_time_new = 6000 - (rank * 1000);
-		Log.Out(Logs::Detail, Logs::Spells, "Exodus (Rank %d) Casting Time %d", rank, cast_time_new);
-        	cast_time = cast_time_new;
-	}
-
 
 	// Druid Ring Affinity - Ring spells cast 5% faster and cost 10% less mana per rank.
         rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_RINGAFFINITY);
@@ -534,6 +511,20 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		Log.Out(Logs::Detail, Logs::Spells, "Exodus (Rank %d) Casting Time %d", rank, cast_time_new);
         	cast_time = cast_time_new;
 	}
+	
+	// Magician Quick Damage
+	rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_QUICKDAMAGE);
+	if(rank > 0 && spell.spell_category == 1) { // Only apply to direct damage spells
+		int cast_time_bonus = 0;
+		if(rank == 1) cast_time_bonus = cast_time * 0.02f;
+		if(rank == 2) cast_time_bonus = cast_time * 0.05f;
+		if(rank == 3) cast_time_bonus = cast_time * 0.10f;
+		if(rank == 4) cast_time_bonus = cast_time * 0.15f;
+		if(rank == 5) cast_time_bonus = cast_time * 0.20f;
+		Log.Out(Logs::Detail, Logs::Spells, "Quick Damage (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus);
+        	cast_time -= cast_time_bonus;
+	}
+	
 
 	if(mana_cost > GetMana())
 		mana_cost = GetMana();
