@@ -394,6 +394,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg -= bonus_damage;
 							}
 
+							// Shock of Swords
+							rank = casterClient->GetBuildRank(MAGICIAN, RB_MAG_SHOCKOFSWORDS);
+							if (rank > 0 &&
+								(spell_id == 113 || spell_id == 114 || spell_id == 330 || spell_id == 324
+								 || spell_id == 410  || spell_id == 1663)) { //blade spells
+								int bonus_damage = (rank * 0.04 * -dmg);
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Shock of Swords %u added %i bonus damage.", rank, bonus_damage);
+								dmg -= bonus_damage;
+							}
+
 							// Ancient Wrath
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
 							if (rank > 0 && caster != this) { // Ancient Wrath does not affect spells cast on self.
