@@ -1,6 +1,6 @@
 +++
 banner = "post/images/veeshan-gem.png"
-date = "2016-07-01T01:19:18-07:00"
+date = "2017-01-13T01:19:18-07:00"
 description = "Barbarian Polar Bear"
 images = ["post/images/veeshan-gem.png"]
 tags = ["velious"]
