@@ -8,6 +8,7 @@ title = "Veeshan Gem"
 +++
 
 * Added veeshan gems.
+* Lady Vox and Lord Nagafen are now much stronger, and attackable at any level.
 * Elunium has a new graphic and is 4x more likely to drop.
 * Added Elunium Shards.
 * Hole pathfile was again patched.
