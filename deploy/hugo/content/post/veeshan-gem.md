@@ -10,7 +10,6 @@ title = "Veeshan Gem"
 * Added veeshan gems.
 * Elunium has a new graphic and is 4x more likely to drop.
 * Added Elunium Shards.
-
 * Hole pathfile was again patched.
 * Gfay <-> CB zoneline is now dynamically placed.
 * Combat in toxx was attempted to be repaired again.
