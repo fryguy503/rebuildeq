@@ -1479,7 +1479,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		cooldown = 0;
 	}
 
-
 	if (rank_id == aaLessonoftheDevoted) {
 		if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) > 0) {
 			spellid = 6236;
@@ -1493,6 +1492,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			spellid = 6240;
 		} else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) > 0) {
 			spellid = 6237;
+		} else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) {
+			spellid = 6276;
 		}
 	}
 
