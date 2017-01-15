@@ -1226,11 +1226,11 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		return;
 	}
 	
-
 	//Shin: set spell Id override
 	int spellid = rank->spell;
 	int manacost = -1;
 	int cooldown = 0;
+	
 	if (rank_id == aaEntrap && GetBuildRank(DRUID, RB_DRU_ENTRAP) > 0) {
 		uint8 rank = GetBuildRank(DRUID, RB_DRU_ENTRAP);
 		if (rank == 1) spellid = 3614;
@@ -1248,34 +1248,26 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 
 		if (rank >= 5) rank = 8;
 		manacost /= (0.4f * rank);
-		
-
 	}
 
-        if (rank_id == aaCalloftheWild) {
-                uint8 rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
+	if (rank_id == aaCalloftheWild) {
+		uint8 rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 		if(rb_rank > 0) {
 			spellid = 958;
 			cooldown = 1800 - (rb_rank-1) * 300;
 		}
-        }
+	}
 
 	if(rank_id == aaSecondaryRecall) {
 		int rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
-                if(rb_rank == 1)
-                        cooldown = 86400; // 24 hours
-                else if(rb_rank == 2)
-                        cooldown = 64800; // 18 hours
-                else if(rb_rank == 3)
-                        cooldown = 43200; // 12 hours
-                else if(rb_rank == 4)
-                        cooldown = 21600; // 6 hours
-                else if(rb_rank == 5)
-                        cooldown = 10800; // 3 hours
+		if(rb_rank == 1) cooldown = 86400; // 24 hours
+		else if(rb_rank == 2) cooldown = 64800; // 18 hours
+		else if(rb_rank == 3) cooldown = 43200; // 12 hours
+		else if(rb_rank == 4) cooldown = 21600; // 6 hours
+		else if(rb_rank == 5) cooldown = 10800; // 3 hours
 	}
 
 	if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
-		
 		AddBuff(this, 271, GetBuildRank(ROGUE, RB_ROG_APPRAISAL));
 		if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 		{
@@ -1320,27 +1312,19 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			cooldown = 4;
 		}	
 	}
+	
 	if (rank_id == aaNaturesBlessing) {
 		cooldown = 16;
 	}
 
 	if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesBoon || rank_id == aaAncestralAid) {
 		cooldown = 16;
-		if (GetLevel() < 10) {
-			manacost = 20;
-		}
-		else if (GetLevel() < 31) {
-			manacost = GetLevel() * 2.6f;
-		}
-		else if (GetLevel() < 41) {
-			manacost = GetLevel() * 4.6f;
-		}
-		else if (GetLevel() < 51) {
-			manacost = GetLevel() * 5.6f;
-		}
-		else {
-			manacost = GetLevel() * 7.5f;
-		}
+		if (GetLevel() < 10)  manacost = 20;
+		else if (GetLevel() < 31) manacost = GetLevel() * 2.6f;
+		else if (GetLevel() < 41) manacost = GetLevel() * 4.6f;
+		else if (GetLevel() < 51) manacost = GetLevel() * 5.6f;
+		else  manacost = GetLevel() * 7.5f;
+		
 		if (rank_id == aaNaturesBoon) {
 			cooldown = 85 - (12 * GetBuildRank(DRUID, RB_DRU_NATURESBOON));
 			if (cooldown < 20) {
