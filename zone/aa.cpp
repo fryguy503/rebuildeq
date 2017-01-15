@@ -58,8 +58,13 @@ void Mob::TemporaryPets(uint16 spell_id, Mob *targ, const char *name_override, u
 	{
 		if(spells[spell_id].effectid[x] == SE_TemporaryPets)
 		{
-			pet.count = spells[spell_id].base[x];
-			pet.duration = spells[spell_id].max[x];
+			if(spell_id == 3265 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) > 0) {
+				pet.count = spells[spell_id].base[x];
+				pet.duration = spells[spell_id].max[x] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) / 5.0f);
+			} else {
+				pet.count = spells[spell_id].base[x];
+				pet.duration = spells[spell_id].max[x];
+			}
 		}
 	}
 
