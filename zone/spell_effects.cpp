@@ -696,6 +696,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									}
 								}
 							}
+						
+							// Mend Companion
+							if(spell_id == 2752 && casterClient->GetBuildRank(MAGICIAN, RB_MAG_MENDCOMPANION) > 0)) {
+								dmg = GetMaxHP() * (casterClient->GetBuildRank(MAGICIAN, RB_MAG_MENDCOMPANION) / 5.0f);
+							}
 						}
 
 						dmg = caster->GetActSpellHealing(spell_id, dmg, this);
