@@ -1715,10 +1715,10 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_TotalHP:
 			{
-				if (spell_id == 6276 && GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) // Primal Spirit Buff
+				if (spell_id == 6276 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) // Primal Spirit Buff
 				{
 					// Change the amount of HP healed to scale with the rank
-					effect_value *= (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) / 5.0f);
+					effect_value *= (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) / 5.0f);
 				}
 			
 				new_bonus->HP += effect_value;

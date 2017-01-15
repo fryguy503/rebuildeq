@@ -731,10 +731,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						caster->SendAppearancePacket(AT_Anim, 115);
 					}
 				}
-				if (spell_id == 6276 && GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) // Primal Spirit Buff
+				if (spell_id == 6276 && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) // Primal Spirit Buff
 				{
 					// Change the amount of HP healed to scale with the rank
-					effect_value *= (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) / 5.0f);
+					effect_value *= (caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) / 5.0f);
 				}				
 
 				//do any AAs apply to these spells?
@@ -1213,11 +1213,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 						if(spell_id == 958 && 
 							caster->IsClient() &&  //Casted by a druid client
-                                                        caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0 && //Has call of the wild skill
+                            caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0 && //Has call of the wild skill
 							IsNPC() //target is an NPC
 							) {
 							int rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 							effect_value = 2000 * rank;
+						}
+						
+						if(spell_id == 6318 && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) {
+							effect *= (caster->CastToClient()->GetBuildRank(DRUID, RB_MAG_PRIMALFUSION)/5.0f);
 						}
 
 						Stun(effect_value);
