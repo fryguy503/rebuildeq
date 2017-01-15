@@ -10463,6 +10463,31 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_SHM_FERALSWIPE) return "Feral Swipe";
 		else if (id == RB_SHM_PARAGONOFSPIRIT) return "Paragon of Spirit";
 		break;	
+	case MAGICIAN:
+		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";
+		else if (id == RB_MAG_QUICKSUMMONING) return "Quick Summoning";
+		else if (id == RB_MAG_IMPROVEDPETRECLAIM) return "Improved Pet Reclaim}";
+		else if (id == RB_MAG_MODULATIONSHARD) return "Modulation Shard";
+		else if (id == RB_MAG_COMPANIONSDURABILITY) return "Companions Durability";
+		else if (id == RB_MAG_SUSPENDEDMINION) return "Suspended Minion";
+		else if (id == RB_MAG_MENDCOMPANION) return "Mend Companion";
+		else if (id == RB_MAG_COMPANIONOFNECCESSITY) return "Companion of Necessity";
+		else if (id == RB_MAG_SHAREDHEALTH) return "Shard Health";
+		else if (id == RB_MAG_HOSTINTHESHELL) return "Host in the Shell";
+		else if (id == RB_MAG_TURNSUMMONED) return "Turn Summoned";
+		else if (id == RB_MAG_FRENZIEDBURNOUT) return "Frenzied Burnout";
+		else if (id == RB_MAG_ELEMENTALALACRITY) return "Elemental Alacrity";
+		else if (id == RB_MAG_CALLOFTHEHERO) return "Call of the Hero";
+		else if (id == RB_MAG_CLOCKWORKMERCHANT) return "Clockwork Merchant";
+		else if (id == RB_MAG_SERVANTOFRO) return "Servant of Ro";
+		else if (id == RB_MAG_DIMENSIONALSHIELD) return "Dimensional SHield";
+		else if (id == RB_MAG_HEARTOFSTONE) return "Heart of Stone";
+		else if (id == RB_MAG_HEARTOFVAPOR) return "Heart of Vapor";
+		else if (id == RB_MAG_SHOCKOFSWORDS) return "Shock of Swords";
+		else if (id == RB_MAG_HEARTOFICE) return "Heart of Ice";
+		else if (id == RB_MAG_QUICKDAMAGE) return "Quick Damage";
+		else if (id == RB_MAG_HEARTOFFLAME) return "Heart of Flame";
+		else if (id == RB_MAG_PRIMALFUSION) return "Primal Fusion";
 	}
 	return "Unknown";
 }
