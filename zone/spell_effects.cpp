@@ -435,7 +435,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								if (mana_amount < rank) mana_amount = rank;
 								if (caster->ShowBuildEcho()) caster->Message(MT_FocusEffect, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
-							}							
+							}	
+
+							rank = casterClient->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION);
+							if (spell_id == 6317 && rank > 0) {
+								dmg *= (rank / 5.0f);
+							}
 						}
 
 						dmg = caster->GetActSpellDamage(spell_id, dmg, this);
@@ -716,7 +721,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				{
 					dmg = caster->GetMana()*-3;
 					caster->SetMana(0);
-				} else if (spell_id == 2755 && caster) //Lifeburn
+				}
+				if (spell_id == 2755 && caster) //Lifeburn
 				{
 					dmg = caster->GetHP()*-15/10;
 					caster->SetHP(1);
@@ -725,6 +731,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						caster->SendAppearancePacket(AT_Anim, 115);
 					}
 				}
+				if (spell_id == 6276 && GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) // Primal Spirit Buff
+				{
+					// Change the amount of HP healed to scale with the rank
+					effect_value *= (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) / 5.0f);
+				}				
 
 				//do any AAs apply to these spells?
 				if(dmg < 0) {
@@ -3652,8 +3663,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			case SE_SkillProc:
 			case SE_SkillProcSuccess:
 			{
-				
-
 				if (caster && caster->IsClient()) {
 					Client * casterClient = caster->CastToClient();					
 					uint8 level = GetLevel();
@@ -3710,7 +3719,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							caster->QuickBuff(this, 11, duration); //Holy Armor
 						}
 					}
-
 
 					rank = casterClient->GetBuildRank(DRUID, RB_DRU_BLESSINGOFRO);
 					if (rank > 0 && zone->random.Roll(5 * rank)) {		
