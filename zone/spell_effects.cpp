@@ -698,7 +698,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 						
 							// Mend Companion
-							if(spell_id == 2752 && casterClient->GetBuildRank(MAGICIAN, RB_MAG_MENDCOMPANION) > 0)) {
+							if(spell_id == 2752 && casterClient->GetBuildRank(MAGICIAN, RB_MAG_MENDCOMPANION) > 0) {
 								dmg = GetMaxHP() * (casterClient->GetBuildRank(MAGICIAN, RB_MAG_MENDCOMPANION) / 5.0f);
 							}
 						}
@@ -1906,7 +1906,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_MitigateMeleeDamage:
 			{
-				buffs[buffslot].melee_rune = spells[spell_id].max[i];
+				if(spell_id == 5914 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) > 0) {
+					buffs[buffslot].melee_rune = spells[spell_id].max[i] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) / 5.0f);
+				} else {
+					buffs[buffslot].melee_rune = spells[spell_id].max[i];
+				}
 				break;
 			}
 
@@ -1924,7 +1928,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_MitigateSpellDamage:
 			{
-				buffs[buffslot].magic_rune = spells[spell_id].max[i];
+				if(spell_id == 5916 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFICE) > 0) {
+					buffs[buffslot].magic_rune = spells[spell_id].max[i] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFICE) / 5.0f);
+				} else {
+					buffs[buffslot].magic_rune = spells[spell_id].max[i];
+				}
 				break;
 			}
 
