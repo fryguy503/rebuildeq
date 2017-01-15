@@ -523,6 +523,18 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
         	cast_time -= cast_time_bonus;
 	}
 	
+	// Magician Quick Summoning
+	rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_QUICKSUMMONING);
+	if(rank > 0 && IsSummonPetSpell(spell_id)) { // All Pet Summoning Spells
+		int cast_time_bonus = 0;
+		if(rank == 1) cast_time_bonus = cast_time * 0.10f;
+		if(rank == 2) cast_time_bonus = cast_time * 0.20f;
+		if(rank == 3) cast_time_bonus = cast_time * 0.30f;
+		if(rank == 4) cast_time_bonus = cast_time * 0.40f;
+		if(rank == 5) cast_time_bonus = cast_time * 0.50f;
+		Log.Out(Logs::Detail, Logs::Spells, "Quick Summoning (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000);
+		cast_time -= cast_time_bonus;
+	}
 
 	if(mana_cost > GetMana())
 		mana_cost = GetMana();
