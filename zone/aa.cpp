@@ -1186,6 +1186,23 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaNaturesGuardian && GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN) < 1 ||
 		rank_id == aaShieldofNotes && GetBuildRank(BARD, RB_BRD_SHIELDOFNOTES) < 1 ||
 		rank_id == aaSongofStone && GetBuildRank(BARD, RB_BRD_SONGOFSTONE) < 1 ||
+		rank_id == aaSharedHealth && GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) < 1 ||
+		rank_id == aaDimensionalShield && GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD) < 1 ||
+		rank_id == aaHostintheShell && GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) < 1 ||
+		rank_id == aaHeartofStone && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) < 1 ||
+		rank_id == aaImprovedReclaimEnergy && GetBuildRank(MAGICIAN, RB_MAG_IMPROVEDRECLAIMENERGY) < 1 ||
+		rank_id == aaTurnSummoned && GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED) < 1 ||
+		rank_id == aaHeartofVapor && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) < 1 ||
+		rank_id == aaSmallModulationShard && GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD) < 1 ||
+		rank_id == aaFrenziedBurnout && GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT) < 1 ||
+		rank_id == aaHeartofIce && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFICE) < 1 ||
+		rank_id == aaSuspendedMinion && GetBuildRank(MAGICIAN, RB_MAG_SUSPENDEDMINION) < 1 ||
+		rank_id == aaCalloftheHero && GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO) < 1 ||
+		rank_id == aaMendCompanion && GetBuildRank(MAGICIAN, RB_MAG_MENDCOMPANION) < 1 ||
+		rank_id == aaClockworkBanker && GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT) < 1 ||
+		rank_id == aaHeartofFlames && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES) < 1 ||
+		rank_id == aaCompanionofNecessity && GetBuildRank(MAGICIAN, RB_MAG_COMPANIONOFNECESSITY) < 1 ||
+		rank_id == aaServantofRo && GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) < 1 ||
 		( //Lesson of the Devoted is used by multiple classes different builds
 			rank_id == aaLessonoftheDevoted && 
 				GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
@@ -1193,7 +1210,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 				GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) < 1 &&
 				GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) < 1 &&
 				GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1 &&
-				GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) < 1
+				GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) < 1 &&
+				GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) < 1
 		) //end lessons
 		) {
 		Message(13, "You cannot use this ability until you unlock it via %s.", CreateSayLink("#builds", "#builds").c_str());
