@@ -65,7 +65,7 @@ sub velious_armor_hail {
 				$armor_type = " Tattered Silk";			
 			}
 		}
-		quest::say("Veeshan's Gems infuse armor from the Temple, and may be chiseled to perfection 10 total times. The first 4 times, while the gem is yellow and white are always successful. Beyond this point, the gem becomes red, and each chisel runs the risk of losing the gem (so proceed with caution). Found in $location, I require a$armor_type piece, Veeshan's Gem from Dozekur the Cursed (or a previously chiseled gem), an elunium found off creatures level 55+, and my fee of 200 platinum in order to attempt chiseling.");
+		quest::say("Veeshan's Gems infuse armor from the Temple, and may be chiseled to perfection 10 total times. The first 4 times, while the gem is yellow and white are always successful. Beyond this point, the gem becomes red, and each chisel runs the risk of losing the gem (so proceed with caution). Found in $location, I require a$armor_type piece, Veeshan's Gem from Dozekar the Cursed (or a previously chiseled gem), an elunium found off creatures level 55+, and my fee of 200 platinum in order to attempt chiseling.");
     }
     return;
 }
