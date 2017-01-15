@@ -9050,7 +9050,7 @@ void Client::RefreshBuild() {
 				}
 
 				if (GetClass() == MAGICIAN && i == RB_MAG_HEARTOFSTONE && GetAA(aaHeartofStone) < 1) {
-					TrainAARank(aaDimensionalShield);
+					TrainAARank(aaHeartofStone);
 					Message(15, "You have unlocked the AA \"Heart of Stone\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
