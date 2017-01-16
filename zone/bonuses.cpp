@@ -1589,6 +1589,12 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 			max = se_max;
 			i = EFFECT_COUNT; //End the loop
 		}
+		
+		if(spell_id == 2754 && CastToNPC()->IsPet()) {
+			Client * client = CastToNPC()->GetOwner()->CastToClient();
+			uint32 rank = client->GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT);
+			effect_value *= (rank / 5.0f);
+		}
 
 		switch (effectid)
 		{

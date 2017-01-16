@@ -194,14 +194,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 	bool SE_SpellTrigger_HasCast = false;
 	
-	uint32 rank = casterClient->GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT) > 0);
-	if(spell_id == 2754 && rank {
-		spell.base[1] *= (rank / 5.0f); // AC 
-		spell.base[3] *= (rank / 5.0f); // Bard Haste v2
-		spell.base[6] *= (rank / 5.0f); // STR 
-		spell.base[8] *= (rank / 5.0f); // ATK
-	}
-
 	// iterate through the effects in the spell
 	for (i = 0; i < EFFECT_COUNT; i++)
 	{
@@ -3017,7 +3009,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 #ifdef SPELL_EFFECT_SPAM
 				snprintf(effect_desc, _EDLEN, "Defensive Proc: %s (id %d)", spells[effect_value].name, procid);
 #endif
-				if(spells[spell_id].base2[i] == 0)
+				if(spell_id == 27424 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD) > 0) {
+					AddDefensiveProc(procid, rank * 20,spell_id);
+				}
+				 else if(spells[spell_id].base2[i] == 0)
 					AddDefensiveProc(procid, 100,spell_id);
 				else
 					AddDefensiveProc(procid, spells[spell_id].base2[i]+100,spell_id);
