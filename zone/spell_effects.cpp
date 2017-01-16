@@ -6058,22 +6058,31 @@ int16 Mob::CalcFocusEffect(focusType type, uint16 focus_id, uint16 spell_id, boo
 		case SE_SpellHateMod:
 			if (type == focusSpellHateMod) {
 				
-				float modifier = 1;
-				
-				if(spell_id == 5913 && CastToClient->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) > 0) {
-					modifier = CastToClient->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f;
-				}
-				
 				if (value != 0) {
 					if (value > 0) {
-						if (focus_spell.base[i] > value)
-							value = focus_spell.base[i] * modifier;
+						if (focus_spell.base[i] > value) {
+							if(spell_id == 5913 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) > 0) {
+								value = focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f;
+							} else {
+								value = focus_spell.base[i];
+							}
+						}
 					} else {
-						if (focus_spell.base[i] < value)
-							value = focus_spell.base[i] * modifier;
+						if (focus_spell.base[i] < value) {
+							if(spell_id == 5913 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) > 0) {
+								value = focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f;
+							} else {
+								value = focus_spell.base[i];
+							}
+						}
 					}
-				} else
-					value = focus_spell.base[i] * modifier;
+				} else {
+					if(spell_id == 5913 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) > 0) {
+						value = focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f;
+					} else {
+						value = focus_spell.base[i];
+					}
+				}
 			}
 			break;
 
