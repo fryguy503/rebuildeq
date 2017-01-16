@@ -519,7 +519,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		if(rank == 3) cast_time_bonus = cast_time * 0.10f;
 		if(rank == 4) cast_time_bonus = cast_time * 0.15f;
 		if(rank == 5) cast_time_bonus = cast_time * 0.20f;
-		Log.Out(Logs::Detail, Logs::Spells, "Quick Damage (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000);
+		Log.Out(Logs::Detail, Logs::Spells, "Quick Damage (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
         	cast_time -= cast_time_bonus;
 	}
 	
@@ -532,7 +532,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		if(rank == 3) cast_time_bonus = cast_time * 0.30f;
 		if(rank == 4) cast_time_bonus = cast_time * 0.40f;
 		if(rank == 5) cast_time_bonus = cast_time * 0.50f;
-		Log.Out(Logs::Detail, Logs::Spells, "Quick Summoning (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000);
+		Log.Out(Logs::Detail, Logs::Spells, "Quick Summoning (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
 		cast_time -= cast_time_bonus;
 	}
 
