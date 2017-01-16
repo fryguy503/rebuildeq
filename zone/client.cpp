@@ -10587,7 +10587,6 @@ bool Client::IsSwornEnemyActive() {
 bool Client::IsBuildAvailable() {
 	if (GetClass() == CLERIC ||
 		GetClass() == ENCHANTER ||
-		GetClass() == MAGICIAN ||
 		GetClass() == MONK ||
 		GetClass() == NECROMANCER ||
 		GetClass() == RANGER ||
