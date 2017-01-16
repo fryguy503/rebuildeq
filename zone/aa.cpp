@@ -61,6 +61,9 @@ void Mob::TemporaryPets(uint16 spell_id, Mob *targ, const char *name_override, u
 			if(spell_id == 3265 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) > 0) {
 				pet.count = spells[spell_id].base[x];
 				pet.duration = spells[spell_id].max[x] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) / 5.0f);
+			} else if(spell_id == 13167 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONOFNECESSITY) > 0) {
+				pet.count = spells[spell_id].base[x];
+				pet.duration = spells[spell_id].max[x] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONOFNECESSITY) / 5.0f);
 			} else {
 				pet.count = spells[spell_id].base[x];
 				pet.duration = spells[spell_id].max[x];
