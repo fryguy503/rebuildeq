@@ -2680,7 +2680,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		if (i.item_id == 100141 && (GetRace() == 70)) loot_list.push_back(i); //Zombie card
 		if (i.item_id == 100142 && (GetRace() == 367 || GetRace() == 161)) loot_list.push_back(i); //Skeleton card
 		if (i.item_id == 100143 && (GetRace() == 154) && mob_name.find("chroma") != std::string::npos) loot_list.push_back(i); //Chromadrac Card
-		if (i.item_id == 100144 && mob_name.find("Dozekar") != std::string::npos) loot_list.push_back_back(i); //Dozekar the Cursed Card
+		if (i.item_id == 100144 && mob_name.find("Dozekar") != std::string::npos) loot_list.push_back(i); //Dozekar the Cursed Card
 	}
 	
 	return loot_list;
