@@ -1199,7 +1199,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaHostintheShell && GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) < 1 ||
 		rank_id == aaHeartofStone && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) < 1 ||
 		rank_id == aaImprovedReclaimEnergy && GetBuildRank(MAGICIAN, RB_MAG_IMPROVEDRECLAIMENERGY) < 1 ||
-		rank_id == aaTurnSummoned && GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED) < 1 ||
+		rank_id == aaTurnSummoned2 && GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED) < 1 ||
 		rank_id == aaHeartofVapor && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) < 1 ||
 		rank_id == aaSmallModulationShard && GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD) < 1 ||
 		rank_id == aaFrenziedBurnout && GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT) < 1 ||
@@ -1730,10 +1730,12 @@ bool Mob::SetAA(uint32 rank_id, uint32 new_value, uint32 charges) {
 		AA::Ability *ability = zone->GetAlternateAdvancementAbilityByRank(rank_id);
 
 		if(!ability) {
+			Message(13, "Set AA Error: AA ID Does Not Exist: %i", rank_id);
 			return false;
 		}
 
 		if(new_value > ability->GetMaxLevel(this)) {
+			Message(13, "Set AA Error: AA Rank (%i) Does Not Exist For Ability: %i", new_value, rank_id);
 			return false;
 		}
 
