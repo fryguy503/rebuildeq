@@ -2623,12 +2623,13 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		SpecialLoot_Struct(100135, "Spider", 500),
 		SpecialLoot_Struct(100136, "Beetle", 500),
 		SpecialLoot_Struct(100137, "Snake", 500),
-		SpecialLoot_Struct(100138, "Wolf", 50000), //super rare since it gives sow
+		SpecialLoot_Struct(100138, "Wolf", 10000), //super rare since it gives sow
 		SpecialLoot_Struct(100139, "Bear", 500),
 		SpecialLoot_Struct(100140, "Ghoul", 500),
 		SpecialLoot_Struct(100141, "Zombie", 500),
 		SpecialLoot_Struct(100142, "Skeleton", 500),
 		SpecialLoot_Struct(100143, "Chromadrac", 500),
+		SpecialLoot_Struct(100144, "Dozekar the Cursed", 1000),
 	};
 
 	std::vector<SpecialLoot_Struct> loot_list;
@@ -2679,6 +2680,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		if (i.item_id == 100141 && (GetRace() == 70)) loot_list.push_back(i); //Zombie card
 		if (i.item_id == 100142 && (GetRace() == 367 || GetRace() == 161)) loot_list.push_back(i); //Skeleton card
 		if (i.item_id == 100143 && (GetRace() == 154) && mob_name.find("chroma") != std::string::npos) loot_list.push_back(i); //Chromadrac Card
+		if (i.item_id == 100144 && mob_name.find("Dozekar") != std::string::npos) loot_list.push_back_back(i); //Dozekar the Cursed Card
 	}
 	
 	return loot_list;
