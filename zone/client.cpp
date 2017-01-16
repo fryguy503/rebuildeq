@@ -9059,8 +9059,8 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Improved Reclaim Energy\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == MAGICIAN && i == RB_MAG_TURNSUMMONED && GetAA(aaTurnSummoned) < 1) {
-					TrainAARank(aaTurnSummoned);
+				if (GetClass() == MAGICIAN && i == RB_MAG_TURNSUMMONED && GetAA(aaTurnSummoned2) < 1) {
+					TrainAARank(aaTurnSummoned2);
 					Message(15, "You have unlocked the AA \"Turn Summoned\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 

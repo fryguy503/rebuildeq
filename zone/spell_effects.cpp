@@ -403,16 +403,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Shock of Swords %u added %i bonus damage.", rank, bonus_damage);
 								dmg -= bonus_damage;
 							}
-							
-							// Turn Summoned
-							rank = casterClient->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED);
-							if(spell_id == 8133 && rank > 0) {
-								if(rank == 1) dmg = -500;
-								else if(rank == 2) dmg = -1000;
-								else if(rank == 3) dmg = -1500;
-								else if(rank == 4) dmg = -2000;
-								else if(rank == 5) dmg = -2500;
-							}
 
 							// Ancient Wrath
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
@@ -4314,7 +4304,13 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 				if (caster->IsClient()) {
 					Client* caster_client = caster->CastToClient();
-					uint16 rank = caster_client->GetBuildRank(DRUID, RB_DRU_FOCUSEDSWARM);
+					
+					uint16 rank = caster_client->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED);
+					if (rank > 0 && buff.spellid == 8133) {
+						effect_value *= (rank * 5);
+					}
+					
+					rank = caster_client->GetBuildRank(DRUID, RB_DRU_FOCUSEDSWARM);
 					if (rank > 0) {
 						float dist2 = DistanceSquared(m_Position, caster->GetPosition());						
 						float multiplier = 1.0f;
