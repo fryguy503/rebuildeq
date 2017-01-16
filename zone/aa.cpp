@@ -872,20 +872,25 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 	if (rank->id == aaCalloftheWild && GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0) {
 		int rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 		aai->spell_refresh = 1800 - (rb_rank-1) * 300;
-	} else if (rank->id == aaSecondaryRecall && GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL) > 0) {
+	} 
+	else if (rank->id == aaSecondaryRecall && GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL) > 0) {
 		int rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
 		if(rb_rank == 1) aai->spell_refresh = 86400; // 24 hours
 		else if(rb_rank == 2) aai->spell_refresh = 64800; // 18 hours
 		else if(rb_rank == 3) aai->spell_refresh = 43200; // 12 hours
 		else if(rb_rank == 4) aai->spell_refresh = 21600; // 6 hours
 		else if(rb_rank == 5) aai->spell_refresh = 10800; // 3 hours
-	} else if (rank->id == aaClockworkBanker && GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT) > 0) {
+	} 
+	else if (rank->id == aaClockworkBanker && GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT) > 0) {
 		int rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT);
 		if(rb_rank == 1) aai->spell_refresh = 86400; // 24 hours
 		else if(rb_rank == 2) aai->spell_refresh = 43200; // 12 hours
 		else if(rb_rank == 3) aai->spell_refresh = 21600; // 6 hours
 		else if(rb_rank == 4) aai->spell_refresh = 10800; // 3 hours
 		else if(rb_rank == 5) aai->spell_refresh = 3600; // 1 hour
+	}  
+	else if (rank->id == aaCalloftheHero && GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO) > 0) {
+		aai->spell_refresh = (5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 2.5f + 5;
 	} else {
 		aai->spell_refresh = rank->recast_time;
 	}	
@@ -1276,8 +1281,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		else if(rb_rank == 4) cooldown = 21600; // 6 hours
 		else if(rb_rank == 5) cooldown = 10800; // 3 hours
 	}
-	
-	if(rank_id == aaClockworkBanker) {
+	else if(rank_id == aaClockworkBanker) {
 		int rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT);
 		if(rb_rank == 1) cooldown = 86400; // 24 hours
 		else if(rb_rank == 2) cooldown = 43200; // 12 hours
@@ -1285,8 +1289,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		else if(rb_rank == 4) cooldown = 10800; // 3 hours
 		else if(rb_rank == 5) cooldown = 3600; // 1 hours
 	}
-
-	if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
+	else if(rank_id == aaCalloftheHero) {
+		cooldown = (5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 2.5f + 5;
+	}
+	else if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
 		AddBuff(this, 271, GetBuildRank(ROGUE, RB_ROG_APPRAISAL));
 		if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 		{
