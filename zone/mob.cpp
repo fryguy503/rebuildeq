@@ -3583,7 +3583,13 @@ bool Mob::TrySpellTrigger(Mob *target, uint32 spell_id, int effect)
 		{
 			if (spells[spell_id].effectid[i] == SE_SpellTrigger)
 			{
-				if(zone->random.Int(0, trig_chance) <= spells[spell_id].base[i])
+				float chance = spells[spell_id].base[i];
+				
+				if(spell_id == 8133 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED) > 0) {
+					chance = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED);
+				}
+				
+				if(zone->random.Int(0, trig_chance) <= chance)
 				{
 					// If we trigger an effect then its over.
 					if (IsValidSpell(spells[spell_id].base2[i])){
