@@ -1918,7 +1918,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			{
 				if(spell_id == 5914 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) > 0) {
 					buffs[buffslot].melee_rune = spells[spell_id].max[i] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) / 5.0f);
-				} else {
+				} else if(spell_id == 21843 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) > 0) {
+					buffs[buffslot].melee_rune = spells[spell_id].max[i] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) / 5.0f);
+				}else {
 					buffs[buffslot].melee_rune = spells[spell_id].max[i];
 				}
 				break;
