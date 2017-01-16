@@ -535,6 +535,12 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		Log.Out(Logs::Detail, Logs::Spells, "Quick Summoning (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
 		cast_time -= cast_time_bonus;
 	}
+	
+	// Magician Call of the Hero
+	rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO);
+	if(rank > 0 && spell_id == 16531) {
+		cast_time = (5 - CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 2.5f + 5;
+	}
 
 	if(mana_cost > GetMana())
 		mana_cost = GetMana();
