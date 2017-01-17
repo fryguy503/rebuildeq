@@ -2954,6 +2954,11 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 				attacker->AddToHateList(this, uint32(10 * rank));
 			}
 		}
+		
+		rank = this->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES);
+		if (rank > 0 && spellid == 37903) {
+			DS *= (0.20f * rank);
+		}
 
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TREEFORM);
 		if (rank > 0 && zone->random.Roll((int)(rank))) {
