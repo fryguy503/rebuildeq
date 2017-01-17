@@ -1246,6 +1246,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	int manacost = -1;
 	int cooldown = 0;
 	
+	if(rank_id == aaHeartofFlames && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES) > 0) {
+		spellid = 37903;
+	}
+	
 	if (rank_id == aaEntrap && GetBuildRank(DRUID, RB_DRU_ENTRAP) > 0) {
 		uint8 rank = GetBuildRank(DRUID, RB_DRU_ENTRAP);
 		if (rank == 1) spellid = 3614;
