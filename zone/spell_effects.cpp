@@ -2197,14 +2197,19 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				{
 				uint16 pet_spellid =  CastToNPC()->GetPetSpellID();
 				uint16 pet_ActSpellCost = caster->GetActSpellCost(pet_spellid, spells[pet_spellid].mana);
-				int16 ImprovedReclaimMod =	caster->spellbonuses.ImprovedReclaimEnergy +
-											caster->itembonuses.ImprovedReclaimEnergy +
-											caster->aabonuses.ImprovedReclaimEnergy;
 
-				if (!ImprovedReclaimMod)
-					ImprovedReclaimMod = 75; //Reclaim Energy default is 75% of actual mana cost
+				if(caster->IsClient() && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_IMPROVEDRECLAIMENERGY) > 0) {
+					pet_ActSpellCost =  pet_ActSpellCost*(75 + (caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_IMPROVEDRECLAIMENERGY) * 5))/100;
+				} else {				
+					int16 ImprovedReclaimMod =	caster->spellbonuses.ImprovedReclaimEnergy +
+												caster->itembonuses.ImprovedReclaimEnergy +
+												caster->aabonuses.ImprovedReclaimEnergy;
 
-				pet_ActSpellCost = pet_ActSpellCost*ImprovedReclaimMod/100;
+					if (!ImprovedReclaimMod)
+						ImprovedReclaimMod = 75; //Reclaim Energy default is 75% of actual mana cost
+					
+					pet_ActSpellCost = pet_ActSpellCost*ImprovedReclaimMod/100;
+				}
 
 				caster->SetMana(caster->GetMana() + pet_ActSpellCost);
 
