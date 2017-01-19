@@ -9054,11 +9054,6 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Heart of Stone\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == MAGICIAN && i == RB_MAG_IMPROVEDRECLAIMENERGY && GetAA(aaImprovedReclaimEnergy) < 1) {
-					TrainAARank(aaImprovedReclaimEnergy);
-					Message(15, "You have unlocked the AA \"Improved Reclaim Energy\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
 				if (GetClass() == MAGICIAN && i == RB_MAG_TURNSUMMONED && GetAA(aaTurnSummoned2) < 1) {
 					TrainAARank(aaTurnSummoned2);
 					Message(15, "You have unlocked the AA \"Turn Summoned\"! Find the hotkey in your Alternate Advancement Window.");
@@ -9123,7 +9118,6 @@ void Client::RefreshBuild() {
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Primal Fusion\"! Find the hotkey in your Alternate Advancement Window.");
 				}
-
 			}
 		}
 
