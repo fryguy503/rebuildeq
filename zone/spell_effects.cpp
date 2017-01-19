@@ -1685,11 +1685,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_SummonItem:
 			{
-				const EQEmu::Item_Struct *item;
 #ifdef SPELL_EFFECT_SPAM
 				const char *itemname = item ? item->Name : "*Unknown Item*";
 				snprintf(effect_desc, _EDLEN, "Summon Item: %s (id %d)", itemname, spell.base[i]);
 #endif
+				int item_id = spell.base[i];
 
 				if (spell_id == 223 && IsClient()) {
 					if (CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) > 0) {
@@ -1704,54 +1704,54 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if(IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SUMMONINGFOCUS) > 0) {
 					uint32 rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SUMMONINGFOCUS);
 
+					// Override the item id to be summoned if applicable
+
 					// Rank 1 : Level 1-15
-					if(spell_id == 311 && rank >= 0) item = database.GetItem(100049); // Enhanced Dagger
-					else if(spell_id == 1330 && rank >= 1) item = database.GetItem(100050); // Enhanced Brass Choker
-					else if(spell_id == 233 && rank >= 1) item = database.GetItem(100051); // Enhanced Linen Mantle
-					else if(spell_id == 613 && rank >= 1) item = database.GetItem(100052); // Enhanced Staff of Tracing
-					else if(spell_id == 319 && rank >= 1) item = database.GetItem(100053); // Enhanced Fang
-					else if(spell_id == 2242 && rank >= 1) item = database.GetItem(100054); // Enhanced Tarnished Bauble
-					else if(spell_id == 2531 && rank >= 1) item = database.GetItem(100055); // Enhanced Elemental Defender
-					else if(spell_id == 614 && rank >= 1) item = database.GetItem(100056); // Enhanced Staff of Warding
-					else if(spell_id == 100 && rank >= 1) item = database.GetItem(100057); // Enhanced Throwing Dagger
+					if(spell_id == 311 && rank >= 0) item_id = 100049; // Enhanced Dagger
+					else if(spell_id == 1330 && rank >= 1) item_id = 100050; // Enhanced Brass Choker
+					else if(spell_id == 233 && rank >= 1) item_id = 100051; // Enhanced Linen Mantle
+					else if(spell_id == 613 && rank >= 1) item_id = 100052; // Enhanced Staff of Tracing
+					else if(spell_id == 319 && rank >= 1) item_id = 100053; // Enhanced Fang
+					else if(spell_id == 2242 && rank >= 1) item_id = 100054; // Enhanced Tarnished Bauble
+					else if(spell_id == 2531 && rank >= 1) item_id = 100055; // Enhanced Elemental Defender
+					else if(spell_id == 614 && rank >= 1) item_id = 100056; // Enhanced Staff of Warding
+					else if(spell_id == 100 && rank >= 1) item_id = 100057; // Enhanced Throwing Dagger
 
 					// Rank 2: Level 16-30
-					else if(spell_id == 2239 && rank >= 2) item = database.GetItem(100058); // Enhanced Tiny Ring
-					else if(spell_id == 4027 && rank >= 2) item = database.GetItem(100059); // Enhanced Wooden Bracelet
-					else if(spell_id == 101 && rank >= 2) item = database.GetItem(100060); // Enhanced Arrows
-					else if(spell_id == 102 && rank >= 2) item = database.GetItem(100061); // Enhanced Spear of Warding
-					else if(spell_id == 2236 && rank >= 2) item = database.GetItem(100062); // Enhanced Jade Bracelet
-					else if(spell_id == 2231 && rank >= 2) item = database.GetItem(100063); // Enhanced Silver Choker
-					else if(spell_id == 2234 && rank >= 2) item = database.GetItem(100064); // Enhanced Leather Mantle
-					else if(spell_id == 2243 && rank >= 2) item = database.GetItem(100065); // Enhanced Shiny Bauble
-					else if(spell_id == 615 && rank >= 2) item = database.GetItem(100066); // Enhanced Staff of Runes
-					else if(spell_id == 617 && rank >= 2) item = database.GetItem(100067); // Enhanced Sword of Runes
+					else if(spell_id == 2239 && rank >= 2) item_id = 100058; // Enhanced Tiny Ring
+					else if(spell_id == 4027 && rank >= 2) item_id = 100059; // Enhanced Wooden Bracelet
+					else if(spell_id == 101 && rank >= 2) item_id = 100060; // Enhanced Arrows
+					else if(spell_id == 102 && rank >= 2) item_id = 100061; // Enhanced Spear of Warding
+					else if(spell_id == 2236 && rank >= 2) item_id = 100062; // Enhanced Jade Bracelet
+					else if(spell_id == 2231 && rank >= 2) item_id = 100063; // Enhanced Silver Choker
+					else if(spell_id == 2234 && rank >= 2) item_id = 100064; // Enhanced Leather Mantle
+					else if(spell_id == 2243 && rank >= 2) item_id = 100065; // Enhanced Shiny Bauble
+					else if(spell_id == 615 && rank >= 2) item_id = 100066; // Enhanced Staff of Runes
+					else if(spell_id == 617 && rank >= 2) item_id = 100067; // Enhanced Sword of Runes
 
 					// Rank 3: Level 31-45
-					else if(spell_id == 2240 && rank >= 3) item = database.GetItem(100068); // Enhanced Twisted Ring
-					else if(spell_id == 616 && rank >= 3) item = database.GetItem(100069); // Enhanced Staff of Symbols
-					else if(spell_id == 104 && rank >= 3) item = database.GetItem(100070); // Enhanced Dagger of Symbols
-					else if(spell_id == 2237 && rank >= 3) item = database.GetItem(100071); // Enhanced Opal Bracelet
-					else if(spell_id == 4028 && rank >= 3) item = database.GetItem(100072); // Enhanced Stone Bracelet
+					else if(spell_id == 2240 && rank >= 3) item_id = 100068; // Enhanced Twisted Ring
+					else if(spell_id == 616 && rank >= 3) item_id = 100069; // Enhanced Staff of Symbols
+					else if(spell_id == 104 && rank >= 3) item_id = 100070; // Enhanced Dagger of Symbols
+					else if(spell_id == 2237 && rank >= 3) item_id = 100071; // Enhanced Opal Bracelet
+					else if(spell_id == 4028 && rank >= 3) item_id = 100072; // Enhanced Stone Bracelet
 
 					// Rank 4: Level 46-50
-					else if(spell_id == 2535 && rank >= 4) item = database.GetItem(100073); // Enhanced Elemental Blanket
-					else if(spell_id == 2332 && rank >= 4) item = database.GetItem(100074); // Enhanced Golden Choker
+					else if(spell_id == 2535 && rank >= 4) item_id = 100073; // Enhanced Elemental Blanket
+					else if(spell_id == 2332 && rank >= 4) item_id = 100074; // Enhanced Golden Choker
 
 					// Rank 5: Level 51-60
-					else if(spell_id == 2235 && rank >= 5) item = database.GetItem(100075); // Enhanced Silken Mantle
-					else if(spell_id == 2244 && rank >= 5) item = database.GetItem(100076); // Enhanced Brilliant Bauble
-					else if(spell_id == 2241 && rank >= 5) item = database.GetItem(100077); // Enhanced Studded Ring
-					else if(spell_id == 2238 && rank >= 5) item = database.GetItem(100078); // Enhanced Ruby Bracelet
-					else if(spell_id == 4029 && rank >= 5) item = database.GetItem(100079); // Enhanced Iron Bracelet
-					else if(spell_id == 1682 && rank >= 5) item = database.GetItem(100080); // Enhanced Quiver of Marr
-					else if(spell_id == 1681 && rank >= 5) item = database.GetItem(100081); // Enhanced Bandoleer of Luclin
-					else if(spell_id == 1685 && rank >= 5) item = database.GetItem(100082); // Enhanced Muzzle of Mardu
+					else if(spell_id == 2235 && rank >= 5) item_id = 100075; // Enhanced Silken Mantle
+					else if(spell_id == 2244 && rank >= 5) item_id = 100076; // Enhanced Brilliant Bauble
+					else if(spell_id == 2241 && rank >= 5) item_id = 100077; // Enhanced Studded Ring
+					else if(spell_id == 2238 && rank >= 5) item_id = 100078; // Enhanced Ruby Bracelet
+					else if(spell_id == 4029 && rank >= 5) item_id = 100079; // Enhanced Iron Bracelet
+					else if(spell_id == 1682 && rank >= 5) item_id = 100080; // Enhanced Quiver of Marr
+					else if(spell_id == 1681 && rank >= 5) item_id = 100081; // Enhanced Bandoleer of Luclin
+					else if(spell_id == 1685 && rank >= 5) item_id = 100082; // Enhanced Muzzle of Mardu
 				}
-
-				if(!item) {
-					item = database.GetItem(spell.base[i]); // If the item to be summoned is not overriden
-				}
+				
+				const EQEmu::Item_Struct *item = database.GetItem(item_id);
 
 				if (!item) {
 					Message(13, "Unable to summon item %d. Item not found.", spell.base[i]);
