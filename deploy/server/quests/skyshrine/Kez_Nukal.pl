@@ -31,7 +31,6 @@ sub EVENT_ITEM {
       return;       
     }
   }
-  quest::say("Cash $cash");
 
   if ($cash < 200000) {
     quest::say("I have no interest in these items.");
