@@ -1690,6 +1690,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				snprintf(effect_desc, _EDLEN, "Summon Item: %s (id %d)", itemname, spell.base[i]);
 #endif
 				int item_id = spell.base[i];
+				int item_charges = -1;
 
 				if (spell_id == 223 && IsClient()) {
 					if (CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) > 0) {
@@ -1751,6 +1752,21 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					else if(spell_id == 1685 && rank >= 5) item_id = 100082; // Enhanced Muzzle of Mardu
 				}
 				
+				if(IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD) > 0 && spell_id == 27465) {
+					uint32 rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD);
+
+					// Upgrade the shard per rank, increasing the spell effect and charges. 
+					item_id = 6346; 	
+					item_charges = rank;
+					
+					//This will be for later when player have more hp
+					//if(rank == 1) { item_id = 79320; item_charges = 1; } // Small, 1 Charge (7500hp)
+					//else if(rank == 2) { item_id = 79320; item_charges = 3; } // Small, 3 Charges (7500hp)
+					//else if(rank == 3) { item_id = 79321; item_charges = 1; } // Medium, 1 Charge (15000hp)
+					//else if(rank == 4) { item_id = 79321; item_charges = 3; } // Medium, 3 Charges (15000hp)
+					//else if(rank == 5) { item_id = 79322; item_charges = 3; } // Large, 3 Charges (23000hp)
+				}
+
 				const EQEmu::Item_Struct *item = database.GetItem(item_id);
 
 				if (!item) {
@@ -1770,6 +1786,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 						if (charges < 1)
 							charges = 1;
+
+						if(item_charges != -1)
+							charges = item_charges;
 
 						if (SummonedItem) {
 							c->PushItemOnCursor(*SummonedItem);
