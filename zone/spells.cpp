@@ -3295,6 +3295,10 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		if (caster && duration > 0) // negatives are perma buffs
 			duration = caster->GetActSpellDuration(spell_id, duration);
 	}
+	
+	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) > 0 && spell_id == 5235) {
+		duration = 2 * caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH);
+	}
 
 	if (duration == 0) {
 		Log.Out(Logs::Detail, Logs::Spells, "Buff %d failed to add because its duration came back as 0.", spell_id);

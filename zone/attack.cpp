@@ -1544,12 +1544,26 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQEmu::skills::Sk
 
 	if(!ClientFinishedLoading())
 		damage = -5;
+	
+	if(GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) > 0) {
+		Mob *pet = GetPet();
 
-	//do a majority of the work...
-	CommonDamage(other, damage, spell_id, attack_skill, avoidable, buffslot, iBuffTic, special);
+		if(pet && pet->HasSpellEffect(SE_PetShield)) {
+			float shared = GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) * 0.10f;
+			int client_damage = (int) (damage * (1.0f-shared));
+			int pet_damage = (int) (damage * shared);
+			CommonDamage(other, client_damage, spell_id, attack_skill, avoidable, buffslot, iBuffTic, special);
+			if(pet_damage > 0) {
+				Message(MT_DoTDamage, "Shared Health has caused %d incoming damage from %s to be shielded by %s.", pet_damage, other->GetCleanName(), pet->GetCleanName());
+				pet->CastToNPC()->Damage(other, pet_damage, spell_id, attack_skill, avoidable, buffslot, iBuffTic, special);
+			}
+		}
+	} else {
+		//do a majority of the work...
+		CommonDamage(other, damage, spell_id, attack_skill, avoidable, buffslot, iBuffTic, special);
+	}
 
 	if (damage > 0) {
-
 		if (spell_id == SPELL_UNKNOWN)
 			CheckIncreaseSkill(EQEmu::skills::SkillDefense, other, -15);
 	}
@@ -2121,9 +2135,9 @@ bool NPC::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, bool
 	}
 	else
 		damage = -5;
-
+	
 	if(GetHP() > 0 && !other->HasDied()) {
-		other->Damage(this, damage, SPELL_UNKNOWN, skillinuse, true, -1, false, special); // Not avoidable client already had thier chance to Avoid
+		other->Damage(this, damage, SPELL_UNKNOWN, skillinuse, true, -1, false, special); // Not avoidable client already had their chance to Avoid
 	} else
 		return false;
 

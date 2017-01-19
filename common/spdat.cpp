@@ -994,7 +994,8 @@ bool IsSelfConversionSpell(uint16 spell_id)
 // returns true for both detrimental and beneficial buffs
 bool IsBuffSpell(uint16 spell_id)
 {
-	if (IsValidSpell(spell_id) && (spells[spell_id].buffduration || spells[spell_id].buffdurationformula))
+	if (IsValidSpell(spell_id) && (spells[spell_id].buffduration || spells[spell_id].buffdurationformula)
+		|| spell_id == 5235) // Shared Health
 		return true;
 
 	return false;
