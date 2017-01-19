@@ -5768,11 +5768,15 @@ void Client::SuspendMinion()
 
 	int AALevel = GetAA(aaSuspendedMinion);
 
-	if(AALevel == 0)
-		return;
+	if(GetBuildRank(MAGICIAN, RB_MAG_SUSPENDEDMINION) > 0) {
+		AALevel = GetBuildRank(MAGICIAN, RB_MAG_SUSPENDEDMINION);
+	} else {
+		if(AALevel == 0)
+			return;
 
-	if(GetLevel() < 62)
-		return;
+		if(GetLevel() < 62)
+			return;
+	}
 
 	if(!CurrentPet)
 	{
