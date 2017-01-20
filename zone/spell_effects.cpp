@@ -273,7 +273,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH);
 							if (rank > 0 && spell_id == 13531) {
-								dmg -= zone->random.Real(10, 43) * rank * GetLevel();
+								dmg -= zone->random.Real(5, 10) * rank * GetLevel();
 							}
 
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_LINGERINGPAIN);
