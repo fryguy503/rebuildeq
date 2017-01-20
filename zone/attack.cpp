@@ -4657,7 +4657,7 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 		defender &&
 		defender->GetLevel() <= GetLevel() &&
 		rank > 0 &&
-		zone->random.Roll(100) <= rank) {
+		zone->random.Int(0,100) <= rank) {
 
 		int32 SlayDmgBonus = aabonuses.SlayUndead[1] + itembonuses.SlayUndead[1] + spellbonuses.SlayUndead[1];
 		SlayDmgBonus += rank * 50;
@@ -4672,34 +4672,6 @@ void Mob::TryCriticalHit(Mob *defender, uint16 skill, int32 &damage, ExtraAttack
 				MT_CritMelee, FilterMeleeCrits, MALE_SLAYUNDEAD,
 				GetCleanName(), itoa(damage));
 		return;
-	}
-	
-
-	//1: Try Slay Undead
-	if (defender && (defender->GetBodyType() == BT_Undead ||
-				defender->GetBodyType() == BT_SummonedUndead || defender->GetBodyType() == BT_Vampire)) {	
-		if (SlayRateBonus) {
-			float slayChance = static_cast<float>(SlayRateBonus) / 10000.0f;
-			if (zone->random.Roll(slayChance)) {
-				int32 SlayDmgBonus = aabonuses.SlayUndead[1] + itembonuses.SlayUndead[1] + spellbonuses.SlayUndead[1];
-				
-				if (this->IsClient() && 
-					this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) > 0) {
-					SlayDmgBonus += this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SLAYER) * 50;
-				}
-
-				damage = (damage * SlayDmgBonus * 2.25f) / 100;
-				if (GetGender() == 1) // female
-					entity_list.FilteredMessageClose_StringID(this, false, 200,
-							MT_CritMelee, FilterMeleeCrits, FEMALE_SLAYUNDEAD,
-							GetCleanName(), itoa(damage));
-				else // males and neuter I guess
-					entity_list.FilteredMessageClose_StringID(this, false, 200,
-							MT_CritMelee, FilterMeleeCrits, MALE_SLAYUNDEAD,
-							GetCleanName(), itoa(damage));
-				return;
-			}
-		}
 	}
 
 	//2: Try Melee Critical
