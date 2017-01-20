@@ -36,6 +36,7 @@
         <tr><td>Splitpaw</td></tr>
         <tr><td>The Temple of Droga</td></tr>
         <tr><td>Veksar</td></tr>
+        <tr><td>Plane of Mischief</td></tr>
         </tr>
       </tbody>
       </table>
