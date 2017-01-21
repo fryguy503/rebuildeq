@@ -282,10 +282,10 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		}
 
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
-                if (spell_id == 2760 && rank < 1) {
-                        Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
-                        return;
-                }
+		if (spell_id == 2760 && rank < 1) {
+			Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
+			return;
+		}
 	}
 
 	int16 act_power = 0; // The actual pet power we'll use.
@@ -385,49 +385,49 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		//Turn it into a pet
 		switch (GetBaseRace())
 		{
-		case VAHSHIR:
-			npc_type->race = TIGER;
-			npc_type->size = 2.5f;
+			case VAHSHIR:
+				npc_type->race = TIGER;
+				npc_type->size = 2.5f;
 
-			break;
-		case TROLL:
-			npc_type->race = ALLIGATOR;
-			npc_type->size *= 10.0f;
-			break;
-		case OGRE:
-			npc_type->race = BEAR;
-			npc_type->texture = 3;
-			npc_type->gender = 2;
-			npc_type->size = 2.5f;
-			break;
-		case BARBARIAN:
-			npc_type->race = BEAR;
-			npc_type->texture = 2;
-			npc_type->size = 2.5f;
-			break;
-		case IKSAR:
-			npc_type->race = WOLF;
-			npc_type->texture = 0;
-			npc_type->gender = 1;
-			//npc_type->size *= 2.0f;
-			npc_type->size = 4;
-			npc_type->luclinface = 0;
-			break;
-		case WOOD_ELF:
-			npc_type->race = BEAR;
-			npc_type->texture = 1;
-			npc_type->helmtexture = 2;
-			npc_type->size = 2.5f;
-			break;
-		case DARK_ELF:
-			npc_type->race = WOLF;
-			npc_type->texture = 1;
-			npc_type->size = 2.5f;
-			break;
-		default:
-			npc_type->race = WOLF;
-			npc_type->texture = 0;
-			npc_type->size = 2.5f;
+				break;
+			case TROLL:
+				npc_type->race = ALLIGATOR;
+				npc_type->size *= 10.0f;
+				break;
+			case OGRE:
+				npc_type->race = BEAR;
+				npc_type->texture = 3;
+				npc_type->gender = 2;
+				npc_type->size = 2.5f;
+				break;
+			case BARBARIAN:
+				npc_type->race = BEAR;
+				npc_type->texture = 2;
+				npc_type->size = 2.5f;
+				break;
+			case IKSAR:
+				npc_type->race = WOLF;
+				npc_type->texture = 0;
+				npc_type->gender = 1;
+				//npc_type->size *= 2.0f;
+				npc_type->size = 4;
+				npc_type->luclinface = 0;
+				break;
+			case WOOD_ELF:
+				npc_type->race = BEAR;
+				npc_type->texture = 1;
+				npc_type->helmtexture = 2;
+				npc_type->size = 2.5f;
+				break;
+			case DARK_ELF:
+				npc_type->race = WOLF;
+				npc_type->texture = 1;
+				npc_type->size = 2.5f;
+				break;
+			default:
+				npc_type->race = WOLF;
+				npc_type->texture = 0;
+				npc_type->size = 2.5f;
 		}
 	}
 
@@ -559,6 +559,12 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		if (this->CastToClient()->GetInv().GetItem(EQEmu::legacy::SlotPrimary)) { //If a weapon is equipped
 			npc_type->prim_melee_type = this->CastToClient()->GetInv().GetItem(EQEmu::legacy::SlotPrimary)->GetItem()->ItemType;
 		}
+	}
+
+	if(this->IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONSDURABILITY) > 0) {
+		uint32 rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONSDURABILITY);
+		npc_type->max_hp *= (1 + rank * 0.02);
+		npc_type->cur_hp *= (1 + rank * 0.02);
 	}
 
 	if (MaxHP){

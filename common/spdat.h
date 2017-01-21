@@ -363,7 +363,7 @@ typedef enum {
 #define SE_FleshToBone					207	// implemented
 //#define SE_PurgePoison				208	// not used
 #define SE_DispelBeneficial				209 // implemented
-//#define SE_PetShield					210	// *not implemented
+#define SE_PetShield					210	// implemented
 #define SE_AEMelee						211	// implemented TO DO: Implement to allow NPC use (client only atm).
 #define SE_FrenziedDevastation			212	// implemented - increase spell criticals + all DD spells cast 2x mana.
 #define SE_PetMaxHP						213	// implemented[AA] - increases the maximum hit points of your pet

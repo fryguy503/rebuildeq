@@ -58,8 +58,16 @@ void Mob::TemporaryPets(uint16 spell_id, Mob *targ, const char *name_override, u
 	{
 		if(spells[spell_id].effectid[x] == SE_TemporaryPets)
 		{
-			pet.count = spells[spell_id].base[x];
-			pet.duration = spells[spell_id].max[x];
+			if(spell_id == 3265 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) > 0) {
+				pet.count = spells[spell_id].base[x];
+				pet.duration = spells[spell_id].max[x] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) / 5.0f);
+			} else if(spell_id == 13167 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONOFNECESSITY) > 0) {
+				pet.count = spells[spell_id].base[x];
+				pet.duration = spells[spell_id].max[x] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONOFNECESSITY) / 5.0f);
+			} else {
+				pet.count = spells[spell_id].base[x];
+				pet.duration = spells[spell_id].max[x];
+			}
 		}
 	}
 
@@ -861,21 +869,28 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 	aai->spell = rank->spell;
 	aai->spell_type = rank->spell_type;
 	
-        if (rank->id == aaCalloftheWild && GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0) {
+	if (rank->id == aaCalloftheWild && GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0) {
 		int rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 		aai->spell_refresh = 1800 - (rb_rank-1) * 300;
-	} else if (rank->id == aaSecondaryRecall && GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL) > 0) {
+	} 
+	else if (rank->id == aaSecondaryRecall && GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL) > 0) {
 		int rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
-		if(rb_rank == 1)
-			aai->spell_refresh = 86400; // 24 hours
-		else if(rb_rank == 2)
-			aai->spell_refresh = 64800; // 18 hours
-		else if(rb_rank == 3)
-			aai->spell_refresh = 43200; // 12 hours
-		else if(rb_rank == 4)
-			aai->spell_refresh = 21600; // 6 hours
-		else if(rb_rank == 5)
-			aai->spell_refresh = 10800; // 3 hours
+		if(rb_rank == 1) aai->spell_refresh = 86400; // 24 hours
+		else if(rb_rank == 2) aai->spell_refresh = 64800; // 18 hours
+		else if(rb_rank == 3) aai->spell_refresh = 43200; // 12 hours
+		else if(rb_rank == 4) aai->spell_refresh = 21600; // 6 hours
+		else if(rb_rank == 5) aai->spell_refresh = 10800; // 3 hours
+	} 
+	else if (rank->id == aaClockworkBanker && GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT) > 0) {
+		int rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT);
+		if(rb_rank == 1) aai->spell_refresh = 86400; // 24 hours
+		else if(rb_rank == 2) aai->spell_refresh = 43200; // 12 hours
+		else if(rb_rank == 3) aai->spell_refresh = 21600; // 6 hours
+		else if(rb_rank == 4) aai->spell_refresh = 10800; // 3 hours
+		else if(rb_rank == 5) aai->spell_refresh = 3600; // 1 hour
+	}  
+	else if (rank->id == aaCalloftheHero && GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO) > 0) {
+		aai->spell_refresh = (5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 2.5f + 5;
 	} else {
 		aai->spell_refresh = rank->recast_time;
 	}	
@@ -1186,6 +1201,23 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaNaturesGuardian && GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN) < 1 ||
 		rank_id == aaShieldofNotes && GetBuildRank(BARD, RB_BRD_SHIELDOFNOTES) < 1 ||
 		rank_id == aaSongofStone && GetBuildRank(BARD, RB_BRD_SONGOFSTONE) < 1 ||
+		rank_id == aaSharedHealth && GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) < 1 ||
+		rank_id == aaDimensionalShield && GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD) < 1 ||
+		rank_id == aaHostintheShell && GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) < 1 ||
+		rank_id == aaHeartofStone && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) < 1 ||
+		rank_id == aaImprovedReclaimEnergy && GetBuildRank(MAGICIAN, RB_MAG_IMPROVEDRECLAIMENERGY) < 1 ||
+		rank_id == aaTurnSummoned2 && GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED) < 1 ||
+		rank_id == aaHeartofVapor && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) < 1 ||
+		rank_id == aaSmallModulationShard && GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD) < 1 ||
+		rank_id == aaFrenziedBurnout && GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT) < 1 ||
+		rank_id == aaHeartofIce && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFICE) < 1 ||
+		rank_id == aaSuspendedMinion && GetBuildRank(MAGICIAN, RB_MAG_SUSPENDEDMINION) < 1 ||
+		rank_id == aaCalloftheHero && GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO) < 1 ||
+		rank_id == aaMendCompanion && GetBuildRank(MAGICIAN, RB_MAG_MENDCOMPANION) < 1 ||
+		rank_id == aaClockworkBanker && GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT) < 1 ||
+		rank_id == aaHeartofFlames && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES) < 1 ||
+		rank_id == aaCompanionofNecessity && GetBuildRank(MAGICIAN, RB_MAG_COMPANIONOFNECESSITY) < 1 ||
+		rank_id == aaServantofRo && GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) < 1 ||
 		( //Lesson of the Devoted is used by multiple classes different builds
 			rank_id == aaLessonoftheDevoted && 
 				GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
@@ -1193,7 +1225,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 				GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) < 1 &&
 				GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) < 1 &&
 				GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1 &&
-				GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) < 1
+				GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) < 1 &&
+				GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) < 1
 		) //end lessons
 		) {
 		Message(13, "You cannot use this ability until you unlock it via %s.", CreateSayLink("#builds", "#builds").c_str());
@@ -1208,11 +1241,15 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		return;
 	}
 	
-
 	//Shin: set spell Id override
 	int spellid = rank->spell;
 	int manacost = -1;
 	int cooldown = 0;
+	
+	if(rank_id == aaHeartofFlames && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES) > 0) {
+		spellid = 37903;
+	}
+	
 	if (rank_id == aaEntrap && GetBuildRank(DRUID, RB_DRU_ENTRAP) > 0) {
 		uint8 rank = GetBuildRank(DRUID, RB_DRU_ENTRAP);
 		if (rank == 1) spellid = 3614;
@@ -1230,34 +1267,36 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 
 		if (rank >= 5) rank = 8;
 		manacost /= (0.4f * rank);
-		
-
 	}
 
-        if (rank_id == aaCalloftheWild) {
-                uint8 rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
+	if (rank_id == aaCalloftheWild) {
+		uint8 rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 		if(rb_rank > 0) {
 			spellid = 958;
 			cooldown = 1800 - (rb_rank-1) * 300;
 		}
-        }
+	}
 
 	if(rank_id == aaSecondaryRecall) {
 		int rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
-                if(rb_rank == 1)
-                        cooldown = 86400; // 24 hours
-                else if(rb_rank == 2)
-                        cooldown = 64800; // 18 hours
-                else if(rb_rank == 3)
-                        cooldown = 43200; // 12 hours
-                else if(rb_rank == 4)
-                        cooldown = 21600; // 6 hours
-                else if(rb_rank == 5)
-                        cooldown = 10800; // 3 hours
+		if(rb_rank == 1) cooldown = 86400; // 24 hours
+		else if(rb_rank == 2) cooldown = 64800; // 18 hours
+		else if(rb_rank == 3) cooldown = 43200; // 12 hours
+		else if(rb_rank == 4) cooldown = 21600; // 6 hours
+		else if(rb_rank == 5) cooldown = 10800; // 3 hours
 	}
-
-	if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
-		
+	else if(rank_id == aaClockworkBanker) {
+		int rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT);
+		if(rb_rank == 1) cooldown = 86400; // 24 hours
+		else if(rb_rank == 2) cooldown = 43200; // 12 hours
+		else if(rb_rank == 3) cooldown = 21600; // 6 hours
+		else if(rb_rank == 4) cooldown = 10800; // 3 hours
+		else if(rb_rank == 5) cooldown = 3600; // 1 hours
+	}
+	else if(rank_id == aaCalloftheHero) {
+		cooldown = (5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 2.5f + 5;
+	}
+	else if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
 		AddBuff(this, 271, GetBuildRank(ROGUE, RB_ROG_APPRAISAL));
 		if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 		{
@@ -1302,27 +1341,19 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			cooldown = 4;
 		}	
 	}
+	
 	if (rank_id == aaNaturesBlessing) {
 		cooldown = 16;
 	}
 
 	if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesBoon || rank_id == aaAncestralAid) {
 		cooldown = 16;
-		if (GetLevel() < 10) {
-			manacost = 20;
-		}
-		else if (GetLevel() < 31) {
-			manacost = GetLevel() * 2.6f;
-		}
-		else if (GetLevel() < 41) {
-			manacost = GetLevel() * 4.6f;
-		}
-		else if (GetLevel() < 51) {
-			manacost = GetLevel() * 5.6f;
-		}
-		else {
-			manacost = GetLevel() * 7.5f;
-		}
+		if (GetLevel() < 10)  manacost = 20;
+		else if (GetLevel() < 31) manacost = GetLevel() * 2.6f;
+		else if (GetLevel() < 41) manacost = GetLevel() * 4.6f;
+		else if (GetLevel() < 51) manacost = GetLevel() * 5.6f;
+		else  manacost = GetLevel() * 7.5f;
+		
 		if (rank_id == aaNaturesBoon) {
 			cooldown = 85 - (12 * GetBuildRank(DRUID, RB_DRU_NATURESBOON));
 			if (cooldown < 20) {
@@ -1461,7 +1492,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		cooldown = 0;
 	}
 
-
 	if (rank_id == aaLessonoftheDevoted) {
 		if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) > 0) {
 			spellid = 6236;
@@ -1475,6 +1505,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			spellid = 6240;
 		} else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) > 0) {
 			spellid = 6237;
+		} else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) {
+			spellid = 6276;
 		}
 	}
 
@@ -1719,10 +1751,12 @@ bool Mob::SetAA(uint32 rank_id, uint32 new_value, uint32 charges) {
 		AA::Ability *ability = zone->GetAlternateAdvancementAbilityByRank(rank_id);
 
 		if(!ability) {
+			Message(13, "Set AA Error: AA ID Does Not Exist: %i", rank_id);
 			return false;
 		}
 
 		if(new_value > ability->GetMaxLevel(this)) {
+			Message(13, "Set AA Error: AA Rank (%i) Does Not Exist For Ability: %i", new_value, rank_id);
 			return false;
 		}
 

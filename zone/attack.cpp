@@ -1544,12 +1544,26 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQEmu::skills::Sk
 
 	if(!ClientFinishedLoading())
 		damage = -5;
+	
+	if(GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) > 0) {
+		Mob *pet = GetPet();
 
-	//do a majority of the work...
-	CommonDamage(other, damage, spell_id, attack_skill, avoidable, buffslot, iBuffTic, special);
+		if(pet && pet->HasSpellEffect(SE_PetShield)) {
+			float shared = GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) * 0.10f;
+			int client_damage = (int) (damage * (1.0f-shared));
+			int pet_damage = (int) (damage * shared);
+			CommonDamage(other, client_damage, spell_id, attack_skill, avoidable, buffslot, iBuffTic, special);
+			if(pet_damage > 0) {
+				Message(MT_DoTDamage, "Shared Health has caused %d incoming damage from %s to be shielded by %s.", pet_damage, other->GetCleanName(), pet->GetCleanName());
+				pet->CastToNPC()->Damage(other, pet_damage, spell_id, attack_skill, avoidable, buffslot, iBuffTic, special);
+			}
+		}
+	} else {
+		//do a majority of the work...
+		CommonDamage(other, damage, spell_id, attack_skill, avoidable, buffslot, iBuffTic, special);
+	}
 
 	if (damage > 0) {
-
 		if (spell_id == SPELL_UNKNOWN)
 			CheckIncreaseSkill(EQEmu::skills::SkillDefense, other, -15);
 	}
@@ -2121,9 +2135,9 @@ bool NPC::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, bool
 	}
 	else
 		damage = -5;
-
+	
 	if(GetHP() > 0 && !other->HasDied()) {
-		other->Damage(this, damage, SPELL_UNKNOWN, skillinuse, true, -1, false, special); // Not avoidable client already had thier chance to Avoid
+		other->Damage(this, damage, SPELL_UNKNOWN, skillinuse, true, -1, false, special); // Not avoidable client already had their chance to Avoid
 	} else
 		return false;
 
@@ -2848,6 +2862,11 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 		&& other &&  (buffs[spellbonuses.ImprovedTaunt[2]].casterid != other->GetID()))
 		hate = (hate*spellbonuses.ImprovedTaunt[1])/100;
 
+	if(hate > 0 && other->IsPet() && other->GetOwner()->IsClient() && other->GetOwner()->CastToClient()->GetClass() == MAGICIAN) {
+		Log.Out(Logs::Detail, Logs::Aggro, "Mage pet hate nerfed from %d to %d", hate, (int)(hate * 0.25f));
+		hate = (int) (hate * 0.25f); // Nerf mage pet hate to 25% effectiveness
+	}
+
 	hate_list.AddEntToHateList(other, hate, damage, bFrenzy, !iBuffTic);
 
 	if(other->IsClient())
@@ -2953,6 +2972,11 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 			if (attacker->IsNPC()) {
 				attacker->AddToHateList(this, uint32(10 * rank));
 			}
+		}
+		
+		rank = this->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES);
+		if (rank > 0 && spellid == 37903) {
+			DS *= (0.20f * rank);
 		}
 
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TREEFORM);
@@ -5562,6 +5586,11 @@ void Mob::DoMainHandAttackRounds(Mob *target, ExtraAttackOptions *opts, int spec
 								
 			if ((IsPet() || IsTempPet()) && IsPetOwnerClient()){
 				int chance = spellbonuses.PC_Pet_Flurry + itembonuses.PC_Pet_Flurry + aabonuses.PC_Pet_Flurry;
+				
+				if(GetOwner()->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_ELEMENTALALACRITY) > 0) {
+					chance += (4 * GetOwner()->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_ELEMENTALALACRITY));
+				}
+				
 				if (chance && zone->random.Roll(chance))
 					Flurry(nullptr);
 			}
@@ -5620,6 +5649,11 @@ void Mob::DoOffHandAttackRounds(Mob *target, ExtraAttackOptions *opts, int speci
 
 				if ((IsPet() || IsTempPet()) && IsPetOwnerClient()){
 					int chance = spellbonuses.PC_Pet_Flurry + itembonuses.PC_Pet_Flurry + aabonuses.PC_Pet_Flurry;
+					
+					if(GetOwner()->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_ELEMENTALALACRITY) > 0) {
+						chance += (4 * GetOwner()->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_ELEMENTALALACRITY));
+					}
+					
 					if (chance && zone->random.Roll(chance))
 						Flurry(nullptr);
 				}

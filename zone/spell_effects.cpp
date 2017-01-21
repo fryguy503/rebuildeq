@@ -193,7 +193,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 		SetSpellPowerDistanceMod(0);
 
 	bool SE_SpellTrigger_HasCast = false;
-
+	
 	// iterate through the effects in the spell
 	for (i = 0; i < EFFECT_COUNT; i++)
 	{
@@ -394,6 +394,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg -= bonus_damage;
 							}
 
+							// Shock of Swords
+							rank = casterClient->GetBuildRank(MAGICIAN, RB_MAG_SHOCKOFSWORDS);
+							if (rank > 0 &&
+								(spell_id == 113 || spell_id == 114 || spell_id == 330 || spell_id == 324
+								 || spell_id == 410  || spell_id == 1663)) { //blade spells
+								int bonus_damage = (rank * 0.04 * -dmg);
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Shock of Swords %u added %i bonus damage.", rank, bonus_damage);
+								dmg -= bonus_damage;
+							}
+
 							// Ancient Wrath
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
 							if (rank > 0 && caster != this) { // Ancient Wrath does not affect spells cast on self.
@@ -425,7 +435,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								if (mana_amount < rank) mana_amount = rank;
 								if (caster->ShowBuildEcho()) caster->Message(MT_FocusEffect, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
-							}							
+							}	
+
+							rank = casterClient->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION);
+							if (spell_id == 6317 && rank > 0) {
+								dmg *= (rank / 5.0f);
+							}
 						}
 
 						dmg = caster->GetActSpellDamage(spell_id, dmg, this);
@@ -681,6 +696,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									}
 								}
 							}
+						
+							// Mend Companion
+							if(spell_id == 2752 && casterClient->GetBuildRank(MAGICIAN, RB_MAG_MENDCOMPANION) > 0) {
+								dmg = GetMaxHP() * (casterClient->GetBuildRank(MAGICIAN, RB_MAG_MENDCOMPANION) / 5.0f);
+							}
 						}
 
 						dmg = caster->GetActSpellHealing(spell_id, dmg, this);
@@ -706,7 +726,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				{
 					dmg = caster->GetMana()*-3;
 					caster->SetMana(0);
-				} else if (spell_id == 2755 && caster) //Lifeburn
+				}
+				if (spell_id == 2755 && caster) //Lifeburn
 				{
 					dmg = caster->GetHP()*-15/10;
 					caster->SetHP(1);
@@ -715,6 +736,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						caster->SendAppearancePacket(AT_Anim, 115);
 					}
 				}
+				if (spell_id == 6276 && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) // Primal Spirit Buff
+				{
+					// Change the amount of HP healed to scale with the rank
+					effect_value *= (caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) / 5.0f);
+				}				
 
 				//do any AAs apply to these spells?
 				if(dmg < 0) {
@@ -1192,11 +1218,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 						if(spell_id == 958 && 
 							caster->IsClient() &&  //Casted by a druid client
-                                                        caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0 && //Has call of the wild skill
+                            caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0 && //Has call of the wild skill
 							IsNPC() //target is an NPC
 							) {
 							int rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 							effect_value = 2000 * rank;
+						}
+						
+						if(spell_id == 6318 && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) {
+							effect *= (caster->CastToClient()->GetBuildRank(DRUID, RB_MAG_PRIMALFUSION)/5.0f);
 						}
 
 						Stun(effect_value);
@@ -1655,11 +1685,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_SummonItem:
 			{
-				const EQEmu::Item_Struct *item = database.GetItem(spell.base[i]);
 #ifdef SPELL_EFFECT_SPAM
 				const char *itemname = item ? item->Name : "*Unknown Item*";
 				snprintf(effect_desc, _EDLEN, "Summon Item: %s (id %d)", itemname, spell.base[i]);
 #endif
+				int item_id = spell.base[i];
+				int item_charges = -1;
 
 				if (spell_id == 223 && IsClient()) {
 					if (CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) > 0) {
@@ -1671,13 +1702,79 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					break;
 				}
 
+				if(IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SUMMONINGFOCUS) > 0) {
+					uint32 rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SUMMONINGFOCUS);
+
+					// Override the item id to be summoned if applicable
+
+					// Rank 1 : Level 1-15
+					if(spell_id == 311 && rank >= 0) item_id = 100049; // Enhanced Dagger
+					else if(spell_id == 1330 && rank >= 1) item_id = 100050; // Enhanced Brass Choker
+					else if(spell_id == 233 && rank >= 1) item_id = 100051; // Enhanced Linen Mantle
+					else if(spell_id == 613 && rank >= 1) item_id = 100052; // Enhanced Staff of Tracing
+					else if(spell_id == 319 && rank >= 1) item_id = 100053; // Enhanced Fang
+					else if(spell_id == 2242 && rank >= 1) item_id = 100054; // Enhanced Tarnished Bauble
+					else if(spell_id == 2531 && rank >= 1) item_id = 100055; // Enhanced Elemental Defender
+					else if(spell_id == 614 && rank >= 1) item_id = 100056; // Enhanced Staff of Warding
+					else if(spell_id == 100 && rank >= 1) item_id = 100057; // Enhanced Throwing Dagger
+
+					// Rank 2: Level 16-30
+					else if(spell_id == 2239 && rank >= 2) item_id = 100058; // Enhanced Tiny Ring
+					else if(spell_id == 4027 && rank >= 2) item_id = 100059; // Enhanced Wooden Bracelet
+					else if(spell_id == 101 && rank >= 2) item_id = 100060; // Enhanced Arrows
+					else if(spell_id == 102 && rank >= 2) item_id = 100061; // Enhanced Spear of Warding
+					else if(spell_id == 2236 && rank >= 2) item_id = 100062; // Enhanced Jade Bracelet
+					else if(spell_id == 2231 && rank >= 2) item_id = 100063; // Enhanced Silver Choker
+					else if(spell_id == 2234 && rank >= 2) item_id = 100064; // Enhanced Leather Mantle
+					else if(spell_id == 2243 && rank >= 2) item_id = 100065; // Enhanced Shiny Bauble
+					else if(spell_id == 615 && rank >= 2) item_id = 100066; // Enhanced Staff of Runes
+					else if(spell_id == 617 && rank >= 2) item_id = 100067; // Enhanced Sword of Runes
+
+					// Rank 3: Level 31-45
+					else if(spell_id == 2240 && rank >= 3) item_id = 100068; // Enhanced Twisted Ring
+					else if(spell_id == 616 && rank >= 3) item_id = 100069; // Enhanced Staff of Symbols
+					else if(spell_id == 104 && rank >= 3) item_id = 100070; // Enhanced Dagger of Symbols
+					else if(spell_id == 2237 && rank >= 3) item_id = 100071; // Enhanced Opal Bracelet
+					else if(spell_id == 4028 && rank >= 3) item_id = 100072; // Enhanced Stone Bracelet
+
+					// Rank 4: Level 46-50
+					else if(spell_id == 2535 && rank >= 4) item_id = 100073; // Enhanced Elemental Blanket
+					else if(spell_id == 2332 && rank >= 4) item_id = 100074; // Enhanced Golden Choker
+
+					// Rank 5: Level 51-60
+					else if(spell_id == 2235 && rank >= 5) item_id = 100075; // Enhanced Silken Mantle
+					else if(spell_id == 2244 && rank >= 5) item_id = 100076; // Enhanced Brilliant Bauble
+					else if(spell_id == 2241 && rank >= 5) item_id = 100077; // Enhanced Studded Ring
+					else if(spell_id == 2238 && rank >= 5) item_id = 100078; // Enhanced Ruby Bracelet
+					else if(spell_id == 4029 && rank >= 5) item_id = 100079; // Enhanced Iron Bracelet
+					else if(spell_id == 1682 && rank >= 5) item_id = 100080; // Enhanced Quiver of Marr
+					else if(spell_id == 1681 && rank >= 5) item_id = 100081; // Enhanced Bandoleer of Luclin
+					else if(spell_id == 1685 && rank >= 5) item_id = 100082; // Enhanced Muzzle of Mardu
+				}
+				
+				if(IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD) > 0 && spell_id == 27465) {
+					uint32 rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD);
+
+					// Upgrade the shard per rank, increasing the spell effect and charges. 
+					item_id = 6346; 	
+					item_charges = rank;
+					
+					//This will be for later when player have more hp
+					//if(rank == 1) { item_id = 79320; item_charges = 1; } // Small, 1 Charge (7500hp)
+					//else if(rank == 2) { item_id = 79320; item_charges = 3; } // Small, 3 Charges (7500hp)
+					//else if(rank == 3) { item_id = 79321; item_charges = 1; } // Medium, 1 Charge (15000hp)
+					//else if(rank == 4) { item_id = 79321; item_charges = 3; } // Medium, 3 Charges (15000hp)
+					//else if(rank == 5) { item_id = 79322; item_charges = 3; } // Large, 3 Charges (23000hp)
+				}
+
+				const EQEmu::Item_Struct *item = database.GetItem(item_id);
 
 				if (!item) {
 					Message(13, "Unable to summon item %d. Item not found.", spell.base[i]);
 				} else if (IsClient()) {
 					Client *c = CastToClient();
 					if (c->CheckLoreConflict(item)) {
-						c->DuplicateLoreMessage(spell.base[i]);
+						c->DuplicateLoreMessage(item->ID);
 					} else {
 						int charges;
 						if (item->Stackable)
@@ -1690,12 +1787,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (charges < 1)
 							charges = 1;
 
+						if(item_charges != -1)
+							charges = item_charges;
+
 						if (SummonedItem) {
 							c->PushItemOnCursor(*SummonedItem);
 							c->SendItemPacket(EQEmu::legacy::SlotCursor, SummonedItem, ItemPacketSummonItem);
 							safe_delete(SummonedItem);
 						}
-						SummonedItem = database.CreateItem(spell.base[i], charges);
+						SummonedItem = database.CreateItem(item->ID, charges);
 					}
 				}
 
@@ -1825,7 +1925,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_MitigateMeleeDamage:
 			{
-				buffs[buffslot].melee_rune = spells[spell_id].max[i];
+				if(spell_id == 5914 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) > 0) {
+					buffs[buffslot].melee_rune = spells[spell_id].max[i] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) / 5.0f);
+				} else if(spell_id == 21843 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) > 0) {
+					buffs[buffslot].melee_rune = spells[spell_id].max[i] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) / 5.0f);
+				}else {
+					buffs[buffslot].melee_rune = spells[spell_id].max[i];
+				}
 				break;
 			}
 
@@ -1843,7 +1949,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_MitigateSpellDamage:
 			{
-				buffs[buffslot].magic_rune = spells[spell_id].max[i];
+				if(spell_id == 5916 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFICE) > 0) {
+					buffs[buffslot].magic_rune = spells[spell_id].max[i] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFICE) / 5.0f);
+				} else {
+					buffs[buffslot].magic_rune = spells[spell_id].max[i];
+				}
 				break;
 			}
 
@@ -2087,14 +2197,19 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				{
 				uint16 pet_spellid =  CastToNPC()->GetPetSpellID();
 				uint16 pet_ActSpellCost = caster->GetActSpellCost(pet_spellid, spells[pet_spellid].mana);
-				int16 ImprovedReclaimMod =	caster->spellbonuses.ImprovedReclaimEnergy +
-											caster->itembonuses.ImprovedReclaimEnergy +
-											caster->aabonuses.ImprovedReclaimEnergy;
 
-				if (!ImprovedReclaimMod)
-					ImprovedReclaimMod = 75; //Reclaim Energy default is 75% of actual mana cost
+				if(caster->IsClient() && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_IMPROVEDRECLAIMENERGY) > 0) {
+					pet_ActSpellCost =  pet_ActSpellCost*(75 + (caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_IMPROVEDRECLAIMENERGY) * 5))/100;
+				} else {				
+					int16 ImprovedReclaimMod =	caster->spellbonuses.ImprovedReclaimEnergy +
+												caster->itembonuses.ImprovedReclaimEnergy +
+												caster->aabonuses.ImprovedReclaimEnergy;
 
-				pet_ActSpellCost = pet_ActSpellCost*ImprovedReclaimMod/100;
+					if (!ImprovedReclaimMod)
+						ImprovedReclaimMod = 75; //Reclaim Energy default is 75% of actual mana cost
+					
+					pet_ActSpellCost = pet_ActSpellCost*ImprovedReclaimMod/100;
+				}
 
 				caster->SetMana(caster->GetMana() + pet_ActSpellCost);
 
@@ -2910,7 +3025,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 #ifdef SPELL_EFFECT_SPAM
 				snprintf(effect_desc, _EDLEN, "Defensive Proc: %s (id %d)", spells[effect_value].name, procid);
 #endif
-				if(spells[spell_id].base2[i] == 0)
+				if(spell_id == 27424 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD) > 0) {
+					AddDefensiveProc(procid, rank * 20,spell_id);
+				}
+				 else if(spells[spell_id].base2[i] == 0)
 					AddDefensiveProc(procid, 100,spell_id);
 				else
 					AddDefensiveProc(procid, spells[spell_id].base2[i]+100,spell_id);
@@ -3591,8 +3709,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			case SE_SkillProc:
 			case SE_SkillProcSuccess:
 			{
-				
-
 				if (caster && caster->IsClient()) {
 					Client * casterClient = caster->CastToClient();					
 					uint8 level = GetLevel();
@@ -3649,7 +3765,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							caster->QuickBuff(this, 11, duration); //Holy Armor
 						}
 					}
-
 
 					rank = casterClient->GetBuildRank(DRUID, RB_DRU_BLESSINGOFRO);
 					if (rank > 0 && zone->random.Roll(5 * rank)) {		
@@ -4213,7 +4328,13 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 				if (caster->IsClient()) {
 					Client* caster_client = caster->CastToClient();
-					uint16 rank = caster_client->GetBuildRank(DRUID, RB_DRU_FOCUSEDSWARM);
+					
+					uint16 rank = caster_client->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED);
+					if (rank > 0 && buff.spellid == 8133) {
+						effect_value *= (rank * 5);
+					}
+					
+					rank = caster_client->GetBuildRank(DRUID, RB_DRU_FOCUSEDSWARM);
 					if (rank > 0) {
 						float dist2 = DistanceSquared(m_Position, caster->GetPosition());						
 						float multiplier = 1.0f;
@@ -5971,16 +6092,32 @@ int16 Mob::CalcFocusEffect(focusType type, uint16 focus_id, uint16 spell_id, boo
 
 		case SE_SpellHateMod:
 			if (type == focusSpellHateMod) {
+				
 				if (value != 0) {
 					if (value > 0) {
-						if (focus_spell.base[i] > value)
-							value = focus_spell.base[i];
+						if (focus_spell.base[i] > value) {
+							if(spell_id == 5913 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) > 0) {
+								value = focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f;
+							} else {
+								value = focus_spell.base[i];
+							}
+						}
 					} else {
-						if (focus_spell.base[i] < value)
-							value = focus_spell.base[i];
+						if (focus_spell.base[i] < value) {
+							if(spell_id == 5913 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) > 0) {
+								value = focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f;
+							} else {
+								value = focus_spell.base[i];
+							}
+						}
 					}
-				} else
-					value = focus_spell.base[i];
+				} else {
+					if(spell_id == 5913 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) > 0) {
+						value = focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f;
+					} else {
+						value = focus_spell.base[i];
+					}
+				}
 			}
 			break;
 

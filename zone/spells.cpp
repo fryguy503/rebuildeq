@@ -458,31 +458,6 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 	// RebuildEQ Rank for Calculations
 	int rank = 0;
 
-	// Druid Teleport Bind
-	rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TELEPORTBIND);
-        if (rank > 0 && spell_id == 5953) {
-		// 85% Mana at Rank 1, minus 15% per rank: 85,70,55,40,25
-		mana_cost = GetMaxMana() * (1 - rank * 0.15f);
-
-		Log.Out(Logs::Detail, Logs::Spells, "Teleport Bind (Rank %d) Mana Cost %d and Casting Time %d", rank, mana_cost, cast_time);
-
-		if (mana_cost > GetMana()) {
-			Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana spell=%d mymana=%d cost=%d\n", GetName(), spell_id, GetMana(), mana_cost);
-			Message_StringID(13, INSUFFICIENT_MANA);
-                        InterruptSpell();
-		}
-	}	
-
-	// Druid Exodus
-	rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_EXODUS);
-	if(rank > 0 && spell_id == 2771) {
-                // 5 second cast time, 1 less second per rank: 5000ms/4000ms/3000ms/2000ms/1000ms
-		int cast_time_new = 6000 - (rank * 1000);
-		Log.Out(Logs::Detail, Logs::Spells, "Exodus (Rank %d) Casting Time %d", rank, cast_time_new);
-        	cast_time = cast_time_new;
-	}
-
-
 	// Druid Ring Affinity - Ring spells cast 5% faster and cost 10% less mana per rank.
         rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_RINGAFFINITY);
         if (rank > 0 && (
@@ -533,6 +508,38 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		int cast_time_new = 6000 - (rank * 1000);
 		Log.Out(Logs::Detail, Logs::Spells, "Exodus (Rank %d) Casting Time %d", rank, cast_time_new);
         	cast_time = cast_time_new;
+	}
+	
+	// Magician Quick Damage
+	rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_QUICKDAMAGE);
+	if(rank > 0 && spell.spell_category == 1 && cast_time >= 3000) { // Only apply to direct damage spells with a cast time >= 3 seconds
+		int cast_time_bonus = 0;
+		if(rank == 1) cast_time_bonus = cast_time * 0.02f;
+		if(rank == 2) cast_time_bonus = cast_time * 0.05f;
+		if(rank == 3) cast_time_bonus = cast_time * 0.10f;
+		if(rank == 4) cast_time_bonus = cast_time * 0.15f;
+		if(rank == 5) cast_time_bonus = cast_time * 0.20f;
+		Log.Out(Logs::Detail, Logs::Spells, "Quick Damage (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
+        	cast_time -= cast_time_bonus;
+	}
+	
+	// Magician Quick Summoning
+	rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_QUICKSUMMONING);
+	if(rank > 0 && IsSummonPetSpell(spell_id)) { // All Pet Summoning Spells
+		int cast_time_bonus = 0;
+		if(rank == 1) cast_time_bonus = cast_time * 0.10f;
+		if(rank == 2) cast_time_bonus = cast_time * 0.20f;
+		if(rank == 3) cast_time_bonus = cast_time * 0.30f;
+		if(rank == 4) cast_time_bonus = cast_time * 0.40f;
+		if(rank == 5) cast_time_bonus = cast_time * 0.50f;
+		Log.Out(Logs::Detail, Logs::Spells, "Quick Summoning (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
+		cast_time -= cast_time_bonus;
+	}
+	
+	// Magician Call of the Hero
+	rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO);
+	if(rank > 0 && spell_id == 16531) {
+		cast_time = (5 - CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 2.5f + 5;
 	}
 
 	if(mana_cost > GetMana())
@@ -3287,6 +3294,10 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 
 		if (caster && duration > 0) // negatives are perma buffs
 			duration = caster->GetActSpellDuration(spell_id, duration);
+	}
+	
+	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) > 0 && spell_id == 5235) {
+		duration = 2 * caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH);
 	}
 
 	if (duration == 0) {

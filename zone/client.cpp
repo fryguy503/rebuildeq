@@ -5768,11 +5768,15 @@ void Client::SuspendMinion()
 
 	int AALevel = GetAA(aaSuspendedMinion);
 
-	if(AALevel == 0)
-		return;
+	if(GetBuildRank(MAGICIAN, RB_MAG_SUSPENDEDMINION) > 0) {
+		AALevel = GetBuildRank(MAGICIAN, RB_MAG_SUSPENDEDMINION);
+	} else {
+		if(AALevel == 0)
+			return;
 
-	if(GetLevel() < 62)
-		return;
+		if(GetLevel() < 62)
+			return;
+	}
 
 	if(!CurrentPet)
 	{
@@ -8846,7 +8850,6 @@ void Client::RefreshBuild() {
 					Message(270, message.c_str());
 				}
 
-
 				if (GetClass() == BARD && (i == RB_BRD_KINSONG || i == RB_BRD_KINSONG ) && GetAA(aaLessonoftheDevoted) < 1) {					
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
@@ -8936,7 +8939,6 @@ void Client::RefreshBuild() {
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
-			
 
 				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_BLOODOATH && n > 4 && GetAA(aa2HandBash) < 1) { //AA 428
 					TrainAARank(aa2HandBash);
@@ -9036,6 +9038,90 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Escape\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == MAGICIAN && i == RB_MAG_SHAREDHEALTH && GetAA(aaSharedHealth) < 1) {
+					TrainAARank(aaSharedHealth);
+					Message(15, "You have unlocked the AA \"Shared Health\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_DIMENSIONALSHIELD && GetAA(aaDimensionalShield) < 1) {
+					TrainAARank(aaDimensionalShield);
+					Message(15, "You have unlocked the AA \"Dimensional Shield\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_HOSTINTHESHELL && GetAA(aaHostintheShell) < 1) {
+					TrainAARank(aaHostintheShell);
+					Message(15, "You have unlocked the AA \"Host in the Shell\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_HEARTOFSTONE && GetAA(aaHeartofStone) < 1) {
+					TrainAARank(aaHeartofStone);
+					Message(15, "You have unlocked the AA \"Heart of Stone\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_TURNSUMMONED && GetAA(aaTurnSummoned2) < 1) {
+					TrainAARank(aaTurnSummoned2);
+					Message(15, "You have unlocked the AA \"Turn Summoned\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_HEARTOFVAPOR && GetAA(aaHeartofVapor) < 1) {
+					TrainAARank(aaHeartofVapor);
+					Message(15, "You have unlocked the AA \"Heart of Vapor\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_MODULATIONSHARD && GetAA(aaSmallModulationShard) < 1) {
+					TrainAARank(aaSmallModulationShard);
+					Message(15, "You have unlocked the AA \"Modulation Shard\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_FRENZIEDBURNOUT && GetAA(aaFrenziedBurnout) < 1) {
+					TrainAARank(aaFrenziedBurnout);
+					Message(15, "You have unlocked the AA \"Frenzied Burnout\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_HEARTOFICE && GetAA(aaHeartofIce) < 1) {
+					TrainAARank(aaHeartofIce);
+					Message(15, "You have unlocked the AA \"Heart of Ice\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_SUSPENDEDMINION && GetAA(aaSuspendedMinion) < 1) {
+					TrainAARank(aaSuspendedMinion);
+					Message(15, "You have unlocked the AA \"Suspended Minion\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_CALLOFTHEHERO && GetAA(aaCalloftheHero) < 1) {
+					TrainAARank(aaCalloftheHero);
+					Message(15, "You have unlocked the AA \"Call of tbe Hero\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_MENDCOMPANION && GetAA(aaMendCompanion) < 1) {
+					TrainAARank(aaMendCompanion);
+					Message(15, "You have unlocked the AA \"Mend Companion\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_CLOCKWORKMERCHANT && GetAA(aaClockworkBanker) < 1) {
+					TrainAARank(aaClockworkBanker);
+					Message(15, "You have unlocked the AA \"Clockwork Merchant\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_HEARTOFFLAMES && GetAA(aaHeartofFlames) < 1) {
+					TrainAARank(aaHeartofFlames);
+					Message(15, "You have unlocked the AA \"Heart of Flames\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_COMPANIONOFNECESSITY && GetAA(aaCompanionofNecessity) < 1) {
+					TrainAARank(aaCompanionofNecessity);
+					Message(15, "You have unlocked the AA \"Companion of Necessity\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_SERVANTOFRO && GetAA(aaServantofRo) < 1) {
+					TrainAARank(aaServantofRo);
+					Message(15, "You have unlocked the AA \"Servant of Ro\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == MAGICIAN && i == RB_MAG_PRIMALFUSION && GetAA(aaLessonoftheDevoted) < 1) {
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Primal Fusion\"! Find the hotkey in your Alternate Advancement Window.");
+				}
 			}
 		}
 
@@ -10463,6 +10549,31 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_SHM_FERALSWIPE) return "Feral Swipe";
 		else if (id == RB_SHM_PARAGONOFSPIRIT) return "Paragon of Spirit";
 		break;	
+	case MAGICIAN:
+		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";
+		else if (id == RB_MAG_QUICKSUMMONING) return "Quick Summoning";
+		else if (id == RB_MAG_IMPROVEDRECLAIMENERGY) return "Improved Reclaim Energy";
+		else if (id == RB_MAG_MODULATIONSHARD) return "Modulation Shard";
+		else if (id == RB_MAG_COMPANIONSDURABILITY) return "Companions Durability";
+		else if (id == RB_MAG_SUSPENDEDMINION) return "Suspended Minion";
+		else if (id == RB_MAG_MENDCOMPANION) return "Mend Companion";
+		else if (id == RB_MAG_COMPANIONOFNECESSITY) return "Companion of Necessity";
+		else if (id == RB_MAG_SHAREDHEALTH) return "Shard Health";
+		else if (id == RB_MAG_HOSTINTHESHELL) return "Host in the Shell";
+		else if (id == RB_MAG_TURNSUMMONED) return "Turn Summoned";
+		else if (id == RB_MAG_FRENZIEDBURNOUT) return "Frenzied Burnout";
+		else if (id == RB_MAG_ELEMENTALALACRITY) return "Elemental Alacrity";
+		else if (id == RB_MAG_CALLOFTHEHERO) return "Call of the Hero";
+		else if (id == RB_MAG_CLOCKWORKMERCHANT) return "Clockwork Merchant";
+		else if (id == RB_MAG_SERVANTOFRO) return "Servant of Ro";
+		else if (id == RB_MAG_DIMENSIONALSHIELD) return "Dimensional SHield";
+		else if (id == RB_MAG_HEARTOFSTONE) return "Heart of Stone";
+		else if (id == RB_MAG_HEARTOFVAPOR) return "Heart of Vapor";
+		else if (id == RB_MAG_SHOCKOFSWORDS) return "Shock of Swords";
+		else if (id == RB_MAG_HEARTOFICE) return "Heart of Ice";
+		else if (id == RB_MAG_QUICKDAMAGE) return "Quick Damage";
+		else if (id == RB_MAG_HEARTOFFLAMES) return "Heart of Flames";
+		else if (id == RB_MAG_PRIMALFUSION) return "Primal Fusion";
 	}
 	return "Unknown";
 }
@@ -10474,7 +10585,6 @@ bool Client::IsSwornEnemyActive() {
 bool Client::IsBuildAvailable() {
 	if (GetClass() == CLERIC ||
 		GetClass() == ENCHANTER ||
-		GetClass() == MAGICIAN ||
 		GetClass() == MONK ||
 		GetClass() == NECROMANCER ||
 		GetClass() == RANGER ||
