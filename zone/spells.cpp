@@ -498,6 +498,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 				Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana spell=%d mymana=%d cost=%d\n", GetName(), spell_id, GetMana(), mana_cost);
 				Message_StringID(13, INSUFFICIENT_MANA);
 				InterruptSpell();
+				return false;
 			}
 		}
 
