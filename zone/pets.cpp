@@ -356,7 +356,26 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	//Live AA - Elemental Durability
 	int16 MaxHP = aabonuses.PetMaxHP + itembonuses.PetMaxHP + spellbonuses.PetMaxHP;
 
-	if((spell_id == 58 || spell_id == 315 || spell_id == 316 || spell_id == 317) && CastToClient()->GetClass() == MAGICIAN) {
+	if(spell_id == 1936) {
+
+		npc_type->level = CastToClient()->GetLevel();
+		npc_type = this->AdjustNPC(npc_type, true, true);
+
+		npc_type->STR *= .75f;
+		npc_type->STA *= .75f;
+		npc_type->AGI *= .75f;
+		npc_type->DEX *= .75f;
+		npc_type->WIS *= .75f;
+		npc_type->INT *= .75f;
+		npc_type->CHA *= .75f;
+
+		//Now that we generated base HP, let's nerf it on a new formula
+		npc_type->max_hp *= 0.5f; //50 % of normal hp
+		npc_type->AC *= 0.5f; //this formula likely needs tweaks
+		npc_type->max_dmg *= 0.5f; //50% dmg at max
+	}
+	
+	if(spell_id == 58 || spell_id == 315 || spell_id == 316 || spell_id == 317) {
 
 		npc_type->level = CastToClient()->GetLevel();
 		npc_type = this->AdjustNPC(npc_type, true, true);
