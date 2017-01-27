@@ -1,7 +1,7 @@
 # Magician Quests
 
 sub EVENT_SAY {
-  if($text=~/hail/i) {
+  if($text=~/hail/i) {   
     quest::say("I am Joyce of the Temple of Solusek Ro. I am the guardian of four of the items of the elementalist. If you are a magician, ask me about the [Robe of the Elements], the [Clay Bracelet], the [Earthen Boots] or the [Circlet of Mist]");
   }
   if($text=~/circlet of mist/i) {
@@ -30,20 +30,24 @@ sub EVENT_SAY {
   }
 }
 
-sub EVENT_ITEM {
+sub EVENT_ITEM {  
   #circlet
   if($itemcount{10545} && $itemcount{10547} && $itemcount{10034} && $itemcount{10546} == 1) {
-    quest::say("You have done well. You are truly a powerful magician. Here is yourCirclet of Mist.");
+    quest::say("You have done well. You are truly a powerful magician. Here is your Circlet of Mist.");
     quest::summonitem(2358);
     quest::faction("320","15");
     quest::faction("291","-15");
   }
   #bracelet
-  if($itemcount{10539} && $itemcount{10542} && $itemcount{10540} && $itemcount{10541} == 1) {
+  if($itemcount{10539} && $itemcount{10542} && $itemcount{10540} && $itemcount{10541} == 1) {    
     quest::say("One, two, three.. all four runes of clay! I knew you looked competent. I am very impressed! Please take the Clay Bracelet that you have earned.");
     quest::summonitem(2359);
     quest::faction("320","15");
     quest::faction("291","-15");
+    if (quest::istaskactivityactive(301,5)) {
+      quest::updatetaskactivity(301,5);
+      quest::say("Excellent! You have completed the Clay Bracelet.");
+    }
   }
   #boots
   if($itemcount{10543} && $itemcount{10026} && $itemcount{10544} && $itemcount{2363} == 1) {

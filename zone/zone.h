@@ -39,6 +39,9 @@ struct ZonePoint
 	float target_x;
 	float target_y;
 	float target_z;
+	float target_x_offset;
+        float target_y_offset;
+        float target_z_offset;
 	float target_heading;
 	uint16 target_zone_id;
 	int32 target_zone_instance;

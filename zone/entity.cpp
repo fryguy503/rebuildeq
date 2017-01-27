@@ -3672,6 +3672,11 @@ void EntityList::AddTempPetsToHateList(Mob *owner, Mob* other, bool bFrenzy)
 	}
 }
 
+bool Entity::ShowBuildEcho() {
+	if (!IsClient()) return false;
+	return (CastToClient()->GetEPP().show_rb_echo == 1);
+}
+
 bool Entity::CheckCoordLosNoZLeaps(float cur_x, float cur_y, float cur_z,
 		float trg_x, float trg_y, float trg_z, float perwalk)
 {

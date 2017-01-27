@@ -1492,7 +1492,9 @@ void Mob::ShowStats(Client* client)
 				spawngroupid = n->respawn2->SpawnGroupID();
 			client->Message(0, "  NPCID: %u  SpawnGroupID: %u Grid: %i LootTable: %u FactionID: %i SpellsID: %u ", GetNPCTypeID(),spawngroupid, n->GetGrid(), n->GetLoottableID(), n->GetNPCFactionID(), n->GetNPCSpellsID());
 			client->Message(0, "  Accuracy: %i MerchantID: %i EmoteID: %i Runspeed: %.3f Walkspeed: %.3f", n->GetAccuracyRating(), n->MerchantType, n->GetEmoteID(), static_cast<float>(0.025f * n->GetRunspeed()), static_cast<float>(0.025f * n->GetWalkspeed()));
-			n->QueryLoot(client);
+			
+			if(!n->CastToMob()->IsCharmed())
+				n->QueryLoot(client);
 		}
 		if (IsAIControlled()) {
 			client->Message(0, "  AggroRange: %1.0f  AssistRange: %1.0f", GetAggroRange(), GetAssistRange());
@@ -3583,7 +3585,13 @@ bool Mob::TrySpellTrigger(Mob *target, uint32 spell_id, int effect)
 		{
 			if (spells[spell_id].effectid[i] == SE_SpellTrigger)
 			{
-				if(zone->random.Int(0, trig_chance) <= spells[spell_id].base[i])
+				float chance = spells[spell_id].base[i];
+				
+				if(spell_id == 8133 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED) > 0) {
+					chance = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED);
+				}
+				
+				if(zone->random.Int(0, trig_chance) <= chance)
 				{
 					// If we trigger an effect then its over.
 					if (IsValidSpell(spells[spell_id].base2[i])){

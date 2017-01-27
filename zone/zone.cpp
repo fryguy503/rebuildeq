@@ -100,9 +100,6 @@ bool Zone::Bootup(uint32 iZoneID, uint32 iInstanceID, bool iStaticZone) {
 		worldserver.SetZoneData(0);
 		return false;
 	}
-	zone->zonemap = Map::LoadMapFile(zone->map_name);
-	zone->watermap = WaterMap::LoadWaterMapfile(zone->map_name);
-	zone->pathing = PathManager::LoadPathFile(zone->map_name);
 
 	std::string tmp;
 	if (database.GetVariable("loglevel", tmp)) {
@@ -875,6 +872,23 @@ Zone::~Zone() {
 bool Zone::Init(bool iStaticZone) {
 	SetStaticZone(iStaticZone);
 
+	//load the zone config file.
+        if (!LoadZoneCFG(zone->GetShortName(), zone->GetInstanceVersion(), true)) // try loading the zone name...
+                LoadZoneCFG(zone->GetFileName(), zone->GetInstanceVersion()); // if that fails, try the file name, then load defaults
+
+        if(RuleManager::Instance()->GetActiveRulesetID() != default_ruleset)
+        {
+                std::string r_name = RuleManager::Instance()->GetRulesetName(&database, default_ruleset);
+                if(r_name.size() > 0)
+                {
+                        RuleManager::Instance()->LoadRules(&database, r_name.c_str());
+                }
+        }
+
+	zone->zonemap = Map::LoadMapFile(zone->map_name);
+	zone->watermap = WaterMap::LoadWaterMapfile(zone->map_name);
+	zone->pathing = PathManager::LoadPathFile(zone->map_name);
+
 	Log.Out(Logs::General, Logs::Status, "Loading spawn conditions...");
 	if(!spawn_conditions.LoadSpawnConditions(short_name, instanceid)) {
 		Log.Out(Logs::General, Logs::Error, "Loading spawn conditions failed, continuing without them.");
@@ -952,7 +966,7 @@ bool Zone::Init(bool iStaticZone) {
 	zone->GetMerchantDataForZoneLoad();
 
 	//Load temporary merchant data
-	zone->LoadTempMerchantData();
+	//zone->LoadTempMerchantData();
 
 	// Merc data
 	if (RuleB(Mercs, AllowMercs)) {
@@ -965,19 +979,6 @@ bool Zone::Init(bool iStaticZone) {
 
 	petition_list.ClearPetitions();
 	petition_list.ReadDatabase();
-
-	//load the zone config file.
-	if (!LoadZoneCFG(zone->GetShortName(), zone->GetInstanceVersion(), true)) // try loading the zone name...
-		LoadZoneCFG(zone->GetFileName(), zone->GetInstanceVersion()); // if that fails, try the file name, then load defaults
-
-	if(RuleManager::Instance()->GetActiveRulesetID() != default_ruleset)
-	{
-		std::string r_name = RuleManager::Instance()->GetRulesetName(&database, default_ruleset);
-		if(r_name.size() > 0)
-		{
-			RuleManager::Instance()->LoadRules(&database, r_name.c_str());
-		}
-	}
 
 	Log.Out(Logs::General, Logs::Status, "Loading timezone data...");
 	zone->zone_time.setEQTimeZone(database.GetZoneTZ(zoneid, GetInstanceVersion()));
@@ -1660,7 +1661,7 @@ bool ZoneDatabase::LoadStaticZonePoints(LinkedList<ZonePoint*>* zone_point_list,
 	zone_point_list->Clear();
 	zone->numzonepoints = 0;
 	std::string query = StringFormat("SELECT x, y, z, target_x, target_y, "
-					 "target_z, target_zone_id, heading, target_heading, "
+					 "target_z, target_x_offset, target_y_offset, target_z_offset, target_zone_id, heading, target_heading, "
 					 "number, target_instance, client_version_mask "
 					 "FROM zone_points WHERE zone='%s' AND (version=%i OR version=-1) "
 					 "ORDER BY number",
@@ -1679,12 +1680,15 @@ bool ZoneDatabase::LoadStaticZonePoints(LinkedList<ZonePoint*>* zone_point_list,
 		zp->target_x = atof(row[3]);
 		zp->target_y = atof(row[4]);
 		zp->target_z = atof(row[5]);
-		zp->target_zone_id = atoi(row[6]);
-		zp->heading = atof(row[7]);
-		zp->target_heading = atof(row[8]);
-		zp->number = atoi(row[9]);
-		zp->target_zone_instance = atoi(row[10]);
-		zp->client_version_mask = (uint32)strtoul(row[11], nullptr, 0);
+		zp->target_x_offset = atof(row[6]);
+                zp->target_y_offset = atof(row[7]);
+                zp->target_z_offset = atof(row[8]);
+		zp->target_zone_id = atoi(row[9]);
+		zp->heading = atof(row[10]);
+		zp->target_heading = atof(row[11]);
+		zp->number = atoi(row[12]);
+		zp->target_zone_instance = atoi(row[13]);
+		zp->client_version_mask = (uint32)strtoul(row[14], nullptr, 0);
 
 		zone_point_list->Insert(zp);
 

@@ -436,6 +436,7 @@ typedef enum {	//AA IDs
 	aaChaoticPotential						=1001,//added
 	aaDiscordantDefiance					=1006,//implemented as bonus
 	aaTrialsofMataMuram						=1011,
+	aaCalloftheHero							=1017,
 	aaMysticalAttuning						=1021,
 	aaDelayDeath							=1026,//implemented as bonus
 	aaHealthyAura							=1031,
@@ -993,6 +994,7 @@ typedef enum {	//AA IDs
 	aaDreamlikeCunning						=8381,
 	aaDreamlikeSapience						=8391,
 	aaArmorRend								=8400,
+	aaClockworkBanker						=9031,
 	aaFundamentofIntellect					=9100,
 	aaSongwriting							=9101,
 	aaFundamentofIntellect2					=9109,

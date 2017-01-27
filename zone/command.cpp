@@ -202,6 +202,7 @@ int command_init(void)
 		command_add("equipitem", "[slotid(0-21)] - Equip the item on your cursor into the specified slot", 50, command_equipitem) ||
 		command_add("exp", "- Get current exp pool buffer. (60+)", 0, command_exp) ||
 		command_add("face", "- Change the face of your target", 80, command_face) ||
+		command_add("feat", "- Display unlockable feats", 80, command_feat) ||
 		command_add("faq", "- Read the server FAQs", 0, command_faq) ||
 		command_add("findaliases", "[search term]- Searches for available command aliases, by alias or command", 50, command_findaliases) ||
 		command_add("findnpctype", "[search criteria] - Search database NPC types", 100, command_findnpctype) ||
@@ -266,6 +267,7 @@ int command_init(void)
 		command_add("logs",  "Manage anything to do with logs",  250, command_logs) ||
 		command_add("logtest",  "Performs log performance testing.",  250, command_logtest) ||
 		command_add("makepet", "[level] [class] [race] [texture] - Make a pet", 50, command_makepet) ||
+		command_add("makepettwo", "npc_id level - Make a secondary pet", 250, command_makepet2) ||
 		command_add("mana", "- Fill your or your target's mana", 50, command_mana) ||
 		command_add("maxskills", "Maxes skills for you.", 200, command_max_all_skills) ||
 		command_add("memspell", "[slotid] [spellid] - Memorize spellid in the specified slot", 50, command_memspell) ||
@@ -281,6 +283,7 @@ int command_init(void)
 		command_add("name", "[newname] - Rename your player target", 150, command_name) ||
 		command_add("netstats", "- Gets the network stats for a stream.", 200, command_netstats) ||
 		command_add("encounter", "- Learn more about encounters, or claim rewards.", 0, command_encounter) ||
+		command_add("npc", "[help] - NPC editor", 200, command_npc) ||
 		command_add("npccast", "[targetname/entityid] [spellid] - Causes NPC target to cast spellid on targetname/entityid", 80, command_npccast) ||
 		command_add("npcedit", "[column] [value] - Mega NPC editing command", 100, command_npcedit) ||
 		command_add("npcemote", "[message] - Make your NPC target emote a message.", 150, command_npcemote) ||
@@ -311,7 +314,7 @@ int command_init(void)
 		command_add("petitioninfo", "[petition number] - Get info about a petition", 50, command_petitioninfo) ||
 		command_add("pf", "- Display additional mob coordinate and wandering data", 50, command_pf) ||
 		command_add("picklock",  "Analog for ldon pick lock for the newer clients since we still don't have it working.",  100, command_picklock) ||
-		command_add("playsound", "Play a sound", 200, command_playsound) ||
+		command_add("playsound", "Play a sound", 150, command_playsound) ||
 #ifdef EQPROFILE
 		command_add("profiledump", "- Dump profiling info to logs", 250, command_profiledump) ||
 		command_add("profilereset", "- Reset profiling info", 250, command_profilereset) ||
@@ -341,7 +344,7 @@ int command_init(void)
 		command_add("resetaa", "- Resets a Player's AA in their profile and refunds spent AA's to unspent, may disconnect player.", 200, command_resetaa) ||
 		command_add("resetaa_timer", "Command to reset AA cooldown timers.", 200, command_resetaa_timer) ||
 		command_add("return", "- Return to the safe point of the last zone you died", 0, command_return) ||
-		command_add("rez", "- Pay platinum to summon and ressurect corpses in your current zone", 0, command_rez) ||
+		command_add("rez", "- Pay platinum to summon and resurrect corpses in your current zone", 0, command_rez) ||
 		command_add("revoke", "[charname] [1/0] - Makes charname unable to talk on OOC", 200, command_revoke) ||
 		command_add("rules", "(subcommand) - Manage server rules", 250, command_rules) ||
 		command_add("save", "- Force your player or player corpse target to be saved to the database", 50, command_save) ||
@@ -378,6 +381,7 @@ int command_init(void)
 		command_add("spawn", "[name] [race] [level] [material] [hp] [gender] [class] [priweapon] [secweapon] [merchantid] - Spawn an NPC", 10, command_spawn) ||
 		command_add("spawnfix", "- Find targeted NPC in database based on its X/Y/heading and update the database to make it spawn at your current location/heading.", 170, command_spawnfix) ||
 		command_add("spawnstatus", "- Show respawn timer status", 100, command_spawnstatus) ||
+		command_add("spelleffect", "Play a sound", 150, command_spelleffect) ||
 		command_add("spellinfo", "[spellid] - Get detailed info about a spell", 50, command_spellinfo) ||
 		command_add("spoff", "- Sends OP_ManaChange", 80, command_spoff) ||
 		command_add("spon", "- Sends OP_MemorizeSpell", 80, command_spon) ||
@@ -692,6 +696,8 @@ void command_resetaa(Client* c,const Seperator *sep) {
 
 void command_help(Client *c, const Seperator *sep)
 {
+	if (!c->IsTaskCompleted(FEAT_GETTINGSTARTED) && !c->IsTaskActive(307)) c->AssignTask(FEAT_GETTINGSTARTED, 0);
+	if (c->IsTaskActivityActive(307, 0)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 0, 1);
 	int commands_shown=0;
 
 	c->Message(0, "Available EQEMu commands:");
@@ -2425,6 +2431,14 @@ void command_makepet(Client *c, const Seperator *sep)
 		c->MakePet(0, sep->arg[1]);
 }
 
+void command_makepet2(Client *c, const Seperator *sep)
+{
+	if (sep->arg[1][0] == '\0')
+		c->Message(0, "Usage: #makepet2 npc_type_id (will not survive across zones)");
+	else
+		c->MakePet2((uint16)atoi(sep->arg[1]), c->GetLevel());
+}
+
 void command_level(Client *c, const Seperator *sep)
 {
 	uint16 level = atoi(sep->arg[1]);
@@ -3952,6 +3966,7 @@ void command_bind(Client *c, const Seperator *sep)
 //List all available builds
 void command_builds(Client *c, const Seperator *sep)
 {
+	if (c->IsTaskActivityActive(307, 7)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 7, 1);
 	uint8 level_req = 75;
 	if (!c->IsBuildAvailable()) {
 		c->Message(0, "This class does not yet have builds available. It will be coming soon!");
@@ -4078,6 +4093,115 @@ void command_setbuild(Client *c, const Seperator *sep) {
 	cTarget->RefreshBuild();
 }
 
+void command_npc(Client *c, const Seperator *sep) {
+	if (!sep->arg[1]) {
+		c->Message(0, "Usage: #npc [option], (help, entity, type)");
+		return;
+	}
+	if (strcasecmp(sep->arg[1], "help") == 0) { //#npc help
+		c->Message(0, "Help: #npc [option] values include:");
+		c->Message(0, "entity: active npc instances in entity list manager");
+		c->Message(0, "type: npc base type data manager");
+		return;
+	}
+
+	if (strcasecmp(sep->arg[1], "entity") == 0) { //#npc entity
+		if (!sep->arg[2] || strcasecmp(sep->arg[2], "help") == 0) { //#npc entity help
+			c->Message(0, "Help: #npc entity [option] values include:");
+			c->Message(0, "info: learn information about npc");
+			c->Message(0, "loot: learn loot about npc");
+			c->Message(0, "faction: learn faction data about npc");
+			c->Message(0, "spawn: learn spawn data about npc");
+			return;
+		}
+
+		if (strcasecmp(sep->arg[2], "list") == 0) { //#npc entity list
+			if (strcasecmp(sep->arg[3], "help") == 0) { //#npc entity list help
+				c->Message(0, "Help: #npc entity list [option] values include:");
+				c->Message(0, "target: (default) target entity");
+				c->Message(0, "id #: provided entity id");
+				c->Message(0, "range # #: search for entites between # to #, inclusive");
+				c->Message(0, "search [a-Z_]+: first match to search");
+				c->Message(0, "all: truncated list of all entities in zone");
+				return;
+			}
+
+			if (!sep->arg[3] || strcasecmp(sep->arg[3], "target") == 0) { //#npc entity list target
+				if (!c->GetTarget()) {
+					c->Message(13, "#npc entity info: No target provided.");
+					return;
+				}
+				if (!c->GetTarget()->IsNPC()) {
+					c->Message(13, "#npc entity info: Target must be NPC.");
+					return;
+				}
+				entity_list.ListNPCs(c, StringFormat("%u", c->GetTarget()->GetName()).c_str(), StringFormat("%u", c->GetTarget()->GetID()).c_str(), 1);
+				return;
+			}
+
+			if (strcasecmp(sep->arg[3], "range") == 0) {//#npc entity list range
+				if (!sep->arg[4] || !sep->IsNumber(4) || !sep->arg[5] || !sep->IsNumber(5)) {
+					c->Message(13, "#npc entity info: both range values not provided or invalid.");
+					return;
+				}
+				int id = atoi(sep->arg[4]);
+				int id2 = atoi(sep->arg[5]);
+				if (id < 1 || id2 < 1) {
+					c->Message(13, "#npc entity info: both range values must be greater than 0.");
+					return;
+				}
+				entity_list.ListNPCs(c, StringFormat("%i", id).c_str(), StringFormat("%i", id2).c_str(), 2);
+				return;
+			}
+
+			if (strcasecmp(sep->arg[3], "search") == 0) {//#npc entity list range
+				if (!sep->arg[4]) {
+					c->Message(13, "#npc entity info: no search term provided.");
+					return;
+				}
+				entity_list.ListNPCs(c, "all", sep->arg[4], 0);
+				return;
+			}
+
+			if (strcasecmp(sep->arg[3], "id") == 0) { //#npc entity list id
+				if (!sep->arg[4] || !sep->IsNumber(4)) {
+					c->Message(13, "#npc entity info: id not provided or invalid.");
+					return;
+				}
+				int id = atoi(sep->arg[4]);
+				if (id < 1) {
+					c->Message(13, "#npc entity info: id must be greater than 0.");
+					return;
+				}
+				entity_list.ListNPCs(c, StringFormat("%i", id).c_str(), StringFormat("%i", id).c_str(), 2);
+				return;
+			}			
+
+			if (!sep->arg[3] || strcasecmp(sep->arg[3], "all") == 0) { //#npc entity list all		
+				entity_list.ListNPCs(c, "all", "", 0);
+				return;
+			}
+
+			c->Message(13, "Command is not yet supported.");
+			return;
+		}
+
+
+	}
+
+	if (strcasecmp(sep->arg[1], "type")) { //#npc type
+		if (!sep->arg[2] || strcasecmp(sep->arg[2], "help")) { //#npc type help
+			c->Message(0, "Help: #npc type [option] values include:");
+			c->Message(0, "info: learn information about npc");
+			c->Message(0, "loot: learn loot about npc");
+			c->Message(0, "faction: learn faction data about npc");
+			c->Message(0, "spawn: learn spawn data about npc");
+			return;
+		}
+
+	}
+}
+
 //Spawns an encounter, if a valid timing
 void command_encounter(Client *c, const Seperator *sep) {
 	uint32 unclaimed_rewards = 0;
@@ -4090,7 +4214,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 		c->SpawnEncounter(false, c->GetEPP().encounter_type);
 		return;
 	}
-
+	if (c->IsTaskActivityActive(307, 3)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 3, 1);
 	//GM: emote an encounter for targetted player
 	if (c->Admin() >= 200 && sep->arg[1] && strcasecmp(sep->arg[1], "emote") == 0) {
 		if (c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
@@ -4178,6 +4302,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "claim") == 0) {
+		if (c->IsTaskActivityActive(307, 4)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 4, 1);
 		if (unclaimed_rewards == 0) {
 			c->Message(13, "You have no unclaimed rewards.");
 			return;
@@ -4291,7 +4416,8 @@ void command_teleport(Client *c, const Seperator *sep) {
 	static Location Locations[] = {
 		Location("airplane", 71, 614, 1415, -663.62, 55.8, 46, 10094),
 		Location("cobaltscar", 117, -1574.95, -1053.25, 307.74, 56.1, 10, 100011),
-		Location("commons", 21, 1839.84, 0.15, -15.61, 61.0, 10, 0),
+		Location("chardok", 103, 865.17, 23.58, 103.72, 188.8, 10, 100018),
+		//Location("commons", 21, 1839.84, 0.15, -15.61, 61.0, 10, 0),
 		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10, 100016),
 		Location("ecommons", 22, -73.06, -1787.51, 3.13, 51.8, 1, 0),
 		Location("emeraldjungle", 94, 3474.83, -3123.34, -341.34, 1.5, 10, 100013),
@@ -4303,8 +4429,9 @@ void command_teleport(Client *c, const Seperator *sep) {
 		Location("lavastorm", 27, -25, 182, -73.26, 252.3, 10, 100015),
 		Location("northkarana", 13, 1205.91, -3685.44, -8.56, 126.6, 10, 0),
 		Location("sebilis", 89, 0, 250, 39.13, 125.0, 30, 100014),
-		Location("skyfire", 91, 783.57, -3097.01, -159.38, 1.8, 10, 100012),		
+		Location("skyfire", 91, 783.57, -3097.01, -159.38, 1.8, 10, 100012),
 		Location("sro", 35, 124.6, -1041.51, 9.45, 99.5, 10, 0),
+		Location("timorous", 96, 4351.98, -12257.01, -278.9, 64.1, 10, 100017),
 		Location("toxxulia", 414, -1656.96, -1502.43, 72.29, 58.2, 1, 0),
 		Location("wakening", 119, -2980.7, -3020, 26.5, 42.9, 10, 100009)
 	};
@@ -4406,6 +4533,9 @@ void command_teleport(Client *c, const Seperator *sep) {
 			c->SetBindPoint(0, location->ZoneID, 0, glm::vec3(location->X, location->Y, location->Z));
 		}
 
+		if (c->IsTaskActivityActive(307, 1)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 1, 1);
+		if (c->IsTaskActivityActive(307, 9)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 9, 1);
+
 		// Finally, Teleport!
 		c->MovePC(location->ZoneID, location->X, location->Y, location->Z, location->Heading, (uint8)'\000', ZoneSolicited);
 		return;
@@ -4445,6 +4575,7 @@ void command_buff(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work until full health.");
 		return;
 	}
+	if (c->IsTaskActivityActive(307, 12)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 12, 1);
 
 	std::string displayCost;
 	uint64 cost = 0;
@@ -4596,6 +4727,8 @@ void command_return(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
+
+	if (c->IsTaskActivityActive(307, 14)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 14, 1);
 
 	std::string returnZoneName;
 
@@ -5904,6 +6037,7 @@ void command_dps(Client *c, const Seperator *sep)
 	/*if (!target->IsCorpse()) {
 		c->Message(0, "Invalid Target type (Not corpse), bypassing for now");
 	}*/
+	if (target->IsCorpse() && c->IsTaskActivityActive(307, 13)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 13, 1);
 
 	if (target->DPS().size() < 1) {
 		c->Message(0, "Target %s not engaged.", (target->IsCorpse() ? "was" : "is"));		
@@ -5958,6 +6092,7 @@ void command_randomfeatures(Client *c, const Seperator *sep)
 
 void command_exp(Client *c, const Seperator *sep) 
 {
+	
 	uint8 maxlevel = 60;
 	
 	if (c->GetLevel() < maxlevel) {
@@ -5965,7 +6100,13 @@ void command_exp(Client *c, const Seperator *sep)
 		return;
 	}
 
-	int exp_pool = 0;
+	if (!c->IsTaskCompleted(FEAT_GETTINGSTARTED)) {
+		for (int i = 0; i < 20; i++) {
+			c->UpdateTaskActivity(FEAT_GETTINGSTARTED, i, 1);
+		}
+	}
+	
+	uint64 exp_pool = 0;
 	auto query = StringFormat("SELECT exp_pool FROM character_custom WHERE character_id = %i", c->CharacterID());
 	auto results = database.QueryDatabase(query);
 	if (results.Success() && results.RowCount() != 0) {
@@ -5973,11 +6114,9 @@ void command_exp(Client *c, const Seperator *sep)
 		exp_pool = atoi(row[0]);
 	}
 	int bottles = exp_pool / RuleI(AA, ExpPerPoint);
-	
-
 
 	if (sep->arg[1][0] == '\0' || !strcasecmp(sep->arg[1], "help")) {
-		c->Message(0, "You currently have %i experience stored in reserve, which equates to %i experience bottles. If you hold an empty experience bottle on cursor, you can [ %s ] it for 500 platinum.", exp_pool, bottles, c->CreateSayLink("#exp fill", "fill").c_str());
+		c->Message(0, "You currently have %i experience bottles in reserve, each representing %i experience. Buy empty bottles from Nola Z`Ret in East Commonlands, and then you can [ %s ] it for 500 platinum.", bottles, RuleI(AA, ExpPerPoint), c->CreateSayLink("#exp fill", "fill").c_str());
 		return;
 	}
 	if (!strcasecmp(sep->arg[1], "limit")) {
@@ -6015,9 +6154,10 @@ void command_exp(Client *c, const Seperator *sep)
 
 		int16 inv_slot_id = c->GetInv().HasItem(100000, 1, invWhereWorn | invWherePersonal);
 		if (inv_slot_id == -1) {
-			c->Message(0, "You need an empty bottle of experience to use this command.");
+			c->Message(0, "You need an empty bottle of experience in your inventory to use this command.");
 			return;
 		}
+
 
 		auto inst = c->GetInv()[EQEmu::legacy::SlotCursor];
 		if (inst) { 
@@ -6031,21 +6171,17 @@ void command_exp(Client *c, const Seperator *sep)
 			c->Message(0, "Not enough money to fill the bottle.");
 			return;
 		}
-
-		// FYI This is not needed. If it triggers there is a bug in HasMoneyInInvOrBank..
 		if (!c->TakeMoneyFromPPOrBank(cost, true)) {
-			char *hacker_str = nullptr;
-			MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy teleport and didn't have enough money\n");
-			database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
-			safe_delete_array(hacker_str);
+			c->Message(0, "Something went wrong when getting enough money to fill the bottle.");
 			return;
 		}
 
+		//Handle item move
+		c->DeleteItemInInventory(inv_slot_id, 1, true);
+		c->SummonItem(100001, 1);
+
 		std::string query = StringFormat("UPDATE character_custom SET exp_pool = exp_pool - %i WHERE character_id = %i", RuleI(AA, ExpPerPoint), c->CharacterID());
 		auto results = database.QueryDatabase(query);
-
-		c->DeleteItemInInventory(inv_slot_id, 1, true, true);
-		c->SummonItem(100001, 1);
 
 		c->Message(MT_Experience, "You have paid 500 platinum to fill a bottle of experience.");
 		return;
@@ -6081,6 +6217,100 @@ void command_face(Client *c, const Seperator *sep)
 
 		c->Message(0,"Face = %i",  atoi(sep->arg[1]));
 	}
+}
+
+
+void command_feat(Client *c, const Seperator *sep)
+{
+	if (c->IsTaskActivityActive(307, 15)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 15, 1);
+	if (!sep->arg[1] || strlen(sep->arg[1]) < 1 || !sep->arg[1][0]) {
+		c->Message(0, "Choose the type of feats to display: [ %s ] [ %s ] [ %s ] [ %s ].",
+			c->CreateSayLink("#feat aa", "aa").c_str(),
+			c->CreateSayLink("#feat class", "class").c_str(),
+			c->CreateSayLink("#feat general", "general").c_str(),
+			c->CreateSayLink("#feat pet", "pet").c_str()	
+		);
+		if (c->GetLevel() < 40) c->Message(0, "Note: Feats are difficult, and will take a significant amount of time!");
+		return;
+	}
+		
+	struct Feat {
+		std::string FeatType;
+		std::string FeatName;
+		std::string FeatShort;
+		int AAID;
+		uint32 AARank;
+		uint32 FeatClass;
+		int TaskID;
+		int ItemID;
+		explicit Feat(std::string pFeatType, std::string pFeatName, std::string pFeatShort, int pTaskID, uint32 pFeatClass, int pAAID, uint32 pAARank, int pItemID) : FeatType(pFeatType), FeatName(pFeatName),FeatShort(pFeatShort), TaskID(pTaskID), FeatClass(pFeatClass), AAID(pAAID), AARank(pAARank), ItemID(pItemID) {};
+	};
+
+	static Feat Feats[] = {
+		//Feat("pet", "Pet Naming", "naming", FEAT_PETNAMING, 65535, 0, 0, 0),		
+		Feat("pet", "Pet Discipline", "discipline", FEAT_PETDISCIPLINE, 65535, aaPetDiscipline, 1, 0),
+		Feat("class", "Charm of Defense", "defense", FEAT_CHARMOFDEFENSE, 21, 0, 0, 100045),
+		Feat("general", "Frontal Stun Immunity", "stun", FEAT_FRONTSTUN, 65535, 0, 0, 0),
+		//Feat("general", "Cursed Fragments", "cursed", FEAT_CURSEDFRAGMENTS, 65535, 0, 0, 0),
+		Feat("aa", "Innate Runspeed", "runspeed", FEAT_INNATERUNSPEED, 65535, aaInnateRunSpeed, 3, 0)
+	};
+
+	if (sep->arg[2]) { //if 2nd argument passed
+		for (auto&& feat : Feats) {
+			if (strcmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
+			if (strcmp(sep->arg[2], feat.FeatShort.c_str()) != 0) continue; //Only matching argument shortname			
+			if ((GetPlayerClassBit(c->GetClass()) & feat.FeatClass) != GetPlayerClassBit(c->GetClass())) continue; //Class bit filter
+			
+			std::string message = StringFormat("Feat %s ", feat.FeatName.c_str());
+			if (!c->IsTaskCompleted(feat.TaskID)) {
+				if (!c->IsTaskActive(feat.TaskID)) {
+					c->AssignTask(feat.TaskID, 0);
+					return;
+				}
+				else {
+					message.append("is already in progress.");
+				}
+			}
+			else {
+				message.append("has already been completed.");
+
+				if (feat.ItemID > 0 && c->IsValidItem(feat.ItemID)) {
+					c->Message(15, "A new copy of %s has been given to you.", feat.FeatName.c_str());
+					c->SummonItem(feat.ItemID);
+				}
+			
+				if (feat.AAID > 0 && c->GetAA(feat.AAID) < feat.AARank) {
+					c->SetAA(feat.AAID, feat.AARank, 0);
+					c->SaveAA();
+					c->SendAlternateAdvancementPoints();
+					c->SendAlternateAdvancementStats();
+					c->CalcBonuses();
+					c->Message(15, "You have been granted the AA for %s!", feat.FeatName.c_str());
+				}
+			}
+			c->Message(0, message.c_str());
+			return;
+		}
+	}
+
+	//2nd argument failed or wasn't passed, display all feats of type.
+	int featCount = 0;
+	for (auto&& feat : Feats) {		
+		if (strcmp(sep->arg[1], feat.FeatType.c_str()) != 0) continue; //Only show feats of proper type
+		if ((GetPlayerClassBit(c->GetClass()) & feat.FeatClass) != GetPlayerClassBit(c->GetClass())) continue; //Class bit filter
+
+		featCount++;
+		std::string message = StringFormat("%s: ", feat.FeatName.c_str());
+		if (!c->IsTaskCompleted(feat.TaskID)) {
+			if (c->IsTaskActive(feat.TaskID)) message.append("In Progress");
+			else message.append(StringFormat("[ %s ]", c->CreateSayLink(StringFormat("#feat %s %s", feat.FeatType.c_str(), feat.FeatShort.c_str()).c_str(), "Get Task").c_str()));
+		}
+		else {
+			message.append(StringFormat("[ %s ]", c->CreateSayLink(StringFormat("#feat %s %s", feat.FeatType.c_str(), feat.FeatShort.c_str()).c_str(), "Completed").c_str()));
+		}
+		c->Message(0, message.c_str());
+	}
+	if (featCount == 0) c->Message(0, "No feats are available for this type: %s", sep->arg[1]);
 }
 
 void command_findaliases(Client *c, const Seperator *sep)
@@ -8918,10 +9148,27 @@ void command_toggle(Client *c, const Seperator *sep)
 		c->Message(0, "...healtarget [%s] - Cast beneficial spells on %s instead of an enemy target", ((c->GetEPP().use_self_target) ? "Self" : "Target's Target"), ((c->GetEPP().use_self_target) ? "self" : "target's target"));
 		c->Message(0, "...pettaunt [%s] - Set default option for pet taunting", ((c->GetEPP().use_pet_taunt) ? "ON" : "OFF"));
 		c->Message(0, "...dpsfull [%s] - When a mob dies you hurted, shows report of all DPS", ((c->GetEPP().use_full_dps) ? "ON" : "OFF"));
-		c->Message(0, "...dpsself [%s] - When a mob dies you hurted, shows reports your DPS", ((c->GetEPP().use_self_dps) ? "ON" : "OFF"));
+		c->Message(0, "...dpsself [%s] - When a mob dies you hurted, shows your DPS in report", ((c->GetEPP().use_self_dps) ? "ON" : "OFF"));
+		c->Message(0, "...buildecho [%s] - Display verbose build debug information, breaking down how builds work", ((c->GetEPP().use_self_dps) ? "ON" : "OFF"));
 		return;
 	}
 	
+	if (!strcasecmp(sep->arg[1], "buildecho") || 
+		!strcasecmp(sep->arg[1], "echobuild") || 
+		!strcasecmp(sep->arg[1], "buildsecho") || 
+		!strcasecmp(sep->arg[1], "echobuilds")) {
+		c->GetEPP().show_rb_echo = 1 - c->GetEPP().show_rb_echo;
+		std::string query = StringFormat("UPDATE account_custom SET show_rb_echo = %i WHERE account_id = %u", c->GetEPP().show_rb_echo, c->AccountID());
+		auto results = database.QueryDatabase(query);
+		if (!results.Success()) {
+			c->Message(13, "Setting option failed. The devs have been notified.");
+			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			return;
+		}
+		c->Message(0, "You have %s verbose build echos.", ((c->GetEPP().show_rb_echo) ? "enabled" : "disabled"));
+		return;
+	}
+
 
 	if (!strcasecmp(sep->arg[1], "newcon")) {
 		c->GetEPP().use_new_con = 1 - c->GetEPP().use_new_con;
@@ -11285,14 +11532,47 @@ void command_sensetrap(Client *c, const Seperator *sep)
 
 //Play a sound
 void command_playsound(Client *c, const Seperator *sep) {
-	if (sep->arg[1]) {
-		c->PlayMP3(sep->arg[1]);
-		c->Message(13, "Playing %s", sep->arg[1]);
+	if (!sep->arg[1]) {
+		c->Message(13, "Usage: #playsound <filename>, e.g. bowdraw.mp3");
+		return;
 	}
-	else {
-		c->Message(13, "Usage: #playsound <filename>");
+	c->Message(13, "Playing %s to all players in zone.", sep->arg[1]);
+
+	std::list<Client*> client_list;
+	entity_list.GetClientList(client_list);
+	auto iter = client_list.begin();
+
+	while (iter != client_list.end()) {
+		Client *entry = (*iter);
+		if (!entry->IsLD()) {
+			entry->PlayMP3(sep->arg[1]);
+		}
+		iter++;
 	}
 }
+
+void command_spelleffect(Client *c, const Seperator *sep) {
+	if (!sep->arg[1]) {
+		c->Message(13, "Usage: #spelleffect #");
+		return;
+	}
+	if (!c->GetTarget()) {
+		c->Message(13, "You must have a target.");
+		return;
+	}
+
+	uint32		effectid = (uint32)atoi(sep->arg[1]);
+	uint32		duration = 5000;
+	uint32		finish_delay = 0;
+	bool		zone_wide = true;
+	uint32		unk20 = 3000;
+	bool		perm_effect = false;	
+
+	c->Message(13, "Sending spell effect %u on %s", effectid, c->GetTarget()->GetCleanName());
+	c->GetTarget()->SendSpellEffect(effectid, duration, finish_delay, zone_wide, unk20, perm_effect, nullptr);
+
+}
+
 
 void command_picklock(Client *c, const Seperator *sep)
 {

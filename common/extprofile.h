@@ -70,6 +70,7 @@ struct ExtendedProfile_Struct {
 	uint32				rotten_core_timeout; //SK only skill, timeout for temp buff	
 	uint16				evade_mob_id; //Evade once mechanic id
 	uint32				evade_mob_timeout; //Evade once mechanic timeout
+	bool				show_rb_echo; //Show Build Skill echos
 	bool				use_new_con; //Use new con system?
 	bool				use_self_target; //Use self target system?
 	bool				use_pet_taunt; //Use pet taunt by default?

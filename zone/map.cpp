@@ -248,23 +248,28 @@ bool Map::Load(std::string filename) {
 		uint32 version;
 		if(fread(&version, sizeof(version), 1, f) != 1) {
 			fclose(f);
+			Log.Out(Logs::General, Logs::Error, "Loading Map Version Failed");
 			return false;
 		}
 		
 		if(version == 0x01000000) {
 			bool v = LoadV1(f);
 			fclose(f);
+			Log.Out(Logs::General, Logs::Status, "Loading MapV1: %d", v);
 			return v;
 		} else if(version == 0x02000000) {
 			bool v = LoadV2(f);
 			fclose(f);
+			Log.Out(Logs::General, Logs::Status, "Loading MapV2: %d", v);
 			return v;
 		} else {
 			fclose(f);
+			Log.Out(Logs::General, Logs::Error, "Loading Map Version Mismatch");
 			return false;
 		}
 	}
-	
+
+	Log.Out(Logs::General, Logs::Status, "Loading Map File Failed");	
 	return false;
 }
 

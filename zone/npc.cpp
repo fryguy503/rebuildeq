@@ -595,6 +595,7 @@ bool NPC::Process()
 			// owner->SetPetID(0);
 			this->ownerid = 0;
 			this->petid = 0;
+			this->pet2id = 0;
 		}
 		return false;
 	}
@@ -2600,7 +2601,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		SpecialLoot_Struct(100113, "Gnoll", 500),
 		SpecialLoot_Struct(100114, "Aviak", 500),
 		SpecialLoot_Struct(100115, "Werewolf", 500),
-		SpecialLoot_Struct(100116, "Spider", 500),
+		SpecialLoot_Struct(100116, "Kobold", 500),
 		SpecialLoot_Struct(100117, "Orc", 500),
 		SpecialLoot_Struct(100118, "Fungus", 500),
 		SpecialLoot_Struct(100119, "Goblin", 500),
@@ -2622,12 +2623,13 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		SpecialLoot_Struct(100135, "Spider", 500),
 		SpecialLoot_Struct(100136, "Beetle", 500),
 		SpecialLoot_Struct(100137, "Snake", 500),
-		SpecialLoot_Struct(100138, "Wolf", 50000), //super rare since it gives sow
+		SpecialLoot_Struct(100138, "Wolf", 10000), //super rare since it gives sow
 		SpecialLoot_Struct(100139, "Bear", 500),
 		SpecialLoot_Struct(100140, "Ghoul", 500),
 		SpecialLoot_Struct(100141, "Zombie", 500),
 		SpecialLoot_Struct(100142, "Skeleton", 500),
 		SpecialLoot_Struct(100143, "Chromadrac", 500),
+		SpecialLoot_Struct(100144, "Dozekar the Cursed", 1000),
 	};
 
 	std::vector<SpecialLoot_Struct> loot_list;
@@ -2636,7 +2638,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		Log.Out(Logs::General, Logs::Debug, "ID: %i, String: %s, Race: %i", i.item_id, i.name.c_str(), GetRace());
 		if (i.item_id == 100100 && (GetRace() == 195 /*Zland*/ || GetRace() == 19 /*Trak*/ || GetRace() == 49 /*Sev*/ || GetNPCTypeID() == 69089 /*Fey*/ || GetRace() == 184 /*aary*/)) loot_list.push_back(i); //Dragon Card
 		if (i.item_id == 100101 && GetBodyType() == BT_Insect) loot_list.push_back(i); //Insect Card
-		if (i.item_id == 100102 && GetBodyType() == BT_Animal) loot_list.push_back(i); //Animal Card
+		if (i.item_id == 100102 && (GetBodyType() == BT_Animal || GetRace() == 36 || GetRace() == 156 || GetRace() == 415)) loot_list.push_back(i); //Animal Card
 		if (i.item_id == 100103 && GetBodyType() == BT_Construct) loot_list.push_back(i); //Construct Card
 		if (i.item_id == 100104 && GetBodyType() == BT_Extraplanar) loot_list.push_back(i); //Extra Planar Card
 		if (i.item_id == 100105 && (GetBodyType() == BT_Giant || GetBodyType() == BT_RaidGiant || GetBodyType() == BT_Zek)) loot_list.push_back(i); //Giant Card
@@ -2678,6 +2680,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		if (i.item_id == 100141 && (GetRace() == 70)) loot_list.push_back(i); //Zombie card
 		if (i.item_id == 100142 && (GetRace() == 367 || GetRace() == 161)) loot_list.push_back(i); //Skeleton card
 		if (i.item_id == 100143 && (GetRace() == 154) && mob_name.find("chroma") != std::string::npos) loot_list.push_back(i); //Chromadrac Card
+		if (i.item_id == 100144 && mob_name.find("Dozekar") != std::string::npos) loot_list.push_back(i); //Dozekar the Cursed Card
 	}
 	
 	return loot_list;
