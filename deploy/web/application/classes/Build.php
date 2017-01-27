@@ -540,7 +540,7 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Ring Affinity";
 			$newSkill->desc = 'Ring spells cast <em data-base="5">5</em>% faster and cost <em data-base="10">10</em>%% less mana.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
 			$skills[13] = $newSkill;
 
 			$newSkill = new stdClass();
@@ -572,7 +572,6 @@ class Build {
 			$newSkill->desc = 'Grants the Spirit of the Wood AA, which casts buffs scaled based on your level.<br>Rank 1: Strength<br>Rank 2: Resists<br>Rank 3: HP Regen<br>Rank 4: HP (Wood Line)<br>Rank 5: Damage Shield';
 			$newSkill->image = "/images/builds/icons/rb-dru-spiritofthewood.png";	
 			$skills[24] = $newSkill;			
-
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Awakening";
@@ -582,8 +581,8 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Nature's Boon";
-			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, giving the target (Level*2)*0.2*rank hitpoints per tick. Each rank reduces the duration by <em data-base="12">12</em> seconds. When the buff fades, the target is healed for <em data-base="20">20</em>% of their max hitpoints. This also causes normal heals to be boosted by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-dru-naturesboon.png";	
+			$newSkill->desc = 'Grants the Nature\'s Boon AA, where the target receives a buff that lasts 84 seconds, duration reduced by <em data-base="12">12</em> seconds due to rank. When the buff fades, the target is healed for <em data-base="20">20</em>% of the druid\'s max mana. If Nature\'s Boon is removed early, it will heal for a portion based on duration buff lasted. This also causes normal heals to be boosted by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>. ';
+			$newSkill->image = "/images/builds/icons/rb-dru-naturesboon.png";
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();
@@ -597,7 +596,6 @@ class Build {
 			$newSkill->desc = 'Grants the Nature\'s Guardian AA, where <em data-base="3">3</em>% of the caster\'s max mana is infused by nature and can be transferred to a target or to the caster<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-naturesguardian.png";	
 			$skills[34] = $newSkill;
-
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Intensity";
@@ -622,7 +620,6 @@ class Build {
 			$newSkill->desc = 'All Ro debuffs now have a <em data-base="5">5</em>% chance to spread to enemies within <em data-base="10">10</em>m of an affected target if they are on the aggro list of the druid.';
 			$newSkill->image = "/images/builds/icons/rb-dru-blessingofro.png";	
 			$skills[42] = $newSkill;
-
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Whirling Disaster";
@@ -655,6 +652,149 @@ class Build {
 
 			//==================MAGICIAN======================
 			case "magician":
+			$newSkill = new stdClass();
+			$newSkill->title = "Summoning Focus";
+			$newSkill->desc = 'Items summoned by the magician are reinforced, giving better stats. Additional ranks increase the level of spells affected.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[0] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Quick Summoning";
+			$newSkill->desc = 'Reduces the cast time of pet summoning spells by <em data-base="10">10</em>% per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[2] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Improved Reclaim Energy";
+			$newSkill->desc = 'Increases the amount of mana returned by Reclaim Energy by <em data-base="5">5</em>% per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[4] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Modulation Shard";
+			$newSkill->desc = 'Summons a modulation rod with <em data-base="1">1</em> charge per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[6] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Companion's Durability";
+			$newSkill->desc = 'Increases your pet\'s HP by <em data-base="2">2</em>% per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[8] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Suspended Minion";
+			$newSkill->desc = 'Grants the Suspended Minion AA, allowing you to suspend a minion to be recalled later. Further ranks allow preserving buffs and items while suspended.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[10] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Mend Companion";
+			$newSkill->desc = 'Grants the Mend Companion AA, healing <em data-base="20">20</em>% of your pet\'s HP per rank';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[13] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Companion of Necessity";
+			$newSkill->desc = 'Grants the Companion of Necessity AA, summoning a temporary pet that will gain the attention of one creature and cause that creature to forget all anger when the pet dies. Each rank grants <em data-base="20">20</em>% of maximum duration.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[16] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Shared Health";
+			$newSkill->desc = 'Grants the Shared Health AA, causing <em data-base="10">10</em>% of your incoming damage per rank to be sent to your pet instead.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[18] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Host in the Shell";
+			$newSkill->desc = 'Grants the Host in the Shell AA, creating a rune effect on your pet with <em data-base="20">20</em>% of the rune\'s maximum value per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[20] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Turn Summoned";
+			$newSkill->desc = 'Grants the Turn Summoned AA, inflicing a DoT for <em data-base="500">500</em> damage per rank per tick for 4 ticks with a <em data-base="1">1</em>% chance per rank to cause 32000 damage.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[22] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Frenzied Burnout";
+			$newSkill->desc = 'Grants the Frenzied Burnout AA, accelearting your pet\'s frenzy. This spell\'s effect includes overhaste. Each rank grants <em data-base="20">20</em>% of the spell\'s maximum effectiveness.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[24] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Elemental Alacrity";
+			$newSkill->desc = 'Grants your pet the ability to flurry with at <em data-base="4">4</em>% chance per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[26] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Call of the Hero";
+			$newSkill->desc = 'Grants the Call of the Hero AA with reduced cast time and cooldown timer per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[28] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Clockwork Merchant";
+			$newSkill->desc = 'Grants the Clockwork Banker AA that summons a merchant. Ranks decrease the cooldown substantially.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[31] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Servant of Ro";
+			$newSkill->desc = 'Grants the Servant of Ro AA that calls a loyal servant into being who will repeatedly hurl fire at your target. Ranks increase the duration of this temprorary pet.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[34] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Dimensional Shield";
+			$newSkill->desc = 'Grants Dimensional Shield AA that allows a chance to shadow step away from the attacking target. Ranks increase the chance of the defensive proc by <em data-base="20">20</em>% per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[36] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Heart of Stone";
+			$newSkill->desc = 'Grants Heart of Stone AA that provides a melee guard. The melee guard is scaled at 10% per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[38] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Heart of Vapor";
+			$newSkill->desc = 'Grants Heart of Vapor AA that reduces hate generated. The effectiveness of the spell is 20>% per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[40] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Shock of Swords";
+			$newSkill->desc = 'Increases the damage caused by sword and blade spells by <em data-base="4">4</em>% per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[42] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Heart of Ice";
+			$newSkill->desc = 'Grants Heart of Ice AA that provides a spell guard. The spell guard is scaled at 10% per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[44] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Quick Damage";
+			$newSkill->desc = 'Reduces the cast time of direct damage spells that have casting times longer than 3 seconds. Each rank further decreases the cast time.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[46] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Heart of Flames";
+			$newSkill->desc = 'Grants Heart of Flames AA that provides a massive damage shield. The effectiveness of the spell is scaled at 20% per rank.';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[49] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Primal Fusion";
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, casting Primal Fusion on your pet, increasing its HP and granting an additional direct damage and stun proc. The effectiveness of the spell\'s effects are scaled at 20% per rank ';
+			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$skills[52] = $newSkill;
 			break;
 
 			//==================MONK======================
@@ -807,8 +947,8 @@ class Build {
 			$skills[49] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Slay Undead";
-			$newSkill->desc = 'Grants the passive Slay Undead with a <em data-base="1">1</em>% chance<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Slayer";
+			$newSkill->desc = 'Grants an ability to cleanse the target, similar to Slay Undead, but works on ALL creature types, up to the level of the paladin, with a <em data-base="1">1</em>% chance<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
 			$skills[52] = $newSkill;
 			break;
@@ -870,7 +1010,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jarring Stab";
-			$newSkill->desc = 'When the rogue successfully backstabs an enemy, they have a <em data-base="2">2</em>% chance to cause the enemy to lose <em data-base="50">50</em> hate to all allies except for the top hated ally<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When the rogue successfully backstabs an enemy, they have a <em data-base="2">2</em>% chance to cause all enemies that are hated by the rogue to <em data-base="20">20</em> hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
 			$skills[20] = $newSkill;
 
@@ -1140,7 +1280,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Hungering Aura";
-			$newSkill->desc = 'Improves lifetaps by <em data-base="+6">+6</em>% healing for each enemy attacking you with a maximum of <em data-base="+1">+1</em> enemies<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Improves lifetaps by <em data-base="10">10</em>% healing for each enemy attacking you with a maximum of <em data-base="1">1</em> enemies<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-hungeringaura.png";	
 			$skills[4] = $newSkill;
 			
@@ -1222,13 +1362,13 @@ class Build {
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Bash of Death";
-			$newSkill->desc = 'When you bash a target, if the enemy is at <em data-base="10">10</em>% or less total health there is a <em data-base="1">1</em>% chance to cast harm touch<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you bash a target that is equal to your level or lower and the enemy is at <em data-base="10">10</em>% or less total health there is a <em data-base="7">7</em>% chance to cast harm touch<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-bashofdeath.png";	
 			$skills[34] = $newSkill;
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Embrace Death";
-			$newSkill->desc = 'Grants you the Death Peace AA, giving the ability to feign death as well as heal you for <em data-base="0.5">0.5</em>% maximum health on use<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants you the Death Peace AA, giving the ability to feign death as well as heal you for <em data-base="0.1">0.1</em>% maximum health on use<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-sk-embracedeath.png";	
 			$skills[36] = $newSkill;
 			

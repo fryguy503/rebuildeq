@@ -220,6 +220,36 @@ void Mob::MakePet(uint16 spell_id, const char* pettype, const char *petname) {
 	MakePoweredPet(spell_id, pettype, -1, petname);
 }
 
+//This is a new, unqiue secondary pet system.
+void Mob::MakePet2(uint16 npc_type, uint8 level) {
+	if (!IsClient()) return;
+	if (!HasPet()) {
+		Message(13, "You cannot summon this type of pet until another pet has been summoned.");
+		return;
+	}
+	//Message(0, "Making Pet %u level %u", npc_type, level);
+	//lookup our pets table record for this type
+	const NPCType* npctype = 0;
+	npctype = database.LoadNPCTypesData(npc_type);
+	if (!npctype) return;
+	
+	//we copy the npc_type data because we need to edit it a bit
+	NPCType *enpc = new NPCType;
+	memcpy(enpc, npctype, sizeof(NPCType));
+	strcpy(enpc->name, "");
+	enpc->level = level;
+	enpc = AdjustNPC(enpc, false, false);
+	enpc->bodytype = BT_NoTarget; //NoTarget
+	enpc->npc_faction_id = 0; // No faction		
+	strcpy(enpc->special_abilities, "19,1^20,1^24,1");
+	
+	NPC* npc = new NPC(enpc, nullptr, GetPet()->GetPosition(), FlyMode3);
+	entity_list.AddNPC(npc, true, true);
+	npc->SendPosUpdate();
+	SetPet2ID(npc->GetID());
+	//Message(0, "Spawned, entity # %u", npc->GetID());
+}
+
 // Split from the basic MakePet to allow backward compatiblity with existing code while also
 // making it possible for petpower to be retained without the focus item having to
 // stay equipped when the character zones. petpower of -1 means that the currently equipped petfocus
@@ -252,10 +282,10 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		}
 
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
-                if (spell_id == 2760 && rank < 1) {
-                        Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
-                        return;
-                }
+		if (spell_id == 2760 && rank < 1) {
+			Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
+			return;
+		}
 	}
 
 	int16 act_power = 0; // The actual pet power we'll use.
@@ -355,49 +385,49 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		//Turn it into a pet
 		switch (GetBaseRace())
 		{
-		case VAHSHIR:
-			npc_type->race = TIGER;
-			npc_type->size = 2.5f;
+			case VAHSHIR:
+				npc_type->race = TIGER;
+				npc_type->size = 2.5f;
 
-			break;
-		case TROLL:
-			npc_type->race = ALLIGATOR;
-			npc_type->size *= 10.0f;
-			break;
-		case OGRE:
-			npc_type->race = BEAR;
-			npc_type->texture = 3;
-			npc_type->gender = 2;
-			npc_type->size = 2.5f;
-			break;
-		case BARBARIAN:
-			npc_type->race = BEAR;
-			npc_type->texture = 2;
-			npc_type->size = 2.5f;
-			break;
-		case IKSAR:
-			npc_type->race = WOLF;
-			npc_type->texture = 0;
-			npc_type->gender = 1;
-			//npc_type->size *= 2.0f;
-			npc_type->size = 4;
-			npc_type->luclinface = 0;
-			break;
-		case WOOD_ELF:
-			npc_type->race = BEAR;
-			npc_type->texture = 1;
-			npc_type->helmtexture = 2;
-			npc_type->size = 2.5f;
-			break;
-		case DARK_ELF:
-			npc_type->race = WOLF;
-			npc_type->texture = 1;
-			npc_type->size = 2.5f;
-			break;
-		default:
-			npc_type->race = WOLF;
-			npc_type->texture = 0;
-			npc_type->size = 2.5f;
+				break;
+			case TROLL:
+				npc_type->race = ALLIGATOR;
+				npc_type->size *= 10.0f;
+				break;
+			case OGRE:
+				npc_type->race = BEAR;
+				npc_type->texture = 3;
+				npc_type->gender = 2;
+				npc_type->size = 2.5f;
+				break;
+			case BARBARIAN:
+				npc_type->race = BEAR;
+				npc_type->texture = 2;
+				npc_type->size = 2.5f;
+				break;
+			case IKSAR:
+				npc_type->race = WOLF;
+				npc_type->texture = 0;
+				npc_type->gender = 1;
+				//npc_type->size *= 2.0f;
+				npc_type->size = 4;
+				npc_type->luclinface = 0;
+				break;
+			case WOOD_ELF:
+				npc_type->race = BEAR;
+				npc_type->texture = 1;
+				npc_type->helmtexture = 2;
+				npc_type->size = 2.5f;
+				break;
+			case DARK_ELF:
+				npc_type->race = WOLF;
+				npc_type->texture = 1;
+				npc_type->size = 2.5f;
+				break;
+			default:
+				npc_type->race = WOLF;
+				npc_type->texture = 0;
+				npc_type->size = 2.5f;
 		}
 	}
 
@@ -529,6 +559,12 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		if (this->CastToClient()->GetInv().GetItem(EQEmu::legacy::SlotPrimary)) { //If a weapon is equipped
 			npc_type->prim_melee_type = this->CastToClient()->GetInv().GetItem(EQEmu::legacy::SlotPrimary)->GetItem()->ItemType;
 		}
+	}
+
+	if(this->IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONSDURABILITY) > 0) {
+		uint32 rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONSDURABILITY);
+		npc_type->max_hp *= (1 + rank * 0.02);
+		npc_type->cur_hp *= (1 + rank * 0.02);
 	}
 
 	if (MaxHP){
@@ -804,6 +840,7 @@ void Mob::SetPet(Mob* newpet) {
 	Mob* oldpet = GetPet();
 	if (oldpet) {
 		oldpet->SetOwnerID(0);
+		if (IsClient()) SetPet2ID(0);
 	}
 	if (newpet == nullptr) {
 		SetPetID(0);
@@ -823,9 +860,30 @@ void Mob::SetPetID(uint16 NewPetID) {
 
 	if(IsClient())
 	{
+		if (petid == 0) SetPet2ID(0); //kill second pet if primary died.
 		Mob* NewPet = entity_list.GetMob(NewPetID);
 		CastToClient()->UpdateXTargetType(MyPet, NewPet);
 	}
+}
+
+void Mob::SetPet2ID(uint16 NewPetID) {
+	if (!IsClient()) return;
+	//oldpet
+	if (pet2id != 0) {
+		Mob *SecondaryPet = entity_list.GetMob(pet2id);
+		if (SecondaryPet != nullptr) SecondaryPet->Depop(); //secondary pet poof
+	}
+	
+	if (petid == 0 || NewPetID == 0) { //Primary pet poof, or remove secondary pet		
+		pet2id = 0;
+		return;
+	}
+	//newpet
+	pet2id = NewPetID;
+	Mob *SecondaryPet = entity_list.GetMob(NewPetID);
+	//Secondary pet follows primary pet
+	SecondaryPet->SetFollowID(petid);
+	SecondaryPet->SetFollowDistance(50);
 }
 
 void NPC::GetPetState(SpellBuff_Struct *pet_buffs, uint32 *items, char *name) {

@@ -25,10 +25,47 @@ sub velious_armor_hail {
 	my $text = shift;
 	my $zoneid = shift;
 	my $classid = shift;
+	my $location = "";
+	my $armor_type = "";
+
 	if($text=~/armor/i || $text=~/hail/i) {
-        quest::say("Are you interested in armor that Velious has to offer? [ ".quest::saylink("head")."], [".quest::saylink("arms")."], [".quest::saylink("wrists")."], [".quest::saylink("hands")."], [".quest::saylink("chest")."], [".quest::saylink("legs")."], [".quest::saylink("feet")."]");
+        quest::say("Are you interested in armor that Velious has to offer? [ ".quest::saylink("head")."], [".quest::saylink("arms")."], [".quest::saylink("wrists")."], [".quest::saylink("hands")."], [".quest::saylink("chest")."], [".quest::saylink("legs")."], [".quest::saylink("feet")."], [".quest::saylink("gems")."]");
     } elsif($text=~/head/i || $text=~/arms/i || $text=~/wrists/i || $text=~/hands/i || $text=~/chest/i || $text=~/legs/i || $text=~/feet/i) {
        plugin::velious_armor_requirement($text, $zoneid, $classid);
+    } elsif($text=~/gems/i) {
+    	if ($zoneid == 115) { #Thurgadin
+    		quest::say("Gem quests are available in Kael Drakkel and Skyshrine only.");
+    		return;
+    	} elsif ($zoneid == 113) { #kael
+			$location = "the West Wing of the Temple of Veeshan";
+			if ($classid == 3 || $classid == 8 || $classid == 1 || $classid == 5 || $classid == 2) {
+				$armor_type = "n Ancient Tarnished Plate";			
+			}
+			elsif ($classid == 4 || $classid == 9 || $classid == 10) {
+				$armor_type = "n Ancient Tarnished Chain";			
+			}
+			elsif ($classid == 6 || $classid == 7 || $classid == 10) {
+				$armor_type = "n Ancient Leather";			
+			}
+			else {
+				$armor_type = "n Ancient Silk";			
+			}
+		} elsif ($zoneid == 114) { #skyshrine
+			$location = "the Halls of Testing in the Temple of Veeshan";
+			if ($classid == 3 || $classid == 8 || $classid == 1 || $classid == 5 || $classid == 2) {
+				$armor_type = "n Unadorned Plate";			
+			}
+			elsif ($classid == 4 || $classid == 9 || $classid == 10) {
+				$armor_type = "n Unadorned Chain";			
+			}
+			elsif ($classid == 6 || $classid == 7 || $classid == 10) {
+				$armor_type = "n Unadorned Leather";			
+			}
+			else {
+				$armor_type = " Tattered Silk";			
+			}
+		}
+		quest::say("Veeshan's Gems infuse armor from the Temple, and may be chiseled to perfection 10 total times. The first 4 times, while the gem is yellow and white are always successful. Beyond this point, the gem becomes red, and each chisel runs the risk of losing the gem (so proceed with caution). Found in $location, I require a$armor_type piece, Veeshan's Gem from Dozekar the Cursed (or a previously chiseled gem), an elunium found off creatures level 55+, and my fee of 200 platinum in order to attempt chiseling.");
     }
     return;
 }
@@ -629,12 +666,12 @@ sub velious_armor_list {
 
 	$tmp_class = 10;
 	#thurgadin terman underbelly shaman chain
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24940, reward => 31008}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24935, reward => 31009}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24937, reward => 31010}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24939, reward => 31011}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31012}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24936, reward => 31013}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31014}; #boots
+	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24940, reward => 31007}; #cap
+	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24935, reward => 31008}; #bp
+	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24937, reward => 31009}; #sleeves
+	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24939, reward => 31010}; #wrist
+	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31011}; #gloves
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24936, reward => 31012}; #legs
+	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31013}; #boots
 	return @armor_list;
 }

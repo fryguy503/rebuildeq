@@ -34,6 +34,7 @@ Copyright (C) 2001-2008 EQEMu Development Team (http://eqemulator.net)
 #include "client.h"
 #include "entity.h"
 #include "mob.h"
+#include "string_ids.h"
 
 #include "queryserv.h"
 #include "quest_parser_collection.h"
@@ -1871,7 +1872,29 @@ void ClientTaskState::IncrementDoneCount(Client *c, TaskInformation* Task, int T
 			// If Experience and/or cash rewards are set, reward them from the task even if RewardMethod is METHODQUEST
 			RewardTask(c, Task);
 			//RemoveTask(c, TaskIndex);
-
+			if (TaskIndex == FEAT_PETDISCIPLINE) {
+				c->SetAA(aaPetDiscipline, 1, 0);
+				c->SaveAA();
+				c->SendAlternateAdvancementPoints();
+				c->SendAlternateAdvancementStats();
+				c->CalcBonuses();
+				
+				c->Message(15, "You have been granted the pet discipline AA!");
+			}
+			if (TaskIndex == FEAT_INNATERUNSPEED) {
+				c->SetAA(aaInnateRunSpeed, 3, 0);
+				c->SaveAA();
+				c->SendAlternateAdvancementPoints();
+				c->SendAlternateAdvancementStats();
+				c->CalcBonuses();
+				
+				c->Message(15, "You have been granted an AA!");
+			}
+			if (TaskIndex == FEAT_CHARMOFDEFENSE && c->IsValidItem(100045)) {
+				c->Message(15, "You have obtained the Charm of Defense! Use #feats to summon a new copy if you ever need another.");
+				c->SummonItem(100045);
+				
+			}
 		}
 
 	}
@@ -1887,7 +1910,7 @@ void ClientTaskState::RewardTask(Client *c, TaskInformation *Task) {
 
 	const EQEmu::Item_Struct* Item;
 	std::vector<int> RewardList;
-
+	
 	switch(Task->RewardMethod) {
 
 		case METHODSINGLEID:
@@ -3038,16 +3061,17 @@ void ClientTaskState::AcceptNewTask(Client *c, int TaskID, int NPCID, bool enfor
 
 	char *buf = 0;
 	MakeAnyLenString(&buf, "%d", TaskID);
-
-	NPC *npc = entity_list.GetID(NPCID)->CastToNPC();
-	if(!npc) {
-		c->Message(clientMessageYellow, "Task Giver ID is %i", NPCID);
-		c->Message(clientMessageError, "Unable to find NPC to send EVENT_TASKACCEPTED to. Report this bug.");
-		safe_delete_array(buf);
-		return;
-	}
 	taskmanager->SaveClientState(c, this);
-	parse->EventNPC(EVENT_TASK_ACCEPTED, npc, c, buf, 0);
+	if (NPCID != 0) {
+		NPC *npc = entity_list.GetID(NPCID)->CastToNPC();
+		if (!npc) {
+			c->Message(clientMessageYellow, "Task Giver ID is %i", NPCID);
+			c->Message(clientMessageError, "Unable to find NPC to send EVENT_TASKACCEPTED to. Report this bug.");
+			safe_delete_array(buf);
+			return;
+		}
+		parse->EventNPC(EVENT_TASK_ACCEPTED, npc, c, buf, 0);
+	}
 	safe_delete_array(buf);
 
 }

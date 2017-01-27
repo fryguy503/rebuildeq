@@ -1,4 +1,10 @@
+
+$strikes = 0;
+$portal = 124007;
+$lastpool = 0;
+
 sub EVENT_SAY {
+  
   if ($faction == 1) {
     if ($text=~/hail/i) {
       quest::say("Greetings, $name. I am the keeper of relics. If you are brave I have tasks to test your might and perhaps rewards.");
@@ -83,5 +89,86 @@ sub EVENT_ITEM {
   plugin::return_items(\%itemcount);
 }
 
-# Quest edited and updated by mystic414
+sub EVENT_SPAWN {
+  quest::stopalltimers();
+  quest::setnexthpevent(90);
+}
+
+sub EVENT_HP {
+  if($hpevent == 90) {
+    quest::stopalltimers();
+    $strikes = 0;
+    quest::settimer("spawnportal", 6);
+  }
+}
+
+
+sub EVENT_TIMER {
+  my $portal_list = {0 => {dir => 159.8, x => 680.66, y => -1149.88, z => -81.84, h=> 126.1}, 1 => {dir => 191.4, x =>1023.48, y => -1452.74, z => -141.81, h=>  62.1}, 2 => {dir => 238.5, x =>  857.92, y => -889.58, z => -141.81, h=> 63.8}};
+
+  if ($timer eq "spawnportal") {
+    if (!$npc) { #repop fix.
+      return;
+    }
+
+    quest::stoptimer("spawnportal");    
+    
+    $lastpool = quest::ChooseRandom(0,1,2);
+
+    $npc->SpellEffect(68);
+    if ($targetid) { #call of the zero, aka memwipe and summon target.
+      $npc->CastSpell(2080, $targetid);
+      quest::emote("Looks at $name, then closes her eyes.");
+    }
+
+    $npc->Stun(29000);
+    $npc->SetInvul(30);
+    quest::settimer("invuloff", 1);
+         
+    quest::spawn2($portal, 0, 0, $portal_list->{$pool}->{x}, $portal_list->{$pool}->{y}, $portal_list->{$pool}->{z}, $portal_list->{$pool}->{h});
+    quest::settimer("faceportal", 6);
+  }
+
+  if ($timer eq "faceportal") {
+    quest::stoptimer("faceportal");
+
+    $npc->SetHeading($portal_list->{$lastpool}->{dir});
+    quest::say($portal_list->{$lastpool}->{dir});
+  }
+
+  if ($timer eq "invuloff") {
+    quest::stoptimer("invuloff");
+    $npc->SetInvul(0);
+    quest::settimer("spawnportal", 30);
+    if ($entity_list->GetNPCByNPCTypeID($portal)) { #failed to kill portal in 30s
+      $strikes++;
+
+      if ($strikes < 2) {
+        quest::emote("opens her eyes and begins chanting.");        
+      } else {
+        quest::emote("opens her eyes and resumes attacking, a slight grin on her face.");
+        quest::settimer("dt", 1);
+      }
+      
+    } else { #you did ok..
+      quest::emote("opens her eyes and resumes attacking.");
+    }
+    return;
+  } 
+
+  if ($timer eq "dt") {
+
+    my @hatelist = $npc->GetHateList();
+    foreach $ent (@hatelist) {
+      if(!$ent) {
+        next;
+      }
+      my $h_ent = $ent->GetEnt();
+      if(!$h_ent || !$h_ent->IsClient()) {
+        next;
+      }
+    #quest::emote("grins evilly and looks into $targetname eyes.");
+    $npc->CastSpell(24660, $targetid, 10, 0);
+  }
+}
 

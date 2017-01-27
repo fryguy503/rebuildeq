@@ -1,4 +1,4 @@
-<nav id="page-nav">
+<nav id="page-nav" style="text-align: center">
 {{ if or (.Paginator.HasPrev) (.Paginator.HasNext) }}
     {{ if .Paginator.HasPrev }}
         <a class="extend prev" rel="prev" href="{{ .Site.BaseURL }}{{.Paginator.Prev.URL}}">

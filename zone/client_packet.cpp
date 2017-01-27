@@ -781,7 +781,7 @@ void Client::CompleteConnect()
 	uint32 unclaimed_rewards = 0;
 	uint32 next_daily_claim = time(nullptr) + 72000;
 	//make sure account custom is set
-	std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim, use_new_con, use_self_target, use_full_dps, use_self_dps FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
+	std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim, use_new_con, use_self_target, use_full_dps, use_self_dps, show_rb_echo FROM account_custom WHERE account_id = %u LIMIT 1", AccountID());
 
 	auto results = database.QueryDatabase(query);
 	if (results.Success()) {
@@ -793,6 +793,7 @@ void Client::CompleteConnect()
 			m_epp.use_self_target = atoi(row[3]);
 			m_epp.use_full_dps = atoi(row[4]);
 			m_epp.use_self_dps = atoi(row[5]);
+			m_epp.show_rb_echo = atoi(row[6]);
 		}
 		else {
 			std::string query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", AccountID(), next_daily_claim);
@@ -834,6 +835,7 @@ void Client::CompleteConnect()
 		}
 
 		if (m_pp.birthday > time(nullptr) - 120) { //If they're less than 2 minutes old
+			if (!IsTaskActive(FEAT_GETTINGSTARTED)) AssignTask(FEAT_GETTINGSTARTED, 0);
 			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome %s to the server!", display_name.c_str()).c_str());
 			UpdateSkillsAndSpells();
 			std::string query = StringFormat("SELECT id FROM character_data WHERE account_id = %i", AccountID());
@@ -4931,7 +4933,7 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 		else {
 			race_name = tmob->RaceName();
 		}
-
+		if (IsTaskActivityActive(307, 10)) UpdateTaskActivity(FEAT_GETTINGSTARTED, 10, 1);
 		SendColoredText(color, StringFormat("%s [%u] (%s) %s -- %s", tmob->GetCleanName(), tmob->GetLevel(), race_name.c_str(), con_text.c_str(), level_text.c_str()));
 	}
 	// only wanted to check raid target once
@@ -10496,7 +10498,7 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		break;
 	}
 	case PET_HOLD: {
-		if (GetAA(aaPetDiscipline) && mypet->IsNPC()){
+		if ((GetAA(aaPetDiscipline) || IsFeatUnlocked(FEAT_PETDISCIPLINE)) && mypet->IsNPC()){
 			if (mypet->IsFeared())
 				break; //could be exploited like PET_BACKOFF
 
@@ -10520,7 +10522,7 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		break;
 	}
 	case PET_HOLD_ON: {
-		if (GetAA(aaPetDiscipline) && mypet->IsNPC() && !mypet->IsHeld()) {
+		if ((GetAA(aaPetDiscipline) || IsFeatUnlocked(FEAT_PETDISCIPLINE)) && mypet->IsNPC() && !mypet->IsHeld()) {
 			if (mypet->IsFeared())
 				break; //could be exploited like PET_BACKOFF
 
@@ -10537,7 +10539,7 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 		break;
 	}
 	case PET_HOLD_OFF: {
-		if (GetAA(aaPetDiscipline) && mypet->IsNPC() && mypet->IsHeld())
+		if ((GetAA(aaPetDiscipline) || IsFeatUnlocked(FEAT_PETDISCIPLINE)) && mypet->IsNPC() && mypet->IsHeld())
 			mypet->SetHeld(false);
 		break;
 	}
@@ -12599,7 +12601,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 
 	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
 		uint32 haggle = (int)(SinglePrice * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
-		Message(MT_NonMelee, "Haggle Rank %u reduced buy price by %u copper.", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
+		Message(MT_FocusEffect, "Haggle Rank %u reduced buy price by %u copper.", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
 		SinglePrice -= haggle;
 	}
 
@@ -12775,8 +12777,8 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 	if (vendor == 0 || !vendor->IsNPC() || vendor->GetClass() != MERCHANT)
 		return;
 
-	//This isn't working for some reason
-	if (vendor->GetLastName() == "Origin Binder") {
+	// Don't let players sell items to Origin Binders
+	if (strcmp(vendor->GetLastName(), "Origin Binder") == 0) {
 		EQApplicationPacket* outapp = new EQApplicationPacket(OP_ShopPlayerSell, sizeof(Merchant_Purchase_Struct));
  		Merchant_Purchase_Struct* mco = (Merchant_Purchase_Struct*)outapp->pBuffer;
  		mco->npcid = vendor->GetID();
@@ -12824,7 +12826,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 
 	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
 		uint32 haggle = (int)(price * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
-		Message(MT_NonMelee, "Haggle Rank %u improved sell price by %u copper", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
+		Message(MT_FocusEffect, "Haggle Rank %u improved sell price by %u copper", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
 		price -= haggle;
 	}
 

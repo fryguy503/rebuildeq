@@ -1767,10 +1767,12 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 				sp[tempid].effectid[0] = SE_CurrentHP;
 				sp[tempid].base[0] = 1;
 			}
+
 			if (tempid == 4796) { //RB_DRU_NATURESBOON
 				sp[tempid].targettype = ST_Target;
-				sp[tempid].effectid[0] = SE_HealOverTime;
-				sp[tempid].base[0] = 1; //1 hp tick
+				//sp[tempid].effectid[0] = SE_HealOverTime;
+				sp[tempid].effectid[0] = SE_Illusion;
+				sp[tempid].base[0] = 0; //1 hp tick
 				sp[tempid].buffduration = 1; //1 tick by default
 			}
 

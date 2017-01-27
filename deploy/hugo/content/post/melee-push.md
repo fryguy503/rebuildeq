@@ -8,5 +8,7 @@ tags = ["melee"]
 title = "Melee Push"
 
 +++
-* Melee Push should be significantly better now
+* Melee Push should be significantly better now.
+* Cleaned up dire charm description to be more descriptive.
+* Added Faction Gain modifier.
 <!--more-->

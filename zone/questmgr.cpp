@@ -231,6 +231,19 @@ Mob* QuestManager::encounterspawn(int npc_type, int level, const glm::vec4& posi
 		enpc->max_dmg = (enpc->max_dmg * 0.5f);
 	}
 
+	if (npc_type == 116610) { //Killer bunny!
+		enpc->max_hp = (enpc->max_hp * 5);
+		enpc->runspeed = 3;
+		enpc->MR += 150;
+		enpc->DR += 150;
+		enpc->CR += 500;
+		enpc->FR = 50;
+		//enpc->min_dmg = enpc->min_dmg * 1.5f;
+		//enpc->max_dmg = enpc->max_dmg * 2.0f;
+		enpc->attack_delay = 17;
+		enpc->attack_speed = -52;
+	}
+
 	
 	NPC* npc = new NPC(enpc, nullptr, position, FlyMode3);
 	if (npc_type == 22046 || npc_type == 34013) { //zombie encounter
