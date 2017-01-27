@@ -861,7 +861,7 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 	aai->spell = rank->spell;
 	aai->spell_type = rank->spell_type;
 	
-        if (rank->id == aaCalloftheWild && GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0) {
+	if (rank->id == aaCalloftheWild && GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0) {
 		int rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 		aai->spell_refresh = 1800 - (rb_rank-1) * 300;
 	} else if (rank->id == aaSecondaryRecall && GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL) > 0) {
@@ -876,6 +876,8 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 			aai->spell_refresh = 21600; // 6 hours
 		else if(rb_rank == 5)
 			aai->spell_refresh = 10800; // 3 hours
+	} else if (rank->id == aaAncestralAid && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) > 0) {
+		aai->spell_refresh = 16;
 	} else {
 		aai->spell_refresh = rank->recast_time;
 	}	
@@ -1371,6 +1373,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			manacost = 450;
 			cooldown = 16;
 		}
+	}
+
+	if (rank_id == aaAncestralAid) {
+		cooldown = 16;
 	}
 
 	if (rank_id == aaSteadfastServant) {
