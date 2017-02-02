@@ -1,8 +1,8 @@
 +++
-banner = "post/images/site.png"
+banner = "post/images/macigican-build.png"
 date = "2017-02-01T20:20:00-08:00"
 description = "Magician Build"
-images = ["post/images/site.png"]
+images = ["post/images/magician-build.png"]
 menu = ""
 tags = ["magician", "shaman", "shadowknight"]
 title = "Magician Build"
