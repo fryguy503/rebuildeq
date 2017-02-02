@@ -399,7 +399,7 @@ typedef enum {	//AA IDs
 	aaImprovedConsumptionofSoul				=893,
 	aaIntenseHatred							=895,
 	aaAdvancedSpiritCall					=900,
-	aaCalloftheAncients						=902,//DB
+	aaCalloftheAncients						=970,//DB
 	aaSturdiness							=907,
 	aaWarlordsTenacity						=912,//implemented as effect
 	aaStrengthenedStrike					=915,//implemented as bonus
@@ -422,7 +422,6 @@ typedef enum {	//AA IDs
 	aaDireCharm3							=961,//whats the difference?
 	aaTouchoftheDivine2						=962,//whats the difference?
 	aaTouchofDecay							=967,
-	aaCalloftheAncients2					=970,//whats the difference?
 	aaImprovedVision						=975,
 	aaEternalBreath							=978,//handled by client
 	aaBlacksmithingMastery					=979,//added 9/29/08
@@ -1507,6 +1506,7 @@ typedef enum {	//AA IDs
 	aaHerosBarracks3						=14369,
 	aaHerosBarracks4						=14370,
 	aaSummonTomeoftheHerosJourney			=14371,
+	aaCovenantofSpirit						=15356,//DB
 
 	aaHighestID		//this should always be last, and should always
 					//follow the highest AA ID
