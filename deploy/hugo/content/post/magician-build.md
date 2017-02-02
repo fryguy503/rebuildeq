@@ -1,5 +1,5 @@
 +++
-banner = "post/images/macigican-build.png"
+banner = "post/images/magician-build.png"
 date = "2017-02-01T20:20:00-08:00"
 description = "Magician Build"
 images = ["post/images/magician-build.png"]
@@ -13,6 +13,7 @@ title = "Magician Build"
 * Shimmering geonids are now on geonid collective faction
 * Fixed Ancestral aid cooldown and spell ids
 * Fixed Shaman AA IDs for builds that weren't training properly
+* Shaman pets were slightly nerfed
 * Fixed Translocation from Ocean of Tears to East Freeport
 * Marl Kastane in Tox now has the SK epic dialogues
 * Locked the Howling Stones East wing door with the ground spawn key in South wing
