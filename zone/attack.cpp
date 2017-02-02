@@ -1547,8 +1547,9 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQEmu::skills::Sk
 	
 	if(GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) > 0) {
 		Mob *pet = GetPet();
+		CommonDamage(other, damage, spell_id, attack_skill, avoidable, buffslot, iBuffTic, special);
 
-		if(pet && pet->HasSpellEffect(SE_PetShield)) {
+		/*if(pet && pet->HasSpellEffect(SE_PetShield)) {
 			float shared = GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) * 0.10f;
 			int client_damage = (int) (damage * (1.0f-shared));
 			int pet_damage = (int) (damage * shared);
@@ -1558,6 +1559,7 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQEmu::skills::Sk
 				pet->CastToNPC()->Damage(other, pet_damage, spell_id, attack_skill, avoidable, buffslot, iBuffTic, special);
 			}
 		}
+		*/
 	} else {
 		//do a majority of the work...
 		CommonDamage(other, damage, spell_id, attack_skill, avoidable, buffslot, iBuffTic, special);
