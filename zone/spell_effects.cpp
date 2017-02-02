@@ -462,64 +462,72 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							uint8 caster_level = casterClient->GetLevel();
 
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID);
-							if (spell_id == 267 && rank > 0) {
-								int duration = caster_level * 10;
+              						if (spell_id == 267 && rank > 0) {
+              							int duration = caster_level * 10;
+               							int str = 0;
+								int dex = 0;
 
-								if (rank > 4) { //HP/AC
-									if (level > 57 && caster_level > 57) caster->QuickBuff(this, 2530, duration); //kura's focusing 60
-									else if (level >= 55 && caster_level >= 55) { caster->QuickBuff(this, 1584, duration); caster->QuickBuff(this, 1585, duration); }//shroud of the spirits 54, talisman of kragg 55
-									else if (level >= 46 && caster_level >= 46) caster->QuickBuff(this, 2525, duration); //harnessing of spirit 46
-									else if (level >= 40 && caster_level >= 40) { caster->QuickBuff(this, 389, duration); caster->QuickBuff(this, 168, duration); } //guardian 42, talisman of altuna 40
-									else if (level >= 32 && caster_level >= 32) { caster->QuickBuff(this, 431, duration); caster->QuickBuff(this, 167, duration); } //shifting shield 31, talisman of tnarg 32
-									else { caster->QuickBuff(this, 274, duration); } //scale skin
-									
-									caster->QuickBuff(this, 278, duration); //Spirit of wolf duration is based on natural stats	
-									//SpellFinished(278, this);
-								}
+              							if (rank > 4) { //HP/AC
+              								if (level >= 60 && caster_level >= 60) { caster->QuickBuff(this, 2530, duration);       //kura's focusing 60
+                                                           			str = 1; dex = 1; }       
+              								else if (level >= 55 && caster_level >= 55) caster->QuickBuff(this, 1585, duration);    //talisman of kragg 55
+              								else if (level >= 46 && caster_level >= 46) { caster->QuickBuff(this, 2525, duration);  //harnessing of spirit 46
+                                                                		str = 1; dex = 1; }  
+              								else if (level >= 40 && caster_level >= 40) caster->QuickBuff(this, 168, duration);     //talisman of altuna 40
+              								else if (level >= 32 && caster_level >= 32) caster->QuickBuff(this, 167, duration);     //talisman of tnarg 32
+              								else caster->QuickBuff(this, 267, duration);                                            //inner fire
 
-								if (rank > 0) { //STR
-									if (level > 57 && caster_level > 57) caster->QuickBuff(this, 1581, duration); //talisman of rhino 57
-									else if (level >= 46 && caster_level >= 46) caster->QuickBuff(this, 159, duration); //strength 46
-									else if (level >= 39 && caster_level >= 39) caster->QuickBuff(this, 153, duration); //furious strength 39
-									else if (level >= 35 && caster_level >= 35) caster->QuickBuff(this, 356, duration); //tumulous strength 35
-									else if (level >= 28 && caster_level >= 28) caster->QuickBuff(this, 432, duration); //raging strength 28
-									else if (level >= 18 && caster_level >= 18) caster->QuickBuff(this, 147, duration); //spirit strength 18
-									else if (level >= 8 && caster_level >= 8) caster->QuickBuff(this, 2521, duration); //talisman of beast 8
-									else caster->QuickBuff(this, 40, duration); //strengthen
-								}
+              								if (level >= 54 && caster_level >= 54) caster->QuickBuff(this, 1584, duration);         //shroud of the spirits 54
+              								else if (level >= 42 && caster_level >= 42) caster->QuickBuff(this, 389, duration);     //guardian 42
+              								else if (level >= 31 && caster_level >= 31) caster->QuickBuff(this, 431, duration);     //shifting shield 20
+              								else if (level >= 20 && caster_level >= 20) caster->QuickBuff(this, 649, duration);     //protect 20
+              								else if (level >= 11 && caster_level >= 11) caster->QuickBuff(this, 283, duration);     //turtle skin 11
+              								else caster->QuickBuff(this, 274, duration);                                            //scale skin
+              		
+              								caster->QuickBuff(this, 278, duration);                                                 //spirit of wolf
+              							}
 
-								if (rank > 1) { //DEX
-									if (level > 59 && caster_level > 59) caster->QuickBuff(this, 1583, duration); //talisman of the raptor 59
-									else if (level >= 48 && caster_level >= 48) caster->QuickBuff(this, 157, duration); //dexterity 48
-									else if (level >= 39 && caster_level >= 39) caster->QuickBuff(this, 152, duration); //deftness 39
-									else if (level >= 25 && caster_level >= 25) caster->QuickBuff(this, 349, duration); //rising dexterity 25
-									else if (level >= 21 && caster_level >= 21) caster->QuickBuff(this, 146, duration); //spirit of monkey 21
-									else caster->QuickBuff(this, 266, duration); //dexterous aura
-								}
+              							if (rank > 0 && str == 0) { //STR
+              								if (level >= 57 && caster_level >= 57) caster->QuickBuff(this, 1593, duration);         //maniacal strength 57
+              								else if (level >= 46 && caster_level >= 46) caster->QuickBuff(this, 159, duration);     //strength 46
+              								else if (level >= 39 && caster_level >= 39) caster->QuickBuff(this, 153, duration);     //furious strength 39
+              								else if (level >= 28 && caster_level >= 28) caster->QuickBuff(this, 151, duration);     //raging strength 28
+              								else if (level >= 18 && caster_level >= 18) caster->QuickBuff(this, 147, duration);     //spirit strength 18
+              								else caster->QuickBuff(this, 40, duration);                                             //strengthen
+              							}
 
-								if (rank > 2) { //AGI
-									if (level > 57 && caster_level > 57) caster->QuickBuff(this, 1579, duration); //talisman of the cat 57
-									else if (level >= 53 && caster_level >= 53) caster->QuickBuff(this, 1594, duration); //deleriously nimble 53
-									else if (level >= 41 && caster_level >= 41) caster->QuickBuff(this, 154, duration); //agility 41
-									else if (level >= 31 && caster_level >= 31) caster->QuickBuff(this, 160, duration); //nimble 31
-									else if (level >= 18 && caster_level >= 18) caster->QuickBuff(this, 148, duration);  //spirit of cat 18
-									else caster->QuickBuff(this, 269, duration); //feet like cat
-								}
+              							if (rank > 1 && dex == 0) { //DEX
+              								if (level >= 58 && caster_level >= 58) caster->QuickBuff(this, 1583, duration);         //mortal deftness 58
+              								else if (level >= 48 && caster_level >= 48) caster->QuickBuff(this, 157, duration);     //dexterity 48
+              								else if (level >= 39 && caster_level >= 39) caster->QuickBuff(this, 152, duration);     //deftness 39
+              	 						 	else if (level >= 25 && caster_level >= 25) caster->QuickBuff(this, 349, duration);     //rising dexterity 25
+              								else if (level >= 21 && caster_level >= 21) caster->QuickBuff(this, 146, duration);     //spirit of monkey 21
+              								else caster->QuickBuff(this, 266, duration);                                            //dexterous aura
+              							}
 
-								if (rank > 3) { //STA
-									if (level > 57 && caster_level > 57) caster->QuickBuff(this, 1580, duration); //talisman of the brute 57
-									else if (level >= 54 && caster_level >= 54) caster->QuickBuff(this, 1595, duration); //riotous health 54
-									else if (level >= 43 && caster_level >= 43) caster->QuickBuff(this, 158, duration); //stamina 43
-									else if (level >= 30 && caster_level >= 30) caster->QuickBuff(this, 161, duration); //health 30
-									else if (level >= 21 && caster_level >= 21) caster->QuickBuff(this, 149, duration); //spirit of ox 21
-									else caster->QuickBuff(this, 279, duration); //spirit of Bear
-								}
-								if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
-								{
-									EQApplicationPacket *outapp = MakeBuffsPacket(false);
-									CastToClient()->FastQueuePacket(&outapp);
-								}
-							}
+              							if (rank > 2) { //AGI
+              								if (level >= 57 && caster_level >= 57) caster->QuickBuff(this, 1579, duration);          //talisman of the cat 57
+              								else if (level >= 53 && caster_level >= 53) caster->QuickBuff(this, 1594, duration);     //deleriously nimble 53
+              								else if (level >= 41 && caster_level >= 41) caster->QuickBuff(this, 154, duration);      //agility 41
+              								else if (level >= 31 && caster_level >= 31) caster->QuickBuff(this, 160, duration);      //nimble 31
+              								else if (level >= 18 && caster_level >= 18) caster->QuickBuff(this, 148, duration);      //spirit of cat 18
+              								else caster->QuickBuff(this, 269, duration);                                             //feet like cat
+              							}
+
+              							if (rank > 3) { //STA
+              								if (level >= 54 && caster_level >= 54) caster->QuickBuff(this, 1595, duration);    //riotous health 54
+              								else if (level >= 43 && caster_level >= 43) caster->QuickBuff(this, 158, duration);     //stamina 43
+              								else if (level >= 30 && caster_level >= 30) caster->QuickBuff(this, 161, duration);     //health 30
+              								else if (level >= 21 && caster_level >= 21) caster->QuickBuff(this, 149, duration);     //spirit of ox 21
+              								else caster->QuickBuff(this, 279, duration);                                            //spirit of Bear
+              							}
+                
+              							if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
+              							{
+              								EQApplicationPacket *outapp = MakeBuffsPacket(false);
+              								CastToClient()->FastQueuePacket(&outapp);
+              							}
+              						}
 
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD);
 							//Spirit of the Wood

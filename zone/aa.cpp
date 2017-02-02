@@ -1407,6 +1407,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		}
 	}
 
+	if (rank_id == aaAncestralAid) {
+		cooldown = 16;
+	}
+
 	if (rank_id == aaSteadfastServant) {
 		if (GetLevel() < 14) { //leering corpse 7
 			spellid = 491;
