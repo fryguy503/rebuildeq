@@ -320,6 +320,11 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		return;
 	}
 
+	// Overwrite magician pet's npc_type here
+	if(spell_id == 58 || spell_id == 315 || spell_id == 316 || spell_id == 317) {
+		record.npc_type = 545;
+	}
+	
 	//find the NPC data for the specified NPC type
 	const NPCType *base = database.LoadNPCTypesData(record.npc_type);
 	if (base == nullptr) {
@@ -356,6 +361,68 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	//Live AA - Elemental Durability
 	int16 MaxHP = aabonuses.PetMaxHP + itembonuses.PetMaxHP + spellbonuses.PetMaxHP;
 
+	if(spell_id == 1936) {
+
+		npc_type->level = CastToClient()->GetLevel();
+		npc_type = this->AdjustNPC(npc_type, true, true);
+
+		npc_type->STR *= .75f;
+		npc_type->STA *= .75f;
+		npc_type->AGI *= .75f;
+		npc_type->DEX *= .75f;
+		npc_type->WIS *= .75f;
+		npc_type->INT *= .75f;
+		npc_type->CHA *= .75f;
+
+		//Now that we generated base HP, let's nerf it on a new formula
+		npc_type->max_hp *= 0.5f; //50 % of normal hp
+		npc_type->AC *= 0.5f; //this formula likely needs tweaks
+		npc_type->max_dmg *= 0.5f; //50% dmg at max
+	}
+	
+	if(spell_id == 58 || spell_id == 315 || spell_id == 316 || spell_id == 317) {
+
+		npc_type->level = CastToClient()->GetLevel();
+		npc_type = this->AdjustNPC(npc_type, true, true);
+		
+		npc_type->STR *= .90f;
+		npc_type->STA *= .90f;
+		npc_type->AGI *= .90f;
+		npc_type->DEX *= .90f;
+		npc_type->WIS *= .90f;
+		npc_type->INT *= .90f;
+		npc_type->CHA *= .90f;
+
+		//Now that we generated base HP, let's nerf it on a new formula
+		npc_type->max_dmg *= 0.5f; //50% dmg at max
+		npc_type->size = 3 + (GetLevel() / 15); //3.0 to 7.0
+		npc_type->race = ELEMENTAL;
+		
+		if(spell_id == 315) { // Water
+			npc_type->max_hp *= 0.8f;
+			npc_type->AC *= 0.73f;
+			npc_type->texture = 2;
+			npc_type->npc_spells_id = 16;
+		} else if(spell_id == 316) { // Fire
+			npc_type->max_hp *= 0.6f;
+			npc_type->AC *= 0.8f;
+			npc_type->texture = 1;
+			npc_type->npc_spells_id = 17;
+		}else if(spell_id == 317) { // Air
+			npc_type->max_hp *= 0.69f;
+			npc_type->AC *= 0.8f;
+			npc_type->texture = 3;
+			npc_type->npc_spells_id = 13;
+		} else { // Earth
+			npc_type->texture = 0;
+			npc_type->npc_spells_id = 15;
+		}
+		
+		if (npc_type->max_hp < 50) {
+			npc_type->max_hp = 50;
+		}
+	}
+	
 	if (spell_id == 164 && this->IsClient() && CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL)  > 0) {
 			
 		rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL);
