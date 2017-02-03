@@ -10582,7 +10582,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MAG_CALLOFTHEHERO) return "Call of the Hero";
 		else if (id == RB_MAG_CLOCKWORKMERCHANT) return "Clockwork Merchant";
 		else if (id == RB_MAG_SERVANTOFRO) return "Servant of Ro";
-		else if (id == RB_MAG_DIMENSIONALSHIELD) return "Dimensional SHield";
+		else if (id == RB_MAG_DIMENSIONALSHIELD) return "Dimensional Shield";
 		else if (id == RB_MAG_HEARTOFSTONE) return "Heart of Stone";
 		else if (id == RB_MAG_HEARTOFVAPOR) return "Heart of Vapor";
 		else if (id == RB_MAG_SHOCKOFSWORDS) return "Shock of Swords";
