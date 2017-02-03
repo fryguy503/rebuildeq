@@ -9086,7 +9086,7 @@ void Client::RefreshBuild() {
 
 				if (GetClass() == MAGICIAN && i == RB_MAG_MODULATIONSHARD && GetAA(aaSmallModulationShard) < 1) {
 					TrainAARank(aaSmallModulationShard);
-					Message(15, "You have unlocked the AA \"Modulation Shard\"! Find the hotkey in your Alternate Advancement Window.");
+					Message(15, "You have unlocked the AA \"Small Modulation Shard\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
 				if (GetClass() == MAGICIAN && i == RB_MAG_FRENZIEDBURNOUT && GetAA(aaFrenziedBurnout) < 1) {
@@ -9106,7 +9106,7 @@ void Client::RefreshBuild() {
 
 				if (GetClass() == MAGICIAN && i == RB_MAG_CALLOFTHEHERO && GetAA(aaCalloftheHero) < 1) {
 					TrainAARank(aaCalloftheHero);
-					Message(15, "You have unlocked the AA \"Call of tbe Hero\"! Find the hotkey in your Alternate Advancement Window.");
+					Message(15, "You have unlocked the AA \"Call of the Hero\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
 				if (GetClass() == MAGICIAN && i == RB_MAG_MENDCOMPANION && GetAA(aaMendCompanion) < 1) {
