@@ -6111,7 +6111,7 @@ void command_exp(Client *c, const Seperator *sep)
 	auto results = database.QueryDatabase(query);
 	if (results.Success() && results.RowCount() != 0) {
 		auto row = results.begin();
-		exp_pool = atoi(row[0]);
+		exp_pool = atoll(row[0]);
 	}
 	int bottles = exp_pool / RuleI(AA, ExpPerPoint);
 
