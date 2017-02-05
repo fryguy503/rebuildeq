@@ -37,6 +37,7 @@
         <tr><td>Plane of Mischief</td></tr>
         <tr><td>Splitpaw</td></tr>
         <tr><td>Temple of Droga</td></tr>
+        <tr><td>Veeshan's Peak</td></tr>
         <tr><td>Veksar</td></tr>
         <tr><td>West Commonlands</td></tr>
         </tr>
