@@ -90,7 +90,7 @@ sub velious_armor_requirement {
 			elsif ($slot=~/arms/i) {$slotname = "Vambraces"; $slotid = 7; }
 			elsif ($slot=~/wrists/i) {$slotname = "Bracer"; $slotid = 9; }
 			elsif ($slot=~/hands/i) {$slotname = "Gauntlets"; $slotid = 12; }
-			elsif ($slot=~/chest/i) { $armor_type = " Corroded"; $slotname = "Breastplate"; $slotid = 17; } 
+			elsif ($slot=~/chest/i) { $slotname = "Breastplate"; $slotid = 17; } 
 			elsif ($slot=~/legs/i) {$slotname = "Greaves"; $slotid = 18; }
 			else {$slotname = "Boots"; $slotid = 19; }
 		}
@@ -134,7 +134,7 @@ sub velious_armor_requirement {
 			elsif ($slot=~/arms/i) { $slotname = "Vambraces"; $slotid = 7;  }
 			elsif ($slot=~/wrists/i) { $slotname = "Bracer"; $slotid = 9;  }
 			elsif ($slot=~/hands/i) { $slotname = "Gauntlets"; $slotid = 12;  }
-			elsif ($slot=~/chest/i) { $armor_type = " Corroded"; $slotname = "Breastplate"; $slotid = 17;  }
+			elsif ($slot=~/chest/i) { $slotname = "Breastplate"; $slotid = 17;  }
 			elsif ($slot=~/legs/i) { $slotname = "Greaves"; $slotid = 18;  }
 			else { $slotname = "Boots"; $slotid = 19;  }
 		}
@@ -177,7 +177,7 @@ sub velious_armor_requirement {
 			elsif ($slot=~/arms/i) { $slotname = "Vambraces"; $slotid = 7;  }
 			elsif ($slot=~/wrists/i) { $slotname = "Bracer"; $slotid = 9;  }
 			elsif ($slot=~/hands/i) { $slotname = "Gauntlets"; $slotid = 12;  }
-			elsif ($slot=~/chest/i) { $armor_type = " Corroded"; $slotname = "Breastplate"; $slotid = 17;  }
+			elsif ($slot=~/chest/i) { $slotname = "Breastplate"; $slotid = 17;  }
 			elsif ($slot=~/legs/i) { $slotname = "Greaves"; $slotid = 18;  }
 			else { $slotname = "Boots"; $slotid = 19;  }
 		}
