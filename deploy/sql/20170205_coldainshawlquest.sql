@@ -12,3 +12,6 @@ INSERT INTO tradeskill_recipe_entries SET recipe_id = (SELECT id FROM tradeskill
 INSERT INTO spawngroup SET name = 'thurgadina_lorekeeper_brita', delay = 0;
 INSERT INTO spawnentry SET spawnentry.spawngroupID = (SELECT id FROM spawngroup WHERE name = 'thurgadina_lorekeeper_brita'), spawnentry.npcID = 115152, spawnentry.chance = 100;
 INSERT INTO spawn2 SET spawngroupID = (SELECT id FROM spawngroup WHERE name = 'thurgadina_lorekeeper_brita'), zone = 'thurgadina', version = 0, x = 812, y = -181, z = -17.50, heading = 66, respawntime = 640, variance = 64, _condition = 0, cond_value = 1, enabled = 1, animation = 0;
+
+# Return the pot on failure for the frost bunny stew combine
+UPDATE tradeskill_recipe_entries SET failcount = 1 WHERE recipe_id = 1889 AND item_id = 13432;
