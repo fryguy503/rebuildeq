@@ -1,7 +1,6 @@
 # Add the Ulthork Meat Pie recipe
 INSERT INTO tradeskill_recipe SET name = 'Ulthork Meat Pie', tradeskill = 60, skillneeded = 0, trivial = 82, nofail = 0, replace_container = 0, notes = NULL, must_learn = 0, quest = 0, enabled = 1;
 INSERT INTO tradeskill_recipe_entries SET recipe_id = (SELECT id FROM tradeskill_recipe WHERE name LIKE 'Ulthork Meat Pie'), item_id = 1453, successcount = 0, failcount = 0, componentcount = 1, salvagecount = 0, iscontainer = 0;
-INSERT INTO tradeskill_recipe_entries SET recipe_id = (SELECT id FROM tradeskill_recipe WHERE name LIKE 'Ulthork Meat Pie'), item_id = 1453, successcount = 0, failcount = 0, componentcount = 1, salvagecount = 0, iscontainer = 0;
 INSERT INTO tradeskill_recipe_entries SET recipe_id = (SELECT id FROM tradeskill_recipe WHERE name LIKE 'Ulthork Meat Pie'), item_id = 13438, successcount = 0, failcount = 0, componentcount = 1, salvagecount = 0, iscontainer = 0;
 INSERT INTO tradeskill_recipe_entries SET recipe_id = (SELECT id FROM tradeskill_recipe WHERE name LIKE 'Ulthork Meat Pie'), item_id = 13090, successcount = 0, failcount = 0, componentcount = 1, salvagecount = 0, iscontainer = 0;
 INSERT INTO tradeskill_recipe_entries SET recipe_id = (SELECT id FROM tradeskill_recipe WHERE name LIKE 'Ulthork Meat Pie'), item_id = 1427, successcount = 1, failcount = 0, componentcount = 0, salvagecount = 0, iscontainer = 0;
