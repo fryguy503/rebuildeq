@@ -1114,7 +1114,7 @@ void Client::UpdateSkillsAndSpells() {
 			(GetClass() == MONK && GetLevel() >= 35) ||
 			(GetClass() == PALADIN && GetLevel() >= 30) ||
 			(GetClass() == SHADOWKNIGHT && GetLevel() >= 30) ||
-			(GetClass() == WARRIOR && GetLevel() >= 25) ||
+			(GetClass() == WARRIOR && GetLevel() >= 15) ||
 			(GetClass() == ROGUE && GetLevel() >= 30) ||
 			(GetClass() == MONK && GetLevel() >= 35) ||
 			(GetClass() == RANGER && GetLevel() >= 35) ||
