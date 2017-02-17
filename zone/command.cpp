@@ -4823,7 +4823,7 @@ void command_rez(Client *c, const Seperator *sep) {
 
 	//no corpses found
 	if (!corpse) {
-		c->Message(0, "At level %u, it will cost you %s to summon and resurrect one of your corpses in this zone. There are no corpses in this zone that are eligible.", c->GetLevel(), displayCost.c_str(), c->CreateSayLink("#rez confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %s to summon and resurrect one of your corpses in this zone. There are no corpses in this zone that are eligible.", c->GetLevel(), displayCost.c_str());
 		return;
 	}
 
@@ -4874,7 +4874,7 @@ void command_rez(Client *c, const Seperator *sep) {
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %s to summon and resurrect the closest nearby corpse in this zone. [ %s ]", c->GetLevel(), displayCost.c_str(), c->CreateSayLink("#rez confirm", "Confirm").c_str());
+		c->Message(0, "At level %u, it will cost you %s to summon and resurrect the closest nearby corpse in this zone. This will not work if you killed yourself and will also not restore lost experience that is pooled. [ %s ]", c->GetLevel(), displayCost.c_str(), c->CreateSayLink("#rez confirm", "Confirm").c_str());
 	}
 }
 

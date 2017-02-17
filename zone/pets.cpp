@@ -459,7 +459,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 				break;
 			case TROLL:
 				npc_type->race = ALLIGATOR;
-				npc_type->size *= 10.0f;
+				npc_type->size = 15.0f;
 				break;
 			case OGRE:
 				npc_type->race = BEAR;
@@ -476,7 +476,6 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 				npc_type->race = WOLF;
 				npc_type->texture = 0;
 				npc_type->gender = 1;
-				//npc_type->size *= 2.0f;
 				npc_type->size = 4;
 				npc_type->luclinface = 0;
 				break;
