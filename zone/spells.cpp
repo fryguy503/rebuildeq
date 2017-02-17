@@ -513,7 +513,8 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 	
 	// Magician Quick Damage
 	rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_QUICKDAMAGE);
-	if(rank > 0 && spell.spell_category == 1 && cast_time >= 3000) { // Only apply to direct damage spells with a cast time >= 3 seconds
+	// Only apply to evocation spells and direct damage conjuration spell swith a cast time >= 3 seconds
+	if(rank > 0 && (spell.skill == 24 || (spell.skill == 14 && spell.spell_category == 1)) && cast_time >= 3000) { 
 		int cast_time_bonus = 0;
 		if(rank == 1) cast_time_bonus = cast_time * 0.02f;
 		if(rank == 2) cast_time_bonus = cast_time * 0.05f;
