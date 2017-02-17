@@ -257,7 +257,7 @@ namespace RoF2
 	} /*profile*/
 
 	namespace constants {
-		const size_t CharacterCreationLimit = 12;
+		const size_t CharacterCreationLimit = 16;
 
 		const size_t SayLinkBodySize = 56;
 
