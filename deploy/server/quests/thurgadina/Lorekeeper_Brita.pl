@@ -7,6 +7,23 @@ sub EVENT_SAY {
 }
 
 sub EVENT_ITEM {
+
+	if(plugin::check_handin(\%itemcount, 1427 => 1, 1417 => 1)) {
+		quest::say("Ohh, that's better. I get so touchy when I'm hungry. I should probably go apologize to Derrin for being snappy. Please return this to Mordin for me.");
+		quest::summonitem(1424);
+		quest::exp(150000);
+		quest::faction(49,20); # coldain
+		quest::faction(67,20); # Dain Frostreaver IV
+		quest::faction(188,-60); # Kromrif
+		quest::faction(189,-60); # Kromzek
+		return;
+	}
+	elsif (plugin::check_handin(\%itemcount, 1427 => 1)) {
+		quest::say("Ohh, that's better. I get so touchy when I'm hungry. I should probably go apologize to Derrin for being snappy.");
+		quest::exp(5000);
+		return;
+	}
+
   if ($faction <= 3) {
     my $cash = $copper + $silver * 10 + $gold * 100 + $platinum * 1000;
     my @armor_list = plugin::velious_armor_list();
