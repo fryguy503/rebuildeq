@@ -1241,6 +1241,11 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		return;
 	}
 	
+	// Dont let client waste a reuse timer if they can't use it
+	if (IsStunned() || IsFeared() || IsMezzed() || IsAmnesiad() || IsPet()) {
+		return;
+	}
+	
 	//Shin: set spell Id override
 	int spellid = rank->spell;
 	int manacost = -1;
