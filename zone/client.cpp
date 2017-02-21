@@ -10574,7 +10574,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MAG_SUSPENDEDMINION) return "Suspended Minion";
 		else if (id == RB_MAG_MENDCOMPANION) return "Mend Companion";
 		else if (id == RB_MAG_COMPANIONOFNECESSITY) return "Companion of Necessity";
-		else if (id == RB_MAG_SHAREDHEALTH) return "Shard Health";
+		else if (id == RB_MAG_SHAREDHEALTH) return "Shared Health";
 		else if (id == RB_MAG_HOSTINTHESHELL) return "Host in the Shell";
 		else if (id == RB_MAG_TURNSUMMONED) return "Turn Summoned";
 		else if (id == RB_MAG_FRENZIEDBURNOUT) return "Frenzied Burnout";
