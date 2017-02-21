@@ -6,7 +6,7 @@ srand;
 
 sub EVENT_DEATH_COMPLETE {
   $enrag2 = int(rand(100) + 1);
-  if ($enrag2 <= 5) {
+  if ($enrag2 <= 10) {
     $spawnenrag2 = quest::spawn2(111141,0,0,$x,$y,$z,0);
     $attack = $entity_list->GetMobID($spawnenrag2);
     $enrag2attack = $attack->CastToNPC();
