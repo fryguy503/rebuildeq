@@ -896,7 +896,7 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 		else if(rb_rank == 5) aai->spell_refresh = 3600; // 1 hour
 	}  
 	else if (rank->id == aaCalloftheHero && GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO) > 0) {
-		aai->spell_refresh = (5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 2.5f + 5;
+		aai->spell_refresh = 2 * ((5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 5 + 10);
 	} else {
 		aai->spell_refresh = rank->recast_time;
 	}	
@@ -1305,7 +1305,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		else if(rb_rank == 5) cooldown = 3600; // 1 hours
 	}
 	else if(rank_id == aaCalloftheHero) {
-		cooldown = (5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 2.5f + 5;
+		cooldown = 2 * ((5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 5 + 10);
 	}
 	else if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
 		AddBuff(this, 271, GetBuildRank(ROGUE, RB_ROG_APPRAISAL));

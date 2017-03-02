@@ -541,7 +541,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 	// Magician Call of the Hero
 	rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO);
 	if(rank > 0 && spell_id == 16531) {
-		cast_time = (5000 - CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 2.5f + 5000;
+		cast_time = (5 - rank) * 2500 + 5000;
 	}
 
 	if(mana_cost > GetMana())
