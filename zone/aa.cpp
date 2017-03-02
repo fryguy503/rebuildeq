@@ -1242,13 +1242,13 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	// Break Invis when activating abilities
 	CastToClient()->BreakInvisibleSpells();
 
-	if(CastToClient()->IsSitting() || CastToClient()->GetFeigned()) {
+	if(!CastToClient()->IsStanding()) {
 		Message(13, "You must be standing to use an ability.");
 		return;
 	}
 	
 	// Dont let client waste a reuse timer if they can't use it
-	if (IsStunned() || IsFeared() || IsMezzed() || IsAmnesiad() || IsPet()) {
+	if (IsStunned() || IsFeared() || IsMezzed() || IsAmnesiad() || IsPet() || IsCasting()) {
 		return;
 	}
 	
