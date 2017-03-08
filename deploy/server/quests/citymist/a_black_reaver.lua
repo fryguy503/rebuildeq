@@ -1,6 +1,7 @@
 -- chance for random mob respawn on a black reaver death
 
 function event_death_complete(e)
+	math.randomseed(os.time());
 	local chance_spawn = math.random(100);
 
 	if (chance_spawn <= 10) then
