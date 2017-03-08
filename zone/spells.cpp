@@ -2839,6 +2839,11 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 		caster = target;
 	if(!target)
 		target = caster;
+	
+	if(caster->IsClient() && spell_id == 37903) { // heart of flame
+		int rank = caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES);
+		return rank; // one tick per rank: 6 - 30 seconds
+	}
 
 	formula = spells[spell_id].buffdurationformula;
 	duration = spells[spell_id].buffduration;
