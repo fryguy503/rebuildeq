@@ -1745,7 +1745,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 			auto results = database.QueryDatabase(query);
 			if (results.Success() && results.RowCount() != 0) {
 				auto row = results.begin();
-				exp_pool = atoi(row[0]);
+				exp_pool = atoll(row[0]);
 			}
 			if (exp_pool > 0) { //if there's pooled exp to lose from
 				exp_pool -= exploss; //subtract it.
