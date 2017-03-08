@@ -10598,6 +10598,14 @@ bool Client::IsSwornEnemyActive() {
 	return(m_epp.sworn_enemy_id > 0 && m_epp.sworn_enemy_timeout >= time(nullptr));
 }
 
+bool Client::IsStanding() {
+        bool result = false;
+        if(GetAppearance() == eaStanding)
+                result = true;
+
+        return result;
+}
+
 bool Client::IsBuildAvailable() {
 	if (GetClass() == CLERIC ||
 		GetClass() == ENCHANTER ||
