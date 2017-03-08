@@ -2007,7 +2007,14 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 			case SE_Illusion:
 			{
 				//All illusions won't work, unless I SAY they work, for now.
-				break;
+				if(IsClient() && 
+					(	(spell_id == 581 && CastToClient()->GetInv().HasItem(11646, 1, invWhereWorn) != 0xFFFF) // Amulet of Necropotence
+					||	(spell_id == 581 && CastToClient()->GetInv().HasItem(101005, 1, invWhereWorn != 0xFFFF) // Amulet of Necropotence
+				))) {
+					// Allow illusion
+				} else {
+					break;
+				}
 #ifdef SPELL_EFFECT_SPAM
 				snprintf(effect_desc, _EDLEN, "Illusion: race %d", effect_value);
 #endif
