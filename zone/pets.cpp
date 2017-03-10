@@ -365,7 +365,8 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 
 		npc_type->level = CastToClient()->GetLevel();
 		npc_type = this->AdjustNPC(npc_type, true, true);
-
+	
+		/* Stopped nerfing stats
 		npc_type->STR *= .75f;
 		npc_type->STA *= .75f;
 		npc_type->AGI *= .75f;
@@ -373,11 +374,11 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->WIS *= .75f;
 		npc_type->INT *= .75f;
 		npc_type->CHA *= .75f;
+		*/
 
-		//Now that we generated base HP, let's nerf it on a new formula
-		npc_type->max_hp *= 0.5f; //50 % of normal hp
-		npc_type->AC *= 0.5f; //this formula likely needs tweaks
-		npc_type->max_dmg *= 0.5f; //50% dmg at max
+		npc_type->max_hp *= 0.75f; // 75% of normal hp
+		npc_type->AC *= 0.80f; // 80% of normal ac
+		npc_type->max_dmg *= 0.60f; // 60% of max dmg
 	}
 	
 	if(spell_id == 58 || spell_id == 315 || spell_id == 316 || spell_id == 317) {
