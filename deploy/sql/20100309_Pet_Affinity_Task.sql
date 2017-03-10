@@ -1,75 +1,11 @@
-INSERT INTO tasks SET id="308", title="Pet Affinity", duration="0", description="[1,]", reward="Pet Affinity", rewardid="0", cashreward="0", xpreward="0", rewardmethod="0", startzone="0", minlevel="0", maxlevel="0", repeatable="0"; -- admin (9-Mar-17  7:52:42)
-INSERT INTO activities SET taskid="308", step="1", activityid="0", activitytype="2", text1="", text2="", text3="", goalid="44100", goalmethod="0", goalcount="0", delivertonpc="0", zoneid="44", optional="0"; -- admin (9-Mar-17  7:54:26)
-DELETE FROM activities WHERE taskid="308" AND activityid="0"; -- admin (9-Mar-17  7:54:50)
-INSERT INTO activities SET taskid="308", step="1", activityid="0", activitytype="2", text1="The Magician Najena", text2="", text3="", goalid="44100", goalmethod="0", goalcount="0", delivertonpc="0", zoneid="44", optional="0"; -- admin (9-Mar-17  7:54:50)
-INSERT INTO activities SET taskid="308", step="2", activityid="1", activitytype="2", text1="The Necromancer Xalgoz", text2="", text3="", goalid="88073", goalmethod="0", goalcount="0", delivertonpc="0", zoneid="88", optional="0"; -- admin (9-Mar-17  7:56:29)
-INSERT INTO activities SET taskid="308", step="3", activityid="2", activitytype="1", text1="Tazgar the Efreeti", text2="20 Full Bottles of Experience", text3="", goalid="100001", goalmethod="0", goalcount="5", delivertonpc="80022", zoneid="80", optional="0"; -- admin (9-Mar-17  8:04:18)
-DELETE FROM activities WHERE taskid="308" AND activityid="2"; -- admin (9-Mar-17  8:04:40)
-INSERT INTO activities SET taskid="308", step="3", activityid="2", activitytype="1", text1="Tazgar the Efreeti", text2="5 Full Bottles of Experience", text3="", goalid="100001", goalmethod="0", goalcount="5", delivertonpc="80022", zoneid="80", optional="0"; -- admin (9-Mar-17  8:04:40)
-DELETE FROM activities WHERE taskid="308" AND activityid="1"; -- admin (9-Mar-17  8:04:57)
-INSERT INTO activities SET taskid="308", step="2", activityid="1", activitytype="2", text1="Xalgoz The Necromancer", text2="", text3="", goalid="88073", goalmethod="0", goalcount="0", delivertonpc="0", zoneid="88", optional="0"; -- admin (9-Mar-17  8:04:57)
-DELETE FROM activities WHERE taskid="308" AND activityid="0"; -- admin (9-Mar-17  8:05:26)
-INSERT INTO activities SET taskid="308", step="1", activityid="0", activitytype="2", text1="Najena The Magician", text2="", text3="", goalid="44100", goalmethod="0", goalcount="0", delivertonpc="0", zoneid="44", optional="0"; -- admin (9-Mar-17  8:05:26)
-DELETE FROM activities WHERE taskid="308" AND activityid="1"; -- admin (9-Mar-17  8:05:39)
-INSERT INTO activities SET taskid="308", step="2", activityid="1", activitytype="2", text1="Xalgoz The Necromancer", text2="", text3="", goalid="88073", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="88", optional="0"; -- admin (9-Mar-17  8:05:39)
-DELETE FROM activities WHERE taskid="308" AND activityid="0"; -- admin (9-Mar-17  8:05:46)
-INSERT INTO activities SET taskid="308", step="1", activityid="0", activitytype="2", text1="Najena The Magician", text2="", text3="", goalid="44100", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="44", optional="0"; -- admin (9-Mar-17  8:05:46)
-UPDATE tasks SET title="Pet Affinity", duration="0", description="[1,]Kill Najena The Magician in Najena.
-[2,]Kill Xalgoz The necromancer in Kaesora.
-[3,]Give 5 Full Bottles of Experience to Tazgar The Efreeti in The Temple of Solusek Ro", reward="Pet Affinity", rewardid="0", cashreward="0", xpreward="0", rewardmethod="0", startzone="0", minlevel="0", maxlevel="0", repeatable="0" WHERE id="308"; -- admin (9-Mar-17  8:09:27)
-UPDATE tasks SET title="Pet Affinity", duration="0", description="[1, Kill Najena The Magician in Najena.][2, Kill Xalgoz The necromancer in Kaesora.]
-[3, Give 5 Full Bottles of Experience to Tazgar The Efreeti in The Temple of Solusek Ro.]", reward="Pet Affinity", rewardid="0", cashreward="0", xpreward="0", rewardmethod="0", startzone="0", minlevel="0", maxlevel="0", repeatable="0" WHERE id="308"; -- admin (9-Mar-17  8:11:29)
-UPDATE tasks SET title="Pet Affinity", duration="0", description="[1, Kill Najena The Magician in Najena.][2, Kill Xalgoz The necromancer in Kaesora.]
-[3, Give 5 Full Bottles of Experience to Tazgar The Efreeti in The Temple of Solusek Ro.]", reward="Pet Affinity", rewardid="0", cashreward="0", xpreward="1000", rewardmethod="0", startzone="0", minlevel="0", maxlevel="0", repeatable="0" WHERE id="308"; -- admin (9-Mar-17  8:12:15)
-DELETE FROM activities WHERE taskid="308" AND activityid="0"; -- admin (9-Mar-17  8:16:08)
-INSERT INTO activities SET taskid="308", step="4", activityid="4", activitytype="2", text1="Najena The Magician", text2="", text3="", goalid="44100", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="44", optional="0"; -- admin (9-Mar-17  8:16:08)
-DELETE FROM activities WHERE taskid="308" AND activityid="1"; -- admin (9-Mar-17  8:16:23)
-INSERT INTO activities SET taskid="308", step="1", activityid="0", activitytype="2", text1="Xalgoz The Necromancer", text2="", text3="", goalid="88073", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="88", optional="0"; -- admin (9-Mar-17  8:16:23)
-DELETE FROM activities WHERE taskid="308" AND activityid="4"; -- admin (9-Mar-17  8:16:34)
-INSERT INTO activities SET taskid="308", step="2", activityid="1", activitytype="2", text1="Najena The Magician", text2="", text3="", goalid="44100", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="44", optional="0"; -- admin (9-Mar-17  8:16:34)
-DELETE FROM activities WHERE taskid="308" AND activityid="1"; -- admin (9-Mar-17  8:17:50)
-INSERT INTO activities SET taskid="308", step="1", activityid="1", activitytype="2", text1="Najena The Magician", text2="", text3="", goalid="44100", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="44", optional="0"; -- admin (9-Mar-17  8:17:50)
-DELETE FROM activities WHERE taskid="308" AND activityid="2"; -- admin (9-Mar-17  8:17:55)
-INSERT INTO activities SET taskid="308", step="1", activityid="2", activitytype="1", text1="Tazgar the Efreeti", text2="5 Full Bottles of Experience", text3="", goalid="100001", goalmethod="0", goalcount="5", delivertonpc="80022", zoneid="80", optional="0"; -- admin (9-Mar-17  8:17:55)
-UPDATE tasks SET title="Pet Affinity", duration="0", description="[1, Kill Xalgoz The Necromancer in Kaesora.][2, Kill Najena The Magician in Najena.]
-[3, Give 5 Full Bottles of Experience to Tazgar The Efreeti in The Temple of Solusek Ro.]", reward="Pet Affinity", rewardid="0", cashreward="0", xpreward="1000", rewardmethod="0", startzone="0", minlevel="0", maxlevel="0", repeatable="0" WHERE id="308"; -- admin (9-Mar-17  8:19:04)
-INSERT INTO activities SET taskid="308", step="2", activityid="3", activitytype="2", text1="The Spectral Librarian in Kaesora.", text2="", text3="", goalid="88061", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="88", optional="0"; -- admin (9-Mar-17  8:38:04)
-DELETE FROM activities WHERE taskid="308" AND activityid="3"; -- admin (9-Mar-17  8:38:44)
-INSERT INTO activities SET taskid="308", step="2", activityid="3", activitytype="2", text1="The Spectral Librarian", text2="", text3="", goalid="88061", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="88", optional="0"; -- admin (9-Mar-17  8:38:44)
-INSERT INTO activities SET taskid="308", step="3", activityid="4", activitytype="2", text1="Drusella Sathir", text2="", text3="", goalid="105153", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="105", optional="0"; -- admin (9-Mar-17  8:46:34)
-INSERT INTO activities SET taskid="308", step="4", activityid="5", activitytype="2", text1="The Ghoul Lord", text2="", text3="", goalid="66005", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="66", optional="0"; -- admin (9-Mar-17  8:49:07)
-INSERT INTO activities SET taskid="308", step="5", activityid="6", activitytype="2", text1="Efreeti Lord Djarn", text2="", text3="", goalid="32062", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="32", optional="0"; -- admin (9-Mar-17  8:51:20)
-DELETE FROM activities WHERE taskid="308" AND activityid="0"; -- admin (9-Mar-17  8:53:03)
-INSERT INTO activities SET taskid="308", step="1", activityid="0", activitytype="2", text1="Xalgoz", text2="", text3="", goalid="88073", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="88", optional="0"; -- admin (9-Mar-17  8:53:03)
-DELETE FROM activities WHERE taskid="308" AND activityid="1"; -- admin (9-Mar-17  8:53:11)
-INSERT INTO activities SET taskid="308", step="1", activityid="1", activitytype="2", text1="Najena", text2="", text3="", goalid="44100", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="44", optional="0"; -- admin (9-Mar-17  8:53:11)
-DELETE FROM activities WHERE taskid="308" AND activityid="3"; -- admin (9-Mar-17  8:53:30)
-INSERT INTO activities SET taskid="308", step="2", activityid="3", activitytype="2", text1="Spectral Librarian", text2="", text3="", goalid="88061", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="88", optional="0"; -- admin (9-Mar-17  8:53:30)
-INSERT INTO activities SET taskid="308", step="6", activityid="7", activitytype="2", text1="Phinigel Autropos ", text2="", text3="", goalid="64001", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="64", optional="0"; -- admin (9-Mar-17  8:55:28)
-INSERT INTO activities SET taskid="308", step="7", activityid="8", activitytype="2", text1="The Kly", text2="", text3="", goalid="104077", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="104", optional="0"; -- admin (9-Mar-17  8:58:23)
-UPDATE tasks SET title="Pet Affinity", duration="0", description="", reward="Pet Affinity", rewardid="0", cashreward="0", xpreward="1000", rewardmethod="0", startzone="0", minlevel="0", maxlevel="0", repeatable="0" WHERE id="308"; -- admin (9-Mar-17  8:58:34)
-INSERT INTO activities SET taskid="308", step="8", activityid="9", activitytype="2", text1="Construct of Sathir", text2="", text3="", goalid="102084", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="102", optional="0"; -- admin (9-Mar-17  9:01:34)
-DELETE FROM activities WHERE taskid="308" and activityid="9"; -- admin (9-Mar-17  9:02:25)
-INSERT INTO activities SET taskid="308", step="8", activityid="9", activitytype="2", text1="Queen Dracnia", text2="", text3="", goalid="121072", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="121", optional="0"; -- admin (9-Mar-17  9:03:49)
-INSERT INTO activities SET taskid="308", step="9", activityid="10", activitytype="2", text1="Tserrina Syl`Tor", text2="", text3="", goalid="111154", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="111", optional="0"; -- admin (9-Mar-17  9:05:11)
-DELETE FROM activities WHERE taskid="308" and activityid="3"; -- admin (9-Mar-17  9:39:51)
-DELETE FROM activities WHERE taskid="308" AND activityid="9"; -- admin (9-Mar-17  9:40:26)
-INSERT INTO activities SET taskid="308", step="1", activityid="3", activitytype="2", text1="Queen Dracnia", text2="", text3="", goalid="121072", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="121", optional="0"; -- admin (9-Mar-17  9:40:26)
-DELETE FROM activities WHERE taskid="308" AND activityid="2"; -- admin (9-Mar-17  9:40:41)
-INSERT INTO activities SET taskid="308", step="1", activityid="9", activitytype="1", text1="Tazgar the Efreeti", text2="5 Full Bottles of Experience", text3="", goalid="100001", goalmethod="0", goalcount="5", delivertonpc="80022", zoneid="80", optional="0"; -- admin (9-Mar-17  9:40:41)
-DELETE FROM activities WHERE taskid="308" AND activityid="10"; -- admin (9-Mar-17  9:40:52)
-INSERT INTO activities SET taskid="308", step="9", activityid="2", activitytype="2", text1="Tserrina Syl`Tor", text2="", text3="", goalid="111154", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="111", optional="0"; -- admin (9-Mar-17  9:40:52)
-DELETE FROM activities WHERE taskid="308" AND activityid="8"; -- admin (9-Mar-17  9:41:06)
-INSERT INTO activities SET taskid="308", step="1", activityid="8", activitytype="2", text1="The Kly", text2="", text3="", goalid="104077", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="104", optional="0"; -- admin (9-Mar-17  9:41:06)
-DELETE FROM activities WHERE taskid="308" AND activityid="7"; -- admin (9-Mar-17  9:41:16)
-INSERT INTO activities SET taskid="308", step="1", activityid="7", activitytype="2", text1="Phinigel Autropos ", text2="", text3="", goalid="64001", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="64", optional="0"; -- admin (9-Mar-17  9:41:16)
-DELETE FROM activities WHERE taskid="308" AND activityid="2"; -- admin (9-Mar-17  9:41:22)
-INSERT INTO activities SET taskid="308", step="1", activityid="2", activitytype="2", text1="Tserrina Syl`Tor", text2="", text3="", goalid="111154", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="111", optional="0"; -- admin (9-Mar-17  9:41:22)
-DELETE FROM activities WHERE taskid="308" AND activityid="4"; -- admin (9-Mar-17  9:41:32)
-INSERT INTO activities SET taskid="308", step="1", activityid="4", activitytype="2", text1="Drusella Sathir", text2="", text3="", goalid="105153", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="105", optional="0"; -- admin (9-Mar-17  9:41:32)
-DELETE FROM activities WHERE taskid="308" AND activityid="5"; -- admin (9-Mar-17  9:41:42)
-INSERT INTO activities SET taskid="308", step="1", activityid="5", activitytype="2", text1="The Ghoul Lord", text2="", text3="", goalid="66005", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="66", optional="0"; -- admin (9-Mar-17  9:41:42)
-DELETE FROM activities WHERE taskid="308" AND activityid="6"; -- admin (9-Mar-17  9:41:50)
-INSERT INTO activities SET taskid="308", step="1", activityid="6", activitytype="2", text1="Efreeti Lord Djarn", text2="", text3="", goalid="32062", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="32", optional="0"; -- admin (9-Mar-17  9:41:50)
-UPDATE tasks SET title="Pet Affinity", duration="0", description="[1, Kill Xalgoz in Kaesora.][2, Kill Najena in Najena.][3, Kill Tserrina Syl`Tor in Tower of Frozen Shadows.][4, Kill Queen Dracnia in Crystal Caverns.][5, Kill Drusella Sathir in Charasis.][6, Kill The Ghoul Lord in Lower Guk.][7, Kill Efreeti Lord Djarn in Nagafen’s Lair.][8, Kill Phinigel Autropos in Kedge Keep.][9, Kill The Kly in Crypt of Dalnir.][10, Deliver 5 Full Bottles of Experience to Tazgar the Efreeti in Temple of Solusek Ro.]
-", reward="Pet Affinity", rewardid="0", cashreward="0", xpreward="1000", rewardmethod="0", startzone="0", minlevel="0", maxlevel="0", repeatable="0" WHERE id="308"; -- admin (9-Mar-17  9:53:50)
+INSERT INTO tasks SET id="308", title="Pet Affinity", duration="0", description="Kill various enemies throughout Norrath and then deliver 5 Full Bottles of Experience to Tazgar the Efreeti in Temple of Solusek Ro.", reward="Pet Affinity", rewardid="0", cashreward="0", xpreward="1000", rewardmethod="0", startzone="0", minlevel="0", maxlevel="0", repeatable="0";
+INSERT INTO activities SET taskid="308", step="1", activityid="0", activitytype="2", text1="Xalgoz", text2="", text3="", goalid="88073", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="88", optional="0";
+INSERT INTO activities SET taskid="308", step="1", activityid="1", activitytype="2", text1="Najena", text2="", text3="", goalid="44100", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="44", optional="0";
+INSERT INTO activities SET taskid="308", step="1", activityid="2", activitytype="2", text1="Tserrina Syl`Tor", text2="", text3="", goalid="111154", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="111", optional="0";
+INSERT INTO activities SET taskid="308", step="1", activityid="3", activitytype="2", text1="Queen Dracnia", text2="", text3="", goalid="121072", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="121", optional="0";
+INSERT INTO activities SET taskid="308", step="1", activityid="4", activitytype="2", text1="Drusella Sathir", text2="", text3="", goalid="105153", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="105", optional="0";
+INSERT INTO activities SET taskid="308", step="1", activityid="5", activitytype="2", text1="The Ghoul Lord", text2="", text3="", goalid="66005", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="66", optional="0";
+INSERT INTO activities SET taskid="308", step="1", activityid="6", activitytype="2", text1="Efreeti Lord Djarn", text2="", text3="", goalid="32062", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="32", optional="0";
+INSERT INTO activities SET taskid="308", step="1", activityid="7", activitytype="2", text1="Phinigel Autropos ", text2="", text3="", goalid="64001", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="64", optional="0";
+INSERT INTO activities SET taskid="308", step="1", activityid="8", activitytype="2", text1="The Kly", text2="", text3="", goalid="104077", goalmethod="0", goalcount="1", delivertonpc="0", zoneid="104", optional="0";
+INSERT INTO activities SET taskid="308", step="1", activityid="9", activitytype="1", text1="Tazgar the Efreeti", text2="Full Bottles of Experience", text3="", goalid="100001", goalmethod="0", goalcount="5", delivertonpc="80022", zoneid="80", optional="0";
