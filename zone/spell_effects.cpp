@@ -1760,8 +1760,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					else if(spell_id == 1685 && rank >= 5) item_id = 100082; // Enhanced Muzzle of Mardu
 				}
 				
-				if(IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD) > 0 && spell_id == 27465) {
-					uint32 rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD);
+				if(caster->IsClient() && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD) > 0 && spell_id == 27465) {
+					uint32 rank = caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD);
 
 					// Upgrade the shard per rank, increasing the spell effect and charges. 
 					item_id = 6346; 	
