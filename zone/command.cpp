@@ -6252,7 +6252,8 @@ void command_feat(Client *c, const Seperator *sep)
 		Feat("class", "Charm of Defense", "defense", FEAT_CHARMOFDEFENSE, 21, 0, 0, 100045),
 		Feat("general", "Frontal Stun Immunity", "stun", FEAT_FRONTSTUN, 65535, 0, 0, 0),
 		//Feat("general", "Cursed Fragments", "cursed", FEAT_CURSEDFRAGMENTS, 65535, 0, 0, 0),
-		Feat("aa", "Innate Runspeed", "runspeed", FEAT_INNATERUNSPEED, 65535, aaInnateRunSpeed, 3, 0)
+		Feat("aa", "Innate Runspeed", "runspeed", FEAT_INNATERUNSPEED, 65535, aaInnateRunSpeed, 3, 0),
+		Feat("pet", "Pet Affinity", "affinity", FEAT_PETAFFINITY, 65535, aaPetAffinity, 1, 0)
 	};
 
 	if (sep->arg[2]) { //if 2nd argument passed
