@@ -339,7 +339,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								int bonusDamage = rank * BaseDamageBonus * dmg;
 								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Chosen %u added %i bonus damage.", rank, -bonusDamage);
 
-								dmg -= bonusDamage;
+								dmg += bonusDamage;
 							}
 
 							// Elixir of Might
