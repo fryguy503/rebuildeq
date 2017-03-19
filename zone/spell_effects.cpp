@@ -6064,9 +6064,7 @@ int16 Mob::CalcFocusEffect(focusType type, uint16 focus_id, uint16 spell_id, boo
 			break;
 
 		case SE_IncreaseSpellHaste:
-			if(CastToClient()->IsClient() && CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE) > 0 && (spell_id == 3575 || spell_id == 3576)) {
-				value = focus_spell.base[i] * (1 + (0.20f * CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE)));
-			} else if (type == focusSpellHaste && focus_spell.base[i] > value)
+			if (type == focusSpellHaste && focus_spell.base[i] > value)
 				value = focus_spell.base[i];
 			break;
 
@@ -6630,6 +6628,10 @@ int16 Client::GetFocusEffect(focusType type, uint16 spell_id)
 		// For effects like gift of mana that only fire once, save the spellid into an array that consists of all available buff slots.
 		if(buff_tracker >= 0 && buffs[buff_tracker].numhits > 0) {
 			m_spellHitsLeft[buff_tracker] = focusspell_tracker;
+		}
+		
+		if(type == focusSpellHaste && CastToClient()->IsClient() && CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE) > 0) {
+			realTotal2 *= (1 + (0.20f * CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE)));
 		}
 	}
 
