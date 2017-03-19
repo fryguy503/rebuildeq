@@ -1389,6 +1389,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			if (rank > 0) {
 				chance = 400;
 				proc_damage = GetLevel() * 1.25f * (0.25f * rank);
+				is_proc = true;
 				if (proc_damage < 20) {
 					proc_damage = 20;
 				}
