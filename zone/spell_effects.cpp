@@ -6064,7 +6064,9 @@ int16 Mob::CalcFocusEffect(focusType type, uint16 focus_id, uint16 spell_id, boo
 			break;
 
 		case SE_IncreaseSpellHaste:
-			if (type == focusSpellHaste && focus_spell.base[i] > value)
+			if(CastToClient()->IsClient() && CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE) > 0 && (spell_id == 3575 || spell_id == 3576)) {
+				value = focus_spell.base[i] * (1 + (0.20f * CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE)));
+			} else if (type == focusSpellHaste && focus_spell.base[i] > value)
 				value = focus_spell.base[i];
 			break;
 
