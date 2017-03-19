@@ -1384,6 +1384,15 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					is_proc = true;
 				}
 			}
+			
+			rank = GetBuildRank(CLERIC, RB_CLR_BELIEVE);
+			if (rank > 0) {
+				chance = 400;
+				proc_damage = GetLevel() * 1.25f * (0.25f * rank);
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+			}
 
 			rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
 			if (rank > 0) {
@@ -1503,7 +1512,13 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 
 				if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance)) {
 					other->Damage(this, proc_damage, 615, skillinuse, true, -1, false, special);
-
+					
+					rank = GetBuildRank(CLERIC, RB_CLR_BELIEVE);
+					if (rank > 0) {
+						int healAmount = GetLevel() * 1.25f * (0.25f * rank);
+						CastToClient()->Message(MT_Spells, "Believe %u healed you for %i points of damage.", rank, healAmount);
+						HealDamage(healAmount);
+					}
 				}
 			}
 		}
