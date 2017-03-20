@@ -1405,8 +1405,6 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				if (BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special)) {
 					CastToClient()->Message(MT_Spells, "Believe %u healed you for %i points of damage.", rank, proc_damage);
 					HealDamage(proc_damage);
-				} else {
-					CastToClient()->Message(MT_Spells, "Believe failed to proc");
 				}
 			}
 			
