@@ -5,6 +5,12 @@ sub EVENT_CLICKDOOR {
     } elsif(plugin::check_hasitem($client, 17274)) {
       OPEN_DOORS(8,1);
     }
+  } elsif($doorid == 9){
+    if($client->KeyRingCheck(17274)){
+      OPEN_DOORS(9,0);
+    } elsif(plugin::check_hasitem($client, 17274)) {
+      OPEN_DOORS(9,1);
+    }
   } elsif($doorid == 10){
     if($client->KeyRingCheck(17274)){
       OPEN_DOORS(10,0);
