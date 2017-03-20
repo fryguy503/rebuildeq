@@ -556,6 +556,11 @@ bool Mob::AvoidDamage(Mob *other, int32 &damage, int hand)
 			float counter = (counter_dodge + counter_all) / 100.0f;
 			chance -= chance * counter;
 		}
+		
+		if(IsClient() && CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) > 0) {
+			chance += 50;
+		}
+		
 		if (zone->random.Roll(chance)) {
 			damage = -4;
 			return true;
