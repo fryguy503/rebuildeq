@@ -873,15 +873,12 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry, st
 			quest_npc = true;
 		}
 
-		std::vector<EQEmu::Any> item_list;
 		std::list<ItemInst*> items;
 		for (int i = EQEmu::legacy::TRADE_BEGIN; i <= EQEmu::legacy::TRADE_NPC_END; ++i) {
 			ItemInst *inst = m_inv.GetItem(i);
 			if(inst) {
 				items.push_back(inst);
-				item_list.push_back(inst);
 			} else {
-				item_list.push_back((ItemInst*)nullptr);
 				continue;
 			}
 
@@ -922,9 +919,24 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry, st
 			if(UpdateTasksOnDeliver(items, Cash, tradingWith->GetNPCTypeID())) {
 				if(!tradingWith->IsMoving())
 					tradingWith->FaceTarget(this);
-
-				this->EVENT_ITEM_ScriptStopReturn();
-
+				
+				trade->pp = Cash / 1000;
+				trade->gp = (Cash - (trade->pp * 1000)) / 100;
+				trade->sp = (Cash - (trade->pp * 1000) - (trade->gp * 100)) / 10;
+				trade->cp = Cash % 10;
+			}
+		}
+		
+		std::vector<EQEmu::Any> item_list;
+		std::list<ItemInst*>::iterator it = items.begin();
+		for (int i = EQEmu::legacy::TRADE_BEGIN; i <= EQEmu::legacy::TRADE_NPC_END; ++i) {
+			if(it != items.end()) {
+				ItemInst *inst = *it;
+				item_list.push_back(inst);
+				++it;
+			} else {
+				item_list.push_back((ItemInst*)nullptr);
+				continue;
 			}
 		}
 
