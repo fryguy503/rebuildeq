@@ -558,7 +558,7 @@ bool Mob::AvoidDamage(Mob *other, int32 &damage, int hand)
 		}
 		
 		if(IsClient() && CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) > 0) {
-			chance += 50;
+			chance += (10 * CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR));
 		}
 		
 		if (zone->random.Roll(chance)) {
