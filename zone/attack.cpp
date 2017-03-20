@@ -556,6 +556,11 @@ bool Mob::AvoidDamage(Mob *other, int32 &damage, int hand)
 			float counter = (counter_dodge + counter_all) / 100.0f;
 			chance -= chance * counter;
 		}
+		
+		if(IsClient() && CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) > 0) {
+			chance += (10 * CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR));
+		}
+		
 		if (zone->random.Roll(chance)) {
 			damage = -4;
 			return true;
@@ -1342,67 +1347,128 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 
 		uint16 spellid = 0;
 		int proc_damage = 1;
-		bool is_proc = false;
 		float chance = 0;
 		uint32 rank;
-		rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
-		if (rank > 0) {
-
-			if (CastToClient()->ShowBuildEcho()) Message(MT_FocusEffect, "Spiritual Awakening %u gave %u mana", rank, rank);
-			SetMana(GetMana() + rank);
-		}
-
 
 		if (!IsFromSpell && 
 			skillinuse != EQEmu::skills::SkillBash &&
 			skillinuse != EQEmu::skills::SkillBackstab &&
 			skillinuse != EQEmu::skills::SkillKick) {
+						
+			rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
+			if (rank > 0) {
+				if (CastToClient()->ShowBuildEcho()) Message(MT_FocusEffect, "Spiritual Awakening %u gave %u mana", rank, rank);
+					SetMana(GetMana() + rank);
+				
+				chance = 300;
+				proc_damage = GetLevel() * 2.5f * (0.25f * rank) / 2;
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+				
+				BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special);
+			}
 			
-			//Check for SHM fury proc
 			rank = GetBuildRank(SHAMAN, RB_SHM_FURY);
 			if (rank > 0) {
 				spellid = 271; //Fury spell
 				chance = 400;
-				proc_damage = GetLevel() * 2.5f;
-				proc_damage = proc_damage * 0.25f * rank;
-				if (proc_damage < 20) {
-					proc_damage = 20;
-				}
+				//If you don't have buff up, it still does half damage.
+				proc_damage = GetLevel() * 2.5f * (0.25f * rank) / 2;
+				
 				//Check if they have fleeting fury on
 				int buff_count = GetMaxTotalSlots();
 				for (int i = 0; i < buff_count; i++)
 				{
 					if (buffs[i].spellid == spellid) {
-						is_proc = true;
+						proc_damage *= 2;
 						break;
 					}
 				}
-				//If you don't have buff up, it still does half damage.
-				if (!is_proc) {
-					proc_damage /= 2;
-					if (proc_damage < 1) proc_damage = 1;
-					is_proc = true;
+				
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+				
+				BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special);
+			}
+			
+			rank = GetBuildRank(CLERIC, RB_CLR_BELIEVE);
+			if (rank > 0) {
+				chance = 400;
+				proc_damage = GetLevel() * 1.25f * (0.25f * rank);
+				
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+				
+				if (BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special)) {
+					CastToClient()->Message(MT_Spells, "Believe %u healed you for %i points of damage.", rank, proc_damage);
+					HealDamage(proc_damage);
+				} else {
+					CastToClient()->Message(MT_Spells, "Believe failed to proc");
+				}
+			}
+			
+			rank = GetBuildRank(CLERIC, RB_CLR_DIVINEHAMMER);
+			if (rank > 0) {
+				chance = GetProcChances(80 * rank, Hand);
+				spellid = 2173;
+				
+				ExecWeaponProc(weapon, spellid, other);
+			}
+			
+			rank = GetBuildRank(CLERIC, RB_CLR_AUGMENTEDRETRIBUTION);
+			if (rank > 0) {
+				
+				if(zone->random.Roll((int) rank)) {
+					int levelRange = 0;
+					if(GetLevel() == 60) levelRange = 6;
+					else if(GetLevel() >= 54) levelRange = 5;
+					else if(GetLevel() >= 44) levelRange = 4;
+					else if(GetLevel() >= 29) levelRange = 3;
+					else if(GetLevel() >= 14) levelRange = 2;
+					else if(GetLevel() >= 5) levelRange = 1;
+										
+					int option = zone->random.Int(0, levelRange);
+					
+					switch(option) {
+						case 0:
+							spellid = 14; // Strike
+							break;
+						case 1:
+							spellid = 560; // Furor
+							break;
+						case 2:
+							spellid = 16; // Smite
+							break;
+						case 3:
+							spellid = 329; // Wrath
+							break;
+						case 4:
+							spellid = 672; // Retribution
+							break;
+						case 5:
+							spellid = 1543; // Reckoning
+							break;
+						case 6:
+							spellid = 2508; // Judgement
+							break;
+					}
+				
+					ExecWeaponProc(weapon, spellid, other);
 				}
 			}
 
 			rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
 			if (rank > 0) {
-				spellid = 271; //Fury spell
 				chance = 300;
-				proc_damage = GetLevel() * 2.5f;
-				proc_damage = proc_damage * 0.25f * rank;
+				proc_damage = GetLevel() * 2.5f * (0.25f * rank);
 				if (proc_damage < 20) {
 					proc_damage = 20;
 				}
-				//Check if they have fleeting fury on
-				int buff_count = GetMaxTotalSlots();
-				for (int i = 0; i < buff_count; i++)
-				{
-					if (buffs[i].spellid == spellid) {
-						is_proc = true;
-						break;
-					}
-				}
+				
+				BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special);
 			}
 
 			rank = GetBuildRank(ROGUE, RB_ROG_MUGGINGSHOT);
@@ -1432,7 +1498,6 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				chance /= 2;
 
 				if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance)) {
-
 					//Deal damage
 					if (proc_damage > 0) other->Damage(this, proc_damage, 615, skillinuse, true, -1, false, special);
 					//interrupt					
@@ -1443,24 +1508,9 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					}
 					//cast spell
 					ExecWeaponProc(weapon, spellid, other);
-				}
-				
+				}				
 			}
 
-			//Check for DRU spirit awakening
-			rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
-			if (rank > 0) {
-				chance = 300;
-				proc_damage = GetLevel() * 2.5f;
-				proc_damage = proc_damage * 0.25f * rank;
-				proc_damage /= 2;
-				if (proc_damage < 20) {
-					proc_damage = 20;
-				}
-				is_proc = true;
-			}
-
-			//Check for BRD whistle
 			rank = GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE);
 			if (rank > 0) {
 				chance = 300;
@@ -1469,42 +1519,24 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					chance += chance * 0.1f * rank;
 				}
 
-				proc_damage = GetLevel() * 2.5f;
-				proc_damage = proc_damage * 0.25f * rank;
-				if (proc_damage < 20) {
-					proc_damage = 20;
-				}
-				//Check if they have fleeting fury on
+				//If you aren't playing song, it still does half damage.
+				proc_damage = GetLevel() * 2.5f * (0.25f * rank) / 2;
+				
+				//Check if they have a haste song on
 				int buff_count = GetMaxTotalSlots();
 				for (int i = 0; i < buff_count; i++)
 				{
 					if ((buffs[i].spellid == 734 || buffs[i].spellid == 749 || buffs[i].spellid == 1762)) {
-						is_proc = true;
+						proc_damage *= 2;
 						break;
 					}
 				}
 				
-
-				//If you aren't playing song, it still does half damage.
-				if (!is_proc) {
-					proc_damage /= 2;
-					if (proc_damage < 1) proc_damage = 1;
-					is_proc = true;
+				if (proc_damage < 20) {
+					proc_damage = 20;
 				}
-			}
-
-			//Now do proc calculations
-
-			if (is_proc) {
-				chance = GetProcChances(chance, Hand);
-
-				if (Hand != EQEmu::legacy::SlotPrimary) //Is Archery intened to proc at 50% rate?
-					chance /= 2;
-
-				if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance)) {
-					other->Damage(this, proc_damage, 615, skillinuse, true, -1, false, special);
-
-				}
+				
+				BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special);
 			}
 		}
 	}
@@ -1513,6 +1545,20 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 
 	else
 		return false;
+}
+
+bool Client::BuildProcCalc(float chance, int Hand, Mob* other, int proc_damage, EQEmu::skills::SkillType skillinuse, int special) {
+	chance = GetProcChances(chance, Hand);
+
+	if (Hand != EQEmu::legacy::SlotPrimary) //Is Archery intened to proc at 50% rate?
+		chance /= 2;
+
+	if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance)) {
+		other->Damage(this, proc_damage, 615, skillinuse, true, -1, false, special);		
+		return true;
+	} else {
+		return false;
+	}	
 }
 
 //used by complete heal and #heal

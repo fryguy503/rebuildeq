@@ -150,11 +150,11 @@ class Build {
 			$build->styles[1] = "Swordsinger";
 			$build->styles[2] = "Maestro";
 			break;
-			//==================CLERIC====================== //TODO
+			//==================CLERIC======================
 			case "cleric":
 			$build->fullName = "Cleric";
 			$build->monogram = 2;
-			$build->desc = "Clerics are classically known as the best healers in the game.<br> Their 3 styles focus on melee, healing, or protection.";
+			$build->desc = "Clerics are classically known as the best healers in the game.<br> Their 3 styles focus on melee, healing spells, or offensive spells.";
 			$build->styles[0] = "Templar";
 			$build->styles[1] = "Bishop";
 			$build->styles[2] = "Archon";
@@ -438,22 +438,21 @@ class Build {
 			break;
 			//==================CLERIC======================
 			case "cleric":
-			/*$newSkill = new stdClass();
-			$newSkill->title = "Divine Bash";
-			$newSkill->desc = 'Bash now has a chance to heal nearby group members for <em data-base="2">2</em>% of your maximum health<span class="perLevel"> per rank</span>.';
+			$newSkill = new stdClass();
+			$newSkill->title = "Believe";
+			$newSkill->desc = 'The cleric procs a puma-like proc at half damage of other similar puma procs, and half the damage is health back to the cleric.';
 			$newSkill->image = "/images/builds/icons/rb-clr-divinebash.png";	
 			$skills[0] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Ward of Vie";
-			$newSkill->desc = 'All ward spells last an additional <em data-base="100">100</em> hitpoints<span class="perLevel"> per rank</span>. NOT IMPLEMENTED';
+			$newSkill->desc = 'All ward spells last an additional <em data-base="20">20</em>% more maximum hitpoints<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-wardofvie.png";	
 			$skills[2] = $newSkill;
 
-
 			$newSkill = new stdClass();
 			$newSkill->title = "Harken the Gods";
-			$newSkill->desc = 'Yaulp now gives enhanced accuracy, attack, and mana regen by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Yaulp now gives increased accuracy, attack, and mana regen<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-harkenthegods.png";	
 			$skills[4] = $newSkill;
 
@@ -465,13 +464,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Hammer";
-			$newSkill->desc = 'Grants a passive ability that gives the cleric a <em data-base="2">2</em>% to use the God proc<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants a passive ability that gives you a <em data-base="8">8</em>% chance to use Hand of the God proc<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-divinehammer.png";	
 			$skills[8] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Avatar's Boon";
-			$newSkill->desc = 'Gives a <em data-base="2">2</em>% chance that the next ally you heal is blessed with Avatar\s Boon, granting <em data-base="2">2</em>% of the next damage dealt by the player to return as mana to the cleric<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Gives a <em data-base="2">2</em>% chance that the next ally you heal is blessed with Avatar\s Boon, granting <em data-base="2">2</em>% of the next damage dealt by the player to return as mana to the cleric<span class="perLevel"> per rank</span>. NOT IMPLEMENTED';
 			$newSkill->image = "/images/builds/icons/rb-clr-avatarsboon.png";	
 			$skills[10] = $newSkill;
 
@@ -483,11 +482,11 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Avatar";
-			$newSkill->desc = 'Grants the Divine Avatar AA, allowing a cleric many statistic bonuses and a <em data-base="10">10</em>% chance dodge<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Divine Avatar AA, allowing a cleric many statistic bonuses and a <em data-base="10">10</em>% chance dodge and longer duration <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-divineavatar.png";	
 			$skills[16] = $newSkill;
 
-			$newSkill = new stdClass();
+			/*$newSkill = new stdClass();
 			$newSkill->title = "Instill Life";
 			$newSkill->desc = 'When an ally is healed, there is a <em data-base="1">1</em>% to also apply a heal over time effect<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	

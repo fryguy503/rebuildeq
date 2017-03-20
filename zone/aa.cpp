@@ -1224,6 +1224,13 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaHeartofFlames && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES) < 1 ||
 		rank_id == aaCompanionofNecessity && GetBuildRank(MAGICIAN, RB_MAG_COMPANIONOFNECESSITY) < 1 ||
 		rank_id == aaServantofRo && GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) < 1 ||
+		rank_id == aaDivineAvatar && GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) < 1 ||
+		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALBREEZE) < 1 ||
+		rank_id == aaDivineArbitration && GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) < 1 ||
+		rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
+		rank_id == aaDivineRetribution && GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION) < 1 ||
+		rank_id == aaTurnUndead && GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) < 1 ||
+		rank_id == aaExquisiteBenediction && GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION) < 1 ||
 		( //Lesson of the Devoted is used by multiple classes different builds
 			rank_id == aaLessonoftheDevoted && 
 				GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&

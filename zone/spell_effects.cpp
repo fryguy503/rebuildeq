@@ -1933,10 +1933,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_MitigateMeleeDamage:
 			{
-				if(spell_id == 5914 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) > 0) {
+				int rank = caster->CastToClient()->GetBuildRank(CLERIC, RB_CLR_WARDOFVIE);
+				if(rank > 0 && (spell_id == 4088 || spell_id == 4089 || spell_id == 4090)) {
+					int runeAmount = spells[spell_id].max[i] * (rank / 5.0f);
+					buffs[buffslot].melee_rune = spells[spell_id].max[i] + runeAmount;
+					caster->CastToClient()->Message(MT_Spells, "Ward of Vie %u has increased the ward by %i points of damage.", rank, runeAmount);
+				} else if(spell_id == 5914 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) > 0) {
 					buffs[buffslot].melee_rune = spells[spell_id].max[i] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE) / 5.0f);
 				} else if(spell_id == 21843 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) > 0) {
-					buffs[buffslot].melee_rune = spells[spell_id].max[i] * (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) / 5.0f);
+					buffs[buffslot].melee_rune = spells[spell_id].max[i] * (caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) / 5.0f);
 				}else {
 					buffs[buffslot].melee_rune = spells[spell_id].max[i];
 				}
@@ -6630,6 +6635,10 @@ int16 Client::GetFocusEffect(focusType type, uint16 spell_id)
 		// For effects like gift of mana that only fire once, save the spellid into an array that consists of all available buff slots.
 		if(buff_tracker >= 0 && buffs[buff_tracker].numhits > 0) {
 			m_spellHitsLeft[buff_tracker] = focusspell_tracker;
+		}
+		
+		if(type == focusSpellHaste && CastToClient()->IsClient() && CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE) > 0) {
+			realTotal2 *= (1 + (0.20f * CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE)));
 		}
 	}
 

@@ -9138,6 +9138,41 @@ void Client::RefreshBuild() {
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Primal Fusion\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_DIVINEAVATAR && GetAA(aaDivineAvatar) < 1) {
+					TrainAARank(aaDivineAvatar);
+					Message(15, "You have unlocked the AA \"Divine Avatar\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_CELESTIALBREEZE && GetAA(aaCelestialRegeneration) < 1) {
+					TrainAARank(aaCelestialRegeneration);
+					Message(15, "You have unlocked the AA \"Celestial Regeneration\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_DIVINEARBITRATION && GetAA(aaDivineArbitration) < 1) {
+					TrainAARank(aaDivineArbitration);
+					Message(15, "You have unlocked the AA \"Divine Arbitration\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_DIVINERESURRECTION && GetAA(aaDivineResurrection) < 1) {
+					TrainAARank(aaDivineResurrection);
+					Message(15, "You have unlocked the AA \"Divine Resurrection\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_DIVINERETRIBUTION && GetAA(aaDivineRetribution) < 1) {
+					TrainAARank(aaDivineRetribution);
+					Message(15, "You have unlocked the AA \"Divine Retribution\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_TURNUNDEAD && GetAA(aaTurnUndead) < 1) {
+					TrainAARank(aaTurnUndead);
+					Message(15, "You have unlocked the AA \"Turn Undead\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_EXQUISITEBENEDICTION && GetAA(aaExquisiteBenediction) < 1) {
+					TrainAARank(aaExquisiteBenediction);
+					Message(15, "You have unlocked the AA \"Exquisite Benediction\"! Find the hotkey in your Alternate Advancement Window.");
+				}
 			}
 		}
 
@@ -10590,6 +10625,31 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MAG_QUICKDAMAGE) return "Quick Damage";
 		else if (id == RB_MAG_HEARTOFFLAMES) return "Heart of Flames";
 		else if (id == RB_MAG_PRIMALFUSION) return "Primal Fusion";
+	case CLERIC:
+		if (id == RB_CLR_BELIEVE) return "Believe";
+		else if (id == RB_CLR_WARDOFVIE) return "Ward of Vie";
+		else if (id == RB_CLR_HARKENTHEGODS) return "Harken the Gods";
+		else if (id == RB_CLR_BLESSINGOFHASTE) return "Blessing of Haste";
+		else if (id == RB_CLR_DIVINEHAMMER) return "Divine Hammer";
+		else if (id == RB_CLR_AVATARSBOON) return "Avatar's Boon";
+		else if (id == RB_CLR_AUGMENTEDRETRIBUTION) return "Augmented Retribution";
+		else if (id == RB_CLR_DIVINEAVATAR) return "Divine Avatar";
+		else if (id == RB_CLR_INSTILLLIFE) return "Instill Life";
+		else if (id == RB_CLR_DIVINEBASH) return "Divine Bash";
+		else if (id == RB_CLR_INTENSIFIEDRESOLUTION) return "Intensified Resoltion";
+		else if (id == RB_CLR_CELESTIALBREEZE) return "Celestial Breeze";
+		else if (id == RB_CLR_DIVINEARBITRATION) return "Divine Arbitration";
+		else if (id == RB_CLR_DIVINERESURRECTION) return "Divine Resurrection";
+		else if (id == RB_CLR_PROMISE) return "Promise";
+		else if (id == RB_CLR_HARMONICBALANCE) return "Harmonic Balance";
+		else if (id == RB_CLR_STRIKE) return "Strike";
+		else if (id == RB_CLR_WARDOFREBUKE) return "Ward of Rebuke";
+		else if (id == RB_CLR_FISTOFTHEGODS) return "Fist of the Gods";
+		else if (id == RB_CLR_DIVINERETRIBUTION) return "Divine Retribution";
+		else if (id == RB_CLR_TURNUNDEAD) return "Turn Undead";
+		else if (id == RB_CLR_EXQUISITEBENEDICTION) return "Exquisite Benediction";
+		else if (id == RB_CLR_MARKOFRETRIBUTION) return "Mark of Retribution";
+		else if (id == RB_CLR_PIOUSZEALOT) return "Pious Zealot";
 	}
 	return "Unknown";
 }
@@ -10607,8 +10667,7 @@ bool Client::IsStanding() {
 }
 
 bool Client::IsBuildAvailable() {
-	if (GetClass() == CLERIC ||
-		GetClass() == ENCHANTER ||
+	if (GetClass() == ENCHANTER ||
 		GetClass() == MONK ||
 		GetClass() == NECROMANCER ||
 		GetClass() == RANGER ||
