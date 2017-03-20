@@ -277,11 +277,6 @@ Mob::Mob(const char* in_name,
 		RangedProcs[j].base_spellID = SPELL_UNKNOWN;
 		RangedProcs[j].level_override = -1;
 	}
-	
-	if(CastToClient()->IsClient() && CastToClient()->IsClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEHAMMER) > 0) {
-		// Hand of the Gods innate proc
-		AddProcToWeapon(2173, true, 400, 2173, level);
-	}
 
 	for (i = 0; i < EQEmu::legacy::MaterialCount; i++)
 	{
