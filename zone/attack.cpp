@@ -1400,6 +1400,58 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				if (BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special)) {
 					CastToClient()->Message(MT_Spells, "Believe %u healed you for %i points of damage.", rank, proc_damage);
 					HealDamage(proc_damage);
+				} else {
+					CastToClient()->Message(MT_Spells, "Believe failed to proc");
+				}
+			}
+			
+			rank = GetBuildRank(CLERIC, RB_CLR_DIVINEHAMMER);
+			if (rank > 0) {
+				chance = GetProcChances(80 * rank, Hand);
+				spellid = 2173;
+				
+				ExecWeaponProc(weapon, spellid, other);
+			}
+			
+			rank = GetBuildRank(CLERIC, RB_CLR_AUGMENTEDRETRIBUTION);
+			if (rank > 0) {
+				
+				if(zone->random.Roll((int) rank)) {
+					int levelRange = 0;
+					if(GetLevel() == 60) levelRange = 6;
+					else if(GetLevel() >= 54) levelRange = 5;
+					else if(GetLevel() >= 44) levelRange = 4;
+					else if(GetLevel() >= 29) levelRange = 3;
+					else if(GetLevel() >= 14) levelRange = 2;
+					else if(GetLevel() >= 5) levelRange = 1;
+										
+					int option = zone->random.Int(0, levelRange);
+					
+					switch(option) {
+						case 0:
+							spellid = 14; // Strike
+							break;
+						case 1:
+							spellid = 560; // Furor
+							break;
+						case 2:
+							spellid = 16; // Smite
+							break;
+						case 3:
+							spellid = 329; // Wrath
+							break;
+						case 4:
+							spellid = 672; // Retribution
+							break;
+						case 5:
+							spellid = 1543; // Reckoning
+							break;
+						case 6:
+							spellid = 2508; // Judgement
+							break;
+					}
+				
+					ExecWeaponProc(weapon, spellid, other);
 				}
 			}
 
@@ -1490,7 +1542,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		return false;
 }
 
-bool Client::BuildProcCalc(int chance, int Hand, Mob* other, int proc_damage, EQEmu::skills::SkillType skillinuse, int special) {
+bool Client::BuildProcCalc(float chance, int Hand, Mob* other, int proc_damage, EQEmu::skills::SkillType skillinuse, int special) {
 	chance = GetProcChances(chance, Hand);
 
 	if (Hand != EQEmu::legacy::SlotPrimary) //Is Archery intened to proc at 50% rate?
