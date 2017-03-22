@@ -20,23 +20,6 @@ sub EVENT_SAY {
 
 sub EVENT_ITEM {
 
-  if (quest::istaskactivityactive(305, 0) && plugin::check_handin(\%itemcount, 2300 => 1)) {
-    #quest::summonitem(2300);
-    quest::updatetaskactivity(305,0);      
-    return;
-  }
-
-  if (quest::istaskactivityactive(305,0) && plugin::check_handin(\%itemcount, 101015 => 1)) {
-    quest::updatetaskactivity(305,0);
-    #quest::summonitem(101015);
-    return;
-  }
-
-   if (quest::istaskactivityactive(305,1) && plugin::check_handin(\%itemcount, 100001 => 1)) {
-      quest::say("A bottle of experience, quite nice, I see. Thank you.");
-      return;
-  }
-
   my $cash = (($platinum * 10) + $gold); #Only accept platinum and gold 
 
   if ($cash >= 3250) { #Gold/platinum equivalent of 325pp
