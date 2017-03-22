@@ -44,10 +44,6 @@ sub EVENT_ITEM {
     quest::summonitem(2359);
     quest::faction("320","15");
     quest::faction("291","-15");
-    if (quest::istaskactivityactive(301,5)) {
-      quest::updatetaskactivity(301,5);
-      quest::say("Excellent! You have completed the Clay Bracelet.");
-    }
   }
   #boots
   if($itemcount{10543} && $itemcount{10026} && $itemcount{10544} && $itemcount{2363} == 1) {
