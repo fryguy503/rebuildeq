@@ -904,7 +904,12 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 		if(rb_rank) {
 			aai->spell_refresh = 2 * ((5 - rb_rank) * 5 + 10);
 		}
-	} else {
+	} else if (rank->id == aaBoastfulBellow) {
+		rb_rank = GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW);
+		if(rb_rank) {
+			aai->spell_refresh = rank->recast_time - (rb_rank * 2);
+		}
+	}else {
 		aai->spell_refresh = rank->recast_time;
 	}	
 	
@@ -1479,6 +1484,11 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			spellid = 6237;
 		} else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION)) {
 			spellid = 6276;
+		}
+	} else if (rank_id == aaBoastfulBellow) {
+		rb_rank = GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW);
+		if(rb_rank) {
+			cooldown = rank->recast_time - (rb_rank * 2);
 		}
 	}
 
