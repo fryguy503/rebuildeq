@@ -869,34 +869,41 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 	aai->spell = rank->spell;
 	aai->spell_type = rank->spell_type;
 	
-	if (rank->id == aaCalloftheWild && GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD) > 0) {
-		int rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
-		aai->spell_refresh = 1800 - (rb_rank-1) * 300;
-	} 
-	else if (rank->id == aaAncestralAid) {
-		aai->spell_refresh = 16;
-	}
-	else if (rank->id == aaSpiritCall) {
-		aai->spell_refresh = 16;
-	}
-	else if (rank->id == aaSecondaryRecall && GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL) > 0) {
-		int rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
-		if(rb_rank == 1) aai->spell_refresh = 86400; // 24 hours
-		else if(rb_rank == 2) aai->spell_refresh = 64800; // 18 hours
-		else if(rb_rank == 3) aai->spell_refresh = 43200; // 12 hours
-		else if(rb_rank == 4) aai->spell_refresh = 21600; // 6 hours
-		else if(rb_rank == 5) aai->spell_refresh = 10800; // 3 hours
-	} 
-	else if (rank->id == aaClockworkBanker && GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT) > 0) {
-		int rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT);
-		if(rb_rank == 1) aai->spell_refresh = 86400; // 24 hours
-		else if(rb_rank == 2) aai->spell_refresh = 43200; // 12 hours
-		else if(rb_rank == 3) aai->spell_refresh = 21600; // 6 hours
-		else if(rb_rank == 4) aai->spell_refresh = 10800; // 3 hours
-		else if(rb_rank == 5) aai->spell_refresh = 3600; // 1 hour
-	}  
-	else if (rank->id == aaCalloftheHero && GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO) > 0) {
-		aai->spell_refresh = 2 * ((5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 5 + 10);
+	int rb_rank = 0;
+	
+	if (rank->id == aaCalloftheWild) {
+		rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
+		if(rb_rank)
+			aai->spell_refresh = 1800 - (rb_rank-1) * 300;
+	} else if (rank->id == aaAncestralAid) {
+		if(GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID))
+			aai->spell_refresh = 16;
+	} else if (rank->id == aaSpiritCall) {
+		if(GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL))
+			aai->spell_refresh = 16;
+	} else if (rank->id == aaSecondaryRecall) {
+		rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
+		if(rb_rank) {
+			if(rb_rank == 1) aai->spell_refresh = 86400; // 24 hours
+			else if(rb_rank == 2) aai->spell_refresh = 64800; // 18 hours
+			else if(rb_rank == 3) aai->spell_refresh = 43200; // 12 hours
+			else if(rb_rank == 4) aai->spell_refresh = 21600; // 6 hours
+			else if(rb_rank == 5) aai->spell_refresh = 10800; // 3 hours
+		}
+	} else if (rank->id == aaClockworkBanker) { 
+		rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT);
+		if(rb_rank) {
+			if(rb_rank == 1) aai->spell_refresh = 86400; // 24 hours
+			else if(rb_rank == 2) aai->spell_refresh = 43200; // 12 hours
+			else if(rb_rank == 3) aai->spell_refresh = 21600; // 6 hours
+			else if(rb_rank == 4) aai->spell_refresh = 10800; // 3 hours
+			else if(rb_rank == 5) aai->spell_refresh = 3600; // 1 hour
+		}
+	} else if (rank->id == aaCalloftheHero) {
+		rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO);
+		if(rb_rank) {
+			aai->spell_refresh = 2 * ((5 - rb_rank) * 5 + 10);
+		}
 	} else {
 		aai->spell_refresh = rank->recast_time;
 	}	
@@ -1263,202 +1270,216 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	int spellid = rank->spell;
 	int manacost = -1;
 	int cooldown = 0;
+	uint8 rb_rank = 0;
 	
-	if(rank_id == aaHeartofFlames && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES) > 0) {
-		spellid = 37903;
-	}
-	
-	if (rank_id == aaEntrap && GetBuildRank(DRUID, RB_DRU_ENTRAP) > 0) {
-		uint8 rank = GetBuildRank(DRUID, RB_DRU_ENTRAP);
-		if (rank == 1) spellid = 3614;
-		else if (rank == 2) spellid = 12610;
-		else if (rank == 3) spellid = 23551;
-		else if (rank == 4) spellid = 30682;
-		else spellid = 30682;
-		
-		if (GetLevel() < 15) manacost = 8;
-		else if (GetLevel() < 29) manacost = 13;
-		else if (GetLevel() < 51) manacost = 86;
-		else if (GetLevel() < 55) manacost = 115;
-		else if (GetLevel() < 60) manacost = 152;
-		else manacost = 248;
+	if(rank_id == aaHeartofFlames) {
+		if(GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES))
+			spellid = 37903;
+	} else if (rank_id == aaEntrap) {
+		rb_rank = GetBuildRank(DRUID, RB_DRU_ENTRAP);
+		if(rb_rank) {
+			if (rb_rank == 1) spellid = 3614;
+			else if (rb_rank == 2) spellid = 12610;
+			else if (rb_rank == 3) spellid = 23551;
+			else if (rb_rank == 4) spellid = 30682;
+			else spellid = 30682;
+			
+			if (GetLevel() < 15) manacost = 8;
+			else if (GetLevel() < 29) manacost = 13;
+			else if (GetLevel() < 51) manacost = 86;
+			else if (GetLevel() < 55) manacost = 115;
+			else if (GetLevel() < 60) manacost = 152;
+			else manacost = 248;
 
-		if (rank >= 5) rank = 8;
-		manacost /= (0.4f * rank);
-	}
-
-	if (rank_id == aaCalloftheWild) {
-		uint8 rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
-		if(rb_rank > 0) {
+			if (rb_rank >= 5) rb_rank = 8;
+			manacost /= (0.4f * rb_rank);
+		}
+	} else if (rank_id == aaCalloftheWild) {
+		rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
+		if(rb_rank) {
 			spellid = 958;
 			cooldown = 1800 - (rb_rank-1) * 300;
 		}
-	}
-
-	if(rank_id == aaSecondaryRecall) {
-		int rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
-		if(rb_rank == 1) cooldown = 86400; // 24 hours
-		else if(rb_rank == 2) cooldown = 64800; // 18 hours
-		else if(rb_rank == 3) cooldown = 43200; // 12 hours
-		else if(rb_rank == 4) cooldown = 21600; // 6 hours
-		else if(rb_rank == 5) cooldown = 10800; // 3 hours
-	}
-	else if(rank_id == aaClockworkBanker) {
-		int rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT);
-		if(rb_rank == 1) cooldown = 86400; // 24 hours
-		else if(rb_rank == 2) cooldown = 43200; // 12 hours
-		else if(rb_rank == 3) cooldown = 21600; // 6 hours
-		else if(rb_rank == 4) cooldown = 10800; // 3 hours
-		else if(rb_rank == 5) cooldown = 3600; // 1 hours
-	}
-	else if(rank_id == aaCalloftheHero) {
-		cooldown = 2 * ((5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 5 + 10);
-	}
-	else if (rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) > 0) {
-		AddBuff(this, 271, GetBuildRank(ROGUE, RB_ROG_APPRAISAL));
-		if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
-		{
-			EQApplicationPacket *outapp = MakeBuffsPacket(false);
-			CastToClient()->FastQueuePacket(&outapp);
+	} else if(rank_id == aaSecondaryRecall) {
+		rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
+		if(rb_rank) {
+			if(rb_rank == 1) cooldown = 86400; // 24 hours
+			else if(rb_rank == 2) cooldown = 64800; // 18 hours
+			else if(rb_rank == 3) cooldown = 43200; // 12 hours
+			else if(rb_rank == 4) cooldown = 21600; // 6 hours
+			else if(rb_rank == 5) cooldown = 10800; // 3 hours
 		}
-
-		//Message(0, "Appraisal");
-		cooldown = 10;
-		CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
-		SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
-		return;
-	}
-
-	if (rank_id == aaLeechTouch) {
-		if (GetLevel() < 15) { //lifetap
-			spellid = 341;  //10
-			manacost = 8;
-			cooldown = 4;
+	} else if(rank_id == aaClockworkBanker) {
+		rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT);
+		if(rb_rank) {
+			if(rb_rank == 1) cooldown = 86400; // 24 hours
+			else if(rb_rank == 2) cooldown = 43200; // 12 hours
+			else if(rb_rank == 3) cooldown = 21600; // 6 hours
+			else if(rb_rank == 4) cooldown = 10800; // 3 hours
+			else if(rb_rank == 5) cooldown = 3600; // 1 hours
 		}
-		else if (GetLevel() < 29) { //lifespike
-			spellid = 502; //19
-			manacost = 13;
-			cooldown = 4;
-		} else if (GetLevel() < 51) { //lifedraw
-			spellid = 445; //195
-			manacost = 86;
-			cooldown = 4;
-		} else if (GetLevel() < 55) { //siphon life
-			spellid = 446; //250
-			manacost = 115;
-			cooldown = 4;
-		}
-		else if (GetLevel() < 60) { //drain spirit
-			spellid = 525; //514
-			manacost = 152;
-			cooldown = 4;
-		}
-		else { //drain soul
-			spellid = 447; // 656
-			manacost = 248;
-			cooldown = 4;
-		}	
-	}
-	
-	if (rank_id == aaNaturesBlessing) {
-		cooldown = 16;
-	}
+	} else if(rank_id == aaCalloftheHero) {
+		rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO);
+		if(rb_rank)
+			cooldown = 2 * ((5 - rb_rank) * 5 + 10);
+	} else if (rank_id == aaAppraisal) {
+		rb_rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
+		if(rb_rank) {
+			AddBuff(this, 271, rb_rank);
+			if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
+			{
+				EQApplicationPacket *outapp = MakeBuffsPacket(false);
+				CastToClient()->FastQueuePacket(&outapp);
+			}
 
-	if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesBoon || rank_id == aaAncestralAid) {
-		cooldown = 16;
-		if (GetLevel() < 10)  manacost = 20;
-		else if (GetLevel() < 31) manacost = GetLevel() * 2.6f;
-		else if (GetLevel() < 41) manacost = GetLevel() * 4.6f;
-		else if (GetLevel() < 51) manacost = GetLevel() * 5.6f;
-		else  manacost = GetLevel() * 7.5f;
-		
-		if (rank_id == aaNaturesBoon) {
-			cooldown = 85 - (12 * GetBuildRank(DRUID, RB_DRU_NATURESBOON));
-			if (cooldown < 20) {
-				cooldown = 20;
+			cooldown = 10;
+			CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
+			SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
+			return;
+		}
+	} else if (rank_id == aaLeechTouch) {
+		rb_rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
+		if(rb_rank) {
+			if (GetLevel() < 15) { //lifetap
+				spellid = 341;  //10
+				manacost = 8;
+				cooldown = 4;
+			}
+			else if (GetLevel() < 29) { //lifespike
+				spellid = 502; //19
+				manacost = 13;
+				cooldown = 4;
+			} else if (GetLevel() < 51) { //lifedraw
+				spellid = 445; //195
+				manacost = 86;
+				cooldown = 4;
+			} else if (GetLevel() < 55) { //siphon life
+				spellid = 446; //250
+				manacost = 115;
+				cooldown = 4;
+			}
+			else if (GetLevel() < 60) { //drain spirit
+				spellid = 525; //514
+				manacost = 152;
+				cooldown = 4;
+			}
+			else { //drain soul
+				spellid = 447; // 656
+				manacost = 248;
+				cooldown = 4;
+			}
+		}		
+	} else if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesBoon || rank_id == aaAncestralAid) {
+		if(GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) || GetBuildRank(DRUID, RB_DRU_NATURESBOON) || GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID)) {
+			cooldown = 16;
+			if (GetLevel() < 10)  manacost = 20;
+			else if (GetLevel() < 31) manacost = GetLevel() * 2.6f;
+			else if (GetLevel() < 41) manacost = GetLevel() * 4.6f;
+			else if (GetLevel() < 51) manacost = GetLevel() * 5.6f;
+			else  manacost = GetLevel() * 7.5f;
+			
+			if (rank_id == aaNaturesBoon) {
+				cooldown = 85 - (12 * GetBuildRank(DRUID, RB_DRU_NATURESBOON));
+				if (cooldown < 20) {
+					cooldown = 20;
+				}
 			}
 		}
-	}
-	if (rank_id == aaConvergenceofSpirits) {
-		manacost = GetMaxMana() * 0.02f; //2% of mana for cos
-	}
-
-	if (rank_id == aaHandofPiety) {
-		manacost = GetMaxMana() * 0.01f;
-	}
-
-	if (rank_id == aaFadingMemories && GetBuildRank(BARD, RB_BRD_FADINGMEMORIES)) {
-		manacost = (GetMaxMana() * 0.5f) - ((GetMaxMana() * 0.3f) * 0.2f * GetBuildRank(BARD, RB_BRD_FADINGMEMORIES));
-	}
-
-	if (rank_id == aaEscape && GetBuildRank(ROGUE, RB_ROG_ESCAPE)) {
-		//manacost = (GetMaxEndurance() * 0.5f) - ((GetMaxEndurance() * 0.3f) * 0.2f * GetBuildRank(ROGUE, RB_ROG_ESCAPE));
-		//TODO: Figure out endurance cost calculation prior to this executing
-	}
-
-	if (rank_id == aaSpiritCall) {
-		spellid = 164;
-		if (GetLevel() < 14) {
-			manacost = 20;
-			cooldown = 16;
-		} else if (GetLevel() < 22) {
-			manacost = 40;
-			cooldown = 16;
-		} else if (GetLevel() < 30) {
-			manacost = 80;
-			cooldown = 16;
-		} else if (GetLevel() < 38) {
-			manacost = 160;
-			cooldown = 16;
-		} else if (GetLevel() < 46) {
-			manacost = 200;
-			cooldown = 16;
-		} else if (GetLevel() < 52) {
-			manacost = 290;
-			cooldown = 16;
-		} else if (GetLevel() < 58) {
-			manacost = 390;
-			cooldown = 16;
-		} else {
-			manacost = 450;
-			cooldown = 16;
+	} else if (rank_id == aaConvergenceofSpirits) {
+		if(GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS))
+			manacost = GetMaxMana() * 0.02f; //2% of mana for cos
+	} else if (rank_id == aaHandofPiety) {
+		if(GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY) > 0)
+			manacost = GetMaxMana() * 0.01f;
+	} else if (rank_id == aaFadingMemories) {
+		if(GetBuildRank(BARD, RB_BRD_FADINGMEMORIES) > 0) {
+			manacost = (GetMaxMana() * 0.5f) - ((GetMaxMana() * 0.3f) * 0.2f * GetBuildRank(BARD, RB_BRD_FADINGMEMORIES));
+	} else if (rank_id == aaEscape)
+		if(GetBuildRank(ROGUE, RB_ROG_ESCAPE)) {
+			//manacost = (GetMaxEndurance() * 0.5f) - ((GetMaxEndurance() * 0.3f) * 0.2f * GetBuildRank(ROGUE, RB_ROG_ESCAPE));
+			//TODO: Figure out endurance cost calculation prior to this executing
 		}
-	}
-
-	if (rank_id == aaSteadfastServant) {
-		if (GetLevel() < 14) { //leering corpse 7
-			spellid = 491;
-			manacost = 40;
-			cooldown = 16;
-		} else if (GetLevel() < 22) { //bone walk 14
-			spellid = 351;
-			manacost = 80;
-			cooldown = 16;
-		} else if (GetLevel() < 30) { //convoke shadow 22
-			spellid = 362;
-			manacost = 120;
-			cooldown = 16;
-		} else if (GetLevel() < 38) { //Restless Bones 30
-			spellid = 492;
-			manacost = 160;
-			cooldown = 16;
-		} else if (GetLevel() < 46) { //Aniamte Dead 38
-			spellid = 440;
-			manacost = 200;
-			cooldown = 16;
-		} else if (GetLevel() < 52) { //Summon Dead 46
-			spellid = 441;
-			manacost = 290;
-			cooldown = 16;
-		} else if (GetLevel() < 58) { //Malignant Dead 52
-			spellid = 442;
-			manacost = 390;
-			cooldown = 16;
-		} else { //Cackling Bones 58
-			spellid = 495;
-			manacost = 450;
-			cooldown = 16;
-		}		
+	} else if (rank_id == aaSpiritCall) {
+		if(GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL)) {
+			spellid = 164;
+			if (GetLevel() < 14) {
+				manacost = 20;
+				cooldown = 16;
+			} else if (GetLevel() < 22) {
+				manacost = 40;
+				cooldown = 16;
+			} else if (GetLevel() < 30) {
+				manacost = 80;
+				cooldown = 16;
+			} else if (GetLevel() < 38) {
+				manacost = 160;
+				cooldown = 16;
+			} else if (GetLevel() < 46) {
+				manacost = 200;
+				cooldown = 16;
+			} else if (GetLevel() < 52) {
+				manacost = 290;
+				cooldown = 16;
+			} else if (GetLevel() < 58) {
+				manacost = 390;
+				cooldown = 16;
+			} else {
+				manacost = 450;
+				cooldown = 16;
+			}
+		}
+	} else if (rank_id == aaSteadfastServant) {
+		if(GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT)) {
+			if (GetLevel() < 14) { //leering corpse 7
+				spellid = 491;
+				manacost = 40;
+				cooldown = 16;
+			} else if (GetLevel() < 22) { //bone walk 14
+				spellid = 351;
+				manacost = 80;
+				cooldown = 16;
+			} else if (GetLevel() < 30) { //convoke shadow 22
+				spellid = 362;
+				manacost = 120;
+				cooldown = 16;
+			} else if (GetLevel() < 38) { //Restless Bones 30
+				spellid = 492;
+				manacost = 160;
+				cooldown = 16;
+			} else if (GetLevel() < 46) { //Aniamte Dead 38
+				spellid = 440;
+				manacost = 200;
+				cooldown = 16;
+			} else if (GetLevel() < 52) { //Summon Dead 46
+				spellid = 441;
+				manacost = 290;
+				cooldown = 16;
+			} else if (GetLevel() < 58) { //Malignant Dead 52
+				spellid = 442;
+				manacost = 390;
+				cooldown = 16;
+			} else { //Cackling Bones 58
+				spellid = 495;
+				manacost = 450;
+				cooldown = 16;
+			}		
+		}
+	} else if (rank_id == aaLessonoftheDevoted) {
+		if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE)) {
+			spellid = 6236;
+		} else if (GetBuildRank(BARD, RB_BRD_KINSONG)) {
+			spellid = 6239;
+		} else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION)) {
+			spellid = 6234;
+		} else if (GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON)) {
+			spellid = 6241;
+		} else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT)) {
+			spellid = 6240;
+		} else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) {
+			spellid = 6237;
+		} else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION)) {
+			spellid = 6276;
+		}
 	}
 
 	if(!IsValidSpell(spellid)) {
@@ -1508,59 +1529,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	}
 	if (cooldown < 0) {
 		cooldown = 0;
-	}
-
-	if (rank_id == aaLessonoftheDevoted) {
-		if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) > 0) {
-			spellid = 6236;
-		} else if (GetBuildRank(BARD, RB_BRD_KINSONG) > 0) {
-			spellid = 6239;
-		} else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) > 0) {
-			spellid = 6234;
-		} else if (GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) > 0) {
-			spellid = 6241;
-		} else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) > 0) {
-			spellid = 6240;
-		} else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) > 0) {
-			spellid = 6237;
-		} else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) {
-			spellid = 6276;
-		}
-	}
-
-	if (rank_id == aaSpiritoftheWood || rank_id == aaAncestralAid) {
-		if (GetLevel() < 14) {
-			manacost = 20;
-			cooldown = 16;
-		}
-		else if (GetLevel() < 22) {
-			manacost = 40;
-			cooldown = 16;
-		}
-		else if (GetLevel() < 30) {
-			manacost = 80;
-			cooldown = 16;
-		}
-		else if (GetLevel() < 38) {
-			manacost = 160;
-			cooldown = 16;
-		}
-		else if (GetLevel() < 46) {
-			manacost = 200;
-			cooldown = 16;
-		}
-		else if (GetLevel() < 52) {
-			manacost = 290;
-			cooldown = 16;
-		}
-		else if (GetLevel() < 58) {
-			manacost = 390;
-			cooldown = 16;
-		}
-		else {
-			manacost = 450;
-			cooldown = 16;
-		}
 	}
 
 	Log.Out(Logs::General, Logs::Spells, "AA rank_id %i casting spellid %i", rank_id, spellid);
