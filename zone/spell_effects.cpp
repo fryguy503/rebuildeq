@@ -4849,9 +4849,6 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 			case SE_IllusionCopy:
 			case SE_Illusion:
 			{
-				//All illusions won't work, unless I SAY they work, for now.
-				break;
-
 				SendIllusionPacket(0, GetBaseGender());
 				if(GetRace() == OGRE){
 					SendAppearancePacket(AT_Size, 9);
