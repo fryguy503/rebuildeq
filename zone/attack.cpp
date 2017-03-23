@@ -1405,8 +1405,6 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				if (BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special)) {
 					CastToClient()->Message(MT_Spells, "Believe %u healed you for %i points of damage.", rank, proc_damage);
 					HealDamage(proc_damage);
-				} else {
-					CastToClient()->Message(MT_Spells, "Believe failed to proc");
 				}
 			}
 			
@@ -1513,14 +1511,10 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 
 			rank = GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE);
 			if (rank > 0) {
-				chance = 300;
-				rank = GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY);
-				if (rank > 0) { //Chance boost from harmonic affinity on jonthon whistle
-					chance += chance * 0.1f * rank;
-				}
-
+				chance = 300 + (chance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY)); //Chance boost from harmonic affinity on jonthon whistle
+				
 				//If you aren't playing song, it still does half damage.
-				proc_damage = GetLevel() * 2.5f * (0.25f * rank) / 2;
+				proc_damage = (GetLevel() * 2.5f * (0.25f * rank)) / 2;
 				
 				//Check if they have a haste song on
 				int buff_count = GetMaxTotalSlots();
