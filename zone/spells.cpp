@@ -919,7 +919,7 @@ void Mob::InterruptSpell(uint16 message, uint16 color, uint16 spellid)
 		CastToNPC()->AI_Event_SpellCastFinished(false, casting_spell_slot);
 	}
 
-	if(casting_spell_aa_id && IsClient()) { //Rest AA Timer on failed cast
+	if(casting_spell_aa_id && IsClient()) { //Reset AA Timer on failed cast
 		CastToClient()->Message_StringID(MT_SpellFailure, ABILITY_FAILED);
 		CastToClient()->ResetAlternateAdvancementTimer(casting_spell_aa_id);
 	}

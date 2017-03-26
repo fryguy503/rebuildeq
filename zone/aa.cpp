@@ -1018,7 +1018,7 @@ void Client::SendAlternateAdvancementTimers() {
 }
 
 void Client::ResetAlternateAdvancementTimer(int ability) {
-	AA::Rank *rank = zone->GetAlternateAdvancementRank(casting_spell_aa_id);
+	AA::Rank *rank = zone->GetAlternateAdvancementRank(ability);
 	if(rank) {
 		SendAlternateAdvancementTimer(rank->spell_type, 0, time(0));
 		p_timers.Clear(&database, rank->spell_type + pTimerAAStart);
