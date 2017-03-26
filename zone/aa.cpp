@@ -1543,6 +1543,9 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 
 	Log.Out(Logs::General, Logs::Spells, "AA rank_id %i casting spellid %i", rank_id, spellid);
 
+	CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
+	SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
+	
 	// Bards can cast instant cast AAs while they are casting another song
 	if(spells[rank->spell].cast_time == 0 && GetClass() == BARD && IsBardSong(casting_spell_id)) {
 		if(!SpellFinished(spellid, entity_list.GetMob(target_id), ALTERNATE_ABILITY_SPELL_SLOT, spells[rank->spell].mana, -1, spells[rank->spell].ResistDiff, false)) {
@@ -1554,9 +1557,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			return;
 		}
 	}
-
-	CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
-	SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
 }
 
 int Mob::GetAlternateAdvancementCooldownReduction(AA::Rank *rank_in) {
