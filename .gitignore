@@ -68,3 +68,10 @@ deploy/server/luabind/
 deploy/server/Win32/
 deploy/server/eqlaunch/
 deploy/server/shared/*
+/deploy/server
+/dependencies/boost/boost
+/dependencies/libsodium
+/dependencies/luaj_x64
+/dependencies/mysql_x64
+/dependencies/openssl_x64/include/openssl
+/dependencies/zlib_x64

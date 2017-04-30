@@ -2006,6 +2006,12 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ReverseDS:
 			{
+				if (IsClient()) {
+					rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_MARKOFRETRIBUTION);
+					if (rank > 0) {
+						effect_value *= 1 + (0.20f * rank);
+					}
+				}
 				new_bonus->ReverseDamageShield += effect_value;
 				new_bonus->ReverseDamageShieldSpellID = spell_id;
 
