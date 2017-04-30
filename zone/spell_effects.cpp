@@ -4363,6 +4363,12 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 					if (rank > 0 && buff.spellid == 8133) {
 						effect_value *= (rank * 5);
 					}
+
+					uint16 rank = caster_client->GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD);
+					if (rank > 0 && buff.spellid == 2776) {
+						effect_value *= (rank * 5);
+					}
+
 					
 					rank = caster_client->GetBuildRank(DRUID, RB_DRU_FOCUSEDSWARM);
 					if (rank > 0) {
