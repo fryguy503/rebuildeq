@@ -1068,6 +1068,15 @@ int Mob::GetWeaponDamage(Mob *against, const ItemInst *weapon_item, uint32 *hate
 			(weapon_item->GetItemBaneDamageBody(true) || weapon_item->GetItemBaneDamageRace(true)))
 		banedmg = against->CheckBaneDamage(weapon_item);
 
+	if (IsClient()) {
+		Client *client = CastToClient();
+		uint16 rank = client->GetBuildRank(CLERIC, RB_CLR_FISTOFTHEGODS);
+		if (rank > 0 && against->GetBodyType() == BT_Undead) {
+			Log.Out(Logs::Detail, Logs::Combat, "Fist of the Gods adds %d weapon damage", rank);
+			banedmg += rank;
+		}
+	}
+
 	if (against->GetSpecialAbility(IMMUNE_MELEE_EXCEPT_BANE)) {
 		if (!eledmg && !banedmg) {
 			if (!GetSpecialAbility(SPECATK_BANE))
