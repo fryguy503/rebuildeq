@@ -340,6 +340,19 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg += bonusDamage;
 							}
 
+							// Ward of Rebuke / Ward of the Divine
+							rank = casterClient->GetBuildRank(CLERIC, RB_CLR_WARDOFREBUKE);
+							if (rank > 0 && (spell_id == 6904 || spell_id == 6905)) {
+								static const float BaseDamageBonus = 0.02f;		// 2% per rank
+								static const float BaseManaBonus = 0.01f;		// 1% per rank
+								int bonusDamage = rank * BaseDamageBonus * dmg;
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Ward of Rebuke %u added %i bonus damage.", rank, -bonusDamage);
+								dmg += bonusDamage;
+
+								int manaAmount = rank * BaseManaBonus * -dmg;
+								casterClient->SetMana(casterClient->GetMana() + manaAmount);
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Ward of Rebuke %u gifted %i mana.", rank, manaAmount);
+							}
 
 							// Chosen
 							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN);
@@ -4364,7 +4377,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 						effect_value *= (rank * 5);
 					}
 
-					uint16 rank = caster_client->GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD);
+					rank = caster_client->GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD);
 					if (rank > 0 && buff.spellid == 2776) {
 						effect_value *= (rank * 5);
 					}
