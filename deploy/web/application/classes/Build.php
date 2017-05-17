@@ -491,6 +491,54 @@ class Build {
 			$newSkill->desc = 'When an ally is healed, there is a <em data-base="1">1</em>% to also apply a heal over time effect<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
 			$skills[18] = $newSkill;*/
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Strike";
+			$newSkill->desc = 'Increases the damage of all direct damage spells by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[36] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Ward of Rebuke";
+			$newSkill->desc = 'Ward skills deal an additional <em data-base="2">2</em>% damage <span class="perLevel"> per rank</span> and give <em data-base="1">1</em>% of the damage <span class="perLevel"> per rank</span> back as mana.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[38] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Fist of the Gods";
+			$newSkill->desc = 'Grants +<em data-base="1">1</em> bane damage versus undead<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[40] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Divine Retribution";
+			$newSkill->desc = 'Grants the Divine Retribution AA with <em data-base="20">20</em>%<span class="perLevel"> per rank</span> proc effectiveness.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[42] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Turn Undead";
+			$newSkill->desc = 'Grants the Turn Undead AA dealing <em data-base="500">500</em> damage<span class="perLevel"> per rank</span> and a <em data-base="1">1</em>% chance<span class="perLevel"> per rank</span> to deal 32000 damage.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[44] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Exquisite Benediction";
+			$newSkill->desc = 'Grants the Exquisite Benediction AA that summons a pet that heals nearby allies for <em data-base="50">50</em> hp per <span class="perLevel"> per rank</span> per tick and reduces the cooldown by <em data-base="3">3</em> minutes <span class="perLevel"> per rank</span>. CURRENTLY DOES NOT WORK';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[46] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Mark of Retribution";
+			$newSkill->desc = 'Increases the damage of Mark of Retribution by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[49] = $newSkill;
+			
+			$newSkill = new stdClass();
+			$newSkill->title = "Pious Zealot";
+			$newSkill->desc = 'Summons a pet that will heal group members for <em data-base="2">2</em>%<span class="perLevel"> per rank</span> of the cleric\'s max hp if a nearby ally goes below 20%hp. CURRENTLY NOT IMPLEMENTED';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[52] = $newSkill;
 			break;
 
 			//==================DRUID======================
