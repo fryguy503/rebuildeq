@@ -3071,6 +3071,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if(spell_id == 27424 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD) > 0) {
 					AddDefensiveProc(procid, rank * 20,spell_id);
 				}
+				else if (spell_id == 5866 && CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) > 0) {
+					AddDefensiveProc(procid, rank * 20, spell_id);
+				}
 				 else if(spells[spell_id].base2[i] == 0)
 					AddDefensiveProc(procid, 100,spell_id);
 				else
