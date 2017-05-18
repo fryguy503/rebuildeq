@@ -500,68 +500,39 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Intensified Resolution";
-			$newSkill->desc = 'HP Buffs cast one rank higher than the spell cast. Effective on spells equal or below level <em data-base="12">12</em><span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'HP Buffs cast one rank higher than the spell cast. Effective on spells equal or below level <em data-base="12">12</em> <span class="perLevel">per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
 			$skills[22] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Warsong of Zek";
-			$newSkill->desc = 'Grants an innate ability to lower AC of target by <em data-base="1">1</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Promise";
+			$newSkill->desc = 'All healing spells have a <em data-base="1">1</em>% chance <span class="perLevel">per rank</span> to cost 1 mana.';
 			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
 			$skills[24] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Dance of Blades";
-			$newSkill->desc = 'Grants the Dance of Blades AA, increasing chance to dual wield and double attack as well as proc Bladewhirl at <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Celestial Breeze";
+			$newSkill->desc = 'Grants the Celestial Regeneration AA with an additional <em data-base="1">1</em> mana regeneration per tick <span class="perLevel">per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
 			$skills[26] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Cacophony";
-			$newSkill->desc = 'Grants the Cacophony AA, applying a damage over time on the target dealing <em data-base="10">10</em> damage per tick for 60 seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Divine Arbitration";
+			$newSkill->desc = 'Grants the Divine Arbitration AA, lowering the penalty by <em data-base="1">20</em>% <span class="perLevel">per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Harmonic Affinity";
-			$newSkill->desc = 'Increases proc chance of innate and card weapon procs by <em data-base="10">10</em>% effectiveness<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Divine Resurrection";
+			$newSkill->desc = 'Grants the Divine Resurrection AA, reducing the cooldown by <em data-base="4">4</em> hours <span class="perLevel">per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
 			$skills[31] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Bard's Wish";
-			$newSkill->desc = 'All songs are sung <em data-base="0.2">0.2</em> seconds faster<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Harmonic Balance";
+			$newSkill->desc = 'NOT YET IMPLEMENTED.';
 			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
 			$skills[34] = $newSkill;
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
-				
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Strike";
