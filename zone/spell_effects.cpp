@@ -1720,14 +1720,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				int item_id = spell.base[i];
 				int item_charges = -1;
 
-				if (spell_id == 223 && IsClient()) {
-					if (CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) > 0) {
+				if (spell_id == 223 && IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR)) {
 						MakePet(spell_id, "a_squire");
-					}
-					else {
-						Message(0, "You must train Act of Valor for this effect to work.");
-					}
-					break;
+						break;
 				}
 
 				if(IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SUMMONINGFOCUS) > 0) {
