@@ -331,6 +331,29 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								casterClient->SetMana(caster->GetMana() + manaAmount);
 							}
 
+							// Strike
+							rank = casterClient->GetBuildRank(CLERIC, RB_CLR_STRIKE);
+							if (rank > 0 && spell.spell_category == 1) {
+								static const float BaseDamageBonus = 0.02f;		// 2% per rank
+								int bonusDamage = rank * BaseDamageBonus * dmg;
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Strike %u added %i bonus damage.", rank, -bonusDamage);
+								dmg += bonusDamage;
+							}
+
+							// Ward of Rebuke / Ward of the Divine
+							rank = casterClient->GetBuildRank(CLERIC, RB_CLR_WARDOFREBUKE);
+							if (rank > 0 && (spell_id == 6904 || spell_id == 6905)) {
+								static const float BaseDamageBonus = 0.02f;		// 2% per rank
+								static const float BaseManaBonus = 0.01f;		// 1% per rank
+								int bonusDamage = rank * BaseDamageBonus * dmg;
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Ward of Rebuke %u added %i bonus damage.", rank, -bonusDamage);
+								dmg += bonusDamage;
+
+								int manaAmount = rank * BaseManaBonus * -dmg;
+								casterClient->SetMana(casterClient->GetMana() + manaAmount);
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Ward of Rebuke %u gifted %i mana.", rank, manaAmount);
+							}
+
 							// Chosen
 							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_CHOSEN);
 							if ((spell_id == 2729 || spell_id == 823) && rank > 0) {
@@ -3048,6 +3071,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if(spell_id == 27424 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD) > 0) {
 					AddDefensiveProc(procid, rank * 20,spell_id);
 				}
+				else if (spell_id == 5866 && CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION) > 0) {
+					AddDefensiveProc(procid, rank * 20, spell_id);
+				}
 				 else if(spells[spell_id].base2[i] == 0)
 					AddDefensiveProc(procid, 100,spell_id);
 				else
@@ -4353,6 +4379,12 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 					if (rank > 0 && buff.spellid == 8133) {
 						effect_value *= (rank * 5);
 					}
+
+					rank = caster_client->GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD);
+					if (rank > 0 && buff.spellid == 2776) {
+						effect_value *= (rank * 5);
+					}
+
 					
 					rank = caster_client->GetBuildRank(DRUID, RB_DRU_FOCUSEDSWARM);
 					if (rank > 0) {
