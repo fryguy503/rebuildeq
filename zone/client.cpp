@@ -9294,7 +9294,7 @@ bool Client::InRestedArea() {
 		return true;
 	}
 
-	if (GetZoneID() == 93 && //firiona
+	if (GetZoneID() == 84 && //firiona
 		GetX() < 3245 && GetX() > 917 &&
 		GetY() < -2242 && GetY() > -4817 &&
 		FactionLevelRaw(418) < FACTION_DUBIOUS) {
