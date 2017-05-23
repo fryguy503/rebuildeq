@@ -373,7 +373,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								static const float BaseBonusDamage = 0.2f;			// 20% per rank.
 
 								int bonusDamage = rank * BaseBonusDamage * dmg;
-								if (bonusDamage < 1) bonusDamage = 1;
+								if (bonusDamage > 0) bonusDamage = -1;
 								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Flame of Light %u added %i bonus damage.", rank, -bonusDamage);
 
 								dmg += bonusDamage;
