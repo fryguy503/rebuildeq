@@ -919,7 +919,7 @@ void Mob::InterruptSpell(uint16 message, uint16 color, uint16 spellid)
 		CastToNPC()->AI_Event_SpellCastFinished(false, casting_spell_slot);
 	}
 
-	if(casting_spell_aa_id && IsClient()) { //Rest AA Timer on failed cast
+	if(casting_spell_aa_id && IsClient()) { //Reset AA Timer on failed cast
 		CastToClient()->Message_StringID(MT_SpellFailure, ABILITY_FAILED);
 		CastToClient()->ResetAlternateAdvancementTimer(casting_spell_aa_id);
 	}
@@ -2178,6 +2178,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 	{
 		Log.Out(Logs::Detail, Logs::Spells, "Spell %d: cannot see target %s", spell_id, spell_target->GetName());
 		Message_StringID(13,CANT_SEE_TARGET);
+		InterruptSpell();
 		return false;
 	}
 
@@ -2185,6 +2186,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, uint16 slot, uint16 
 	if(spell_target && IsManaTapSpell(spell_id)) {
 		if(spell_target->GetCasterClass() == 'N') {
 			Message_StringID(13, TARGET_NO_MANA);
+			InterruptSpell();
 			return false;
 		}
 	}
