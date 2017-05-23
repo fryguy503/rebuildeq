@@ -1422,7 +1422,8 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				chance = GetProcChances(80 * rank, Hand);
 				spellid = 2173;
 				
-				ExecWeaponProc(weapon, spellid, other);
+				if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance))
+					ExecWeaponProc(weapon, spellid, other);
 			}
 			
 			rank = GetBuildRank(CLERIC, RB_CLR_AUGMENTEDRETRIBUTION);
