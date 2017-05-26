@@ -1,0 +1,29 @@
+version: '3'
+services:
+  mariadb:
+    image: "bitnami/mariadb:latest"
+    volumes:
+      - ./docker/db:/bitnami/mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpass
+      MARIADB_DATABASE: eqemu
+      MARIADB_USER: eqemu
+      MARIADB_PASSWORD: eqemupass
+    ports:
+      - "3306:3306"
+    expose:
+      - "3306"
+  eqemu:
+    stdin_open: true
+    build: ./docker/eqemu/.
+    restart: always
+    volumes:
+      - "./deploy/server:/eqemu"
+    links:
+      - mariadb
+    depends_on:
+      - mariadb
+    ports:
+      - "7000-7500:7000-7500"
+      - "9000:9000"
