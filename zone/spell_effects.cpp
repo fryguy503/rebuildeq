@@ -406,15 +406,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
 							if (rank > 0 &&
 								(spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562)) { //spear spells
-								int bonus_damage = (rank * casterClient->GetLevel());
+								int bonus_damage = (-rank * casterClient->GetLevel());
 								bonus_damage += int32((float)dmg * 0.1f * (float)rank);
-								if (bonus_damage < rank) bonus_damage = rank;
+								if (bonus_damage > 0) bonus_damage = -1;
 								bool is_quad = false;
-								if (rank > 4 && zone->random.Roll(1)) {
+								if (rank > 4 && zone->random.Roll(50)) { //change back to 1% after testing
 									bonus_damage *= 4;
+									is_quad = true;
 								}
-								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Festering Spear %u added %i %s bonus damage.", rank, bonus_damage, (is_quad) ? "QUAD" : "");
-								dmg -= bonus_damage;
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Festering Spear %u added %i %s bonus damage.", rank, -bonus_damage, (is_quad) ? "QUAD" : "");
+								dmg += bonus_damage;
 							}
 
 							// Shock of Swords
