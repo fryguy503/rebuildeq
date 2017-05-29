@@ -6230,7 +6230,7 @@ void command_feat(Client *c, const Seperator *sep)
 			c->CreateSayLink("#feat general", "general").c_str(),
 			c->CreateSayLink("#feat pet", "pet").c_str()	
 		);
-		if (c->GetLevel() < 60) c->Message(0, "Note: Feats are difficult, and will take a significant amount of time! Only level 60 characters can create the Full Experience Bottles needed to complete feats, but they are tradable! Attempting feats is not recommended for characters at below level 55.");
+		if (c->GetLevel() < 60) c->Message(0, "Note: Feats are difficult, and will take a significant amount of time! Only level 60 characters can create the Full Experience Bottles needed to complete feats, but they are tradable! Attempting feats is not recommended for characters below level 55.");
 		return;
 	}
 		
