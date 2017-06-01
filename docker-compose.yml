@@ -15,6 +15,7 @@ services:
       - "3306:3306"
     expose:
       - "3306"
+ #   network_mode: "bridge"
   eqemu:
     stdin_open: true
     build: ./docker/eqemu/.
@@ -26,5 +27,12 @@ services:
     depends_on:
       - mariadb
     ports:
-      - "7000-7500:7000-7500"
-      - "9000:9000"
+      - "7000-7100:7000-7100/udp"
+      - "9000:9000/udp"
+      - "9001:9001"
+      - "9080:9080"
+    expose:
+      - "7000-7100/udp"
+      - "9000/udp"
+      - "9080/udp"
+  #  network_mode: "bridge"
