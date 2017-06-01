@@ -14,15 +14,15 @@
 			<host>login.eqemulator.net</host>
 			<legacy>1</legacy>
 			<port>5998</port>
-			<account>xackery</account>
-			<password>s0m33l1t3</password>
+			<account></account>
+			<password></password>
 		</loginserver1>
 		<loginserver2>
 			<legacy>1</legacy>
 			<host>localhost</host>
 			<port>5998</port>
-			<account>xackery</account>
-			<password>asd!@#AFS</password>
+			<account></account>
+			<password></password>
 		</loginserver2>
 
 		<!-- Server status.  Default is unlocked -->
