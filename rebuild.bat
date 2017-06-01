@@ -1,0 +1,6 @@
+@echo off
+echo Building binaries...
+docker run -v %cd%:/src -v %cd%\deploy\server:/eqemu buildeq
+
+echo Copying binaries...
+copy bin\* deploy\server\

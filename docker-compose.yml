@@ -6,10 +6,11 @@ services:
       - ./docker/db:/bitnami/mariadb
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: rootpass
+   #   MARIADB_ROOT_PASSWORD: rootpass
       MARIADB_DATABASE: eqemu
       MARIADB_USER: eqemu
       MARIADB_PASSWORD: eqemupass
+      ALLOW_EMPTY_PASSWORD: "yes"
     ports:
       - "3306:3306"
     expose:
