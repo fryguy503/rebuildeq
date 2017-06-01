@@ -2,7 +2,7 @@
 <server>
 	<world>
 		<shortname>rebuildeq</shortname>
-		<longname>RebuildEQ.com [TEST Server]</longname>
+		<longname>Shin's RebuildEQ TEST Server</longname>
 		<!-- <longname>RebuildEQ</longname> -->
 
 		<!-- Only specify these two if you really think you need to.  (read: You don't) -->
