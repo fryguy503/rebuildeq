@@ -8,5 +8,8 @@ RUN apt-get -y update \
 #RUN apt-get -y upgrade
 RUN mkdir -p /var/log/supervisor
 
+ENV HOME /eqemu
+WORKDIR /eqemu
+
 # Define default command.
 CMD ["/usr/bin/supervisord"]

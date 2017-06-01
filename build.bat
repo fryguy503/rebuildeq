@@ -17,4 +17,8 @@ docker-compose build
 echo Running shared memory...
 docker run -v %cd%\deploy\server:/eqemu -it eqemu /eqemu/shared_memory
 
+if not exist "deploy\server\eqemu_config.xml" echo Copying eqemu_config.xml... && copy "docker\eqemu\eqemu_config.xml" "deploy\server"
+
+docker-compose run eqemu shared_memory
+
 echo Build completed. Run docker-compose up to inject DB data, or run the start.sh script to begin the environment.
