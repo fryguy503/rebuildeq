@@ -1,4 +1,7 @@
 @echo off
+echo Shutting down docker-compose... (in case it was running)
+docker-compose down
+
 echo Building 'build' docker container...
 docker build docker/build/. -t buildeq
 
@@ -20,4 +23,4 @@ if not exist "deploy\server\shared" echo Making shared directory... && mkdir dep
 echo Running shared memory...
 docker-compose run eqemu /eqemu/shared_memory
 
-echo Build completed. Run docker-compose up to inject DB data, or run the start.sh script to begin the environment.
+echo Build completed. Run start.bat start the environment, inject DB via localhost. When modifications are done, run rebuild.bat from now on. DO NOT re-run build.bat unless it's a big issue.
