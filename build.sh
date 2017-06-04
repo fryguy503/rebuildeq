@@ -22,13 +22,13 @@ cp -R bin/* deploy/server/
 echo "Building docker-compose..."
 docker-compose build
 
-if [ ! -f /deploy/server/eqemu_config.xml ]; then
+if [ ! -f deploy/server/eqemu_config.xml ]; then
    echo "Copying eqemu_config.xml..."
    cp docker/eqemu/eqemu_config.xml deploy/server/
 fi
 
 
-if [ ! -d /deploy/server/shared ]; then
+if [ ! -d deploy/server/shared ]; then
    echo "Making shared directory..."
    mkdir deploy/server/shared
 fi
