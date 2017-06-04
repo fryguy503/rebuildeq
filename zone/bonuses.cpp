@@ -3048,7 +3048,6 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 			case SE_Rune:
 				if (caster) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_SHIELDOFSONGS);
-					rank = CastToClient()->GetBuildRank(BARD, );
 					if (rank > 0) {
 						effect_value += (rank * 0.2 * effect_value);
 					}
