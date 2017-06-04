@@ -1849,8 +1849,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistFire:
 			{
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
 					}
@@ -1861,8 +1861,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistCold:
 			{
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
 					}
@@ -1873,8 +1873,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistPoison:
 			{
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
 					}
@@ -1885,8 +1885,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistDisease:
 			{
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
 					}
@@ -1897,8 +1897,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistMagic:
 			{
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
 					}
@@ -1909,8 +1909,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistAll:
 			{
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
 					}
@@ -1925,8 +1925,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistCorruption:
 			{
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
 					}
@@ -2000,8 +2000,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_DamageShield:
 			{
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_PSALMOFNORRATH);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_PSALMOFNORRATH);
 					if (rank > 0) {
 						effect_value += (effect_value * 0.2 * rank);
 					}
@@ -3046,9 +3046,9 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				break;
 
 			case SE_Rune:
-				if (IsClient()) {
-					
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_SHIELDOFSONGS);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_SHIELDOFSONGS);
+					rank = CastToClient()->GetBuildRank(BARD, );
 					if (rank > 0) {
 						effect_value += (rank * 0.2 * effect_value);
 					}
@@ -3066,8 +3066,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				break;
 
 			case SE_AbsorbMagicAtt:
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_SHIELDOFSONGS);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_SHIELDOFSONGS);
 					if (rank > 0) {
 						effect_value += (rank * 0.2 * effect_value);
 					}
