@@ -1,4 +1,8 @@
 #!/bin/bash
+
+#THIS SHOULD ONLY BE RAN ONCE, unless there's a critical change or something. It builds up the images and preps the environment.
+#This preps a docker environment for building binaries.
+
 set -e
 echo "Shutting down docker-compose... (in case it was running)"
 docker-compose down
