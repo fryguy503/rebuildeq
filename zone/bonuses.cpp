@@ -1609,12 +1609,13 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 		{
 			case SE_CurrentHP: //regens
 
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_HEALINGTREBLE);
+				if (caster->IsClient()) {
+					Client * casterClient = caster->CastToClient();
+					rank = casterClient->GetBuildRank(BARD, RB_BRD_HEALINGTREBLE);
 					if (rank > 0) {
 						effect_value += (rank * 0.1 * effect_value);
 					}
-					rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_REGENERATION);
+					rank = casterClient->GetBuildRank(DRUID, RB_DRU_REGENERATION);
 					if (rank > 0) {
 						effect_value += (rank * 0.2 * effect_value);
 					}
