@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 echo "Shutting down docker-compose... (in case it was running)"
 docker-compose down
 
