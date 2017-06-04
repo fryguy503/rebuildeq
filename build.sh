@@ -36,4 +36,4 @@ fi
 echo "Running shared memory..."
 docker-compose run eqemu /eqemu/shared_memory
 
-echo "Build completed. Run start.bat start the environment, inject DB via localhost. When modifications are done, run rebuild.sh from now on. DO NOT re-run build.sh unless it's a big issue."
+echo "Build completed. Run start.sh start the environment, inject DB via localhost. When modifications are done, run rebuild.sh from now on. DO NOT re-run build.sh unless it's a big issue."
