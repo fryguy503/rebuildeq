@@ -1550,6 +1550,9 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 	if(!IsAISpellEffect && !IsValidSpell(spell_id))
 		return;
+
+	Client *caster = entity_list.GetClientByID(casterId);
+
 	
 	if(CastToClient()->IsClient()) {
 		int rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_HARKENTHEGODS);
@@ -1608,14 +1611,12 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 		switch (effectid)
 		{
 			case SE_CurrentHP: //regens
-
-				if (caster->IsClient()) {
-					Client * casterClient = caster->CastToClient();
-					rank = casterClient->GetBuildRank(BARD, RB_BRD_HEALINGTREBLE);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_HEALINGTREBLE);
 					if (rank > 0) {
 						effect_value += (rank * 0.1 * effect_value);
 					}
-					rank = casterClient->GetBuildRank(DRUID, RB_DRU_REGENERATION);
+					rank = caster->GetBuildRank(DRUID, RB_DRU_REGENERATION);
 					if (rank > 0) {
 						effect_value += (rank * 0.2 * effect_value);
 					}
@@ -2007,7 +2008,6 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ReverseDS:
 			{
-				Client *caster = entity_list.GetClientByID(casterId);
 				if (caster) {
 					rank = caster->GetBuildRank(CLERIC, RB_CLR_MARKOFRETRIBUTION);
 					if (rank > 0) {
