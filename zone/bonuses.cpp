@@ -1743,6 +1743,17 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 			}
 
 			case SE_ManaRegen_v2:
+			{
+                                if (caster) {
+                                        rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASCHORUS);
+                                        if (rank > 0) {
+                                                effect_value += (rank * 0.1 * effect_value);
+                                        }
+                                }
+                                new_bonus->ManaRegen += effect_value;
+                                break;
+                        }
+
 			case SE_CurrentMana:
 			{
 				if (caster) {
