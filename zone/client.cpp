@@ -9165,7 +9165,7 @@ void Client::RefreshBuild() {
 				}
 
 				if (GetClass() == CLERIC && i == RB_CLR_TURNUNDEAD && GetAA(aaTurnUndead2) < 1) {
-					TrainAARank(aaTurnUndead2,n);
+					TrainAARank(aaTurnUndead2 + n -1);
 					Message(15, "You have unlocked the AA \"Turn Undead\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
