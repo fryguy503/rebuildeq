@@ -8842,7 +8842,7 @@ void Client::RefreshBuild() {
 				if (n > 5 || n < 1) {
 					continue; //ignore bad fields, or fields that are not trained
 				}
-				if (n > 0) {
+				if (n > o) {
 					is_updated = true;
 					std::string message = "You have become better at ";
 					message.append(GetBuildName(i));
