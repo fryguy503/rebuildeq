@@ -8842,7 +8842,7 @@ void Client::RefreshBuild() {
 				if (n > 5 || n < 1) {
 					continue; //ignore bad fields, or fields that are not trained
 				}
-				if (n > o) {
+				if (n > 0) {
 					is_updated = true;
 					std::string message = "You have become better at ";
 					message.append(GetBuildName(i));
@@ -9165,7 +9165,7 @@ void Client::RefreshBuild() {
 				}
 
 				if (GetClass() == CLERIC && i == RB_CLR_TURNUNDEAD && GetAA(aaTurnUndead2) < 1) {
-					TrainAARank(aaTurnUndead2,u);
+					TrainAARank(aaTurnUndead2,n);
 					Message(15, "You have unlocked the AA \"Turn Undead\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
