@@ -351,6 +351,21 @@ bool WorldDatabase::GetStartZone(PlayerProfile_Struct* in_pp, CharCreate_Struct*
 	if(!in_pp || !in_cc)
 		return false;
 
+	in_pp->x = -73.0;
+	in_pp->y = -1787.50;
+	in_pp->z = 5.63;
+	in_pp->heading = 135.0;
+	in_pp->zone_id = 22;
+
+	in_pp->binds[0].x = in_pp->x;
+	in_pp->binds[0].y = in_pp->y;
+	in_pp->binds[0].z = in_pp->z;
+	in_pp->binds[0].zoneId = in_pp->zone_id;
+	in_pp->binds[0].instance_id = 0;
+
+	return true;
+
+	/* Default logic to set character starting zone
 	in_pp->x = in_pp->y = in_pp->z = in_pp->heading = in_pp->zone_id = 0;
 	in_pp->binds[0].x = in_pp->binds[0].y = in_pp->binds[0].z = in_pp->binds[0].zoneId = in_pp->binds[0].instance_id = 0;
 	// see if we have an entry for start_zone. We can support both titanium & SOF+ by having two entries per class/race/deity combo with different zone_ids
@@ -386,6 +401,7 @@ bool WorldDatabase::GetStartZone(PlayerProfile_Struct* in_pp, CharCreate_Struct*
 		database.GetSafePoints(in_pp->binds[0].zoneId, 0, &in_pp->binds[0].x, &in_pp->binds[0].y, &in_pp->binds[0].z);
 
 	return true;
+	*/
 }
 
 void WorldDatabase::SetSoFDefaultStartZone(PlayerProfile_Struct* in_pp, CharCreate_Struct* in_cc){
