@@ -18,5 +18,6 @@ title = "Newbie Translocator"
 * Cleric: Thurgadin quest armor rewards for Cleric have been corrected.
 * Druid: Convergence of Spirits heals on every tick now, not just the last one.
 * Druid: Regeneration perk bonus now properly affects other players.
+* Paladin: Divine Stun will no longer combat lock players.
 * Shadow Knight: Festering Spear damage bonuses are now working as intended.
 <!--more-->
