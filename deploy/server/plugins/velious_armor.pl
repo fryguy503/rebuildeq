@@ -654,13 +654,13 @@ sub velious_armor_list {
 	
 	$tmp_class = 2;
 	#thurgadin loremaster dorinan cleric plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31043}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31044}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31045}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31046}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31047}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31048}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31049}; #boots
+	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31042}; #cap
+	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31043}; #bp
+	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31044}; #sleeves
+	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31045}; #wrist
+	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31046}; #gloves
+	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31047}; #legs
+	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31048}; #boots
 	
 	#thurgadin pearce icefang beastlord leather
 
