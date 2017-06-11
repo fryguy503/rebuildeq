@@ -1419,10 +1419,10 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			
 			rank = GetBuildRank(CLERIC, RB_CLR_DIVINEHAMMER);
 			if (rank > 0) {
-				chance = GetProcChances(80 * rank, Hand);
+				chance = (8 * rank);
 				spellid = 2173;
 				
-				if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance))
+				if (!other->IsNPCCorpse() && zone->random.Roll(chance))
 					ExecWeaponProc(weapon, spellid, other);
 			}
 			
