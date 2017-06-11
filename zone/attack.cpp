@@ -1422,7 +1422,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				chance = (8 * rank);
 				spellid = 2173;
 				
-				if (!other->IsNPCCorpse() && zone->random.Roll(chance))
+				if (!other->IsCorpse() && zone->random.Roll(chance))
 					ExecWeaponProc(weapon, spellid, other);
 			}
 			
