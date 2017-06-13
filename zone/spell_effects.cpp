@@ -406,15 +406,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
 							if (rank > 0 &&
 								(spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562)) { //spear spells
-								int bonus_damage = (rank * casterClient->GetLevel());
+								int bonus_damage = (-rank * casterClient->GetLevel());
 								bonus_damage += int32((float)dmg * 0.1f * (float)rank);
-								if (bonus_damage < rank) bonus_damage = rank;
+								if (bonus_damage > 0) bonus_damage = -1;
 								bool is_quad = false;
-								if (rank > 4 && zone->random.Roll(1)) {
+								if (rank > 4 && zone->random.Roll(50)) { //change back to 1% after testing
 									bonus_damage *= 4;
+									is_quad = true;
 								}
-								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Festering Spear %u added %i %s bonus damage.", rank, bonus_damage, (is_quad) ? "QUAD" : "");
-								dmg -= bonus_damage;
+								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Festering Spear %u added %i %s bonus damage.", rank, -bonus_damage, (is_quad) ? "QUAD" : "");
+								dmg += bonus_damage;
 							}
 
 							// Shock of Swords
@@ -642,12 +643,14 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							if ((spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9 || spell_id == 3261)) { //Paladin Direct Heals
 								//Divine Stun Hate bonus
-								if (casterClient->GetBuildRank(PALADIN, RB_PAL_DIVINESTUN) > 0 && casterClient->IsSwornEnemyActive()) {
+								rank = casterClient->GetBuildRank(PALADIN, RB_PAL_DIVINESTUN);
+								if (rank > 0 && casterClient->IsSwornEnemyActive()) {
 									auto aggroMob = entity_list.GetMobID(casterClient->GetEPP().sworn_enemy_id);
-									
-									rank = casterClient->GetBuildRank(PALADIN, RB_PAL_DIVINESTUN);									
-									casterClient->Message(270, "%s intensifies his hatred towards you.", aggroMob->GetCleanName());
-									aggroMob->AddToHateList(caster, (200 * rank));
+
+									if (aggroMob != NULL && aggroMob->GetID() > 0 && aggroMob->GetHPRatio() > 0) {
+										casterClient->Message(270, "%s intensifies his hatred towards you.", aggroMob->GetCleanName());
+										aggroMob->AddToHateList(caster, (200 * rank));
+									}
 								}
 
 
