@@ -35,4 +35,16 @@ services:
       - "7000-7100/udp"
       - "9000/udp"
       - "9080/udp"
+  web:
+    stdin_open: true
+    build: ./docker/web/.
+    restart: always
+    volumes:
+      - "./deploy/web:/var/www"
+    links:
+      - mariadb
+    depends_on:
+      - mariadb
+    ports:
+      - "80:80"
   #  network_mode: "bridge"
