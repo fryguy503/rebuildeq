@@ -22,6 +22,10 @@ echo Building docker-compose...
 docker-compose build
 
 if not exist "deploy\server\eqemu_config.xml" echo Copying eqemu_config.xml... && copy "docker\eqemu\eqemu_config.xml" "deploy\server"
+if not exist "deploy\web\application\config\database.php" echo Copying database.php... && copy "docker\web\database.php" "deploy\web\application\config"
+if not exist "deploy\web\application\cache" echo Making web cache directory... && mkdir deploy\web\application\cache
+if not exist "deploy\web\application\logs" echo Making web log directory... && mkdir deploy\web\application\logs
+
 if not exist "deploy\server\shared" echo Making shared directory... && mkdir deploy\server\shared
 
 echo Running shared memory...
