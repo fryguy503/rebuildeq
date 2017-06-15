@@ -206,6 +206,37 @@ bool Mob::CheckHitChance(Mob* other, EQEmu::skills::SkillType skillinuse, int Ha
 
 	Log.Out(Logs::Detail, Logs::Attack, "Chance to hit after level diff calc %.2f", chancetohit);
 
+	level_difference = attacker->GetTier() - defender->GetTier();
+	range = defender->GetLevel();
+	range = ((range / 4) + 3);
+	//Chance to hit is affected by Tier in the same way levels is.
+	if (level_difference < 0)
+	{
+		if (attacker->GetTier() >= 5) {
+			//Tier 5+ the difference is doubled
+			level_difference *= 2;
+		}
+
+
+		if (level_difference >= -range)
+		{
+			chancetohit += (level_difference / range) * RuleR(Combat, HitFalloffMinor); //5
+		}
+		else if (level_difference >= -(range + 3.0))
+		{
+			chancetohit -= RuleR(Combat, HitFalloffMinor);
+			chancetohit += ((level_difference + range) / (3.0)) * RuleR(Combat, HitFalloffModerate); //7
+		}
+		else
+		{
+			chancetohit -= (RuleR(Combat, HitFalloffMinor) + RuleR(Combat, HitFalloffModerate));
+			chancetohit += ((level_difference + range + 3.0) / 12.0) * RuleR(Combat, HitFalloffMajor); //50
+		}
+	}
+
+	Log.Out(Logs::Detail, Logs::Attack, "Chance to hit after tier diff calc %.2f", chancetohit);
+
+
 	chancetohit -= ((float)defender->GetAGI() * RuleR(Combat, AgiHitFactor));
 
 	Log.Out(Logs::Detail, Logs::Attack, "Chance to hit after Agility calc %.2f", chancetohit);
