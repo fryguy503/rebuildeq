@@ -1287,7 +1287,7 @@ bool Merc::Process()
 		CalcRestState();
 
 		if (GetHP() < GetMaxHP()) {
-			LogHealEvent(this, CalcHPRegen() + RestRegenHP);
+			entity_list.LogHealEvent(this, this, CalcHPRegen() + RestRegenHP);
 			SetHP(GetHP() + CalcHPRegen() + RestRegenHP);
 		}
 

@@ -374,7 +374,6 @@ public:
 	inline bool HasEndurUpkeep() const { return endur_upkeep; }
 	inline void SetEndurUpkeep(bool val) { endur_upkeep = val; }
 
-	void LogHealEvent(Mob *caster, int total_healing);
 	//Basic Stats/Inventory
 	virtual void SetLevel(uint8 in_level, bool command = false) { level = in_level; }
 	void TempName(const char *newname = nullptr);

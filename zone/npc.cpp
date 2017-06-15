@@ -624,16 +624,16 @@ bool NPC::Process()
 		if((GetHP() < GetMaxHP()) && !IsPet()) {
 			if(!IsEngaged()) {//NPC out of combat
 				if (GetNPCHPRegen() > OOCRegen) {
-					LogHealEvent(this, GetNPCHPRegen());
+					entity_list.LogHealEvent(this, this, GetNPCHPRegen());
 					SetHP(GetHP() + GetNPCHPRegen());					
 				}
 				else {
-					LogHealEvent(this, OOCRegen);
+					entity_list.LogHealEvent(this, this, OOCRegen);
 					SetHP(GetHP() + OOCRegen);
 				}
 			}
 			else {
-				LogHealEvent(this, GetNPCHPRegen());
+				entity_list.LogHealEvent(this, this, GetNPCHPRegen());
 				SetHP(GetHP() + GetNPCHPRegen());
 			}
 		} else if(GetHP() < GetMaxHP() && GetOwnerID() !=0) {
@@ -643,7 +643,7 @@ bool NPC::Process()
 				SetHP(GetHP()+GetNPCHPRegen()+bonus);
 		}
 		else {
-			LogHealEvent(this, GetNPCHPRegen());
+			entity_list.LogHealEvent(this, this, GetNPCHPRegen());
 			SetHP(GetHP() + GetNPCHPRegen());
 		}
 

@@ -2369,6 +2369,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 	float cur_hps_dealt;
 	int total_damage = 0;
 	uint32 engage_start = EngageEnd() - 1;
+	
 	if (DPS().size() > 0) { //don't need to dps report an empty dps mob
 		for (auto&& d : DPS()) {
 			if ((EngageEnd() - d.engage_start) > 1) cur_dps = (float)((float)d.total_damage / (EngageEnd() - d.engage_start));
@@ -2383,14 +2384,20 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 
 
 			if (engage_start > d.engage_start) engage_start = d.engage_start;
-			std::string query = StringFormat("INSERT INTO dps_log (fight_id, is_player, tier, acct_id, type_id, name, level, class, dps, damage, total_heal_taken, net_heal_taken, hps_taken, total_heal_dealt, net_heal_dealt, hps_dealt, time, aggro_count) VALUES (\"%s\", %i, %i, %i, %i, \"%s\", %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i);", fight_id.c_str(), d.is_player, d.tier, d.acct_id, d.type_id, d.character_name.c_str(), d.level, d.class_id, (int)cur_dps, d.total_damage, d.total_healing_taken, d.net_healing_taken, (int)cur_hps_taken,  d.total_healing_dealt, d.net_healing_dealt, (int)cur_hps_dealt, ((EngageEnd() - d.engage_start) < 1) ? 1 : (EngageEnd() - d.engage_start), d.aggro_count);
-			Log.Out(Logs::Detail, Logs::Aggro, "Query: %s", query.c_str());
+			std::string query = StringFormat("INSERT INTO dps_log (fight_id, is_dying, is_player, tier, acct_id, type_id, name, level, class, dps, damage, total_heal_taken, net_heal_taken, hps_taken, total_heal_dealt, net_heal_dealt, hps_dealt, time, aggro_count) VALUES (\"%s\", %i, %i, %i, %i, %i, \"%s\", %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i);", fight_id.c_str(), 0, d.is_player, d.tier, d.acct_id, d.type_id, d.character_name.c_str(), d.level, d.class_id, (int)cur_dps, d.total_damage, d.total_healing_taken, d.net_healing_taken, (int)cur_hps_taken,  d.total_healing_dealt, d.net_healing_dealt, (int)cur_hps_dealt, ((EngageEnd() - d.engage_start) < 1) ? 1 : (EngageEnd() - d.engage_start), d.aggro_count);
 			auto results = database.QueryDatabase(query);
 
 			
 			//if (!c->GetEPP().use_full_dps && c->GetID() != d.character_id) continue; //Don't show DPS if self only is flagged
 			//c->Message(MT_CritMelee, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((EngageEnd() - d.engage_start) < 1) ? 1 : (EngageEnd() - d.engage_start), dps);
 		}
+	}
+	if (IsNPC()) {		
+		if ((EngageEnd() - engage_start) > 1) cur_dps = (float)((float)total_damage / (EngageEnd() - engage_start));
+		else cur_dps = total_damage;
+
+		std::string query = StringFormat("INSERT INTO dps_log (fight_id, is_dying, tier, type_id, name, level, class, dps, damage, time, aggro_count) VALUES (\"%s\", %i, %i, %i, \"%s\", %i, %i, %i, %i, %i, %i);", fight_id.c_str(), 1, /*tier*/0, GetNPCTypeID(), CastToNPC()->GetCleanName(), GetLevel(), (int)GetClass(), (int)cur_dps, total_damage, (((EngageEnd() - engage_start) < 1) ? 1 : (EngageEnd() - engage_start)), hate_list.GetAggroCount());
+		auto results = database.QueryDatabase(query);
 	}
 
 	//Give DPS report to people with value toggled.
@@ -4369,7 +4376,7 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 			Message(MT_NonMelee, "You have been healed for %d points of damage.", acthealed);
 		}
 	}
-	LogHealEvent(caster, amount);
+	entity_list.LogHealEvent(caster, this, amount);	
 	if (curhp < maxhp) {
 		if ((curhp + amount) > maxhp)
 			curhp = maxhp;

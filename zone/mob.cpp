@@ -28,6 +28,8 @@
 #include <sstream>
 #include <algorithm>
 
+#include "entity.h"
+
 #ifdef BOTS
 #include "bot.h"
 #endif
@@ -6838,6 +6840,7 @@ void Mob::AddDPS(Mob *other, int damage) {
 
 	std::string character_name = other->GetCleanName();
 	if (other->IsClient()) {
+		is_player = 1;
 		acct_id = other->CastToClient()->AccountID();
 		type_id = other->CastToClient()->CharacterID();
 	}
@@ -6864,6 +6867,7 @@ void Mob::AddDPS(Mob *other, int damage) {
 	for (auto&& d : dps) {
 		if (d.type_id != type_id) continue;
 		d.total_damage += damage;
+		d.aggro_count = aggro_count;
 		return;
 	}
 
@@ -6900,6 +6904,14 @@ void Mob::AddHPS(Mob *other, bool is_dealer, int total_healing, int net_healing)
 		character_id = other->GetOwnerID();
 		character_name = other->GetOwner()->GetCleanName();
 	}*/
+	if (other->IsClient()) {
+		is_player = 1;
+		type_id = other->CastToClient()->CharacterID();
+		acct_id = other->CastToClient()->AccountID();
+	}
+	if (other->IsNPC()) {
+		type_id = other->CastToNPC()->GetNPCTypeID();
+	}
 
 	//see if entry already is being tracked
 	for (auto&& d : dps) {
@@ -6912,63 +6924,16 @@ void Mob::AddHPS(Mob *other, bool is_dealer, int total_healing, int net_healing)
 			d.total_healing_taken += total_healing;
 			d.net_healing_taken += net_healing;
 		}
+		d.aggro_count = aggro_count;
 		return;
 	}
-	if (other->IsClient()) {
-		is_player = 1;
-		type_id = other->CastToClient()->CharacterID();
-		acct_id = other->CastToClient()->AccountID();
-	}
-	if (other->IsNPC()) {
-		type_id = other->CastToNPC()->GetNPCTypeID();
-	}
+	
 
 	Log.Out(Logs::General, Logs::Combat, "Added new DPS entry for %s", character_name.c_str());
 	//new entry
 	dps.push_back(DPS_Struct(time(nullptr), acct_id, type_id, ent_id, character_name, 1, 1, (float)net_healing, ((!is_dealer) ? total_healing : 0), ((!is_dealer) ? net_healing : 0), tier, class_id, is_player, level, aggro_count, ((is_dealer) ? total_healing : 0), ((is_dealer) ? net_healing : 0)));
 }
 
-void Mob::LogHealEvent(Mob *caster, int total_healing) {
-	int net_healing = total_healing;
-	if (cur_hp + total_healing > max_hp) {
-		net_healing = max_hp - cur_hp;
-	}
-
-	//report hps
-	//iterate hate list, look for any mobs
-	auto iterator = hate_list.GetHateList().begin();
-	while (iterator != hate_list.GetHateList().end())
-	{
-		struct_HateList *h = (*iterator);
-		if (!h) {
-			++iterator;
-			continue;
-		}
-
-		if (h->entity_on_hatelist == nullptr) {  //if it doesn't exist
-			++iterator;
-			continue;
-		}
-		h->entity_on_hatelist->AddHPS(this, false, total_healing, net_healing);
-	}
-	if (caster != nullptr) {
-		auto iterator = caster->hate_list.GetHateList().begin();
-		while (iterator != caster->hate_list.GetHateList().end())
-		{
-			struct_HateList *h = (*iterator);
-			if (!h) {
-				++iterator;
-				continue;
-			}
-
-			if (h->entity_on_hatelist == nullptr) {  //if it doesn't exist
-				++iterator;
-				continue;
-			}
-			h->entity_on_hatelist->AddHPS(caster, true, total_healing, net_healing);
-		}
-	}
-}
 
 uint32 Mob::EngageEnd() {
 	return engage_end;
