@@ -242,9 +242,19 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							SetMana(GetMana() + mana_amount);
 							break;
 						}
+
+						rank = casterClient->GetBuildRank(CLERIC, RB_CLR_INSTILLLIFE);
+						if (rank > 0 && spells[spell_id].spell_category == 21) {
+							if (zone->random.Roll((int)rank)) {
+								if (caster_level < 19) AddBuff(casterClient, 2502); // Celestial Remedy
+								else if (caster_level < 29) AddBuff(casterClient, 2175); // Celestial Health
+								else if (caster_level < 44) AddBuff(casterClient, 1444); // Celestial Healing								
+								else if(caster_level < 59) AddBuff(casterClient, 1522); // Celestial Exlixir
+								else AddBuff(casterClient, 3475); // Supernal Elixir
+							}
+						}
 					}
 				}
-
 
 				// for offensive spells check if we have a spell rune on
 				int32 dmg = effect_value;
