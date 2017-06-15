@@ -4070,6 +4070,41 @@ void Mob::CommonDamage(Mob* attacker, int32 &damage, const uint16 spell_id, cons
 				attacker->SpellFinished(13531, this); //Proc Harm Touch!
 			}
 
+			if (attacker->IsClient() &&
+				attacker->CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEBASH) > 0 &&
+				zone->random.Roll((int)attacker->CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEBASH))) {
+
+				// heal for 4% of the cleric's max hp per rank to the player in the group with the lowest hp (or self if not grouped)
+				int heal_amount = 0.04f * attacker->GetMaxHP();
+				Client *caster = CastToClient();
+
+				if (caster->IsGrouped()) {
+					Group *caster_group = entity_list.GetGroupByMob(caster);
+					if (caster_group) {
+						Mob *m = nullptr;
+						for (int z = 0; z < MAX_GROUP_MEMBERS; z++) {
+							if (caster_group->members[z] != nullptr) {
+								if (m == nullptr) {
+									m = caster_group->members[z]->CastToClient();
+								} else if (caster_group->members[z]->GetHPRatio() < m->GetHPRatio()) {
+									m = caster_group->members[z]->CastToClient();
+								}
+							}
+						}
+
+						if (m != nullptr) {
+							if (caster->ShowBuildEcho()) caster->Message(MT_FocusEffect, "Divine Bash has healed %s for %d", m->GetCleanName(), heal_amount);
+							if (m->ShowBuildEcho()) caster->Message(MT_FocusEffect, "Divine Bash has healed you for %d", heal_amount);
+							m->HealDamage(heal_amount, caster, 12);
+						}
+					}
+					else {
+						if (caster->ShowBuildEcho()) caster->Message(MT_FocusEffect, "Divine Bash has healed you for %d", heal_amount);
+						caster->HealDamage(heal_amount, caster, 12);
+					}
+				}
+			}
+
 			if (stun_chance && zone->random.Roll(stun_chance)) {
 				// Passed stun, try to resist now
 				int stun_resist = itembonuses.StunResist + spellbonuses.StunResist;
