@@ -7043,7 +7043,17 @@ int Mob::GetTier() {
 	}
 
 	if (IsClient()) {
-		//Players tier would be idenfied based on which tasks they complete.
+		//Players tier is idenfied based on which tasks they complete.
+		Client *c = CastToClient();
+		if (c->IsTaskCompleted(TIER_9)) return 9;
+		if (c->IsTaskCompleted(TIER_8)) return 8;
+		if (c->IsTaskCompleted(TIER_7)) return 7;
+		if (c->IsTaskCompleted(TIER_6)) return 6;
+		if (c->IsTaskCompleted(TIER_5)) return 5;
+		if (c->IsTaskCompleted(TIER_4)) return 4;
+		if (c->IsTaskCompleted(TIER_3)) return 3;
+		if (c->IsTaskCompleted(TIER_2)) return 2;
+		if (c->IsTaskCompleted(TIER_1)) return 1;
 		return 0;
 	}
 
