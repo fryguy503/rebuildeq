@@ -2396,7 +2396,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 		if ((EngageEnd() - engage_start) > 1) cur_dps = (float)((float)total_damage / (EngageEnd() - engage_start));
 		else cur_dps = total_damage;
 
-		std::string query = StringFormat("INSERT INTO dps_log (fight_id, is_dying, tier, type_id, name, level, class, dps, damage, time, aggro_count) VALUES (\"%s\", %i, %i, %i, \"%s\", %i, %i, %i, %i, %i, %i);", fight_id.c_str(), 1, /*tier*/0, GetNPCTypeID(), CastToNPC()->GetCleanName(), GetLevel(), (int)GetClass(), (int)cur_dps, total_damage, (((EngageEnd() - engage_start) < 1) ? 1 : (EngageEnd() - engage_start)), hate_list.GetAggroCount());
+		std::string query = StringFormat("INSERT INTO dps_log (fight_id, is_dying, tier, type_id, name, level, class, dps, damage, time, aggro_count) VALUES (\"%s\", %i, %i, %i, \"%s\", %i, %i, %i, %i, %i, %i);", fight_id.c_str(), 1, GetTier(), GetNPCTypeID(), CastToNPC()->GetCleanName(), GetLevel(), (int)GetClass(), (int)cur_dps, total_damage, (((EngageEnd() - engage_start) < 1) ? 1 : (EngageEnd() - engage_start)), hate_list.GetAggroCount());
 		auto results = database.QueryDatabase(query);
 	}
 

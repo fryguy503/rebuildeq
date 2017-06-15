@@ -1442,6 +1442,9 @@ protected:
 	uint32 engage_end;
 	bool engage_flush_on_next_engage;
 
+	//Figure out the tier of the mob or player
+	int GetTier();
+
 private:
 	void _StopSong(); //this is not what you think it is
 	Mob* target;
