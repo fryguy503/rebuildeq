@@ -2383,7 +2383,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 
 
 			if (engage_start > d.engage_start) engage_start = d.engage_start;
-			std::string query = StringFormat("INSERT INTO dps_log (fight_id, is_player, tier, acct_id, type_id, name, level, class, dps, damage, total_heal_taken, net_heal_taken, net_hps_taken, total_heal_dealt, net_heal_dealt, net_hps_dealt, time, aggro_count) VALUES (\"%s\", %i, %i, %i, %i, \"%s\", %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i);", fight_id.c_str(), d.is_player, d.tier, d.acct_id, d.type_id, d.character_name.c_str(), d.level, d.class_id, (int)cur_dps, d.total_damage, d.total_healing_taken, d.net_healing_taken, (int)cur_hps_taken,  d.total_healing_dealt, d.net_healing_dealt, (int)cur_hps_dealt, ((EngageEnd() - d.engage_start) < 1) ? 1 : (EngageEnd() - d.engage_start), d.aggro_count);
+			std::string query = StringFormat("INSERT INTO dps_log (fight_id, is_player, tier, acct_id, type_id, name, level, class, dps, damage, total_heal_taken, net_heal_taken, hps_taken, total_heal_dealt, net_heal_dealt, hps_dealt, time, aggro_count) VALUES (\"%s\", %i, %i, %i, %i, \"%s\", %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i);", fight_id.c_str(), d.is_player, d.tier, d.acct_id, d.type_id, d.character_name.c_str(), d.level, d.class_id, (int)cur_dps, d.total_damage, d.total_healing_taken, d.net_healing_taken, (int)cur_hps_taken,  d.total_healing_dealt, d.net_healing_dealt, (int)cur_hps_dealt, ((EngageEnd() - d.engage_start) < 1) ? 1 : (EngageEnd() - d.engage_start), d.aggro_count);
 			Log.Out(Logs::Detail, Logs::Aggro, "Query: %s", query.c_str());
 			auto results = database.QueryDatabase(query);
 
