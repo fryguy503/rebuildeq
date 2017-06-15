@@ -23,11 +23,15 @@ fi
 if [ ! -d deploy/web/application/cache ]; then
    echo "Making web cache directory..."
    mkdir deploy/web/application/cache
+   chmod -R 777 deploy/web/application/cache
+
 fi
 
 if [ ! -d deploy/web/application/logs ]; then
    echo "Making web logs directory..."
    mkdir deploy/web/application/logs
+   chmod -R 777 deploy/web/application/logs
+
 fi
 
 echo "Building binaries..."
