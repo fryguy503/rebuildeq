@@ -860,6 +860,7 @@ bool IsPlayerIllusionSpell(uint16 spell_id); // seveian 2008-09-23
 bool IsLDoNObjectSpell(uint16 spell_id);
 int32 GetSpellResistType(uint16 spell_id);
 int32 GetSpellTargetType(uint16 spell_id);
+bool IsHealSpell(uint16 spell_id);
 bool IsHealOverTimeSpell(uint16 spell_id);
 bool IsCompleteHealSpell(uint16 spell_id);
 bool IsFastHealSpell(uint16 spell_id);

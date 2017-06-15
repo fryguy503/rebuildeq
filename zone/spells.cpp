@@ -544,6 +544,15 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, uint16 slot,
 		cast_time = (5 - rank) * 2500 + 5000;
 	}
 
+	// Cleric Promise
+	rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_PROMISE);
+	if (rank > 0 && IsHealSpell(spell_id)) {
+		if (zone->random.Roll(rank)) {
+			if (CastToClient()->ShowBuildEcho()) CastToClient()->Message(MT_FocusEffect, "Promise has reduced the mana cost to 1");
+			mana_cost = 1;
+		}
+	}
+	
 	if(mana_cost > GetMana())
 		mana_cost = GetMana();
 

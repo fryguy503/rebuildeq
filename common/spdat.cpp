@@ -883,6 +883,18 @@ int32 GetSpellTargetType(uint16 spell_id)
 	return (int32)spells[spell_id].targettype;
 }
 
+bool IsHealSpell(uint16 spell_id)
+{
+	if (spells[spell_id].spell_category == 20 ||
+		spells[spell_id].spell_category == 21 ||
+		spells[spell_id].spell_category == 22 ||
+		spells[spell_id].spell_category == 23 ||
+		spells[spell_id].spell_category == 26)
+		return true;
+
+	return false;
+}
+
 bool IsHealOverTimeSpell(uint16 spell_id)
 {
 	if (IsEffectInSpell(spell_id, SE_HealOverTime) && !IsGroupSpell(spell_id))
