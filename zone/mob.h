@@ -925,6 +925,7 @@ public:
 	bool Charmed() const { return typeofpet == petCharmed; }
 	static uint32 GetLevelHP(uint8 tlevel);
 	uint32 GetZoneID() const; //for perl
+	bool IsRaidZone();
 	virtual int32 CheckAggroAmount(uint16 spell_id, Mob *target, bool isproc = false);
 	virtual int32 CheckHealAggroAmount(uint16 spell_id, Mob *target, uint32 heal_possible = 0);
 

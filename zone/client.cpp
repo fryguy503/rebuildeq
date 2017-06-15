@@ -490,6 +490,9 @@ void Client::SendZoneInPackets()
 	if (IsBuildAvailable() && GetBuildUnspentPoints() > 0) {
 		Message(MT_Experience, "You have unspent build points. Visit %s to spend them.", CreateSayLink("#builds", "#builds").c_str());
 	}
+	if (IsRaidZone()) {
+		Message(MT_Experience, "Beware, adventurer. Tread lightly, as the place you have entered is not easily returnable upon death.");
+	}
 
 	if ((GetZoneID() == 118 && !KeyRingCheck(100008)) ||
 		(GetZoneID() == 119 && !KeyRingCheck(100009)) ||
