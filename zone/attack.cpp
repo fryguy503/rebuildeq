@@ -1943,9 +1943,12 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	if (GetZoneID() == 124 || //ToV
 		GetZoneID() == 108 || //VP
 		GetZoneID() == 128 || //Sleeper's Tomb
-		GetZoneID() == 186 || //Plane of Hate
+		GetZoneID() == 186 || //Plane of Hate B
 		GetZoneID() == 72 || //Plane of Fear
 		GetZoneID() == 71 //Plane of Sky
+		GetZoneID() == 143 //Plane of Growth
+		GetZoneID() == 223 //Plane of Mischief
+		GetZoneID() == 162 //Plane of Hate
 		) {
 		Message(13, "The zone you died in is not eligible for #return");
 		//Update character_custom with empty return zone
