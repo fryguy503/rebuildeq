@@ -6044,18 +6044,31 @@ void command_dps(Client *c, const Seperator *sep)
 		return;
 	}
 
-	float dps;
+	float dps = 0;
+	float net_hps_taken = 0;
+	float net_hps_dealt = 0;
 	int total_damage = 0;
 	uint32 engage_start = target->EngageEnd() - 1;
 
 	c->Message(MT_CritMelee, "-----DPS for %s-----", target->GetCleanName());
 	for (auto&& d : target->DPS()) {
-		if ((target->EngageEnd() - d.engage_start) > 1) dps = (float)((float)d.total_damage / (target->EngageEnd() - d.engage_start));
-		else dps = d.total_damage;
+
+		if ((target->EngageEnd() - d.engage_start) > 1) {
+			dps = (float)((float)d.total_damage / (target->EngageEnd() - d.engage_start));
+			net_hps_taken = (float)((float)d.net_healing_taken / (target->EngageEnd() - d.engage_start));
+			net_hps_dealt = (float)((float)d.net_healing_dealt / (target->EngageEnd() - d.engage_start));
+		} else {
+			dps = d.total_damage;
+			net_hps_taken = d.net_healing_taken;
+			net_hps_dealt = d.net_healing_dealt;
+		}
 		total_damage += d.total_damage;
 
+		if ((target->EngageEnd() - d.engage_start) > 1) dps = (float)((float)d.total_damage / (target->EngageEnd() - d.engage_start));
+		else 
 		if (engage_start > d.engage_start) engage_start = d.engage_start;
-		c->Message(MT_CritMelee, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), dps);
+		//c->Message(MT_CritMelee, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), dps);
+		c->Message(MT_CritMelee, "%s over %is [%i dmg (%.2f DPS)] [%i hp taken (%.2f HPS)] [%i hp dealt (%.2f HPS)]", d.character_name.c_str(), ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), d.total_damage,  dps, d.net_healing_taken, net_hps_taken, d.net_healing_dealt, net_hps_dealt);
 	}
 	if ((target->EngageEnd() - engage_start) > 1) dps = (float)((float)total_damage / (target->EngageEnd() - engage_start));
 	else dps = total_damage;

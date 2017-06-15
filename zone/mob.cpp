@@ -6828,26 +6828,146 @@ void Mob::AddDPS(Mob *other, int damage) {
 
 	//since damage is being dealt, engage_end is at minimum now.
 	engage_end = time(nullptr);
+	int is_player = 0;
+	int ent_id = other->GetID();
+	int type_id = 0;
+	int acct_id = 0;
+	int level = other->GetLevel();
 	
-	int character_id = other->GetID();
+	int aggro_count = other->hate_list.GetAggroCount();
+
 	std::string character_name = other->GetCleanName();
+	if (other->IsClient()) {
+		acct_id = other->CastToClient()->AccountID();
+		type_id = other->CastToClient()->CharacterID();
+	}
 
 	//Pets are attributed to their owners. Keep it simple.
 	if (other->IsPet() && other->IsPetOwnerClient() && other->GetOwner() != nullptr) {
-		character_id = other->GetOwnerID();
+		ent_id = other->GetOwnerID();
 		character_name = other->GetOwner()->GetCleanName();
+		aggro_count = other->GetOwner()->hate_list.GetAggroCount();
+		level = other->GetOwner()->GetLevel();
+
+		if (other->GetOwner()->IsClient()) {
+			is_player = 1;
+			acct_id = other->GetOwner()->CastToClient()->AccountID();
+			type_id = other->GetOwner()->CastToClient()->CharacterID();
+		}
+		
+	}
+	if (other->IsNPC()) {
+		type_id = other->CastToNPC()->GetNPCTypeID();
 	}
 
 	//see if entry already is being tracked
-	for (auto&& d : dps) {		
-		if (d.character_id != character_id) continue;
+	for (auto&& d : dps) {
+		if (d.type_id != type_id) continue;
 		d.total_damage += damage;
 		return;
 	}
 
+	int tier = 0; //TO BE ADDED LATER?
+	int class_id = (int)other->GetClass();
+	
 	Log.Out(Logs::General, Logs::Combat, "Added new DPS entry for %s", character_name.c_str());
 	//new entry
-	dps.push_back(DPS_Struct(time(nullptr), character_id, character_name, damage, damage));
+	dps.push_back(DPS_Struct(time(nullptr), acct_id, type_id, ent_id, character_name, damage, damage, 0, 0, 0, tier, class_id, is_player, level, aggro_count, 0, 0));
+}
+
+//Add a mob's heal to the DPS counter system
+void Mob::AddHPS(Mob *other, bool is_dealer, int total_healing, int net_healing) {
+	if (other == nullptr) return;
+	if (total_healing < 1) return;
+	//net_healing could be zero, since the heal could do nothing, we still track it.
+
+
+	//Don't worry about flushing aggro, that's handled with DPS.
+	int tier = 0;
+	int is_player = 0;
+	int level = other->GetLevel();
+	int ent_id = other->GetID();
+	int type_id = 0;
+	int acct_id = 0;
+	int class_id = (int)other->GetClass();
+	std::string character_name = other->GetCleanName();
+
+	int aggro_count = other->hate_list.GetAggroCount();
+
+	//Pet healing.. should it be tracked? For now, no..
+	/*//Pets are attributed to their owners. Keep it simple.
+	if (other->IsPet() && other->IsPetOwnerClient() && other->GetOwner() != nullptr) {
+		character_id = other->GetOwnerID();
+		character_name = other->GetOwner()->GetCleanName();
+	}*/
+
+	//see if entry already is being tracked
+	for (auto&& d : dps) {
+		if (d.ent_id != ent_id) continue;
+		if (is_dealer) {
+			d.total_healing_dealt += total_healing;
+			d.net_healing_dealt += net_healing;
+		}
+		else {
+			d.total_healing_taken += total_healing;
+			d.net_healing_taken += net_healing;
+		}
+		return;
+	}
+	if (other->IsClient()) {
+		is_player = 1;
+		type_id = other->CastToClient()->CharacterID();
+		acct_id = other->CastToClient()->AccountID();
+	}
+	if (other->IsNPC()) {
+		type_id = other->CastToNPC()->GetNPCTypeID();
+	}
+
+	Log.Out(Logs::General, Logs::Combat, "Added new DPS entry for %s", character_name.c_str());
+	//new entry
+	dps.push_back(DPS_Struct(time(nullptr), acct_id, type_id, ent_id, character_name, 1, 1, (float)net_healing, ((!is_dealer) ? total_healing : 0), ((!is_dealer) ? net_healing : 0), tier, class_id, is_player, level, aggro_count, ((is_dealer) ? total_healing : 0), ((is_dealer) ? net_healing : 0)));
+}
+
+void Mob::LogHealEvent(Mob *caster, int total_healing) {
+	int net_healing = total_healing;
+	if (cur_hp + total_healing > max_hp) {
+		net_healing = max_hp - cur_hp;
+	}
+
+	//report hps
+	//iterate hate list, look for any mobs
+	auto iterator = hate_list.GetHateList().begin();
+	while (iterator != hate_list.GetHateList().end())
+	{
+		struct_HateList *h = (*iterator);
+		if (!h) {
+			++iterator;
+			continue;
+		}
+
+		if (h->entity_on_hatelist == nullptr) {  //if it doesn't exist
+			++iterator;
+			continue;
+		}
+		h->entity_on_hatelist->AddHPS(this, false, total_healing, net_healing);
+	}
+	if (caster != nullptr) {
+		auto iterator = caster->hate_list.GetHateList().begin();
+		while (iterator != caster->hate_list.GetHateList().end())
+		{
+			struct_HateList *h = (*iterator);
+			if (!h) {
+				++iterator;
+				continue;
+			}
+
+			if (h->entity_on_hatelist == nullptr) {  //if it doesn't exist
+				++iterator;
+				continue;
+			}
+			h->entity_on_hatelist->AddHPS(caster, true, total_healing, net_healing);
+		}
+	}
 }
 
 uint32 Mob::EngageEnd() {

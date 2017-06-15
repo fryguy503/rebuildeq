@@ -2831,6 +2831,7 @@ bool Client::BindWound(Mob *bindmob, bool start, bool fail)
 						// cap it at that value. Dont know if live does it this way
 						// but it makes sense to me.
 						int chp = bindmob->GetHP() + bindhps;
+						bindmob->LogHealEvent(this, chp);
 						if (chp > max_hp)
 							chp = max_hp;
 

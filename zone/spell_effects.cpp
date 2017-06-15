@@ -7006,6 +7006,7 @@ bool Mob::TryDeathSave() {
 						}
 						if ((GetMaxHP() - GetHP()) < HealAmt)
 							HealAmt = GetMaxHP() - GetHP();
+						LogHealEvent(buff_client, HealAmt);
 						SetHP((GetHP() + HealAmt));
 						Message(263, "The gods have healed you for %i points of damage.", HealAmt);
 						entity_list.MessageClose_StringID(this, false, 200, MT_CritMelee, DIVINE_INTERVENTION, GetCleanName());
@@ -7045,6 +7046,7 @@ bool Mob::TryDeathSave() {
 				if ((GetMaxHP() - GetHP()) < HealAmt)
 					HealAmt = GetMaxHP() - GetHP();
 
+				LogHealEvent(this, HealAmt);
 				SetHP((GetHP()+HealAmt));
 				Message(263, "The gods have healed you for %i points of damage.", HealAmt);
 
@@ -7077,7 +7079,7 @@ bool Mob::TryDeathSave() {
 
 					if ((GetMaxHP() - GetHP()) < HealAmt)
 						HealAmt = GetMaxHP() - GetHP();
-
+					LogHealEvent(this, HealAmt);
 					SetHP((GetHP()+HealAmt));
 					Message(263, "The gods have healed you for %i points of damage.", HealAmt);
 

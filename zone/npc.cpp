@@ -623,19 +623,29 @@ bool NPC::Process()
 		//Lieka Edit:Fixing NPC regen.NPCs should regen to full during a set duration, not based on their HPs.Increase NPC's HPs by % of total HPs / tick.
 		if((GetHP() < GetMaxHP()) && !IsPet()) {
 			if(!IsEngaged()) {//NPC out of combat
-				if(GetNPCHPRegen() > OOCRegen)
-					SetHP(GetHP() + GetNPCHPRegen());
-				else
+				if (GetNPCHPRegen() > OOCRegen) {
+					LogHealEvent(this, GetNPCHPRegen());
+					SetHP(GetHP() + GetNPCHPRegen());					
+				}
+				else {
+					LogHealEvent(this, OOCRegen);
 					SetHP(GetHP() + OOCRegen);
-			} else
-				SetHP(GetHP()+GetNPCHPRegen());
+				}
+			}
+			else {
+				LogHealEvent(this, GetNPCHPRegen());
+				SetHP(GetHP() + GetNPCHPRegen());
+			}
 		} else if(GetHP() < GetMaxHP() && GetOwnerID() !=0) {
 			if(!IsEngaged()) //pet
 				SetHP(GetHP()+GetNPCHPRegen()+bonus+(GetLevel()/5));
 			else
 				SetHP(GetHP()+GetNPCHPRegen()+bonus);
-		} else
-			SetHP(GetHP()+GetNPCHPRegen());
+		}
+		else {
+			LogHealEvent(this, GetNPCHPRegen());
+			SetHP(GetHP() + GetNPCHPRegen());
+		}
 
 		if(GetMana() < GetMaxMana()) {
 			SetMana(GetMana()+mana_regen+bonus);

@@ -1286,8 +1286,10 @@ bool Merc::Process()
 
 		CalcRestState();
 
-		if(GetHP() < GetMaxHP())
+		if (GetHP() < GetMaxHP()) {
+			LogHealEvent(this, CalcHPRegen() + RestRegenHP);
 			SetHP(GetHP() + CalcHPRegen() + RestRegenHP);
+		}
 
 		if(GetMana() < GetMaxMana())
 			SetMana(GetMana() + CalcManaRegen() + RestRegenMana);
