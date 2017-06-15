@@ -4886,7 +4886,7 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 	                        con_text = "scowls at you, ready to attack";
 	                        break;
 		}
-
+		
 		con->level = GetLevelCon(GetLevel(), tmob->GetLevel());
 		std::string level_text;
 		//if (tmob->GetLevel() >= GetLevel() + 4) {
@@ -4934,7 +4934,32 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 			race_name = tmob->RaceName();
 		}
 		if (IsTaskActivityActive(307, 10)) UpdateTaskActivity(FEAT_GETTINGSTARTED, 10, 1);
-		SendColoredText(color, StringFormat("%s [%u] (%s) %s -- %s", tmob->GetCleanName(), tmob->GetLevel(), race_name.c_str(), con_text.c_str(), level_text.c_str()));
+
+		std::string level_value = StringFormat("%u", tmob->GetLevel());
+		//Tiers affect the con/faction lvl.
+		if (tmob->GetTier() > 0) {
+			level_value = StringFormat("T%i", tmob->GetTier());
+			if (tmob->GetTier() > GetTier() + 5) {
+				level_text = "You are doomed.";
+			}
+			else if (tmob->GetTier() > GetTier() + 4) {
+				level_text = "the Gods do not favor you.";
+			}
+			else if (tmob->GetTier() > GetTier() + 3) {
+				level_text = "this may be your last fight.";
+			}
+			else if (tmob->GetTier() > GetTier() + 2) {
+				level_text = "the odds are against you.";
+			}
+			else if (tmob->GetTier() > GetTier() + 1) {
+				level_text = "winning might be possible.";
+			}
+			else if (tmob->GetTier() > GetTier()) {
+				level_text = "looks like a worthy challenge.";
+			}
+		}
+
+		SendColoredText(color, StringFormat("%s [%s] (%s) %s -- %s", tmob->GetCleanName(), level_value.c_str(), race_name.c_str(), con_text.c_str(), level_text.c_str()));
 	}
 	// only wanted to check raid target once
 	// and need con to still be around so, do it here!

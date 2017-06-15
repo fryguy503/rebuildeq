@@ -1057,6 +1057,9 @@ public:
 	void DelAssistCap() { --npc_assist_cap; }
 	void ResetAssistCap() { npc_assist_cap = 0; }
 
+	//Figure out the tier of the mob or player
+	int GetTier();
+
 	// Bots HealRotation methods
 #ifdef BOTS
 	bool IsHealRotationTarget() { return (m_target_of_heal_rotation.use_count() && m_target_of_heal_rotation.get()); }
@@ -1442,8 +1445,6 @@ protected:
 	uint32 engage_end;
 	bool engage_flush_on_next_engage;
 
-	//Figure out the tier of the mob or player
-	int GetTier();
 
 private:
 	void _StopSong(); //this is not what you think it is
