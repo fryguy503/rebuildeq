@@ -6964,7 +6964,6 @@ int Mob::GetTier() {
 		if (npc_type_id == 71059) return 0; //Protector_of_Sky
 		if (npc_type_id == 71021) return 0; //Gorgalosk
 		if (npc_type_id == 71060) return 0; //the_Hand_of_Veeshan
-		if (npc_type_id == 71065) return 0; //Eye_of_Veeshan
 		if (npc_type_id == 71072) return 0; //Bazzt_Zzzt
 		if (npc_type_id == 71076) return 0; //#Sister_of_the_Spire
 		if (npc_type_id == 64001) return 0; //Phinigel_Autropos
@@ -6979,6 +6978,7 @@ int Mob::GetTier() {
 		if (npc_type_id == 91093) return 0; //Talendor
 		if (npc_type_id == 96073) return 0; //#Faydedar
 		if (npc_type_id == 96089) return 0; //Faydedar
+		if (npc_type_id == 71065) return 1; //Eye_of_Veeshan
 		if (npc_type_id == 117073) return 1; //Kelorek`Dar
 		if (npc_type_id == 119112) return 1; //Wuoshi
 		if (npc_type_id == 94009) return 1; //Severilous
@@ -7028,17 +7028,17 @@ int Mob::GetTier() {
 		if (npc_type_id == 114106) return 7; //Lord_Yelinak
 		if (npc_type_id == 124074) return 7; //#Lord_Kreizenn
 		if (npc_type_id == 124155) return 7; //#Vulak`Aerr
-		if (npc_type_id == 128054) return 7; //#Master_of_the_Guard
+		if (npc_type_id == 128054) return 8; //#Master_of_the_Guard
 		if (npc_type_id == 128045) return 8; //#The_Final_Arbiter
 		if (npc_type_id == 128053) return 8; //#The_Progenitor
 		if (npc_type_id == 128090) return 8; //#Nanzata_the_Warder
 		if (npc_type_id == 128091) return 8; //#Ventani_the_Warder
 		if (npc_type_id == 128092) return 8; //#Tukaarak_the_Warder
 		if (npc_type_id == 128093) return 8; //#Hraashna_the_Warder
-		if (npc_type_id == 128089) return 10; //#Kerafyrm
 		if (npc_type_id == 129003) return 9; //#Dain_Frostreaver_IV
 		if (npc_type_id == 186107) return 9; //#Innoruuk
 		if (npc_type_id == 186111) return 9; //#Maestro_of_Rancor
+		if (npc_type_id == 128089) return 10; //#Kerafyrm
 		return 0;
 	}
 
