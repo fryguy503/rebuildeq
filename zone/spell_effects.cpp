@@ -4487,8 +4487,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}
 							Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
-							SetMana(GetMana() + mana_amount);
-							
+							SetMana(GetMana() + mana_amount);							
 						}
 					}
 					break;
@@ -4570,7 +4569,13 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 						}
 					}
 				}
+
+				rank = caster->CastToClient()->GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION);
+				if (rank > 0 && buff.spellid == 2740) {
+					effect_value = caster->CastToClient()->GetLevel() * rank * 1;
+				}
 			}
+
 			HealDamage(effect_value, caster, buff.spellid);
 			// healing aggro would go here; removed for now
 			break;

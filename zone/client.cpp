@@ -10646,7 +10646,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_CLR_DIVINEARBITRATION) return "Divine Arbitration";
 		else if (id == RB_CLR_DIVINERESURRECTION) return "Divine Resurrection";
 		else if (id == RB_CLR_PROMISE) return "Promise";
-		else if (id == RB_CLR_HARMONICBALANCE) return "Harmonic Balance";
+		else if (id == RB_CLR_CELESTIALREGENERATION) return "Celestial Regeneration";
 		else if (id == RB_CLR_STRIKE) return "Strike";
 		else if (id == RB_CLR_WARDOFREBUKE) return "Ward of Rebuke";
 		else if (id == RB_CLR_FISTOFTHEGODS) return "Fist of the Gods";
