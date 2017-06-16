@@ -9159,6 +9159,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Divine Resurrection\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == CLERIC && i == RB_CLR_CELESTIALREGENERATION && GetAA(aaCelestialRegeneration) < 1) {
+					TrainAARank(aaCelestialRegeneration);
+					Message(15, "You have unlocked the AA \"Celestial Regeneration\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == CLERIC && i == RB_CLR_DIVINERETRIBUTION && GetAA(aaDivineRetribution) < 1) {
 					TrainAARank(aaDivineRetribution);
 					Message(15, "You have unlocked the AA \"Divine Retribution\"! Find the hotkey in your Alternate Advancement Window.");
