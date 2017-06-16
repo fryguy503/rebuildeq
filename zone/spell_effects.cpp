@@ -3172,7 +3172,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					if(gid < 11)
 					{
 						if (spell_id == 3252 && caster->CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) > 0)
-							r->BalanceHP(spell.base[i] * (rank < 5 ? 0.20f * rank : 1), gid, spell.range, caster, spell.base2[i]);
+							r->BalanceHP(rank * 0.10f, gid, spell.range, caster, spell.base2[i]);
 						else
 							r->BalanceHP(spell.base[i], gid, spell.range, caster, spell.base2[i]);						
 						break;
@@ -3185,7 +3185,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					break;
 
 				if (spell_id == 3252 && caster->CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) > 0)
-					g->BalanceHP(spell.base[i] * (rank < 5 ? 0.20f * rank : 1), spell.range, caster, spell.base2[i]);
+					g->BalanceHP(rank * 0.10f, spell.range, caster, spell.base2[i]);
 				else
 					g->BalanceHP(spell.base[i], spell.range, caster, spell.base2[i]);
 				break;
