@@ -668,6 +668,7 @@ public:
 	void SendClientMoneyUpdate(uint8 type,uint32 amount);
 	void SendMoneyUpdate();
 	bool HasMoneyInInvOrBank(int64 Copper);
+	bool HasMoneyInBank(int64 Copper);
 	bool TakeMoneyFromPPOrBank(uint64 copper, bool updateclient);
 	bool TakeMoneyFromPP(uint64 copper, bool updateclient=false);
 	void AddMoneyToPP(uint64 copper,bool updateclient);

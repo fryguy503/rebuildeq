@@ -508,6 +508,10 @@ void Client::SendZoneInPackets()
 		Message(MT_Experience, "This area has a RARE fragment to unlock #teleport to it that you have not yet discovered. Kill monsters to find it.");
 	}
 
+	if (GetLevel() == 39 && !HasMoneyInBank(39000)) {
+		Message(MT_Experience, "At level 40, you will begin dropping items and money on your corpse. To #return/#rez safely, it is suggested you store money in your non-shared bank platinum slot, money will also remove this message on zoning.");
+	}
+
 	//Reset evade on zoning
 	m_epp.evade_mob_id =0;
 	m_epp.evade_mob_timeout = 0;
@@ -2379,12 +2383,20 @@ bool Client::HasMoneyInInvOrBank(int64 Copper) {
 	if (this->HasMoney(Copper)) {
 		return true;
 	}
+	if (this->HasMoneyInBank(Copper)) {
+		return true;
+	}
+	
+
+	return false;
+}
+
+bool Client::HasMoneyInBank(int64 Copper) {
 	if ((static_cast<uint64>(m_pp.copper_bank) +
 		(static_cast<uint64>(m_pp.silver_bank) * 10) +
 		(static_cast<uint64>(m_pp.gold_bank) * 100) +
 		(static_cast<uint64>(m_pp.platinum_bank) * 1000)) >= Copper)
 		return true;
-
 	return false;
 }
 
