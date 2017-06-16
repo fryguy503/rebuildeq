@@ -894,7 +894,11 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 		else if(rb_rank == 3) aai->spell_refresh = 21600; // 6 hours
 		else if(rb_rank == 4) aai->spell_refresh = 10800; // 3 hours
 		else if(rb_rank == 5) aai->spell_refresh = 3600; // 1 hour
-	}  
+	}
+	else if (rank->id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) > 0) {
+		// 72/60/48/36/24 hours
+		aai->spell_refresh = 43200 * (6 - GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION));
+	}
 	else if (rank->id == aaCalloftheHero && GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO) > 0) {
 		aai->spell_refresh = 2 * ((5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 5 + 10);
 	} else {
@@ -1228,13 +1232,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALBREEZE) < 1 ||
 		rank_id == aaDivineArbitration && GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) < 1 ||
 		rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
+		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION) < 1 ||
 		rank_id == aaDivineRetribution && GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION) < 1 ||
 		rank_id == aaTurnUndead && GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) < 1 ||
 		rank_id == aaExquisiteBenediction && GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION) < 1 ||
-		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALBREEZE) < 1 ||
-		rank_id == aaDivineArbitration && GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) < 1 ||
-		rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
-		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION) < 1 ||
 		( //Lesson of the Devoted is used by multiple classes different builds
 			rank_id == aaLessonoftheDevoted && 
 				GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
@@ -1314,6 +1315,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		else if(rb_rank == 3) cooldown = 21600; // 6 hours
 		else if(rb_rank == 4) cooldown = 10800; // 3 hours
 		else if(rb_rank == 5) cooldown = 3600; // 1 hours
+	}
+	else if (rank_id == aaDivineResurrection) {
+		// 72/60/48/36/24 hours
+		cooldown = 43200 * (6 - GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION)); 
 	}
 	else if(rank_id == aaCalloftheHero) {
 		cooldown = 2 * ((5 - GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) * 5 + 10);
