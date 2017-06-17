@@ -1519,12 +1519,12 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 		pp.x = pp.y = pp.z = -1;
 	}
 
-	// RebuildEQ Override the starting location and all bind/origin points to EC tunnel
-	pp.zone_id = 22;
-	pp.x = -73.0;
-	pp.y = -1787.50;
-	pp.z = 5.63;
-	pp.heading = 135.0;
+	// RebuildEQ Override the starting location and all bind/origin points to PoJ tunnel.
+	pp.zone_id = 201;
+	pp.x = 469.48;
+	pp.y = 765.68;
+	pp.z = 9.63;
+	pp.heading = 63.5;
 
 	/* Set Home Binds  -- yep, all of them */
 	pp.binds[1].zoneId = pp.zone_id;
