@@ -30,6 +30,11 @@ if [ ! -d deploy/web/application/logs ]; then
    mkdir deploy/web/application/logs
 fi
 
+if [ ! -f deploy/web/html ]; then
+   echo "Making html symlink..."
+   ln -s deploy/web/web deploy/web/html
+fi
+
 echo "Building binaries..."
 docker run -v $PWD:/src -v $PWD/deploy/server:/eqemu buildeq
 
