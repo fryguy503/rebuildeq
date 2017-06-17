@@ -9178,8 +9178,8 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Divine Retribution\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == CLERIC && i == RB_CLR_TURNUNDEAD && GetAA(aaTurnUndead) < 1) {
-					TrainAARank(aaTurnUndead);
+				if (GetClass() == CLERIC && i == RB_CLR_TURNUNDEAD && GetAA(aaTurnUndead2) < 1) {
+					TrainAARank(aaTurnUndead2);
 					Message(15, "You have unlocked the AA \"Turn Undead\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 

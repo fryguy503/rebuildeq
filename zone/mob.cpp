@@ -3604,7 +3604,7 @@ bool Mob::TrySpellTrigger(Mob *target, uint32 spell_id, int effect)
 					chance = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED);
 				}
 
-				if (spell_id == 2776 && CastToClient()->GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) > 0) {
+				if (spell_id == 8048 && CastToClient()->GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) > 0) {
 					chance = CastToClient()->GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD);
 				}
 				
