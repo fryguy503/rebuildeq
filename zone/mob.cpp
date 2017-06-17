@@ -3255,9 +3255,9 @@ bool Mob::IsRaidZone()  {
 		zone->GetZoneID() == 128 || //Sleeper's Tomb
 		zone->GetZoneID() == 186 || //Plane of Hate B
 		zone->GetZoneID() == 72 || //Plane of Fear
-		zone->GetZoneID() == 71 //Plane of Sky
-		zone->GetZoneID() == 143 //Plane of Growth
-		zone->GetZoneID() == 223 //Plane of Mischief
+		zone->GetZoneID() == 71 || //Plane of Sky
+		zone->GetZoneID() == 143 || //Plane of Growth
+		zone->GetZoneID() == 223 || //Plane of Mischief
 		zone->GetZoneID() == 162 //Plane of Hate
 		;
 }
