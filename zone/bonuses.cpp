@@ -1612,7 +1612,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 		{
 			case SE_CurrentHP: //regens
 				if (caster != nullptr) {
-					if (spell_id == 7 || spell_id == 1448 || spell_id == 714 || spell_id == 748 || spell_id == 1759 || spell_id == 2609 || spell_id == 1169)) {
+					if (spell_id == 7 || spell_id == 1448 || spell_id == 714 || spell_id == 748 || spell_id == 1759 || spell_id == 2609 || spell_id == 1169) {
 						rank = caster->GetBuildRank(BARD, RB_BRD_HEALINGTREBLE);
 						if (rank > 0) {
 							effect_value += (rank * 0.1 * effect_value);
