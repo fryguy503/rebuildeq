@@ -1781,6 +1781,11 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 				sp[tempid].base[0] = 1; //1 hp tick
 				sp[tempid].buffduration = 6; //1 tick
 			}
+			
+			if (tempid == 8190) { //RB_DRU_CONVERGENCEOFSPIRITS
+				sp[tempid].effectid[0] = SE_HealOverTime;
+				sp[tempid].base[0] = 0;
+			}
 		}
     }
 
