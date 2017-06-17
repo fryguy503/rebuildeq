@@ -333,7 +333,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							// Strike
 							rank = casterClient->GetBuildRank(CLERIC, RB_CLR_STRIKE);
-							if (rank > 0 && spell.spell_category == 1) {
+							if (rank > 0 && (spell.spell_category == 1 || spell.spell_category == 2)) {
 								static const float BaseDamageBonus = 0.02f;		// 2% per rank
 								int bonusDamage = rank * BaseDamageBonus * dmg;
 								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Strike %u added %i bonus damage.", rank, -bonusDamage);
