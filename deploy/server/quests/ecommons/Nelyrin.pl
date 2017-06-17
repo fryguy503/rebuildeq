@@ -1,7 +1,7 @@
 sub EVENT_SAY { 
 
 	if ($text=~/brave/i) {
-		quest::say("There are mysterious scattere across Norrath yet to be found. In due time, they will be revealed. (This quest line is not yet available)");
+		quest::say("There are mysteries scattered across Norrath yet to be found. In due time, they will be revealed. (This quest line is not yet available)");
 		return;
 	}
 
