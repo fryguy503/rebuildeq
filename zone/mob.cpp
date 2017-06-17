@@ -3249,6 +3249,19 @@ uint32 Mob::GetZoneID() const {
 	return(zone->GetZoneID());
 }
 
+bool Mob::IsRaidZone()  {
+	return zone->GetZoneID() == 124 || // ToV
+		zone->GetZoneID() == 108 || //VP
+		zone->GetZoneID() == 128 || //Sleeper's Tomb
+		zone->GetZoneID() == 186 || //Plane of Hate B
+		zone->GetZoneID() == 72 || //Plane of Fear
+		zone->GetZoneID() == 71 //Plane of Sky
+		zone->GetZoneID() == 143 //Plane of Growth
+		zone->GetZoneID() == 223 //Plane of Mischief
+		zone->GetZoneID() == 162 //Plane of Hate
+		;
+}
+
 int Mob::GetHaste()
 {
 	// See notes in Client::CalcHaste

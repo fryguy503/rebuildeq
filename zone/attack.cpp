@@ -1940,13 +1940,7 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	if (total_exp_loss < 1 && this->GetLevel() > 10) {
 		return true;
 	}
-	if (GetZoneID() == 124 || //ToV
-		GetZoneID() == 108 || //VP
-		GetZoneID() == 128 || //Sleeper's Tomb
-		GetZoneID() == 186 || //Plane of Hate
-		GetZoneID() == 72 || //Plane of Fear
-		GetZoneID() == 71 //Plane of Sky
-		) {
+	if (IsRaidZone()) {
 		Message(13, "The zone you died in is not eligible for #return");
 		//Update character_custom with empty return zone
 		std::string query = StringFormat("SELECT return_zone FROM character_custom WHERE character_id = %u LIMIT 1", this->CharacterID());
