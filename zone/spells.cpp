@@ -4849,6 +4849,11 @@ float Mob::ResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, bool use
 	uint8 caster_level = level_override > 0 ? level_override : caster->GetLevel();
 	int temp_level_diff = GetLevel() - caster_level;
 
+	if (GetTier() < caster->GetTier()) {
+		//Adjust our resist chance based on tier modifiers
+		temp_level_diff -= GetTier() - caster->GetTier() * ((GetTier() >= 5) ? 2 : 1); //double if tier 5+		
+	}
+
 	//Physical Resists are calclated using their own formula derived from extensive parsing.
 	if (resist_type == RESIST_PHYSICAL) {
 		level_mod = ResistPhysical(temp_level_diff, caster_level);
@@ -4897,6 +4902,10 @@ float Mob::ResistSpell(uint8 resist_type, uint16 spell_id, Mob *caster, bool use
 			if(GetLevel() >= RuleI(Casting,ResistFalloff))
 			{
 				level_diff = (RuleI(Casting,ResistFalloff)-1) - caster_level;
+				if (GetTier() < caster->GetTier()) {
+					//Adjust our resist chance based on tier modifiers
+					level_diff += GetTier() - caster->GetTier() * ((GetTier() >= 5) ? 2 : 1); //double if tier 5+		
+				}
 				if(level_diff < 0)
 				{
 					level_diff = 0;

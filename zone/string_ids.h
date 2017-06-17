@@ -477,6 +477,18 @@
 #define FEAT_GETTINGSTARTED 307
 #define FEAT_PETAFFINITY 308
 
+//Tiers
+#define TIER_1 501
+#define TIER_2 502
+#define TIER_3 503
+#define TIER_4 504
+#define TIER_5 505
+#define TIER_6 506
+#define TIER_7 507
+#define TIER_8 508
+#define TIER_9 509
+
+
 //Build Skills
 #define RB_BRD_ELEMENTALHARMONY 0
 #define RB_BRD_HEALINGTREBLE 2

@@ -1776,12 +1776,15 @@ void Client::OPGMSummon(const EQApplicationPacket *app)
 }
 
 void Client::DoHPRegen() {
+	entity_list.LogHealEvent(this, this, CalcHPRegen() + RestRegenHP);
 	SetHP(GetHP() + CalcHPRegen() + RestRegenHP);
 	if (GetBuildRank(DRUID, RB_DRU_REGENERATION) > 0) {
 		if ((GetLevel() * 0.2f) < 2) {
+			entity_list.LogHealEvent(this, this, 2);
 			SetHP(GetHP() + 2);
 		}
 		else {
+			entity_list.LogHealEvent(this, this, (GetLevel() * 0.2f));
 			SetHP(GetHP() + (GetLevel() * 0.2f));
 		}
 	}

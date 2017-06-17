@@ -1306,3 +1306,28 @@ void Mob::RogueEvade(Mob *other)
 	return;
 }
 
+
+void EntityList::LogHealEvent(Mob *caster, Mob *target, int total_healing) {
+	if (target == nullptr || total_healing == 0) return;
+
+	int net_healing = total_healing;
+	if (target->GetHP() + total_healing > target->GetMaxHP()) {
+		net_healing = target->GetMaxHP() - target->GetHP();		
+	}
+	
+	if (net_healing == 0 && !target->IsClient()) { //Ignore an NPC regenerating
+		return;
+	}
+
+	for (auto it = npc_list.begin(); it != npc_list.end(); ++it) {
+		NPC *mob = it->second;
+
+		if (!mob) continue;
+		if (mob->IsOnHatelist(caster)) {
+			mob->AddHPS(caster, 1, total_healing, net_healing);
+		}
+		if (mob->IsOnHatelist(target)) {
+			mob->AddHPS(target, 0, total_healing, net_healing);
+		}
+	}
+}

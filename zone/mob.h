@@ -54,12 +54,25 @@ namespace EQEmu
 }
 
 struct DPS_Struct {
-	explicit DPS_Struct(uint32 engage_start, int character_id, std::string character_name, float dps, int total_damage) : engage_start(engage_start), character_id(character_id), character_name(character_name), dps(dps), total_damage(total_damage) {};
+	explicit DPS_Struct(uint32 engage_start, int acct_id, int type_id, int ent_id, std::string character_name, float dps, int total_damage, float hps, int total_healing_taken, int net_healing_taken, int tier, int class_id, int is_player, int level, int aggro_count, int total_healing_dealt, int net_healing_dealt) : engage_start(engage_start), acct_id(acct_id), type_id(type_id), ent_id(ent_id), character_name(character_name), dps(dps), total_damage(total_damage), hps(hps), total_healing_taken(total_healing_taken), net_healing_taken(net_healing_taken), tier(tier), class_id(class_id), is_player(is_player), level(level), aggro_count(aggro_count), total_healing_dealt(total_healing_dealt), net_healing_dealt(net_healing_dealt) {};
 	uint32 engage_start;
-	int character_id;
+	int acct_id;
+	int type_id;
+	int ent_id;
 	std::string character_name;
 	float dps;
 	int total_damage;
+	float hps;
+	int total_healing_taken;
+	int net_healing_taken;
+	int tier;
+	int class_id;
+	int is_player;
+	int level;
+	int aggro_count;
+	int total_healing_dealt;
+	int net_healing_dealt;
+
 };
 
 class Mob : public Entity {
@@ -146,7 +159,10 @@ public:
 
 	//Somewhat sorted: needs documenting!
 	void AddDPS(Mob *other, int damage);
+	void AddHPS(Mob *other, bool is_dealer, int total_healing, int net_healing);
+
 	std::vector<DPS_Struct> DPS();
+
 	void EngageReset();
 	uint32 EngageEnd();
 	void EngageFlushOnNextEngage();
@@ -1042,6 +1058,9 @@ public:
 	void DelAssistCap() { --npc_assist_cap; }
 	void ResetAssistCap() { npc_assist_cap = 0; }
 
+	//Figure out the tier of the mob or player
+	int GetTier();
+
 	// Bots HealRotation methods
 #ifdef BOTS
 	bool IsHealRotationTarget() { return (m_target_of_heal_rotation.use_count() && m_target_of_heal_rotation.get()); }
@@ -1426,6 +1445,7 @@ protected:
 
 	uint32 engage_end;
 	bool engage_flush_on_next_engage;
+
 
 private:
 	void _StopSong(); //this is not what you think it is
