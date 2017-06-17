@@ -9281,6 +9281,10 @@ void Client::DoRestedStatus() {
 
 bool Client::InRestedArea() {
 
+	if (GetZoneID() == 201) { //pojustice whole zone is rested
+		return true;
+	}
+
 	if (GetZoneID() == 22 && //ecommons
 		GetX() < 100 && GetX() > -800 &&
 		GetY() < -1500 && GetY() > -2000) {
