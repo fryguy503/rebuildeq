@@ -1602,7 +1602,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 			i = EFFECT_COUNT; //End the loop
 		}
 		
-		if(spell_id == 2754 && CastToNPC()->IsPet()) {
+		if(spell_id == 2754 && IsPet() && IsNPC() && GetOwner()->IsClient()) {
 			Client * client = CastToNPC()->GetOwner()->CastToClient();
 			uint32 rank = client->GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT);
 			effect_value *= (rank / 5.0f);
@@ -1611,7 +1611,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 		switch (effectid)
 		{
 			case SE_CurrentHP: //regens
-				if (caster) {
+				if (caster != nullptr) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_HEALINGTREBLE);
 					if (rank > 0) {
 						effect_value += (rank * 0.1 * effect_value);
@@ -1732,7 +1732,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_TotalHP:
 			{
-				if (spell_id == 6276 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) // Primal Spirit Buff
+				if (spell_id == 6276 && IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) // Primal Spirit Buff
 				{
 					// Change the amount of HP healed to scale with the rank
 					effect_value *= (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) / 5.0f);
@@ -1744,15 +1744,15 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ManaRegen_v2:
 			{
-                                if (caster) {
-                                        rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASCHORUS);
-                                        if (rank > 0) {
-                                                effect_value += (rank * 0.1 * effect_value);
-                                        }
-                                }
-                                new_bonus->ManaRegen += effect_value;
-                                break;
-                        }
+				if (caster != nullptr) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASCHORUS);
+					if (rank > 0) {
+							effect_value += (rank * 0.1 * effect_value);
+					}
+				}
+				new_bonus->ManaRegen += effect_value;
+				break;
+            }
 
 			case SE_CurrentMana:
 			{
