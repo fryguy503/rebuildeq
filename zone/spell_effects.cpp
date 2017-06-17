@@ -647,7 +647,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								if (rank > 0 && casterClient->IsSwornEnemyActive()) {
 									auto aggroMob = entity_list.GetMobID(casterClient->GetEPP().sworn_enemy_id);
 
-									if (aggroMob != NULL && aggroMob->GetID() > 0 && aggroMob->IsNPC()) {
+									if (aggroMob != nullptr && aggroMob->GetID() > 0 && aggroMob->IsNPC() && aggroMob->GetHP() > 0) {
 										casterClient->Message(270, "%s intensifies his hatred towards you.", aggroMob->GetCleanName());
 										aggroMob->AddToHateList(caster, (200 * rank));
 									}
