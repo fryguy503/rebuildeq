@@ -1849,7 +1849,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistFire:
 			{
-				if (caster) {
+				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
@@ -1861,7 +1861,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistCold:
 			{
-				if (caster) {
+				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
@@ -1873,7 +1873,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistPoison:
 			{
-				if (caster) {
+				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
@@ -1885,7 +1885,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistDisease:
 			{
-				if (caster) {
+				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
@@ -1897,7 +1897,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistMagic:
 			{
-				if (caster) {
+				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
@@ -1909,7 +1909,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistAll:
 			{
-				if (caster) {
+				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
@@ -1925,12 +1925,12 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ResistCorruption:
 			{
-				if (caster) {
+				/*if (caster != nullptr) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
 						effect_value += (rank * 10);
 					}
-				}
+				}*/
 				new_bonus->Corrup += effect_value;
 				break;
 			}
@@ -3046,7 +3046,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				break;
 
 			case SE_Rune:
-				if (caster) {
+				if (caster != nullptr) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_SHIELDOFSONGS);
 					if (rank > 0) {
 						effect_value += (rank * 0.2 * effect_value);
@@ -3065,7 +3065,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				break;
 
 			case SE_AbsorbMagicAtt:
-				if (caster) {
+				if (caster != nullptr) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_SHIELDOFSONGS);
 					if (rank > 0) {
 						effect_value += (rank * 0.2 * effect_value);
