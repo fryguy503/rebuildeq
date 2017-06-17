@@ -1550,6 +1550,9 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 	if(!IsAISpellEffect && !IsValidSpell(spell_id))
 		return;
+
+	Client *caster = entity_list.GetClientByID(casterId);
+
 	
 	if(CastToClient()->IsClient()) {
 		int rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_HARKENTHEGODS);
@@ -1608,13 +1611,12 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 		switch (effectid)
 		{
 			case SE_CurrentHP: //regens
-
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_HEALINGTREBLE);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_HEALINGTREBLE);
 					if (rank > 0) {
 						effect_value += (rank * 0.1 * effect_value);
 					}
-					rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_REGENERATION);
+					rank = caster->GetBuildRank(DRUID, RB_DRU_REGENERATION);
 					if (rank > 0) {
 						effect_value += (rank * 0.2 * effect_value);
 					}
@@ -1741,10 +1743,21 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 			}
 
 			case SE_ManaRegen_v2:
+			{
+                                if (caster) {
+                                        rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASCHORUS);
+                                        if (rank > 0) {
+                                                effect_value += (rank * 0.1 * effect_value);
+                                        }
+                                }
+                                new_bonus->ManaRegen += effect_value;
+                                break;
+                        }
+
 			case SE_CurrentMana:
 			{
-				if (IsClient()) {
-					rank = CastToClient()->GetBuildRank(BARD, RB_BRD_CASSINDRASCHORUS);
+				if (caster) {
+					rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASCHORUS);
 					if (rank > 0) {
 						effect_value += (rank * 0.1 * effect_value);
 					}
@@ -2006,7 +2019,6 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ReverseDS:
 			{
-				Client *caster = entity_list.GetClientByID(casterId);
 				if (caster) {
 					rank = caster->GetBuildRank(CLERIC, RB_CLR_MARKOFRETRIBUTION);
 					if (rank > 0) {
