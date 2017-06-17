@@ -389,7 +389,7 @@ public:
 	bool	Merc_AICheckCloseBeneficialSpells(Merc* caster, uint8 iChance, float iRange, uint32 iSpellTypes);
 	Mob*	GetTargetForMez(Mob* caster);
 	uint32	CheckNPCsClose(Mob *center);
-	void EntityList::LogHealEvent(Mob *caster, Mob *target, int total_healing);
+	void LogHealEvent(Mob *caster, Mob *target, int total_healing);
 
 	Corpse* GetClosestCorpse(Mob* sender, const char *Name);
 	NPC* GetClosestBanker(Mob* sender, uint32 &distance);
