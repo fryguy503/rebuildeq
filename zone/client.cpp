@@ -3962,23 +3962,23 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 		if (rank > 0) {
 			int mana_bonus = rank * 20;
 			
-			if (this->IsGrouped()) {
+			if (this->IsGrouped() && IsClient()) {
 				Message(MT_FocusEffect, "Untapped Potential %u gives the group %i mana.", rank, mana_bonus);
 				auto group = this->GetGroup(); //iterate group
-				for (int i = 0; i < 6; ++i) {
-					if (group->members[i] &&  //target grouped
-						group->members[i]->IsClient() && //Is a client												
-						this->GetID() != group->members[i]->GetID() && //not me
-						this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
-						!group->members[i]->CastToClient()->IsDead() //and not dead
-						) {
+				for (int i = 0; i < MAX_GROUP_MEMBERS; i++) {
+					if (group->members[i] == nullptr) continue;					
+					if (!group->members[i]->IsClient()) continue;					
+					Client *c = group->members[i]->CastToClient();
+					if (c->GetZoneID() != GetZoneID()) continue;
+					if (GetID() == c->GetID()) continue;
+					if (c->IsDead()) continue;					
 
-						float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
-						float range2 = 100 * 100;
-						if (dist2 <= range2) {
-							group->members[i]->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
-							group->members[i]->SetMana(group->members[i]->GetMana() + mana_bonus);
-						}
+					float dist2 = DistanceSquared(m_Position, c->GetPosition());
+					float range2 = 100 * 100;
+
+					if (dist2 <= range2) {
+						c->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
+						c->SetMana(c->GetMana() + mana_bonus);
 					}
 				}
 			}
