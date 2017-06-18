@@ -12,7 +12,7 @@ sub EVENT_SAY {
    quest::say("Uglan brave warrior of Oggok. He now in Neriak. Work for dark elves. He NO LIKE dark elves!! He work because we make him. He spy for Crakneks.");
   }
   if ($text=~/book/i) {
-    quest::say("Book lost all over. Doctrine, lost chapters, Rallos made many creatures you know? Ogres first, Giants next. Orcs be third. 4th uhm.. I forget. Oh!! Goblins. Go find me chapters. You get Doctrine.");
+    quest::say("Book lost all over. Doctrine, lost chapters, Rallos made many creatures you know? Each creature, different page.. Ogres first, Giants next. Orcs be third. 4th uhm.. I forget. Oh!! Goblins. Go find me chapters. You get Doctrine.");
   }
 }
 
