@@ -222,6 +222,7 @@ public:
 		}
 		return;
 	}
+	void TierBanish(Mob *target);
 
 	//Appearance
 	void SendLevelAppearance();

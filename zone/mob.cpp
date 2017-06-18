@@ -2023,6 +2023,33 @@ void Mob::SendAppearancePacket(uint32 type, uint32 value, bool WholeZone, bool i
 	safe_delete(outapp);
 }
 
+//Banish a player from zone
+void Mob::TierBanish(Mob * target) {
+	if (target == nullptr) return;
+	if (!target->IsClient()) return;
+	
+	
+
+	target->BuffFadeNonPersistDeath(); //strip buffs
+
+	//put rez effects
+	int SpellEffectDescNum = GetSpellEffectDescNum(1524); //Reviviscence
+														  // Rez spells with Rez effects have this DescNum (first is Titanium, second is 6.2 Client)
+	if ((SpellEffectDescNum == 82) || (SpellEffectDescNum == 39067)) {
+		target->SetMana(0);
+		int hp = target->GetHP();
+		if (hp > (target->GetMaxHP() / 5)) hp = target->GetMaxHP() / 10;
+		target->SetHP(hp);
+		target->SpellOnTarget(756, target->CastToMob()); // Rezz effects
+	}
+	target->Message(MT_Experience, "%s banished you for being the 7th player to engage him. Tier monsters can only be engaged by 6 players at a time.", GetCleanName());
+	Say("You are not worthy of my attention, %s, BEGONE!", target->GetCleanName());
+	
+	//banish
+	target->CastToClient()->MovePC(zone->GetZoneID(), zone->GetInstanceID(), 0, 0, 0, 0, 0, EvacToSafeCoords);
+	return;
+}
+
 void Mob::SendLevelAppearance(){
 	auto outapp = new EQApplicationPacket(OP_LevelAppearance, sizeof(LevelAppearance_Struct));
 	LevelAppearance_Struct* la = (LevelAppearance_Struct*)outapp->pBuffer;

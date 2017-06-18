@@ -56,7 +56,7 @@ public:
 
 	std::list<struct_HateList*>& GetHateList() { return list; }
 	int GetAggroCount() { return list.size(); }
-
+	int GetClientAggroCount();
 	void AddEntToHateList(Mob *ent, int32 in_hate = 0, int32 in_damage = 0, bool in_is_frenzied = false, bool add_to_hate_list_if_not_exist = true);
 	void DoFactionHits(int32 npc_faction_level_id);
 	void IsEntityInFrenzyMode();

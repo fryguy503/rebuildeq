@@ -176,6 +176,19 @@ Mob* HateList::GetClosestEntOnHateList(Mob *hater) {
 	return close_entity;
 }
 
+//Count how many players (non-pet) are on aggro list
+int HateList::GetClientAggroCount()
+{
+	int clientCount = 0;
+	auto iterator = list.begin();
+	while (iterator != list.end())
+	{
+		if ((*iterator)->entity_on_hatelist && (*iterator)->entity_on_hatelist->IsClient()) clientCount++;
+		++iterator;
+	}
+	return clientCount;
+}
+
 void HateList::AddEntToHateList(Mob *in_entity, int32 in_hate, int32 in_damage, bool in_is_entity_frenzied, bool iAddIfNotExist)
 {
 	if (!in_entity)
@@ -186,6 +199,11 @@ void HateList::AddEntToHateList(Mob *in_entity, int32 in_hate, int32 in_damage, 
 
 	if (in_entity->IsClient() && in_entity->CastToClient()->IsDead())
 		return;
+
+	//Banish logic for tier encounters
+	if (hate_owner != nullptr && hate_owner->GetTier() > 0 && !IsEntOnHateList(in_entity) && GetClientAggroCount() >= 6) {
+		hate_owner->TierBanish(in_entity);
+	}
 
 
 	struct_HateList *entity = Find(in_entity);
