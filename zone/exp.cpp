@@ -626,7 +626,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 				Message(15, "Welcome to level %i!", check_level);
 
 			if (check_level == RuleI(Character, DeathItemLossLevel))
-				Message_StringID(15, CORPSE_ITEM_LOST);
+				Message(15, "Your items will no longer stay with you when you respawn on death. You will now need to return to your corpse for your items.");
 
 			if (check_level == RuleI(Character, DeathExpLossLevel))
 				Message_StringID(15, CORPSE_EXP_LOST);
