@@ -5270,11 +5270,20 @@ void NPC::UnStun() {
 
 void Mob::Mesmerize()
 {
+	//Let's try to strip negative spells off target once mezzed
+	int buff_count = GetMaxTotalSlots();
+	for (int slot = 0; slot < buff_count; slot++) {
+		if (!IsNPC()) continue;
+		if (buffs[slot].spellid != SPELL_UNKNOWN) continue;
+		if (IsDetrimentalSpell(buffs[slot].spellid)) continue;
+		BuffFadeBySlot(slot);
+	}
+
 	mezzed = true;
 
 	if (casting_spell_id)
 		InterruptSpell();
-
+	
 	SendPosition();
 /* this stuns the client for max time, with no way to break it
 	if (this->IsClient()){
