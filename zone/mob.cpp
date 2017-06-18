@@ -6896,6 +6896,7 @@ void Mob::AddDPS(Mob *other, int damage) {
 void Mob::AddHPS(Mob *other, bool is_dealer, int total_healing, int net_healing) {
 	if (other == nullptr) return;
 	if (total_healing < 1) return;
+	if (IsPet()) return; 
 	//net_healing could be zero, since the heal could do nothing, we still track it.
 
 
