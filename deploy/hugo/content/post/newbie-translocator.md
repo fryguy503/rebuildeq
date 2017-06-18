@@ -4,7 +4,7 @@ date = "2017-06-17T21:45:18-07:00"
 description = "Newbie Translocator"
 images = ["post/images/newbie-translocator.png"]
 menu = ""
-tags = ["fragment", card", "#return", "#rest", "npc", "items", "#feat", cleric","bard","shadowknight","druid"]
+tags = ["fragment", "card", "#return", "#rest", "npc", "items", "#feat", cleric","bard","shadowknight","druid"]
 title = "Newbie Translocator"
 
 +++
