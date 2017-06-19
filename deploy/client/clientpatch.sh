@@ -15,9 +15,9 @@ if [ ! -d ../patch/rof ]; then
    mkdir ../patch/rof
 fi
 
-cp -R * ../patch/rof/
+cp -R ../patch/rof/
 
-rm ../patch/filelistbuilder
-rm ../patch/filelistbuilder.yml
-rm ../patch/delete.txt
+rm ../patch/rof/filelistbuilder
+rm ../patch/rof/filelistbuilder.yml
+rm ../patch/rof/delete.txt
 echo "Complete."
