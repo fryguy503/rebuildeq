@@ -1,4 +1,18 @@
+#bin and build for temp build files
 bin/
+/Build/
+/build/
+Build32/
+build32/
+Build64/
+build64/
+Build_32/
+build_32/
+Build_64/
+build_64/
+
+
+# deploy/server stuff that needs ignored.
 deploy/server/eqemu_config.xml
 deploy/server/*.lock
 deploy/server/eqcleanup-linux64
@@ -7,8 +21,40 @@ deploy/server/backups/
 deploy/server/db_update/
 deploy/server/db_dumper.pl
 deploy/server/login.ini
+deploy/server/queryserv
+deploy/server/shared_memory
+deploy/server/ucs
+deploy/server/world
+deploy/server/zone
+deploy/server/.bash_history
+deploy/server/eqlaunch
+deploy/server/export_client_files
+deploy/server/import_client_files
+deploy/server/EQEmu.sln
+deploy/server/EQEmu.sdf
+deploy/server/EQEmu.opensdf
+deploy/server/common/
+deploy/server/client_files/
+deploy/server/luabind/
+deploy/server/Win32/
+deploy/server/eqlaunch/
+deploy/server/shared/*
 
+# Dependencies
+/dependencies/boost/boost
+/dependencies/libsodium
+/dependencies/luaj_x64
+/dependencies/mysql_x64
+/dependencies/openssl_x64/include/openssl
+/dependencies/zlib_x64
+
+# This is the file list builder exe
 deploy/client/filelistbuilder*
+
+# This is where patchfiles export to once we prep a patch
+deploy/client/patch
+
+#docker related
 .bash_history 
 
 #logs are ignored for versioning
@@ -45,39 +91,8 @@ CMakeFiles
 Makefile
 cmake_install.cmake
 install_manifest.txt
-/Build/
-/build/
-Build32/
-build32/
-Build64/
-build64/
-Build_32/
-build_32/
-Build_64/
-build_64/
-deploy/server/queryserv
-deploy/server/shared_memory
-deploy/server/ucs
-deploy/server/world
-deploy/server/zone
+
+# Visual Studio files
 *.vcxproj
 *.filters
-deploy/server/.bash_history
-deploy/server/eqlaunch
-deploy/server/export_client_files
-deploy/server/import_client_files
-deploy/server/EQEmu.sln
-deploy/server/EQEmu.sdf
-deploy/server/EQEmu.opensdf
-deploy/server/common/
-deploy/server/client_files/
-deploy/server/luabind/
-deploy/server/Win32/
-deploy/server/eqlaunch/
-deploy/server/shared/*
-/dependencies/boost/boost
-/dependencies/libsodium
-/dependencies/luaj_x64
-/dependencies/mysql_x64
-/dependencies/openssl_x64/include/openssl
-/dependencies/zlib_x64
+
