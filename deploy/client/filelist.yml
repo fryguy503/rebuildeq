@@ -1,5 +1,5 @@
 version: "20170618"
-downloadprefix: http://rebuildeq.com/patch/
+downloadprefix: https://storage.googleapis.com/rebuildeq/
 downloads:
 - name: Resources\GlobalLoad.txt
   md5: b0585263285fafc683defce922bde67d
@@ -18,9 +18,9 @@ downloads:
   date: "20170531"
   size: 136
 - name: hateplaneb_chr.txt
-  md5: f0c040ade8f39fdfb27bb66ff3b7d33f
+  md5: ceb0cc45d2839f43fbc0d0c7d66dff30
   date: "20170618"
-  size: 267
+  size: 287
 - name: hole_chr.txt
   md5: 128e65e5ae4c04dfddbac45abc620a54
   date: "20170531"

@@ -1,6 +1,6 @@
 # automatic eol conversions
 * text=auto
-
+deploy/client/ binary
 *.c text
 *.cc text
 *.cpp text
