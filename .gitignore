@@ -52,7 +52,8 @@ deploy/server/shared/*
 /dependencies/zlib_x64
 
 # This is the file list builder exe
-deploy/client/filelistbuilder*
+deploy/client/rof/patch.zip
+deploy/client/rof/filelist*
 
 # This is where patchfiles export to once we prep a patch
 deploy/client/patch/*
