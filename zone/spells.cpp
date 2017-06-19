@@ -5274,6 +5274,7 @@ void Mob::Mesmerize()
 	int buff_count = GetMaxTotalSlots();
 	for (int slot = 0; slot < buff_count; slot++) {
 		if (!IsNPC()) continue;
+		if (buffs[slot].spellid == casting_spell_id) continue;
 		if (buffs[slot].spellid == SPELL_UNKNOWN) continue;
 		if (!IsDetrimentalSpell(buffs[slot].spellid)) continue;
 		BuffFadeBySlot(slot);
