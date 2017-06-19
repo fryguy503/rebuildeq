@@ -16,6 +16,27 @@ download:
   - spells_us.txt:
     md5: 4012A903B97A93BD913851AF50A6C07D
     date: 20170614
-  - Resources\GlobalLoad.txt:
+  - Resources/GlobalLoad.txt:
     md5: B0585263285FAFC683DEFCE922BDE67D
+    date: 20170612
+  - Resources/GlobalLoad_chr.txt:
+    md5: 2028AB5B7CE133BA4F0802B84038C26C
+    date: 20170612
+  - Resources/loadscreen.jpg:
+    md5: 2FE479736F24E58F7C5F085D5C9102A2
+    date: 20170612
+  - frontiermtns_chr.txt:
+    md5: 20CCA2D20E30CE1C348B95386AD09D7A
+    date: 20170612
+  - hateplaneb_chr.txt:
+    md5: CEB0CC45D2839F43FBC0D0C7D66DFF30
+    date: 20170612
+  - hole_chr.txt:
+    md5: 128E65E5AE4C04DFDDBAC45ABC620A54
+    date: 20170612
+  - lavastorm_chr.txt:
+    md5: 2FDF636625B7C51092D9EA9961BAFF71
+    date: 20170612
+  - rathemtn_chr.txt:
+    md5: B8B29926EE286E159239DFACEA43154C
     date: 20170612
