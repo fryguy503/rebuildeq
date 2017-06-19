@@ -1,0 +1,21 @@
+#NOTE: If you manually patch, you will have to remove certain files by hand.
+version: 20170617 #date of patch
+md5: 
+
+#remove files listed below from your everquest directory.
+remove:
+  - nektulos.eqg:
+    md5: AD455CAD53CF2E8449E8C98757A1A9B1
+    date: 20170617
+
+#download these files. Prefix is http://rebuildeq.com/patch/
+download:
+  - nektulos.s3d:
+    md5: A149E1F59E5AF9652933A39B095C493E
+    date: 20170615
+  - spells_us.txt:
+    md5: 4012A903B97A93BD913851AF50A6C07D
+    date: 20170614
+  - Resources\GlobalLoad.txt:
+    md5: B0585263285FAFC683DEFCE922BDE67D
+    date: 20170612
