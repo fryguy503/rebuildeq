@@ -8,6 +8,7 @@ deploy/server/db_update/
 deploy/server/db_dumper.pl
 deploy/server/login.ini
 
+deploy/client/filelistbuilder*
 .bash_history 
 
 #logs are ignored for versioning

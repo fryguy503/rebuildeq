@@ -1,42 +1,35 @@
-#NOTE: If you manually patch, you will have to remove certain files by hand.
-version: 20170617 #date of patch
-md5: 
-
-#remove files listed below from your everquest directory.
-remove:
-  - nektulos.eqg:
-    md5: AD455CAD53CF2E8449E8C98757A1A9B1
-    date: 20170617
-
-#download these files. Prefix is http://rebuildeq.com/patch/
-download:
-  - nektulos.s3d:
-    md5: A149E1F59E5AF9652933A39B095C493E
-    date: 20170615
-  - spells_us.txt:
-    md5: 4012A903B97A93BD913851AF50A6C07D
-    date: 20170614
-  - Resources/GlobalLoad.txt:
-    md5: B0585263285FAFC683DEFCE922BDE67D
-    date: 20170612
-  - Resources/GlobalLoad_chr.txt:
-    md5: 2028AB5B7CE133BA4F0802B84038C26C
-    date: 20170612
-  - Resources/loadscreen.jpg:
-    md5: 2FE479736F24E58F7C5F085D5C9102A2
-    date: 20170612
-  - frontiermtns_chr.txt:
-    md5: 20CCA2D20E30CE1C348B95386AD09D7A
-    date: 20170612
-  - hateplaneb_chr.txt:
-    md5: CEB0CC45D2839F43FBC0D0C7D66DFF30
-    date: 20170612
-  - hole_chr.txt:
-    md5: 128E65E5AE4C04DFDDBAC45ABC620A54
-    date: 20170612
-  - lavastorm_chr.txt:
-    md5: 2FDF636625B7C51092D9EA9961BAFF71
-    date: 20170612
-  - rathemtn_chr.txt:
-    md5: B8B29926EE286E159239DFACEA43154C
-    date: 20170612
+version: "20170618"
+downloadprefix: http://rebuildeq.com/patch/
+downloads:
+- name: Resources\GlobalLoad.txt
+  md5: b0585263285fafc683defce922bde67d
+  date: "20130611"
+  size: 2142
+- name: Resources\GlobalLoad_chr.txt
+  md5: 2028ab5b7ce133ba4f0802b84038c26c
+  date: "20130611"
+  size: 173
+- name: Resources\loadscreen.jpg
+  md5: 2fe479736f24e58f7c5f085d5c9102a2
+  date: "20130611"
+  size: 363372
+- name: frontiermtns_chr.txt
+  md5: 20cca2d20e30ce1c348b95386ad09d7a
+  date: "20170531"
+  size: 136
+- name: hateplaneb_chr.txt
+  md5: ceb0cc45d2839f43fbc0d0c7d66dff30
+  date: "20170531"
+  size: 287
+- name: hole_chr.txt
+  md5: 128e65e5ae4c04dfddbac45abc620a54
+  date: "20170531"
+  size: 74
+- name: lavastorm_chr.txt
+  md5: 2fdf636625b7c51092d9ea9961baff71
+  date: "20170531"
+  size: 230
+- name: rathemtn_chr.txt
+  md5: b8b29926ee286e159239dfacea43154c
+  date: "20170531"
+  size: 331
