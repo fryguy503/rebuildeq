@@ -11,6 +11,9 @@ build_32/
 Build_64/
 build_64/
 
+# eqemu temp files
+*.oldlock
+
 
 # deploy/server stuff that needs ignored.
 deploy/server/eqemu_config.xml
@@ -52,7 +55,7 @@ deploy/server/shared/*
 deploy/client/filelistbuilder*
 
 # This is where patchfiles export to once we prep a patch
-deploy/client/patch
+deploy/client/patch/*
 
 #docker related
 .bash_history 

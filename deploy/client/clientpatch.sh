@@ -15,7 +15,7 @@ if [ ! -d ../patch/rof ]; then
    mkdir ../patch/rof
 fi
 
-cp -R ../patch/rof/
+cp -R * ../patch/rof/
 
 rm ../patch/rof/filelistbuilder
 rm ../patch/rof/filelistbuilder.yml
