@@ -4,6 +4,7 @@ set -e
 #used to deploy a client patch
 cd rof
 ./filelistbuilder
+rm -rf ../patch/rof/*
 
 if [ ! -d ../patch ]; then
    echo "Making patch directory..."
