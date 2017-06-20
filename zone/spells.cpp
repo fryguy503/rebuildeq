@@ -5277,6 +5277,7 @@ void Mob::Mesmerize()
 		if (buffs[slot].spellid == casting_spell_id) continue;
 		if (buffs[slot].spellid == SPELL_UNKNOWN) continue;
 		if (!IsDetrimentalSpell(buffs[slot].spellid)) continue;
+		if (IsMezSpell(buffs[slot].spellid)) continue;		
 		BuffFadeBySlot(slot);
 	}
 
