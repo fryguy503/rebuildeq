@@ -4474,6 +4474,17 @@ void command_teleport(Client *c, const Seperator *sep) {
 	
 	// Handle: Player is trying to #teleport to a location.
 	if (sep->arg[1] && strlen(sep->arg[1]) > 0 ) {
+		if (strcasecmp(sep->arg[1], "info") == 0) {
+			const char *message = "The #teleport command is used to simplify teleporting around Norrath. <br> \
+				You will find in certain zones (typically where druid/wizard can teleport) will have a chance of fragments dropping off every mob in the zone. The chance is low, and once looted the item dissapears, and you unlock the ability to #teleport to the zone in the future.<br> \
+				<br> \
+				Teleporting is only available when the following situation is true: <br> \
+				* Not in combat.<br> \
+				* At full health.<br> \
+				* Have enough platinum either in your inventory or in bank.";
+			c->SendPopupToClient("Teleport Info", message);
+			return;
+		}
 		auto location = search(sep->arg[1]);
 
 		// Handle: Invalid zone.
@@ -4563,6 +4574,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 			ss << " [ " << c->CreateSayLink(StringFormat("#teleport %s", i.ZoneName.c_str()).c_str(), i.ZoneName.c_str()) << " ] ";
 		}
 	}
+	ss << " (" << c->CreateSayLink("#teleport info", "info") << ")";
 
 	c->Message(0, ss.str().c_str());
 }
