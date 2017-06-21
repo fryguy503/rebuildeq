@@ -47,4 +47,3 @@ services:
       - mariadb
     ports:
       - "80:80"
-  #  network_mode: "bridge"
