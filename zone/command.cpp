@@ -4574,7 +4574,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 			ss << " [ " << c->CreateSayLink(StringFormat("#teleport %s", i.ZoneName.c_str()).c_str(), i.ZoneName.c_str()) << " ] ";
 		}
 	}
-	ss << " (" << c->CreateSayLink("#teleport info", "info") << ")";
+	ss << " ( " << c->CreateSayLink("#teleport info", "info") << " )";
 
 	c->Message(0, ss.str().c_str());
 }
@@ -4727,17 +4727,24 @@ void command_refer(Client *c, const Seperator *sep) {
 }
 
 void command_return(Client *c, const Seperator *sep) {
+	if (sep->arg[1] && strlen(sep->arg[1]) > 0 && strcasecmp(sep->arg[1], "info") == 0) {
+		const char *message = "The #return command is used to return a player to the safe point of a zone they last died at. <br> \
+				Only your most recent death, with experience loss, is allowed to be returned to. Be careful to not bind in a location that death may happen, as your return point may be overwritten. If you die in a zone flagged raid zone (You get a notification on zoning in), the return feature will not work either.<br> \
+				<br> \
+				Return is only available when the following situation is true: <br> \
+				Not in combat.<br> \
+				At full health.<br> \
+				You are not in the zone you last died.<br> \
+				Have enough platinum either in your inventory or in bank.";
+		c->SendPopupToClient("Return Info", message);
+		return;
+	}
 	if (c->GetAggroCount() > 0) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
 	if (c->GetHPRatio() < 100) {
 		c->Message(0, "This command does not work until full health.");
-		return;
-	}
-
-	if (c->GetAggroCount() > 0) {
-		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
 
@@ -4809,9 +4816,9 @@ void command_return(Client *c, const Seperator *sep) {
 		return;
 	}
 	if (returnZoneName == "") {
-		c->Message(0, "It costs %s to use #return at your level. You have not died recently.", displayCost.c_str());
+		c->Message(0, "It costs %s to use #return at your level. You have not died recently. ( %s )", displayCost.c_str(), c->CreateSayLink("#return info", "info").c_str());
 	} else {
-		c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ]", displayCost.c_str(), returnZoneName.c_str(), c->CreateSayLink("#return confirm", "Confirm").c_str());
+		c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ] ( %s )", displayCost.c_str(), returnZoneName.c_str(), c->CreateSayLink("#return confirm", "confirm").c_str(), c->CreateSayLink("#return info", "info").c_str());
 	}
 }
 
