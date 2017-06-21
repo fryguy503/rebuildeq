@@ -86,11 +86,17 @@ sub EVENT_AGGRO {
 }
 
 sub EVENT_ITEM {
-	if(plugin::check_handin(\%itemcount, 16503 =>1)) { #enchanted bar
+	if(plugin::check_handin(\%itemcount, 16503 =>1)) { #platinum
 		quest::say("mez can enchant dis bar, me thinks.. watch dis..!");
 		quest::summonitem(16507);
 		$entity_list->GetMobID($mobid)->CastToNPC()->SpellEffect(22);
 	}
+
+  if(plugin::check_handin(\%itemcount, 16501 =>1)) { #electrum
+    quest::say("mez can enchant dis bar, me thinks.. watch dis..!");
+    quest::summonitem(16505);
+    $entity_list->GetMobID($mobid)->CastToNPC()->SpellEffect(22);
+  }
 
 	if(plugin::check_handin(\%itemcount, 13977 =>1)) { #carrot
 		quest::say("mez can enchant dis orange thingie! magicals away!");
