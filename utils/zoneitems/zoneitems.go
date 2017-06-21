@@ -63,10 +63,11 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	insertQuery := "INSERT INTO zone_drops (item_id, npc_id, zone_short_name, zone_id) VALUES (?, ?, ?, ?),"
+	insertQuery := "REPLACE INTO zone_drops (item_id, npc_id, zone_short_name, zone_id) VALUES"
 	insertVals := []interface{}{}
 
 	for _, zone := range zones {
+		lastInsertCount := insertCount
 		fmt.Print("\n" + zone.Short_name.String + "...")
 		spawns := []spawn.Spawn2{}
 		if spawns, err = db.getSpawns(zone.Short_name.String); err != nil {
@@ -109,6 +110,18 @@ func main() {
 								}
 								insertQuery += "(?, ?, ?, ?),"
 								insertVals = append(insertVals, itementry.Id, npc.Id, zone.Short_name, zone.Id)
+
+								if insertCount%10000 == 0 {
+									fmt.Print(", inserting 10k records...")
+									insertQuery = insertQuery[0 : len(insertQuery)-1]
+									stmt, _ := db.instance.Prepare(insertQuery)
+									if _, err = stmt.Exec(insertVals...); err != nil {
+										log.Fatal(err.Error())
+									}
+									//reset query
+									insertQuery = "REPLACE INTO zone_drops (item_id, npc_id, zone_short_name, zone_id) VALUES"
+									insertVals = []interface{}{}
+								}
 								//fmt.Printf(itementry.Name + ", ")
 								//db.instance.Exec("(?,?,?,?)", itementry.Id, npc.Id, zone.Short_name, zone.Id)
 							}
@@ -118,6 +131,7 @@ func main() {
 			}
 
 		}
+		fmt.Printf("(%d)", (insertCount - lastInsertCount))
 	}
 	//trim the last
 	insertQuery = insertQuery[0 : len(insertQuery)-1]
