@@ -17,7 +17,7 @@ class Controller_Web_BuildSkill extends Template_Web_Core {
 		$skills = array();
 
 
-		$skillid = intval($this->request->param('skillid'));
+		$skillid = $this->request->param('skillid');
 		$build = Build::get_build_info($class);
 		$skills = Build::get_skills($class);
 
@@ -26,26 +26,37 @@ class Controller_Web_BuildSkill extends Template_Web_Core {
 			return;
 		}
 
+		$this->template->crumbs[] =	(object)array("name" => ucfirst($class), "link" => "/builds/".$class."/");
+		$this->template->crumbs[] =	(object)array("name" => "Skill", "link" => "/builds/".$class."/skill/");
+		$this->template->class = $class;
+		$this->template->monogram = $build->monogram;
+		$this->template->styles = $build->styles;
+
+		$this->template->fullName = $build->fullName;
+		$this->template->classDescription = $build->desc;
+
+		//$this->template->site->image = $class->image;
+		$this->template->site->title = "Build Skills | ".ucfirst($class);
+		$this->template->site->description = strip_tags($build->desc);
+
+		if (strlen($skillid) == 0) {
+			$this->template->skills = $skills;
+			return;
+		}
+		$skillid = intval($skillid);
+
 		if (empty($skills[$skillid])) {
 			$this->redirect('/builds/');
 			return;
 		}
-		//print_r($class);
-		//exit;
-		$this->template->crumbs[] =	(object)array("name" => ucfirst($class), "link" => "/builds/shadowknight/");
-		$this->template->crumbs[] =	(object)array("name" => "Skill", "link" => "/builds/shadowknight/skill/");
+		
 		
 
 		$skill = $skills[$skillid];
 		$this->template->crumbs[] =	(object)array("name" => $skill->title);
-		$this->template->class = $class;
 		$this->template->skill = $skill;
-		$this->template->monogram = $build->monogram;
-		$this->template->styles = $build->styles;
 		$this->template->site->image = $skill->image;
 		$this->template->site->title = $skill->title." | ".ucfirst($class);
-		$this->template->fullName = $build->fullName;
-		$this->template->classDescription = $build->desc;
 		$this->template->site->description = strip_tags($skill->title." ".$skill->desc);
 	}
 
