@@ -1013,7 +1013,7 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Killing Spree";
 			$newSkill->desc = 'Each time a creature is successfully killed, the rogue gains a killing spree counter. For a limited time, attacks deal an additional <em data-base="5">5</em>% damage per counter, with a cap of <em data-base="2">2</em> counters<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-appraisal.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-killingspree.png";
 			$skills[2] = $newSkill;
 			$newSkill = new stdClass();
 			$newSkill->title = "Thief's Eyes";
@@ -1029,7 +1029,7 @@ class Build {
 			$newSkill->title = "Sneak Attack";
 			$newSkill->desc = 'If a rogue is sneaking and uses a backstab while an enemy is greater than 70% hp, their chance to hit with a backstab increases by <em data-base="2000">2000</em>% and critical chance increases by <em data-base="10">10</em>% <span class="perLevel"> per rank</span>.';
 
-			$newSkill->image = "/images/builds/icons/rb-rog-sinisterstrikes.png";	
+			$newSkill->image = "/images/builds/icons/rb-rog-sneakattack.png";	
 			$skills[8] = $newSkill;
 			$newSkill = new stdClass();
 			$newSkill->title = "Focused Stab";
@@ -1052,97 +1052,97 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Sleight Distraction";
 			$newSkill->desc = 'When the rogue successfully pick pockets an enemy (even if they do not obtain an item), the enemy has a <em data-base="10">10</em>% chance to be distracted for a short duration. The next time the enemy attacks the rogue it has a very high chance of missing. <span class="perLevel"> per rank</span>';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";	
+			$newSkill->image = "/images/builds/icons/rb-rog-sleightdistraction.png";	
 			$skills[18] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jarring Stab";
 			$newSkill->desc = 'When the rogue successfully backstabs an enemy, they have a <em data-base="2">2</em>% chance to cause all enemies that are hated by the rogue to <em data-base="20">20</em> hate<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-jarringstab.png";
 			$skills[20] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Untapped Potential";
 			$newSkill->desc = 'Pick pocket now gives the group <em data-base="20">20</em> mana on success<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-untappedpotential.png";
 			$skills[22] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Confuse";
 			$newSkill->desc = 'When a rogue uses beg on an enemy, there is a very small chance to cause the enemy to be mesmerized for 6 seconds.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-confuse.png";
 			$skills[24] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Gangster's Paradise";
 			$newSkill->desc = 'Rogue melee attacks passively cause <em data-base="10">10</em> less hate per attack, and when a rogue is out of combat and does not move for some time, they have a chance to gain a Shroud of Stealth like state. The chances of gaining Shroud of Stealth is increased when two rogues are grouped and near each other.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-gangstersparadise.png";
 			$skills[26] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Moss Stone";
 			$newSkill->desc = 'When throw stone is used on a creature with less than 20% health and is not snared, it has a <em data-base="20">20</em>% chance to ensnare the enemy.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-mossstone.png";
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Duelist";
 			$newSkill->desc = 'While engaged with a single enemy who is lesser level than them, the rogue gains improved evasion. Many factors decrease the effectiveness of this skill, such as the level of the enemy and how much health they have.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-duelist.png";
 			$skills[31] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Escape";
 			$newSkill->desc = 'Grants the Escape AA, allowing the rogue to escape combat instantly for 50% of your endurance bar. Endurance cost is reduced by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-escape.png";
 			$skills[34] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Sleight of Strength";
 			$newSkill->desc = 'When the rogue successfully pick pockets, there is a <em data-base="2">2</em>%<span class="perLevel"> chance they will obtain a random beneficial buff for a short duration <span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-sleightofstrength.png";
 			$skills[36] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Haggle";
 			$newSkill->desc = 'When a rogue sells or buys items, the price is improved by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-haggle.png";
 			$skills[38] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Hidden Stash";
 			$newSkill->desc = 'When a rogue pickpockets, they have a <em data-base="2">2</em>% chance to find a hidden stash of coin<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-hiddenstash.png";
 			$skills[40] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Throwing Precision";
 			$newSkill->desc = 'Increases the minimum damage of throwing daggers by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-throwingprecision.png";
 			$skills[42] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Mugging Shot";
 			$newSkill->desc = 'Adds a special proc based on the offhand wielded by the rogue, has a <em data-base="100">100</em> proc rate<span class="perLevel"> per rank</span>.<br>Mace: Lowers aggro by <em data-base="50">50</em> hate and interrupts foe.<br>	Sword: Deals <em data-base="5">5</em> damage. Dagger: Drains mana by <em data-base="100">100</em> and deals <em data-base="2">2</em> damage.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-muggingshot.png";
 			$skills[44] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Deadly Dagger";
 			$newSkill->desc = 'Increases the maximum damage of throwing daggers by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-deadlydagger.png";
 			$skills[46] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Thieves' Affinity";
 			$newSkill->desc = 'Increases proc chance of innate and card weapon procs by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-thievesaffinity.png";
 			$skills[49] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Hidden Dagger";
 			$newSkill->desc = 'If an enemy is not engaged, and is hit by a dagger thrown by a rogue sneaking, it will break sneak, and has a <em data-base="15">15</em>% chance to not be social<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";
+			$newSkill->image = "/images/builds/icons/rb-rog-hiddendagger.png";
 			$skills[52] = $newSkill;
 			break;
 			
@@ -1152,149 +1152,149 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit of Speed";
 			$newSkill->desc = 'Spirit of Wolf lasts <em data-base="20">20</em>% longer<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-spiritofspeed.png";
 			$skills[0] = $newSkill;
 			//1
 			//2
 			$newSkill = new stdClass();
 			$newSkill->title = "Purify Soul";
 			$newSkill->desc = 'Grants the Purify Soul AA, which cures target of disease, poison, as well as gives a <em data-base="10">10</em>% chance to heal the target by <em data-base="1">1</em>% max HP per tick regen<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";
+			$newSkill->image = "/images/builds/icons/rb-shm-purifysoul.png";
 			$skills[2] = $newSkill;
 			//3
 			//4
 			$newSkill = new stdClass();
 			$newSkill->title = "Ancestral Aid";
 			$newSkill->desc = 'Grants the Ancestral Aid AA, which casts focus line buff scaled to your level.<br>Rank 1: +STR<br>Rank 2: +DEX<br>Rank 3: +AGI<br>Rank 4: +STA<br>Rank 5: +HP';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";
+			$newSkill->image = "/images/builds/icons/rb-shm-ancestralaid.png";
 			$skills[4] = $newSkill;
 			//5
 			//6
 			$newSkill = new stdClass();
 			$newSkill->title = "Extended Haste";
 			$newSkill->desc = 'Improves attack speed spells used by the caster by increasing their duration by <em data-base="30">30</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";
+			$newSkill->image = "/images/builds/icons/rb-shm-extendedhaste.png";
 			$skills[6] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Healing";
 			$newSkill->desc = 'Heals recover an additional <em data-base="15">15</em>% health<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-spiritualhealing.png";	
 			$skills[8] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Covenant of Spirit";
 			$newSkill->desc = 'Grants the Covenent of Spirit AA, which imbues divine intervention on the target with a <em data-base="2">2</em>% chance to save<span class="perLevel"> per rank</span>.<b>NOT IMPLEMENTED</b>';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-covenantofspirit.png";
 			$skills[10] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Reinforce Torpor";
 			$newSkill->desc = '- NOT IMPLEMENTED - Reduces the negative effects of Stoicism and Torpor by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-reinforcetorpor.png";
 			$skills[13] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fateseer's Boon";
 			$newSkill->desc = 'Grants the Lesson of the Devoted AA, giving a group buff that increases critical damage by 70% with all skills, chance to critical hit by 50% with all skills, as well as a 400 hitpoint per tick regen. Each rank increases duration by <em data-base="12">12</em> seconds<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-fateseersboon.png";
 			$skills[16] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Cannibalize";
 			$newSkill->desc = 'Grants the Cannibalization AA, causing <em data-base="5">5</em>% current HP loss in exchange for mana at <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-cannibalize.png";	
 			$skills[18] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit Call";
 			$newSkill->desc = 'Grants the Spirit Call AA, summoning a racial pet with <em data-base="10">10</em>% effectiveness<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-5.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-spiritcall.png";
 			$skills[20] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Virulent Paralysis";
 			$newSkill->desc = 'Grants the Virulent Paralysis AA, causing a target to be immobilized. Each rank increases duration by <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-6.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-virulentparalysis.png";
 			$skills[22] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Poison";
 			$newSkill->desc = 'All poison-based DoTs now deal <em data-base="5">5</em>% additional damage<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-8.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-poison.png";
 			$skills[24] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Extended Turgur";
 			$newSkill->desc = 'Increases duration of slow by <em data-base="5">5</em>% as well as penetrates magic defense by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-extendedturgur.png";
 			$skills[26] = $newSkill;
 			//37
 			//38
 			$newSkill = new stdClass();
 			$newSkill->title = "Ancient Wrath";
 			$newSkill->desc = 'All direct damage spells now deal <em data-base="10">10</em>% more damage as well as <em data-base="1">1</em>% chance to critical hit<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-1.png";
+			$newSkill->image = "/images/builds/icons/rb-shm-ancientwrath.png";
 			$skills[28] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Turgur's Echo";
 			$newSkill->desc = 'When a slow-based spell is resisted, the spell will have a <em data-base="2">2</em>% chance to try again to land.<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-2.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-turgursecho.png";	
 			$skills[31] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Channeling";
 			$newSkill->desc = 'While this ability is active, all spells cost HP rather than mana. Cooldown of reuse is reduced by <em data-base="6">6</em>seconds<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-3.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-spiritualchanneling.png";
 			$skills[34] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fury";
 			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma that deals your level * 2.5 damage at <em data-base="20">20</em>% effectiveness and increases duration by <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>. If Fury is not on, it still deals half proc damage.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-fury.png";
 			$skills[36] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Rabid Bear";
 			$newSkill->desc = 'Grants the Rabid Bear AA, granting <em data-base="2">2</em>% attack speed and the tainted bite proc line with <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-rabidbear.png";
 			$skills[38] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Ancestral Guard";
 			$newSkill->desc = 'Grants the Ancestral Guard AA, granting <em data-base="2">2</em>% chance of evading damage with mitigation<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-ancestralguard.png";
 			$skills[40] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Call of the Ancients";
 			$newSkill->desc = 'Grants the Call of the Ancients AA, summoning a spirit that deals <em data-base="1">1</em> of an enemy\'s current health (maximum <em data-base="100">100</em>) per attack<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-calloftheancients.png";
 			$skills[42] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Wrath";
 			$newSkill->desc = 'Grants the Spiritual Wrath AA, attacking your target<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-spiritualwrath.png";
 			$skills[44] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Mark of Sloth";
 			$newSkill->desc = 'On each attack, grants a chance to trigger a sloth effect, causing the next direct damage spell to deal <em data-base="5">5</em>% bonus damage<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-markofsloth.png";
 			$skills[46] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Feral Swipe";
 			$newSkill->desc = 'Grants the Feral Swipe AA, giving a bonus attack ability with <em data-base="5">5</em>% effectiveness<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-feralswipe.png";
 			$skills[49] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Paragon of Spirit";
 			$newSkill->desc = 'Grants the Paragon of Spirit AA, giving a mana and hp regen ability <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-4.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-paragonofspirit.png";
 			$skills[52] = $newSkill;
 
 			break;
