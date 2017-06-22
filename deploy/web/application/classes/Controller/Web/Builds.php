@@ -6,11 +6,16 @@ class Controller_Web_Builds extends Template_Web_Core {
 		parent::before();
 		$this->template->site->title = "Shadow Knight Build";
 		$this->template->site->description = "Shadow Knight Custom Build For RebuildEQ";
+		$this->template->crumbs = array(
+			(object)array("name" => "Home", "isActive" => true, "link" => "/"),
+			(object)array("name" => "Builds")
+		);
 		
 	}
 
 	public function action_index() {
-
+		$this->template->showHeader = false;
+		$this->template->showFooter = false;
 		$class =  strtolower($this->request->param('class'));
 		$skills = array();		
 

@@ -8,31 +8,26 @@ class Controller_Web_Guide extends Template_Web_Core {
 		parent::before();
 		$this->template->site->title = "Guide List";
 		$this->template->site->description = "Learn how to play Rebuild EQ by following these guides.";
+        $this->template->crumbs = array(
+            (object)array("name" => "Home", "isActive" => true, "link" => "/"),
+            (object)array("name" => "Guide", "isActive" => false, "link" => "/guide/")
+        );  
 	}
 
     public function action_zone() {
-        parent::before();
+        $this->template->crumbs[] = (object)array("name" => "Disabled Zone List");
         $this->template->site->title = "Zone List";
         $this->template->site->description = "List of zones disabled on RebuildEQ.";
+        
     }
 
 	public function action_index() {
 
 	}
 
-	public function action_setup() {
-
-	}
-
-    public function action_newbie() {
-
-    }
-
-    public function action_command() {
-
-    }
 
     public function action_card() {
+        $this->template->crumbs[] = (object)array("name" => "Card Augment List");
     	$this->template->site->title = "Card Augment List";
     	$this->template->site->description = "RebuildEQ features a custom set of cards that fit as augments, and this page lists all of them.";
     	$this->template->site->image = "http://rebuildeq.com/images/cards/card.png";
@@ -42,11 +37,4 @@ class Controller_Web_Guide extends Template_Web_Core {
 		$this->template->cards = $dbItems;
     }
 
-    public function action_encounter() {
-
-    }
-
-    public function action_rested() {
-
-    }
 }

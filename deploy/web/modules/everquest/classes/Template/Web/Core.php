@@ -15,6 +15,7 @@ class Template_Web_Core extends Controller_Template {
 		$this->get_user_token();
 
 		parent::before();
+
 		
 		$pageAlerts = array();
 
@@ -38,6 +39,9 @@ class Template_Web_Core extends Controller_Template {
 		$this->template->page = "index";
 		$this->template->site = (object)$this->config['site'];
 		$this->template->domain = Kohana_Cookie::$domain;
+		$this->template->showFooter = true;
+		$this->template->showHeader = false;
+		$this->template->favicon = "/favicon.ico";
 		//$this->template->characterCount = Character::count();
 
 		if (!empty($userToken)) {

@@ -3,11 +3,17 @@
  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
 <script src="/js/builds/skillManager.js"></script>
 	<link href="/css/builds/builds.css" rel="stylesheet" type="text/css">
-	 <section id="pricing" class="dark">
 	  <div class="container">
+		<div class="col-sm-12 col-md-11 center-column mt25">
 
-		<div class="row" style="margin-top:60px;">
-			
+		<div class="row">
+			<div class="col-md-offset-2 col-md-8">
+            <div class="panel">
+                <div class="panel-heading">
+                   <span class="panel-title">Select a Class </span>
+                </div>    
+                <div class="panel-body">
+
 		    {if !empty($errorMessage)}
 	 		<div class="row">				
 				<p style="color: #FF5533;">{$errorMessage}</p>			    
@@ -61,8 +67,14 @@
 
 			{/if}
 
-	  		<div class="row">
-				
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-heading">
+                   <span class="panel-title">Spend Points</span>
+                </div>    
+                <div class="panel-body">	
 			<img unselectable="on" class="portrait" src="/images/monograms/{$monogram}.gif" style="left: 30%;margin-left: -30%;">
 			<div class="treeCollection">
 			<div class="treewrapper green">
@@ -610,19 +622,39 @@
 				</div>
 			</div>
 			</div>
+		</div>
+		</div>
 
-			<div class="row" style="text-align: left;">
-						
-			          	<div style="text-align: center;"><label class="control-label" style="color: white">{$class|capitalize} Skill List</label><br></div>
-			          	<ul class="build-list">
-			          	{foreach from=$skills item=skill key=s}
-				          	<li>
-				          		<a href="/builds/{$class}/skill/{$s}"><img src="{$skill->image}"> <b>{$skill->title}</b> - {$skill->desc|strip_tags|truncate:150}</a>
-				          	</li>
-			          	{/foreach}		          	
-			          	</ul>	
+
+
+
+
+
+            <div class="panel">
+                <div class="panel-heading">
+                   <span class="panel-title">{$class|capitalize} Skills</span>
+                </div>
+                <div class="panel-body">
+                <table class="table footable table-striped">
+			      <thead>
+			        <tr>
+				        <th>Icon</th>
+				        <th>Name</th>
+				        <th>Description</th>
+			        </tr>
+			      </thead>
+      				<tbody>
+  			      	{foreach from=$skills item=skill key=s}
+  			      	<tr>
+				       	<td><a href="/builds/{$class}/skill/{$s}"><img src="{$skill->image}"/></a></td>
+				       	<td>{$skill->title}</td>
+				       	<td>{$skill->desc|strip_tags|truncate:150}</td>
+			       	</tr>
+		          	{/foreach}
+		        	</tbody>
+		        </table>
 			</div>
-
+</div>
 
 			
 			<script type="text/javascript">
@@ -642,6 +674,4 @@
 			
 		</div>
 	  </div>
-</section>
 </div>
-{*include file="../_footer.tpl"*}

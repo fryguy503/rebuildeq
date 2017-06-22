@@ -1,6 +1,6 @@
-{include file="../_header.tpl"}
-
-
+<div id="content">
+<div class="row">
+{*
 <div id="intro">
         <div class="item background-cover" style="background: url('/public/prestige/img/bg/ec.jpg')">
           <div class="container">
@@ -36,87 +36,123 @@
       </div>
 
     </section>
+    *}
+<div class="col-sm-12 col-md-11 center-column mt25">
+<div class="row">
 
-    <!-- Pricing
-    ================================================== -->
-    <section id="pricing" class="dark">
+          <div class="col-md-8">
+            <div class="panel">
+                <div class="panel-heading">
+                   <span class="panel-icon glyphicon glyphicon-book"></span>
+                   <span class="panel-title"> What are builds?</span>
+                </div>    
+                <div class="panel-body">
+                  <p class="">
+                    Each time you level up, you gain a build point and are presented with an in game dialog, linking you to this website's <a href="/builds">build</a> section.<p>
+                    Choose a build to place your points and it will instantly affect in game.<p>
+                    During testing, it is free to experiment and reset builds.<p>
+                    You will end up with a total of 60 points, enough to get to the final skill of two sections.<p>
+                    Builds have a heavy impact on game play experience.<br>
+                  </p>
+                </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="panel">
+            <div class="panel-heading">
+                   <span class="panel-title">Example of Builds in Action</span>
+                </div> 
+                <div class="panel-body">
+                  <p class="">
+                    <div class="text-center">
+            <img class="margin-top img-responsive" src="/images/guide/build-guide.gif" alt="Generic placeholder image" data-sr="enter left, hustle 20px" width="429">
+          </div>
+                  </p>
+                </div>
+            </div>
+          </div>
+        </div>
+        </div>
 
-      <div class="page-header text-center">
-        <h2>Level Features</h2>
+
+  <div class="col-sm-12 col-md-11 center-column mt25">
+    <div class="pricing-table mt25">
+      <div class="col-sm-3">
+        <div class="pricing-plan plan-info">
+          <div class="plan-header">
+            <h2 class="mtn">Beginner</h2>
+          </div>
+          <div class="plan-pricing">
+            <h2>1 to 10</h2>
+          </div>
+          <div class="plan-features">
+            <ul>
+              <li><strong>Free #teleport</strong></li>
+              <li>No EXP loss</li>
+              <li>Keep your items on death</li>
+              <li>Gain spells and skills automatically</li>
+            </ul>
+          </div>
+        </div>
       </div>
-
-      <div class="container">
-        <div class="row">
-          <div class="plans">
-              <div class="col-xs-12 col-sm-6 col-md-3">
-                <div class="plan" data-sr="enter over 1s">
-                  <div class="plan-title">
-                    <h2>1 to 10</h2>
-                    <h3><sup>Beginner</sub></h3>
-                  </div>
-
-                  <ul class="plan-features">
-                    <li><strong>Free #teleport</strong></li>
-                    <li>No EXP loss</li>
-                    <li>Keep your items on death</li>
-                    <li>Gain spells and skills automatically</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="col-xs-12 col-sm-6 col-md-3">
-                <div class="plan featured" data-sr="enter over 1s">
-                  <div class="plan-title">
-                    <h2>11 to 40</h2>
-                    <h3><sup>Intermediate</sub></h3>
-                  </div>
-
-                  <ul class="plan-features">
-                    <li><strong>New #teleport destinations</strong></li>
-                    <li>Collect fragments</li>
-                    <li>#return on death</li>
-                    <li>TBD</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="col-xs-12 col-sm-6 col-md-3">
-                <div class="plan featured" data-sr="enter over 1s">
-                  <div class="plan-title">
-                    <h2>41 to 60</h2>
-                    <h3><sup>Professional</sub></h3>
-                  </div>
-
-                  <ul class="plan-features">
-                    <li><strong>Two build trees</strong></li>
+      <div class="col-sm-3">
+        <div class="pricing-plan plan-info">
+          <div class="plan-header">
+            <h2 class="mtn">Intermediate</h2>
+          </div>
+          <div class="plan-pricing">
+            <h2>11 to 40</h2>
+          </div>
+          <div class="plan-features">
+            <ul>
+              <li><strong>New #teleport destinations</strong></li>
+              <li>Collect fragments</li>
+              <li>#return on death</li>
+              <li>Explore builds</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="pricing-plan plan-info">
+          <div class="plan-header">
+            <h2 class="mtn">Professional</h2>
+          </div>
+          <div class="plan-pricing">
+            <h2>41 to 60</h2>
+          </div>
+          <div class="plan-features">
+            <ul>
+               <li><strong>Two build trees</strong></li>
                     <li>Lose items on death</li>
                     <li>#teleport to Hate/Sky 46+</li>
-                    <li>TBD</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="col-xs-12 col-sm-6 col-md-3">
-                <div class="plan" data-sr="enter over 1s">
-                  <div class="plan-title">
-                    <h2>60+</h2>
-                    <h3><sup>Expert</sub></h3>
-                  </div>
-
-                  <ul class="plan-features">
-                    <li><strong>Fill Experience Bottles</strong></li>
-                    <li>Find Elunium, upgrade Velious Armor</li>
-                    <li>TBD</li>
-                    <li>TBD</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+                    <li>Unlock Feats</li>
+            </ul>
+          </div>
         </div>
       </div>
 
+      <div class="col-sm-3">
+        <div class="pricing-plan plan-info">
+          <div class="plan-header">
+            <h2 class="mtn">Expert</h2>
+          </div>
+          <div class="plan-pricing">
+            <h2>T1-T9</h2>
+          </div>
+          <div class="plan-features">
+            <ul>
+               <li><strong>Fill Experience Bottles</strong></li>
+                <li>Find Elunium, upgrade Velious Armor</li>
+                <li>Unlock Tier Progression</li>
+                <li>Discover World Events</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </section>
-
+  </div>
+{*
     <!-- Gallery
     ================================================== -->
     <section id="gallery">
@@ -138,5 +174,6 @@
       </div>
 
     </section>
-    
-{*include file="../_footer.tpl"*}
+    *}
+</div>
+</div>

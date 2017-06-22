@@ -6,7 +6,10 @@ class Controller_Web_BuildSkill extends Template_Web_Core {
 		parent::before();
 		$this->template->site->title = "";
 		$this->template->site->description = "";
-		
+		$this->template->crumbs = array(
+			(object)array("name" => "Home", "isActive" => true, "link" => "/"),
+			(object)array("name" => "Builds", "isActive" => false, "link" => "/builds")
+		);	
 	}
 
 	public function action_index() {
@@ -27,7 +30,14 @@ class Controller_Web_BuildSkill extends Template_Web_Core {
 			$this->redirect('/builds/');
 			return;
 		}
+		//print_r($class);
+		//exit;
+		$this->template->crumbs[] =	(object)array("name" => ucfirst($class), "link" => "/builds/shadowknight/");
+		$this->template->crumbs[] =	(object)array("name" => "Skill", "link" => "/builds/shadowknight/skill/");
+		
+
 		$skill = $skills[$skillid];
+		$this->template->crumbs[] =	(object)array("name" => $skill->title);
 		$this->template->class = $class;
 		$this->template->skill = $skill;
 		$this->template->monogram = $build->monogram;
