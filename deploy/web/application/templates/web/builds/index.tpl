@@ -1,5 +1,3 @@
-{include file="../_header.tpl"}
-
  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
 <script src="/js/builds/skillManager.js"></script>
 	<link href="/css/builds/builds.css" rel="stylesheet" type="text/css">
@@ -23,20 +21,20 @@
 		    {if empty($character)}
 		     <div class="row">
 				<div class="form-group">
-					<a href="/builds/bard"><img class="classicon {if $class eq 'bard'}classicon-active{/if}" src="/images/classicons/brd.png"/></a>
-					<a href="/builds/cleric"><img class="classicon {if $class eq 'cleric'}classicon-active{/if}" src="/images/classicons/clr.png"/></a>
-					<a href="/builds/druid"><img class="classicon {if $class eq 'druid'}classicon-active{/if}" src="/images/classicons/dru.png"/></a>
-					<a href="/builds/enchanter"><img class="classicon {if $class eq 'enchanter'}classicon-active{/if}" src="/images/classicons/enc.png"/></a>
-					<a href="/builds/magician"><img class="classicon {if $class eq 'magician'}classicon-active{/if}" src="/images/classicons/mag.png"/></a>
-					<a href="/builds/monk"><img class="classicon {if $class eq 'monk'}classicon-active{/if}" src="/images/classicons/mnk.png"/></a>
-					<a href="/builds/necromancer"><img class="classicon {if $class eq 'necromancer'}classicon-active{/if}" src="/images/classicons/nec.png"/></a>
-					<a href="/builds/paladin"><img class="classicon {if $class eq 'paladin'}classicon-active{/if}" src="/images/classicons/pal.png"/></a>
-					<a href="/builds/ranger"><img class="classicon {if $class eq 'ranger'}classicon-active{/if}" src="/images/classicons/rng.png"/></a>
-					<a href="/builds/rogue"><img class="classicon {if $class eq 'rogue'}classicon-active{/if}" src="/images/classicons/rog.png"/></a>
-					<a href="/builds/shadowknight"><img class="classicon {if $class eq 'shadowknight'}classicon-active{/if}" src="/images/classicons/shd.png"/></a>
-					<a href="/builds/shaman"><img class="classicon {if $class eq 'shaman'}classicon-active{/if}" src="/images/classicons/shm.png"/></a>
-					<a href="/builds/warrior"><img class="classicon {if $class eq 'warrior'}classicon-active{/if}" src="/images/classicons/war.png"/></a>
-					<a href="/builds/wizard"><img class="classicon {if $class eq 'wizard'}classicon-active{/if}" src="/images/classicons/wiz.png"/></a>
+					<a href="/builds/bard"><img class="classicon {if !empty($class) AND $class eq 'bard'}classicon-active{/if}" src="/images/classicons/brd.png"/></a>
+					<a href="/builds/cleric"><img class="classicon {if !empty($class) AND $class eq 'cleric'}classicon-active{/if}" src="/images/classicons/clr.png"/></a>
+					<a href="/builds/druid"><img class="classicon {if !empty($class) AND $class eq 'druid'}classicon-active{/if}" src="/images/classicons/dru.png"/></a>
+					<a href="/builds/enchanter"><img class="classicon {if !empty($class) AND $class eq 'enchanter'}classicon-active{/if}" src="/images/classicons/enc.png"/></a>
+					<a href="/builds/magician"><img class="classicon {if !empty($class) AND $class eq 'magician'}classicon-active{/if}" src="/images/classicons/mag.png"/></a>
+					<a href="/builds/monk"><img class="classicon {if !empty($class) AND $class eq 'monk'}classicon-active{/if}" src="/images/classicons/mnk.png"/></a>
+					<a href="/builds/necromancer"><img class="classicon {if !empty($class) AND $class eq 'necromancer'}classicon-active{/if}" src="/images/classicons/nec.png"/></a>
+					<a href="/builds/paladin"><img class="classicon {if !empty($class) AND $class eq 'paladin'}classicon-active{/if}" src="/images/classicons/pal.png"/></a>
+					<a href="/builds/ranger"><img class="classicon {if !empty($class) AND $class eq 'ranger'}classicon-active{/if}" src="/images/classicons/rng.png"/></a>
+					<a href="/builds/rogue"><img class="classicon {if !empty($class) AND $class eq 'rogue'}classicon-active{/if}" src="/images/classicons/rog.png"/></a>
+					<a href="/builds/shadowknight"><img class="classicon {if !empty($class) AND $class eq 'shadowknight'}classicon-active{/if}" src="/images/classicons/shd.png"/></a>
+					<a href="/builds/shaman"><img class="classicon {if !empty($class) AND $class eq 'shaman'}classicon-active{/if}" src="/images/classicons/shm.png"/></a>
+					<a href="/builds/warrior"><img class="classicon {if !empty($class) AND $class eq 'warrior'}classicon-active{/if}" src="/images/classicons/war.png"/></a>
+					<a href="/builds/wizard"><img class="classicon {if !empty($class) AND $class eq 'wizard'}classicon-active{/if}" src="/images/classicons/wiz.png"/></a>
 		        </div>
 			</div>
 
@@ -49,7 +47,7 @@
 	          		{/if}
 	        	</ul>
 	        	{/if}
-	        	{if empty($character)}
+	        	{if empty($character) AND !empty($class)}
 	        	<p>
 		          <label class="control-label">{$classDescription}</label><br>
 		         Required Level To Obtain: <span class="charLevel">0</span>
@@ -69,7 +67,7 @@
 
                 </div>
             </div>
-
+{if (!empty($class))}
             <div class="panel">
                 <div class="panel-heading">
                    <span class="panel-title">Spend Points</span>
@@ -671,7 +669,7 @@
 			session = "{$session}";
 			{/if}
 			</script>
-			
+{/if}			
 		</div>
 	  </div>
 </div>

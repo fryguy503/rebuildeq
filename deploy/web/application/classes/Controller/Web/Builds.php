@@ -8,7 +8,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 		$this->template->site->description = "Shadow Knight Custom Build For RebuildEQ";
 		$this->template->crumbs = array(
 			(object)array("name" => "Home", "isActive" => true, "link" => "/"),
-			(object)array("name" => "Builds")
+			(object)array("name" => "Builds", "link" => "/builds/")
 		);
 		
 	}
@@ -73,8 +73,10 @@ class Controller_Web_Builds extends Template_Web_Core {
 			$this->template->hash = $buildHash;
 		}
 		if ($class == "") {
-			$class = "shadowknight";
+			return;			
 		}
+
+		$this->template->crumbs[] = (object)array('name' => ucfirst($class));
 
 		$build = Build::get_build_info($class);
 		$skills = Build::get_skills($class);
