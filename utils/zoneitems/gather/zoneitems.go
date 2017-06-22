@@ -113,10 +113,6 @@ func main() {
 	for _, zone := range zones {
 		fmt.Print(zone.Short_name.String)
 
-		if zone.Min_status > 0 {
-			fmt.Printf(" Skipping, status > 0, %d\n", zone.Min_status)
-			continue
-		}
 		data := DataPack{
 			Zone: zone,
 		}
@@ -130,9 +126,11 @@ func main() {
 			break
 		}
 		//fmt.Println(len(zoneChan), len(spawnChan), len(spawnEntryChan), len(npctypeChan), len(loottableEntryChan), len(lootdropEntryChan))
-		time.Sleep(5 * time.Second)
+		time.Sleep(10 * time.Second)
 	}
-	time.Sleep(1 * time.Second)
+	time.Sleep(10 * time.Second)
+	log.Println("Removing duplicates...")
+	//DELETE zone_drops WHERE id NOT IN (SELECT (min(id) FROM zone_drops GROUP BY npc_id, item_id, zone_id))
 	//trim the last
 	log.Println("Done!")
 	return

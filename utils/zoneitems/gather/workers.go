@@ -112,7 +112,7 @@ func lootdropEntryWorker() {
 
 func insertWorker() {
 	insertCount := 0
-	insertQuery := "REPLACE INTO zone_drops (item_id, npc_id, zone_short_name, zone_id) VALUES"
+	insertQuery := "INSERT INTO zone_drops (item_id, npc_id, zone_id) VALUES"
 	insertVals := []interface{}{}
 	doDump := false
 
@@ -124,8 +124,8 @@ func insertWorker() {
 				fmt.Printf("%d, ", insertCount)
 			}
 
-			insertQuery += "(?, ?, ?, ?),"
-			insertVals = append(insertVals, data.Item.Id, data.NpcTypes.Id, data.Zone.Short_name, data.Zone.Zoneidnumber)
+			insertQuery += "(?, ?, ?),"
+			insertVals = append(insertVals, data.Item.Id, data.NpcTypes.Id, data.Zone.Zoneidnumber)
 		case <-time.After(1 * time.Second):
 			doDump = true
 		}
@@ -137,7 +137,7 @@ func insertWorker() {
 				log.Fatal(err.Error())
 			}
 			//reset query
-			insertQuery = "REPLACE INTO zone_drops (item_id, npc_id, zone_short_name, zone_id) VALUES"
+			insertQuery = "INSERT INTO zone_drops (item_id, npc_id, zone_id) VALUES"
 			insertVals = []interface{}{}
 			doDump = false
 		}

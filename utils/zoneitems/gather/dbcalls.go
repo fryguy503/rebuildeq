@@ -54,7 +54,7 @@ func (db *Database) getZones() ([]zone.Zone, error) {
 		return nil, fmt.Errorf("No database instance")
 	}
 	zones := []zone.Zone{}
-	query := "SELECT * from eqemu.zone"
+	query := "SELECT * from eqemu.zone WHERE min_status = 0"
 	if err := db.instance.Select(&zones, query); err != nil {
 		return nil, err
 	}
