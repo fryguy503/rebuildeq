@@ -1,11 +1,50 @@
 <div class="col-sm-12 col-md-11 center-column mt25">
-<div class="row">
+
+<div class="admin-form">
+
+              <div class="panel heading-border">
+                <div class="panel-body bg-dark dark">
+                  <form method="get" action="/lookup/npc/" id="form-ui">
+                    <div class="section-divider mb40" id="spy1">
+                      <span>NPC search</span>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-offset-2 col-md-8">
+                        <div class="section">
+                          <label class="field prepend-icon">
+                            <input type="text" name="name" id="name" class="gui-input" placeholder="NPC Name">
+                            <label for="name" class="field-icon">
+                              <i class="fa fa-user"></i>
+                            </label>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="panel-footer">
+                        <button type="submit" class="button btn-primary">Search</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+</div>
+
+
+<div class="admin-form">
     <div class="panel">
     <div class="panel-heading"><span class="panel-title">{if !empty($zone)}Drops for {$zone->short_name}{/if}</span></div>
     <div class="panel-body">
       <p>
+      <div class="col-md-4">
+      <form class="form-ui">
+                        <div class="section">
+                          
+                        </div>
+                      </div>
+      </form>
     Zone description here.
       </p>
+    </div>
     </div>
     </div>
 </div>
