@@ -28,7 +28,7 @@
 
         {foreach from=$items item=item key=c}
         <tr>
-          <td><span class="image-icon icon-{$item->entry->icon}"></span></td>
+          <td><a href="/lookup/item/{$item->entry->item_id}"><span class="image-icon icon-{$item->entry->icon}"></span></a></td>
           <td><a href="/lookup/item/{$item->entry->item_id}">{$item->entry->name}</a></td>
           <td>{$item->entry->era}</td>
           <td>{foreach from=$item->npcs item=npc}

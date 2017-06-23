@@ -342,7 +342,7 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Jonthon's Whistle";
 			$newSkill->desc = 'Jonthon\'s Self Haste Songs have improved haste, as well as grants a proc line similar to puma that deals your level * 2.5<span class="perLevel"> per rank</span>. If you do not use a jonthon whistle, it still deals half damage procs.';
-			$newSkill->image = "/images/builds/icons/rb-brd-jonathonswhistle.png";	
+			$newSkill->image = "/images/builds/icons/rb-brd-jonthonswhistle.png";	
 			$skills[18] = $newSkill;
 
 			$newSkill = new stdClass();
@@ -954,7 +954,7 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Zealot's Fervor";
 			$newSkill->desc = 'When a heal is casted by a paladin, up to <em data-base="1">1</em> nearby enemies of the target are dealt <em data-base="1">1</em>% of the healing as damage. <span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-pal-zealotsfervor.png";
 			$skills[36] = $newSkill;
 
 			$newSkill = new stdClass();
