@@ -14,12 +14,13 @@
 
 {if !empty($npcs)}
 <div class="row">
-<div class="panel-heading">{$focus->Name} is found off these mobs</div>
+<div class="panel-heading">Mobs that drop {$focus->Name}</div>
       <table class="table table-striped">
       <thead>
         <tr>
         
-        <th>NPC</th>
+        <th>Name</th>
+        <th>Level</th>
         <th>Zone</th>
         </tr>
       </thead>
@@ -28,7 +29,8 @@
         {foreach from=$npcs item=zones}
         {foreach from=$zones item=npc}
         <tr>
-          <td><a href="/lookup/npc/{$npc->zone_id}/{$npc->npc_id}">{$npc->clean_name} [{$npc->level}]</a></td>
+          <td><a href="/lookup/npc/{$npc->zone_id}/{$npc->npc_id}">{$npc->clean_name}</a></td>
+          <td>{$npc->level}</td>
           <td><a href="/zone/{$npc->zone_id}">{$npc->long_name}</a></td>          
         </tr>
         {/foreach}

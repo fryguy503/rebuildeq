@@ -19,7 +19,10 @@ class Controller_Web_Lookup extends Template_Web_Core {
 	public function action_zone() {
 		$id =  strtolower($this->request->param('id'));
 		$this->template->crumbs[] = (object)array("name" => "Zone", "link" => "/lookup/zone/");
-
+		if (empty($id)) {
+			$this->redirect("/lookup/");
+			return;
+		}
 		$rawItems = DB::select('items.era', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id', 'zone.long_name zone_name')
 			->from('zone_drops')
 			->join('items')->on('items.id', '=', 'item_id')
@@ -27,6 +30,7 @@ class Controller_Web_Lookup extends Template_Web_Core {
 			->join('zone')->on('zone.zoneidnumber', '=', $id)
 			->where('zone_id', '=', $id)->as_object()->execute();
 		if (count($rawItems) == 0) {
+			$this->redirect("/lookup/");
 			return;
 		}
 		
@@ -49,6 +53,7 @@ class Controller_Web_Lookup extends Template_Web_Core {
 			$items[$i->item_id]->npcs[] = (object)array('id' => $i->npc_id, 'name' => str_replace("_", " ", $i->npc_name));
 		}
 		$this->template->items = $items;
+		
 
 		//echo count($items);
 	}
@@ -95,8 +100,12 @@ class Controller_Web_Lookup extends Template_Web_Core {
 		$id =  strtolower($this->request->param('id')); //zone
 		$sort = strtolower($this->request->param('sort')); //npc
 
+		
+
 		$this->template->focus = DB::select()->from('npc_types')->where('id', '=', $sort)->as_object()->execute()->current();
 		$this->template->focus->clean_name = str_replace("_", " ", $this->template->focus->name);
+
+
 
 		$rawItems = DB::select('items.era', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id','zone.long_name zone_name')
 			->from('zone_drops')
@@ -112,6 +121,12 @@ class Controller_Web_Lookup extends Template_Web_Core {
 		$this->template->zone = new stdClass();
 		$this->template->zone->short_name = $rawItems[0]->zone_name;
 		$this->template->zone->id = $rawItems[0]->zone_id;
+
+		$this->template->crumbs[] = (object)array("name" => "Zone", "link" => "/lookup/zone/");
+		$this->template->crumbs[] = (object)array("name" => $rawItems[0]->zone_name, "link" => "/lookup/zone/".$rawItems[0]->zone_id);
+		$this->template->crumbs[] = (object)array("name" => "NPC", "link" => "/lookup/npc/");
+		$this->template->crumbs[] = (object)array("name" => $this->template->focus->clean_name);
+
 		$items = array();
 		foreach ($rawItems as $i) {
 			if (empty($items[$i->item_id])) {
