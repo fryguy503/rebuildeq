@@ -1622,7 +1622,6 @@
                 <a class="btn btn-sm btn-primary signup" href="/chat" role="button">Join Now!</a></span>
         </div>
         <div class="col-xs-6 text-right">
-
        
           <span class="footer-meta">by Shin Noir</span>
           <a href="#" class="footer-return-top">
@@ -1632,6 +1631,29 @@
       </div>
     </footer>
 {/if}
+
+
+
+<!--- Widgets -->
+
+<div id="itemtooltip" class="panel" style="display: none; position: fixed;">  
+  <div class="panel-body">
+  <span style="vertical-align:middle;width:50px"> <span id="itemtooltip-icon" style="width:40px;height:auto;"></span></span>
+  <span id="itemtooltip-name" class="panel-title">Cloth Shirt</span>
+  <table class="container_div display_table" style="width:100px">            
+        <tbody>    
+        <tr>
+            <td style="vertical-align:top"><br><table width="100%"><tbody><tr><td valign="top"><table width="100%" cellpadding="0" cellspacing="0"><tbody><tr><td colspan="2" nowrap="1"></td></tr><tr><td colspan="2"><b>Class: </b>ALL</td></tr><tr><td colspan="2"><b>Race: </b>ALL</td></tr><tr><td colspan="2"><b>Chest</b></td></tr></tbody></table><br><table><tbody><tr valign="top"><td><table style="width: 125px;"><tbody><tr><td><b>Size: </b></td><td style="text-align:right">MEDIUM</td></tr><tr><td><b>Weight: </b></td><td style="text-align:right">0.8</td></tr><tr><td><b>Item Type: </b></td><td style="text-align:right">Armor</td></tr></tbody></table></td><td><table style="width: 125px;"><tbody><tr><td><b>AC: </b></td><td style="text-align:right">6</td></tr></tbody></table></td><td><table style="width: 125px;"></table></td></tr><tr><td colspan="2">&nbsp;</td></tr><tr valign="top"><td><table style="width:100%"></table></td><td><table style="width:100%"></table></td><td><table style="width:100%"></table></td></tr></tbody></table><br></td></tr><tr><td width="0%" nowrap="1" colspan="2"><img src="images/icons/blank_slot.gif" style="width:auto;height:10px"> <b>Slot 1: </b>Type 7</td></tr><tr><td></td><td>&nbsp;</td><td></td></tr><tr><td><br><b>Value: </b>0 <img src="http://www.raidaddicts.org/Allah//images/icons/item_644.png" width="14" height="14"> 2 <img src="http://www.raidaddicts.org/Allah//images/icons/item_645.png" width="14" height="14"> 5 <img src="http://www.raidaddicts.org/Allah//images/icons/item_646.png" width="14" height="14"> 0 <img src="http://www.raidaddicts.org/Allah//images/icons/item_647.png" width="14" height="14"></td></tr></tbody></table><br></td>
+            <td style="vertical-align:top"></td>
+        </tr>
+    
+        </tbody></table>
+  </div>
+</div>
+
+
+<!--- End Widgets -->
+
 
 <!-- BEGIN: PAGE SCRIPTS -->
 
@@ -1678,6 +1700,57 @@
 
 
   });
+
+  $(document).on("mouseenter", "a", function(e){    
+    showItemTooltip($(this))
+  });
+
+  $(document).on("mouseleave", "a", function(){
+     var tooltip = $(this).attr("itemtooltip");
+      if (!tooltip) return;
+      hideItemTooltip();
+  });
+
+  var lastItemId = 0;
+  function showItemTooltip(e) {
+    var id = $(e).attr("itemtooltip");
+    if (!id) return;
+
+    if (lastItemId == id) { //don't need to call twice if it's previously requested
+      $('#itemtooltip').show();
+      $('#itemtooltip').css({ left: e.offset().left + 120, top: e.offset().top - 250});
+    }
+
+    $.ajax({
+      type: "POST",
+      url: "/rest/lookup/item",
+      data: "item_id="+id,
+      success: function (data) {
+        var rest = jQuery.parseJSON(data);
+        if (rest.Status != 1) {
+          console.log("return != 1, aborting showItemTooltip");
+          return;
+        }
+
+        //console.log(rest);
+        console.log(rest.Data.icon);
+        $('#itemtooltip-icon').attr("class", "itemtooltip-icon image-icon icon-"+rest.Data.icon);
+        $('#itemtooltip-name').html(rest.Data.Name);
+        $('#itemtooltip').show();
+        $('#itemtooltip').css({ left: e.offset().left + 120, top: e.offset().top - 250});
+      },
+      error: function() {
+        console.log("Error requesting!?");
+      }
+    });
+
+
+   
+  }
+
+  function hideItemTooltip() {
+    $('#itemtooltip').hide();
+  }
   </script>
 </body>
 </html>

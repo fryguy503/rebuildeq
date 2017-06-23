@@ -9,8 +9,6 @@
     </div>
     </div>
 </div>
-        
-
 
 {if !empty($npcs)}
 <div class="row">

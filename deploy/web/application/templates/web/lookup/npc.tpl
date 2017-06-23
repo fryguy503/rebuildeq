@@ -1,5 +1,5 @@
 <div class="col-sm-12 col-md-11 center-column mt25">
-
+{if !empty($focus)}
   <div class="row">
     <div class="col-md-4">
       <div class="panel">
@@ -60,7 +60,7 @@
 
           {foreach from=$items item=item key=c}
           <tr>
-            <td><a href="/lookup/item/{$item->entry->item_id}"><span class="image-icon icon-{$item->entry->icon}"></span></a><a href="/lookup/item/{$item->entry->item_id}">  {$item->entry->name}</a></td>
+            <td><a itemtooltip="{$item->entry->item_id}" href="/lookup/item/{$item->entry->item_id}"><span class="image-icon icon-{$item->entry->icon}"></span></a><a itemtooltip="{$item->entry->item_id}" href="/lookup/item/{$item->entry->item_id}">  {$item->entry->name}</a></td>
             <td>{$item->entry->era}</td>
            
           </tr>
@@ -69,6 +69,7 @@
         </table>
         </div>
   </div>
+{/if}
 {else}
 
 <div class="admin-form">

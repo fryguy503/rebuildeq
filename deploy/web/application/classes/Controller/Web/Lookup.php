@@ -99,10 +99,12 @@ class Controller_Web_Lookup extends Template_Web_Core {
 	public function action_npc() {
 		$id =  strtolower($this->request->param('id')); //zone
 		$sort = strtolower($this->request->param('sort')); //npc
-
 		
 
 		$this->template->focus = DB::select()->from('npc_types')->where('id', '=', $sort)->as_object()->execute()->current();
+		if (empty($this->template->focus)) {
+			return;
+		}
 		$this->template->focus->clean_name = str_replace("_", " ", $this->template->focus->name);
 
 
