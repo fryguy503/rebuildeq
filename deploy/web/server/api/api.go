@@ -1,24 +1,21 @@
-package server
+package api
 
-/*
 import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
-
-	restpkg "github.com/xackery/rebuildeq/deploy/web/rest"
+	//"strings"
 )
 
-func handleRestCore(w http.ResponseWriter, r *http.Request, handler func(http.ResponseWriter, *http.Request, *restpkg.Rest) (err error)) {
+func HandleApiCore(w http.ResponseWriter, r *http.Request, handler func(http.ResponseWriter, *http.Request, *Rest) (err error)) {
 	var err error
-	rest := &restpkg.Rest{
+	rest := &Rest{
 		Status:  0,
 		Message: "Unhandled Error",
 	}
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	if r.Method != "POST" && strings.Contains("/api/", r.RequestURI) {
+	/*if r.Method != "POST" && strings.Contains("/api/", r.RequestURI) {
 		rest.Message = "Invalid request method."
 		rest.Data = nil
 		rest.Status = 0
@@ -27,7 +24,7 @@ func handleRestCore(w http.ResponseWriter, r *http.Request, handler func(http.Re
 			fmt.Println("Error decoding rest:", err.Error)
 		}
 		return
-	}
+	}*/
 
 	err = handler(w, r, rest)
 	//All errors for every route is handled inside the rest struct
@@ -49,4 +46,3 @@ func handleRestCore(w http.ResponseWriter, r *http.Request, handler func(http.Re
 
 	return
 }
-*/

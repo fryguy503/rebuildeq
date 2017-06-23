@@ -20,6 +20,7 @@ package main
 import ( //"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
@@ -62,20 +63,16 @@ func main() {
 	if zones, err = db.getZones(); err != nil {
 		log.Fatal(err.Error())
 	}
-
-	insertQuery := "REPLACE INTO zone_drops (item_id, npc_id, zone_short_name, zone_id) VALUES"
+	startTime := time.Now()
+	insertQuery := "REPLACE INTO zone_drops (item_id, npc_id, zone_id) VALUES"
 	insertVals := []interface{}{}
-
+	fmt.Print("Starting zone_drop record creation")
 	for _, zone := range zones {
 		lastInsertCount := insertCount
-		fmt.Print("\n" + zone.Short_name.String + "...")
+		fmt.Printf("\n%s (%d) ", zone.Short_name.String, zone.Zoneidnumber)
 		spawns := []spawn.Spawn2{}
 		if spawns, err = db.getSpawns(zone.Short_name.String); err != nil {
 			log.Fatal(err.Error())
-		}
-		if zone.Min_status > 0 {
-			fmt.Printf("Skipping, status > 0, %d", zone.Min_status)
-			continue
 		}
 
 		for _, spawn2 := range spawns {
@@ -108,18 +105,18 @@ func main() {
 								if insertCount%1000 == 0 {
 									fmt.Printf("%d, ", insertCount)
 								}
-								insertQuery += "(?, ?, ?, ?),"
-								insertVals = append(insertVals, itementry.Id, npc.Id, zone.Short_name, zone.Id)
+								insertQuery += "(?, ?, ?),"
+								insertVals = append(insertVals, itementry.Id, npc.Id, zone.Zoneidnumber)
 
 								if insertCount%10000 == 0 {
-									fmt.Print(", inserting 10k records...")
+									fmt.Printf("inserting 10k records and %.2f seconds in (%.2f/sec) ", time.Since(startTime).Seconds(), (float64(insertCount) / time.Since(startTime).Seconds()))
 									insertQuery = insertQuery[0 : len(insertQuery)-1]
 									stmt, _ := db.instance.Prepare(insertQuery)
 									if _, err = stmt.Exec(insertVals...); err != nil {
 										log.Fatal(err.Error())
 									}
 									//reset query
-									insertQuery = "REPLACE INTO zone_drops (item_id, npc_id, zone_short_name, zone_id) VALUES"
+									insertQuery = "REPLACE INTO zone_drops (item_id, npc_id, zone_id) VALUES"
 									insertVals = []interface{}{}
 								}
 								//fmt.Printf(itementry.Name + ", ")
@@ -139,7 +136,7 @@ func main() {
 	if _, err = stmt.Exec(insertVals); err != nil {
 		log.Fatal(err.Error())
 	}
-	log.Println("Done!", insertCount)
+	log.Println("Done!", insertCount, "inserted over", time.Since(startTime).Seconds(), "Seconds")
 	return
 }
 
@@ -209,7 +206,7 @@ func (db *Database) getZones() ([]zone.Zone, error) {
 		return nil, fmt.Errorf("No database instance")
 	}
 	zones := []zone.Zone{}
-	query := "SELECT * from eqemu.zone"
+	query := "SELECT * from eqemu.zone WHERE min_status = 0"
 	if err := db.instance.Select(&zones, query); err != nil {
 		return nil, err
 	}

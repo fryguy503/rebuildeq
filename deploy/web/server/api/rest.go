@@ -1,4 +1,6 @@
-package rest
+package api
+
+import ()
 
 type Rest struct {
 	Status  int64       `json:""`

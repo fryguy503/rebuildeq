@@ -1,12 +1,27 @@
 package web
 
 import (
-	"fmt"
-	"html/template"
+	"log"
+	//	"fmt"
+	//	"html/template"
 	"net/http"
-	"os"
+	//	"os"
 )
 
+func Index(w http.ResponseWriter, r *http.Request) (err error) {
+	type templateData struct {
+		*SiteData
+		Content string
+	}
+	data := templateData{
+		Content: "Shinshop!",
+	}
+	RenderTemplate(w, "index", data)
+	log.Println("Rendered template")
+	return
+}
+
+/*
 //this stores the template, should be written once. (Dev can cause race conditions)
 var indexTemplate *template.Template
 
@@ -57,3 +72,4 @@ func Index(w http.ResponseWriter, r *http.Request) (err error) {
 	}
 	return
 }
+*/
