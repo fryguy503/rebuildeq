@@ -15,7 +15,6 @@ services:
       - "3306:3306"
     expose:
       - "3306"
- #   network_mode: "bridge"
   eqemu:
     stdin_open: true
     build: ./docker/eqemu/.
