@@ -1,27 +1,29 @@
- <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
 <script src="/js/builds/skillManager.js"></script>
-	<link href="/css/builds/builds.css" rel="stylesheet" type="text/css">
+<link href="/css/builds/builds.css" rel="stylesheet" type="text/css">
+
 	  <div class="container">
 		<div class="col-sm-12 col-md-11 center-column mt25">
-
-		<div class="row">
-			<div class="col-md-offset-2 col-md-8">
-            <div class="panel">
-                <div class="panel-heading">
-                   <span class="panel-title">Select a Class </span>
-                </div>    
+	<div class="row">
+	{if !empty($errorMessage)}
+	<div class="row">
+            <div class="panel alert-danger">
                 <div class="panel-body">
-
-		    {if !empty($errorMessage)}
-	 		<div class="row">				
-				<p style="color: #FF5533;">{$errorMessage}</p>			    
-			</div>
-		    {/if}
-
-		    {if empty($character)}
+                <p {*style="color: #FF5533;"*}>{$errorMessage}</p>			    
+                </div>
+            </div>
+    </div>
+    {/if}
+    {if empty($character)}
+	<div class="row">
+	    <div class="panel">
+	        <div class="panel-heading">
+	           <span class="panel-title">Select a Class </span>
+	        </div>    
+	        <div class="panel-body">
 		     <div class="row">
 				<div class="form-group">
-					<a href="/builds/bard"><img class="classicon {if !empty($class) AND $class eq 'bard'}classicon-active{/if}" src="/images/classicons/brd.png"/></a>
+					<a href="/builds/bard"><img class="classicon {if !empty($class) AND $class eq 'bard'}classicon-active{/if}" src="/images/classicons/brd.png" alt="Bard"/></a>
 					<a href="/builds/cleric"><img class="classicon {if !empty($class) AND $class eq 'cleric'}classicon-active{/if}" src="/images/classicons/clr.png"/></a>
 					<a href="/builds/druid"><img class="classicon {if !empty($class) AND $class eq 'druid'}classicon-active{/if}" src="/images/classicons/dru.png"/></a>
 					<a href="/builds/enchanter"><img class="classicon {if !empty($class) AND $class eq 'enchanter'}classicon-active{/if}" src="/images/classicons/enc.png"/></a>
@@ -37,40 +39,41 @@
 					<a href="/builds/wizard"><img class="classicon {if !empty($class) AND $class eq 'wizard'}classicon-active{/if}" src="/images/classicons/wiz.png"/></a>
 		        </div>
 			</div>
-
-			<div class="row">	        	
-				{if !empty($character)}
-				<ul class="breadcrumb"  style="text-align: left;">
-	          		<li><a href="/builds">Builds</a></li>
-	          		{if empty($character)}<li class="active">{$fullName}</li>
-	          		{else}<li class="active">{$character->name}</li>
-	          		{/if}
-	        	</ul>
-	        	{/if}
-	        	{if empty($character) AND !empty($class)}
-	        	<p>
+			<div class="row">				
+		    	{if !empty($class)}
+		    	<p>
 		          <label class="control-label">{$classDescription}</label><br>
 		         Required Level To Obtain: <span class="charLevel">0</span>
 		        </p>					
 		        {/if}
 			</div>
-			{else}
-			<div class="row">
-				<p>
-					<label class="control-label">{$character->level} {$fullName} {$character->name} {if !empty($character->guildName)}&lt;{$character->guildName}&gt;{/if}</label><br>
-					<span class="charPointsLeft">0</span> points left to spend.
-					<div style="display: none"><span class="charLevel">1</span></div>
-				</p>
 			</div>
-
+		</div>
+	</div>
+	{else}
+	<div class="row">
+        <div class="panel">
+            <div class="panel-heading">
+               <span class="panel-title">{$character->name} {if !empty($character->guildName)}&lt;{$character->guildName}&gt;{/if}</span>
+            </div>    
+            <div class="panel-body">
+				<div class="row">
+					<p>
+						<label class="control-label">Level {$character->level} {$fullName}</label><br>
+						<span class="charPointsLeft">0</span> points left to spend.
+						<div style="display: none"><span class="charLevel">1</span></div>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
 			{/if}
 
-                </div>
-            </div>
 {if (!empty($class))}
+	<div class="row">
             <div class="panel">
                 <div class="panel-heading">
-                   <span class="panel-title">Spend Points</span>
+                   <span class="panel-title">Spend Points {if !empty($character)}(<span class="charPointsLeft">0</span> remaining){/if}</span>
                 </div>    
                 <div class="panel-body">	
 			<img unselectable="on" class="portrait" src="/images/monograms/{$monogram}.gif" style="left: 30%;margin-left: -30%;">
@@ -622,11 +625,11 @@
 			</div>
 		</div>
 		</div>
+	</div>
 
 
 
-
-
+	<div class="row">
 
             <div class="panel">
                 <div class="panel-heading">
@@ -652,6 +655,7 @@
 		        	</tbody>
 		        </table>
 			</div>
+		</div>
 </div>
 
 			

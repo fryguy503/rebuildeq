@@ -197,6 +197,9 @@ function updateStats() {
 	var grandTotal = parseInt($("#tree-1").find("span.totalPoints").text());
 	grandTotal += parseInt($("#tree-2").find("span.totalPoints").text());
 	grandTotal += parseInt($("#tree-3").find("span.totalPoints").text());
+	if ('undefined' == typeof classLevel) {
+		return;
+	}
 	$("span.charPointsLeft").text((classLevel - grandTotal));
 
 //	$("div.descriptionContainer").html(descriptions);

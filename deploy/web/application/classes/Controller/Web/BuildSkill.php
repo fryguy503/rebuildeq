@@ -31,6 +31,7 @@ class Controller_Web_BuildSkill extends Template_Web_Core {
 		$this->template->class = $class;
 		$this->template->monogram = $build->monogram;
 		$this->template->styles = $build->styles;
+		$this->template->favicon = "/favicon/".strtolower($build->shortName).".ico";
 
 		$this->template->fullName = $build->fullName;
 		$this->template->classDescription = $build->desc;

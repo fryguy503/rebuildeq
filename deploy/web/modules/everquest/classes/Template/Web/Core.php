@@ -41,7 +41,7 @@ class Template_Web_Core extends Controller_Template {
 		$this->template->domain = Kohana_Cookie::$domain;
 		$this->template->showFooter = true;
 		$this->template->showHeader = false;
-		$this->template->favicon = "/favicon.ico";
+		$this->template->favicon = "/favicon/rebuildeq.ico";
 		//$this->template->characterCount = Character::count();
 
 		if (!empty($userToken)) {

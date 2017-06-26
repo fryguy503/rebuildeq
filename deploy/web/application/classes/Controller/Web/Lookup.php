@@ -4,7 +4,7 @@ class Controller_Web_Lookup extends Template_Web_Core {
 	public function before() {
 
 		parent::before();
-		$this->template->site->title = "Item System";
+		$this->template->site->title = "Lookup";
 		$this->template->site->description = "Testing item system";
 		$this->template->crumbs = array(
             (object)array("name" => "Home", "isActive" => true, "link" => "/"),
@@ -13,6 +13,8 @@ class Controller_Web_Lookup extends Template_Web_Core {
 	}
 
 	public function action_index() {
+		$this->template->site->title = "Browse By Zone";
+		$this->template->site->description = "Browse RebuildEQ by zone";
 		$this->template->zones = DB::select()->from('zone')->where('min_status', '=', 0)->as_object()->execute();
 	}
 
@@ -23,7 +25,7 @@ class Controller_Web_Lookup extends Template_Web_Core {
 			$this->redirect("/lookup/");
 			return;
 		}
-		$rawItems = DB::select('items.era', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id', 'zone.long_name zone_name')
+		$rawItems = DB::select('items.era', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id', 'zone.long_name zone_name', 'zone.description')
 			->from('zone_drops')
 			->join('items')->on('items.id', '=', 'item_id')
 			->join('npc_types npc')->on('npc.id', '=', 'npc_id')
@@ -35,9 +37,11 @@ class Controller_Web_Lookup extends Template_Web_Core {
 		}
 		
 		
-
+		$this->template->site->title = $rawItems[0]->zone_name;
+		$this->template->site->description = $rawItems[0]->description;
 		$this->template->zone = new stdClass();
 		$this->template->zone->name = $rawItems[0]->zone_name;
+		$this->template->zone->description = $rawItems[0]->description;
 		$this->template->zone->id = $rawItems[0]->zone_id;
 		$this->template->crumbs[] = (object)array("name" => $this->template->zone->name, "link" => "/lookup/zone/".$this->template->zone->id."/");
 
@@ -62,9 +66,47 @@ class Controller_Web_Lookup extends Template_Web_Core {
 		$id =  strtolower($this->request->param('id'));
 		$this->template->crumbs[] = (object)array("name" => "Item", "link" => "/lookup/item/");
 
-		//First, get item.
+		//First, get item by id
 		$this->template->focus = DB::select()->from('items')->where('id', '=', $id)->as_object()->execute()->current();
 		if (empty($this->template->focus)) {
+			if (empty($id)) {
+				$id = $this->request->query('name');
+				if (empty($id)) {
+					//$this->template->errorMessage = "Item ID not found: ".$id;
+					return;
+				}
+			}
+
+
+			//try with name param
+			$this->template->focus = DB::select()
+				->from('items')
+				->join('zone_drops')->on('zone_drops.item_id', '=', 'items.id')
+				->where('name', 'like', "%".$id."%")
+				->limit(1)
+				->as_object()->execute()->current();
+			
+			//still no dice? return
+			if (empty($this->template->focus)) {
+				$this->template->errorMessage = "Item not found: ".$id;
+				return;
+			}
+
+			//see if additional results
+			$itemList = DB::select('items.*')
+				->from('items')
+				->join('zone_drops')->on('zone_drops.item_id', '=', 'items.id')
+				->where('name', 'like', "%".$id."%")
+				->group_by('item_id')
+				->limit(100)
+				->as_object()->execute();
+
+			if (count($itemList) > 0) {
+				$this->template->items = $itemList;
+				$this->template->resultMessage = "Found ".count($itemList)." results for items matching '" . $id . "'";
+				if (count($itemList) > 100) $this->template->resultMessage .= ", limited to first 100 results.";
+				return;
+			}
 			return;
 		}
 		$this->template->crumbs[] = (object)array("name" => $this->template->focus->Name);

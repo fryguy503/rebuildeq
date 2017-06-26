@@ -4,7 +4,7 @@ class Controller_Web_Builds extends Template_Web_Core {
 
 	public function before() {
 		parent::before();
-		$this->template->site->title = "Shadow Knight Build";
+		$this->template->site->title = "Builds";
 		$this->template->site->description = "Shadow Knight Custom Build For RebuildEQ";
 		$this->template->crumbs = array(
 			(object)array("name" => "Home", "isActive" => true, "link" => "/"),
@@ -17,10 +17,21 @@ class Controller_Web_Builds extends Template_Web_Core {
 		$this->template->showHeader = false;
 		$this->template->showFooter = false;
 		$class =  strtolower($this->request->param('class'));
-		$skills = array();		
+		if ($class == "") {
+			return;			
+		}
+		$buildinfo = Build::get_build_info($class);
+		if (empty($buildinfo)) {
+			$this->redirect("/builds/");
+		}
+		$skills = array();
+		$skills = Build::get_skills($class);
+		
 
 		//Validate Session
 		$session = $this->request->param('session');
+
+		$this->template->crumbs[] = (object)array('name' => ucfirst($class));
 
 		if (!empty($session)) {
 			//First see if session exists
@@ -29,15 +40,23 @@ class Controller_Web_Builds extends Template_Web_Core {
 				$this->template->errorMessage = "Invalid Session Provided. Go in game and type #builds to create a new session.";
 			}
 
-			$tmpChar = DB::select('name, last_name, class, level, build_data')->from('character_data')->where('session', '=', $session)->where('session_timeout', '>=', DB::expr('UNIX_TIMESTAMP(NOW())'))->limit(1)->as_object()->execute()->current();
+			$tmpChar = DB::select('name, last_name, class, level, build_data')->from('character_data')
+			->where('session', '=', $session)
+			//->where('session_timeout', '>=', DB::expr('UNIX_TIMESTAMP(NOW())'))
+			->limit(1)->as_object()->execute()->current();
 			if (empty($tmpChar)) {
 				$this->template->errorMessage = "Expired Session provided. Go in game and type #builds to create a new session.";
+				return;
 			} else {
+
+				
 				$character = new stdClass();
 				$character->name = $tmpChar->name;
+
 				if (!empty($tmpChar->last_name)) {
 					$character->name .= " ".$tmpChar->last_name;
 				}
+				$this->template->crumbs[] = (object)array('name' => $character->name);
 				$character->level = $tmpChar->level;
 				$class = Build::convert_class($tmpChar->class);
 				if ($class == "unknown") {
@@ -72,24 +91,18 @@ class Controller_Web_Builds extends Template_Web_Core {
 			}
 			$this->template->hash = $buildHash;
 		}
-		if ($class == "") {
-			return;			
-		}
 
-		$this->template->crumbs[] = (object)array('name' => ucfirst($class));
-
-		$build = Build::get_build_info($class);
-		$skills = Build::get_skills($class);
+		$this->template->favicon = "/favicon/".strtolower($buildinfo->shortName).".ico";
 
 		$this->template->skills = $skills;
-		$this->template->monogram = $build->monogram;
-		$this->template->styles = $build->styles;
+		$this->template->monogram = $buildinfo->monogram;
+		$this->template->styles = $buildinfo->styles;
 		$this->template->class = $class;
-		$this->template->site->image = "http://rebuildeq.com/images/monograms/".$build->monogram.".gif";
-		$this->template->site->title = $build->fullName;
-		$this->template->fullName = $build->fullName;
-		$this->template->classDescription = $build->desc;
-		$this->template->site->description = strip_tags($build->desc);
+		$this->template->site->image = "http://rebuildeq.com/images/monograms/".$buildinfo->monogram.".gif";
+		$this->template->site->title = $buildinfo->fullName;
+		$this->template->fullName = $buildinfo->fullName;
+		$this->template->classDescription = $buildinfo->desc;
+		$this->template->site->description = strip_tags($buildinfo->desc);
 	}
 
 }

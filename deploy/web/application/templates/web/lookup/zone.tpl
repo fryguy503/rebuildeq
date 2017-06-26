@@ -4,7 +4,7 @@
     <div class="panel-heading"><span class="panel-title">{if !empty($zone)}Drops for {$zone->name}{/if}</span></div>
     <div class="panel-body">
       <p>
-    Zone description here.
+      {if !empty($zone)}{$zone->description}{/if}
       </p>
     </div>
     </div>

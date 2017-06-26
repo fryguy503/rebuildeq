@@ -15,8 +15,9 @@ class Controller_Web_Guide extends Template_Web_Core {
 	}
 
     public function action_zone() {
+        $this->template->favicon = "/favicon/zone.ico";
         $this->template->crumbs[] = (object)array("name" => "Disabled Zone List");
-        $this->template->site->title = "Zone List";
+        $this->template->site->title = "Disabled Zones";
         $this->template->site->description = "List of zones disabled on RebuildEQ.";
         
     }
@@ -27,6 +28,7 @@ class Controller_Web_Guide extends Template_Web_Core {
 
 
     public function action_card() {
+        $this->template->favicon = "/favicon/card.ico";
         $this->template->crumbs[] = (object)array("name" => "Card Augment List");
     	$this->template->site->title = "Card Augment List";
     	$this->template->site->description = "RebuildEQ features a custom set of cards that fit as augments, and this page lists all of them.";

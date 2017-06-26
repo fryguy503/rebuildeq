@@ -11,7 +11,7 @@ class Controller_Web_Index extends Template_Web_Core {
 	}
 
 	public function action_index() {
-
+		$this->redirect('/about/');
 	}
 
 }
