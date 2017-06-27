@@ -107,7 +107,7 @@
             <tr>
               <td><a href="/lookup/npc/{$npc->zone_id}/{$npc->npc_id}">{$npc->clean_name}</a></td>
               <td>{$npc->level}</td>
-              <td>{if $npc->is_quest == 1}Quest{/if}</td>
+              <td>{if $npc->is_quest_reward == 1}Quest Reward{else if $npc->is_quest_item == 1}Quest Item{/if}</td>
               <td><a href="/lookup/zone/{$npc->zone_id}">{$npc->long_name}</a></td>          
             </tr>
             {/foreach}

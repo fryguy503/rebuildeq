@@ -35,7 +35,7 @@ class Controller_Web_Lookup extends Template_Web_Core {
 			return;
 		}
 
-		$rawItems = DB::select('items.era', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id', 'zone.long_name zone_name', 'zone.description', 'zone_drops.is_quest')
+		$rawItems = DB::select('items.era', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id', 'zone.long_name zone_name', 'zone.description', 'zone_drops.is_quest_reward', 'zone_drops.is_quest_item')
 			->from('zone_drops')
 			->join('items')->on('items.id', '=', 'item_id')
 			->join('npc_types npc')->on('npc.id', '=', 'npc_id')
@@ -166,7 +166,7 @@ class Controller_Web_Lookup extends Template_Web_Core {
 
 
 
-		$rawItems = DB::select('items.era', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id','zone.long_name zone_name')
+		$rawItems = DB::select('items.era', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id','zone.long_name zone_name', "zone_drops.is_quest_reward", "zone_drops.is_quest_item")
 			->from('zone_drops')
 			->join('items')->on('items.id', '=', 'item_id')
 			->join('npc_types npc')->on('npc.id', '=', 'npc_id')

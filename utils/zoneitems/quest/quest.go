@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -19,6 +21,7 @@ var (
 	config     *eqemuconfig.Config
 	prefixPath string
 	db         Database
+	lastZone   string
 )
 
 type Database struct {
@@ -63,6 +66,10 @@ func visit(path string, f os.FileInfo, err error) error {
 	if len(filename) < 1 {
 		return nil
 	}
+	if lastZone != dir {
+		lastZone = dir
+		fmt.Println("Zone:", lastZone)
+	}
 
 	npcname := ""
 	if strings.Contains(filename, ".pl") {
@@ -84,39 +91,37 @@ func visit(path string, f os.FileInfo, err error) error {
 		return nil
 	}
 
-	fmt.Println(dir, npcname)
-
 	file, err := os.Open(path)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close()
 
-	//fmt.Println(dir, filename)
+	fmt.Printf("%s, ", filename)
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		parse := strings.TrimSpace(strings.Replace(strings.ToLower(scanner.Text()), " ", "", -1))
-		if !strings.Contains(parse, "summonitem(") {
-			continue
+
+		isQuestReward := 0
+		isQuestItem := 0
+
+		var items []int
+		if items = getQuestReward(parse); len(items) == 0 {
+			if items = getQuestItem(parse); len(items) == 0 {
+				continue
+			}
+			isQuestItem = 1
+		} else {
+			isQuestReward = 1
 		}
 
-		item_id := parse[strings.Index(parse, "summonitem(")+11:]
-		if len(item_id) < 2 {
-			continue
-		}
-		item_id = item_id[0:strings.Index(item_id, ")")]
-		if len(item_id) < 2 {
-			continue
-		}
-		if item_id == "0" {
-			continue
-		}
-
-		fmt.Println(zone_id, npc_id, item_id, dir, filename)
-		insertQuery := "REPLACE INTO zone_drops (item_id, npc_id, zone_id, is_quest) VALUES (?, ?, ?, ?)"
-		stmt, _ := db.instance.Prepare(insertQuery)
-		if _, err = stmt.Exec(item_id, npc_id, zone_id, 1); err != nil {
-			log.Fatal(err.Error())
+		for _, item_id := range items {
+			fmt.Println("Inserting", zone_id, npc_id, item_id, isQuestReward, isQuestItem, "for", dir, filename)
+			insertQuery := "REPLACE INTO zone_drops (item_id, npc_id, zone_id, is_quest_reward, is_quest_item) VALUES (?, ?, ?, ?, ?)"
+			stmt, _ := db.instance.Prepare(insertQuery)
+			if _, err = stmt.Exec(item_id, npc_id, zone_id, isQuestReward, isQuestItem); err != nil {
+				log.Fatal(err.Error())
+			}
 		}
 
 		//fmt.Println(scanner.Text())
@@ -129,6 +134,74 @@ func visit(path string, f os.FileInfo, err error) error {
 	return nil
 }
 
+func getQuestReward(parse string) (items []int) {
+	if !strings.Contains(parse, "summonitem(") {
+		return
+	}
+	item_id := parse[strings.Index(parse, "summonitem(")+11:]
+	if len(item_id) < 2 {
+		return
+	}
+	item_id = item_id[0:strings.Index(item_id, ")")]
+	if len(item_id) < 2 {
+		return
+	}
+	if item_id == "0" {
+		return
+	}
+	var err error
+	var result int
+	if result, err = strconv.Atoi(item_id); err != nil {
+		return
+	}
+	items = append(items, result)
+	return
+}
+
+func getQuestItem(parse string) (items []int) {
+	var err error
+	var result int
+	if strings.Contains(parse, `check_handin(\%itemcount,`) {
+
+		fmt.Println("1", parse)
+		item_id := parse[strings.Index(parse, `check_handin(\%itemcount,`)+25:]
+		if len(item_id) < 2 {
+			return
+		}
+		fmt.Println("2", item_id)
+
+		strIds := strings.Split(item_id, "=>")
+		fmt.Println("3", len(strIds))
+		for _, strId := range strIds {
+
+			item_id = strings.Replace(strings.TrimSpace(strId), ",", "", -1)
+			fmt.Println("4", item_id)
+			if result, err = strconv.Atoi(item_id); err != nil {
+				continue
+			}
+			items = append(items, result)
+		}
+		return
+	} else if strings.Contains(parse, "item_lib.check_turn_in") {
+		itemReg := regexp.MustCompile("item[0-9]=([0-9]+)")
+		//fmt.Println(itemReg.FindAll(b, n) (parse))
+		fmt.Println("1", parse)
+		strIds := itemReg.FindAllString(parse, -1)
+		fmt.Println("2", strIds)
+		for _, strId := range strIds {
+			fmt.Println("3", strId)
+			if strings.Index(strId, "=") > 0 {
+				strId = strings.Split(strId, "=")[1]
+			}
+			fmt.Println("4", strId)
+			if result, err = strconv.Atoi(strId); err != nil {
+				continue
+			}
+			items = append(items, result)
+		}
+	}
+	return
+}
 func loadConfig() error {
 	if config != nil {
 		return nil
@@ -166,7 +239,11 @@ func getZoneByShortname(shortname string) int {
 
 func getNpcByNameOrId(npcname string) int64 {
 	npcs := []npc.NpcTypes{}
-	query := "SELECT * from npc_types WHERE id = ? OR Name = ?"
+	query := `SELECT npc.* 
+	FROM npc_types npc 
+	INNER JOIN spawnentry ON spawnentry.npcid = npc.id
+	INNER JOIN spawn2 ON spawn2.spawngroupid = spawnentry.spawngroupid
+	WHERE npc.id = ? OR npc.Name = ?`
 	if err := db.instance.Select(&npcs, query, npcname, npcname); err != nil {
 		log.Fatal("Error getting", npcname, err.Error())
 		return 0

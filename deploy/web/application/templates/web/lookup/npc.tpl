@@ -54,6 +54,7 @@
           <tr>
           <th>Item</th>
           <th>Era</th>
+          <th>Is Quest</th>
           </tr>
         </thead>
         <tbody>
@@ -62,6 +63,7 @@
           <tr>
             <td><a itemtooltip="{$item->entry->item_id}" href="/lookup/item/{$item->entry->item_id}"><span class="image-icon icon-{$item->entry->icon}"></span></a><a itemtooltip="{$item->entry->item_id}" href="/lookup/item/{$item->entry->item_id}">  {$item->entry->name}</a></td>
             <td>{$item->entry->era}</td>
+            <td>{if $item->entry->is_quest_reward == 1}Quest Reward{else if $item->entry->is_quest_item == 1}Quest Item{/if}</td>
            
           </tr>
           {/foreach}
