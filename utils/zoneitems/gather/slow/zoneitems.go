@@ -63,7 +63,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	insertQuery := "REPLACE INTO zone_drops (item_id, npc_id, zone_short_name, zone_id) VALUES"
+	insertQuery := "REPLACE INTO zone_drops (item_id, npc_id, zone_id) VALUES"
 	insertVals := []interface{}{}
 
 	for _, zone := range zones {
@@ -108,18 +108,19 @@ func main() {
 								if insertCount%1000 == 0 {
 									fmt.Printf("%d, ", insertCount)
 								}
-								insertQuery += "(?, ?, ?, ?),"
-								insertVals = append(insertVals, itementry.Id, npc.Id, zone.Short_name, zone.Id)
+								insertQuery += "(?, ?, ?),"
+								insertVals = append(insertVals, itementry.Id, npc.Id.Int64, zone.Zoneidnumber)
 
-								if insertCount%10000 == 0 {
-									fmt.Print(", inserting 10k records...")
+								if insertCount%5000 == 0 {
+									fmt.Print(", inserting 5k records...")
 									insertQuery = insertQuery[0 : len(insertQuery)-1]
 									stmt, _ := db.instance.Prepare(insertQuery)
+
 									if _, err = stmt.Exec(insertVals...); err != nil {
 										log.Fatal(err.Error())
 									}
 									//reset query
-									insertQuery = "REPLACE INTO zone_drops (item_id, npc_id, zone_short_name, zone_id) VALUES"
+									insertQuery = "REPLACE INTO zone_drops (item_id, npc_id, zone_id) VALUES"
 									insertVals = []interface{}{}
 								}
 								//fmt.Printf(itementry.Name + ", ")
@@ -209,7 +210,7 @@ func (db *Database) getZones() ([]zone.Zone, error) {
 		return nil, fmt.Errorf("No database instance")
 	}
 	zones := []zone.Zone{}
-	query := "SELECT * from eqemu.zone"
+	query := "SELECT * from eqemu.zone WHERE min_status = 0 ORDER BY short_name ASC"
 	if err := db.instance.Select(&zones, query); err != nil {
 		return nil, err
 	}

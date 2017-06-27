@@ -20,6 +20,7 @@
         <tr>
         <th>Item</th>
         <th>Era</th>
+        <th>Quest</th>
         <th>NPCs</th>
         </tr>
       </thead>
@@ -30,6 +31,7 @@
           
           <td><a href="/lookup/item/{$item->entry->item_id}"><span class="image-icon icon-{$item->entry->icon}"></span></a><a href="/lookup/item/{$item->entry->item_id}">{$item->entry->name}</a></td>
           <td>{$item->entry->era}</td>
+          <td>{if $item->entry->is_quest == 1}Quest{/if}</td>
           <td>{foreach from=$item->npcs item=npc}
                 <a href="/lookup/npc/{$zone->id}/{$npc->id}">{$npc->name}</a>{if count($item->npcs) > 1}, and {count($item->npcs)-1} more NPCs{/if}
                 {break}

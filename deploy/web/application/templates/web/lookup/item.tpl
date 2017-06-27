@@ -96,6 +96,7 @@
             
             <th>Name</th>
             <th>Level</th>
+            <th>Quest</th>
             <th>Zone</th>
             </tr>
           </thead>
@@ -106,7 +107,8 @@
             <tr>
               <td><a href="/lookup/npc/{$npc->zone_id}/{$npc->npc_id}">{$npc->clean_name}</a></td>
               <td>{$npc->level}</td>
-              <td><a href="/zone/{$npc->zone_id}">{$npc->long_name}</a></td>          
+              <td>{if $npc->is_quest == 1}Quest{/if}</td>
+              <td><a href="/lookup/zone/{$npc->zone_id}">{$npc->long_name}</a></td>          
             </tr>
             {/foreach}
             {/foreach}

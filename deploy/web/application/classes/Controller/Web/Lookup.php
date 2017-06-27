@@ -15,26 +15,41 @@ class Controller_Web_Lookup extends Template_Web_Core {
 	public function action_index() {
 		$this->template->site->title = "Browse By Zone";
 		$this->template->site->description = "Browse RebuildEQ by zone";
-		$this->template->zones = DB::select()->from('zone')->where('min_status', '=', 0)->as_object()->execute();
+		$this->template->zones = DB::select()
+			->from('zone')
+			->where('min_status', '=', 0)
+			->where('levels', '>', 0)
+			//->order_by('long_name', 'asc')
+			->order_by('levels', 'asc')
+			->as_object()->execute();
 	}
 
 	public function action_zone() {
+
 		$id =  strtolower($this->request->param('id'));
 		$this->template->crumbs[] = (object)array("name" => "Zone", "link" => "/lookup/zone/");
-		if (empty($id)) {
+
+		if (empty($id) || !is_numeric($id)) {
+			//die("Redirect, empty/!isnmber");
 			$this->redirect("/lookup/");
 			return;
 		}
-		$rawItems = DB::select('items.era', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id', 'zone.long_name zone_name', 'zone.description')
+
+		$rawItems = DB::select('items.era', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id', 'zone.long_name zone_name', 'zone.description', 'zone_drops.is_quest')
 			->from('zone_drops')
 			->join('items')->on('items.id', '=', 'item_id')
 			->join('npc_types npc')->on('npc.id', '=', 'npc_id')
 			->join('zone')->on('zone.zoneidnumber', '=', $id)
-			->where('zone_id', '=', $id)->as_object()->execute();
+			->where('zone_id', '=', $id)
+			->where('description', '!=', "")
+			->as_object()->execute();
+		
 		if (count($rawItems) == 0) {
+			//die("no results");
 			$this->redirect("/lookup/");
 			return;
 		}
+
 		
 		
 		$this->template->site->title = $rawItems[0]->zone_name;
