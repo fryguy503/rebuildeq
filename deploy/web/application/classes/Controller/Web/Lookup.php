@@ -27,23 +27,87 @@ class Controller_Web_Lookup extends Template_Web_Core {
 	public function action_zone() {
 
 		$id =  strtolower($this->request->param('id'));
-		$this->template->crumbs[] = (object)array("name" => "Zone", "link" => "/lookup/zone/");
+		$sort =  strtolower($this->request->param('sort'));
+		$category = strtolower($this->request->query('category'));
+		if ($category != "gear" &&
+			$category != "weapon" &&
+			$category != "item") {
+			$category = "";
+		}
+		if ($sort != "item" &&
+			$sort != "era" && 
+			$sort != "npc" && 
+			$sort != "quest") {
+			$sort = "item";
+		}
+		$this->template->category = $category;
 
+		$this->template->crumbs[] = (object)array("name" => "Zone", "link" => "/lookup/zone/");
+		$limit = 100;
+		$offset = 0;
+		$page = $this->request->query('page'); 
+		if (!is_numeric($page) || $page < 1) {
+			$page = 1;
+		}
+		
 		if (empty($id) || !is_numeric($id)) {
 			//die("Redirect, empty/!isnmber");
 			$this->redirect("/lookup/");
 			return;
 		}
 
-		$rawItems = DB::select('items.*', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id', 'zone.long_name zone_name', 'zone.description', 'zone_drops.is_quest_reward', 'zone_drops.is_quest_item')
+		$query = DB::select('item_id')
 			->from('zone_drops')
 			->join('items')->on('items.id', '=', 'item_id')
 			->join('npc_types npc')->on('npc.id', '=', 'npc_id')
 			->join('zone')->on('zone.zoneidnumber', '=', $id)
 			->where('zone_id', '=', $id)
-			->where('description', '!=', "")
-			->limit(1000)
+			->where('description', '!=', "");
+
+		if ($sort == "item") $query = $query->order_by("items.Name");
+		if ($sort == "npc") $query = $query->order_by("npc.name");
+		if ($sort == "quest") $query = $query->order_by("is_quest_reward", "desc");
+		if ($sort == "quest") $query = $query->order_by("is_quest_item", "desc");
+
+		$countRows = $query->group_by('item_id')	
+			->limit(2500)
+			->execute();
+		$count = sizeof($countRows);
+		if (count($count) < 1) {
+			$this->redirect("/lookup/");
+			return;
+		}		
+
+		$this->template->totalPages = ceil($count /  $limit);		
+		if ($this->template->totalPages < 1) $this->template->totalPages = 1;
+		if ($this->template->totalPages > 25) $this->template->totalPages = 25;
+		if ($page > $this->template->totalPages) {
+			$page = $this->template->totalPages;
+		}
+
+		$offset = $page * $limit;
+		
+		$this->template->currentPage = $page;
+		$this->template->count = $count;
+
+		$query = DB::select('items.*', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id', 'zone.long_name zone_name', 'zone.description', 'zone_drops.is_quest_reward', 'zone_drops.is_quest_item')
+			->from('zone_drops')
+			->join('items')->on('items.id', '=', 'item_id')
+			->join('npc_types npc')->on('npc.id', '=', 'npc_id')
+			->join('zone')->on('zone.zoneidnumber', '=', $id)
+			->where('zone_id', '=', $id)
+			->where('description', '!=', "");
+
+		if ($sort == "item") $query = $query->order_by("items.Name");
+		if ($sort == "npc") $query = $query->order_by("npc.name");
+		if ($sort == "quest") $query = $query->order_by("is_quest_reward", "desc");
+		if ($sort == "quest") $query = $query->order_by("is_quest_item", "desc");
+
+		$rawItems = $query->group_by('item_id')
+			->limit($limit)
+			->offset($offset)
 			->as_object()->execute();
+
 		
 		if (count($rawItems) == 0) {
 			//die("no results");
@@ -63,15 +127,28 @@ class Controller_Web_Lookup extends Template_Web_Core {
 
 		$items = array();
 		foreach ($rawItems as $i) {
+			$i = Item::get_attributes($i);
+			if ($category == "gear" && $i->category != "Gear") continue;
+			if ($category == "item" && $i->category != "Item") continue;
+			if ($category == "weapon" && $i->category != "Weapon") continue;
+
 			if (empty($items[$i->item_id])) {
 				$items[$i->item_id] = new stdClass();
 			}
 			//if (empty($items[$i->item_id])) {
 			//	$items[$i->item_id]->npcs = array();
 			//}
-			$i = Item::get_attributes($i);
+
+			
 			$items[$i->item_id]->entry = $i;
 			$items[$i->item_id]->npcs[] = (object)array('id' => $i->npc_id, 'name' => str_replace("_", " ", $i->npc_name));
+		}
+
+		//since it's post-filtered, gotta recount
+		if ($category != "") {
+			$this->template->count = sizeof($items);
+			$this->template->page = 1;
+			$this->template->totalPages = 1;
 		}
 		$this->template->items = $items;
 		
@@ -81,7 +158,16 @@ class Controller_Web_Lookup extends Template_Web_Core {
 
 	public function action_item() {
 		$id =  strtolower($this->request->param('id'));
+		$sort =  strtolower($this->request->param('sort'));
+
 		$this->template->crumbs[] = (object)array("name" => "Item", "link" => "/lookup/item/");
+		if ($sort != "item" &&
+			$sort != "era" && 
+			$sort != "npc" && 
+			$sort != "quest") {
+			$sort = "item";
+		}
+
 
 		//First, get item by id
 		$this->template->focus = DB::select()->from('items')->where('id', '=', $id)->as_object()->execute()->current();
@@ -96,14 +182,17 @@ class Controller_Web_Lookup extends Template_Web_Core {
 
 
 			//try with name param
-			$this->template->focus = DB::select()
+			$query = DB::select()
 				->from('items')
 				->join('zone_drops')->on('zone_drops.item_id', '=', 'items.id')
-				->where('name', 'like', "%".$id."%")
-				->limit(1)
-				->as_object()->execute()->current();
+				->where('name', 'like', "%".$id."%");
+			if ($sort == "item") $query = $query->order_by("items.Name");
+			if ($sort == "npc") $query = $query->order_by("npc.name");
+			if ($sort == "quest") $query = $query->order_by("is_quest_reward");
+			if ($sort == "quest") $query = $query->order_by("is_quest_item");
+			$query = $this->template->focus->limit(1)->as_object()->execute()->current();
+			$this->template->focus = $query;
 			
-			//still no dice? return
 			if (empty($this->template->focus)) {
 				$this->template->errorMessage = "Item not found: ".$id;
 				return;
@@ -124,9 +213,10 @@ class Controller_Web_Lookup extends Template_Web_Core {
 				if (count($itemList) > 100) $this->template->resultMessage .= ", limited to first 100 results.";
 				return;
 			}
-			return;
+			
 		}
 		$this->template->crumbs[] = (object)array("name" => $this->template->focus->Name);
+		$this->template->site->title = $this->template->focus->Name;
 		
 		$this->template->focus = Item::get_attributes($this->template->focus);
 		$this->template->itemfocus = $this->template->focus;

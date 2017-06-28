@@ -35,6 +35,8 @@
 <link rel="stylesheet" type="text/css" href="/r2/vendor/plugins/footable/css/footable.core.min.css">
 
 <link rel="stylesheet" type="text/css" href="/css/icons.css">
+<!-- jQuery -->
+<script src="/r2/vendor/jquery/jquery-1.11.1.min.js"></script>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!--[if lt IE 9]>
   <script src="/r2/https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -1650,8 +1652,7 @@
 
 <!-- BEGIN: PAGE SCRIPTS -->
 
-<!-- jQuery -->
-<script src="/r2/vendor/jquery/jquery-1.11.1.min.js"></script>
+
 <script src="/r2/vendor/jquery/jquery_ui/jquery-ui.min.js"></script>
 
 <!-- HighCharts Plugin -->

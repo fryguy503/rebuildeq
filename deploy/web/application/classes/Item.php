@@ -10,7 +10,7 @@ class Item {
 		$item->typeString = Item::get_type($item->itemtype);
 		$item->sizeString = Item::get_sizes($item->size);
 		$item->weight = sprintf("%.1f", $item->weight/10);
-		$item->slotType = Item::get_slottype($item->slots);
+		$item->category = Item::get_category($item->slots);
 		return $item;
 	}
 
@@ -61,7 +61,7 @@ class Item {
 		return $raceString;
 	}
 
-	public static function get_slottype($slots) {
+	public static function get_category($slots) {
 		if (($slots & 8192) == 8192 ||  //primary
 			($slots & 16384) == 16384 || //secondary
 			($slots & 2048) == 2048) { //range

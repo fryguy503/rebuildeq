@@ -72,8 +72,6 @@
       </table>
       </div>
     </div>
-
-
 {else}
 {* single item result *}
   <div class="row">

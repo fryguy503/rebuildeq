@@ -42,6 +42,7 @@ class Template_Web_Core extends Controller_Template {
 		$this->template->showFooter = true;
 		$this->template->showHeader = false;
 		$this->template->favicon = "/favicon/rebuildeq.ico";
+		$this->template->url = $this->request->uri();
 		//$this->template->characterCount = Character::count();
 
 		if (!empty($userToken)) {

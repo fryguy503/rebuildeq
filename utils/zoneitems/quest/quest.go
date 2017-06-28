@@ -18,10 +18,12 @@ import (
 )
 
 var (
-	config     *eqemuconfig.Config
-	prefixPath string
-	db         Database
-	lastZone   string
+	config        *eqemuconfig.Config
+	prefixPath    string
+	db            Database
+	lastZone      string
+	questNoSpawns []string
+	insertCount   int
 )
 
 type Database struct {
@@ -38,12 +40,25 @@ func main() {
 	if err = loadDatabase(&db); err != nil {
 		log.Fatal(err.Error())
 	}
+
+	query := "DELETE FROM zone_drops WHERE is_quest_item = 1 OR is_quest_reward = 1"
+	if _, err := db.instance.Exec(query); err != nil {
+		log.Fatal(err.Error())
+	}
+
 	//os.Chdir("../../deploy/server/quests")
 	prefixPath = "../../../deploy/server/quests/"
 	err = filepath.Walk(prefixPath, visit)
 	if err != nil {
 		log.Fatal("Error filepath", err.Error())
 	}
+	fmt.Println("===============")
+	for _, entry := range questNoSpawns {
+		fmt.Println(entry)
+	}
+	fmt.Println("===============")
+	fmt.Println("Created", insertCount, "entries")
+
 }
 
 func visit(path string, f os.FileInfo, err error) error {
@@ -79,6 +94,7 @@ func visit(path string, f os.FileInfo, err error) error {
 		npcname = filename[0 : len(filename)-4]
 	}
 
+	fmt.Printf("%s, ", filename)
 	zone_id := getZoneByShortname(dir)
 	if zone_id < 1 {
 		//fmt.Println("Zone skipped", dir)
@@ -88,6 +104,7 @@ func visit(path string, f os.FileInfo, err error) error {
 	npc_id := getNpcByNameOrId(npcname)
 	if npc_id < 1 {
 		//fmt.Println("NPC skipped", filename)
+		questNoSpawns = append(questNoSpawns, fmt.Sprintf("%s/%s", dir, filename))
 		return nil
 	}
 
@@ -97,7 +114,6 @@ func visit(path string, f os.FileInfo, err error) error {
 	}
 	defer file.Close()
 
-	fmt.Printf("%s, ", filename)
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		parse := strings.TrimSpace(strings.Replace(strings.ToLower(scanner.Text()), " ", "", -1))
@@ -121,6 +137,10 @@ func visit(path string, f os.FileInfo, err error) error {
 			stmt, _ := db.instance.Prepare(insertQuery)
 			if _, err = stmt.Exec(item_id, npc_id, zone_id, isQuestReward, isQuestItem); err != nil {
 				log.Fatal(err.Error())
+			}
+			insertCount++
+			if insertCount%1000 == 0 {
+				fmt.Println("Inserted", insertCount, "so far")
 			}
 		}
 
@@ -161,22 +181,25 @@ func getQuestReward(parse string) (items []int) {
 func getQuestItem(parse string) (items []int) {
 	var err error
 	var result int
-	if strings.Contains(parse, `check_handin(\%itemcount,`) {
+	if strings.Contains(parse, `check_handin(`) {
 
 		//fmt.Println("1", parse)
-		item_id := parse[strings.Index(parse, `check_handin(\%itemcount,`)+25:]
+		item_id := parse[strings.Index(parse, `check_handin(`)+13:]
 		if len(item_id) < 2 {
 			return
 		}
-		//fmt.Println("2", item_id)
+		itemReg := regexp.MustCompile("([0-9]+)=>[0-9]+")
+		strIds := itemReg.FindAllString(parse, -1)
 
-		strIds := strings.Split(item_id, "=>")
-		//fmt.Println("3", len(strIds))
+		//fmt.Println("2", len(strIds))
 		for _, strId := range strIds {
+			//fmt.Println("3", strId)
+			if strings.Index(strId, "=>") > 0 {
+				strId = strings.Split(strId, "=>")[0]
+			}
 
-			item_id = strings.Replace(strings.TrimSpace(strId), ",", "", -1)
-			//fmt.Println("4", item_id)
-			if result, err = strconv.Atoi(item_id); err != nil {
+			//fmt.Println("4", strId)
+			if result, err = strconv.Atoi(strId); err != nil {
 				continue
 			}
 			items = append(items, result)
