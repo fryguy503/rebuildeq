@@ -14,11 +14,26 @@
 
 {if !empty($items)}
 <div class="row">
+<div class="table-responsive"> 
+<form action="/" method="get">
+ <table class="table table-striped">
+ 
+   <td> <input type="checkbox" name="onlyGear" value="onlyGear"> Only Gear<br></td>
+   <td> <input type="checkbox" name="onlyGear" value="onlyGear"> Only Weapons<br></td>
+   <td> <input type="checkbox" name="onlyGear" value="onlyGear"> Only Items<br></td>
+   <td> <input type="button" name="onlyGear" value="filter"><br></td>
+ 
+ </table>
+ </form>
+</div>
+</div>
+<div class="row">
     <div class="table-responsive"> 
       <table class="table table-striped">
       <thead>
         <tr>
         <th>Item</th>
+        <th>Category</th>
         <th>Era</th>
         <th>Quest</th>
         <th>NPCs</th>
@@ -28,8 +43,8 @@
 
         {foreach from=$items item=item key=c}
         <tr>
-          
-          <td><a href="/lookup/item/{$item->entry->item_id}"><span class="image-icon icon-{$item->entry->icon}"></span></a><a href="/lookup/item/{$item->entry->item_id}">{$item->entry->name}</a></td>
+          <td><a itemtooltip="{$item->entry->item_id}" href="/lookup/item/{$item->entry->item_id}"><span class="image-icon icon-{$item->entry->icon}"></span></a><a itemtooltip="{$item->entry->item_id}" href="/lookup/item/{$item->entry->item_id}">{$item->entry->name}</a></td>
+          <td>{$item->entry->slotType}</td>
           <td>{$item->entry->era}</td>
           <td>{if $item->entry->is_quest_reward == 1}Quest Reward{else if $item->entry->is_quest_item}Quest Item{/if}</td>
           <td>{foreach from=$item->npcs item=npc}

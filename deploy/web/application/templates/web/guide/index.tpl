@@ -1,5 +1,3 @@
-{include file="../_header.tpl"}
-  
 <div id="intro">
  <section id="pricing" class="dark">
   <div class="container">

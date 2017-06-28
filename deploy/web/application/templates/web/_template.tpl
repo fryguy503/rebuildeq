@@ -1636,18 +1636,11 @@
 
 <!--- Widgets -->
 
-<div id="itemtooltip" class="panel" style="display: none; position: fixed;">  
+<div class="item_tooltip" class="panel" style="display: none; position: fixed;">  
   <div class="panel-body">
-  <span style="vertical-align:middle;width:50px"> <span id="itemtooltip-icon" style="width:40px;height:auto;"></span></span>
-  <span id="itemtooltip-name" class="panel-title">Cloth Shirt</span>
-  <table class="container_div display_table" style="width:100px">            
-        <tbody>    
-        <tr>
-            <td style="vertical-align:top"><br><table width="100%"><tbody><tr><td valign="top"><table width="100%" cellpadding="0" cellspacing="0"><tbody><tr><td colspan="2" nowrap="1"></td></tr><tr><td colspan="2"><b>Class: </b>ALL</td></tr><tr><td colspan="2"><b>Race: </b>ALL</td></tr><tr><td colspan="2"><b>Chest</b></td></tr></tbody></table><br><table><tbody><tr valign="top"><td><table style="width: 125px;"><tbody><tr><td><b>Size: </b></td><td style="text-align:right">MEDIUM</td></tr><tr><td><b>Weight: </b></td><td style="text-align:right">0.8</td></tr><tr><td><b>Item Type: </b></td><td style="text-align:right">Armor</td></tr></tbody></table></td><td><table style="width: 125px;"><tbody><tr><td><b>AC: </b></td><td style="text-align:right">6</td></tr></tbody></table></td><td><table style="width: 125px;"></table></td></tr><tr><td colspan="2">&nbsp;</td></tr><tr valign="top"><td><table style="width:100%"></table></td><td><table style="width:100%"></table></td><td><table style="width:100%"></table></td></tr></tbody></table><br></td></tr><tr><td width="0%" nowrap="1" colspan="2"><img src="{*blank_slot.gif*}" style="width:auto;height:10px"> <b>Slot 1: </b>Type 7</td></tr><tr><td></td><td>&nbsp;</td><td></td></tr><tr><td><br><b>Value: </b>0 <img src="http://www.raidaddicts.org/Allah//images/icons/item_644.png" width="14" height="14"> 2 <img src="http://www.raidaddicts.org/Allah//images/icons/item_645.png" width="14" height="14"> 5 <img src="http://www.raidaddicts.org/Allah//images/icons/item_646.png" width="14" height="14"> 0 <img src="http://www.raidaddicts.org/Allah//images/icons/item_647.png" width="14" height="14"></td></tr></tbody></table><br></td>
-            <td style="vertical-align:top"></td>
-        </tr>
-    
-        </tbody></table>
+  <span style="vertical-align:middle;width:50px"> <span class="item_icon" style="width:40px;height:auto;"></span></span>
+  <span class="item_name" class="panel-title">Cloth Shirt</span>
+  {include file="./_item_stats.tpl"}
   </div>
 </div>
 
@@ -1717,8 +1710,8 @@
     if (!id) return;
 
     if (lastItemId == id) { //don't need to call twice if it's previously requested
-      $('#itemtooltip').show();
-      $('#itemtooltip').css({ left: e.offset().left + 120, top: e.offset().top - 250});
+      $('.item_tooltip').show();
+      $('.item_tooltip').css({ left: e.offset().left + 120, top: e.offset().top - 250});
     }
 
     $.ajax({
@@ -1733,11 +1726,17 @@
         }
 
         //console.log(rest);
-        console.log(rest.Data.icon);
-        $('#itemtooltip-icon').attr("class", "itemtooltip-icon image-icon icon-"+rest.Data.icon);
-        $('#itemtooltip-name').html(rest.Data.Name);
-        $('#itemtooltip').show();
-        $('#itemtooltip').css({ left: e.offset().left + 120, top: e.offset().top - 250});
+        console.log(rest.Data.class);
+        $('.item_icon').attr("class", "item_icon image-icon icon-"+rest.Data.icon);
+        $('.item_name').html(rest.Data.Name);
+        $('.item_class').html(rest.Data.classesString);
+        $('.item_race').html(rest.Data.racesString);
+        $('.item_platinum').html(rest.Data.price % 1000);
+        $('.item_gold').html(rest.Data.price % 100);
+        $('.item_silver').html(rest.Data.price % 10);
+        $('.item_copper').html(rest.Data.price % 1);
+        $('.item_tooltip').show();
+        $('.item_tooltip').css({ left: e.offset().left + 120, top: e.offset().top - 250});
       },
       error: function() {
         console.log("Error requesting!?");
@@ -1749,7 +1748,7 @@
   }
 
   function hideItemTooltip() {
-    $('#itemtooltip').hide();
+    $('.item_tooltip').hide();
   }
   </script>
 </body>

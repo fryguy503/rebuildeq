@@ -163,19 +163,19 @@ func getQuestItem(parse string) (items []int) {
 	var result int
 	if strings.Contains(parse, `check_handin(\%itemcount,`) {
 
-		fmt.Println("1", parse)
+		//fmt.Println("1", parse)
 		item_id := parse[strings.Index(parse, `check_handin(\%itemcount,`)+25:]
 		if len(item_id) < 2 {
 			return
 		}
-		fmt.Println("2", item_id)
+		//fmt.Println("2", item_id)
 
 		strIds := strings.Split(item_id, "=>")
-		fmt.Println("3", len(strIds))
+		//fmt.Println("3", len(strIds))
 		for _, strId := range strIds {
 
 			item_id = strings.Replace(strings.TrimSpace(strId), ",", "", -1)
-			fmt.Println("4", item_id)
+			//fmt.Println("4", item_id)
 			if result, err = strconv.Atoi(item_id); err != nil {
 				continue
 			}
@@ -185,15 +185,15 @@ func getQuestItem(parse string) (items []int) {
 	} else if strings.Contains(parse, "item_lib.check_turn_in") {
 		itemReg := regexp.MustCompile("item[0-9]=([0-9]+)")
 		//fmt.Println(itemReg.FindAll(b, n) (parse))
-		fmt.Println("1", parse)
+		//fmt.Println("1", parse)
 		strIds := itemReg.FindAllString(parse, -1)
-		fmt.Println("2", strIds)
+		//fmt.Println("2", strIds)
 		for _, strId := range strIds {
-			fmt.Println("3", strId)
+			//fmt.Println("3", strId)
 			if strings.Index(strId, "=") > 0 {
 				strId = strings.Split(strId, "=")[1]
 			}
-			fmt.Println("4", strId)
+			//fmt.Println("4", strId)
 			if result, err = strconv.Atoi(strId); err != nil {
 				continue
 			}

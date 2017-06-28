@@ -13,6 +13,8 @@ class Controller_Rest_Lookup extends Template_Rest_Core {
 			->as_object()->execute()->current();
 		if (empty($item)) return;
 
+		$item = Item::get_attributes($item);
+		
 		$this->rest->Status = 1;
 		$this->rest->Message = "Success";
 		$this->rest->Data = $item;

@@ -35,13 +35,14 @@ class Controller_Web_Lookup extends Template_Web_Core {
 			return;
 		}
 
-		$rawItems = DB::select('items.era', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id', 'zone.long_name zone_name', 'zone.description', 'zone_drops.is_quest_reward', 'zone_drops.is_quest_item')
+		$rawItems = DB::select('items.*', 'items.icon', 'npc_id', 'npc.name npc_name', 'items.name', 'item_id', 'zone_id', 'zone.long_name zone_name', 'zone.description', 'zone_drops.is_quest_reward', 'zone_drops.is_quest_item')
 			->from('zone_drops')
 			->join('items')->on('items.id', '=', 'item_id')
 			->join('npc_types npc')->on('npc.id', '=', 'npc_id')
 			->join('zone')->on('zone.zoneidnumber', '=', $id)
 			->where('zone_id', '=', $id)
 			->where('description', '!=', "")
+			->limit(1000)
 			->as_object()->execute();
 		
 		if (count($rawItems) == 0) {
@@ -68,6 +69,7 @@ class Controller_Web_Lookup extends Template_Web_Core {
 			//if (empty($items[$i->item_id])) {
 			//	$items[$i->item_id]->npcs = array();
 			//}
+			$i = Item::get_attributes($i);
 			$items[$i->item_id]->entry = $i;
 			$items[$i->item_id]->npcs[] = (object)array('id' => $i->npc_id, 'name' => str_replace("_", " ", $i->npc_name));
 		}
@@ -125,7 +127,9 @@ class Controller_Web_Lookup extends Template_Web_Core {
 			return;
 		}
 		$this->template->crumbs[] = (object)array("name" => $this->template->focus->Name);
-
+		
+		$this->template->focus = Item::get_attributes($this->template->focus);
+		$this->template->itemfocus = $this->template->focus;
 		
 		//Next, get zones and mobs it drops from.
 		$rawMobs = DB::select()
@@ -133,6 +137,7 @@ class Controller_Web_Lookup extends Template_Web_Core {
 			->join('npc_types npc')->on('npc.id', '=', 'npc_id')
 			->join('zone')->on('zone.zoneidnumber', '=', 'zone_id')
 			->where('item_id', '=', $id)
+			->limit(500)
 			->as_object()->execute();
 		if (count($rawMobs) == 0) {
 			return;
@@ -140,15 +145,23 @@ class Controller_Web_Lookup extends Template_Web_Core {
 
 		//Now let's merge NPCs by zone to be in same list
 		$npcs = array();
+		$quests = array();
 		foreach ($rawMobs as $i) {
-			if (empty($npcs[$i->zone_id])) $npcs[$i->zone_id] = array();
-			if (empty($npcs[$i->zone_id][$i->name])) $npcs[$i->zone_id][$i->name] = new stdClass();
 			$i->clean_name = str_replace("_", " ", $i->name);
 			if (Tier::get_tier_by_npc($i->npc_id) >= 0) $i->level = "T".Tier::get_tier_by_npc($i->npc_id);
-			$npcs[$i->zone_id][$i->name] = $i;
 
+			if ($i->is_quest_reward == 1 || $i->is_quest_item == 1) {
+				if (empty($quests[$i->zone_id])) $quests[$i->zone_id] = array();
+				if (empty($quests[$i->zone_id][$i->name])) $quests[$i->zone_id][$i->name] = new stdClass();
+				$quests[$i->zone_id][$i->name] = $i;
+			} else {
+				if (empty($npcs[$i->zone_id])) $npcs[$i->zone_id] = array();
+				if (empty($npcs[$i->zone_id][$i->name])) $npcs[$i->zone_id][$i->name] = new stdClass();
+			 	$npcs[$i->zone_id][$i->name] = $i;
+			}
 		}
 		$this->template->npcs = $npcs;
+		$this->template->quests = $quests;
 
 	}
 

@@ -81,7 +81,7 @@
       <div class="panel-heading"><span class="image-icon icon-{$focus->icon}"></span><span class="panel-title">{$focus->Name}</span></div>
       <div class="panel-body">
         <p>
-      Item stats here
+          {include file="../_item_stats.tpl"}
         </p>
       </div>
       </div>
@@ -103,6 +103,36 @@
           <tbody>
 
             {foreach from=$npcs item=zones}
+            {foreach from=$zones item=npc}
+            <tr>
+              <td><a href="/lookup/npc/{$npc->zone_id}/{$npc->npc_id}">{$npc->clean_name}</a></td>
+              <td>{$npc->level}</td>
+              <td>{if $npc->is_quest_reward == 1}Quest Reward{else if $npc->is_quest_item == 1}Quest Item{/if}</td>
+              <td><a href="/lookup/zone/{$npc->zone_id}">{$npc->long_name}</a></td>          
+            </tr>
+            {/foreach}
+            {/foreach}
+          </tbody>
+          </table>
+    </div>
+    {/if}
+
+    {if !empty($quests)}
+    <div class="row">
+    <div class="panel-heading">Quests involving {$focus->Name}</div>
+          <table class="table table-striped">
+          <thead>
+            <tr>
+            
+            <th>Name</th>
+            <th>Level</th>
+            <th>Quest</th>
+            <th>Zone</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            {foreach from=$quests item=zones}
             {foreach from=$zones item=npc}
             <tr>
               <td><a href="/lookup/npc/{$npc->zone_id}/{$npc->npc_id}">{$npc->clean_name}</a></td>
