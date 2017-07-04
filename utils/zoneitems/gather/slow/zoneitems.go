@@ -53,9 +53,9 @@ func main() {
 	if err = db.createTable(); err != nil {
 		log.Fatal(err.Error())
 	}
-	if err = db.truncateTable(); err != nil {
-		log.Fatal(err.Error())
-	}
+	//if err = db.truncateTable(); err != nil {
+	//	log.Fatal(err.Error())
+	//}
 
 	insertCount := 0
 	zones := []zone.Zone{}
@@ -66,14 +66,22 @@ func main() {
 	insertQuery := "REPLACE INTO zone_drops (item_id, npc_id, zone_id) VALUES"
 	insertVals := []interface{}{}
 
+	isSkip := true
+
 	for _, zone := range zones {
+		//skipping feature
+		if zone.Short_name.String != "steamfactory" && isSkip {
+			fmt.Println("Skipping", zone.Short_name.String)
+			continue
+		}
+		isSkip = false
 		lastInsertCount := insertCount
 		fmt.Print("\n" + zone.Short_name.String + "...")
 		spawns := []spawn.Spawn2{}
 		if spawns, err = db.getSpawns(zone.Short_name.String); err != nil {
 			log.Fatal(err.Error())
 		}
-		if zone.Min_status > 0 {
+		if zone.Min_status > 80 {
 			fmt.Printf("Skipping, status > 0, %d", zone.Min_status)
 			continue
 		}
@@ -210,7 +218,7 @@ func (db *Database) getZones() ([]zone.Zone, error) {
 		return nil, fmt.Errorf("No database instance")
 	}
 	zones := []zone.Zone{}
-	query := "SELECT * from eqemu.zone WHERE min_status = 0 ORDER BY short_name ASC"
+	query := "SELECT * from eqemu.zone WHERE min_status < 90 ORDER BY short_name ASC"
 	if err := db.instance.Select(&zones, query); err != nil {
 		return nil, err
 	}

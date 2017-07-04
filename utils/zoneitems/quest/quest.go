@@ -48,6 +48,7 @@ func main() {
 
 	//os.Chdir("../../deploy/server/quests")
 	prefixPath = "../../../deploy/server/quests/"
+	prefixPath = "./quests/"
 	err = filepath.Walk(prefixPath, visit)
 	if err != nil {
 		log.Fatal("Error filepath", err.Error())
@@ -249,7 +250,7 @@ func loadDatabase(db *Database) error {
 
 func getZoneByShortname(shortname string) int {
 	zones := []zone.Zone{}
-	query := "SELECT * from zone WHERE min_status = 0 AND short_name = ? LIMIT 1"
+	query := "SELECT * from zone WHERE min_status < 90 AND short_name = ? LIMIT 1" //was min_status = 0
 	if err := db.instance.Select(&zones, query, shortname); err != nil {
 		log.Fatal("Error getting ", shortname, ": ", err.Error())
 		return 0
