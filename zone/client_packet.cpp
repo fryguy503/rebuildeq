@@ -845,7 +845,8 @@ void Client::CompleteConnect()
 				m_epp.encounter_timeout = time(nullptr); //stop encounter eligability
 			}
 		}
-		else if(m_pp.lastlogin < time(nullptr) - 600) {
+		else if(m_pp.lastlogin < time(nullptr) - 600 && 
+			!GetAnon()) { //not anon
 			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("Welcome back to the server, %s!", display_name.c_str()).c_str());
 		}
 
