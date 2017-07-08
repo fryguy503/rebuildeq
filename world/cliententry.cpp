@@ -38,16 +38,18 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginN
 
 	pIP = ip;
 	pLSID = iLSID;
-	if (iLSID > 0) {
+	if(iLSID > 0)
 		paccountid = database.GetAccountIDFromLSID(iLSID, paccountname, &padmin);
-	}
 	strn0cpy(plsname, iLoginName, sizeof(plsname));
 	strn0cpy(plskey, iLoginKey, sizeof(plskey));
 	pworldadmin = iWorldAdmin;
 	plocal=(local==1);
 
 	pinstance = 0;
-	loadIdentity();
+	pLFGFromLevel = 0;
+	pLFGToLevel = 0;
+	pLFGMatchFilter = false;
+	memset(pLFGComments, 0, 64);
 }
 
 ClientListEntry::ClientListEntry(uint32 in_id, uint32 iAccID, const char* iAccName, MD5& iMD5Pass, int16 iAdmin)
@@ -65,7 +67,10 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iAccID, const char* iAccNa
 	padmin = iAdmin;
 
 	pinstance = 0;
-	loadIdentity();
+	pLFGFromLevel = 0;
+	pLFGToLevel = 0;
+	pLFGMatchFilter = false;
+	memset(pLFGComments, 0, 64);
 }
 
 ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer* iZS, ServerClientList_Struct* scl, int8 iOnline)
@@ -84,6 +89,10 @@ ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer* iZS, ServerClientList
 	padmin = scl->Admin;
 
 	pinstance = 0;
+	pLFGFromLevel = 0;
+	pLFGToLevel = 0;
+	pLFGMatchFilter = false;
+	memset(pLFGComments, 0, 64);
 
 	if (iOnline >= CLE_Status_Zoning)
 		Update(iZS, scl, iOnline);
@@ -292,7 +301,7 @@ bool ClientListEntry::CheckAuth(uint32 iLSID, const char* iKey) {
 			int16 tmpStatus = WorldConfig::get()->DefaultStatus;
 			paccountid = database.CreateAccount(plsname, 0, tmpStatus, LSID());
 			if (!paccountid) {
-				Log.Out(Logs::Detail, Logs::World_Server,"Error adding local account for LS login: '%s', duplicate name?" ,plsname);
+				Log(Logs::Detail, Logs::World_Server,"Error adding local account for LS login: '%s', duplicate name?" ,plsname);
 				return false;
 			}
 			strn0cpy(paccountname, plsname, sizeof(paccountname));
@@ -332,7 +341,6 @@ void ClientListEntry::ProcessTellQueue()
 	while (it != tell_queue.end()) {
 		pack = new ServerPacket(ServerOP_ChannelMessage, sizeof(ServerChannelMessage_Struct) + strlen((*it)->message) + 1);
 		memcpy(pack->pBuffer, *it, pack->size);
-		pack->Deflate();
 		Server()->SendPacket(pack);
 		safe_delete(pack);
 		safe_delete_array(*it);

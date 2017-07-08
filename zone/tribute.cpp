@@ -161,7 +161,7 @@ void Client::DoTributeUpdate() {
 			uint32 item_id = tier.tribute_item_id;
 
 			//summon the item for them
-			const ItemInst* inst = database.CreateItem(item_id, 1);
+			const EQEmu::ItemInstance* inst = database.CreateItem(item_id, 1);
 			if(inst == nullptr)
 				continue;
 
@@ -220,7 +220,7 @@ void Client::ChangeTributeSettings(TributeInfo_Struct *t) {
 
 void Client::SendTributeDetails(uint32 client_id, uint32 tribute_id) {
 	if(tribute_list.count(tribute_id) != 1) {
-		Log.Out(Logs::General, Logs::Error, "Details request for invalid tribute %lu", (unsigned long)tribute_id);
+		Log(Logs::General, Logs::Error, "Details request for invalid tribute %lu", (unsigned long)tribute_id);
 		return;
 	}
 	TributeData &td = tribute_list[tribute_id];
@@ -239,7 +239,7 @@ void Client::SendTributeDetails(uint32 client_id, uint32 tribute_id) {
 
 //returns the number of points received from the tribute
 int32 Client::TributeItem(uint32 slot, uint32 quantity) {
-	const ItemInst*inst = m_inv[slot];
+	const EQEmu::ItemInstance*inst = m_inv[slot];
 
 	if(inst == nullptr)
 		return(0);
@@ -413,14 +413,14 @@ bool ZoneDatabase::LoadTributes() {
         uint32 id = atoul(row[0]);
 
         if(tribute_list.count(id) != 1) {
-            Log.Out(Logs::General, Logs::Error, "Error in LoadTributes: unknown tribute %lu in tribute_levels", (unsigned long)id);
+            Log(Logs::General, Logs::Error, "Error in LoadTributes: unknown tribute %lu in tribute_levels", (unsigned long)id);
             continue;
         }
 
         TributeData &cur = tribute_list[id];
 
         if(cur.tier_count >= MAX_TRIBUTE_TIERS) {
-            Log.Out(Logs::General, Logs::Error, "Error in LoadTributes: on tribute %lu: more tiers defined than permitted", (unsigned long)id);
+            Log(Logs::General, Logs::Error, "Error in LoadTributes: on tribute %lu: more tiers defined than permitted", (unsigned long)id);
             continue;
         }
 

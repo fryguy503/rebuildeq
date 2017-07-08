@@ -1,11 +1,12 @@
 
 #include "global_define.h"
 #include "eq_stream_proxy.h"
-#include "eq_stream.h"
 #include "struct_strategy.h"
+#include "eqemu_logsys.h"
+#include "opcodemgr.h"
 
 
-EQStreamProxy::EQStreamProxy(std::shared_ptr<EQStream> &stream, const StructStrategy *structs, OpcodeManager **opcodes)
+EQStreamProxy::EQStreamProxy(std::shared_ptr<EQStreamInterface> &stream, const StructStrategy *structs, OpcodeManager **opcodes)
 :	m_stream(stream),
 	m_structs(structs),
 	m_opcodes(opcodes)
@@ -26,9 +27,24 @@ const EQEmu::versions::ClientVersion EQStreamProxy::ClientVersion() const
 	return m_structs->ClientVersion();
 }
 
+EQStreamState EQStreamProxy::GetState()
+{
+	return m_stream->GetState();
+}
+
+void EQStreamProxy::SetOpcodeManager(OpcodeManager **opm)
+{
+	return m_stream->SetOpcodeManager(opm);
+}
+
 void EQStreamProxy::QueuePacket(const EQApplicationPacket *p, bool ack_req) {
 	if(p == nullptr)
 		return;
+
+	if (p->GetOpcode() != OP_SpecialMesg) {
+		Log(Logs::General, Logs::Server_Client_Packet, "[%s - 0x%04x] [Size: %u]", OpcodeManager::EmuToName(p->GetOpcode()), p->GetOpcode(), p->Size());
+		Log(Logs::General, Logs::Server_Client_Packet_With_Dump, "[%s - 0x%04x] [Size: %u] %s", OpcodeManager::EmuToName(p->GetOpcode()), p->GetOpcode(), p->Size(), DumpPacketToString(p).c_str());
+	}
 
 	EQApplicationPacket *newp = p->Copy();
 	FastQueuePacket(&newp, ack_req);
@@ -52,6 +68,10 @@ EQApplicationPacket *EQStreamProxy::PopPacket() {
 
 void EQStreamProxy::Close() {
 	m_stream->Close();
+}
+
+std::string EQStreamProxy::GetRemoteAddr() const {
+	return(m_stream->GetRemoteAddr());
 }
 
 uint32 EQStreamProxy::GetRemoteIP() const {

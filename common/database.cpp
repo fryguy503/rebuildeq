@@ -64,11 +64,11 @@ bool Database::Connect(const char* host, const char* user, const char* passwd, c
 	uint32 errnum= 0;
 	char errbuf[MYSQL_ERRMSG_SIZE];
 	if (!Open(host, user, passwd, database, port, &errnum, errbuf)) {
-		Log.Out(Logs::General, Logs::Error, "Failed to connect to database: Error: %s", errbuf); 
+		Log(Logs::General, Logs::Error, "Failed to connect to database: Error: %s", errbuf); 
 		return false; 
 	}
 	else {
-		Log.Out(Logs::General, Logs::Status, "Using database '%s' at %s:%d", database, host,port);
+		Log(Logs::General, Logs::Status, "Using database '%s' at %s:%d", database, host,port);
 		return true;
 	}
 }
@@ -208,7 +208,7 @@ uint32 Database::CreateAccount(const char* name, const char* password, int16 sta
 	else
 		query = StringFormat("INSERT INTO account SET name='%s', status=%i, lsaccount_id=%i, time_creation=UNIX_TIMESTAMP();",name, status, lsaccount_id);
 
-	Log.Out(Logs::General, Logs::World_Server, "Account Attempting to be created: '%s' status: %i", name, status);
+	Log(Logs::General, Logs::World_Server, "Account Attempting to be created: '%s' status: %i", name, status);
 	auto results = QueryDatabase(query);
 
 	if (!results.Success()) {
@@ -225,7 +225,7 @@ uint32 Database::CreateAccount(const char* name, const char* password, int16 sta
 
 bool Database::DeleteAccount(const char* name) {
 	std::string query = StringFormat("DELETE FROM account WHERE name='%s';",name); 
-	Log.Out(Logs::General, Logs::World_Server, "Account Attempting to be deleted:'%s'", name);
+	Log(Logs::General, Logs::World_Server, "Account Attempting to be deleted:'%s'", name);
 
 	auto results = QueryDatabase(query); 
 	if (!results.Success()) {
@@ -272,7 +272,7 @@ bool Database::ReserveName(uint32 account_id, char* name) {
 	auto results = QueryDatabase(query);
 	for (auto row = results.begin(); row != results.end(); ++row) {
 		if (row[0] && atoi(row[0]) > 0){
-			Log.Out(Logs::General, Logs::World_Server, "Account: %i tried to request name: %s, but it is already taken...", account_id, name);
+			Log(Logs::General, Logs::World_Server, "Account: %i tried to request name: %s, but it is already taken...", account_id, name);
 			return false;
 		}
 	}
@@ -290,23 +290,24 @@ bool Database::ReserveName(uint32 account_id, char* name) {
 bool Database::DeleteCharacter(char *name) {
 	uint32 charid = 0;
 	if(!name ||	!strlen(name)) {
-		Log.Out(Logs::General, Logs::World_Server, "DeleteCharacter: request to delete without a name (empty char slot)");
+		Log(Logs::General, Logs::World_Server, "DeleteCharacter: request to delete without a name (empty char slot)");
 		return false;
 	}
-	Log.Out(Logs::General, Logs::World_Server, "Database::DeleteCharacter name : '%s'", name);
+	Log(Logs::General, Logs::World_Server, "Database::DeleteCharacter name : '%s'", name);
 
 	/* Get id from character_data before deleting record so we can clean up the rest of the tables */
 	std::string query = StringFormat("SELECT `id` from `character_data` WHERE `name` = '%s'", name);
 	auto results = QueryDatabase(query);
 	for (auto row = results.begin(); row != results.end(); ++row) { charid = atoi(row[0]); }
 	if (charid <= 0){ 
-		Log.Out(Logs::General, Logs::Error, "Database::DeleteCharacter :: Character (%s) not found, stopping delete...", name);
+		Log(Logs::General, Logs::Error, "Database::DeleteCharacter :: Character (%s) not found, stopping delete...", name);
 		return false; 
 	}
 
 	query = StringFormat("DELETE FROM `quest_globals` WHERE `charid` = '%d'", charid); QueryDatabase(query);
 	query = StringFormat("DELETE FROM `character_activities` WHERE `charid` = '%d'", charid); QueryDatabase(query);
 	query = StringFormat("DELETE FROM `character_enabledtasks` WHERE `charid` = '%d'", charid); QueryDatabase(query);
+	query = StringFormat("DELETE FROM `character_tasks` WHERE `charid` = '%d'", charid); QueryDatabase(query);
 	query = StringFormat("DELETE FROM `completed_tasks` WHERE `charid` = '%d'", charid); QueryDatabase(query);
 	query = StringFormat("DELETE FROM `friends` WHERE `charid` = '%d'", charid); QueryDatabase(query);
 	query = StringFormat("DELETE FROM `mail` WHERE `charid` = '%d'", charid); QueryDatabase(query);
@@ -638,6 +639,13 @@ bool Database::SaveCharacterCreate(uint32 character_id, uint32 account_id, Playe
 		character_id, pp->binds[4].zoneId, 0, pp->binds[4].x, pp->binds[4].y, pp->binds[4].z, pp->binds[4].heading, 4
 	); results = QueryDatabase(query);
 
+        /* HoTT Ability */
+        if(RuleB(Character, GrantHoTTOnCreate))
+        {
+                query = StringFormat("INSERT INTO `character_leadership_abilities` (id, slot, rank) VALUES (%u, %i, %i)", character_id, 14, 1);
+                results = QueryDatabase(query);
+        }
+
 	/* Save Skills */
 	int firstquery = 0;
 	for (int i = 0; i < MAX_PP_SKILL; i++){
@@ -672,14 +680,14 @@ bool Database::SaveCharacterCreate(uint32 character_id, uint32 account_id, Playe
 }
 
 /* This only for new Character creation storing */
-bool Database::StoreCharacter(uint32 account_id, PlayerProfile_Struct* pp, Inventory* inv) {
+bool Database::StoreCharacter(uint32 account_id, PlayerProfile_Struct* pp, EQEmu::InventoryProfile* inv) {
 	uint32 charid = 0; 
 	char zone[50]; 
 	float x, y, z; 
 	charid = GetCharacterID(pp->name);
 
 	if(!charid) {
-		Log.Out(Logs::General, Logs::Error, "StoreCharacter: no character id");
+		Log(Logs::General, Logs::Error, "StoreCharacter: no character id");
 		return false;
 	}
 
@@ -701,7 +709,7 @@ bool Database::StoreCharacter(uint32 account_id, PlayerProfile_Struct* pp, Inven
 	/* Insert starting inventory... */
 	std::string invquery;
 	for (int16 i = EQEmu::legacy::EQUIPMENT_BEGIN; i <= EQEmu::legacy::BANK_BAGS_END;) {
-		const ItemInst* newinv = inv->GetItem(i);
+		const EQEmu::ItemInstance* newinv = inv->GetItem(i);
 		if (newinv) {
 			invquery = StringFormat("INSERT INTO `inventory` (charid, slotid, itemid, charges, color) VALUES (%u, %i, %u, %i, %u)",
 				charid, i, newinv->GetItem()->ID, newinv->GetCharges(), newinv->GetColor()); 
@@ -709,7 +717,7 @@ bool Database::StoreCharacter(uint32 account_id, PlayerProfile_Struct* pp, Inven
 			auto results = QueryDatabase(invquery); 
 		}
 
-		if (i == EQEmu::legacy::SlotCursor) {
+		if (i == EQEmu::inventory::slotCursor) {
 			i = EQEmu::legacy::GENERAL_BAGS_BEGIN; 
 			continue;
 		}
@@ -1492,7 +1500,7 @@ void Database::SetGroupID(const char* name, uint32 id, uint32 charid, uint32 ism
 		auto results = QueryDatabase(query);
 
 		if (!results.Success())
-			Log.Out(Logs::General, Logs::Error, "Error deleting character from group id: %s", results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Error, "Error deleting character from group id: %s", results.ErrorMessage().c_str());
 
 		return;
 	}
@@ -1535,7 +1543,7 @@ uint32 Database::GetGroupID(const char* name){
 	if (results.RowCount() == 0)
 	{
 		// Commenting this out until logging levels can prevent this from going to console
-		//Log.Out(Logs::General, Logs::None,, "Character not in a group: %s", name);
+		//Log(Logs::General, Logs::None,, "Character not in a group: %s", name);
 		return 0;
 	}
 
@@ -1582,7 +1590,7 @@ void Database::SetGroupLeaderName(uint32 gid, const char* name) {
 	result = QueryDatabase(query);
 
 	if(!result.Success()) {
-		Log.Out(Logs::General, Logs::None, "Error in Database::SetGroupLeaderName: %s", result.ErrorMessage().c_str());
+		Log(Logs::General, Logs::None, "Error in Database::SetGroupLeaderName: %s", result.ErrorMessage().c_str());
 	}
 }
 
@@ -1779,7 +1787,7 @@ const char* Database::GetRaidLeaderName(uint32 raid_id)
 	auto results = QueryDatabase(query);
 
 	if (!results.Success()) {
-		Log.Out(Logs::General, Logs::Debug, "Unable to get Raid Leader Name for Raid ID: %u", raid_id);
+		Log(Logs::General, Logs::Debug, "Unable to get Raid Leader Name for Raid ID: %u", raid_id);
 		return "UNKNOWN";
 	}
 
@@ -2048,6 +2056,8 @@ uint32 Database::GetGuildIDByCharID(uint32 character_id)
 
 void Database::LoadLogSettings(EQEmuLogSys::LogSettings* log_settings)
 {
+	// log_settings previously initialized to '0' by EQEmuLogSys::LoadLogSettingsDefaults()
+	
 	std::string query = 
 		"SELECT "
 		"log_category_id, "
@@ -2061,10 +2071,13 @@ void Database::LoadLogSettings(EQEmuLogSys::LogSettings* log_settings)
 	auto results = QueryDatabase(query);
 
 	int log_category = 0;
-	Log.file_logs_enabled = false;
+	LogSys.file_logs_enabled = false;
 
 	for (auto row = results.begin(); row != results.end(); ++row) {
 		log_category = atoi(row[0]);
+		if (log_category <= Logs::None || log_category >= Logs::MaxCategoryID)
+			continue;
+
 		log_settings[log_category].log_to_console = atoi(row[2]);
 		log_settings[log_category].log_to_file = atoi(row[3]);
 		log_settings[log_category].log_to_gmsay = atoi(row[4]);
@@ -2084,7 +2097,7 @@ void Database::LoadLogSettings(EQEmuLogSys::LogSettings* log_settings)
 			If we go through this whole loop and nothing is set to any debug level, there is no point to create a file or keep anything open
 		*/
 		if (log_settings[log_category].log_to_file > 0){
-			Log.file_logs_enabled = true;
+			LogSys.file_logs_enabled = true;
 		}
 	}
 }
@@ -2106,7 +2119,7 @@ struct TimeOfDay_Struct Database::LoadTime(time_t &realtime)
 	auto results = QueryDatabase(query);
 
 	if (!results.Success() || results.RowCount() == 0){
-		Log.Out(Logs::Detail, Logs::World_Server, "Loading EQ time of day failed. Using defaults.");
+		Log(Logs::Detail, Logs::World_Server, "Loading EQ time of day failed. Using defaults.");
 		eqTime.minute = 0;
 		eqTime.hour = 9;
 		eqTime.day = 1;
@@ -2135,4 +2148,28 @@ bool Database::SaveTime(int8 minute, int8 hour, int8 day, int8 month, int16 year
 
 	return results.Success();
 
+}
+
+int Database::GetIPExemption(std::string account_ip) {
+	std::string query = StringFormat("SELECT `exemption_amount` FROM `ip_exemptions` WHERE `exemption_ip` = '%s'", account_ip.c_str());
+	auto results = QueryDatabase(query);
+	
+	if (results.Success() && results.RowCount() > 0) {
+		auto row = results.begin();
+		return atoi(row[0]);
+	}
+	
+	return RuleI(World, MaxClientsPerIP);
+}
+
+int Database::GetInstanceID(uint32 char_id, uint32 zone_id) {
+	std::string query = StringFormat("SELECT instance_list.id FROM instance_list INNER JOIN instance_list_player ON instance_list.id = instance_list_player.id WHERE instance_list.zone = '%i' AND instance_list_player.charid = '%i'", zone_id, char_id);
+	auto results = QueryDatabase(query);
+
+	if (results.Success() && results.RowCount() > 0) {
+		auto row = results.begin();
+		return atoi(row[0]);;
+	}
+
+	return 0;
 }

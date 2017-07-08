@@ -17,13 +17,6 @@
 #define _NPCPET(x) (x && x->IsNPC() && x->CastToMob()->GetOwner() && x->CastToMob()->GetOwner()->IsNPC())
 #define _BECOMENPCPET(x) (x && x->CastToMob()->GetOwner() && x->CastToMob()->GetOwner()->IsClient() && x->CastToMob()->GetOwner()->CastToClient()->IsBecomeNPC())
 
-#define USE_ITEM_SPELL_SLOT 10
-#define POTION_BELT_SPELL_SLOT 11
-#define TARGET_RING_SPELL_SLOT 12
-#define DISCIPLINE_SPELL_SLOT 10
-#define ABILITY_SPELL_SLOT 9
-#define ALTERNATE_ABILITY_SPELL_SLOT 0xFF
-
 //LOS Parameters:
 #define HEAD_POSITION 0.9f	//ratio of GetSize() where NPCs see from
 #define SEE_POSITION 0.5f	//ratio of GetSize() where NPCs try to see for LOS
@@ -38,9 +31,18 @@
 #define CON_GREEN		2
 #define CON_LIGHTBLUE	18
 #define CON_BLUE		4
-#define CON_WHITE		20
+#define CON_WHITE		10
+#define CON_WHITE_TITANIUM		20
 #define CON_YELLOW		15
 #define CON_RED			13
+#define CON_GRAY		6
+
+#define DMG_BLOCKED		-1
+#define DMG_PARRIED		-2
+#define DMG_RIPOSTED		-3
+#define DMG_DODGED		-4
+#define DMG_INVULNERABLE	-5
+#define DMG_RUNE		-6
 
 //Spell specialization parameters, not sure of a better place for them
 #define SPECIALIZE_FIZZLE 11		//% fizzle chance reduce at 200 specialized
@@ -53,6 +55,55 @@
 #define ZONEPOINT_NOZONE_RANGE 40000.0f
 //Maximum distance from a zone point if zone was specified
 #define ZONEPOINT_ZONE_RANGE 40000.0f
+
+// Defines based on the RoF2 Client
+#define PET_HEALTHREPORT	0	// 0x00 - /pet health or Pet Window
+#define PET_LEADER			1	// 0x01 - /pet leader or Pet Window
+#define PET_ATTACK			2	// 0x02 - /pet attack or Pet Window
+#define PET_QATTACK			3	// 0x03 - /pet qattack or Pet Window
+#define PET_FOLLOWME		4	// 0x04 - /pet follow or Pet Window
+#define PET_GUARDHERE		5	// 0x05 - /pet guard or Pet Window
+#define PET_SIT				6	// 0x06 - /pet sit or Pet Window
+#define PET_SITDOWN			7	// 0x07 - /pet sit on
+#define PET_STANDUP			8	// 0x08 - /pet sit off
+#define PET_STOP			9	// 0x09 - /pet stop or Pet Window - Not implemented
+#define PET_STOP_ON			10	// 0x0a - /pet stop on - Not implemented
+#define PET_STOP_OFF		11	// 0x0b - /pet stop off - Not implemented
+#define PET_TAUNT			12	// 0x0c - /pet taunt or Pet Window
+#define PET_TAUNT_ON		13	// 0x0d - /pet taunt on
+#define PET_TAUNT_OFF		14	// 0x0e - /pet taunt off
+#define PET_HOLD			15	// 0x0f - /pet hold or Pet Window, won't add to hate list unless attacking
+#define PET_HOLD_ON			16	// 0x10 - /pet hold on
+#define PET_HOLD_OFF		17	// 0x11 - /pet hold off
+#define PET_GHOLD			18	// 0x12 - /pet ghold, will never add to hate list unless told to
+#define PET_GHOLD_ON		19	// 0x13 - /pet ghold on
+#define PET_GHOLD_OFF		20	// 0x14 - /pet ghold off
+#define PET_SPELLHOLD		21	// 0x15 - /pet no cast or /pet spellhold or Pet Window
+#define PET_SPELLHOLD_ON	22	// 0x16 - /pet spellhold on
+#define PET_SPELLHOLD_OFF	23	// 0x17 - /pet spellhold off
+#define PET_FOCUS			24	// 0x18 - /pet focus or Pet Window
+#define PET_FOCUS_ON		25	// 0x19 - /pet focus on
+#define PET_FOCUS_OFF		26	// 0x1a - /pet focus off
+#define PET_FEIGN			27	// 0x1b - /pet feign
+#define PET_BACKOFF			28	// 0x1c - /pet back off
+#define PET_GETLOST			29	// 0x1d - /pet get lost
+#define PET_GUARDME			30	// 0x1e - Same as /pet follow, but different message in older clients - define not from client /pet target in modern clients but doesn't send packet
+#define PET_REGROUP			31	// 0x1f - /pet regroup, acts like classic hold. Stops attack and moves back to guard/you but doesn't clear hate list
+#define PET_REGROUP_ON		32	// 0x20 - /pet regroup on, turns on regroup
+#define PET_REGROUP_OFF		33	// 0x21 - /pet regroup off, turns off regroup
+#define PET_MAXCOMMANDS		PET_REGROUP_OFF + 1
+
+// can change the state of these buttons with a packet
+#define PET_BUTTON_SIT			0
+#define PET_BUTTON_STOP			1
+#define PET_BUTTON_REGROUP		2
+#define PET_BUTTON_FOLLOW		3
+#define PET_BUTTON_GUARD		4
+#define PET_BUTTON_TAUNT		5
+#define PET_BUTTON_HOLD			6
+#define PET_BUTTON_GHOLD		7
+#define PET_BUTTON_FOCUS		8
+#define PET_BUTTON_SPELLHOLD	9
 
 typedef enum {	//focus types
 	focusSpellHaste = 1,
@@ -187,6 +238,16 @@ enum class PlayerState : uint32 {
 	Stunned = 32,
 	PrimaryWeaponEquipped = 64,
 	SecondaryWeaponEquipped = 128
+};
+
+enum class LootResponse : uint8 {
+	SomeoneElse = 0,
+	Normal = 1,
+	NotAtThisTime = 2,
+	Normal2 = 3, // acts exactly the same as Normal, maybe group vs ungroup? No idea
+	Hostiles = 4,
+	TooFar = 5,
+	LootAll = 6 // SoD+
 };
 
 //this is our internal representation of the BUFF struct, can put whatever we want in it
@@ -347,7 +408,7 @@ struct StatBonuses {
 	uint32	SpellTriggers[MAX_SPELL_TRIGGER];	// Innate/Spell/Item Spells that trigger when you cast
 	uint32	SpellOnKill[MAX_SPELL_TRIGGER*3];	// Chance to proc after killing a mob
 	uint32	SpellOnDeath[MAX_SPELL_TRIGGER*2];	// Chance to have effect cast when you die
-	int32	CritDmgMob[EQEmu::skills::HIGHEST_SKILL + 2];		// All Skills + -1
+	int32	CritDmgMod[EQEmu::skills::HIGHEST_SKILL + 2];		// All Skills + -1
 	int32	SkillReuseTime[EQEmu::skills::HIGHEST_SKILL + 1];	// Reduces skill timers
 	int32	SkillDamageAmount[EQEmu::skills::HIGHEST_SKILL + 2];	// All Skills + -1
 	int32	TwoHandBluntBlock;					// chance to block when wielding two hand blunt weapon
@@ -454,17 +515,16 @@ struct StatBonuses {
 	int32	ItemATKCap;							// Raise item attack cap
 	int32	FinishingBlow[2];					// Chance to do a finishing blow for specified damage amount.
 	uint32	FinishingBlowLvl[2];				// Sets max level an NPC can be affected by FB. (base1 = lv, base2= ???)
-	int32	ShieldEquipHateMod;					// Hate mod when shield equiped.
-	int32	ShieldEquipDmgMod[2];				// Damage mod when shield equiped. 0 = damage modifier 1 = Unknown
+	int32	ShieldEquipDmgMod;					// Increases weapon's base damage by base1 % when shield is equipped (indirectly increasing hate)
 	bool	TriggerOnValueAmount;				// Triggers off various different conditions, bool to check if client has effect.
 	int8	StunBashChance;						// chance to stun with bash.
 	int8	IncreaseChanceMemwipe;				// increases chance to memory wipe
 	int8	CriticalMend;						// chance critical monk mend
 	int32	ImprovedReclaimEnergy;				// Modifies amount of mana returned from reclaim energy
 	uint32	HeadShot[2];						// Headshot AA (Massive dmg vs humaniod w/ archery) 0= ? 1= Dmg
-	uint8	HSLevel;							// Max Level Headshot will be effective at.
+	uint8	HSLevel[2];							// Max Level Headshot will be effective at. and chance mod
 	uint32	Assassinate[2];						// Assassinate AA (Massive dmg vs humaniod w/ assassinate) 0= ? 1= Dmg
-	uint8	AssassinateLevel;					// Max Level Assassinate will be effective at.
+	uint8	AssassinateLevel[2];				// Max Level Assassinate will be effective at.
 	int32	PetMeleeMitigation;					// Add AC to owner's pet.
 	bool	IllusionPersistence;				// Causes illusions not to fade.
 	uint16	extra_xtargets;						// extra xtarget entries
@@ -474,6 +534,8 @@ struct StatBonuses {
 	uint8	TradeSkillMastery;					// Allow number of tradeskills to exceed 200 skill.
 	int16	NoBreakAESneak;						// Percent value
 	int16	FeignedCastOnChance;				// Percent Value
+	bool	PetCommands[PET_MAXCOMMANDS];		// SPA 267
+	int	FeignedMinionChance;				// SPA 281 base1 = chance, just like normal FD
 };
 
 typedef struct
@@ -565,7 +627,11 @@ struct MercData {
 	uint32	NPCID;
 };
 
-class ItemInst;
+namespace EQEmu
+{
+	class ItemInstance;
+}
+
 class Mob;
 // All data associated with a single trade
 class Trade
@@ -603,7 +669,7 @@ public:
 
 private:
 	// Send item data for trade item to other person involved in trade
-	void SendItemData(const ItemInst* inst, int16 dest_slot_id);
+	void SendItemData(const EQEmu::ItemInstance* inst, int16 dest_slot_id);
 
 	uint32 with_id;
 	Mob* owner;
@@ -630,6 +696,24 @@ struct ExtraAttackOptions {
 	int melee_damage_bonus_flat;
 	int skilldmgtaken_bonus_flat;
 
+};
+
+struct DamageTable {
+	int32 max_extra; // max extra damage
+	int32 chance; // chance not to apply?
+	int32 minusfactor; // difficulty of rolling
+};
+
+struct DamageHitInfo {
+	//uint16 attacker; // id
+	//uint16 defender; // id
+	int base_damage;
+	int min_damage;
+	int damage_done;
+	int offense;
+	int tohit;
+	int hand;
+	EQEmu::skills::SkillType skill;
 };
 
 #endif

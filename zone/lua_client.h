@@ -63,6 +63,7 @@ public:
 	int GetWeight();
 	uint32 GetEXP();
 	uint32 GetAAExp();
+	uint32 GetAAPercent();
 	uint32 GetTotalSecondsPlayed();
 	void UpdateLDoNPoints(int points, uint32 theme);
 	void SetDeity(int v);
@@ -295,6 +296,11 @@ public:
 	void QuestReward(Lua_Mob target, uint32 copper, uint32 silver, uint32 gold, uint32 platinum, uint32 itemid);
 	void QuestReward(Lua_Mob target, uint32 copper, uint32 silver, uint32 gold, uint32 platinum, uint32 itemid, uint32 exp);
 	void QuestReward(Lua_Mob target, uint32 copper, uint32 silver, uint32 gold, uint32 platinum, uint32 itemid, uint32 exp, bool faction);
+	void QuestReward(Lua_Mob target, luabind::adl::object reward);
+	bool IsDead();
+	int CalcCurrentWeight();
+	int CalcATK();
+	void FilteredMessage(Mob *sender, uint32 type, int filter, const char* message);
 };
 
 #endif

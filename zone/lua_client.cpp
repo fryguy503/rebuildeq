@@ -185,6 +185,11 @@ uint32 Lua_Client::GetAAExp() {
 	return self->GetAAXP();
 }
 
+uint32 Lua_Client::GetAAPercent() {
+	Lua_Safe_Call_Int();
+	return self->GetAAPercent();
+}
+
 uint32 Lua_Client::GetTotalSecondsPlayed() {
 	Lua_Safe_Call_Int();
 	return self->GetTotalSecondsPlayed();
@@ -1167,6 +1172,11 @@ uint64 Lua_Client::GetAllMoney() {
 	return self->GetAllMoney();
 }
 
+uint32 Lua_Client::GetMoney(uint8 type, uint8 subtype) {
+	Lua_Safe_Call_Int();
+	return self->GetMoney(type, subtype);
+}
+
 void Lua_Client::OpenLFGuildWindow() {
 	Lua_Safe_Call_Void();
 	self->OpenLFGuildWindow();
@@ -1214,13 +1224,13 @@ Lua_Raid Lua_Client::GetRaid() {
 
 bool Lua_Client::PutItemInInventory(int slot_id, Lua_ItemInst inst) {
 	Lua_Safe_Call_Bool();
-	ItemInst *rinst = inst;
+	EQEmu::ItemInstance *rinst = inst;
 	return self->PutItemInInventory(slot_id, *rinst, true);
 }
 
 bool Lua_Client::PushItemOnCursor(Lua_ItemInst inst) {
 	Lua_Safe_Call_Bool();
-	ItemInst *rinst = inst;
+	EQEmu::ItemInstance *rinst = inst;
 	return self->PushItemOnCursor(*rinst, true);
 }
 
@@ -1335,9 +1345,99 @@ void Lua_Client::QuestReward(Lua_Mob target, uint32 copper, uint32 silver, uint3
 	self->QuestReward(target, copper, silver, gold, platinum, itemid, exp, faction);
 }
 
-uint32 Lua_Client::GetMoney(uint8 type, uint8 subtype) {
+void Lua_Client::QuestReward(Lua_Mob target, luabind::adl::object reward) {
+	Lua_Safe_Call_Void();
+
+	if (luabind::type(reward) != LUA_TTABLE) {
+		return;
+	}
+
+	uint32 copper = 0;
+	uint32 silver = 0;
+	uint32 gold = 0;
+	uint32 platinum = 0;
+	uint32 itemid = 0;
+	uint32 exp = 0;
+	bool faction = false;
+
+	auto cur = reward["copper"];
+	if (luabind::type(cur) != LUA_TNIL) {
+		try {
+			copper = luabind::object_cast<uint32>(cur);
+		} catch (luabind::cast_failed) {
+		}
+	}
+
+	cur = reward["silver"];
+	if (luabind::type(cur) != LUA_TNIL) {
+		try {
+			silver = luabind::object_cast<uint32>(cur);
+		} catch (luabind::cast_failed) {
+		}
+	}
+
+	cur = reward["gold"];
+	if (luabind::type(cur) != LUA_TNIL) {
+		try {
+			gold = luabind::object_cast<uint32>(cur);
+		} catch (luabind::cast_failed) {
+		}
+	}
+
+	cur = reward["platinum"];
+	if (luabind::type(cur) != LUA_TNIL) {
+		try {
+			platinum = luabind::object_cast<uint32>(cur);
+		} catch (luabind::cast_failed) {
+		}
+	}
+
+	cur = reward["itemid"];
+	if (luabind::type(cur) != LUA_TNIL) {
+		try {
+			itemid = luabind::object_cast<uint32>(cur);
+		} catch (luabind::cast_failed) {
+		}
+	}
+
+	cur = reward["exp"];
+	if (luabind::type(cur) != LUA_TNIL) {
+		try {
+			exp = luabind::object_cast<uint32>(cur);
+		} catch (luabind::cast_failed) {
+		}
+	}
+
+	cur = reward["faction"];
+	if (luabind::type(cur) != LUA_TNIL) {
+		try {
+			faction = luabind::object_cast<bool>(cur);
+		} catch (luabind::cast_failed) {
+		}
+	}
+
+	self->QuestReward(target, copper, silver, gold, platinum, itemid, exp, faction);
+}
+
+bool Lua_Client::IsDead() {
+	Lua_Safe_Call_Bool();
+	return self->IsDead();
+}
+
+int Lua_Client::CalcCurrentWeight() {
 	Lua_Safe_Call_Int();
-	return self->GetMoney(type, subtype);
+	return self->CalcCurrentWeight();
+}
+
+int Lua_Client::CalcATK() {
+	Lua_Safe_Call_Int();
+	return self->CalcATK();
+}
+
+void Lua_Client::FilteredMessage(Mob *sender, uint32 type, int filter, const char *message)
+{
+	Lua_Safe_Call_Void();
+	self->FilteredMessage(sender, type, (eqFilterType)filter, message);
 }
 
 luabind::scope lua_register_client() {
@@ -1377,6 +1477,7 @@ luabind::scope lua_register_client() {
 		.def("GetWeight", (int(Lua_Client::*)(void))&Lua_Client::GetWeight)
 		.def("GetEXP", (uint32(Lua_Client::*)(void))&Lua_Client::GetEXP)
 		.def("GetAAExp", (uint32(Lua_Client::*)(void))&Lua_Client::GetAAExp)
+		.def("GetAAPercent", (uint32(Lua_Client::*)(void))&Lua_Client::GetAAPercent)
 		.def("GetTotalSecondsPlayed", (uint32(Lua_Client::*)(void))&Lua_Client::GetTotalSecondsPlayed)
 		.def("UpdateLDoNPoints", (void(Lua_Client::*)(int,uint32))&Lua_Client::UpdateLDoNPoints)
 		.def("SetDeity", (void(Lua_Client::*)(int))&Lua_Client::SetDeity)
@@ -1573,6 +1674,7 @@ luabind::scope lua_register_client() {
 		.def("GetAggroCount", (int(Lua_Client::*)(void))&Lua_Client::GetAggroCount)
 		.def("GetCarriedMoney", (uint64(Lua_Client::*)(void))&Lua_Client::GetCarriedMoney)
 		.def("GetAllMoney", (uint64(Lua_Client::*)(void))&Lua_Client::GetAllMoney)
+		.def("GetMoney", (uint32(Lua_Client::*)(uint8, uint8))&Lua_Client::GetMoney)
 		.def("OpenLFGuildWindow", (void(Lua_Client::*)(void))&Lua_Client::OpenLFGuildWindow)
 		.def("Signal", (void(Lua_Client::*)(uint32))&Lua_Client::Signal)
 		.def("AddAlternateCurrencyValue", (void(Lua_Client::*)(uint32,int))&Lua_Client::AddAlternateCurrencyValue)
@@ -1606,7 +1708,11 @@ luabind::scope lua_register_client() {
 		.def("QuestReward", (void(Lua_Client::*)(Lua_Mob, uint32, uint32, uint32, uint32, uint32))&Lua_Client::QuestReward)
 		.def("QuestReward", (void(Lua_Client::*)(Lua_Mob, uint32, uint32, uint32, uint32, uint32, uint32))&Lua_Client::QuestReward)
 		.def("QuestReward", (void(Lua_Client::*)(Lua_Mob, uint32, uint32, uint32, uint32, uint32, uint32, bool))&Lua_Client::QuestReward)
-		.def("GetMoney", (uint32(Lua_Client::*)(uint8, uint8))&Lua_Client::GetMoney);
+		.def("QuestReward", (void(Lua_Client::*)(Lua_Mob, luabind::adl::object))&Lua_Client::QuestReward)
+		.def("IsDead", &Lua_Client::IsDead)
+		.def("CalcCurrentWeight", &Lua_Client::CalcCurrentWeight)
+		.def("CalcATK", &Lua_Client::CalcATK)
+		.def("FilteredMessage", &Lua_Client::FilteredMessage);
 }
 
 luabind::scope lua_register_inventory_where() {

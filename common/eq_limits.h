@@ -1,4 +1,4 @@
-/*	EQEMu:  Everquest Server Emulator
+/*	EQEMu: Everquest Server Emulator
 	
 	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.net)
 
@@ -10,7 +10,7 @@
 	but WITHOUT ANY WARRANTY except by those people which sell it, which
 	are required to give you total support for your newly bought product;
 	without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-	A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+	A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 	
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
@@ -20,9 +20,10 @@
 #ifndef COMMON_EQ_LIMITS_H
 #define COMMON_EQ_LIMITS_H
 
+#include "emu_legacy.h"
 #include "types.h"
 #include "eq_constants.h"
-#include "inventory_version.h"
+#include "emu_versions.h"
 #include "../common/patches/titanium_limits.h"
 #include "../common/patches/sof_limits.h"
 #include "../common/patches/sod_limits.h"
@@ -34,30 +35,50 @@
 namespace EQEmu
 {
 	namespace constants {
-		extern size_t CharacterCreationLimit(versions::ClientVersion client_version);
+		class LookupEntry {
+		public:
+			size_t CharacterCreationLimit;
+			int LongBuffs;
+			int ShortBuffs;
+			int DiscBuffs;
+			int TotalBuffs;
+			int NPCBuffs;
+			int PetBuffs;
+			int MercBuffs;
+		};
+
+		const LookupEntry* Lookup(versions::ClientVersion client_version);
 
 	} /*constants*/
 	
 	namespace inventory {
-		extern uint16 InventoryTypeSize(versions::InventoryVersion inventory_version, int16 inv_type);
-		extern uint64 PossessionsBitmask(versions::InventoryVersion inventory_version);
+		class LookupEntry {
+		public:
+			size_t InventoryTypeSize[25]; // should reflect EQEmu::inventory::typeCount referenced in emu_constants.h
 
-		extern bool AllowEmptyBagInBag(versions::InventoryVersion inventory_version);
-		extern bool AllowClickCastFromBag(versions::InventoryVersion inventory_version);
+			uint64 PossessionsBitmask;
+			size_t ItemBagSize;
+			size_t ItemAugSize;
 
-		extern uint16 ItemAugSize(versions::InventoryVersion inventory_version);
-		extern uint16 ItemBagSize(versions::InventoryVersion inventory_version);
+			bool AllowEmptyBagInBag;
+			bool AllowClickCastFromBag;
+			bool ConcatenateInvTypeLimbo;
+			bool AllowOverLevelEquipment;
+		};
 
-		extern bool ConcatenateInvTypeLimbo(versions::InventoryVersion inventory_version);
-
-		extern bool AllowOverLevelEquipment(versions::InventoryVersion inventory_version);
+		const LookupEntry* Lookup(versions::MobVersion mob_version);
 
 	} /*inventory*/
 	
-	namespace profile {
-		extern bool CoinHasWeight(versions::InventoryVersion inventory_version);
+	namespace behavior {
+		class LookupEntry {
+		public:
+			bool CoinHasWeight;
+		};
 
-	} /*profile*/
+		const LookupEntry* Lookup(versions::MobVersion mob_version);
+
+	} /*behavior*/
 
 } /*EQEmu*/
 

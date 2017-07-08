@@ -1,4 +1,4 @@
-/*	EQEMu:  Everquest Server Emulator
+/*	EQEMu: Everquest Server Emulator
 	
 	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.net)
 
@@ -10,7 +10,7 @@
 	but WITHOUT ANY WARRANTY except by those people which sell it, which
 	are required to give you total support for your newly bought product;
 	without even the implied warranty of MERCHANTABILITY or FITNESS FOR
-	A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+	A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
@@ -27,29 +27,77 @@
 
 namespace EntityLimits
 {
-	namespace npc {
+	namespace NPC {
 		enum : int { Invalid = -1, Null, Safety };
 
 		enum : bool { False = false, True = true };
-	}
 
-	namespace merc {
+		const size_t InvTypeTradeSize = 4;
+
+	} /*NPC*/
+
+	namespace NPCMerchant {
 		enum : int { Invalid = -1, Null, Safety };
 
 		enum : bool { False = false, True = true };
-	}
 
-	namespace bot {
+		const size_t InvTypeTradeSize = 4;
+
+	} /*NPCMerchant*/
+
+	namespace Merc {
 		enum : int { Invalid = -1, Null, Safety };
 
 		enum : bool { False = false, True = true };
-	}
 
-	namespace pet {
+		const size_t InvTypeTradeSize = 4;
+
+	} /*Merc*/
+
+	namespace Bot {
 		enum : int { Invalid = -1, Null, Safety };
 
 		enum : bool { False = false, True = true };
-	}
+
+		const size_t InvTypeTradeSize = 8;
+
+	} /*Bot*/
+
+	namespace ClientPet {
+		enum : int { Invalid = -1, Null, Safety };
+
+		enum : bool { False = false, True = true };
+
+		const size_t InvTypeTradeSize = 4;
+
+	} /*Pet*/
+
+	namespace NPCPet {
+		enum : int { Invalid = -1, Null, Safety };
+
+		enum : bool { False = false, True = true };
+
+		const size_t InvTypeTradeSize = 4;
+
+	} /*Pet*/
+
+	namespace MercPet {
+		enum : int { Invalid = -1, Null, Safety };
+
+		enum : bool { False = false, True = true };
+
+		const size_t InvTypeTradeSize = 4;
+
+	} /*Pet*/
+
+	namespace BotPet {
+		enum : int { Invalid = -1, Null, Safety };
+
+		enum : bool { False = false, True = true };
+
+		const size_t InvTypeTradeSize = 4;
+
+	} /*Pet*/
 
 }; /*EntityLimits*/
 

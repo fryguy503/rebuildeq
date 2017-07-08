@@ -28,6 +28,7 @@
 
 #include "queryserv.h"
 #include "quest_parser_collection.h"
+#include "lua_parser.h"
 #include "string_ids.h"
 
 #ifdef BOTS
@@ -101,9 +102,12 @@ uint32 Client::CalcEXP(uint8 conlevel) {
 		if (conlevel != 0xFF) {
 			switch (conlevel)
 			{
-			case CON_GREEN:
+			case CON_GRAY:
 				in_add_exp = 0;
 				return 0;
+			case CON_GREEN:
+				in_add_exp = in_add_exp * RuleI(Character, GreenModifier) / 100;
+				break;
 			case CON_LIGHTBLUE:
 				in_add_exp = in_add_exp * RuleI(Character, LightBlueModifier)/100;
 				break;
@@ -148,6 +152,26 @@ uint32 Client::CalcEXP(uint8 conlevel) {
 	}
 
 	return in_add_exp;
+}
+
+uint32 Client::GetExperienceForKill(Mob *against)
+{
+#ifdef LUA_EQEMU
+	uint32 lua_ret = 0;
+	bool ignoreDefault = false;
+	lua_ret = LuaParser::Instance()->GetExperienceForKill(this, against, ignoreDefault);
+
+	if (ignoreDefault) {
+		return lua_ret;
+	}
+#endif
+
+	if (against && against->IsNPC()) {
+		uint32 level = (uint32)against->GetLevel();
+		return EXP_FORMULA;
+	}
+
+	return 0;
 }
 
 void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, bool resexp) {
@@ -206,10 +230,14 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, bool resexp) {
 			if (conlevel != 0xFF && !resexp) {
 				switch (conlevel)
 				{
-					case CON_GREEN:
+					case CON_GRAY:
 						add_exp = 0;
 						add_aaxp = 0;
 						return;
+					case CON_GREEN:
+						add_exp = add_exp * RuleI(Character, GreenModifier) / 100;
+						add_aaxp = add_aaxp * RuleI(Character, GreenModifier) / 100;
+						break;
 					case CON_LIGHTBLUE:
 							add_exp = add_exp * RuleI(Character, LightBlueModifier)/100;
 							add_aaxp = add_aaxp * RuleI(Character, LightBlueModifier)/100;
@@ -331,9 +359,9 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, bool resexp) {
 }
 
 void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
-	Log.Out(Logs::Detail, Logs::None, "Attempting to Set Exp for %s (XP: %u, AAXP: %u, Rez: %s)", this->GetCleanName(), set_exp, set_aaxp, isrezzexp ? "true" : "false");
-	//max_AAXP = GetEXPForLevel(52) - GetEXPForLevel(51);	//GetEXPForLevel() doesn't depend on class/race, just level, so it shouldn't change between Clients
-	max_AAXP = RuleI(AA, ExpPerPoint);	//this may be redundant since we're doing this in Client::FinishConnState2()
+	Log(Logs::Detail, Logs::None, "Attempting to Set Exp for %s (XP: %u, AAXP: %u, Rez: %s)", this->GetCleanName(), set_exp, set_aaxp, isrezzexp ? "true" : "false");
+
+	auto max_AAXP = GetRequiredAAExperience();
 	if (max_AAXP == 0 || GetEXPForLevel(GetLevel()) == 0xFFFFFFFF) {
 		Message(13, "Error in Client::SetEXP. EXP not set.");
 		return; // Must be invalid class/race
@@ -513,21 +541,20 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 
 		//figure out how many AA points we get from the exp were setting
 		m_pp.aapoints = set_aaxp / max_AAXP;
-		Log.Out(Logs::Detail, Logs::None, "Calculating additional AA Points from AAXP for %s: %u / %u = %.1f points", this->GetCleanName(), set_aaxp, max_AAXP, (float)set_aaxp / (float)max_AAXP);
+		Log(Logs::Detail, Logs::None, "Calculating additional AA Points from AAXP for %s: %u / %u = %.1f points", this->GetCleanName(), set_aaxp, max_AAXP, (float)set_aaxp / (float)max_AAXP);
 
 		//get remainder exp points, set in PP below
 		set_aaxp = set_aaxp - (max_AAXP * m_pp.aapoints);
 
 		//add in how many points we had
 		m_pp.aapoints += last_unspentAA;
-		//set_aaxp = m_pp.expAA % max_AAXP;
 
 		//figure out how many points were actually gained
 		/*uint32 gained = m_pp.aapoints - last_unspentAA;*/	//unused
 
 		//Message(15, "You have gained %d skill points!!", m_pp.aapoints - last_unspentAA);
 		char val1[20]={0};
-		Message_StringID(MT_Experience, GAIN_ABILITY_POINT,ConvertArray(m_pp.aapoints, val1),m_pp.aapoints == 1 ? "" : "(s)");	//You have gained an ability point! You now have %1 ability point%2.
+		Message_StringID(MT_Experience, GAIN_ABILITY_POINT, ConvertArray(m_pp.aapoints, val1),m_pp.aapoints == 1 ? "" : "(s)");	//You have gained an ability point! You now have %1 ability point%2.
 		
 		/* QS: PlayerLogAARate */
 		if (RuleB(QueryServ, PlayerLogAARate)){
@@ -679,15 +706,14 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 		char val1[20]={0};
 		char val2[20]={0};
 		char val3[20]={0};
-		Message_StringID(MT_Experience, GM_GAINXP,ConvertArray(set_aaxp,val1),ConvertArray(set_exp,val2),ConvertArray(GetEXPForLevel(GetLevel()+1),val3));	//[GM] You have gained %1 AXP and %2 EXP (%3).
-		//Message(15, "[GM] You now have %d / %d EXP and %d / %d AA exp.", set_exp, GetEXPForLevel(GetLevel()+1), set_aaxp, max_AAXP);
+		Message_StringID(MT_Experience, GM_GAINXP, ConvertArray(set_aaxp,val1),ConvertArray(set_exp,val2),ConvertArray(GetEXPForLevel(GetLevel()+1),val3));	//[GM] You have gained %1 AXP and %2 EXP (%3).
 	}
 }
 
 void Client::SetLevel(uint8 set_level, bool command)
 {
 	if (GetEXPForLevel(set_level) == 0xFFFFFFFF) {
-		Log.Out(Logs::General, Logs::Error, "Client::SetLevel() GetEXPForLevel(%i) = 0xFFFFFFFF", set_level);
+		Log(Logs::General, Logs::Error, "Client::SetLevel() GetEXPForLevel(%i) = 0xFFFFFFFF", set_level);
 		return;
 	}
 
@@ -745,7 +771,7 @@ void Client::SetLevel(uint8 set_level, bool command)
 	safe_delete(outapp);
 	this->SendAppearancePacket(AT_WhoLevel, set_level); // who level change
 
-	Log.Out(Logs::General, Logs::Normal, "Setting Level for %s to %i", GetName(), set_level);
+	Log(Logs::General, Logs::Normal, "Setting Level for %s to %i", GetName(), set_level);
 
 	CalcBonuses();
 
@@ -1179,6 +1205,15 @@ void Client::UpdateSkillsAndSpells() {
 // Add: You can set the values you want now, client will be always sync :) - Merkur
 uint32 Client::GetEXPForLevel(uint16 check_level)
 {
+#ifdef LUA_EQEMU
+	uint32 lua_ret = 0;
+	bool ignoreDefault = false;
+	lua_ret = LuaParser::Instance()->GetEXPForLevel(this, check_level, ignoreDefault);
+
+	if (ignoreDefault) {
+		return lua_ret;
+	}
+#endif
 
 	uint16 check_levelm1 = check_level-1;
 	float mod;
@@ -1258,10 +1293,33 @@ uint32 Client::GetEXPForLevel(uint16 check_level)
 	return finalxp;
 }
 
-void Client::AddLevelBasedExp(uint8 exp_percentage, uint8 max_level) { 
-	if (exp_percentage > 100) { exp_percentage = 100; } 
-	if (!max_level || GetLevel() < max_level) { max_level = GetLevel(); } 
-	uint32 newexp = GetEXP() + ((GetEXPForLevel(max_level + 1) - GetEXPForLevel(max_level)) * exp_percentage / 100); 
+void Client::AddLevelBasedExp(uint8 exp_percentage, uint8 max_level) 
+{ 
+	uint32	award;
+	uint32	xp_for_level;
+
+	if (exp_percentage > 100) 
+	{ 
+		exp_percentage = 100; 
+	} 
+
+	if (!max_level || GetLevel() < max_level)
+	{ 
+		max_level = GetLevel(); 
+	} 
+
+	xp_for_level = GetEXPForLevel(max_level + 1) - GetEXPForLevel(max_level);
+	award = xp_for_level * exp_percentage / 100; 
+
+	if(RuleB(Zone, LevelBasedEXPMods))
+	{
+		if(zone->level_exp_mod[GetLevel()].ExpMod)
+		{
+			award *= zone->level_exp_mod[GetLevel()].ExpMod;
+		}
+	}
+
+	uint32 newexp = GetEXP() + award;
 	SetEXP(newexp, GetAAXP());
 }
 
@@ -1297,7 +1355,7 @@ void Group::SplitExp(uint32 exp, Mob* other) {
 		groupexp += (uint32)((float)exp * groupmod * (RuleR(Character, GroupExpMultiplier)));
 
 	int conlevel = Mob::GetLevelCon(maxlevel, other->GetLevel());
-	if(conlevel == CON_GREEN)
+	if(conlevel == CON_GRAY)
 		return;	//no exp for greenies...
 
 	if (membercount == 0)
@@ -1344,7 +1402,7 @@ void Raid::SplitExp(uint32 exp, Mob* other) {
 	groupexp = (uint32)((float)groupexp * (1.0f-(RuleR(Character, RaidExpMultiplier))));
 
 	int conlevel = Mob::GetLevelCon(maxlevel, other->GetLevel());
-	if(conlevel == CON_GREEN)
+	if(conlevel == CON_GRAY)
 		return;	//no exp for greenies...
 
 	if (membercount == 0)
@@ -1424,4 +1482,18 @@ uint32 Client::GetCharMaxLevelFromQGlobal() {
 	}
 
 	return false;
+}
+
+uint32 Client::GetRequiredAAExperience() {
+#ifdef LUA_EQEMU
+	uint32 lua_ret = 0;
+	bool ignoreDefault = false;
+	lua_ret = LuaParser::Instance()->GetRequiredAAExperience(this, ignoreDefault);
+
+	if (ignoreDefault) {
+		return lua_ret;
+	}
+#endif
+
+	return RuleI(AA, ExpPerPoint);
 }

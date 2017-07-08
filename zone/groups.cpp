@@ -47,6 +47,7 @@ Group::Group(uint32 gid)
 	AssistTargetID = 0;
 	TankTargetID = 0;
 	PullerTargetID = 0;
+	disbandcheck = false;
 
 	memset(&LeaderAbilities, 0, sizeof(GroupLeadershipAA_Struct));
 	uint32 i;
@@ -64,6 +65,8 @@ Group::Group(uint32 gid)
 		MarkedNPCs[i] = 0;
 
 	NPCMarkerID = 0;
+
+	m_autohatermgr.SetOwner(nullptr, this, nullptr);
 }
 
 //creating a new group
@@ -77,6 +80,7 @@ Group::Group(Mob* leader)
 	AssistTargetID = 0;
 	TankTargetID = 0;
 	PullerTargetID = 0;
+	disbandcheck = false;
 	memset(&LeaderAbilities, 0, sizeof(GroupLeadershipAA_Struct));
 	mentoree = nullptr;
 	uint32 i;
@@ -94,6 +98,7 @@ Group::Group(Mob* leader)
 		MarkedNPCs[i] = 0;
 
 	NPCMarkerID = 0;
+	m_autohatermgr.SetOwner(nullptr, this, nullptr);
 }
 
 Group::~Group()
@@ -333,20 +338,20 @@ bool Group::AddMember(Mob* newmember, const char *NewMemberName, uint32 Characte
 				database.SetGroupID(NewMemberName, GetID(), owner->CharacterID(), true);
 			}
 		}
-#ifdef BOTS
-		for (i = 0;i < MAX_GROUP_MEMBERS; i++) {
-			if (members[i] != nullptr && members[i]->IsBot()) {
-				members[i]->CastToBot()->CalcChanceToCast();
-			}
-		}
-#endif //BOTS
 	}
 	else
 	{
 		database.SetGroupID(NewMemberName, GetID(), CharacterID, ismerc);
 	}
 
+	if (newmember && newmember->IsClient())
+		newmember->CastToClient()->JoinGroupXTargets(this);
+
 	safe_delete(outapp);
+
+#ifdef BOTS
+	Bot::UpdateGroupCastingRoles(this);
+#endif
 
 	return true;
 }
@@ -395,6 +400,8 @@ void Group::SendHPPacketsTo(Mob *member)
 			{
 				members[i]->CreateHPPacket(&hpapp);
 				member->CastToClient()->QueuePacket(&hpapp, false);
+				safe_delete_array(hpapp.pBuffer);
+				hpapp.size = 0;
 				if (member->CastToClient()->ClientVersion() >= EQEmu::versions::ClientVersion::SoD)
 				{
 					outapp.SetOpcode(OP_MobManaUpdate);
@@ -482,6 +489,10 @@ bool Group::UpdatePlayer(Mob* update){
 	if (update->IsClient() && !mentoree && mentoree_name.length() && !mentoree_name.compare(update->GetName()))
 		mentoree = update->CastToClient();
 
+#ifdef BOTS
+	Bot::UpdateGroupCastingRoles(this);
+#endif
+
 	return updateSuccess;
 }
 
@@ -496,16 +507,11 @@ void Group::MemberZoned(Mob* removemob) {
 		SetLeader(nullptr);
 
 	for (i = 0; i < MAX_GROUP_MEMBERS; i++) {
-			if (members[i] == removemob) {
-				members[i] = nullptr;
-				//should NOT clear the name, it is used for world communication.
-				break;
-			}
-#ifdef BOTS
-		if (members[i] != nullptr && members[i]->IsBot()) {
-			members[i]->CastToBot()->CalcChanceToCast();
+		if (members[i] == removemob) {
+			members[i] = nullptr;
+			//should NOT clear the name, it is used for world communication.
+			break;
 		}
-#endif //BOTS
 	}
 
 	if(removemob->IsClient() && HasRole(removemob, RoleAssist))
@@ -519,6 +525,10 @@ void Group::MemberZoned(Mob* removemob) {
 
 	if (removemob->IsClient() && removemob == mentoree)
 		mentoree = nullptr;
+
+#ifdef BOTS
+	Bot::UpdateGroupCastingRoles(this);
+#endif
 }
 
 void Group::SendGroupJoinOOZ(Mob* NewMember) {
@@ -587,6 +597,16 @@ bool Group::DelMember(Mob* oldmember, bool ignoresender)
 		return false;
 	}
 
+	// TODO: fix this shit
+	// okay, so there is code below that tries to handle this. It does not.
+	// So instead of figuring it out now, lets just disband the group so the client doesn't
+	// sit there with a broken group and there isn't any group leader shuffling going on
+	// since the code below doesn't work.
+	if (oldmember == GetLeader()) {
+		DisbandGroup();
+		return true;
+	}
+
 	for (uint32 i = 0; i < MAX_GROUP_MEMBERS; i++)
 	{
 		if (members[i] == oldmember)
@@ -628,7 +648,7 @@ bool Group::DelMember(Mob* oldmember, bool ignoresender)
 		}
 	}
 	
-	if (GetLeader() == nullptr)
+	if (!GetLeaderName())
 	{
 		DisbandGroup();
 		return true;
@@ -661,11 +681,6 @@ bool Group::DelMember(Mob* oldmember, bool ignoresender)
 			if(members[i]->IsClient())
 				members[i]->CastToClient()->QueuePacket(outapp);
 		}
-#ifdef BOTS
-		if (members[i] != nullptr && members[i]->IsBot()) {
-			members[i]->CastToBot()->CalcChanceToCast();
-		}
-#endif //BOTS
 	}
 
 	if (!ignoresender)
@@ -718,8 +733,10 @@ bool Group::DelMember(Mob* oldmember, bool ignoresender)
 	if (oldmember->GetName() == mentoree_name)
 		ClearGroupMentor();
 
-	if(oldmember->IsClient())
+	if(oldmember->IsClient()) {
 		SendMarkedNPCsToMember(oldmember->CastToClient(), true);
+		oldmember->CastToClient()->LeaveGroupXTargets(this);
+	}
 
 	if(GroupCount() < 3)
 	{
@@ -729,6 +746,10 @@ bool Group::DelMember(Mob* oldmember, bool ignoresender)
 		}
 		ClearAllNPCMarks();
 	}
+
+#ifdef BOTS
+	Bot::UpdateGroupCastingRoles(this);
+#endif
 
 	return true;
 }
@@ -769,7 +790,7 @@ void Group::CastGroupSpell(Mob* caster, uint16 spell_id) {
 					caster->SpellOnTarget(spell_id, members[z]->GetPet());
 #endif
 			} else
-				Log.Out(Logs::Detail, Logs::Spells, "Group spell: %s is out of range %f at distance %f from %s", members[z]->GetName(), range, distance, caster->GetName());
+				Log(Logs::Detail, Logs::Spells, "Group spell: %s is out of range %f at distance %f from %s", members[z]->GetName(), range, distance, caster->GetName());
 		}
 	}
 
@@ -808,7 +829,7 @@ void Group::GroupBardPulse(Mob* caster, uint16 spell_id) {
 					members[z]->GetPet()->BardPulse(spell_id, caster);
 #endif
 			} else
-				Log.Out(Logs::Detail, Logs::Spells, "Group bard pulse: %s is out of range %f at distance %f from %s", members[z]->GetName(), range, distance, caster->GetName());
+				Log(Logs::Detail, Logs::Spells, "Group bard pulse: %s is out of range %f at distance %f from %s", members[z]->GetName(), range, distance, caster->GetName());
 		}
 	}
 }
@@ -872,7 +893,11 @@ uint32 Group::GetTotalGroupDamage(Mob* other) {
 	return total;
 }
 
-void Group::DisbandGroup() {
+void Group::DisbandGroup(bool joinraid) {
+#ifdef BOTS
+	Bot::UpdateGroupCastingRoles(this, true);
+#endif
+
 	auto outapp = new EQApplicationPacket(OP_GroupUpdate, sizeof(GroupUpdate_Struct));
 
 	GroupUpdate_Struct* gu = (GroupUpdate_Struct*) outapp->pBuffer;
@@ -899,6 +924,8 @@ void Group::DisbandGroup() {
 			database.SetGroupID(members[i]->GetCleanName(), 0, members[i]->CastToClient()->CharacterID(), false);
 			members[i]->CastToClient()->QueuePacket(outapp);
 			SendMarkedNPCsToMember(members[i]->CastToClient(), true);
+			if (!joinraid)
+				members[i]->CastToClient()->LeaveGroupXTargets(this);
 		}
 		
 		if (members[i]->IsMerc())
@@ -1106,7 +1133,7 @@ bool Group::LearnMembers() {
         return false;
 
     if (results.RowCount() == 0) {
-        Log.Out(Logs::General, Logs::Error, "Error getting group members for group %lu: %s", (unsigned long)GetID(), results.ErrorMessage().c_str());
+        Log(Logs::General, Logs::Error, "Error getting group members for group %lu: %s", (unsigned long)GetID(), results.ErrorMessage().c_str());
 			return false;
     }
 
@@ -1135,7 +1162,7 @@ void Group::VerifyGroup() {
 	for (i = 0; i < MAX_GROUP_MEMBERS; i++) {
 		if (membername[i][0] == '\0') {
 #if EQDEBUG >= 7
-	Log.Out(Logs::General, Logs::None, "Group %lu: Verify %d: Empty.\n", (unsigned long)GetID(), i);
+	Log(Logs::General, Logs::None, "Group %lu: Verify %d: Empty.\n", (unsigned long)GetID(), i);
 #endif
 			members[i] = nullptr;
 			continue;
@@ -1144,7 +1171,7 @@ void Group::VerifyGroup() {
 		Mob *them = entity_list.GetMob(membername[i]);
 		if(them == nullptr && members[i] != nullptr) {	//they aren't in zone
 #if EQDEBUG >= 6
-		Log.Out(Logs::General, Logs::None, "Member of group %lu named '%s' has disappeared!!", (unsigned long)GetID(), membername[i]);
+		Log(Logs::General, Logs::None, "Member of group %lu named '%s' has disappeared!!", (unsigned long)GetID(), membername[i]);
 #endif
 			membername[i][0] = '\0';
 			members[i] = nullptr;
@@ -1153,13 +1180,13 @@ void Group::VerifyGroup() {
 
 		if(them != nullptr && members[i] != them) {	//our pointer is out of date... not so good.
 #if EQDEBUG >= 5
-		Log.Out(Logs::General, Logs::None, "Member of group %lu named '%s' had an out of date pointer!!", (unsigned long)GetID(), membername[i]);
+		Log(Logs::General, Logs::None, "Member of group %lu named '%s' had an out of date pointer!!", (unsigned long)GetID(), membername[i]);
 #endif
 			members[i] = them;
 			continue;
 		}
 #if EQDEBUG >= 8
-		Log.Out(Logs::General, Logs::None, "Member of group %lu named '%s' is valid.", (unsigned long)GetID(), membername[i]);
+		Log(Logs::General, Logs::None, "Member of group %lu named '%s' is valid.", (unsigned long)GetID(), membername[i]);
 #endif
 	}
 }
@@ -1494,7 +1521,7 @@ void Group::DelegateMainTank(const char *NewMainTankName, uint8 toggle)
                                         MainTankName.c_str(), GetID());
         auto results = database.QueryDatabase(query);
 		if (!results.Success())
-			Log.Out(Logs::General, Logs::Error, "Unable to set group main tank: %s\n", results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Error, "Unable to set group main tank: %s\n", results.ErrorMessage().c_str());
 	}
 }
 
@@ -1540,7 +1567,7 @@ void Group::DelegateMainAssist(const char *NewMainAssistName, uint8 toggle)
                                         MainAssistName.c_str(), GetID());
         auto results = database.QueryDatabase(query);
 		if (!results.Success())
-			Log.Out(Logs::General, Logs::Error, "Unable to set group main assist: %s\n", results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Error, "Unable to set group main assist: %s\n", results.ErrorMessage().c_str());
 
 	}
 }
@@ -1587,7 +1614,7 @@ void Group::DelegatePuller(const char *NewPullerName, uint8 toggle)
                                         PullerName.c_str(), GetID());
         auto results = database.QueryDatabase(query);
 		if (!results.Success())
-			Log.Out(Logs::General, Logs::Error, "Unable to set group main puller: %s\n", results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Error, "Unable to set group main puller: %s\n", results.ErrorMessage().c_str());
 
 	}
 
@@ -1738,7 +1765,7 @@ void Group::UnDelegateMainTank(const char *OldMainTankName, uint8 toggle)
 		std::string query = StringFormat("UPDATE group_leaders SET maintank = '' WHERE gid = %i LIMIT 1", GetID());
 		auto results = database.QueryDatabase(query);
 		if (!results.Success())
-			Log.Out(Logs::General, Logs::Error, "Unable to clear group main tank: %s\n", results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Error, "Unable to clear group main tank: %s\n", results.ErrorMessage().c_str());
 
 		if(!toggle) {
 			for(uint32 i = 0; i < MAX_GROUP_MEMBERS; ++i) {
@@ -1787,7 +1814,7 @@ void Group::UnDelegateMainAssist(const char *OldMainAssistName, uint8 toggle)
 		std::string query = StringFormat("UPDATE group_leaders SET assist = '' WHERE gid = %i LIMIT 1", GetID());
         auto results = database.QueryDatabase(query);
 		if (!results.Success())
-			Log.Out(Logs::General, Logs::Error, "Unable to clear group main assist: %s\n", results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Error, "Unable to clear group main assist: %s\n", results.ErrorMessage().c_str());
 
 		if(!toggle)
 		{
@@ -1815,7 +1842,7 @@ void Group::UnDelegatePuller(const char *OldPullerName, uint8 toggle)
 		std::string query = StringFormat("UPDATE group_leaders SET puller = '' WHERE gid = %i LIMIT 1", GetID());
         auto results = database.QueryDatabase(query);
 		if (!results.Success())
-			Log.Out(Logs::General, Logs::Error, "Unable to clear group main puller: %s\n", results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Error, "Unable to clear group main puller: %s\n", results.ErrorMessage().c_str());
 
 		if(!toggle) {
 			for(uint32 i = 0; i < MAX_GROUP_MEMBERS; ++i) {
@@ -1898,7 +1925,7 @@ void Group::SetGroupMentor(int percent, char *name)
 			mentoree_name.c_str(), mentor_percent, GetID());
 	auto results = database.QueryDatabase(query);
 	if (!results.Success())
-		Log.Out(Logs::General, Logs::Error, "Unable to set group mentor: %s\n", results.ErrorMessage().c_str());
+		Log(Logs::General, Logs::Error, "Unable to set group mentor: %s\n", results.ErrorMessage().c_str());
 }
 
 void Group::ClearGroupMentor()
@@ -1909,7 +1936,7 @@ void Group::ClearGroupMentor()
 	std::string query = StringFormat("UPDATE group_leaders SET mentoree = '', mentor_percent = 0 WHERE gid = %i LIMIT 1", GetID());
 	auto results = database.QueryDatabase(query);
 	if (!results.Success())
-		Log.Out(Logs::General, Logs::Error, "Unable to clear group mentor: %s\n", results.ErrorMessage().c_str());
+		Log(Logs::General, Logs::Error, "Unable to clear group mentor: %s\n", results.ErrorMessage().c_str());
 }
 
 void Group::NotifyAssistTarget(Client *c)
@@ -1979,7 +2006,7 @@ void Group::DelegateMarkNPC(const char *NewNPCMarkerName)
                                     NewNPCMarkerName, GetID());
     auto results = database.QueryDatabase(query);
 	if (!results.Success())
-		Log.Out(Logs::General, Logs::Error, "Unable to set group mark npc: %s\n", results.ErrorMessage().c_str());
+		Log(Logs::General, Logs::Error, "Unable to set group mark npc: %s\n", results.ErrorMessage().c_str());
 }
 
 void Group::NotifyMarkNPC(Client *c)
@@ -2060,7 +2087,7 @@ void Group::UnDelegateMarkNPC(const char *OldNPCMarkerName)
 	std::string query = StringFormat("UPDATE group_leaders SET marknpc = '' WHERE gid = %i LIMIT 1", GetID());
     auto results = database.QueryDatabase(query);
 	if (!results.Success())
-		Log.Out(Logs::General, Logs::Error, "Unable to clear group marknpc: %s\n", results.ErrorMessage().c_str());
+		Log(Logs::General, Logs::Error, "Unable to clear group marknpc: %s\n", results.ErrorMessage().c_str());
 
 }
 
@@ -2077,7 +2104,7 @@ void Group::SaveGroupLeaderAA()
 	safe_delete_array(queryBuffer);
     auto results = database.QueryDatabase(query);
 	if (!results.Success())
-		Log.Out(Logs::General, Logs::Error, "Unable to store LeadershipAA: %s\n", results.ErrorMessage().c_str());
+		Log(Logs::General, Logs::Error, "Unable to store LeadershipAA: %s\n", results.ErrorMessage().c_str());
 
 }
 
@@ -2290,6 +2317,30 @@ void Group::UpdateXTargetMarkedNPC(uint32 Number, Mob *m)
 		}
 	}
 
+}
+
+void Group::SetDirtyAutoHaters()
+{
+	for (int i = 0; i < MAX_GROUP_MEMBERS; ++i)
+		if (members[i] && members[i]->IsClient())
+			members[i]->CastToClient()->SetDirtyAutoHaters();
+}
+
+void Group::JoinRaidXTarget(Raid *raid, bool first)
+{
+	if (!GetXTargetAutoMgr()->empty())
+		raid->GetXTargetAutoMgr()->merge(*GetXTargetAutoMgr());
+
+	for (int i = 0; i < MAX_GROUP_MEMBERS; ++i) {
+		if (members[i] && members[i]->IsClient()) {
+			auto *client = members[i]->CastToClient();
+			if (!first)
+				client->RemoveAutoXTargets();
+			client->SetXTargetAutoMgr(raid->GetXTargetAutoMgr());
+			if (!client->GetXTargetAutoMgr()->empty())
+				client->SetDirtyAutoHaters();
+		}
+	}
 }
 
 void Group::SetMainTank(const char *NewMainTankName)
