@@ -59,6 +59,7 @@ enum class eSpecialAttacks : int {
 	Rampage,
 	AERampage,
 	ChaoticStab
+};
 
 struct DPS_Struct {
 	explicit DPS_Struct(uint32 engage_start, int acct_id, int type_id, int ent_id, std::string character_name, float dps, int total_damage, float hps, int total_healing_taken, int net_healing_taken, int tier, int class_id, int is_player, int level, int aggro_count, int total_healing_dealt, int net_healing_dealt) : engage_start(engage_start), acct_id(acct_id), type_id(type_id), ent_id(ent_id), character_name(character_name), dps(dps), total_damage(total_damage), hps(hps), total_healing_taken(total_healing_taken), net_healing_taken(net_healing_taken), tier(tier), class_id(class_id), is_player(is_player), level(level), aggro_count(aggro_count), total_healing_dealt(total_healing_dealt), net_healing_dealt(net_healing_dealt) {};
@@ -80,7 +81,6 @@ struct DPS_Struct {
 	int total_healing_dealt;
 	int net_healing_dealt;
 
-};
 };
 
 

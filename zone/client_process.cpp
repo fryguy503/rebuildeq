@@ -1993,7 +1993,7 @@ void Client::CalcRestState() {
 	
 	//How many ticks player has been out of combat regen eligable
 	int ooc_tick = ((time(nullptr) - this->m_epp.ooc_last_expiration) / 6);
-	Log.Out(Logs::Detail, Logs::LogCategory::OOC, "OOC tick: %i, regen: %f, step: %f, group size: %i", ooc_tick, rest_regen_percent, step, group_size);
+	Log(Logs::Detail, Logs::LogCategory::OOC, "OOC tick: %i, regen: %f, step: %f, group size: %i", ooc_tick, rest_regen_percent, step, group_size);
 	
 	rest_regen_percent = (step * ooc_tick) + (rest_regen_percent + group_size);
 	
@@ -2008,7 +2008,7 @@ void Client::CalcRestState() {
 	RestRegenMana = (GetMaxMana() * rest_regen_percent / 100);
 	
 	RestRegenEndurance = (GetMaxEndurance() * rest_regen_percent / 100);
-	Log.Out(Logs::General, Logs::LogCategory::OOC, "OOC Regen: %f, HP: %i, MP: %i, EP: %i", rest_regen_percent, RestRegenHP, RestRegenMana, RestRegenEndurance);
+	Log(Logs::General, Logs::LogCategory::OOC, "OOC Regen: %f, HP: %i, MP: %i, EP: %i", rest_regen_percent, RestRegenHP, RestRegenMana, RestRegenEndurance);
 }
 
 void Client::DoTracking()

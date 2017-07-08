@@ -7007,7 +7007,7 @@ void Mob::AddDPS(Mob *other, int damage) {
 
 	int class_id = (int)other->GetClass();
 	
-	Log.Out(Logs::General, Logs::Combat, "Added new DPS entry for %s", character_name.c_str());
+	Log(Logs::General, Logs::Combat, "Added new DPS entry for %s", character_name.c_str());
 	//new entry
 	dps.push_back(DPS_Struct(time(nullptr), acct_id, type_id, ent_id, character_name, damage, damage, 0, 0, 0, tier, class_id, is_player, level, aggro_count, 0, 0));
 }
@@ -7063,7 +7063,7 @@ void Mob::AddHPS(Mob *other, bool is_dealer, int total_healing, int net_healing)
 	}
 	
 
-	Log.Out(Logs::General, Logs::Combat, "Added new DPS entry for %s", character_name.c_str());
+	Log(Logs::General, Logs::Combat, "Added new DPS entry for %s", character_name.c_str());
 	//new entry
 	dps.push_back(DPS_Struct(time(nullptr), acct_id, type_id, ent_id, character_name, 1, 1, (float)net_healing, ((!is_dealer) ? total_healing : 0), ((!is_dealer) ? net_healing : 0), tier, class_id, is_player, level, aggro_count, ((is_dealer) ? total_healing : 0), ((is_dealer) ? net_healing : 0)));
 }
@@ -7075,7 +7075,7 @@ uint32 Mob::EngageEnd() {
 
 //Resets the engage, this is triggered when a mob hits full health.
 void Mob::EngageReset() {
-	Log.Out(Logs::General, Logs::Combat, "Resetting DPS for %s", GetCleanName());
+	Log(Logs::General, Logs::Combat, "Resetting DPS for %s", GetCleanName());
 	engage_end = 0;	
 	engage_flush_on_next_engage = false;
 	dps.clear();

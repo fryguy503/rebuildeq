@@ -1768,7 +1768,7 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		m_epp->next_encounter_time,
 		m_epp->last_invsnapshot_time
 	);
-	//Log.Out(Logs::General, Logs::Zone_Server);
+	//Log(Logs::General, Logs::Zone_Server);
 
 	auto results = database.QueryDatabase(query);
 	Log(Logs::General, Logs::None, "ZoneDatabase::SaveCharacterData %i, done... Took %f seconds", character_id, ((float)(std::clock() - t)) / CLOCKS_PER_SEC);

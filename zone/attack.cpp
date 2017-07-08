@@ -60,7 +60,7 @@ EQEmu::skills::SkillType Mob::AttackAnimation(int Hand, const EQEmu::ItemInstanc
 	if (weapon && weapon->IsClassCommon()) {
 		const EQEmu::ItemData* item = weapon->GetItem();
 
-		Log.Out(Logs::Detail, Logs::Attack, "Weapon skill : %i", item->ItemType);
+		Log(Logs::Detail, Logs::Attack, "Weapon skill : %i", item->ItemType);
 
 		switch (item->ItemType) {
 		case EQEmu::item::ItemType1HSlash: // 1H Slashing
@@ -292,9 +292,9 @@ bool Mob::CheckHitChance(Mob* other, DamageHitInfo &hit)
 	auto avoidance = defender->GetTotalDefense();
 	if (avoidance == -1) // some sort of auto avoid disc
 		return false;
-
-if (IsClient() && 
-		tohit_roll <= chancetohit //this normally would hit
+	/*
+	if (IsClient() && 
+		hit.tohit <= //this normally would hit
 		&& other  //there is an enemy
 		&& CastToClient()->GetBuildRank(ROGUE,RB_ROG_DUELIST) > 0 &&  //has duelist ability
 		CastToClient()->GetAggroCount() == 1 &&
@@ -329,17 +329,18 @@ if (IsClient() &&
 		if (chancetohit < 20) chancetohit = 20; //cap evasion to 20% min
 		chancetohit -= duelist_evasion; //lower chance to hit
 
-		Log.Out(Logs::Detail, Logs::Attack, "Duelist hit chance: %.2f. Hit roll %.2f", chancetohit, tohit_roll);
+		Log(Logs::Detail, Logs::Attack, "Duelist hit chance: %.2f. Hit roll %.2f", chancetohit, tohit_roll);
 		if (tohit_roll > chancetohit) {			
 			if (ShowBuildEcho()) CastToClient()->Message(MT_FocusEffect, "Duelist %u caused %s to miss.", CastToClient()->GetBuildRank(ROGUE, RB_ROG_DUELIST), other->GetCleanName());
 		}
 	}
-
+	
 	//Evade once bonus mechanics
 	if (IsClient() && tohit_roll <= chancetohit && other && CastToClient()->DoEvadeOnce()) {		
 		Message(MT_OtherMissesYou, "At the last second, you EVADE %s's attack!", other->GetCleanName());
 		chancetohit = tohit_roll + 1;
 	}
+	*/
 
 
 	auto accuracy = hit.tohit;
@@ -357,6 +358,8 @@ if (IsClient() &&
 	// tie breaker? Don't want to be biased any one way
 	if (tohit_roll == avoid_roll)
 		return zone->random.Roll(50);
+
+
 	return tohit_roll > avoid_roll;
 }
 
@@ -808,25 +811,21 @@ int Mob::GetClassRaceACBonus()
 			ac_bonus = 12;
 	}
 
-		mitigation_rating = mod_mitigation_rating(mitigation_rating, attacker);
-
-		if (attacker->IsClient())
-			attack_rating = (attacker->CastToClient()->CalcATK() + ((attacker->GetSTR() - 66) * 0.9) + (attacker->GetSkill(EQEmu::skills::SkillOffense)*1.345));
-		else
-			attack_rating = (attacker->GetATK() + (attacker->GetSkill(EQEmu::skills::SkillOffense)*1.345) + ((attacker->GetSTR() - 66) * 0.9));
-
-		attack_rating = attacker->mod_attack_rating(attack_rating, this);
-
-		damage = GetMeleeMitDmg(attacker, damage, minhit, mitigation_rating, attack_rating);
-	} else {
-		////////////////////////////////////////////////////////
-		// Scorpious2k: Include AC in the calculation
-		// use serverop variables to set values
-		int32 myac = GetAC();
-		if(opts) {
-			myac *= (1.0f - opts->armor_pen_percent);
-			myac -= opts->armor_pen_flat;
-		}
+	if (GetClass() == BEASTLORD) {
+		int level_scaler = level - 6;
+		if (GetAGI() < 80)
+			ac_bonus = level_scaler / 5;
+		else if (GetAGI() < 85)
+			ac_bonus = (level_scaler * 2) / 5;
+		else if (GetAGI() < 90)
+			ac_bonus = (level_scaler * 3) / 5;
+		else if (GetAGI() < 100)
+			ac_bonus = (level_scaler * 4) / 5;
+		else if (GetAGI() >= 100)
+			ac_bonus = (level_scaler * 5) / 5;
+		if (ac_bonus > 16)
+			ac_bonus = 16;
+	}
 
 	if (GetRace() == IKSAR)
 		ac_bonus += EQEmu::Clamp(static_cast<int>(level), 10, 35);
@@ -1190,7 +1189,7 @@ int Mob::GetWeaponDamage(Mob *against, const EQEmu::ItemInstance *weapon_item, u
 		Client *client = CastToClient();
 		uint16 rank = client->GetBuildRank(CLERIC, RB_CLR_FISTOFTHEGODS);
 		if (rank > 0 && against->GetBodyType() == BT_Undead) {
-			Logs(Logs::Detail, Logs::Combat, "Fist of the Gods adds %d weapon damage", rank);
+			Log(Logs::Detail, Logs::Combat, "Fist of the Gods adds %d weapon damage", rank);
 			banedmg += rank;
 		}
 	}
@@ -3180,7 +3179,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 		hate = (hate*spellbonuses.ImprovedTaunt[1]) / 100;
 
 	if(hate > 0 && other->IsPet() && other->GetOwner()->IsClient() && other->GetOwner()->CastToClient()->GetClass() == MAGICIAN) {
-		Log.Out(Logs::Detail, Logs::Aggro, "Mage pet hate nerfed from %d to %d", hate, (int)(hate * 0.25f));
+		Log(Logs::Detail, Logs::Aggro, "Mage pet hate nerfed from %d to %d", hate, (int)(hate * 0.25f));
 		hate = (int) (hate * 0.25f); // Nerf mage pet hate to 25% effectiveness
 	}
 
@@ -4041,7 +4040,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					else if (attacker_level <= 60) {
 						scale_damage = 118 + ((attacker_level - 20) * 5);
 					}
-					Log.Out(Logs::General, Logs::Spells, "Applying lifetap scale for SHD: %i to %i", damage, scale_damage);
+					Log(Logs::General, Logs::Spells, "Applying lifetap scale for SHD: %i to %i", damage, scale_damage);
 					if (scale_damage > damage) {
 						damage = scale_damage;
 					}
@@ -4064,7 +4063,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				}
 
 				healed = attacker->GetActSpellHealing(spell_id, healed);
-				Log.Out(Logs::Detail, Logs::Combat, "Applying lifetap heal of %d to %s", healed, attacker->GetName());
+				Log(Logs::Detail, Logs::Combat, "Applying lifetap heal of %d to %s", healed, attacker->GetName());
 				attacker->HealDamage(healed);
 
 				//we used to do a message to the client, but its gone now.
@@ -5128,7 +5127,7 @@ void Mob::TryCriticalHit(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *
 
 		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);		
 		if (rank > 0 && defender->GetHPRatio() >= 90.0f && skill == EQEmu::skills::SkillBackstab && CastToClient()->sneaking) {
-			Log.Out(Logs::Detail, Logs::Attack, "Sneak Attack crit? %u %i %i skill : %i", rank, CastToClient()->hidden, CastToClient()->sneaking, skill);
+			Log(Logs::Detail, Logs::Attack, "Sneak Attack crit? %u %i %i skill : %i", rank, CastToClient()->hidden, CastToClient()->sneaking, skill);
 			if (ShowBuildEcho()) CastToClient()->Message(MT_FocusEffect, "Sneak Attack %u catches %s off guard.", rank, defender->GetCleanName());
 			crit_chance += 10 * rank;
 
@@ -5175,16 +5174,16 @@ void Mob::TryCriticalHit(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *
 
 				CastToClient()->sneaking = false; //Disable sneak
 				CastToClient()->SendAppearancePacket(AT_Sneak, 0);
-				Log.Out(Logs::Detail, Logs::Build, "HIDDEN_DAGGER: Sneak Attack %u, throwing skill: %i", rank, skill);
+				Log(Logs::Detail, Logs::Build, "HIDDEN_DAGGER: Sneak Attack %u, throwing skill: %i", rank, skill);
 				if (zone->random.Roll(rank * 15) &&
 					GetLevel() >= defender->GetLevel()) {
 					//Harmony = 3601
 					//defender->SpellFinished(3601, defender);								
 					CastToClient()->Message(MT_FocusEffect, "Hidden Dagger %u muffles %s.", rank, defender->GetCleanName());
-					Log.Out(Logs::Detail, Logs::LogCategory::Build, "HIDDEN_DAGGER: Failed chance roll or too low level");
+					Log(Logs::Detail, Logs::LogCategory::Build, "HIDDEN_DAGGER: Failed chance roll or too low level");
 				}
 				else {
-					Log.Out(Logs::Detail, Logs::LogCategory::Build, "HIDDEN_DAGGER: Failed chance roll or too low level");
+					Log(Logs::Detail, Logs::LogCategory::Build, "HIDDEN_DAGGER: Failed chance roll or too low level");
 				}
 			}
 
@@ -6324,5 +6323,5 @@ void Mob::DoOffHandAttackRounds(Mob *target, ExtraAttackOptions *opts)
 void Mob::SetMuffled(bool muffled)
 {
 	this->is_muffled = muffled;
-	Log.Out(Logs::Detail, Logs::Build, "Muffled status is now %d", muffled);
+	Log(Logs::Detail, Logs::Build, "Muffled status is now %d", muffled);
 }

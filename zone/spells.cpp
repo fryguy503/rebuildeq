@@ -502,7 +502,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
         )) {
                 int mana_cost_reduc = 0.1f * rank * mana_cost;
                 int cast_time_reduc = 0.05f * rank * cast_time;
-                Log.Out(Logs::Detail, Logs::Spells, "Ring Affinity (Rank %d) Reduced Mana by %d and Casting Time by %d", rank, mana_cost_reduc, cast_time_reduc);
+                Log(Logs::Detail, Logs::Spells, "Ring Affinity (Rank %d) Reduced Mana by %d and Casting Time by %d", rank, mana_cost_reduc, cast_time_reduc);
                 mana_cost -= mana_cost_reduc;
                 cast_time -= cast_time_reduc;
         }
@@ -514,10 +514,10 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 			// 85% Mana at Rank 1, minus 15% per rank: 85,70,55,40,25
 			mana_cost = GetMaxMana() * (1 - rank * 0.15f);
 
-			Log.Out(Logs::Detail, Logs::Spells, "Teleport Bind (Rank %d) Mana Cost %d and Casting Time %d", rank, mana_cost, cast_time);
+			Log(Logs::Detail, Logs::Spells, "Teleport Bind (Rank %d) Mana Cost %d and Casting Time %d", rank, mana_cost, cast_time);
 
 			if (mana_cost > GetMana()) {
-				Log.Out(Logs::Detail, Logs::Spells, "Spell Error not enough mana spell=%d mymana=%d cost=%d\n", GetName(), spell_id, GetMana(), mana_cost);
+				Log(Logs::Detail, Logs::Spells, "Spell Error not enough mana spell=%d mymana=%d cost=%d\n", GetName(), spell_id, GetMana(), mana_cost);
 				Message_StringID(13, INSUFFICIENT_MANA);
 				InterruptSpell();
 				return false;
@@ -529,7 +529,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 	if(rank > 0 && spell_id == 2771) {
                 // 5 second cast time, 1 less second per rank: 5000ms/4000ms/3000ms/2000ms/1000ms
 		int cast_time_new = 6000 - (rank * 1000);
-		Log.Out(Logs::Detail, Logs::Spells, "Exodus (Rank %d) Casting Time %d", rank, cast_time_new);
+		Log(Logs::Detail, Logs::Spells, "Exodus (Rank %d) Casting Time %d", rank, cast_time_new);
         	cast_time = cast_time_new;
 	}
 	
@@ -543,7 +543,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		if(rank == 3) cast_time_bonus = cast_time * 0.10f;
 		if(rank == 4) cast_time_bonus = cast_time * 0.15f;
 		if(rank == 5) cast_time_bonus = cast_time * 0.20f;
-		Log.Out(Logs::Detail, Logs::Spells, "Quick Damage (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
+		Log(Logs::Detail, Logs::Spells, "Quick Damage (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
         	cast_time -= cast_time_bonus;
 	}
 	
@@ -556,7 +556,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		if(rank == 3) cast_time_bonus = cast_time * 0.30f;
 		if(rank == 4) cast_time_bonus = cast_time * 0.40f;
 		if(rank == 5) cast_time_bonus = cast_time * 0.50f;
-		Log.Out(Logs::Detail, Logs::Spells, "Quick Summoning (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
+		Log(Logs::Detail, Logs::Spells, "Quick Summoning (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
 		cast_time -= cast_time_bonus;
 	}
 	
@@ -3646,7 +3646,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		duration += 600;
 	}
 
-	Log.Out(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",
+	Log(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",
 		spell_id, caster?caster->GetName():"UNKNOWN", caster_level, duration);
 
 	// first we loop through everything checking that the spell
@@ -4776,14 +4776,14 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster)
 				   (rank == 4 && GetLevel() > caster->CastToClient()->GetLevel() - 6) ||
 				   (rank == 5 && GetLevel() > caster->CastToClient()->GetLevel() - 5)
 				) {
-					Log.Out(Logs::Detail, Logs::Spells, "Our level (%d) is higher than the limit of this Charm spell (%d)", GetLevel(), spells[spell_id].max[effect_index]);
+					Log(Logs::Detail, Logs::Spells, "Our level (%d) is higher than the limit of this Charm spell (%d)", GetLevel(), spells[spell_id].max[effect_index]);
                                 	caster->Message_StringID(MT_Shout, CANNOT_CHARM_YET);
                                 	caster->CastToClient()->ResetAlternateAdvancementTimer(aaDireCharm);
                                 	return true;
 				}
 
 			} else if(GetLevel() > spells[spell_id].max[effect_index] && spells[spell_id].max[effect_index] != 0) {
-				Log.Out(Logs::Detail, Logs::Spells, "Our level (%d) is higher than the limit of this Charm spell (%d)", GetLevel(), spells[spell_id].max[effect_index]);
+				Log(Logs::Detail, Logs::Spells, "Our level (%d) is higher than the limit of this Charm spell (%d)", GetLevel(), spells[spell_id].max[effect_index]);
 				caster->Message_StringID(MT_Shout, CANNOT_CHARM_YET);
 				return true;
 			}

@@ -1398,9 +1398,9 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 
 	in.s_addr = GetIP();
 
-	Log.Out(Logs::Detail, Logs::World_Server, "Character creation request from %s LS#%d (%s:%d) : ", GetCLE()->LSName(), GetCLE()->LSID(), inet_ntoa(in), GetPort());
-	Log.Out(Logs::Detail, Logs::World_Server, "Name: %s", name);
-	Log.Out(Logs::Detail, Logs::World_Server, "Race: %d  Class: %d  Gender: %d  Deity: %d  Start zone: %d  Tutorial: %s",
+	Log(Logs::Detail, Logs::World_Server, "Character creation request from %s LS#%d (%s:%d) : ", GetCLE()->LSName(), GetCLE()->LSID(), inet_ntoa(in), GetPort());
+	Log(Logs::Detail, Logs::World_Server, "Name: %s", name);
+	Log(Logs::Detail, Logs::World_Server, "Race: %d  Class: %d  Gender: %d  Deity: %d  Start zone: %d  Tutorial: %s",
 		cc->race, cc->class_, cc->gender, cc->deity, cc->start_zone, cc->tutorial ? "true" : "false");
 	Log(Logs::Detail, Logs::World_Server, "STR  STA  AGI  DEX  WIS  INT  CHA    Total");
 	Log(Logs::Detail, Logs::World_Server, "%3d  %3d  %3d  %3d  %3d  %3d  %3d     %3d",

@@ -1550,7 +1550,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	}
 
 	//calculate cooldown
-	int cooldown = rank->recast_time - GetAlternateAdvancementCooldownReduction(rank);
+	cooldown = rank->recast_time - GetAlternateAdvancementCooldownReduction(rank);
 	if(cooldown < 0) {
 		cooldown = 0;
 	}

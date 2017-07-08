@@ -827,7 +827,7 @@ void Client::CompleteConnect()
 			auto results = database.QueryDatabase(query);
 			if (!results.Success()) {
 				//Message(13, "Setting daily claim failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
-				Log.Out(Logs::General, Logs::Normal, "Daily claim increment failed for user %u: %s", AccountID(), results.ErrorMessage().c_str());
+				Log(Logs::General, Logs::Normal, "Daily claim increment failed for user %u: %s", AccountID(), results.ErrorMessage().c_str());
 				return;
 			}
 			Message(15, "You have acquired the daily login reward [ %s ]! In 20 hours a new reward will be available to claim.", CreateSayLink("#encounter claim", "claim").c_str());
@@ -5003,7 +5003,7 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 		std::string race_name;
 		if (tmob->IsNPC()) {
 			auto loot_list = tmob->CastToNPC()->SpecialLoot(true);
-			Log.Out(Logs::General, Logs::Client_Server_Packet, "Size of SpecialLoot: %i", loot_list.size());
+			Log(Logs::General, Logs::Client_Server_Packet, "Size of SpecialLoot: %i", loot_list.size());
 			for (auto&& i : loot_list) race_name += ", "+i.name;
 			if (race_name.length() > 3) race_name = race_name.substr(2).c_str();
 			else race_name = "Unknown";

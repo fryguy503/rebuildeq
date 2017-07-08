@@ -999,7 +999,7 @@ bool Zone::Init(bool iStaticZone) {
 		}
 	}
 
-	Log.Out(Logs::General, Logs::Status, "Loading timezone data...");
+	Log(Logs::General, Logs::Status, "Loading timezone data...");
 	zone->zone_time.setEQTimeZone(database.GetZoneTZ(zoneid, GetInstanceVersion()));
 
 	Log(Logs::General, Logs::Status, "Init Finished: ZoneID = %d, Time Offset = %d", zoneid, zone->zone_time.getEQTimeZone());

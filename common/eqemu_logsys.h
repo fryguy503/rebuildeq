@@ -84,6 +84,8 @@ enum LogCategory {
 	Server_Client_Packet_With_Dump,
 	Client_Server_Packet_With_Dump,
 	Login_Server,
+	OOC,
+	Build,
 	Client_Login,
 	Headless_Client,
 	MaxCategoryID	/* Don't Remove this*/
@@ -136,8 +138,9 @@ enum LogCategory {
 		"Packet :: Client -> Server (Dump)",
 		"Login Server",
 		"OOC",
-		"Build",
-		"Client Login"
+		"Build",		
+		"Client Login",
+		"Headless Client"
 	};
 }
 

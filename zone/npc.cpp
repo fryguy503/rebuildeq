@@ -2718,7 +2718,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 	std::vector<SpecialLoot_Struct> loot_list;
 
 	for (auto &&i : SpecialLoots) {
-		Log.Out(Logs::General, Logs::Debug, "ID: %i, String: %s, Race: %i", i.item_id, i.name.c_str(), GetRace());
+		Log(Logs::General, Logs::Debug, "ID: %i, String: %s, Race: %i", i.item_id, i.name.c_str(), GetRace());
 		if (i.item_id == 100100 && (GetRace() == 195 /*Zland*/ || GetRace() == 19 /*Trak*/ || GetRace() == 49 /*Sev*/ || GetNPCTypeID() == 96073 /*Fey*/ || GetRace() == 184 /*aary*/)) loot_list.push_back(i); //Dragon Card
 		if (i.item_id == 100101 && GetBodyType() == BT_Insect) loot_list.push_back(i); //Insect Card
 		if (i.item_id == 100102 && (GetBodyType() == BT_Animal || GetRace() == 36 || GetRace() == 156 || GetRace() == 415)) loot_list.push_back(i); //Animal Card

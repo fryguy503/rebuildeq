@@ -560,7 +560,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			npc_type->armor_tint[EQEmu::legacy::MaterialFeet] = GetEquipmentColor(EQEmu::legacy::MaterialFeet);
 			npc_type->armor_tint[EQEmu::legacy::MaterialWrist] = GetEquipmentColor(EQEmu::legacy::MaterialWrist);
 			npc_type->armor_tint[EQEmu::legacy::MaterialHands] = GetEquipmentColor(EQEmu::legacy::MaterialHands);
-			//Log.Out(Logs::General, Logs::Zone_Server, "Setting Chest Armor Tint npc_type to %u with Steadfast", npc_type->armor_tint[MaterialChest]);
+			//Log(Logs::General, Logs::Zone_Server, "Setting Chest Armor Tint npc_type to %u with Steadfast", npc_type->armor_tint[MaterialChest]);
 
 			//npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
 			npc_type->haircolor = GetHairColor();
@@ -788,14 +788,14 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc->size = in_size;
 
 	/*if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) >= 5) {		
-		Log.Out(Logs::General, Logs::Zone_Server, "Before Chest Armor Tint to %u with Steadfast", npc->armor_tint[MaterialChest]);
+		Log(Logs::General, Logs::Zone_Server, "Before Chest Armor Tint to %u with Steadfast", npc->armor_tint[MaterialChest]);
 		npc->armor_tint[MaterialArms] = GetEquipmentColor(MaterialArms);
 		npc->armor_tint[MaterialChest] = GetEquipmentColor(MaterialChest);
 		npc->armor_tint[MaterialLegs] = GetEquipmentColor(MaterialLegs);
 		npc->armor_tint[MaterialFeet] = GetEquipmentColor(MaterialFeet);
 		npc->armor_tint[MaterialWrist] = GetEquipmentColor(MaterialWrist);
 		npc->armor_tint[MaterialHands] = GetEquipmentColor(MaterialHands);
-		Log.Out(Logs::General, Logs::Zone_Server, "Setting Chest Armor Tint to %u with Steadfast", npc->armor_tint[MaterialChest]);
+		Log(Logs::General, Logs::Zone_Server, "Setting Chest Armor Tint to %u with Steadfast", npc->armor_tint[MaterialChest]);
 	}*/
 
 	entity_list.AddNPC(npc, true, true);

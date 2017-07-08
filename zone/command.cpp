@@ -4235,13 +4235,13 @@ void command_encounter(Client *c, const Seperator *sep) {
 			auto results = database.QueryDatabase(query);
 			if (!results.Success()) {
 				c->Message(13, "Claiming reward failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
-				Log.Out(Logs::General, Logs::Normal, "Creating account_custom failed with error user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+				Log(Logs::General, Logs::Normal, "Creating account_custom failed with error user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 				return;
 			}
 		}
 
 	} else {
-		Log.Out(Logs::General, Logs::Normal, "Failed to select unclaimed_encounter_rewards for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+		Log(Logs::General, Logs::Normal, "Failed to select unclaimed_encounter_rewards for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 		return;
 	}
 
@@ -4253,7 +4253,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting daily claim failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
-			Log.Out(Logs::General, Logs::Normal, "Daily claim increment failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Daily claim increment failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(15, "You have acquired the daily login reward [ %s ]! In 20 hours a new reward will be available to claim.", c->CreateSayLink("#encounter claim", "claim").c_str());
@@ -4287,13 +4287,13 @@ void command_encounter(Client *c, const Seperator *sep) {
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Claiming reward failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
-			Log.Out(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());			
+			Log(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());			
 			return;
 		}		
 
 		const EQEmu::Item_Struct * item = database.GetItem(itemid);
 		if (!c->SummonItem(itemid)) { //
-			Log.Out(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u", c->CharacterID());
+			Log(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u", c->CharacterID());
 			c->Message(13, "Something went wrong during the claim. The admins have been notified.");
 			return;
 		}
@@ -4873,7 +4873,7 @@ void command_issue(Client *c, const Seperator *sep) {
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Deleting an issue failed. The admins have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "#issue creation failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "#issue creation failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "You have deleted issue #%u.", issue_id);
@@ -4886,7 +4886,7 @@ void command_issue(Client *c, const Seperator *sep) {
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Listing issues failed. The admins have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "#issue list failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "#issue list failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
 			return;
 		}
 		if (results.RowCount() == 0) {
@@ -4969,7 +4969,7 @@ void command_issue(Client *c, const Seperator *sep) {
 	auto results = database.QueryDatabase(query);
 	if (!results.Success()) {
 		c->Message(13, "Creating an issue failed. The admins have been notified.");
-		Log.Out(Logs::General, Logs::Normal, "#issue creation failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
+		Log(Logs::General, Logs::Normal, "#issue creation failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
 		return;		
 	}
 
@@ -9158,7 +9158,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "You have %s verbose build echos.", ((c->GetEPP().show_rb_echo) ? "enabled" : "disabled"));
@@ -9172,7 +9172,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "You have %s the new consider system.", ((c->GetEPP().use_new_con) ? "enabled" : "disabled"));
@@ -9185,7 +9185,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "You will now cast beneficial spells on %s instead of an enemy target.", ((c->GetEPP().use_self_target) ? "self" : "target's target"));
@@ -9198,7 +9198,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "Pet taunting is now %s by default.", ((c->GetEPP().use_pet_taunt) ? "enabled" : "disabled"));
@@ -9211,7 +9211,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "Full DPS is now %s by default.", ((c->GetEPP().use_full_dps) ? "enabled" : "disabled"));
@@ -9224,7 +9224,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "Self DPS is now %s by default.", ((c->GetEPP().use_self_dps) ? "enabled" : "disabled"));

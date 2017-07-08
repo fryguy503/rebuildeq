@@ -252,7 +252,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 				// for offensive spells check if we have a spell rune on
 				int32 dmg = effect_value;
-				Log.Out(Logs::General, Logs::Spells, "Current HP trigger for spell %i and dmg %i", spell_id, dmg);
+				Log(Logs::General, Logs::Spells, "Current HP trigger for spell %i and dmg %i", spell_id, dmg);
 
 				if(dmg < 0)
 				{
@@ -2374,7 +2374,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 #ifdef SPELL_EFFECT_SPAM
 				snprintf(effect_desc, _EDLEN, "Revive");	// heh the corpse won't see this
 #endif
-				Log.Out(Logs::Detail, Logs::Spells, "SE Revive: %i %i", IsCorpse(), (IsCorpse() ? CastToCorpse()->IsPlayerCorpse() : 0));
+				Log(Logs::Detail, Logs::Spells, "SE Revive: %i %i", IsCorpse(), (IsCorpse() ? CastToCorpse()->IsPlayerCorpse() : 0));
 				if (IsCorpse() && CastToCorpse()->IsPlayerCorpse()) {
 
 					if(caster)
@@ -3792,7 +3792,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					
 					rank = casterClient->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
 					if (spell_id == 202 && rank > 0) {
-						Log.Out(Logs::General, Logs::Spells, "Applying Courage buff");
+						Log(Logs::General, Logs::Spells, "Applying Courage buff");
 						int duration = caster_level * 10;
 						if (rank < 5) duration /= 2;
 						//4065 blessing of austerity
@@ -5233,7 +5233,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 		}
 	}
 
-	Log.Out(Logs::General, Logs::Spells, "Buff Fade By Slot %i spellid %i", slot, buffs[slot].spellid);
+	Log(Logs::General, Logs::Spells, "Buff Fade By Slot %i spellid %i", slot, buffs[slot].spellid);
 	uint16 rank;
 	if (p && p->IsClient()) {
 		rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_DEEPROOTS);

@@ -318,7 +318,7 @@ bool Map::Load(std::string filename)
 		uint32 version;
 		if(fread(&version, sizeof(version), 1, f) != 1) {
 			fclose(f);
-			Log.Out(Logs::General, Logs::Error, "Loading Map Version Failed");
+			Log(Logs::General, Logs::Error, "Loading Map Version Failed");
 			return false;
 		}
 		
@@ -340,7 +340,7 @@ bool Map::Load(std::string filename)
 			return v;
 		} else {
 			fclose(f);
-			Log.Out(Logs::General, Logs::Error, "Loading Map Version Mismatch");
+			Log(Logs::General, Logs::Error, "Loading Map Version Mismatch");
 			return false;
 		}
 	}
