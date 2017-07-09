@@ -453,12 +453,12 @@ void Client::ResetTrade() {
 }
 
 void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry, std::list<void*>* event_details) {
-	if(tradingWith && tradingWith->IsClient()) {
+	if (tradingWith && tradingWith->IsClient()) {
 		Client* other = tradingWith->CastToClient();
 		QSPlayerLogTrade_Struct* qs_audit = nullptr;
 		bool qs_log = false;
 
-		if(other) {
+		if (other) {
 			Log(Logs::Detail, Logs::Trading, "Finishing trade with client %s", other->GetName());
 
 			this->AddMoneyToPP(other->trade->cp, other->trade->sp, other->trade->gp, other->trade->pp, true);
@@ -794,12 +794,12 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry, st
 			//Do not reset the trade here, done by the caller.
 		}
 	}
-	else if(tradingWith && tradingWith->IsNPC()) {
+	else if (tradingWith && tradingWith->IsNPC()) {
 		QSPlayerLogHandin_Struct* qs_audit = nullptr;
 		bool qs_log = false;
 
 		// QS code
-		if(RuleB(QueryServ, PlayerLogTrades) && event_entry && event_details) {
+		if (RuleB(QueryServ, PlayerLogTrades) && event_entry && event_details) {
 			// Currently provides only basic functionality. Calling method will also
 			// need to be modified before item returns and rewards can be logged.
 			qs_audit = (QSPlayerLogHandin_Struct*)event_entry;
@@ -820,11 +820,11 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry, st
 			qs_audit->npc_count = 0;
 		}
 
-		if(qs_log) { // This can be incorporated below when revisions are made
+		if (qs_log) { // This can be incorporated below when revisions are made
 			for (int16 trade_slot = EQEmu::legacy::TRADE_BEGIN; trade_slot <= EQEmu::legacy::TRADE_NPC_END; ++trade_slot) {
 				const EQEmu::ItemInstance* trade_inst = m_inv[trade_slot];
 
-				if(trade_inst) {
+				if (trade_inst) {
 					auto detail = new QSHandinItems_Struct;
 
 					strcpy(detail->action_type, "HANDIN");
@@ -845,7 +845,7 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry, st
 						for (uint8 sub_slot = EQEmu::inventory::containerBegin; sub_slot < trade_inst->GetItem()->BagSlots; ++sub_slot) {
 							const EQEmu::ItemInstance* trade_baginst = trade_inst->GetItem(sub_slot);
 
-							if(trade_baginst) {
+							if (trade_baginst) {
 								detail = new QSHandinItems_Struct;
 
 								strcpy(detail->action_type, "HANDIN");
@@ -869,7 +869,7 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry, st
 		}
 
 		bool quest_npc = false;
-		if(parse->HasQuestSub(tradingWith->GetNPCTypeID(), EVENT_TRADE)) {
+		if (parse->HasQuestSub(tradingWith->GetNPCTypeID(), EVENT_TRADE)) {
 			// This is a quest NPC
 			quest_npc = true;
 		}
@@ -878,17 +878,19 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry, st
 		std::list<EQEmu::ItemInstance*> items;
 		for (int i = EQEmu::legacy::TRADE_BEGIN; i <= EQEmu::legacy::TRADE_NPC_END; ++i) {
 			EQEmu::ItemInstance *inst = m_inv.GetItem(i);
-			if(inst) {
+			if (inst) {
 				items.push_back(inst);
-			} else {
+				item_list.push_back(inst);
+			}
+			else {
 				item_list.push_back((EQEmu::ItemInstance*)nullptr);
 				continue;
 			}
 
 			const EQEmu::ItemData* item = inst->GetItem();
-			if(item && quest_npc == false) {
+			if (item && quest_npc == false) {
 				// if it was not a NO DROP or Attuned item (or if a GM is trading), let the NPC have it
-				if(GetGM() || (item->NoDrop != 0 && inst->IsAttuned() == false)) {
+				if (GetGM() || (item->NoDrop != 0 && inst->IsAttuned() == false)) {
 					// pets need to look inside bags and try to equip items found there
 					if (item->IsClassBag() && item->BagSlots > 0) {
 						for (int16 bslot = EQEmu::inventory::containerBegin; bslot < item->BagSlots; bslot++) {
@@ -917,29 +919,14 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry, st
 			}
 		}
 
-		if(RuleB(TaskSystem, EnableTaskSystem)) {
+		if (RuleB(TaskSystem, EnableTaskSystem)) {
 			int Cash = trade->cp + (trade->sp * 10) + (trade->gp * 100) + (trade->pp * 1000);
-			if(UpdateTasksOnDeliver(items, Cash, tradingWith->GetNPCTypeID())) {
-				if(!tradingWith->IsMoving())
+			if (UpdateTasksOnDeliver(items, Cash, tradingWith->GetNPCTypeID())) {
+				if (!tradingWith->IsMoving())
 					tradingWith->FaceTarget(this);
-				
-				trade->pp = Cash / 1000;
-				trade->gp = (Cash - (trade->pp * 1000)) / 100;
-				trade->sp = (Cash - (trade->pp * 1000) - (trade->gp * 100)) / 10;
-				trade->cp = Cash % 10;
-			}
-		}
-		
-		std::vector<EQEmu::Any> item_list;
-		std::list<ItemInst*>::iterator it = items.begin();
-		for (int i = EQEmu::legacy::TRADE_BEGIN; i <= EQEmu::legacy::TRADE_NPC_END; ++i) {
-			if(it != items.end()) {
-				ItemInst *inst = *it;
-				item_list.push_back(inst);
-				++it;
-			} else {
-				item_list.push_back((ItemInst*)nullptr);
-				continue;
+
+				this->EVENT_ITEM_ScriptStopReturn();
+
 			}
 		}
 
@@ -956,9 +943,9 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry, st
 		parse->AddVar(temp1, temp2);
 		snprintf(temp1, 100, "platinum.%d", tradingWith->GetNPCTypeID());
 		snprintf(temp2, 100, "%u", trade->pp);
-		parse->AddVar(temp1, temp2); 
+		parse->AddVar(temp1, temp2);
 
-		if(tradingWith->GetAppearance() != eaDead) {
+		if (tradingWith->GetAppearance() != eaDead) {
 			tradingWith->FaceTarget(this);
 		}
 
@@ -970,8 +957,8 @@ void Client::FinishTrade(Mob* tradingWith, bool finalizer, void* event_entry, st
 
 		parse->EventNPC(EVENT_TRADE, tradingWith->CastToNPC(), this, "", 0, &item_list);
 
-		for(int i = 0; i < 4; ++i) {
-			if(insts[i]) {
+		for (int i = 0; i < 4; ++i) {
+			if (insts[i]) {
 				safe_delete(insts[i]);
 			}
 		}

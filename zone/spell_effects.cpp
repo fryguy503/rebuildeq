@@ -443,14 +443,14 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
 							if (rank > 0) {
 								if (zone->random.Roll((int)(rank))) { //chance
-									if (GetLevel() > 57) { //Ignite Blood
-										SpellFinished(6, this, buffslot, 0, -1, spells[6].ResistDiff, true, level_override);
+									if (GetLevel() > 57) { //Ignite Blood										
+										SpellFinished(6, this, EQEmu::CastingSlot::Ability, 0, -1, spells[6].ResistDiff, true, level_override);
 									}
 									else if (GetLevel() > 36) { //boil blood
-										SpellFinished(451, this, buffslot, 0, -1, spells[451].ResistDiff, true, level_override);
+										SpellFinished(451, this, EQEmu::CastingSlot::Ability, 0, -1, spells[451].ResistDiff, true, level_override);
 									}
 									else if (GetLevel() > 20) { //heat blood
-										SpellFinished(360, this, buffslot, 0, -1, spells[360].ResistDiff, true, level_override);
+										SpellFinished(360, this, EQEmu::CastingSlot::Ability, 0, -1, spells[360].ResistDiff, true, level_override);
 									}
 								}
 							}
@@ -1801,7 +1801,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					//else if(rank == 5) { item_id = 79322; item_charges = 3; } // Large, 3 Charges (23000hp)
 				}
 
-				const EQEmu::Item_Struct *item = database.GetItem(item_id);
+				item = database.GetItem(item_id);
 
 				if (!item) {
 					Message(13, "Unable to summon item %d. Item not found.", spell.base[i]);
@@ -2325,8 +2325,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						}
 						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACESHADOW) > 0) {
 							if (zone->random.Roll((int)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACESHADOW) * 20)) {
-								SpellFinished(522, this, USE_ITEM_SPELL_SLOT, 0, -1, spells[522].ResistDiff); //invis
-								SpellFinished(1420, this, USE_ITEM_SPELL_SLOT, 0, -1, spells[1420].ResistDiff); //ivu
+								SpellFinished(522, this, EQEmu::CastingSlot::Item, 0, -1, spells[522].ResistDiff); //invis
+								SpellFinished(1420, this, EQEmu::CastingSlot::Item, 0, -1, spells[1420].ResistDiff); //ivu
 							}
 						}
 					}

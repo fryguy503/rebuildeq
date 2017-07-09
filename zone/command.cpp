@@ -4266,7 +4266,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 			return;
 		}
 
-		ItemInst *CursorItemInst = c->GetInv().GetItem(EQEmu::legacy::SlotCursor);
+		EQEmu::ItemInstance *CursorItemInst = c->GetInv().GetItem(EQEmu::inventory::slotCursor);
 		if (CursorItemInst) {
 			c->Message(13, "Your cursor must be empty before claiming a reward.");
 			return;
@@ -4291,7 +4291,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 			return;
 		}		
 
-		const EQEmu::Item_Struct * item = database.GetItem(itemid);
+		const EQEmu::ItemData * item = database.GetItem(itemid);
 		if (!c->SummonItem(itemid)) { //
 			Log(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u", c->CharacterID());
 			c->Message(13, "Something went wrong during the claim. The admins have been notified.");
@@ -4932,7 +4932,8 @@ void command_issue(Client *c, const Seperator *sep) {
 
 	std::string itemname = "";
 	uint32 itemid = 0;
-	auto inst = c->GetInv()[EQEmu::legacy::SlotCursor];
+	
+	const EQEmu::ItemInstance * inst = c->GetInv()[EQEmu::inventory::slotCursor];
 	if (inst) { 
 		auto item = inst->GetItem();
 		if (item) {
@@ -6154,7 +6155,7 @@ void command_exp(Client *c, const Seperator *sep)
 		}
 
 
-		auto inst = c->GetInv()[EQEmu::legacy::SlotCursor];
+		auto inst = c->GetInv()[EQEmu::inventory::slotCursor];
 		if (inst) { 
 			c->Message(0, "Your cursor needs to be empty to run this command."); 
 			return;

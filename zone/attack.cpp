@@ -1488,7 +1488,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		}
 #endif
 		//Live AA - Sinister Strikes *Adds weapon damage bonus to offhand weapon.
-		if (Hand == EQEmu::legacy::SlotSecondary) {
+		if (Hand == EQEmu::inventory::slotSecondary) {
 			if (aabonuses.SecondaryDmgInc || itembonuses.SecondaryDmgInc || spellbonuses.SecondaryDmgInc){
 
 				ucDamageBonus = GetWeaponDamageBonus(weapon ? weapon->GetItem() : (const EQEmu::ItemData*) nullptr, true);
@@ -1513,7 +1513,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			hate += opts->hate_flat;
 			hit_chance_bonus += opts->hit_chance;
 		}
-		if (Hand == EQEmu::legacy::SlotSecondary && IsClient() && GetBuildRank(BARD, RB_BRD_OFFHANDATTACK) > 0) {
+		if (Hand == EQEmu::inventory::slotSecondary && IsClient() && GetBuildRank(BARD, RB_BRD_OFFHANDATTACK) > 0) {
 			int hcb = (hit_chance_bonus * 0.05f * GetBuildRank(BARD, RB_BRD_OFFHANDATTACK));
 			if (IsClient() && CastToClient()->ShowBuildEcho()) Message(MT_FocusEffect, "Offhand Attack %u gave a %i->%i bonus.", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb);
 			if (hcb < 1) {
@@ -1524,11 +1524,11 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 
 		if (IsClient() && GetBuildRank(BARD, RB_BRD_INNATESONGBLADE) > 0) {
 			int isb = (hit_chance_bonus * 0.02f * GetBuildRank(BARD, RB_BRD_INNATESONGBLADE));
-			int isd = (damage * 0.02f * GetBuildRank(BARD, RB_BRD_INNATESONGBLADE));
+			int isd = (my_hit.damage_done * 0.02f * GetBuildRank(BARD, RB_BRD_INNATESONGBLADE));
 			if (isd > 0 && isb > 0) {
 				if (IsClient() && CastToClient()->ShowBuildEcho()) Message(MT_NonMelee, "Innate Songblade %u gave a %i->%i bonus to hit and %i to damage.", GetBuildRank(BARD, RB_BRD_INNATESONGBLADE), hit_chance_bonus, isb, isd);
 				hit_chance_bonus += isb;
-				damage += isd;
+				my_hit.damage_done += isd;
 			}
 		}
 
@@ -1567,12 +1567,11 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 	CommonBreakInvisibleFromCombat();
 
 	if(GetTarget())
-		TriggerDefensiveProcs(other, Hand, true, damage);
+		TriggerDefensiveProcs(other, Hand, true, my_hit.damage_done);
 
-	if (my_hit.damage_done > 0)
 
 	//Do special procs for rebuild
-	if (my_hit.damage > 0 && 
+	if (my_hit.damage_done > 0 && 
 		IsClient() && 
 		GetTarget() && 
 		!other->GetSpecialAbility(NO_HARM_FROM_CLIENT) && //not immune to dmg
@@ -1583,11 +1582,11 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		int proc_damage = 1;
 		float chance = 0;
 		uint32 rank;
-
+		
 		if (!IsFromSpell && 
-			skillinuse != EQEmu::skills::SkillBash &&
-			skillinuse != EQEmu::skills::SkillBackstab &&
-			skillinuse != EQEmu::skills::SkillKick) {
+			my_hit.skill != EQEmu::skills::SkillBash &&
+			my_hit.skill != EQEmu::skills::SkillBackstab &&
+			my_hit.skill != EQEmu::skills::SkillKick) {
 						
 			rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
 			if (rank > 0) {
@@ -1600,7 +1599,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					proc_damage = 20;
 				}
 				
-				BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special);
+				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
 			}
 			
 			rank = GetBuildRank(SHAMAN, RB_SHM_FURY);
@@ -1624,7 +1623,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					proc_damage = 20;
 				}
 				
-				BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special);
+				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
 			}
 			
 			rank = GetBuildRank(CLERIC, RB_CLR_BELIEVE);
@@ -1636,7 +1635,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					proc_damage = 20;
 				}
 				
-				if (BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special)) {
+				if (BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill)) {
 					CastToClient()->Message(MT_Spells, "Believe %u healed you for %i points of damage.", rank, proc_damage);
 					HealDamage(proc_damage);
 				}
@@ -1701,15 +1700,15 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					proc_damage = 20;
 				}
 				
-				BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special);
+				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
 			}
 
 			rank = GetBuildRank(ROGUE, RB_ROG_MUGGINGSHOT);
 			if (rank > 0) {
 				chance = rank * 100;
 				bool is_interrupt = false;
-				if (Hand == EQEmu::legacy::SlotSecondary) { //Get offhand
-					switch (skillinuse) {
+				if (Hand == EQEmu::inventory::slotSecondary) { //Get offhand
+					switch (my_hit.skill) {
 					case EQEmu::skills::Skill1HBlunt:
 						spellid = 1741; //jolt
 						proc_damage = 0;
@@ -1732,7 +1731,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 
 				if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance)) {
 					//Deal damage
-					if (proc_damage > 0) other->Damage(this, proc_damage, 615, skillinuse, true, -1, false, special);
+					if (proc_damage > 0) other->Damage(this, proc_damage, 615, my_hit.skill, true, -1, false, m_specialattacks);
 					//interrupt					
 					if (is_interrupt &&
 						other->IsCasting()
@@ -1765,24 +1764,24 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					proc_damage = 20;
 				}
 				
-				BuildProcCalc(chance, Hand, other, proc_damage, skillinuse, special);
+				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
 			}
 		}
-	}
 		return true;
-
-	else
+	}
+	else {
 		return false;
+	}
 }
 
-bool Client::BuildProcCalc(float chance, int Hand, Mob* other, int proc_damage, EQEmu::skills::SkillType skillinuse, int special) {
+bool Client::BuildProcCalc(float chance, int Hand, Mob* other, int proc_damage, EQEmu::skills::SkillType skillinuse) {
 	chance = GetProcChances(chance, Hand);
 
-	if (Hand != EQEmu::legacy::SlotPrimary) //Is Archery intened to proc at 50% rate?
+	if (Hand != EQEmu::inventory::slotPrimary) //Is Archery intened to proc at 50% rate?
 		chance /= 2;
 
 	if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance)) {
-		other->Damage(this, proc_damage, 615, skillinuse, true, -1, false, special);		
+		other->Damage(this, proc_damage, 615, skillinuse, true, -1, false);
 		return true;
 	} else {
 		return false;
@@ -2373,10 +2372,10 @@ bool NPC::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, bool
 		}
 	}
 	else
-		damage = -5;
+		my_hit.damage_done = DMG_INVULNERABLE;
 
 	if(GetHP() > 0 && !other->HasDied()) {
-		other->Damage(this, damage, SPELL_UNKNOWN, skillinuse, true, -1, false, special); // Not avoidable client already had thier chance to Avoid
+		other->Damage(this, my_hit.damage_done, SPELL_UNKNOWN, my_hit.skill, true, -1, false, m_specialattacks); // Not avoidable client already had thier chance to Avoid
 	} else
 		return false;
 
@@ -3019,6 +3018,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 	Mob* mypet = this->GetPet();
 	Mob* myowner = this->GetOwner();
 	Mob* targetmob = this->GetTarget();
+	bool on_hatelist = CheckAggro(other);
 
 	if(other){
 
@@ -3233,7 +3233,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 		}
 	}
 
-	if (mypet && (!(GetAA(aaPetDiscipline) || IsFeatUnlocked(FEAT_PETDISCIPLINE))&& mypet->IsHeld()))) { // I have a pet, add other to it
+	if (mypet && (!(GetAA(aaPetDiscipline) || IsFeatUnlocked(FEAT_PETDISCIPLINE))&& mypet->IsHeld())) { // I have a pet, add other to it
 		if(!mypet->IsFamiliar() && !mypet->GetSpecialAbility(IMMUNE_AGGRO))
 			mypet->hate_list.AddEntToHateList(other, 0, 0, bFrenzy);
 	}
@@ -4788,7 +4788,7 @@ void Mob::TryWeaponProc(const EQEmu::ItemInstance *inst, const EQEmu::ItemData *
 	ProcBonus += static_cast<float>(itembonuses.ProcChance) / 10.0f; // Combat Effects
 	float ProcChance = GetProcChances(ProcBonus, hand);
 
-	if (hand != EQEmu::legacy::SlotPrimary) //Is Archery intened to proc at 50% rate?
+	if (hand != EQEmu::inventory::slotPrimary) //Is Archery intened to proc at 50% rate?
 		ProcChance /= 2;
 
 	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY) > 0) { //Proc chance increases with this skill
@@ -5059,37 +5059,35 @@ void Mob::TryCriticalHit(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *
 		rank > 0 &&
 		zone->random.Int(0,100) <= rank) {
 		int32 SlayRateBonus = aabonuses.SlayUndead[1] + itembonuses.SlayUndead[1] + spellbonuses.SlayUndead[1];
-		SlayDmgBonus += rank * 50;
+		int SlayDmgBonus = rank * 50;
 		hit.damage_done = (hit.damage_done * SlayDmgBonus * 2.25f) / 100;
 		
 		if (GetGender() == 1) {
-					entity_list.FilteredMessageClose_StringID(
-						this, /* Sender */
-						false, /* Skip Sender */
-						RuleI(Range, CriticalDamage),
-						MT_CritMelee, /* Type: 301 */
-						FilterMeleeCrits, /* FilterType: 12 */
-						FEMALE_SLAYUNDEAD, /* MessageFormat: %1's holy blade cleanses her target!(%2) */
-						GetCleanName(), /* Message1 */
-						itoa(hit.damage_done + hit.min_damage) /* Message2 */
-						);
-				}
-				/* Males and Neuter */
-				else {
-					entity_list.FilteredMessageClose_StringID(
-						this, /* Sender */
-						false, /* Skip Sender */
-						RuleI(Range, CriticalDamage),
-						MT_CritMelee, /* Type: 301 */
-						FilterMeleeCrits, /* FilterType: 12 */
-						MALE_SLAYUNDEAD, /* MessageFormat: %1's holy blade cleanses his target!(%2)  */
-						GetCleanName(), /* Message1 */
-						itoa(hit.damage_done + hit.min_damage) /* Message2 */
-						);
-				}
-					return;
-			}
+			entity_list.FilteredMessageClose_StringID(
+				this, /* Sender */
+				false, /* Skip Sender */
+				RuleI(Range, CriticalDamage),
+				MT_CritMelee, /* Type: 301 */
+				FilterMeleeCrits, /* FilterType: 12 */
+				FEMALE_SLAYUNDEAD, /* MessageFormat: %1's holy blade cleanses her target!(%2) */
+				GetCleanName(), /* Message1 */
+				itoa(hit.damage_done + hit.min_damage) /* Message2 */
+				);
 		}
+		/* Males and Neuter */
+		else {
+			entity_list.FilteredMessageClose_StringID(
+				this, /* Sender */
+				false, /* Skip Sender */
+				RuleI(Range, CriticalDamage),
+				MT_CritMelee, /* Type: 301 */
+				FilterMeleeCrits, /* FilterType: 12 */
+				MALE_SLAYUNDEAD, /* MessageFormat: %1's holy blade cleanses his target!(%2)  */
+				GetCleanName(), /* Message1 */
+				itoa(hit.damage_done + hit.min_damage) /* Message2 */
+				);
+		}
+		return;
 	}
 
 	// 2: Try Melee Critical
@@ -5126,8 +5124,8 @@ void Mob::TryCriticalHit(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *
 			dex_bonus = dex_bonus * 3 / 5;
 
 		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);		
-		if (rank > 0 && defender->GetHPRatio() >= 90.0f && skill == EQEmu::skills::SkillBackstab && CastToClient()->sneaking) {
-			Log(Logs::Detail, Logs::Attack, "Sneak Attack crit? %u %i %i skill : %i", rank, CastToClient()->hidden, CastToClient()->sneaking, skill);
+		if (rank > 0 && defender->GetHPRatio() >= 90.0f && hit.skill == EQEmu::skills::SkillBackstab && CastToClient()->sneaking) {
+			Log(Logs::Detail, Logs::Attack, "Sneak Attack crit? %u %i %i skill : %i", rank, CastToClient()->hidden, CastToClient()->sneaking, hit.skill);
 			if (ShowBuildEcho()) CastToClient()->Message(MT_FocusEffect, "Sneak Attack %u catches %s off guard.", rank, defender->GetCleanName());
 			crit_chance += 10 * rank;
 
@@ -5174,7 +5172,7 @@ void Mob::TryCriticalHit(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *
 
 				CastToClient()->sneaking = false; //Disable sneak
 				CastToClient()->SendAppearancePacket(AT_Sneak, 0);
-				Log(Logs::Detail, Logs::Build, "HIDDEN_DAGGER: Sneak Attack %u, throwing skill: %i", rank, skill);
+				Log(Logs::Detail, Logs::Build, "HIDDEN_DAGGER: Sneak Attack %u, throwing skill: %i", rank, hit.skill);
 				if (zone->random.Roll(rank * 15) &&
 					GetLevel() >= defender->GetLevel()) {
 					//Harmony = 3601

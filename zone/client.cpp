@@ -8977,10 +8977,10 @@ std::string Client::CreateSayLink(const char* message, const char* name) {
 	database.DoEscapeString(escaped_string, message, saylink_size);
 
 	uint32 saylink_id = database.LoadSaylinkID(escaped_string);
-	safe_delete_array(escaped_string);
+	safe_delete_array(escaped_string);	
 
-	EQEmu::saylink::SayLinkEngine linker;
-	linker.SetLinkType(linker.SayLinkItemData);
+	EQEmu::SayLinkEngine linker;
+	linker.SetLinkType(EQEmu::saylink::SayLinkItemData);
 	linker.SetProxyItemID(SAYLINK_ITEM_ID);
 	linker.SetProxyAugment1ID(saylink_id);
 	linker.SetProxyText(name);
@@ -10688,13 +10688,13 @@ int Client::GiveBoxReward(int minimumRarity) {
 		if (Admin() >= 200) Message(0, "[GM] Loot Roll dice: %i is in pool: %i, total pool: %i (%.1f%%)", dice, entry->first, pool, (float)((float)(entry->first - lastPool) / (float)pool * 100));
 		//Item Reward
 		int itemid = entry->second;
-		const EQEmu::Item_Struct* item = database.GetItem(itemid);
+		const EQEmu::ItemData * item = database.GetItem(itemid);
 		if (!SummonItem(itemid)) {
 			//Log!!
 		}
 
-		EQEmu::saylink::SayLinkEngine linker;
-		linker.SetLinkType(linker.SayLinkItemData);
+		EQEmu::SayLinkEngine linker;
+		linker.SetLinkType(EQEmu::saylink::SayLinkItemData);
 		linker.SetItemData(item);
 		std::string item_link;
 		item_link = linker.GenerateLink();
@@ -10863,7 +10863,7 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 		if (Admin() >= 200) Message(0, "[GM] Loot Roll dice: %i is in pool: %i, total pool: %i (%.1f%%)", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100));
 		//Item Reward
 		int itemid = entry->second;
-		const EQEmu::Item_Struct* item = database.GetItem(itemid);
+		const EQEmu::ItemData* item = database.GetItem(itemid);
 		if (!SummonItem(itemid)) {
 			if (Admin() >= 200) Message(0, "[GM] Failed to summon %i", itemid);
 
@@ -10871,8 +10871,8 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 			//Log!!
 		}
 
-		EQEmu::saylink::SayLinkEngine linker;
-		linker.SetLinkType(linker.SayLinkItemData);
+		EQEmu::SayLinkEngine linker;
+		linker.SetLinkType(EQEmu::saylink::SayLinkItemData);
 		linker.SetItemData(item);
 		std::string item_link;
 		item_link = linker.GenerateLink();
@@ -10903,7 +10903,7 @@ int Client::GiveWeaponBoxReward(int minimumRarity) {
 }
 
 bool Client::IsValidItem(int itemid) {
-	const EQEmu::Item_Struct* item = database.GetItem(itemid);
+	const EQEmu::ItemData* item = database.GetItem(itemid);
 	if (!item) {
 		if (Admin() >= 200) Message(0, "Invalid item id %i", itemid);
 		return false;

@@ -3419,7 +3419,8 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		return -2;	// no duration? this isn't a buff
 	}
 
-	Log(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",	
+	Log(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",
+		spell_id, caster ? caster->GetName() : "UNKNOWN", caster_level, duration);
 	// REBUILDEQ - BUFF MODIFIERS
 	if (caster && caster->IsClient()) {
 		Client * caster_client = caster->CastToClient();

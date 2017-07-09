@@ -424,15 +424,13 @@ void NPC::AddItem(const EQEmu::ItemData* item, uint16 charges, bool equipitem) {
 	AddLootDrop(item, &itemlist, charges, 1, 255, equipitem, equipitem);
 }
 
-void NPC::AddItem(uint32 itemid, uint16 charges, bool equipitem) {
-
-	
+void NPC::AddItem(uint32 itemid, uint16 charges, bool equipitem, uint32 aug1, uint32 aug2, uint32 aug3, uint32 aug4, uint32 aug5, uint32 aug6) {
 	//slot isnt needed, its determined from the item.
 	const EQEmu::ItemData * i = database.GetItem(itemid);
 	if(i == nullptr)
 		return;
 
-	if (itemid > 100000 && itemid < 101000) {
+	if (itemid > 100000 && itemid < 101000) {		
 		Log(Logs::General, Logs::Spawns, "%s (%u) eid %u spawned with %u (%s)", GetCleanName(), GetNPCTypeID(), GetID(), itemid, i->Name);
 	}	
 	AddLootDrop(i, &itemlist, charges, 1, 127, equipitem, equipitem);
