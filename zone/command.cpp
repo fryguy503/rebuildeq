@@ -6026,36 +6026,33 @@ void command_dps(Client *c, const Seperator *sep)
 		c->Message(0, "Target %s not engaged.", (target->IsCorpse() ? "was" : "is"));		
 		return;
 	}
+	int my_hp_self_loss_net = 0;
+	int my_hp_target_loss_net = 0;
+	int engage_duration = 1;
 
-	float dps = 0;
-	float net_hps_taken = 0;
-	float net_hps_dealt = 0;
-	int total_damage = 0;
-	uint32 engage_start = target->EngageEnd() - 1;
+	for (auto&& d : target->DPS()) {
+		if (d.ent_id == target->GetID()) {
+			my_hp_self_loss_net = d.hp_self_loss_net;
+			my_hp_target_loss_net = d.hp_target_loss_net;
+			int my_engage_duration = target->EngageEnd() - d.engage_start;
+			if (my_engage_duration > engage_duration) engage_duration = my_engage_duration;
+		}
+	}
 
-	c->Message(MT_CritMelee, "-----DPS for %s-----", target->GetCleanName());
+	float my_dps_loss = (float)((float)my_hp_self_loss_net / engage_duration);
+	float my_dps_target_loss = (float)((float)my_hp_target_loss_net / engage_duration);
+	c->Message(MT_CritMelee, "------ %s DPS over %i seconds ----------", target->GetCleanName(), engage_duration);
+	c->Message(MT_CritMelee, "- dealt %i damage (%.1f DPS)", my_hp_self_loss_net, my_dps_loss);
+	c->Message(MT_CritMelee, "- took %i damage (%.1f DPS)", my_hp_target_loss_net, my_dps_target_loss);
+	c->Message(MT_CritMelee, "------ Participants ----------");
 	for (auto&& d : target->DPS()) {
 
-		if ((target->EngageEnd() - d.engage_start) > 1) {
-			dps = (float)((float)d.hp_target_loss_total / (target->EngageEnd() - d.engage_start));
-			net_hps_taken = (float)((float)d.hp_self_gain_net / (target->EngageEnd() - d.engage_start));
-			net_hps_dealt = (float)((float)d.hp_target_gain_net / (target->EngageEnd() - d.engage_start));
-		} else {
-			dps = d.hp_target_loss_total;
-			net_hps_taken = d.hp_self_gain_net;
-			net_hps_dealt = d.hp_target_gain_net;
-		}
-		total_damage += d.hp_target_loss_total;
-
-		if ((target->EngageEnd() - d.engage_start) > 1) dps = (float)((float)d.hp_target_loss_total / (target->EngageEnd() - d.engage_start));
-		else 
-		if (engage_start > d.engage_start) engage_start = d.engage_start;
-		c->Message(MT_CritMelee, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.hp_target_loss_total, ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), dps);
-		//c->Message(MT_CritMelee, "%s over %is [%i dmg (%.2f DPS)] [%i hp taken (%.2f HPS)] [%i hp dealt (%.2f HPS)]", d.character_name.c_str(), ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), d.hp_target_loss_total,  dps, d.net_healing_taken, net_hps_taken, d.net_healing_dealt, net_hps_dealt);
+		float cur_dps = (float)((float)d.hp_target_loss_net / engage_duration);
+		//float cur_hps_taken = (float)((float)d.hp_self_gain_net / engage_duration);
+		//float cur_hps_dealt = (float)((float)d.hp_target_gain_net / engage_duration);
+		c->Message(MT_CritMelee, "- %s: %i damage (%.1f DPS)", d.character_name.c_str(), d.hp_target_loss_net, cur_dps);
 	}
-	if ((target->EngageEnd() - engage_start) > 1) dps = (float)((float)total_damage / (target->EngageEnd() - engage_start));
-	else dps = total_damage;
-	c->Message(MT_CritMelee, "%s %i taken over %is (%.2f RDPS)", target->GetCleanName(), total_damage, ((target->EngageEnd() - engage_start) < 1) ? 1 : (target->EngageEnd() - engage_start), dps);
+
 }
 
 void command_doanim(Client *c, const Seperator *sep)

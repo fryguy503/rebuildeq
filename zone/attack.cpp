@@ -2658,7 +2658,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 		c->Message(MT_CritMelee, "------ %s DPS over %i seconds ----------", GetCleanName(), engage_duration);
 		c->Message(MT_CritMelee, "- dealt %i damage (%.1f DPS)", my_hp_self_loss_net, my_dps_loss);
 		c->Message(MT_CritMelee, "- took %i damage (%.1f DPS)", my_hp_target_loss_net, my_dps_target_loss);
-		c->Message(MT_CritMelee, "------ Participants ----------", GetCleanName(), my_hp_self_loss_net, my_dps_loss, my_hp_target_loss_net, my_dps_target_loss);
+		c->Message(MT_CritMelee, "------ Participants ----------");
 		for (auto&& d : DPS()) {
 			if (d.ent_id == GetID()) { //if it's me
 				continue;
