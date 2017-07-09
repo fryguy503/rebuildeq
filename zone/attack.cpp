@@ -137,7 +137,10 @@ EQEmu::skills::SkillType Mob::AttackAnimation(int Hand, const EQEmu::ItemInstanc
 	if (Hand == EQEmu::inventory::slotSecondary)	// DW anim
 		type = animDualWield;
 
-	DoAnim(type, 0, false);
+	if (attack_anim_timer.Check()) {
+		DoAnim(type, 0, false);
+	}
+
 	return skillinuse;
 }
 
@@ -4280,8 +4283,6 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 		entity_list.LogHPEvent(attacker, this, -damage);
 		SetHP(GetHP() - damage);
 
-		if (IsClient() && RuleB(Character, MarqueeHPUpdates))
-			this->CastToClient()->SendHPUpdateMarquee();
 
 		if (HasDied()) {
 			bool IsSaved = false;
@@ -4443,8 +4444,11 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 			if (zone->zonemap && zone->zonemap->CheckLoS(glm::vec3(m_Position), new_pos)) { // If we have LoS on the new loc it should be reachable.
 				if (IsNPC()) {
 					// Is this adequate?
+
 					Teleport(new_pos);
-					SendPosUpdate();
+					if (position_update_melee_push_timer.Check()) {
+						SendPosUpdate();
+					}
 				}
 			}
 			else {

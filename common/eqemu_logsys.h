@@ -88,6 +88,7 @@ enum LogCategory {
 	Build,
 	Client_Login,
 	Headless_Client,
+	HP_Update,
 	MaxCategoryID	/* Don't Remove this*/
 };
 
@@ -140,7 +141,8 @@ enum LogCategory {
 		"OOC",
 		"Build",		
 		"Client Login",
-		"Headless Client"
+		"Headless Client",
+		"HP Update"
 	};
 }
 
