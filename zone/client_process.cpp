@@ -1823,15 +1823,15 @@ void Client::OPGMSummon(const EQApplicationPacket *app)
 }
 
 void Client::DoHPRegen() {
-	entity_list.LogHealEvent(this, this, CalcHPRegen() + RestRegenHP);
+	entity_list.LogHPEvent(this, this, CalcHPRegen() + RestRegenHP);
 	SetHP(GetHP() + CalcHPRegen() + RestRegenHP);
 	if (GetBuildRank(DRUID, RB_DRU_REGENERATION) > 0) {
 		if ((GetLevel() * 0.2f) < 2) {
-			entity_list.LogHealEvent(this, this, 2);
+			entity_list.LogHPEvent(this, this, 2);
 			SetHP(GetHP() + 2);
 		}
 		else {
-			entity_list.LogHealEvent(this, this, (GetLevel() * 0.2f));
+			entity_list.LogHPEvent(this, this, (GetLevel() * 0.2f));
 			SetHP(GetHP() + (GetLevel() * 0.2f));
 		}
 	}
@@ -1841,7 +1841,7 @@ void Client::DoHPRegen() {
 void Client::DoManaRegen() {
 	if (GetMana() >= max_mana && spellbonuses.ManaRegen >= 0)
 		return;
-
+	entity_list.LogManaEvent(this, this, CalcManaRegen() + RestRegenMana);
 	SetMana(GetMana() + CalcManaRegen() + RestRegenMana);
 	SendManaUpdatePacket();
 }

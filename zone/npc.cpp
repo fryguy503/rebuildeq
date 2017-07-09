@@ -662,6 +662,7 @@ bool NPC::Process()
 		else
 			SetHP(GetHP() + dbregen + sitting_bonus);
 
+		entity_list.LogManaEvent(this, this, mana_regen + sitting_bonus);
 		if (GetMana() < GetMaxMana()) {
 			SetMana(GetMana() + mana_regen + sitting_bonus);
 		}

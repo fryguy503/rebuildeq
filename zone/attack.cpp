@@ -1591,7 +1591,9 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
 			if (rank > 0) {
 				if (CastToClient()->ShowBuildEcho()) Message(MT_FocusEffect, "Spiritual Awakening %u gave %u mana", rank, rank);
-					SetMana(GetMana() + rank);
+				entity_list.LogManaEvent(this, this, rank);
+				SetMana(GetMana() + rank);
+
 				
 				chance = 300;
 				proc_damage = GetLevel() * 2.5f * (0.25f * rank) / 2;
@@ -2559,42 +2561,67 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 	float cur_dps;
 	float cur_hps_taken;
 	float cur_hps_dealt;
-	int total_damage = 0;
-	uint32 engage_start = EngageEnd() - 1;
+	int engage_duration = 1;
 	
-	if (IsClient() || (killer_mob != nullptr && killer_mob->IsClient())) { //only include fights involving a client. Otherwise every kill a guard does is logged.
+	int my_hp_self_loss_net;
+	int my_hp_target_loss_net;
+	
 
+	
+	if (DPS().size() > 0) { //don't need to dps report an empty dps mob
 		//Generate a unique id for fight.
 		std::string fight_id = zone->CreateSessionHash();
-		
-		if (DPS().size() > 0) { //don't need to dps report an empty dps mob
-			for (auto&& d : DPS()) {
-				if ((EngageEnd() - d.engage_start) > 1) cur_dps = (float)((float)d.total_damage / (EngageEnd() - d.engage_start));
-				else cur_dps = d.total_damage;
-				total_damage += d.total_damage;
-
-				if ((EngageEnd() - d.engage_start) > 1) cur_hps_taken = (float)((float)d.total_healing_taken / (EngageEnd() - d.engage_start));
-				else cur_hps_taken = d.total_healing_taken;
-
-				if ((EngageEnd() - d.engage_start) > 1) cur_hps_dealt = (float)((float)d.total_healing_dealt / (EngageEnd() - d.engage_start));
-				else cur_hps_dealt = d.total_healing_dealt;
-
-
-				if (engage_start > d.engage_start) engage_start = d.engage_start;
-				std::string query = StringFormat("INSERT INTO dps_log (fight_id, is_dying, is_player, tier, acct_id, type_id, name, level, class, dps, damage, total_heal_taken, net_heal_taken, hps_taken, total_heal_dealt, net_heal_dealt, hps_dealt, time, aggro_count) VALUES (\"%s\", %i, %i, %i, %i, %i, \"%s\", %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i);", fight_id.c_str(), 0, d.is_player, d.tier, d.acct_id, d.type_id, d.character_name.c_str(), d.level, d.class_id, (int)cur_dps, d.total_damage, d.total_healing_taken, d.net_healing_taken, (int)cur_hps_taken, d.total_healing_dealt, d.net_healing_dealt, (int)cur_hps_dealt, ((EngageEnd() - d.engage_start) < 1) ? 1 : (EngageEnd() - d.engage_start), d.aggro_count);
-				auto results = database.QueryDatabase(query);
-
-
-				//if (!c->GetEPP().use_full_dps && c->GetID() != d.character_id) continue; //Don't show DPS if self only is flagged
-				//c->Message(MT_CritMelee, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((EngageEnd() - d.engage_start) < 1) ? 1 : (EngageEnd() - d.engage_start), dps);
-			}
+		//First, verify a client participated in some capacity to the fight
+		bool isClientParticipating = false;
+		for (auto&& d : DPS()) {
+			if (d.acct_id == 0) continue;
+			isClientParticipating = true;
+			break;
 		}
-		if (IsNPC()) {
-			if ((EngageEnd() - engage_start) > 1) cur_dps = (float)((float)total_damage / (EngageEnd() - engage_start));
-			else cur_dps = total_damage;
+		if (isClientParticipating) {
+			for (auto&& d : DPS()) {
+				int is_dying = 0;
+				if (d.ent_id == GetID()) {
+					my_hp_self_loss_net = d.hp_self_loss_net;
+					my_hp_target_loss_net = d.hp_target_loss_net;
+				}
 
-			std::string query = StringFormat("INSERT INTO dps_log (fight_id, is_dying, tier, type_id, name, level, class, dps, damage, time, aggro_count) VALUES (\"%s\", %i, %i, %i, \"%s\", %i, %i, %i, %i, %i, %i);", fight_id.c_str(), 1, GetTier(), GetNPCTypeID(), CastToNPC()->GetCleanName(), GetLevel(), (int)GetClass(), (int)cur_dps, total_damage, (((EngageEnd() - engage_start) < 1) ? 1 : (EngageEnd() - engage_start)), hate_list.GetAggroCount());
-			auto results = database.QueryDatabase(query);
+				int my_engage_duration = EngageEnd() - d.engage_start;
+				if (my_engage_duration < 1) my_engage_duration = 1;
+				if (my_engage_duration > engage_duration) engage_duration = my_engage_duration;
+
+				if (d.ent_id == GetID()) is_dying = 1;
+
+				std::string query = StringFormat("INSERT INTO dps_log (fight_id,  time, acct_id, name, hp_self_gain_total, hp_self_gain_net, hp_self_loss_total, hp_self_loss_net, hp_target_gain_total, hp_target_gain_net, hp_target_loss_total, hp_target_loss_net, mana_self_gain_total, mana_self_gain_net, mana_self_loss_total, mana_self_loss_net, mana_target_gain_total, mana_target_gain_net, mana_target_loss_total, mana_target_loss_net, class, level, tier, aggro_count, is_dying, type_id) VALUES(\"%s\", %i, %i, \"%s\", %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i);",					
+					fight_id.c_str(), //fight_id
+					engage_duration, //uint32 engage_start,
+					d.acct_id, //acct_id,
+					d.character_name.c_str(), //std::string character_name,
+					d.hp_self_gain_total, //int hp_self_gain_total,
+					d.hp_self_gain_net, //hp_self_gain_net
+					d.hp_self_loss_total, //hp_self_loss_total
+					d.hp_self_loss_net, //hp_self_loss_net
+					d.hp_target_gain_total, //hp_target_gain_total
+					d.hp_target_gain_net, //hp_target_gain_net
+					d.hp_target_loss_total, //hp_target_loss_total
+					d.hp_target_loss_net, //hp_target_loss_net
+					d.mana_self_gain_total, //mana_self_gain_total
+					d.mana_self_gain_net, //mana_self_gain_net
+					d.mana_self_loss_total, //mana_self_loss_total
+					d.mana_self_loss_net, //mana_self_loss_net
+					d.mana_target_gain_total, //mana_target_gain_total
+					d.mana_target_gain_net, //mana_target_gain_net
+					d.mana_target_loss_total, //mana_target_loss_total
+					d.mana_target_loss_net, //mana_target_loss_net
+					d.class_id, //class_id
+					d.level, //level
+					d.tier, //tier
+					d.aggro_count, //aggro_count
+					is_dying,  //is_dying
+					d.type_id //type_id
+				);
+				auto results = database.QueryDatabase(query);
+			}
 		}
 	}
 
@@ -2618,10 +2645,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 			continue;
 		}
 
-
 		cur_dps = 0;
-		total_damage = 0;
-		engage_start = EngageEnd() - 1;
 
 		Client *c = h->entity_on_hatelist->CastToClient();
 		if (c == nullptr) {
@@ -2629,30 +2653,24 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 			continue;
 		}
 
-
-
-
-		c->Message(MT_CritMelee, "-----DPS for %s-----", GetCleanName());
+		float my_dps_loss = (float)((float)my_hp_self_loss_net / engage_duration);
+		float my_dps_target_loss = (float)((float)my_hp_target_loss_net / engage_duration);
+		c->Message(MT_CritMelee, "------ %s DPS over %i seconds ----------", GetCleanName(), engage_duration);
+		c->Message(MT_CritMelee, "- dealt %i damage (%.1f DPS)", my_hp_self_loss_net, my_dps_loss);
+		c->Message(MT_CritMelee, "- took %i damage (%.1f DPS)", my_hp_target_loss_net, my_dps_target_loss);
+		c->Message(MT_CritMelee, "------ Participants ----------", GetCleanName(), my_hp_self_loss_net, my_dps_loss, my_hp_target_loss_net, my_dps_target_loss);
 		for (auto&& d : DPS()) {
-			if ((EngageEnd() - d.engage_start) > 1) cur_dps = (float)((float)d.total_damage / (EngageEnd() - d.engage_start));
-			else cur_dps = d.total_damage;
-			total_damage += d.total_damage;
+			if (d.ent_id == GetID()) { //if it's me
+				continue;
+			}
 
+			cur_dps = (float)((float)d.hp_target_loss_net / engage_duration);
+			cur_hps_taken = (float)((float)d.hp_self_gain_net / engage_duration);
+			cur_hps_dealt = (float)((float)d.hp_target_gain_net / engage_duration);
 
-			if ((EngageEnd() - d.engage_start) > 1) cur_hps_taken = (float)((float)d.total_healing_taken / (EngageEnd() - d.engage_start));
-			else cur_hps_taken = d.total_healing_taken;
-
-			if ((EngageEnd() - d.engage_start) > 1) cur_hps_dealt = (float)((float)d.total_healing_dealt / (EngageEnd() - d.engage_start));
-			else cur_hps_dealt = d.total_healing_dealt;
-
-			if (engage_start > d.engage_start) engage_start = d.engage_start;
 			if (!c->GetEPP().use_full_dps && c->GetID() != d.ent_id) continue; //Don't show DPS if self only is flagged
-			c->Message(MT_CritMelee, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((EngageEnd() - d.engage_start) < 1) ? 1 : (EngageEnd() - d.engage_start), cur_dps);
+			c->Message(MT_CritMelee, "- %s: %i damage (%.1f DPS)", d.character_name.c_str(), d.hp_target_loss_net, cur_dps);
 		}
-
-		if ((EngageEnd() - engage_start) > 1) cur_dps = (float)((float)total_damage / (EngageEnd() - engage_start));
-		else cur_dps = total_damage;
-		c->Message(MT_CritMelee, "%s %i taken over %is (%.2f RDPS)", GetCleanName(), total_damage, ((EngageEnd() - engage_start) < 1) ? 1 : (EngageEnd() - engage_start), cur_dps);
 		++iterator;
 	}
 
@@ -3308,18 +3326,19 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 			switch(zone->random.Int(0,2)) {
 				case 0:
 					heal_amount = (uint32)(GetMaxHP() * rank * 0.02f);
-					CastToClient()->Message(MT_Spells, "Treeform %u healed you for %i.", rank, heal_amount);
+					if (CastToClient()->ShowBuildEcho()) CastToClient()->Message(MT_Spells, "Treeform %u healed you for %i.", rank, heal_amount);
 					HealDamage(heal_amount, this);
 					break;
 				case 1:
 					mana_amount = (uint32)(GetMaxMana() * rank * 0.02f);
-					CastToClient()->Message(MT_Spells, "Treeform %u gave you %i mana.", rank, mana_amount);
+					if (CastToClient()->ShowBuildEcho()) CastToClient()->Message(MT_Spells, "Treeform %u gave you %i mana.", rank, mana_amount);
+					entity_list.LogManaEvent(this, this, mana_amount);
 					SetMana((GetMana() + mana_amount));
 					CastToClient()->SendManaUpdate();
 					break;
 				case 2:
 					int damage_amount = (uint32)(GetMaxHP() * rank * 0.02f);
-					CastToClient()->Message(MT_Spells, "Treeform %u damaged %s for %i.", rank, attacker->GetCleanName(), damage_amount);
+					if (CastToClient()->ShowBuildEcho()) CastToClient()->Message(MT_Spells, "Treeform %u damaged %s for %i.", rank, attacker->GetCleanName(), damage_amount);
 					DS += ((spell_ds) ? 1 : -1) * damage_amount;
 					break;
 			}
@@ -3800,6 +3819,7 @@ int32 Mob::ReduceAllDamage(int32 damage)
 		int32 mana_reduced = damage * spellbonuses.ManaAbsorbPercentDamage[0] / 100;
 		if (GetMana() >= mana_reduced) {
 			damage -= mana_reduced;
+			entity_list.LogManaEvent(this, this, -mana_reduced);
 			SetMana(GetMana() - mana_reduced);
 			TryTriggerOnValueAmount(false, true);
 		}
@@ -4257,8 +4277,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 		}
 
 		//final damage has been determined.
-		AddDPS(attacker, damage);
-
+		entity_list.LogHPEvent(attacker, this, -damage);
 		SetHP(GetHP() - damage);
 
 		if (IsClient() && RuleB(Character, MarqueeHPUpdates))
@@ -4584,6 +4603,7 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 		if (zone->random.Roll((int)(1 * caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE)))) {
 			int manaAmount = (int)((float)acthealed * (float)0.01f * (float)caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE));
 			if (manaAmount > 0) {
+				entity_list.LogManaEvent(this, this, manaAmount);
 				SetMana(GetMana() + manaAmount);
 				Message(MT_Spells, "%s's Refreshing Breeze %u gave you %i mana.", caster->GetCleanName(), caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE), manaAmount);
 			}
@@ -4643,7 +4663,7 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 			Message(MT_NonMelee, "You have been healed for %d points of damage.", acthealed);
 		}
 	}
-	entity_list.LogHealEvent(caster, this, amount);	
+	entity_list.LogHPEvent(caster, this, amount);	
 	if (curhp < maxhp) {
 		if ((curhp + amount) > maxhp)
 			curhp = maxhp;

@@ -6949,123 +6949,172 @@ std::vector<DPS_Struct> Mob::DPS() {
 	return dps;
 }
 
-
-
-//Add a mob's damage to the DPS counter system
-void Mob::AddDPS(Mob *other, int damage) {
+//Add a mob's mana to the DPS counter system
+void Mob::AddManaEvent(Mob *other, int total, int net, bool is_dealer) {
 	if (other == nullptr) return;
-	if (damage < 1) return;
+	if (IsPet()) return;
 
-	//When a client loses all aggro and take damage after, this triggers a flush
-	if (engage_flush_on_next_engage) { 
-		EngageReset();
-	}
-
-	//since damage is being dealt, engage_end is at minimum now.
-	engage_end = time(nullptr);
-	int is_player = 0;
+	int level = other->GetLevel();
 	int ent_id = other->GetID();
 	int type_id = 0;
 	int acct_id = 0;
-	int level = other->GetLevel();
+	int class_id = (int)other->GetClass();
 	int tier = other->GetTier();
-
+	std::string character_name = other->GetCleanName();
 	int aggro_count = other->hate_list.GetAggroCount();
 
-	std::string character_name = other->GetCleanName();
-	if (other->IsClient()) {
-		is_player = 1;
+	//pet mana isn't tracked
+	/*if (total < 1 && other->IsPet() && other->IsPetOwnerClient() && other->GetOwner() != nullptr) {
 		acct_id = other->CastToClient()->AccountID();
 		type_id = other->CastToClient()->CharacterID();
-	}
-
-	//Pets are attributed to their owners. Keep it simple.
-	if (other->IsPet() && other->IsPetOwnerClient() && other->GetOwner() != nullptr) {
-		ent_id = other->GetOwnerID();
-		character_name = other->GetOwner()->GetCleanName();
-		aggro_count = other->GetOwner()->hate_list.GetAggroCount();
-		level = other->GetOwner()->GetLevel();
-		tier = other->GetOwner()->GetTier();
-		if (other->GetOwner()->IsClient()) {
-			is_player = 1;
-			acct_id = other->GetOwner()->CastToClient()->AccountID();
-			type_id = other->GetOwner()->CastToClient()->CharacterID();
-		}
-		
-	}
-	if (other->IsNPC()) {
-		type_id = other->CastToNPC()->GetNPCTypeID();
-	}
-
-	//see if entry already is being tracked
-	for (auto&& d : dps) {
-		if (d.type_id != type_id) continue;
-		d.total_damage += damage;
-		d.aggro_count = aggro_count;
-		return;
-	}
-
-	int class_id = (int)other->GetClass();
-	
-	Log(Logs::General, Logs::Combat, "Added new DPS entry for %s", character_name.c_str());
-	//new entry
-	dps.push_back(DPS_Struct(time(nullptr), acct_id, type_id, ent_id, character_name, damage, damage, 0, 0, 0, tier, class_id, is_player, level, aggro_count, 0, 0));
-}
-
-//Add a mob's heal to the DPS counter system
-void Mob::AddHPS(Mob *other, bool is_dealer, int total_healing, int net_healing) {
-	if (other == nullptr) return;
-	if (total_healing < 1) return;
-	if (IsPet()) return; 
-	//net_healing could be zero, since the heal could do nothing, we still track it.
-
-
-	//Don't worry about flushing aggro, that's handled with DPS.
-	int is_player = 0;
-	int level = other->GetLevel();
-	int ent_id = other->GetID();
-	int type_id = 0;
-	int acct_id = 0;
-	int class_id = (int)other->GetClass();
-	int tier = other->GetTier();
-	std::string character_name = other->GetCleanName();
-
-	int aggro_count = other->hate_list.GetAggroCount();
-
-	//Pet healing.. should it be tracked? For now, no..
-	/*//Pets are attributed to their owners. Keep it simple.
-	if (other->IsPet() && other->IsPetOwnerClient() && other->GetOwner() != nullptr) {
-		character_id = other->GetOwnerID();
 		character_name = other->GetOwner()->GetCleanName();
 	}*/
 	if (other->IsClient()) {
-		is_player = 1;
-		type_id = other->CastToClient()->CharacterID();
 		acct_id = other->CastToClient()->AccountID();
+		type_id = other->CastToClient()->CharacterID();
 	}
-	if (other->IsNPC()) {
+	else if (other->IsNPC()) {
 		type_id = other->CastToNPC()->GetNPCTypeID();
 	}
 
 	//see if entry already is being tracked
 	for (auto&& d : dps) {
 		if (d.ent_id != ent_id) continue;
-		if (is_dealer) {
-			d.total_healing_dealt += total_healing;
-			d.net_healing_dealt += net_healing;
+		if (total > 0) {
+			if (is_dealer) {
+				d.mana_target_gain_net += net;
+				d.mana_target_gain_total += total;
+			}
+			else {
+				d.mana_self_gain_net += net;
+				d.mana_self_gain_total += total;
+			}
 		}
-		else {
-			d.total_healing_taken += total_healing;
-			d.net_healing_taken += net_healing;
+		else { //invert the damage since it's negative
+			if (is_dealer) {
+				d.mana_target_loss_net += -net;
+				d.mana_target_loss_total += -total;
+			}
+			else {
+				d.mana_self_loss_net += -net;
+				d.mana_self_loss_total += -total;
+			}
 		}
 		d.aggro_count = aggro_count;
 		return;
 	}
-	
 
 	Log(Logs::General, Logs::Combat, "Added new DPS entry for %s", character_name.c_str());
 	//new entry
-	dps.push_back(DPS_Struct(time(nullptr), acct_id, type_id, ent_id, character_name, 1, 1, (float)net_healing, ((!is_dealer) ? total_healing : 0), ((!is_dealer) ? net_healing : 0), tier, class_id, is_player, level, aggro_count, ((is_dealer) ? total_healing : 0), ((is_dealer) ? net_healing : 0)));
+	dps.push_back(DPS_Struct(time(nullptr), //uint32 engage_start,
+		acct_id,
+		type_id,
+		ent_id,
+		character_name,
+		0, //hp_self_gain_total;
+		0, //hp_self_gain_net,
+		0, //hp_self_loss_total,
+		0, //hp_self_loss_net,
+		0, //hp_target_gain_total,
+		0, //hp_target_gain_net,
+		0, //hp_target_loss_total,
+		0, //hp_target_loss_net,
+		((!is_dealer && total > 0) ? total : 0), //mana_self_gain_total,
+		((!is_dealer && net > 0) ? net : 0), //mana_self_gain_net,
+		((!is_dealer && total < 0) ? -total : 0), //mana_self_loss_total,
+		((!is_dealer && net < 0) ? -net : 0), //mana_self_loss_net,
+		((is_dealer && total > 0) ? total : 0), //mana_target_gain_total,
+		((is_dealer && net > 0) ? net : 0), //mana_target_gain_net,
+		((is_dealer && total < 0) ? -total : 0), //mana_target_loss_total,
+		((is_dealer && net < 0) ? -net : 0), //mana_target_loss_net,
+		tier,
+		class_id,
+		level,
+		aggro_count));
+}
+
+//Add a mob's heal to the DPS counter system
+void Mob::AddHPEvent(Mob *other, int total, int net, bool is_dealer) {
+	if (other == nullptr) return;
+	if (IsPet()) return;
+	if (total == 0) return;
+
+	int level = other->GetLevel();
+	int ent_id = other->GetID();
+	int type_id = 0;
+	int acct_id = 0;
+	int class_id = (int)other->GetClass();
+	int tier = other->GetTier();
+	std::string character_name = other->GetCleanName();
+	int aggro_count = other->hate_list.GetAggroCount();
+
+	//pet healing isn't tracked
+	if (total < 1 && other->IsPet() && other->IsPetOwnerClient() && other->GetOwner() != nullptr) {
+		acct_id = other->CastToClient()->AccountID();
+		type_id = other->CastToClient()->CharacterID();
+		character_name = other->GetOwner()->GetCleanName();
+	} else if (other->IsClient()) {
+		acct_id = other->CastToClient()->AccountID();
+		type_id = other->CastToClient()->CharacterID();
+	} else if (other->IsNPC()) {
+		type_id = other->CastToNPC()->GetNPCTypeID();
+	}
+
+	//see if entry already is being tracked
+	for (auto&& d : dps) {
+		if (d.ent_id != ent_id) continue;
+		if (total > 0) {
+			if (is_dealer) {
+				d.hp_target_gain_net += net;
+				d.hp_target_gain_total += total;				
+			}
+			else {
+				d.hp_self_gain_net += net;
+				d.hp_self_gain_total += total;
+			}
+		}
+		else { //invert the damage since it's negative
+			if (is_dealer) {
+				d.hp_target_loss_net += -net;
+				d.hp_target_loss_total += -total;
+			}
+			else {
+				d.hp_self_loss_net += -net;
+				d.hp_self_loss_total += -total;
+			}
+		}
+		d.aggro_count = aggro_count;
+		return;
+	}
+
+	Log(Logs::General, Logs::Combat, "Added new DPS entry for %s", character_name.c_str());
+	//new entry
+	dps.push_back(DPS_Struct(
+		time(nullptr), //uint32 engage_start,
+		acct_id,
+		type_id,
+		ent_id,
+		character_name,
+		((!is_dealer && total > 0) ? total : 0), //hp_self_gain_total;
+		((!is_dealer && net > 0) ? net : 0), //hp_self_gain_net,
+		((!is_dealer && total < 0) ? -total : 0), //hp_self_loss_total,
+		((!is_dealer && net < 0) ? -net : 0), //hp_self_loss_net,
+		((is_dealer && total > 0) ? total : 0), //hp_target_gain_total,
+		((is_dealer && net > 0) ? net : 0), //hp_target_gain_net,
+		((is_dealer && total < 0) ? -total : 0), //hp_target_loss_total,
+		((is_dealer && net < 0) ? -net : 0), //hp_target_loss_net,
+		0, //mana_self_gain_total,
+		0, //mana_self_gain_net,
+		0, //mana_self_loss_total,
+		0, //mana_self_loss_net,
+		0, //mana_target_gain_total,
+		0, //mana_target_gain_net,
+		0, //mana_target_loss_total,
+		0, //mana_target_loss_net,
+		tier,
+		class_id,
+		level,
+		aggro_count));
 }
 
 

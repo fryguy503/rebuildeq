@@ -1373,12 +1373,13 @@ void Group::BalanceMana(int32 penalty, float range, Mob* caster, int32 limit)
 		if(members[gi]){
 			distance = DistanceSquared(caster->GetPosition(), members[gi]->GetPosition());
 			if(distance <= range2){
+				entity_list.LogManaEvent(caster, members[gi], -manataken);
 				if((members[gi]->GetMaxMana() - manataken) < 1){
 					members[gi]->SetMana(1);
 					if (members[gi]->IsClient())
 						members[gi]->CastToClient()->SendManaUpdate();
 				}
-				else{
+				else{					
 					members[gi]->SetMana(members[gi]->GetMaxMana() - manataken);
 					if (members[gi]->IsClient())
 						members[gi]->CastToClient()->SendManaUpdate();

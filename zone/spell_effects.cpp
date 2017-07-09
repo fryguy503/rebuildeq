@@ -332,6 +332,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								if (damageAmount < 1) damageAmount = 1;
 								dmg = -damageAmount;
 								int manaAmount = damageAmount * 0.1f * rank;
+								entity_list.LogManaEvent(this, this, manaAmount);
 								casterClient->SetMana(caster->GetMana() + manaAmount);
 							}
 
@@ -354,6 +355,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg += bonusDamage;
 
 								int manaAmount = rank * BaseManaBonus * -dmg;
+								entity_list.LogManaEvent(caster, caster, manaAmount);
 								casterClient->SetMana(casterClient->GetMana() + manaAmount);
 								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Ward of Rebuke %u gifted %i mana.", rank, manaAmount);
 							}
@@ -390,6 +392,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Elixir of Might %u gifted %i health and %i mana.", rank, healAmount, manaAmount);
 
 									casterClient->HealDamage(healAmount, caster);
+									entity_list.LogManaEvent(caster, caster, manaAmount);
 									casterClient->SetMana(casterClient->GetMana() + manaAmount);
 								}
 							}
@@ -462,6 +465,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								int mana_amount = -dmg * 0.05f * rank;
 								if (mana_amount < rank) mana_amount = rank;
 								if (caster->ShowBuildEcho()) caster->Message(MT_FocusEffect, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
+								entity_list.LogManaEvent(caster, caster, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}	
 
@@ -867,6 +871,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 #ifdef SPELL_EFFECT_SPAM
 						snprintf(effect_desc, _EDLEN, "Current Mana: %+i", effect_value);
 #endif
+						entity_list.LogManaEvent(caster, this, effect_value);
 						SetMana(GetMana() + effect_value);
 						if (caster)
 							caster->SetMana(caster->GetMana() + std::abs(effect_value));
@@ -886,7 +891,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					if (buffslot >= 0)
 						break;
 
-					
+					entity_list.LogManaEvent(caster, this, effect_value);
 					SetMana(GetMana() + effect_value);		
 					if (effect_value < 0)
 						TryTriggerOnValueAmount(false, true);
@@ -2275,6 +2280,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					pet_ActSpellCost = pet_ActSpellCost*ImprovedReclaimMod/100;
 				}
 
+				entity_list.LogManaEvent(caster, caster, pet_ActSpellCost);
 				caster->SetMana(caster->GetMana() + pet_ActSpellCost);
 
 					if(caster->IsClient())
@@ -3294,6 +3300,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 				else {
 					heal_amt = ratio*max_mana/10;
+					entity_list.LogManaEvent(caster, caster, -max_mana);
 					caster->SetMana(caster->GetMana() - max_mana);
 				}
 
@@ -3325,6 +3332,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				int mana_damage = 0;
 				int32 mana_to_use = GetMana() - spell.base[i];
 				if(mana_to_use > -1) {
+					entity_list.LogManaEvent(caster, this, -spell.base[i]);
 					SetMana(GetMana() - spell.base[i]);
 					TryTriggerOnValueAmount(false, true);
 					// we take full dmg(-10 to make the damage the right sign)
@@ -3427,6 +3435,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 					else {
 						dmg = ratio*max_mana/10;
+						entity_list.LogManaEvent(caster, caster, -max_mana);
 						caster->SetMana(caster->GetMana() - max_mana);
 						TryTriggerOnValueAmount(false, true);
 					}
@@ -3881,6 +3890,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									if (caster_group->members[z] == caster) {
 										//caster->Message(0, "Group! %i %i", dmg, mana_amount);
 										caster->HealDamage(dmg, caster, 3409);
+										entity_list.LogManaEvent(caster, caster, mana_amount);
 										caster->SetMana(caster->GetMana() + mana_amount);
 										if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
 											caster->HealDamage(dmg, caster->GetPet());
@@ -3890,6 +3900,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 										distance = DistanceSquared(caster->GetPosition(), caster_group->members[z]->GetPosition());
 										if (distance <= range2) {
 											caster_group->members[z]->HealDamage(dmg, caster, 3409);
+											entity_list.LogManaEvent(caster, caster_group->members[z], mana_amount);
 											caster_group->members[z]->SetMana(caster_group->members[z]->GetMana() + mana_amount);
 											if (caster_group->members[z]->GetPet() && !caster_group->members[z]->GetPet()->IsCharmed()) {
 												caster_group->members[z]->GetPet()->HealDamage(dmg, caster);
@@ -3911,6 +3922,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									for (int x = 0; x < MAX_RAID_MEMBERS; x++) { //iterate raid
 										if (target_raid->members[x].member == caster) { //if member is the caster										
 											caster->HealDamage(dmg, caster, 3409);
+											entity_list.LogManaEvent(caster, caster, mana_amount);
 											caster->SetMana(caster->GetMana() + mana_amount);
 											if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
 												caster->HealDamage(dmg, caster->GetPet(), 3409);
@@ -3921,6 +3933,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 												distance = DistanceSquared(caster->GetPosition(), target_raid->members[x].member->GetPosition()); //get distance
 												if (distance <= range2) { //in distance
 													target_raid->members[x].member->HealDamage(dmg, caster, 3409);
+													entity_list.LogManaEvent(caster, target_raid->members[x].member, mana_amount);
 													target_raid->members[x].member->SetMana(target_raid->members[x].member->GetMana() + mana_amount);
 													if (target_raid->members[x].member->GetPet() && !target_raid->members[x].member->GetPet()->IsCharmed()) {
 														target_raid->members[x].member->HealDamage(dmg, caster, 3409);
@@ -3935,6 +3948,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						else { //not grouped
 						 //caster->Message(0, "Lifesteal! %i %i", dmg, mana_amount);
 							caster->HealDamage(dmg, caster, 3409);
+							entity_list.LogManaEvent(caster, caster, mana_amount);
 							caster->SetMana(caster->GetMana() + mana_amount);
 							if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
 								caster->HealDamage(dmg, caster->GetPet(), 3409);
@@ -4528,9 +4542,11 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							if (mana_amount < 1) mana_amount = 1;
 							if (caster != this) {
 								caster->Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+								entity_list.LogManaEvent(caster, caster, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}
 							Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+							entity_list.LogManaEvent(caster, this, mana_amount);
 							SetMana(GetMana() + mana_amount);
 							
 						}
@@ -4564,9 +4580,11 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							if (mana_amount < 1) mana_amount = 1;
 							if (caster != this) {
 								caster->Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+								entity_list.LogManaEvent(caster, caster, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}
 							Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+							entity_list.LogManaEvent(caster, this, mana_amount);
 							SetMana(GetMana() + mana_amount);							
 						}
 					}
@@ -5267,9 +5285,11 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 					int32 mana_amount = amount_healed * (0.01f * rank);
 					if (mana_amount < 1) mana_amount = 1;
 					Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+					entity_list.LogManaEvent(this, this, mana_amount);
 					SetMana(GetMana() + mana_amount);
 					if (p != this) {
 						p->Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+						entity_list.LogManaEvent(this, this, mana_amount);
 						p->SetMana(p->GetMana() + mana_amount);
 					}
 				}
@@ -5312,9 +5332,11 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 				int32 mana_amount = amount_healed * (0.01f * rank);
 				if (mana_amount < 1) mana_amount = 1;
 				Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+				entity_list.LogManaEvent(this, this, mana_amount);
 				SetMana(GetMana() + mana_amount);
 				if (p != this) {
 					p->Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+					entity_list.LogManaEvent(p, p, mana_amount);
 					p->SetMana(p->GetMana() + mana_amount);
 				}
 			}
@@ -7092,7 +7114,7 @@ bool Mob::TryDeathSave() {
 						}
 						if ((GetMaxHP() - GetHP()) < HealAmt)
 							HealAmt = GetMaxHP() - GetHP();
-						entity_list.LogHealEvent(buff_client, this, HealAmt);
+						entity_list.LogHPEvent(buff_client, this, HealAmt);
 						SetHP((GetHP() + HealAmt));
 						Message(263, "The gods have healed you for %i points of damage.", HealAmt);
 						entity_list.MessageClose_StringID(this, false, 200, MT_CritMelee, DIVINE_INTERVENTION, GetCleanName());
@@ -7132,7 +7154,7 @@ bool Mob::TryDeathSave() {
 				if ((GetMaxHP() - GetHP()) < HealAmt)
 					HealAmt = GetMaxHP() - GetHP();
 
-				entity_list.LogHealEvent(this, this, HealAmt);
+				entity_list.LogHPEvent(this, this, HealAmt);
 				SetHP((GetHP()+HealAmt));
 				Message(263, "The gods have healed you for %i points of damage.", HealAmt);
 
@@ -7165,7 +7187,7 @@ bool Mob::TryDeathSave() {
 
 					if ((GetMaxHP() - GetHP()) < HealAmt)
 						HealAmt = GetMaxHP() - GetHP();
-					entity_list.LogHealEvent(this, this, HealAmt);
+					entity_list.LogHPEvent(this, this, HealAmt);
 					SetHP((GetHP()+HealAmt));
 					Message(263, "The gods have healed you for %i points of damage.", HealAmt);
 
@@ -7945,8 +7967,10 @@ void Mob::ResourceTap(int32 damage, uint16 spellid)
 						Damage(this, -damage, 0, EQEmu::skills::SkillEvocation, false);
 				}
 	
-				if (spells[spellid].base2[i] == 1) // Mana Tap
+				if (spells[spellid].base2[i] == 1) { // Mana Tap 
+					entity_list.LogManaEvent(this, this, damage);
 					SetMana(GetMana() + damage);
+				}
 	
 				if (spells[spellid].base2[i] == 2 && IsClient()) // Endurance Tap
 					CastToClient()->SetEndurance(CastToClient()->GetEndurance() + damage);

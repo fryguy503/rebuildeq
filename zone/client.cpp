@@ -2907,7 +2907,7 @@ bool Client::BindWound(Mob *bindmob, bool start, bool fail)
 						// cap it at that value. Dont know if live does it this way
 						// but it makes sense to me.
 						int chp = bindmob->GetHP() + bindhps;
-						entity_list.LogHealEvent(bindmob, this, chp);						
+						entity_list.LogHPEvent(bindmob, this, chp);						
 						
 						if (chp > max_hp)
 							chp = max_hp;
@@ -4100,6 +4100,7 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 
 					if (dist2 <= range2) {
 						c->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
+						entity_list.LogManaEvent(this, c, mana_bonus);
 						c->SetMana(c->GetMana() + mana_bonus);
 					}
 				}
@@ -4123,6 +4124,7 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 							float range2 = 100 * 100;
 							if (dist2 <= range2) {
 								raid->members[i].member->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
+								entity_list.LogManaEvent(this, raid->members[i].member, mana_bonus);
 								raid->members[i].member->SetMana(raid->members[i].member->GetMana() + mana_bonus);
 							}
 						}

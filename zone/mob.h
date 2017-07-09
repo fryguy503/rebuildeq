@@ -61,26 +61,84 @@ enum class eSpecialAttacks : int {
 	ChaoticStab
 };
 
+
 struct DPS_Struct {
-	explicit DPS_Struct(uint32 engage_start, int acct_id, int type_id, int ent_id, std::string character_name, float dps, int total_damage, float hps, int total_healing_taken, int net_healing_taken, int tier, int class_id, int is_player, int level, int aggro_count, int total_healing_dealt, int net_healing_dealt) : engage_start(engage_start), acct_id(acct_id), type_id(type_id), ent_id(ent_id), character_name(character_name), dps(dps), total_damage(total_damage), hps(hps), total_healing_taken(total_healing_taken), net_healing_taken(net_healing_taken), tier(tier), class_id(class_id), is_player(is_player), level(level), aggro_count(aggro_count), total_healing_dealt(total_healing_dealt), net_healing_dealt(net_healing_dealt) {};
+	explicit DPS_Struct(
+		uint32 engage_start,
+		int acct_id,
+		int type_id,
+		int ent_id,
+		std::string character_name,
+		int hp_self_gain_total,
+		int hp_self_gain_net,
+		int hp_self_loss_total,
+		int hp_self_loss_net,
+		int hp_target_gain_total,
+		int hp_target_gain_net,
+		int hp_target_loss_total,
+		int hp_target_loss_net,
+		int mana_self_gain_total,
+		int mana_self_gain_net,
+		int mana_self_loss_total,
+		int mana_self_loss_net,
+		int mana_target_gain_total,
+		int mana_target_gain_net,
+		int mana_target_loss_total,
+		int mana_target_loss_net,
+		int tier,
+		int class_id,
+		int level,
+		int aggro_count) :
+	engage_start(engage_start),
+		acct_id(acct_id),
+		type_id(type_id),
+		ent_id(ent_id),
+		character_name(character_name),
+		hp_self_gain_total(hp_self_gain_total),
+		hp_self_gain_net(hp_self_gain_net),
+		hp_self_loss_total(hp_self_loss_total),
+		hp_self_loss_net(hp_self_loss_net),
+		hp_target_gain_total(hp_target_gain_total),
+		hp_target_gain_net(hp_target_gain_net),
+		hp_target_loss_total(hp_target_loss_total),
+		hp_target_loss_net(hp_target_loss_net),
+		mana_self_gain_total(mana_self_gain_total),
+		mana_self_gain_net(mana_self_gain_net),
+		mana_self_loss_total(mana_self_loss_total),
+		mana_self_loss_net(mana_self_loss_net),
+		mana_target_gain_total(mana_target_gain_total),
+		mana_target_gain_net(mana_target_gain_net),
+		mana_target_loss_total(mana_target_loss_total),
+		mana_target_loss_net(mana_target_loss_net),
+		tier(tier),
+		class_id(class_id),
+		level(level),
+		aggro_count(aggro_count) {};
 	uint32 engage_start;
 	int acct_id;
 	int type_id;
 	int ent_id;
 	std::string character_name;
-	float dps;
-	int total_damage;
-	float hps;
-	int total_healing_taken;
-	int net_healing_taken;
+	int hp_self_gain_total;
+	int hp_self_gain_net;
+	int hp_self_loss_total;
+	int hp_self_loss_net;
+	int hp_target_gain_total;
+	int hp_target_gain_net;
+	int hp_target_loss_total;
+	int hp_target_loss_net;
+	int mana_self_gain_total;
+	int mana_self_gain_net;
+	int mana_self_loss_total;
+	int mana_self_loss_net;
+	int mana_target_gain_total;
+	int mana_target_gain_net;
+	int mana_target_loss_total;
+	int mana_target_loss_net;
 	int tier;
 	int class_id;
-	int is_player;
 	int level;
 	int aggro_count;
-	int total_healing_dealt;
-	int net_healing_dealt;
-
 };
 
 
@@ -167,8 +225,9 @@ public:
 	inline virtual bool InZone() const { return true; }
 
 	//Somewhat sorted: needs documenting!
-	void AddDPS(Mob *other, int damage);
-	void AddHPS(Mob *other, bool is_dealer, int total_healing, int net_healing);
+	void AddHPEvent(Mob *other, int total, int net, bool is_dealer);
+	void AddManaEvent(Mob *other, int total, int net, bool is_dealer);
+
 
 	std::vector<DPS_Struct> DPS();
 

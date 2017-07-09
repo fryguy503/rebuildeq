@@ -1346,28 +1346,56 @@ void Mob::RogueEvade(Mob *other)
 	return;
 }
 
+void EntityList::LogManaEvent(Mob *caster, Mob *target, int mana) {
+	if (target == nullptr) return;
 
-void EntityList::LogHealEvent(Mob *caster, Mob *target, int total_healing) {
-	if (target == nullptr || total_healing == 0) return;
+	int net_mana = mana;
+	if (target->GetMana() + mana > target->GetMaxMana()) net_mana = target->GetMaxMana() - target->GetMana(); //overheal, get difference of max - cur
+	if (target->GetMana() - mana < 0) net_mana = target->GetMana(); //reduce below zero, store mana left
 
-	int net_healing = total_healing;
-	if (target->GetHP() + total_healing > target->GetMaxHP()) {
-		net_healing = target->GetMaxHP() - target->GetHP();		
-	}
-	
-	if (net_healing == 0 && !target->IsClient()) { //Ignore an NPC regenerating
-		return;
-	}
+	//if (net_mana == 0 || !target->IsClient()) return; //Ignore an NPC regenerating, or no events
 
 	for (auto it = npc_list.begin(); it != npc_list.end(); ++it) {
 		NPC *mob = it->second;
 
 		if (!mob) continue;
-		if (mob->IsOnHatelist(caster)) {
-			mob->AddHPS(caster, 1, total_healing, net_healing);
-		}
-		if (mob->IsOnHatelist(target)) {
-			mob->AddHPS(target, 0, total_healing, net_healing);
+		if (mob->GetID() == target->GetID()) {
+			if (mob->IsOnHatelist(caster) ||
+				mob->IsOnHatelist(target) ||
+				mob->GetID() == caster->GetID() ||
+				mob->GetID() == target->GetID()) {
+			}
+			mob->AddManaEvent(caster, mana, net_mana, 1);
+			mob->AddManaEvent(target, mana, net_mana, 0);
+		}		
+	}
+}
+//caster: me, target: enemy.
+void EntityList::LogHPEvent(Mob *caster, Mob *target, int hp) {
+	int net_hp = hp;
+	if (target == nullptr) return;
+	if (caster == nullptr) {
+		caster = target; //This may bite me in the ass, but seems logical.
+	}
+	
+
+	
+	if (target->GetHP() + hp > target->GetMaxHP()) net_hp = target->GetMaxHP() - target->GetHP(); //overheal, get difference of max - cur
+	if (target->GetHP() - hp < 0) net_hp = target->GetHP(); //reduce below zero, store mana left
+	
+	//if (net_hp == 0 || !target->IsClient()) return; //Ignore an NPC regenerating, or no events
+	
+	//now find anyone else who may be tracking this event (on aggro list)
+	for (auto it = npc_list.begin(); it != npc_list.end(); ++it) {
+		NPC *mob = it->second;		
+		if (!mob) continue;		
+		if (mob->IsOnHatelist(caster) ||
+			mob->IsOnHatelist(target) ||
+			((caster != nullptr) && mob->GetID() == caster->GetID()) ||
+			mob->GetID() == target->GetID()) {
+
+			mob->AddHPEvent(caster, hp, net_hp, 1);
+			mob->AddHPEvent(target, hp, net_hp, 0);
 		}
 	}
 }

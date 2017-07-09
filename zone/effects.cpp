@@ -385,8 +385,10 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 			//Do mana conversion
 			int manaAmount = (target->GetMaxMana() * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMPATHETICSOUL));
 			if (GetMana() > manaAmount) { //If I have enough mana
+				entity_list.LogManaEvent(this, this, -manaAmount);
 				SetMana((GetMana() - manaAmount)); //Take it from my bar
 				CastToClient()->Message(MT_NonMelee, "You have transferred %i mana to %s", manaAmount, target->GetCleanName());
+				entity_list.LogManaEvent(this, target, manaAmount);
 				target->SetMana((target->GetMana() + manaAmount)); //Give it to target
 				if (target->IsClient()) {
 					target->CastToClient()->Message(MT_NonMelee, "%s transferred %i mana to you.", target->GetCleanName(), manaAmount);
