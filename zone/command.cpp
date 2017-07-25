@@ -252,7 +252,8 @@ int command_init(void)
 		command_add("ipban", "[IP address] - Ban IP by character name", 200, command_ipban) ||
 		command_add("iplookup", "[charname] - Look up IP address of charname", 200, command_iplookup) ||
 		command_add("iteminfo", "- Get information about the item on your cursor", 100, command_iteminfo) ||
-		command_add("itemsearch", "[search criteria] - Search for an item", 100, command_itemsearch) ||
+		command_add("itemscore", "- Get itemscore of the item on your cursor", 100, command_itemscore) ||
+		command_add("itemsearch", "[search criteria] - Search for an item", 100, command_itemsearch) ||		
 		command_add("issue", "- Report an issue with the server", 0, command_issue) ||
 		command_add("kick", "[charname] - Disconnect charname", 150, command_kick) ||
 		command_add("kill", "- Kill your target", 100, command_kill) ||
@@ -5485,6 +5486,49 @@ void command_iteminfo(Client *c, const Seperator *sep)
 
 	if (c->Admin() >= 200)
 		c->Message(0, ">> MinStatus: %u", item->MinStatus);
+}
+
+
+void command_itemscore(Client *c, const Seperator *sep)
+{
+	auto inst = c->GetInv()[EQEmu::inventory::slotCursor];
+	if (!inst) {
+		c->Message(13, "Error: You need an item on your cursor for this command");
+		return;
+	}
+	auto item = inst->GetItem();
+	if (!item) {
+		Log(Logs::General, Logs::Inventory, "(%s) Command #iteminfo processed an item with no data pointer");
+		c->Message(13, "Error: This item has no data reference");
+		return;
+	}
+
+	EQEmu::SayLinkEngine linker;
+	linker.SetLinkType(EQEmu::saylink::SayLinkItemInst);
+	linker.SetItemInst(inst);
+
+	auto item_link = linker.GenerateLink();
+
+	int itemScore = 0;
+	int classItemScore = 0;
+	uint8 myClass = c->GetClass();
+	if (item->AAgi > 0) {
+		itemScore += item->AAgi * 30;
+		if (IsFighterClass(myClass)) classItemScore += item->AAgi * 40;
+		else if (IsCasterClass(myClass)) classItemScore += item->AAgi * 10;
+	}
+	if (item->AC > 0) itemScore += item->AC * 50;
+	if (item->Accuracy > 0) itemScore += item->Accuracy * 80;
+	if (item->ACha > 0) itemScore += item->ACha * 10;
+	if (item->ADex > 0) itemScore += item->ACha * 20;
+	if (item->AInt > 0) itemScore += item->AInt * 30;
+	if (item->ASta > 0) itemScore += item->ASta * 30;
+	if (item->AStr > 0) itemScore += item->AStr * 10;
+	if (item->Attack > 0) itemScore += item->Attack * 30;
+	if (item->Avoidance > 0) itemScore += item->Avoidance * 40;
+	if (item->AWis > 0) itemScore += item->AWis * 30;	
+
+	c->Message(0, "*** Item Score for [%s]: %i, Class Item Score: %i ***", item_link.c_str(), itemScore, classItemScore);	
 }
 
 void command_uptime(Client *c, const Seperator *sep)
