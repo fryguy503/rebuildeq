@@ -1555,26 +1555,26 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		cooldown = 0;
 	}
 
-	if (!IsCastWhileInvis(rank->spell))
+	if (!IsCastWhileInvis(spellid))
 		CommonBreakInvisible();
 
-	if (spells[rank->spell].sneak && (!hidden || (hidden && (Timer::GetCurrentTime() - tmHidden) < 4000))) {
+	if (spells[spellid].sneak && (!hidden || (hidden && (Timer::GetCurrentTime() - tmHidden) < 4000))) {
 		Message_StringID(MT_SpellFailure, SNEAK_RESTRICT);
 		return;
 	}
-	//
+	
 	// Modern clients don't require pet targeted for AA casts that are ST_Pet
-	if (spells[rank->spell].targettype == ST_Pet || spells[rank->spell].targettype == ST_SummonedPet)
+	if (spells[spellid].targettype == ST_Pet || spells[spellid].targettype == ST_SummonedPet)
 		target_id = GetPetID();
 
 	// Bards can cast instant cast AAs while they are casting another song
-	if(spells[rank->spell].cast_time == 0 && GetClass() == BARD && IsBardSong(casting_spell_id)) {
-		if(!SpellFinished(rank->spell, entity_list.GetMob(target_id), EQEmu::CastingSlot::AltAbility, spells[rank->spell].mana, -1, spells[rank->spell].ResistDiff, false)) {
+	if(spells[spellid].cast_time == 0 && GetClass() == BARD && IsBardSong(casting_spell_id)) {
+		if(!SpellFinished(spellid, entity_list.GetMob(target_id), EQEmu::CastingSlot::AltAbility, spells[spellid].mana, -1, spells[spellid].ResistDiff, false)) {
 			return;
 		}
 		ExpendAlternateAdvancementCharge(ability->id);
 	} else {
-		if(!CastSpell(rank->spell, target_id, EQEmu::CastingSlot::AltAbility, -1, -1, 0, -1, rank->spell_type + pTimerAAStart, cooldown, nullptr, rank->id)) {
+		if(!CastSpell(spellid, target_id, EQEmu::CastingSlot::AltAbility, -1, -1, 0, -1, rank->spell_type + pTimerAAStart, cooldown, nullptr, rank->id)) {
 			return;
 		}
 	}
