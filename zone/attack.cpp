@@ -4098,8 +4098,8 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH) > 0 &&
 				zone->random.Roll((int)(4 * CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH)))) {
 				int damageReduction = (int)(float)(damage * (float)0.05f * (float)CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH));				
-				if (damageReduction < 1) {
-					if (attacker->ShowBuildEcho()) attacker->CastToClient()->Message(MT_FocusEffect, "Armor of Faith %u reduced damage from %s by %i.", CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH), attacker->GetCleanName(), damageReduction);
+				if (damageReduction > 0) {
+					if (CastToClient()->ShowBuildEcho()) CastToClient()->Message(MT_FocusEffect, "Armor of Faith %u reduced damage from %s by %i.", CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH), attacker->GetCleanName(), damageReduction);
 					damage -= damageReduction;
 				}
 			}
