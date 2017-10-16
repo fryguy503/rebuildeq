@@ -253,7 +253,7 @@ int command_init(void)
 		command_add("ipban", "[IP address] - Ban IP by character name", 200, command_ipban) ||
 		command_add("iplookup", "[charname] - Look up IP address of charname", 200, command_iplookup) ||
 		command_add("iteminfo", "- Get information about the item on your cursor", 100, command_iteminfo) ||
-		command_add("itemscore", "- Get itemscore of the item on your cursor", 100, command_itemscore) ||
+		command_add("itemscore", "- Get itemscore of the item on your cursor", 250, command_itemscore) ||
 		command_add("itemsearch", "[search criteria] - Search for an item", 100, command_itemsearch) ||		
 		command_add("issue", "- Report an issue with the server", 0, command_issue) ||
 		command_add("kick", "[charname] - Disconnect charname", 150, command_kick) ||
@@ -4009,15 +4009,13 @@ void command_setallbuilds(Client *c, const Seperator *sep) {
 		return;
 	}
 
-	Client* cTarget = nullptr;
-	auto target = c->GetTarget();
 	
 	// Get a session, this allows RefreshBuild to detect that changes have happened.
-	cTarget->GetSession();
+	c->GetSession();
 
 	std::string build = "55555555555555555555555555555555555555555555555555555";
 
-	std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %i", EscapeString(build).c_str(), c->CharacterID());
+	std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %i", EscapeString(build).c_str(), (int)c->CharacterID());
 	auto results = database.QueryDatabase(query);
 	if (!results.Success()) {
 		c->Message(13, "Failed to set build.");
@@ -4026,7 +4024,7 @@ void command_setallbuilds(Client *c, const Seperator *sep) {
 	c->Message(15, "Successfully updated your build.");
 		
 	// Trigger refresh on target.
-	cTarget->RefreshBuild();
+	c->RefreshBuild();
 }
 
 void command_setbuild(Client *c, const Seperator *sep) {
