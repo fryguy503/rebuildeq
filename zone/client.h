@@ -1311,6 +1311,8 @@ public:
 	void EvadeOnce(Mob * mob);
 
 	bool DoEvadeOnce();
+	int GetItemScore(const EQEmu::ItemInstance *inst);
+	int GetCharacterItemScore();
 
 	void CheckRegionTypeChanges();
 

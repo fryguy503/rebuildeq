@@ -62,6 +62,8 @@ void command_beardcolor(Client *c, const Seperator *sep);
 void command_bind(Client* c, const Seperator *sep);
 void command_builds(Client *c, const Seperator *sep);
 void command_setbuild(Client *c, const Seperator *sep);
+void command_setallbuilds(Client *c, const Seperator *sep);
+
 void command_buff(Client *c, const Seperator *sep);
 #ifdef BUGTRACK
 void command_bug(Client *c, const Seperator *sep);

@@ -5037,7 +5037,12 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 			}
 		}
 
-		SendColoredText(color, StringFormat("%s [%s] (%s) %s -- %s", tmob->GetCleanName(), level_value.c_str(), race_name.c_str(), con_text.c_str(), level_text.c_str()));
+		if (tmob->IsClient()) {
+			SendColoredText(color, StringFormat("%s [%s] {%i} (%s) %s -- %s", tmob->GetCleanName(), level_value.c_str(), tmob->CastToClient()->GetCharacterItemScore(), race_name.c_str(), con_text.c_str(), level_text.c_str()));
+		}
+		else {
+			SendColoredText(color, StringFormat("%s [%s] (%s) %s -- %s", tmob->GetCleanName(), level_value.c_str(), race_name.c_str(), con_text.c_str(), level_text.c_str()));
+		}
 	}
 	// only wanted to check raid target once
 	// and need con to still be around so, do it here!
