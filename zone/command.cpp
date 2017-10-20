@@ -5539,7 +5539,7 @@ void command_itemscore(Client *c, const Seperator *sep)
 
 	auto item_link = linker.GenerateLink();
 	
-	c->Message(0, "*** %s ItemScore: %i ***", item_link.c_str(), c->GetItemScore(inst));
+	c->Message(0, "*** %s ItemScore: %i  ***", item_link.c_str(), inst->GetItemScore());
 }
 
 void command_uptime(Client *c, const Seperator *sep)

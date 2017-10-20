@@ -277,6 +277,8 @@ namespace EQEmu
 		int GetItemHeroicCorrup(bool augments = false) const;
 		int GetItemHaste(bool augments = false) const;
 
+		int GetItemScore() const;
+
 	protected:
 		//////////////////////////
 		// Protected Members

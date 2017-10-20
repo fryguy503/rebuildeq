@@ -5038,7 +5038,14 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 		}
 
 		if (tmob->IsClient()) {
-			SendColoredText(color, StringFormat("%s [%s] {%i} (%s) %s -- %s", tmob->GetCleanName(), level_value.c_str(), tmob->CastToClient()->GetCharacterItemScore(), race_name.c_str(), con_text.c_str(), level_text.c_str()));
+			int itemScore = tmob->CastToClient()->GetCharacterItemScore();
+			int maxItemScore = 0;
+			std::string tmp_value;
+			RuleManager::Instance()->GetRule(StringFormat("ItemScore:Class%i", tmob->GetClass()).c_str(), tmp_value);
+			maxItemScore = std::stoi(tmp_value);
+			if (itemScore < 1) itemScore = 1;
+			if (itemScore > maxItemScore) maxItemScore = itemScore;
+			SendColoredText(color, StringFormat("%s [%s] (%i%% ItemScore) %s -- %s", tmob->GetCleanName(), level_value.c_str(), (itemScore * 100 / maxItemScore), con_text.c_str(), level_text.c_str()));
 		}
 		else {
 			SendColoredText(color, StringFormat("%s [%s] (%s) %s -- %s", tmob->GetCleanName(), level_value.c_str(), race_name.c_str(), con_text.c_str(), level_text.c_str()));

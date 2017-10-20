@@ -607,3 +607,22 @@ bool WorldDatabase::LoadCharacterCreateCombos()
 
 	return true;
 }
+
+bool WorldDatabase::GetAllCharacters(std::vector<CharData_Struct*> &chars)
+{
+	std::string query = StringFormat("SELECT id, class FROM character_data");
+	auto results = QueryDatabase(query);
+	if (!results.Success()) {
+		Log(Logs::General, Logs::Error, "WorldDatabase::GetAllCharacterIDs: %s", results.ErrorMessage().c_str());
+		return false;
+	}
+
+	if (results.RowCount() == 0)
+		return false;
+
+	for (auto row = results.begin(); row != results.end(); ++row) {
+		CharData_Struct* cData = new CharData_Struct(atoi(row[0]), atoi(row[1]));
+		chars.push_back(cData);
+	}
+	return true;
+}
