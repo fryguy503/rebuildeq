@@ -3334,6 +3334,10 @@ if (sp2_value < 0)
 // 66+ Group Spells 62, Single Target 61
 bool Mob::CheckSpellLevelRestriction(uint16 spell_id)
 {
+	int SpellLevel = GetMinLevel(spell_id);
+	if (GetOwner() != nullptr && GetOwner()->IsClient()) {
+		return (SpellLevel <= GetOwner()->GetLevel());
+	}
 	return true;
 }
 
@@ -3343,16 +3347,8 @@ bool Client::CheckSpellLevelRestriction(uint16 spell_id)
 
 	// Only check for beneficial buffs
 	if (IsBuffSpell(spell_id) && IsBeneficialSpell(spell_id)) {
-		if (SpellLevel > 65) {
-			if (IsGroupSpell(spell_id) && GetLevel() < 62)
-				return false;
-			else if (GetLevel() < 61)
-				return false;
-		}
-		else if (SpellLevel > 50) { // 51-65
-			if (GetLevel() < (SpellLevel / 2 + 15))
-				return false;
-		}
+		//SpellLevelRestriction is overridden to now require the target to be equal or greater to the min level of the spell being casted.
+		return (SpellLevel <= GetLevel());		
 	}
 
 	return true;
