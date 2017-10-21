@@ -610,7 +610,7 @@ bool WorldDatabase::LoadCharacterCreateCombos()
 
 bool WorldDatabase::GetAllCharacters(std::vector<CharData_Struct*> &chars)
 {
-	std::string query = StringFormat("SELECT id, class FROM character_data");
+	std::string query = StringFormat("SELECT cd.id, cd.class FROM character_data cd INNER JOIN account ON account.id = cd.account_id WHERE account.status < 99");
 	auto results = QueryDatabase(query);
 	if (!results.Success()) {
 		Log(Logs::General, Logs::Error, "WorldDatabase::GetAllCharacterIDs: %s", results.ErrorMessage().c_str());

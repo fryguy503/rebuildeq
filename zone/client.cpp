@@ -11219,7 +11219,7 @@ int Client::GetCharacterItemScore() {
 	int x;
 	const EQEmu::ItemInstance* inst;
 	int itemScore = 0;
-	for (x = EQEmu::legacy::EQUIPMENT_BEGIN; x < EQEmu::inventory::slotWaist; x++) { // include cursor or not?
+	for (x = EQEmu::legacy::EQUIPMENT_BEGIN; x < EQEmu::legacy::EQUIPMENT_END; x++) { // include cursor or not?
 		inst = GetInv().GetItem(x);
 		if (!inst) continue;
 		itemScore += inst->GetItemScore();

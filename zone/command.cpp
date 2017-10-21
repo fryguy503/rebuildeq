@@ -253,7 +253,7 @@ int command_init(void)
 		command_add("ipban", "[IP address] - Ban IP by character name", 200, command_ipban) ||
 		command_add("iplookup", "[charname] - Look up IP address of charname", 200, command_iplookup) ||
 		command_add("iteminfo", "- Get information about the item on your cursor", 100, command_iteminfo) ||
-		command_add("itemscore", "- Get itemscore of the item on your cursor", 250, command_itemscore) ||
+		command_add("itemscore", "- Get itemscore of the item on your cursor", 0, command_itemscore) ||
 		command_add("itemsearch", "[search criteria] - Search for an item", 100, command_itemsearch) ||		
 		command_add("issue", "- Report an issue with the server", 0, command_issue) ||
 		command_add("kick", "[charname] - Disconnect charname", 150, command_kick) ||
@@ -5527,19 +5527,38 @@ void command_iteminfo(Client *c, const Seperator *sep)
 
 void command_itemscore(Client *c, const Seperator *sep)
 {
+
+	int itemScore = c->CastToClient()->GetCharacterItemScore();
+	int maxItemScore = 0;
+	std::string tmp_value;
+	RuleManager::Instance()->GetRule(StringFormat("ItemScore:Class%i", c->GetClass()).c_str(), tmp_value);
+	maxItemScore = std::stoi(tmp_value);
+	if (itemScore < 1) itemScore = 1;
+	if (itemScore > maxItemScore) maxItemScore = itemScore;
+
+	const char *windowTitle = "ItemScore";
+	std::string windowText = StringFormat("Your total ItemScore is: <c \"#FFDF00\">%i</c> (%i%%)<br>", itemScore, (itemScore * 100 / maxItemScore));
+		
 	auto inst = c->GetInv()[EQEmu::inventory::slotCursor];
-	if (!inst) {
-		c->Message(13, "Error: You need an item on your cursor for this command");
-		return;
+	if (inst) {
+		windowText.append(StringFormat("<c \"#4444DD\">Cursor</c> (%s) ItemScore: %i<br>", inst->GetItem()->Name, inst->GetItemScore()));
 	}
 
-	EQEmu::SayLinkEngine linker;
-	linker.SetLinkType(EQEmu::saylink::SayLinkItemInst);
-	linker.SetItemInst(inst);
-
-	auto item_link = linker.GenerateLink();
+	int x;
+	//const EQEmu::ItemInstance* inst = nullptr;
+	std::string itemBreakdown = "";
+	for (x = EQEmu::legacy::EQUIPMENT_BEGIN; x < EQEmu::legacy::EQUIPMENT_END; x++) {
+		inst = c->GetInv().GetItem(x);
+		if (!inst) continue;
+		itemBreakdown.append(StringFormat("<c \"#4444DD\">%s</c> (%s) ItemScore: %i<br>", inst->GetSlotName(x).c_str(), inst->GetItem()->Name, inst->GetItemScore()));
+	}
+	windowText.append(itemBreakdown);
 	
-	c->Message(0, "*** %s ItemScore: %i  ***", item_link.c_str(), inst->GetItemScore());
+
+	windowText.append("<br>ItemScore is a tally of all worn items, calculated based on modifiers of each stat, includes augments, and scaled in percent based on best known geared character of your class on server.<br>The best known geared player data is updated every 24 hours, and the formula for ItemScore is subject to change.<br>");
+	c->Message(0, "Your ItemScore is %i (%i%%). Use #itemscore with an item on cursor to get it's score.", itemScore, (itemScore * 100 / maxItemScore));
+
+	c->SendPopupToClient(windowTitle, windowText.c_str());
 }
 
 void command_uptime(Client *c, const Seperator *sep)

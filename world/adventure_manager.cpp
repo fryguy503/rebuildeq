@@ -2252,7 +2252,7 @@ void AdventureManager::RefreshItemScore() {
 		itemScore = 0;
 		
 		//iterate worn
-		for (x = EQEmu::legacy::EQUIPMENT_BEGIN; x < EQEmu::inventory::slotWaist; x++) {			
+		for (x = EQEmu::legacy::EQUIPMENT_BEGIN; x < EQEmu::legacy::EQUIPMENT_END; x++) {
 			item = inv.GetItem(x);
 			if (!item) continue;
 				

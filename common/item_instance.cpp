@@ -1690,115 +1690,79 @@ int EQEmu::ItemInstance::GetItemHaste(bool augments) const
 }
 
 
+std::string EQEmu::ItemInstance::GetSlotName(int slotNumber) const {
+	if (slotNumber == EQEmu::legacy::SLOT_CHARM) return "Charm";
+	if (slotNumber == EQEmu::legacy::SLOT_EAR01) return "Left Ear";
+	if (slotNumber == EQEmu::legacy::SLOT_HEAD) return "Head";
+	if (slotNumber == EQEmu::legacy::SLOT_FACE) return "Face";
+	if (slotNumber == EQEmu::legacy::SLOT_EAR02) return "Right Ear";
+	if (slotNumber == EQEmu::legacy::SLOT_NECK) return "Neck";
+	if (slotNumber == EQEmu::legacy::SLOT_SHOULDER) return "Shoulder";
+	if (slotNumber == EQEmu::legacy::SLOT_ARMS) return "Arms";
+	if (slotNumber == EQEmu::legacy::SLOT_BACK) return "Back";
+	if (slotNumber == EQEmu::legacy::SLOT_BRACER01) return "Left Bracer";
+	if (slotNumber == EQEmu::legacy::SLOT_BRACER02) return "Right Bracer";
+	if (slotNumber == EQEmu::legacy::SLOT_RANGE) return "Range";
+	if (slotNumber == EQEmu::legacy::SLOT_HANDS) return "Hands";
+	if (slotNumber == EQEmu::legacy::SLOT_PRIMARY) return "Primary";
+	if (slotNumber == EQEmu::legacy::SLOT_SECONDARY) return "Secondary";
+	if (slotNumber == EQEmu::legacy::SLOT_RING01) return "Left Ring";
+	if (slotNumber == EQEmu::legacy::SLOT_RING02) return "Right Ring";
+	if (slotNumber == EQEmu::legacy::SLOT_CHEST) return "Chest";
+	if (slotNumber == EQEmu::legacy::SLOT_LEGS) return "Legs";
+	if (slotNumber == EQEmu::legacy::SLOT_FEET) return "Feet";
+	if (slotNumber == EQEmu::legacy::SLOT_WAIST) return "Waist";
+	if (slotNumber == EQEmu::legacy::SLOT_AMMO) return "Ammo";
+	return "";
+}
+
+std::string EQEmu::ItemInstance::GetSlotNames() const {
+	if (this == nullptr) return "";
+	std::string slotsString = "";
+	auto slots = GetItem()->Slots;
+
+	if (slots & EQEmu::legacy::SLOT_CHARM == EQEmu::legacy::SLOT_CHARM) slotsString.append("Charm");
+	if (slots & EQEmu::legacy::SLOT_EAR01 == EQEmu::legacy::SLOT_EAR01) slotsString.append("Left Ear");
+	if (slots & EQEmu::legacy::SLOT_HEAD == EQEmu::legacy::SLOT_HEAD) slotsString.append("Head");
+	if (slots & EQEmu::legacy::SLOT_FACE == EQEmu::legacy::SLOT_FACE) slotsString.append("Face");
+	if (slots & EQEmu::legacy::SLOT_EAR02 == EQEmu::legacy::SLOT_EAR02) slotsString.append("Right Ear");
+	if (slots & EQEmu::legacy::SLOT_NECK == EQEmu::legacy::SLOT_NECK) slotsString.append("Neck");
+	if (slots & EQEmu::legacy::SLOT_SHOULDER == EQEmu::legacy::SLOT_SHOULDER) slotsString.append("Shoulder");
+	if (slots & EQEmu::legacy::SLOT_ARMS == EQEmu::legacy::SLOT_ARMS) slotsString.append("Arms");
+	if (slots & EQEmu::legacy::SLOT_BACK == EQEmu::legacy::SLOT_BACK) slotsString.append("Back");
+	if (slots & EQEmu::legacy::SLOT_BRACER01 == EQEmu::legacy::SLOT_BRACER01) slotsString.append("Left Bracer");
+	if (slots & EQEmu::legacy::SLOT_BRACER02 == EQEmu::legacy::SLOT_BRACER02) slotsString.append("Right Bracer");
+	if (slots & EQEmu::legacy::SLOT_RANGE == EQEmu::legacy::SLOT_RANGE) slotsString.append("Range");
+	if (slots & EQEmu::legacy::SLOT_HANDS == EQEmu::legacy::SLOT_HANDS) slotsString.append("Hands");
+	if (slots & EQEmu::legacy::SLOT_PRIMARY == EQEmu::legacy::SLOT_PRIMARY) slotsString.append("Primary");
+	if (slots & EQEmu::legacy::SLOT_SECONDARY == EQEmu::legacy::SLOT_SECONDARY) slotsString.append("Secondary");
+	if (slots & EQEmu::legacy::SLOT_RING01 == EQEmu::legacy::SLOT_RING01) slotsString.append("Left Ring");
+	if (slots & EQEmu::legacy::SLOT_RING02 == EQEmu::legacy::SLOT_RING02) slotsString.append("Right Ring");
+	if (slots & EQEmu::legacy::SLOT_CHEST == EQEmu::legacy::SLOT_CHEST) slotsString.append("Chest");
+	if (slots & EQEmu::legacy::SLOT_LEGS == EQEmu::legacy::SLOT_LEGS) slotsString.append("Legs");
+	if (slots & EQEmu::legacy::SLOT_FEET == EQEmu::legacy::SLOT_FEET) slotsString.append("Feet");
+	if (slots & EQEmu::legacy::SLOT_WAIST == EQEmu::legacy::SLOT_WAIST) slotsString.append("Waist");
+	if (slots & EQEmu::legacy::SLOT_AMMO == EQEmu::legacy::SLOT_AMMO) slotsString.append("Ammo");
+	return slotsString;
+}
 
 //Obtain an item score for specified item.
 int EQEmu::ItemInstance::GetItemScore() const {
 	const auto item = this->GetItem();
 	if (!item) {
-		Log(Logs::General, Logs::Inventory, "(%s) Command GetItemScore processed an item with no data pointer");
+		Log(Logs::General, Logs::Inventory, "GetItemScore processed an item with no data pointer");
 		return 0;
 	}
 	int itemScore = 0;
-	//uint8 myClass = c->GetClass();
-	if (item->AAgi > 0) {
-		itemScore += item->AAgi * 30;
-		//if (IsFighterClass(myClass)) classItemScore += item->AAgi * 40;
-		//else if (IsCasterClass(myClass)) classItemScore += item->AAgi * 10;
-	}
-	if (item->AC > 0) itemScore += item->AC * 50;
-	if (item->Accuracy > 0) itemScore += item->Accuracy * 80;
-	if (item->ACha > 0) itemScore += item->ACha * 10;
-	if (item->ADex > 0) itemScore += item->ACha * 20;
-	if (item->AInt > 0) itemScore += item->AInt * 30;
-	if (item->ASta > 0) itemScore += item->ASta * 30;
-	if (item->AStr > 0) itemScore += item->AStr * 10;
-	if (item->Attack > 0) itemScore += item->Attack * 30;
-	if (item->Avoidance > 0) itemScore += item->Avoidance * 40;
-	if (item->AWis > 0) itemScore += item->AWis * 30;
-	if (item->BackstabDmg > 0) itemScore += item->BackstabDmg * 10;
-	if (item->BaneDmgAmt > 0) itemScore += item->BaneDmgAmt * 90;
-	if (item->BaneDmgRaceAmt > 0) itemScore += item->BaneDmgRaceAmt * 90;
-	if (item->CombatEffects > 0) itemScore += item->CombatEffects * 10;
-	if (item->Damage > 0) itemScore += item->Damage * 80;
-	if (item->DamageShield > 0) itemScore += item->DamageShield * 20;
-	if (item->DotShielding > 0) itemScore += item->DotShielding * 20;
-	if (item->DR > 0) itemScore += item->DR * 30;
-	if (item->DSMitigation > 0) itemScore += item->DSMitigation * 40;
-	if (item->ElemDmgAmt > 0) itemScore += item->ElemDmgAmt * 90;
-	if (item->Endur > 0) itemScore += item->Endur * 20;
-	if (item->EnduranceRegen > 0) itemScore += item->EnduranceRegen * 10;
-	if (item->ExtraDmgAmt > 0) itemScore += item->ExtraDmgAmt * 70;
-	if (item->Focus.Effect > 0) itemScore += 30;
-	if (item->FR > 0)
-		itemScore += item->FR * 40;
-	if (item->Haste > 0)
-		itemScore += item->Haste * 90;
-	if (item->HealAmt > 0)
-		itemScore += item->HealAmt * 90;
-	if (item->HeroicAgi > 0)
-		itemScore += item->HeroicAgi * 50;
-	if (item->HeroicCha > 0)
-		itemScore += item->HeroicCha * 20;
+	itemScore += item->GetItemScore();
 
-	if (item->HeroicCR > 0)
-		itemScore += item->HeroicCR * 20;
-
-	if (item->HeroicDex > 0)
-		itemScore += item->HeroicDex * 20;
-
-	if (item->HeroicDR > 0)
-		itemScore += item->HeroicDR * 20;
-
-	if (item->HeroicFR > 0)
-		itemScore += item->HeroicFR * 20;
-
-	if (item->HeroicInt > 0)
-		itemScore += item->HeroicInt * 20;
-	if (item->HeroicMR > 0)
-		itemScore += item->HeroicMR * 20;
-	if (item->HeroicPR > 0)
-		itemScore += item->HeroicPR * 20;
-	if (item->HeroicSta > 0)
-		itemScore += item->HeroicSta * 20;
-	if (item->HeroicStr > 0)
-		itemScore += item->HeroicStr * 20;
-	if (item->HeroicSVCorrup > 0)
-		itemScore += item->HeroicSVCorrup * 20;
-	if (item->HeroicWis > 0)
-		itemScore += item->HeroicWis * 20;
-	if (item->HP > 0)
-		itemScore += item->HP * 90;
-	if (item->Mana > 0)
-		itemScore += item->Mana * 90;
-	if (item->ManaRegen > 0)
-		itemScore += item->ManaRegen * 120;
-	if (item->MR > 0)
-		itemScore += item->MR * 40;
-	if (item->PR > 0)
-		itemScore += item->PR * 40;
-	if (item->Proc.Effect > 0)
-		itemScore += 30;
-	if (item->Purity > 0)
-		itemScore += item->Purity * 30;
-	if (item->Regen > 0)
-		itemScore += item->Regen * 30;
-	if (item->Shielding > 0)
-		itemScore += item->Shielding * 50;
-	if (item->SpellDmg > 0)
-		itemScore += item->SpellDmg * 50;
-	if (item->SpellShield > 0)
-		itemScore += item->SpellShield * 40;
-	if (item->StrikeThrough > 0)
-		itemScore += item->StrikeThrough * 80;
-	if (item->StunResist > 0) {
-		itemScore += item->StunResist * 40;
-	}
-	if (item->SVCorruption > 0) {
-		itemScore += item->SVCorruption * 40;
-	}
-	if (item->Worn.Effect > 0) {
-		itemScore += 40;
-	}
+	EQEmu::ItemInstance * inst = nullptr;
+	for (int i = inventory::socketBegin; i < inventory::SocketCount; i++)
+	{
+		inst = GetAugment(i);
+		if (!inst) continue;
+		itemScore += inst->GetItem()->GetItemScore();
+	}	
 	return itemScore;
 }
 
