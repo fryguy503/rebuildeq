@@ -9,13 +9,27 @@ NatsManager::NatsManager()
 
 NatsManager::~NatsManager()
 {
-	//safe_delete timers
+	// Destroy all our objects to avoid report of memory leak
+	natsStatistics_Destroy(stats);
+	natsConnection_Destroy(conn);
+	natsOptions_Destroy(opts);
+
+	// To silence reports of memory still in used with valgrind
+	nats_Close();
 }
 
 
+//This doesn't work. It seems to loop once or twice then stop.
 void NatsManager::Process()
 {
-	//timer checks
+	natsMsg *msg = NULL;
+	for (int count = 0; (s == NATS_OK) && count < 100 /*&& (count < testSubMax)*/; count++)
+	{
+		s = natsSubscription_NextMsg(&msg, testSub, 1);
+		if (s != NATS_OK) break;
+		Log(Logs::General, Logs::World_Server, "Got Message '%s'", natsMsg_GetData(msg));
+		natsMsg_Destroy(msg);
+	}
 }
 
 void NatsManager::Save()
@@ -25,10 +39,7 @@ void NatsManager::Save()
 
 void NatsManager::Load()
 {
-	natsStatistics  *stats = NULL;
-	natsOptions     *opts = NULL;
 	int64_t         last = 0;
-	natsStatus      s;
 	int64_t			start = 0;
 
 	int total = 2;
@@ -43,6 +54,17 @@ void NatsManager::Load()
 		Log(Logs::General, Logs::World_Server, "Nats status isn't OK, hmm.");
 		return;
 	}
+
+	//Subscribe to test
+	s = natsConnection_SubscribeSync(&testSub, conn, subj);
+
+	// For maximum performance, set no limit on the number of pending messages.
+	if (s == NATS_OK)
+		s = natsSubscription_SetPendingLimits(testSub, -1, -1);
+
+	//if (s == NATS_OK)
+	//	s = natsSubscription_AutoUnsubscribe(testSub, (int)testSubMax);
+
 
 	if (s == NATS_OK)
 		s = natsStatistics_Create(&stats);
@@ -69,14 +91,5 @@ void NatsManager::Load()
 		Log(Logs::General, Logs::World_Server, "NATS error: %d - %s", s, natsStatus_GetText(s));
 		nats_PrintLastErrorStack(stderr);
 	}
-
-	// Destroy all our objects to avoid report of memory leak
-	natsStatistics_Destroy(stats);
-	natsConnection_Destroy(conn);
-	natsOptions_Destroy(opts);
-
-	// To silence reports of memory still in used with valgrind
-	nats_Close();
-
 	return;
 }

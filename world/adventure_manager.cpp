@@ -2226,8 +2226,7 @@ void AdventureManager::Load()
 		}
 
 		safe_delete_array(data);
-	}
-	
+	}	
 }
 
 void AdventureManager::RefreshItemScore() {
