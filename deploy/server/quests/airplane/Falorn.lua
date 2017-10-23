@@ -14,7 +14,7 @@ function event_say(e)
 	elseif(e.message:findi("force")) then 		--warrior test of force
 		e.self:Say("Foolishness or bravery Gendal?  We shall see. Return to me a pearlescent globe, a silver mesh and a spiroc air totem  In return, you will receive both my deepest respect and the aerated pauldrons.");
 	elseif(e.message:findi("skill")) then 		--warrior test of skill
-		e.self:Say("The test of skill it is. Go upward and retrieve these three items: an ivory tessera, a tiny ruby, and an azure ring. Return these to me and the azure ruby ring shall be yours.");
+		e.self:Say("The test of skill it is. Go upward and retrieve these three items: an ivory tessera, a tiny ruby (or small ruby), and an azure ring. Return these to me and the azure ruby ring shall be yours.");
 	end
 end
 
@@ -31,6 +31,11 @@ function event_trade(e)
 		e.self:Say("You have proven yourself worthy.");
 		eq.depop();
 	elseif(item_lib.check_turn_in(e.trade, {item1 = 20928, item2 = 20795, item3 = 20971})) then		--warrior test of skill using ivory tessera, tiny ruby, azure ring
+		e.other:SummonItem(14551); 	--azure ruby ring
+		e.other:AddEXP(100000);
+		e.self:Say("You have proven yourself worthy.");
+		eq.depop();
+	elseif(item_lib.check_turn_in(e.trade, {item1 = 20928, item2 = 20970, item3 = 20971})) then		--warrior test of skill using ivory tessera, small ruby, azure ring
 		e.other:SummonItem(14551); 	--azure ruby ring
 		e.other:AddEXP(100000);
 		e.self:Say("You have proven yourself worthy.");
