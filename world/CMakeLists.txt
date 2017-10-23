@@ -14,6 +14,7 @@ SET(world_sources
 	login_server.cpp
 	login_server_list.cpp
 	net.cpp
+	nats_manager.cpp
 	queryserv.cpp
 	ucs.cpp
 	web_interface.cpp
@@ -29,7 +30,7 @@ SET(world_sources
 SET(world_headers
 	adventure.h
 	adventure_manager.h
-	adventure_template.h
+	adventure_template.h	
 	client.h
 	cliententry.h
 	clientlist.h
@@ -41,6 +42,7 @@ SET(world_headers
 	login_server.h
 	login_server_list.h
 	net.h
+	nats_manager.h
 	queryserv.h
 	sof_char_create_data.h
 	ucs.h
@@ -62,7 +64,6 @@ INSTALL(TARGETS world RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
 ADD_DEFINITIONS(-DWORLD)
 
 TARGET_LINK_LIBRARIES(world ${SERVER_LIBS})
-
 IF(EQEMU_BUILD_PERL)
 	TARGET_LINK_LIBRARIES(world ${PERL_LIBRARY})
 ENDIF(EQEMU_BUILD_PERL)

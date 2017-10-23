@@ -78,6 +78,7 @@ union semun {
 #include "wguild_mgr.h"
 #include "lfplist.h"
 #include "adventure_manager.h"
+#include "nats_manager.h"
 #include "ucs.h"
 #include "queryserv.h"
 #include "web_interface.h"
@@ -93,6 +94,7 @@ UCSConnection UCSLink;
 QueryServConnection QSLink;
 LauncherList launcher_list;
 AdventureManager adventure_manager;
+NatsManager nats_manager;
 EQEmu::Random emu_random;
 volatile bool RunLoops = true;
 uint32 numclients = 0;
@@ -368,6 +370,8 @@ int main(int argc, char** argv) {
 	adventure_manager.Load();
 	adventure_manager.LoadLeaderboardInfo();
 
+	Log(Logs::General, Logs::World_Server, "Loading NATS...");
+	nats_manager.Load();
 	Log(Logs::General, Logs::World_Server, "Purging expired instances");
 	database.PurgeExpiredInstances();
 	Timer PurgeInstanceTimer(450000);
@@ -541,6 +545,7 @@ int main(int argc, char** argv) {
 		launcher_list.Process();
 		LFPGroupList.Process();
 		adventure_manager.Process();
+		nats_manager.Process();
 
 		if (InterserverTimer.Check()) {
 			InterserverTimer.Start();
