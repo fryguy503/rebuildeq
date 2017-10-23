@@ -16,10 +16,15 @@ public:
 
 	void Process();
 	void Save();
-	void Load();	
+	void Load();
+	void Unload();
 protected:
-	//add properties here
-	natsConnection  *conn = NULL;
+	natsConnection *conn = NULL;
+	natsStatus      s;
+	natsStatistics *stats = NULL;
+	natsOptions *opts = NULL;
+	natsSubscription *testSub = NULL;
+	//int testSubMax = 100;
 };
 
 #endif
