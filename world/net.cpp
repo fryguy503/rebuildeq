@@ -38,6 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #include "../common/rulesys.h"
 #include "../common/platform.h"
 #include "../common/crash.h"
+#include "../common/proto/chatmessage.pb.h";
 #include "client.h"
 #include "worlddb.h"
 #ifdef _WINDOWS
@@ -562,6 +563,7 @@ int main(int argc, char** argv) {
 	Log(Logs::General, Logs::World_Server, "Signaling HTTP service to stop...");
 	LogSys.CloseFileLogs();
 
+	google::protobuf::ShutdownProtobufLibrary();
 	return 0;
 }
 
