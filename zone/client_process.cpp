@@ -2008,7 +2008,7 @@ void Client::CalcRestState() {
 	RestRegenMana = (GetMaxMana() * rest_regen_percent / 100);
 	
 	RestRegenEndurance = (GetMaxEndurance() * rest_regen_percent / 100);
-	Log(Logs::General, Logs::LogCategory::OOC, "OOC Regen: %f, HP: %i, MP: %i, EP: %i", rest_regen_percent, RestRegenHP, RestRegenMana, RestRegenEndurance);
+	Log(Logs::Detail, Logs::LogCategory::OOC, "OOC Regen: %f, HP: %i, MP: %i, EP: %i", rest_regen_percent, RestRegenHP, RestRegenMana, RestRegenEndurance);
 }
 
 void Client::DoTracking()

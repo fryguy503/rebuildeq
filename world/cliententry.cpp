@@ -99,7 +99,7 @@ ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer* iZS, ServerClientList
 	else
 		SetOnline(iOnline);
 
-	loadIdentity();
+	RefreshIdentity();
 }
 
 ClientListEntry::~ClientListEntry() {
@@ -256,19 +256,11 @@ void ClientListEntry::ClearVars(bool iAll) {
 	tell_queue.clear();
 }
 
-void ClientListEntry::loadIdentity() {
-	if (paccountid) {
-		//Get identity. Stupid database.
-		std::string query = StringFormat("SELECT `identity` FROM `account` WHERE `id` = %u", paccountid);
-		auto results = database.QueryDatabase(query);
-		if (results.Success()) {
-			auto row = results.begin();
-			if (row != results.end()) {
-				memset(identity, 0, sizeof(identity));
-				strcpy(identity, row[0]);
-			}
-		}
-	}
+void ClientListEntry::RefreshIdentity() {
+	if (!paccountid) return;
+	auto identityStr = database.GetIdentity(paccountid);
+	memset(identity, 0, sizeof(identityStr));
+	strcpy(identity, identityStr);
 }
 
 void ClientListEntry::Camp(ZoneServer* iZS) {

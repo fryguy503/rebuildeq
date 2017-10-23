@@ -90,7 +90,7 @@ public:
 
 private:
 	void	ClearVars(bool iAll = false);
-	void loadIdentity();
+	void	RefreshIdentity();
 
 	const uint32	id;
 	uint32	pIP;

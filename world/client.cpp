@@ -1579,6 +1579,7 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 		return false;
 	}
 	Log(Logs::Detail, Logs::World_Server,"Character creation successful: %s", pp.name);
+	if (database.IsIdentityEmpty(GetAccountID())) database.SetIdentity(GetAccountID(), name);
 	return true;
 }
 

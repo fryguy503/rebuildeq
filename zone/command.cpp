@@ -362,6 +362,7 @@ int command_init(void)
 		command_add("setcrystals", "[value] - Set your or your player target's available radiant or ebon crystals", 100, command_setcrystals) ||
 		command_add("setfaction", "[faction number] - Sets targeted NPC's faction in the database", 170, command_setfaction) ||
 		command_add("setgraveyard", "[zone name] - Creates a graveyard for the specified zone based on your target's LOC.",  200, command_setgraveyard) ||
+		command_add("setidentity", "[name] - Set a user's identity.", 200, command_setidentity) ||
 		command_add("setlanguage", "[language ID] [value] - Set your target's language skillnum to value", 50, command_setlanguage) ||
 		command_add("setlsinfo", "[email] [password] - Set login server email address and password (if supported by login server)", 50, command_setlsinfo) ||
 		command_add("setpass", "[accountname] [password] - Set local password for accountname", 150, command_setpass) ||
@@ -9421,6 +9422,31 @@ void command_setgraveyard(Client *c, const Seperator *sep)
 
 	return;
 }
+
+
+void command_setidentity(Client *c, const Seperator *sep)
+{
+	if (!c->GetTarget() || c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) {
+		c->Message(0, "Need to target a player to use this command.");
+		return;
+	}
+
+	if (!sep->arg[1][0]) {
+		c->Message(0, "Usage: #setidentity [name]");
+		return;
+	}
+
+	auto name = sep->arg[1];
+
+	if (!database.SetIdentity(c->AccountID(), name)) {
+		c->Message(0, "Setting identity failed.");
+		return;
+	}
+	
+	c->Message(0, "Successfully changed identity, the player will need to relog for this to take effect.");
+	return;
+}
+
 
 void command_deletegraveyard(Client *c, const Seperator *sep)
 {

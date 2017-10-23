@@ -373,6 +373,36 @@ bool SharedDatabase::SetSharedPlatinum(uint32 account_id, int32 amount_to_add) {
 	return true;
 }
 
+bool SharedDatabase::SetIdentity(uint32 account_id, char *identity) {
+	auto query = StringFormat("UPDATE account SET identity = '%s' WHERE id = %d", identity, account_id);
+	auto results = QueryDatabase(query);
+	if (!results.Success()) {
+		Log(Logs::General, Logs::Error, "Database::SetIdentity: %s",
+			results.ErrorMessage().c_str());
+		return false;
+	}
+	return true;
+}
+
+bool SharedDatabase::IsIdentityEmpty(uint32 account_id) {
+	std::string query = StringFormat("SELECT identity FROM account WHERE id = %d AND identity != ''", account_id);
+	auto results = QueryDatabase(query);
+	if (!results.Success()) {
+		Log(Logs::General, Logs::Error, "Database::IsIdentityEmpty: %s", results.ErrorMessage().c_str());
+		return true;
+	}
+	auto row = results.begin();
+	return (sizeof(row[0]) < 3);
+}
+
+char * SharedDatabase::GetIdentity(uint32 account_id) {
+	std::string query = StringFormat("SELECT identity FROM account WHERE id = %d", account_id);
+	auto results = QueryDatabase(query);
+	if (!results.Success()) return "";
+	auto row = results.begin();
+	return row[0];
+}
+
 bool SharedDatabase::SetStartingItems(PlayerProfile_Struct* pp, EQEmu::InventoryProfile* inv, uint32 si_race, uint32 si_class, uint32 si_deity, uint32 si_current_zone, char* si_name, int admin_level) {
 
 	const EQEmu::ItemData* myitem;
