@@ -2244,6 +2244,12 @@ void AdventureManager::RefreshItemScore() {
 	int x;
 	int classId = 0;
 	EQEmu::InventoryProfile inv;
+
+
+	//Create a table if it doesn't already exist for storing top charts.
+	std::string query = StringFormat("CREATE TABLE IF NOT EXISTS `itemscore` (`charid` int(11) NOT NULL, `itemscore` int(11) NOT NULL, `update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, `classid` int(11) NOT NULL, UNIQUE KEY `classid` (`classid`)) ENGINE = InnoDB DEFAULT CHARSET = utf8");
+	auto results = database.QueryDatabase(query);
+
 	//iterate characters
 	for (CharData_Struct* charData : chars) {
 		if (!database.GetInventory(charData->ID, &inv)) {
@@ -2255,7 +2261,7 @@ void AdventureManager::RefreshItemScore() {
 		for (x = EQEmu::legacy::EQUIPMENT_BEGIN; x < EQEmu::legacy::EQUIPMENT_END; x++) {
 			item = inv.GetItem(x);
 			if (!item) continue;
-				
+
 			itemScore += item->GetItemScore();
 		}
 		
@@ -2265,8 +2271,9 @@ void AdventureManager::RefreshItemScore() {
 		
 		if (itemScore > itemScores[charData->classID]) {
 			itemScores[charData->classID] = itemScore;
+			std::string query = StringFormat("REPLACE INTO itemscore (charid, itemscore, classid) VALUES (%d, %d, %d)", charData->ID, itemScore, charData->classID);
+			auto results = database.QueryDatabase(query);
 		}
-
 	}
 	
 	for (std::map<int, int>::iterator it = itemScores.begin(); it != itemScores.end(); it++) {
