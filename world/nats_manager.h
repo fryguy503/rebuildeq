@@ -17,7 +17,6 @@ public:
 	void Process();
 	void Save();
 	void Load();
-	void Unload();
 protected:
 	natsConnection *conn = NULL;
 	natsStatus      s;
