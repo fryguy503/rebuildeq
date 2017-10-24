@@ -44,7 +44,7 @@ public:
 
 	bool LoadCharacterCreateAllocations();
 	bool LoadCharacterCreateCombos();
-	bool WorldDatabase::GetAllCharacters(std::vector<CharData_Struct*> &chars);
+	bool GetAllCharacters(std::vector<CharData_Struct*> &chars);
 
 private:
 	void SetTitaniumDefaultStartZone(PlayerProfile_Struct* in_pp, CharCreate_Struct* in_cc);

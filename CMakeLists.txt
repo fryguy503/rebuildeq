@@ -153,7 +153,7 @@ IF(MSVC)
 ELSE(MSVC)
 
 	SET(NATS_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats_x64/linux-lib/libnats.so")
-	SET(PROTOBUF_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x64/lib/libprotobufd.lib")
+	SET(PROTOBUF_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x64/lib/libprotobuf.so")
 
 	#Normally set by perl but we don't use the perl flags anymore so we set it.
 	ADD_DEFINITIONS(-DHAS_UNION_SEMUN)
