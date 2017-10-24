@@ -2,6 +2,8 @@
 
 ::THIS SHOULD ONLY BE RAN ONCE, unless there's a critical change or something. It builds up the images and preps the environment.
 ::This preps a docker environment for building binaries.
+echo Removing old build data
+del CMakeCache.txt
 
 echo Shutting down docker-compose... (in case it was running)
 docker-compose down
