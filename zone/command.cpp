@@ -4463,7 +4463,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 		return;
 	}
 	// Check: Prevent #teleport if not full health.
-	if (c->GetHPRatio() < 100) {
+	if (c->GetHPRatio() < 99) {
 		c->Message(0, "This command does not work until full health.");
 		return;
 	}
@@ -4580,7 +4580,7 @@ void command_buff(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
-	if (c->GetHPRatio() < 100) {
+	if (c->GetHPRatio() < 99) {
 		c->Message(0, "This command does not work until full health.");
 		return;
 	}
@@ -4739,7 +4739,7 @@ void command_return(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
-	if (c->GetHPRatio() < 100) {
+	if (c->GetHPRatio() < 99) {
 		c->Message(0, "This command does not work until full health.");
 		return;
 	}
