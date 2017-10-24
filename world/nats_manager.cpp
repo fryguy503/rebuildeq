@@ -1,7 +1,7 @@
 #include "nats_manager.h"
 #include "nats.h"
-#include "../common/eqemu_logsys.h";
-#include "../common/proto/chatmessage.pb.h";
+#include "../common/eqemu_logsys.h"
+#include "../common/proto/chatmessage.pb.h"
 
 NatsManager::NatsManager()
 {
@@ -41,14 +41,13 @@ void NatsManager::Save()
 void NatsManager::Load()
 {	
 
-	/*
-	// This is a simple protobuf example I have cooked in.
+	
+	/*// This is a simple protobuf example I have cooked in.
 	ChatMessage chatMessage;
 	chatMessage.set_sender("shin");
 	chatMessage.set_message("hello");
 	Log(Logs::General, Logs::World_Server, "Protobuf test: '%s'", chatMessage.SerializeAsString().c_str());
 	*/
-
 	int64_t         last = 0;
 	int64_t			start = 0;
 

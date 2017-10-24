@@ -6,6 +6,8 @@
 if not exist "deploy\web\application\cache" echo Making web cache directory... && mkdir deploy\web\application\cache
 if not exist "deploy\web\application\logs" echo Making web log directory... && mkdir deploy\web\application\logs
 
+echo Exiting any eqemu docker instances
+docker-compose down
 
 echo Building binaries...
 docker run -v %cd%:/src -v %cd%\deploy\server:/eqemu buildeq
