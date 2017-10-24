@@ -70,9 +70,10 @@ deploy/client/patch/*
 *.svn
 .svn/
 
-common/
+#common/
 *.pdb
 *.ilk
+*.orig
 
 # Libraries
 *.lib
