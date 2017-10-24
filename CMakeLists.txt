@@ -53,10 +53,8 @@ IF(MSVC OR MINGW)
 ENDIF(MSVC OR MINGW)
 
 SET(NATS_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats_x64/include")
-SET(NATS_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats_x64/lib/nats.lib")
 
 SET(PROTOBUF_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x64/include")
-SET(PROTOBUF_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x64/lib/libprotobufd.lib")
 
 # on rebuild, i'm shifting the output directory to the deploy dir
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server")
@@ -69,6 +67,9 @@ IF(MSVC)
 	    set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
 	    set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
 	endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
+
+	SET(NATS_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats_x64/lib/nats.lib")
+	SET(PROTOBUF_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x64/lib/libprotobufd.lib")
 
 	#Set our default locations for zlib/mysql based on x86/x64
 	IF(CMAKE_CL_64)
@@ -150,6 +151,10 @@ IF(MSVC)
 
 	ADD_DEFINITIONS(-DNOMINMAX)
 ELSE(MSVC)
+
+	SET(NATS_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats_x64/linux-lib/libnats.so")
+	SET(PROTOBUF_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x64/lib/libprotobufd.lib")
+
 	#Normally set by perl but we don't use the perl flags anymore so we set it.
 	ADD_DEFINITIONS(-DHAS_UNION_SEMUN)
 ENDIF(MSVC)
