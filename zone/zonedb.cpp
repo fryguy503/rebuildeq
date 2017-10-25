@@ -892,8 +892,6 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		"`session_timeout`,			"
 		"`build_data`,				"		
 		"`rested_exp`,				"
-		"`encounter_timeout`,       "
-		"`next_encounter_time`,       "
 		"`e_last_invsnapshot`		"
 		"FROM                       "
 		"character_data             "
@@ -995,13 +993,24 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 		m_epp->session_timeout = atoi(row[r]); r++;								 // "`session_timeout`,			"
 		strcpy(m_epp->build, row[r]);  r++;										 // "`build`,				    "
 		m_epp->rested_exp = atof(row[r]); r++; 									 // "`rested_exp`,			    "
-		m_epp->encounter_timeout = atoi(row[r]); r++;							 // "`encounter_timeout`,		"
-		m_epp->next_encounter_time = atoi(row[r]); r++;							 // "`next_encounter_time`,		"
 		m_epp->last_invsnapshot_time = atoi(row[r]); r++;						 // "`e_last_invsnapshot`		"
 		m_epp->next_invsnapshot_time = m_epp->last_invsnapshot_time + (RuleI(Character, InvSnapshotMinIntervalM) * 60);
 	}
+
+	
 	return true;
 }
+
+bool ZoneDatabase::LoadAccountCustom(uint32 account_id, ExtendedProfile_Struct* m_epp) {
+	std::string query = StringFormat("SELECT next_encounter_time, encounter_timeout FROM account_custom WHERE account_id = %i LIMIT 1", account_id);
+	auto results = database.QueryDatabase(query);
+	
+	auto row = results.begin();
+	m_epp->next_encounter_time = atoi(row[0]);
+	m_epp->encounter_timeout = atoi(row[1]);
+	return true;
+}
+
 
 bool ZoneDatabase::LoadCharacterFactionValues(uint32 character_id, faction_map & val_list) {
 	std::string query = StringFormat("SELECT `faction_id`, `current_value` FROM `faction_values` WHERE `char_id` = %i", character_id);
@@ -1449,16 +1458,6 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 	//DoEscapeString(buildbuffer, m_epp->build, strlen(m_epp->build));	
 	std::string buildbuffer = m_epp->build;
 	buildbuffer.erase(53);
-	/*uint32 sessionTimeout = m_epp->session_timeout;
-	if (sessionTimeout == 0) {
-		sessionTimeout = 1454274245;
-	}
-	if (m_epp->encounter_timeout == 0) {
-		m_epp->encounter_timeout = time(nullptr);
-	}
-	if (m_epp->next_encounter_time == 0) {
-		m_epp->next_encounter_time = time(nullptr);
-	}*/
 	
 	
 	clock_t t = std::clock(); /* Function timer start */
@@ -1561,8 +1560,6 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" session_timeout,			 "
 		" build_data,				 "
 		" rested_exp,				 "
-		" encounter_timeout,		 "
-		" next_encounter_time,		 "	
 		" e_last_invsnapshot		 "
 		")							 "
 		"VALUES ("
@@ -1663,8 +1660,6 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"%u,"  // session_timeout
 		"'%s',"  // build
 		"%f,"  // rested_exp
-		"%u,"  //encounter_timout
-		"%u," //next_encounter_time
 		"%u"   // e_last_invsnapshot
 		")",
 		character_id,					  // " id,                        "
@@ -1764,13 +1759,17 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		m_epp->session_timeout,
 		EscapeString(buildbuffer).c_str(),
 		m_epp->rested_exp,
-		m_epp->encounter_timeout,
-		m_epp->next_encounter_time,
 		m_epp->last_invsnapshot_time
 	);
 	//Log(Logs::General, Logs::Zone_Server);
 
 	auto results = database.QueryDatabase(query);
+
+
+	query = StringFormat("UPDATE account_custom SET next_encounter_time = %i, encounter_timeout = %i WHERE account_id = %i", m_epp->next_encounter_time, m_epp->encounter_timeout, account_id);
+	results = database.QueryDatabase(query);
+
+
 	Log(Logs::General, Logs::None, "ZoneDatabase::SaveCharacterData %i, done... Took %f seconds", character_id, ((float)(std::clock() - t)) / CLOCKS_PER_SEC);
 	return true;
 }

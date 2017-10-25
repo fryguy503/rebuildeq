@@ -273,6 +273,7 @@ public:
 	bool	LoadCharacterDisciplines(uint32 character_id, PlayerProfile_Struct* pp);
 	bool	LoadCharacterSkills(uint32 character_id, PlayerProfile_Struct* pp);
 	bool	LoadCharacterData(uint32 character_id, PlayerProfile_Struct* pp, ExtendedProfile_Struct* m_epp);
+	bool	LoadAccountCustom(uint32 account_id, ExtendedProfile_Struct* m_epp);
 	bool	LoadCharacterCurrency(uint32 character_id, PlayerProfile_Struct* pp);
 	bool	LoadCharacterBindPoint(uint32 character_id, PlayerProfile_Struct* pp);
 	bool	LoadCharacterMaterialColor(uint32 character_id, PlayerProfile_Struct* pp);

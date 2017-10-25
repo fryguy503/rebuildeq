@@ -1405,6 +1405,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 	database.LoadCharacterLanguages(cid, &m_pp); /* Load Character Languages */
 	database.LoadCharacterLeadershipAA(cid, &m_pp); /* Load Character Leadership AA's */
 	database.LoadCharacterTribute(cid, &m_pp); /* Load CharacterTribute */
+	database.LoadAccountCustom(account_id, &m_epp); /* Load AccountCustom */
 
 	/* Load AdventureStats */
 	AdventureStats_Struct as;

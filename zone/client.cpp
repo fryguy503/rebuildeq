@@ -10056,8 +10056,8 @@ bool Client::IsEncounterReady() {
 	if (IsEncounterInZone()) {
 		return false;
 	}
-
-	int pool = 360; 
+	
+	int pool = 16; 
 
 	//Odds before bonus: 0.2% every 6 seconds
 
@@ -10066,10 +10066,9 @@ bool Client::IsEncounterReady() {
 	bonus = (bonus / 86400); //How many days it's been since an encounter
 	if (bonus > 0) {
 		pool -= bonus * 77.5; //Each day shaves off 77.5, with minimum 50
-		if (pool < 50) {
-			pool = 50;
-		}
+		if (pool < 8) pool = 8;		
 	}
+	
 	//Best odds: 2% every 6 seconds
 	int chance = zone->random.Int(1, pool);
 	//Message(13, "Chance: 1 out of %i => %i", pool, chance);
@@ -10428,15 +10427,15 @@ int Client::GiveBoxReward(int minimumRarity) {
 	//Pool size for randomizer
 	int pool = 0;
 	if (minimumRarity <= 0) {
-		pool += 550;
+		pool += 700;
 		rarityTable[pool] = 0;
 	}
 	if (minimumRarity <= 1) {
-		pool += 150;
+		pool += 250;
 		rarityTable[pool] = 1;
 	}
 	if (minimumRarity <= 2) {
-		pool += 40;
+		pool += 50;
 		rarityTable[pool] = 2;
 	}
 	if (minimumRarity <= 3) {
