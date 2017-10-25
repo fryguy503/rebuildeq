@@ -434,8 +434,8 @@ class Build {
 			$newSkill->desc = 'Grants the Fading Memories AA, allowing you to escape all aggressions towards you, the mana cost is reduced by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-fadingmemories.png";	
 			$skills[52] = $newSkill;
-
 			break;
+
 			//==================CLERIC======================
 			case "cleric":
 			$newSkill = new stdClass();
@@ -486,11 +486,17 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-clr-divineavatar.png";	
 			$skills[16] = $newSkill;
 
-			/*$newSkill = new stdClass();
+			$newSkill = new stdClass();
 			$newSkill->title = "Instill Life";
-			$newSkill->desc = 'When an ally is healed, there is a <em data-base="1">1</em>% to also apply a heal over time effect<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When an ally is healed, there is a <em data-base="2">2</em>% to heal for a bonus of <em data-base="1">1</em>% the target\'s max health<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
-			$skills[18] = $newSkill;*/
+			$skills[18] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Divine Bash";
+			$newSkill->desc = 'When the cleric uses bash, there is a <em data-base="1">1</em>% chance to proc a heal for <em data-base="4">4</em>% of the cleric\'s max hp per rank to a group member with lowest health.<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[20] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Strike";
@@ -1178,7 +1184,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Healing";
-			$newSkill->desc = 'Heals recover an additional <em data-base="15">15</em>% health<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Heals recover an additional <em data-base="10">10</em>% health<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shm-spiritualhealing.png";	
 			$skills[8] = $newSkill;
 

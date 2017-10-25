@@ -1313,6 +1313,8 @@ public:
 	bool DoEvadeOnce();
 	int GetCharacterItemScore();
 
+	void DoDivineStunEffect(Mob * target);
+
 	void CheckRegionTypeChanges();
 
 	int32 CalcATK();

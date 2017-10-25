@@ -396,22 +396,30 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 			}
 		}
 
-		if (IsClient() && CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING) > 0) {
-			uint32 rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
-			int healAmount = (int)(value * 0.15 * rank);
+
+		uint32 rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_INSTILLLIFE);
+		if (IsClient() && rank > 0 && zone->random.Roll(int(2 * rank))) {
+			int healAmount = (int)(target->GetMaxHP() * 0.01 * rank);
+			CastToClient()->Message(MT_Spells, "Instill Life %u gave a bonus %i healing.", rank, healAmount);
+			value += healAmount;
+		}
+
+		rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
+		if (IsClient() && rank > 0) {			
+			int healAmount = (int)(value * 0.10 * rank);
 			CastToClient()->Message(MT_Spells, "Spiritual Healing %u gave a bonus %i healing.", rank, healAmount);
 			value += healAmount;
 		}
 
-		if (IsClient() && CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS) > 0) {
-			uint32 rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
+		if (IsClient() && rank > 0) {			
 			int healAmount = (int)(value * 0.05 * rank);
 			CastToClient()->Message(MT_Spells, "Convergence of Spirits %u gave a bonus %i healing.", rank, healAmount);
 			value += healAmount;
 		}
 
-		if (IsClient() && CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON) > 0) {
-			uint32 rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
+		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
+		if (IsClient() && rank > 0) {			
 			int healAmount = (int)(value * 0.05 * rank);
 			CastToClient()->Message(MT_Spells, "Nature's Boon %u gave a bonus %i healing.", rank, healAmount);
 			value += healAmount;

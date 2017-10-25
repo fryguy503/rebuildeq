@@ -11225,3 +11225,63 @@ int Client::GetCharacterItemScore() {
 	}
 	return itemScore;
 }
+
+//Attempt to do the divine stun effect
+void Client::DoDivineStunEffect(Mob* target) {
+	uint32 rank = GetBuildRank(CLERIC, RB_CLR_DIVINEBASH);
+	if (rank < 1) return;
+	if (!zone->random.Roll(int(rank * 1))) return;	
+
+	Mob* healTarget = nullptr;
+	//caster->Message(MT_Spells, "Rodcet's Gift %u spreads your healing power.", rank);
+	if (IsGrouped()) {						
+		auto group = GetGroup(); //iterate group
+		for (int i = 0; i < 6; ++i) {
+			if (group->members[i] &&  //target grouped
+				group->members[i]->IsClient() && //Is a client												
+				this->GetID() != group->members[i]->GetID() && //not me
+				this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
+				!group->members[i]->CastToClient()->IsDead() //and not dead
+				) {
+
+				float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
+				float range2 = 50 * 50; //50m radius
+				if (dist2 > range2) continue;
+				if (healTarget == nullptr) healTarget = group->members[i];
+				if (healTarget->GetHPRatio() > group->members[i]->GetHPRatio()) healTarget = group->members[i];				
+			}
+		}
+	}
+	else if (this->IsRaidGrouped()) { //Raid healing
+		auto raid = this->GetRaid();
+
+		uint32 gid = raid->GetGroup(this);
+		if (gid < 12) {
+			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+				if (raid->members[i].member &&  //is raid member
+					raid->members[i].GroupNumber == gid && //in group
+					raid->members[i].member->IsClient() && //Is a client
+					raid->members[i].member != this && //not me
+					raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
+					!raid->members[i].member->IsDead() //and not dead
+					) {
+
+					float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
+					float range2 = 50 * 50;
+					if (dist2 > range2) return;
+
+					if (healTarget == nullptr) healTarget = raid->members[i].member;
+					if (healTarget->GetHPRatio() > raid->members[i].member->GetHPRatio()) healTarget = raid->members[i].member;
+				}
+			}
+		}
+	}
+
+	if (healTarget == nullptr) return;
+
+	int healAmount = GetMaxHP() * 0.04 * rank;
+	Message(MT_Spells, "Divine Bash healed %s for %i.", healTarget->GetCleanName(), healAmount);
+	healTarget->Message(MT_Spells, "%s has healed you for %i with their Divine Bash.", healTarget->GetCleanName(), healAmount);
+	GetActSpellHealing(200, healAmount, this); //emulate minor healing for actspellhealing
+	healTarget->HealDamage(healAmount, this);
+}
