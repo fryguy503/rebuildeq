@@ -399,7 +399,7 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 
 		uint32 rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_INSTILLLIFE);
 		if (IsClient() && rank > 0 && zone->random.Roll(int(2 * rank))) {
-			int healAmount = (int)(target->GetMaxHP() * 0.01 * rank);
+			int healAmount = (int)(target->GetMaxHP() * 0.02 * rank);
 			CastToClient()->Message(MT_Spells, "Instill Life %u gave a bonus %i healing.", rank, healAmount);
 			value += healAmount;
 		}

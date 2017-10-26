@@ -9425,6 +9425,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == CLERIC && i == RB_CLR_INTENSITYOFTHERESOLUTE && GetAA(aaIntensityoftheResolute) < 1) {
+					TrainAARank(aaIntensityoftheResolute);
+					Message(15, "You have unlocked the AA \"Intensity of the Resolute\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+				
 				if (GetClass() == DRUID && i == RB_DRU_ENTRAP  && GetAA(aaEntrap) < 1) {
 					TrainAARank(aaEntrap);
 					Message(15, "You have unlocked the AA \"Entrap\"! Find the hotkey in your Alternate Advancement Window.");
@@ -10991,7 +10996,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_CLR_DIVINEAVATAR) return "Divine Avatar";
 		else if (id == RB_CLR_INSTILLLIFE) return "Instill Life";
 		else if (id == RB_CLR_DIVINEBASH) return "Divine Bash";
-
+		else if (id == RB_CLR_INTENSITYOFTHERESOLUTE) return "Intensity of the Resolute";		
 		else if (id == RB_CLR_CELESTIALREGENERATION) return "Celestial Regeneration";
 		else if (id == RB_CLR_DIVINEARBITRATION) return "Divine Arbitration";
 		else if (id == RB_CLR_DIVINERESURRECTION) return "Divine Resurrection";

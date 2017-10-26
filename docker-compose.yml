@@ -24,6 +24,8 @@ services:
       - "./deploy/server:/eqemu"
     links:
       - mariadb
+      - nats
+      - web
     depends_on:
       - mariadb
     ports:

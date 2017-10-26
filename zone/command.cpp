@@ -4245,7 +4245,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 				auto row = results.begin();
 				unclaimed_rewards = atoi(row[0]);
 				uint32 unclaimed_rewards_total = atoi(row[1]);
-				c->Message(0, "[GM] %s [%s] (%u) has %u unclaimed rewards and %u total rewards ever, and next encounter is: %u", c->GetTarget()->CastToClient()->GetCleanName(), c->GetTarget()->CastToClient()->Identity(), c->GetTarget()->CastToClient()->AccountID(), unclaimed_rewards, unclaimed_rewards_total, c->GetEPP().next_encounter_time);
+				c->Message(0, "[GM] %s [%s] (%u) has %u unclaimed rewards and %u total rewards ever, and next encounter is in %u seconds", c->GetTarget()->CastToClient()->GetCleanName(), c->GetTarget()->CastToClient()->Identity(), c->GetTarget()->CastToClient()->AccountID(), unclaimed_rewards, unclaimed_rewards_total, (time(nullptr) > c->GetEPP().next_encounter_time) ? 0 : c->GetEPP().next_encounter_time - time(nullptr));
 			} else {
 				c->Message(0, "Target failed to get a record result");
 			}

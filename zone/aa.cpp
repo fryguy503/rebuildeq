@@ -891,6 +891,10 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 		rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 		if(rb_rank)
 			aai->spell_refresh = 1800 - (rb_rank-1) * 300;
+	}
+	else if (rank->id == aaIntensityoftheResolute) {
+		if (GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE))
+			aai->spell_refresh = 16;
 	} else if (rank->id == aaAncestralAid) {
 		if(GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID))
 			aai->spell_refresh = 16;
@@ -1264,6 +1268,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
 		rank_id == aaDivineRetribution && GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION) < 1 ||
 		rank_id == aaTurnUndead2 && GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) < 1 ||
+		rank_id == aaIntensityoftheResolute && GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE) < 1 ||		
 		rank_id == aaExquisiteBenediction && GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION) < 1 ||
 		( //Lesson of the Devoted is used by multiple classes different builds
 			rank_id == aaLessonoftheDevoted && 				
@@ -1409,7 +1414,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			}
 		}		
 	} else if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesBoon || rank_id == aaAncestralAid) {
-		if(GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) || GetBuildRank(DRUID, RB_DRU_NATURESBOON) || GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID)) {
+		if(GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) || GetBuildRank(DRUID, RB_DRU_NATURESBOON) || GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) || GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE)) {
 			cooldown = 16;
 			if (GetLevel() < 10)  manacost = 20;
 			else if (GetLevel() < 31) manacost = GetLevel() * 2.6f;
@@ -1505,7 +1510,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		}
 	} else if (rank_id == aaLessonoftheDevoted) {
 		if (GetBuildRank(BARD, RB_BRD_KINSONG)) spellid = 6239;		
-		else if (GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE)) spellid = 6237;
+		else if (GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE)) spellid = 6233;
 		else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) spellid = 6233;
 		else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION)) spellid = 6276;
 		else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION)) spellid = 6234;
