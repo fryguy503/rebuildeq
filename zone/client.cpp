@@ -9645,7 +9645,7 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Divine Avatar\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == CLERIC && i == RB_CLR_CELESTIALBREEZE && GetAA(aaCelestialRegeneration) < 1) {
+				if (GetClass() == CLERIC && i == RB_CLR_CELESTIALREGENERATION && GetAA(aaCelestialRegeneration) < 1) {
 					TrainAARank(aaCelestialRegeneration);
 					Message(15, "You have unlocked the AA \"Celestial Regeneration\"! Find the hotkey in your Alternate Advancement Window.");
 				}
@@ -9655,10 +9655,10 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Divine Arbitration\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == CLERIC && i == RB_CLR_DIVINERESURRECTION && GetAA(aaDivineResurrection) < 1) {
+				/*if (GetClass() == CLERIC && i == RB_CLR_DIVINERESURRECTION && GetAA(aaDivineResurrection) < 1) {
 					TrainAARank(aaDivineResurrection);
 					Message(15, "You have unlocked the AA \"Divine Resurrection\"! Find the hotkey in your Alternate Advancement Window.");
-				}
+				}*/
 
 				if (GetClass() == CLERIC && i == RB_CLR_DIVINERETRIBUTION && GetAA(aaDivineRetribution) < 1) {
 					TrainAARank(aaDivineRetribution);
@@ -11140,12 +11140,10 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_CLR_DIVINEAVATAR) return "Divine Avatar";
 		else if (id == RB_CLR_INSTILLLIFE) return "Instill Life";
 		else if (id == RB_CLR_DIVINEBASH) return "Divine Bash";
-		else if (id == RB_CLR_INTENSIFIEDRESOLUTION) return "Intensified Resoltion";
-		else if (id == RB_CLR_CELESTIALBREEZE) return "Celestial Breeze";
+
+		else if (id == RB_CLR_CELESTIALREGENERATION) return "Celestial Regeneration";
 		else if (id == RB_CLR_DIVINEARBITRATION) return "Divine Arbitration";
-		else if (id == RB_CLR_DIVINERESURRECTION) return "Divine Resurrection";
-		else if (id == RB_CLR_PROMISE) return "Promise";
-		else if (id == RB_CLR_HARMONICBALANCE) return "Harmonic Balance";
+
 		else if (id == RB_CLR_STRIKE) return "Strike";
 		else if (id == RB_CLR_WARDOFREBUKE) return "Ward of Rebuke";
 		else if (id == RB_CLR_FISTOFTHEGODS) return "Fist of the Gods";

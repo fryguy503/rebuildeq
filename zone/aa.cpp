@@ -1253,9 +1253,9 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaCompanionofNecessity && GetBuildRank(MAGICIAN, RB_MAG_COMPANIONOFNECESSITY) < 1 ||
 		rank_id == aaServantofRo && GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) < 1 ||
 		rank_id == aaDivineAvatar && GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) < 1 ||
-		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALBREEZE) < 1 ||
-		rank_id == aaDivineArbitration && GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) < 1 ||
-		rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
+		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION) < 1 ||
+		//rank_id == aaDivineArbitration && GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) < 1 ||
+		//rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
 		rank_id == aaDivineRetribution && GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION) < 1 ||
 		rank_id == aaTurnUndead2 && GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) < 1 ||
 		rank_id == aaExquisiteBenediction && GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION) < 1 ||
@@ -1339,10 +1339,15 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			else if(rb_rank == 4) cooldown = 10800; // 3 hours
 			else if(rb_rank == 5) cooldown = 3600; // 1 hours
 		}
-	} else if(rank_id == aaCalloftheHero) {
+	}
+	else if (rank_id == aaCalloftheHero) {
 		rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO);
-		if(rb_rank)
+		if (rb_rank)
 			cooldown = 2 * ((5 - rb_rank) * 5 + 10);
+	}
+	else if (rank_id == aaDivineArbitration) {
+		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION);
+		if (rb_rank > 0) cooldown = cooldown - (rb_rank * 30);
 	} else if (rank_id == aaAppraisal) {
 		rb_rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
 		if(rb_rank) {

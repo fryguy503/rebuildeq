@@ -4510,6 +4510,16 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 			uint16 rank;
 
 			if (caster && caster->IsClient()) {
+				rank = caster->CastToClient()->GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION);
+				if (rank > 0 && buff.spellid != 2740) {
+					effect_value = 36 * rank;
+					int32 mana_amount = 2 * rank;
+					if (mana_amount < 1) mana_amount = 1;
+					entity_list.LogManaEvent(caster, caster, mana_amount);
+					caster->SetMana(caster->GetMana() + mana_amount);
+					caster->Message(MT_FocusEffect, "Celestial Regeneration %u gifted %i mana.", rank, mana_amount);
+				}
+
 
 				rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
 				if (rank > 0 && buff.spellid != 6241) {

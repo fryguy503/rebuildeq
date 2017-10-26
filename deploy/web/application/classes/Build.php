@@ -495,8 +495,26 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Bash";
 			$newSkill->desc = 'When the cleric uses bash, there is a <em data-base="1">1</em>% chance to proc a heal for <em data-base="4">4</em>% of the cleric\'s max hp per rank to a group member with lowest health.<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-divinebash.png";	
 			$skills[20] = $newSkill;
+
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Celestial Regeneration";
+			$newSkill->desc = 'Grants the Celestial Regeneration AA, restoring <em data-base="36">36</em> hitpoints and <em data-base="2">2</em> mana for 8 ticks<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-celestialregeneration.png";	
+			$skills[24] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Divine Arbitration";
+			$newSkill->desc = 'Grants the Divine Arbitration AA, balancing the damage each member of your group has taken, with a cooldown reduction of <em data-base="30">30</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-divinearbitration.png";	
+			$skills[26] = $newSkill;
+
+
+
+
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Strike";
