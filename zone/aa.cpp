@@ -920,10 +920,16 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 		if(rb_rank) {
 			aai->spell_refresh = 2 * ((5 - rb_rank) * 5 + 10);
 		}
-	} else if (rank->id == aaBoastfulBellow) {
+	}
+	else if (rank->id == aaBoastfulBellow) {
 		rb_rank = GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW);
-		if(rb_rank) {
+		if (rb_rank) {
 			aai->spell_refresh = rank->recast_time - (rb_rank * 2);
+		}
+	} else if (rank->id == aaLessonoftheDevoted) {
+		rb_rank = GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE);
+		if (rb_rank) {
+			aai->spell_refresh = rank->recast_time - (rb_rank * 30);
 		}
 	}else {
 		aai->spell_refresh = rank->recast_time;
@@ -1254,20 +1260,21 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaServantofRo && GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) < 1 ||
 		rank_id == aaDivineAvatar && GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) < 1 ||
 		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION) < 1 ||
-		//rank_id == aaDivineArbitration && GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) < 1 ||
-		//rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
+		rank_id == aaDivineArbitration && GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) < 1 ||
+		rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
 		rank_id == aaDivineRetribution && GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION) < 1 ||
 		rank_id == aaTurnUndead2 && GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) < 1 ||
 		rank_id == aaExquisiteBenediction && GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION) < 1 ||
 		( //Lesson of the Devoted is used by multiple classes different builds
-			rank_id == aaLessonoftheDevoted && 
-				GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
-				GetBuildRank(BARD, RB_BRD_KINSONG) < 1 &&
-				GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) < 1 &&
-				GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) < 1 &&
-				GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1 &&
-				GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) < 1 &&
-				GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) < 1
+			rank_id == aaLessonoftheDevoted && 				
+			GetBuildRank(BARD, RB_BRD_KINSONG) < 1 &&
+			GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE) < 1 &&			
+			GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) < 1 &&
+			GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) < 1 &&
+			GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) < 1 &&
+			GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1 &&
+			GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
+			GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) < 1 
 		) //end lessons
 		) {
 		Message(13, "You cannot use this ability until you unlock it via %s.", CreateSayLink("#builds", "#builds").c_str());
@@ -1348,6 +1355,12 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	else if (rank_id == aaDivineArbitration) {
 		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION);
 		if (rb_rank > 0) cooldown = cooldown - (rb_rank * 30);
+	} else if (rank_id == aaDivineResurrection) {
+		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION);
+		if (rb_rank > 0) {
+			cooldown = cooldown - (rb_rank * 43200); //12 hours per rank
+			Log(Logs::General, Logs::Build, "Divine Resurrection %u reduced cooldown by %i", rb_rank, (rb_rank * 43200));
+		}
 	} else if (rank_id == aaAppraisal) {
 		rb_rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
 		if(rb_rank) {
@@ -1491,21 +1504,14 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			}		
 		}
 	} else if (rank_id == aaLessonoftheDevoted) {
-		if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE)) {
-			spellid = 6236;
-		} else if (GetBuildRank(BARD, RB_BRD_KINSONG)) {
-			spellid = 6239;
-		} else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION)) {
-			spellid = 6234;
-		} else if (GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON)) {
-			spellid = 6241;
-		} else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT)) {
-			spellid = 6240;
-		} else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) {
-			spellid = 6237;
-		} else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION)) {
-			spellid = 6276;
-		}
+		if (GetBuildRank(BARD, RB_BRD_KINSONG)) spellid = 6239;		
+		else if (GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE)) spellid = 6237;
+		else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) spellid = 6233;
+		else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION)) spellid = 6276;
+		else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION)) spellid = 6234;
+		else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT)) spellid = 6240;
+		else if (GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON)) spellid = 6241;
+		else if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE)) spellid = 6236;
 	} else if (rank_id == aaBoastfulBellow) {
 		rb_rank = GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW);
 		if(rb_rank) {

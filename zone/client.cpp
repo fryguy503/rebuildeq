@@ -9385,6 +9385,46 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Cacophony\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == CLERIC && i == RB_CLR_DIVINEAVATAR && GetAA(aaDivineAvatar) < 1) {
+					TrainAARank(aaDivineAvatar);
+					Message(15, "You have unlocked the AA \"Divine Avatar\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_CELESTIALREGENERATION && GetAA(aaCelestialRegeneration) < 1) {
+					TrainAARank(aaCelestialRegeneration);
+					Message(15, "You have unlocked the AA \"Celestial Regeneration\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_DIVINEARBITRATION && GetAA(aaDivineArbitration) < 1) {
+					TrainAARank(aaDivineArbitration);
+					Message(15, "You have unlocked the AA \"Divine Arbitration\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_DIVINERESURRECTION && GetAA(aaDivineResurrection) < 1) {
+					TrainAARank(aaDivineResurrection);
+					Message(15, "You have unlocked the AA \"Divine Resurrection\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_DIVINERETRIBUTION && GetAA(aaDivineRetribution) < 1) {
+					TrainAARank(aaDivineRetribution);
+					Message(15, "You have unlocked the AA \"Divine Retribution\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_TURNUNDEAD && GetAA(aaTurnUndead2) < 1) {
+					TrainAARank(aaTurnUndead2);
+					Message(15, "You have unlocked the AA \"Turn Undead\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_EXQUISITEBENEDICTION && GetAA(aaExquisiteBenediction) < 1) {
+					TrainAARank(aaExquisiteBenediction);
+					Message(15, "You have unlocked the AA \"Exquisite Benediction\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == CLERIC && i == RB_CLR_HARMONICBALANCE && GetAA(aaLessonoftheDevoted) < 1) {
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == DRUID && i == RB_DRU_ENTRAP  && GetAA(aaEntrap) < 1) {
 					TrainAARank(aaEntrap);
 					Message(15, "You have unlocked the AA \"Entrap\"! Find the hotkey in your Alternate Advancement Window.");
@@ -9438,122 +9478,7 @@ void Client::RefreshBuild() {
 				if (GetClass() == DRUID && i == RB_DRU_NATURESBLIGHT  && GetAA(aaLessonoftheDevoted) < 1) {
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_BLOODOATH && n > 4 && GetAA(aa2HandBash) < 1) {
-					TrainAARank(aa2HandBash);
-					Message(15, "You have unlocked the AA \"2 Hand Bash\"!");
-				}
-				
-				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) {
-					TrainAARank(aaDeathPeace2);
-					Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");					
-				}
-				
-				if (GetClass() == SHADOWKNIGHT && (i == RB_SHD_LEECHTOUCH || i == RB_SHD_HUNGERINGAURA ) && GetAA(aaLeechTouch) < 1) {
-					TrainAARank(aaLeechTouch);
-					Message(15, "You have unlocked the AA \"Leech Touch\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-				
-				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_STEADFASTSERVANT && GetAA(aaSteadfastServant) < 1) {
-					TrainAARank(aaSteadfastServant);
-					Message(15, "You have unlocked the AA \"Steadfast Servant\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-				
-				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_CLOAKOFSHADOWS && GetAA(aaCloakofShadows) < 1) {
-					TrainAARank(aaCloakofShadows);
-					Message(15, "You have unlocked the AA \"Cloak of Shadows\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_REAPERSSTRIKE && GetAA(aaLessonoftheDevoted) < 1) {
-					TrainAARank(aaLessonoftheDevoted);
-					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == SHAMAN && i == RB_SHM_PURIFYSOUL && GetAA(aaPurifySoul) < 1) {
-					TrainAARank(aaPurifySoul);
-					Message(15, "You have unlocked the AA \"Purify Soul\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-				
-				if (GetClass() == SHAMAN && i == RB_SHM_ANCESTRALAID && GetAA(aaAncestralAid) < 1) {
-					TrainAARank(aaAncestralAid);
-					Message(15, "You have unlocked the AA \"Ancestral Aid\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-				
-				if (GetClass() == SHAMAN && i == RB_SHM_COVENANTOFSPIRIT && GetAA(aaCovenantofSpirit) < 1) {
-					TrainAARank(aaCovenantofSpirit);
-					Message(15, "You have unlocked the AA \"Covenant of Spirit\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == SHAMAN && i == RB_SHM_CANNIBALIZE && GetAA(aaCannibalization) < 1) {
-					TrainAARank(aaCannibalization);
-					Message(15, "You have unlocked the AA \"Cannibalization\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == SHAMAN && i == RB_SHM_SPIRITCALL && GetAA(aaSpiritCall) < 1) {
-					TrainAARank(aaSpiritCall);
-					Message(15, "You have unlocked the AA \"Spirit Call\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == SHAMAN && i == RB_SHM_VIRULENTPARALYSIS && GetAA(aaVirulentParalysis) < 1) {
-					TrainAARank(aaVirulentParalysis);
-					Message(15, "You have unlocked the AA \"Virulent Paralysis\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == SHAMAN && i == RB_SHM_RABIDBEAR && GetAA(aaRabidBear) < 1) {
-					TrainAARank(aaRabidBear);
-					Message(15, "You have unlocked the AA \"Rabid Bear\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == SHAMAN && i == RB_SHM_FATESEERSBOON && GetAA(aaLessonoftheDevoted) < 1) {						
-					TrainAARank(aaLessonoftheDevoted);
-					Message(15, "You have unlocked the AA \"Fateseer's Boon\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == SHAMAN && i == RB_SHM_CALLOFTHEANCIENTS && GetAA(aaCalloftheAncients) < 1) {
-					TrainAARank(aaCalloftheAncients);
-					Message(15, "You have unlocked the AA \"Call of the Ancients\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
-					TrainAARank(aaHandofPiety);
-					Message(15, "You have unlocked the AA \"Hand of Piety\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-				
-				if (GetClass() == PALADIN && i == RB_PAL_PURIFICATION && GetAA(aaPurification) < 1) {
-					TrainAARank(aaPurification);
-					Message(15, "You have unlocked the AA \"Purification\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == PALADIN && i == RB_PAL_DIVINESTUN && GetAA(aaDivineStun) < 1) {
-					TrainAARank(aaDivineStun);
-					Message(15, "You have unlocked the AA \"Divine Stun\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == PALADIN && i == RB_PAL_ACTOFVALOR && GetAA(aaActOfValor) < 1) {
-					TrainAARank(aaActOfValor);
-					Message(15, "You have unlocked the AA \"Act of Valor\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-				
-				if (GetClass() == PALADIN && i == RB_PAL_FLAMESOFREDEMPTION && GetAA(aaLessonoftheDevoted) < 1) {						
-					TrainAARank(aaLessonoftheDevoted);
-					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == ROGUE && i == RB_ROG_APPRAISAL && GetAA(aaAppraisal) < 1) {
-					TrainAARank(aaAppraisal);
-					Message(15, "You have unlocked the AA \"Appraisal\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == ROGUE && i == RB_ROG_ASSASSINSTAINT && GetAA(aaLessonoftheDevoted) < 1) {
-					TrainAARank(aaLessonoftheDevoted);
-					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == ROGUE && i == RB_ROG_ESCAPE && GetAA(aaEscape) < 1) {
-					TrainAARank(aaEscape);
-					Message(15, "You have unlocked the AA \"Escape\"! Find the hotkey in your Alternate Advancement Window.");
-				}
+				}				
 
 				if (GetClass() == MAGICIAN && i == RB_MAG_SHAREDHEALTH && GetAA(aaSharedHealth) < 1) {
 					TrainAARank(aaSharedHealth);
@@ -9640,39 +9565,119 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Primal Fusion\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == CLERIC && i == RB_CLR_DIVINEAVATAR && GetAA(aaDivineAvatar) < 1) {
-					TrainAARank(aaDivineAvatar);
-					Message(15, "You have unlocked the AA \"Divine Avatar\"! Find the hotkey in your Alternate Advancement Window.");
+				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
+					TrainAARank(aaHandofPiety);
+					Message(15, "You have unlocked the AA \"Hand of Piety\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+				
+				if (GetClass() == PALADIN && i == RB_PAL_PURIFICATION && GetAA(aaPurification) < 1) {
+					TrainAARank(aaPurification);
+					Message(15, "You have unlocked the AA \"Purification\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == CLERIC && i == RB_CLR_CELESTIALREGENERATION && GetAA(aaCelestialRegeneration) < 1) {
-					TrainAARank(aaCelestialRegeneration);
-					Message(15, "You have unlocked the AA \"Celestial Regeneration\"! Find the hotkey in your Alternate Advancement Window.");
+				if (GetClass() == PALADIN && i == RB_PAL_DIVINESTUN && GetAA(aaDivineStun) < 1) {
+					TrainAARank(aaDivineStun);
+					Message(15, "You have unlocked the AA \"Divine Stun\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == CLERIC && i == RB_CLR_DIVINEARBITRATION && GetAA(aaDivineArbitration) < 1) {
-					TrainAARank(aaDivineArbitration);
-					Message(15, "You have unlocked the AA \"Divine Arbitration\"! Find the hotkey in your Alternate Advancement Window.");
+				if (GetClass() == PALADIN && i == RB_PAL_ACTOFVALOR && GetAA(aaActOfValor) < 1) {
+					TrainAARank(aaActOfValor);
+					Message(15, "You have unlocked the AA \"Act of Valor\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+				
+				if (GetClass() == PALADIN && i == RB_PAL_FLAMESOFREDEMPTION && GetAA(aaLessonoftheDevoted) < 1) {						
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				/*if (GetClass() == CLERIC && i == RB_CLR_DIVINERESURRECTION && GetAA(aaDivineResurrection) < 1) {
-					TrainAARank(aaDivineResurrection);
-					Message(15, "You have unlocked the AA \"Divine Resurrection\"! Find the hotkey in your Alternate Advancement Window.");
-				}*/
-
-				if (GetClass() == CLERIC && i == RB_CLR_DIVINERETRIBUTION && GetAA(aaDivineRetribution) < 1) {
-					TrainAARank(aaDivineRetribution);
-					Message(15, "You have unlocked the AA \"Divine Retribution\"! Find the hotkey in your Alternate Advancement Window.");
+				if (GetClass() == ROGUE && i == RB_ROG_APPRAISAL && GetAA(aaAppraisal) < 1) {
+					TrainAARank(aaAppraisal);
+					Message(15, "You have unlocked the AA \"Appraisal\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == CLERIC && i == RB_CLR_TURNUNDEAD && GetAA(aaTurnUndead2) < 1) {
-					TrainAARank(aaTurnUndead2);
-					Message(15, "You have unlocked the AA \"Turn Undead\"! Find the hotkey in your Alternate Advancement Window.");
+				if (GetClass() == ROGUE && i == RB_ROG_ASSASSINSTAINT && GetAA(aaLessonoftheDevoted) < 1) {
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == CLERIC && i == RB_CLR_EXQUISITEBENEDICTION && GetAA(aaExquisiteBenediction) < 1) {
-					TrainAARank(aaExquisiteBenediction);
-					Message(15, "You have unlocked the AA \"Exquisite Benediction\"! Find the hotkey in your Alternate Advancement Window.");
+				if (GetClass() == ROGUE && i == RB_ROG_ESCAPE && GetAA(aaEscape) < 1) {
+					TrainAARank(aaEscape);
+					Message(15, "You have unlocked the AA \"Escape\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_BLOODOATH && n > 4 && GetAA(aa2HandBash) < 1) {
+					TrainAARank(aa2HandBash);
+					Message(15, "You have unlocked the AA \"2 Hand Bash\"!");
+				}
+
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_EMBRACEDEATH && GetAA(aaDeathPeace2) < 1) {
+					TrainAARank(aaDeathPeace2);
+					Message(15, "You have unlocked the AA \"Death Peace\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHADOWKNIGHT && (i == RB_SHD_LEECHTOUCH || i == RB_SHD_HUNGERINGAURA) && GetAA(aaLeechTouch) < 1) {
+					TrainAARank(aaLeechTouch);
+					Message(15, "You have unlocked the AA \"Leech Touch\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_STEADFASTSERVANT && GetAA(aaSteadfastServant) < 1) {
+					TrainAARank(aaSteadfastServant);
+					Message(15, "You have unlocked the AA \"Steadfast Servant\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_CLOAKOFSHADOWS && GetAA(aaCloakofShadows) < 1) {
+					TrainAARank(aaCloakofShadows);
+					Message(15, "You have unlocked the AA \"Cloak of Shadows\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHADOWKNIGHT && i == RB_SHD_REAPERSSTRIKE && GetAA(aaLessonoftheDevoted) < 1) {
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHAMAN && i == RB_SHM_PURIFYSOUL && GetAA(aaPurifySoul) < 1) {
+					TrainAARank(aaPurifySoul);
+					Message(15, "You have unlocked the AA \"Purify Soul\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHAMAN && i == RB_SHM_ANCESTRALAID && GetAA(aaAncestralAid) < 1) {
+					TrainAARank(aaAncestralAid);
+					Message(15, "You have unlocked the AA \"Ancestral Aid\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHAMAN && i == RB_SHM_COVENANTOFSPIRIT && GetAA(aaCovenantofSpirit) < 1) {
+					TrainAARank(aaCovenantofSpirit);
+					Message(15, "You have unlocked the AA \"Covenant of Spirit\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHAMAN && i == RB_SHM_CANNIBALIZE && GetAA(aaCannibalization) < 1) {
+					TrainAARank(aaCannibalization);
+					Message(15, "You have unlocked the AA \"Cannibalization\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHAMAN && i == RB_SHM_SPIRITCALL && GetAA(aaSpiritCall) < 1) {
+					TrainAARank(aaSpiritCall);
+					Message(15, "You have unlocked the AA \"Spirit Call\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHAMAN && i == RB_SHM_VIRULENTPARALYSIS && GetAA(aaVirulentParalysis) < 1) {
+					TrainAARank(aaVirulentParalysis);
+					Message(15, "You have unlocked the AA \"Virulent Paralysis\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHAMAN && i == RB_SHM_RABIDBEAR && GetAA(aaRabidBear) < 1) {
+					TrainAARank(aaRabidBear);
+					Message(15, "You have unlocked the AA \"Rabid Bear\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHAMAN && i == RB_SHM_FATESEERSBOON && GetAA(aaLessonoftheDevoted) < 1) {
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Fateseer's Boon\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == SHAMAN && i == RB_SHM_CALLOFTHEANCIENTS && GetAA(aaCalloftheAncients) < 1) {
+					TrainAARank(aaCalloftheAncients);
+					Message(15, "You have unlocked the AA \"Call of the Ancients\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 			}
 		}
@@ -10948,31 +10953,58 @@ void Client::ResetBuild() {
 }
 
 std::string Client::GetBuildName(uint32 id) {
-	switch (this->GetClass()) {
-	case ROGUE:
-		if (id == RB_ROG_APPRAISAL) return "Appraisal";
-		else if (id == RB_ROG_KILLINGSPREE) return "Killing Spree";
-		else if (id == RB_ROG_THIEFSEYES) return "Thief's Eyes";
-		else if (id == RB_ROG_SNEAKATTACK) return "Sneak Attack";
-		else if (id == RB_ROG_SINISTERSTRIKES) return "Sinister Strikes";
-		else if (id == RB_ROG_FOCUSEDSTAB) return "Focused Stab";
-		else if (id == RB_ROG_VITALORGANS) return "Vital Organs";
-		else if (id == RB_ROG_ASSASSINSTAINT) return "Assassin's Taint";
-		else if (id == RB_ROG_SLEIGHTDISTRACTION) return "Sleight Distraction";
-		else if (id == RB_ROG_JARRINGSTAB) return "Jarring Stab";
-		else if (id == RB_ROG_GANGSTERSPARADISE) return "Gangster's Paradise";
-		else if (id == RB_ROG_DUELIST) return "Duelist";
-		else if (id == RB_ROG_UNTAPPEDPOTENTIAL) return "Untapped Potential";
-		else if (id == RB_ROG_MOSSSTONE) return "Moss Stone";
-		else if (id == RB_ROG_SLEIGHTOFSTRENGTH) return "Sleight of Strength";
-		else if (id == RB_ROG_HAGGLE) return "Haggle";
-		else if (id == RB_ROG_HIDDENSTASH) return "Hidden Stash";
-		else if (id == RB_ROG_THROWINGPRECISION) return "Throwing Precision";
-		else if (id == RB_ROG_MUGGINGSHOT) return "Mugging Shot";
-		else if (id == RB_ROG_DEADLYDAGGER) return "Deadly Dagger";
-		else if (id == RB_ROG_THIEVESAFFINITY) return "Thieves' Affinity";
-		else if (id == RB_ROG_HIDDENDAGGER) return "Hidden Dagger";
+	switch (this->GetClass()) {	
+	case BARD:
+		if (id == RB_BRD_ELEMENTALHARMONY) return "Elemental Harmony";
+		else if (id == RB_BRD_HEALINGTREBLE) return "Healing Treble";
+		else if (id == RB_BRD_PSALMOFNORRATH) return "Psalm of Norrath";
+		else if (id == RB_BRD_CASSINDRASCHORUS) return "Cassindra's Chorus";
+		else if (id == RB_BRD_SHIELDOFSONGS) return "Shield of Songs";
+		else if (id == RB_BRD_KATTASCONCORD) return "Katta's Concord";
+		else if (id == RB_BRD_RIZLONASPURPOSE) return "Rizlona's Purpose";
+		else if (id == RB_BRD_BARDSWISH) return "Bard's Wish";
+		else if (id == RB_BRD_JONTHONSWHISTLE) return "Jonthon's Whistle";
+		else if (id == RB_BRD_OFFHANDATTACK) return "Offhand Attack";
+		else if (id == RB_BRD_INNATESONGBLADE) return "Innate Songblade";
+		else if (id == RB_BRD_WARSONGOFZEK) return "Warsong of Zek";
+		else if (id == RB_BRD_DANCEOFBLADES) return "Dance of Blades";
+		else if (id == RB_BRD_CACOPHONY) return "Cacophony";
+		else if (id == RB_BRD_HARMONICAFFINITY) return "Harmonic Affinity";
+		else if (id == RB_BRD_KINSONG) return "Kinsong";
+		else if (id == RB_BRD_CHANTCYCLE) return "Chant Cycle";
+		else if (id == RB_BRD_BOASTFULBELLOW) return "Boastful Bellow";
+		else if (id == RB_BRD_SELOSCRESCENDO) return "Selo's Crescendo";
+		else if (id == RB_BRD_SHIELDOFNOTES) return "Shield of Notes";
+		else if (id == RB_BRD_SHOUT) return "Shout";
+		else if (id == RB_BRD_SONGOFSTONE) return "Song of Stone";
+		else if (id == RB_BRD_LINGERINGTWILIGHT) return "Lingering Twilight";
+		else if (id == RB_BRD_FADINGMEMORIES) return "Fading Memories";
+		break;
+	case CLERIC:
+		if (id == RB_CLR_BELIEVE) return "Believe";
+		else if (id == RB_CLR_WARDOFVIE) return "Ward of Vie";
+		else if (id == RB_CLR_HARKENTHEGODS) return "Harken the Gods";
+		else if (id == RB_CLR_BLESSINGOFHASTE) return "Blessing of Haste";
+		else if (id == RB_CLR_DIVINEHAMMER) return "Divine Hammer";
+		else if (id == RB_CLR_AVATARSBOON) return "Avatar's Boon";
+		else if (id == RB_CLR_AUGMENTEDRETRIBUTION) return "Augmented Retribution";
+		else if (id == RB_CLR_DIVINEAVATAR) return "Divine Avatar";
+		else if (id == RB_CLR_INSTILLLIFE) return "Instill Life";
+		else if (id == RB_CLR_DIVINEBASH) return "Divine Bash";
 
+		else if (id == RB_CLR_CELESTIALREGENERATION) return "Celestial Regeneration";
+		else if (id == RB_CLR_DIVINEARBITRATION) return "Divine Arbitration";
+		else if (id == RB_CLR_DIVINERESURRECTION) return "Divine Resurrection";
+		else if (id == RB_CLR_PROMISE) return "Promise";
+		else if (id == RB_CLR_HARMONICBALANCE) return "Harmonic Balance";
+		else if (id == RB_CLR_STRIKE) return "Strike";
+		else if (id == RB_CLR_WARDOFREBUKE) return "Ward of Rebuke";
+		else if (id == RB_CLR_FISTOFTHEGODS) return "Fist of the Gods";
+		else if (id == RB_CLR_DIVINERETRIBUTION) return "Divine Retribution";
+		else if (id == RB_CLR_TURNUNDEAD) return "Turn Undead";
+		else if (id == RB_CLR_EXQUISITEBENEDICTION) return "Exquisite Benediction";
+		else if (id == RB_CLR_MARKOFRETRIBUTION) return "Mark of Retribution";
+		else if (id == RB_CLR_PIOUSZEALOT) return "Pious Zealot";
 		break;
 	case DRUID:
 		if (id == RB_DRU_ENTRAP) return "Entrap";
@@ -11000,31 +11032,32 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_DRU_DEEPROOTS) return "Deep Roots";
 		else if (id == RB_DRU_NATURESBLIGHT) return "Natures Blight";
 		break;
-	case BARD:
-		if (id == RB_BRD_ELEMENTALHARMONY) return "Elemental Harmony";
-		else if (id == RB_BRD_HEALINGTREBLE) return "Healing Treble";
-		else if (id == RB_BRD_PSALMOFNORRATH) return "Psalm of Norrath";
-		else if (id == RB_BRD_CASSINDRASCHORUS) return "Cassindra's Chorus";
-		else if (id == RB_BRD_SHIELDOFSONGS) return "Shield of Songs";
-		else if (id == RB_BRD_KATTASCONCORD) return "Katta's Concord";
-		else if (id == RB_BRD_RIZLONASPURPOSE) return "Rizlona's Purpose";
-		else if (id == RB_BRD_BARDSWISH) return "Bard's Wish";
-		else if (id == RB_BRD_JONTHONSWHISTLE) return "Jonthon's Whistle";
-		else if (id == RB_BRD_OFFHANDATTACK) return "Offhand Attack";
-		else if (id == RB_BRD_INNATESONGBLADE) return "Innate Songblade";
-		else if (id == RB_BRD_WARSONGOFZEK) return "Warsong of Zek";
-		else if (id == RB_BRD_DANCEOFBLADES) return "Dance of Blades";
-		else if (id == RB_BRD_CACOPHONY) return "Cacophony";
-		else if (id == RB_BRD_HARMONICAFFINITY) return "Harmonic Affinity";
-		else if (id == RB_BRD_KINSONG) return "Kinsong";
-		else if (id == RB_BRD_CHANTCYCLE) return "Chant Cycle";
-		else if (id == RB_BRD_BOASTFULBELLOW) return "Boastful Bellow";
-		else if (id == RB_BRD_SELOSCRESCENDO) return "Selo's Crescendo";
-		else if (id == RB_BRD_SHIELDOFNOTES) return "Shield of Notes";
-		else if (id == RB_BRD_SHOUT) return "Shout";
-		else if (id == RB_BRD_SONGOFSTONE) return "Song of Stone";
-		else if (id == RB_BRD_LINGERINGTWILIGHT) return "Lingering Twilight";
-		else if (id == RB_BRD_FADINGMEMORIES) return "Fading Memories";
+	
+	case MAGICIAN:
+		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";
+		else if (id == RB_MAG_QUICKSUMMONING) return "Quick Summoning";
+		else if (id == RB_MAG_IMPROVEDRECLAIMENERGY) return "Improved Reclaim Energy";
+		else if (id == RB_MAG_MODULATIONSHARD) return "Modulation Shard";
+		else if (id == RB_MAG_COMPANIONSDURABILITY) return "Companions Durability";
+		else if (id == RB_MAG_SUSPENDEDMINION) return "Suspended Minion";
+		else if (id == RB_MAG_MENDCOMPANION) return "Mend Companion";
+		else if (id == RB_MAG_COMPANIONOFNECESSITY) return "Companion of Necessity";
+		else if (id == RB_MAG_SHAREDHEALTH) return "Shared Health";
+		else if (id == RB_MAG_HOSTINTHESHELL) return "Host in the Shell";
+		else if (id == RB_MAG_TURNSUMMONED) return "Turn Summoned";
+		else if (id == RB_MAG_FRENZIEDBURNOUT) return "Frenzied Burnout";
+		else if (id == RB_MAG_ELEMENTALALACRITY) return "Elemental Alacrity";
+		else if (id == RB_MAG_CALLOFTHEHERO) return "Call of the Hero";
+		else if (id == RB_MAG_CLOCKWORKMERCHANT) return "Clockwork Merchant";
+		else if (id == RB_MAG_SERVANTOFRO) return "Servant of Ro";
+		else if (id == RB_MAG_DIMENSIONALSHIELD) return "Dimensional Shield";
+		else if (id == RB_MAG_HEARTOFSTONE) return "Heart of Stone";
+		else if (id == RB_MAG_HEARTOFVAPOR) return "Heart of Vapor";
+		else if (id == RB_MAG_SHOCKOFSWORDS) return "Shock of Swords";
+		else if (id == RB_MAG_HEARTOFICE) return "Heart of Ice";
+		else if (id == RB_MAG_QUICKDAMAGE) return "Quick Damage";
+		else if (id == RB_MAG_HEARTOFFLAMES) return "Heart of Flames";
+		else if (id == RB_MAG_PRIMALFUSION) return "Primal Fusion";
 		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";
@@ -11051,6 +11084,30 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_PAL_DISMISSEVIL) return "Dismiss Evil";
 		else if (id == RB_PAL_FRAIL) return "Frail";
 		else if (id == RB_PAL_SLAYER) return "Slayer";
+		break;
+	case ROGUE:
+		if (id == RB_ROG_APPRAISAL) return "Appraisal";
+		else if (id == RB_ROG_KILLINGSPREE) return "Killing Spree";
+		else if (id == RB_ROG_THIEFSEYES) return "Thief's Eyes";
+		else if (id == RB_ROG_SNEAKATTACK) return "Sneak Attack";
+		else if (id == RB_ROG_SINISTERSTRIKES) return "Sinister Strikes";
+		else if (id == RB_ROG_FOCUSEDSTAB) return "Focused Stab";
+		else if (id == RB_ROG_VITALORGANS) return "Vital Organs";
+		else if (id == RB_ROG_ASSASSINSTAINT) return "Assassin's Taint";
+		else if (id == RB_ROG_SLEIGHTDISTRACTION) return "Sleight Distraction";
+		else if (id == RB_ROG_JARRINGSTAB) return "Jarring Stab";
+		else if (id == RB_ROG_GANGSTERSPARADISE) return "Gangster's Paradise";
+		else if (id == RB_ROG_DUELIST) return "Duelist";
+		else if (id == RB_ROG_UNTAPPEDPOTENTIAL) return "Untapped Potential";
+		else if (id == RB_ROG_MOSSSTONE) return "Moss Stone";
+		else if (id == RB_ROG_SLEIGHTOFSTRENGTH) return "Sleight of Strength";
+		else if (id == RB_ROG_HAGGLE) return "Haggle";
+		else if (id == RB_ROG_HIDDENSTASH) return "Hidden Stash";
+		else if (id == RB_ROG_THROWINGPRECISION) return "Throwing Precision";
+		else if (id == RB_ROG_MUGGINGSHOT) return "Mugging Shot";
+		else if (id == RB_ROG_DEADLYDAGGER) return "Deadly Dagger";
+		else if (id == RB_ROG_THIEVESAFFINITY) return "Thieves' Affinity";
+		else if (id == RB_ROG_HIDDENDAGGER) return "Hidden Dagger";
 		break;
 	case SHADOWKNIGHT:
 		if (id == RB_SHD_LEECHTOUCH) return "Leech Touch";
@@ -11103,55 +11160,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_SHM_MARKOFSLOTH) return "Mark of Sloth";
 		else if (id == RB_SHM_FERALSWIPE) return "Feral Swipe";
 		else if (id == RB_SHM_PARAGONOFSPIRIT) return "Paragon of Spirit";
-		break;	
-	case MAGICIAN:
-		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";
-		else if (id == RB_MAG_QUICKSUMMONING) return "Quick Summoning";
-		else if (id == RB_MAG_IMPROVEDRECLAIMENERGY) return "Improved Reclaim Energy";
-		else if (id == RB_MAG_MODULATIONSHARD) return "Modulation Shard";
-		else if (id == RB_MAG_COMPANIONSDURABILITY) return "Companions Durability";
-		else if (id == RB_MAG_SUSPENDEDMINION) return "Suspended Minion";
-		else if (id == RB_MAG_MENDCOMPANION) return "Mend Companion";
-		else if (id == RB_MAG_COMPANIONOFNECESSITY) return "Companion of Necessity";
-		else if (id == RB_MAG_SHAREDHEALTH) return "Shared Health";
-		else if (id == RB_MAG_HOSTINTHESHELL) return "Host in the Shell";
-		else if (id == RB_MAG_TURNSUMMONED) return "Turn Summoned";
-		else if (id == RB_MAG_FRENZIEDBURNOUT) return "Frenzied Burnout";
-		else if (id == RB_MAG_ELEMENTALALACRITY) return "Elemental Alacrity";
-		else if (id == RB_MAG_CALLOFTHEHERO) return "Call of the Hero";
-		else if (id == RB_MAG_CLOCKWORKMERCHANT) return "Clockwork Merchant";
-		else if (id == RB_MAG_SERVANTOFRO) return "Servant of Ro";
-		else if (id == RB_MAG_DIMENSIONALSHIELD) return "Dimensional Shield";
-		else if (id == RB_MAG_HEARTOFSTONE) return "Heart of Stone";
-		else if (id == RB_MAG_HEARTOFVAPOR) return "Heart of Vapor";
-		else if (id == RB_MAG_SHOCKOFSWORDS) return "Shock of Swords";
-		else if (id == RB_MAG_HEARTOFICE) return "Heart of Ice";
-		else if (id == RB_MAG_QUICKDAMAGE) return "Quick Damage";
-		else if (id == RB_MAG_HEARTOFFLAMES) return "Heart of Flames";
-		else if (id == RB_MAG_PRIMALFUSION) return "Primal Fusion";
-	case CLERIC:
-		if (id == RB_CLR_BELIEVE) return "Believe";
-		else if (id == RB_CLR_WARDOFVIE) return "Ward of Vie";
-		else if (id == RB_CLR_HARKENTHEGODS) return "Harken the Gods";
-		else if (id == RB_CLR_BLESSINGOFHASTE) return "Blessing of Haste";
-		else if (id == RB_CLR_DIVINEHAMMER) return "Divine Hammer";
-		else if (id == RB_CLR_AVATARSBOON) return "Avatar's Boon";
-		else if (id == RB_CLR_AUGMENTEDRETRIBUTION) return "Augmented Retribution";
-		else if (id == RB_CLR_DIVINEAVATAR) return "Divine Avatar";
-		else if (id == RB_CLR_INSTILLLIFE) return "Instill Life";
-		else if (id == RB_CLR_DIVINEBASH) return "Divine Bash";
-
-		else if (id == RB_CLR_CELESTIALREGENERATION) return "Celestial Regeneration";
-		else if (id == RB_CLR_DIVINEARBITRATION) return "Divine Arbitration";
-
-		else if (id == RB_CLR_STRIKE) return "Strike";
-		else if (id == RB_CLR_WARDOFREBUKE) return "Ward of Rebuke";
-		else if (id == RB_CLR_FISTOFTHEGODS) return "Fist of the Gods";
-		else if (id == RB_CLR_DIVINERETRIBUTION) return "Divine Retribution";
-		else if (id == RB_CLR_TURNUNDEAD) return "Turn Undead";
-		else if (id == RB_CLR_EXQUISITEBENEDICTION) return "Exquisite Benediction";
-		else if (id == RB_CLR_MARKOFRETRIBUTION) return "Mark of Retribution";
-		else if (id == RB_CLR_PIOUSZEALOT) return "Pious Zealot";
+		break;		
 	}
 	return "Unknown";
 }

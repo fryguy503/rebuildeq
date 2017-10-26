@@ -512,7 +512,23 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-clr-divinearbitration.png";	
 			$skills[26] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Divine Resurrection";
+			$newSkill->desc = 'Grants the Divine Resurrection AA, reviving a fallen player. Lowers cooldown by <em data-base="12">12</em> hours<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-divineresurrection.png";	
+			$skills[28] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Promise";
+			$newSkill->desc = 'All heals done by the cleric now have a <em data-base="2">2</em> chance to have the mana cost reduced by <em data-base="10">10</em>% mana <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-promise.png";	
+			$skills[31] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Harmonic Balance";
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, <em data-base="2">2</em> chance to have the mana cost reduced by <em data-base="10">10</em>% mana <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-harmonicbalance.png";	
+			$skills[34] = $newSkill;
 
 
 			

@@ -303,12 +303,21 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		parse->EventNPC(EVENT_CAST_BEGIN, CastToNPC(), nullptr, temp, 0);
 	}
 
-	if (item_slot == 0 && spell_id == 202 && IsClient() && CastToClient()->GetClass() == PALADIN) {
-		if (CastToClient()->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING) > 0) {
+
+	if (IsClient()) {
+		uint32 rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
+		if (item_slot == 0 && spell_id == 202 && rank > 0) {
 			mana_cost = ((GetLevel() / 60) * 200);
 		}
+		
+		rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_PROMISE);
+		if (rank > 0 && mana_cost > 0) {
+			int reduced = mana_cost * (0.1 * rank);			
+			Log(Logs::General, Logs::Build, "Promise reduced mana cost by %i", rank);
+			mana_cost -= rank;
+			if (mana_cost < 1) mana_cost = 0;			
+		}
 	}
-
 	//To prevent NPC ghosting when spells are cast from scripts
 	if (IsNPC() && IsMoving() && cast_time > 0)
 		SendPosition();
@@ -3461,6 +3470,45 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				}
 			}
 		}
+		
+
+		// Druid
+		else if (caster_client->GetClass() == DRUID) {
+
+			// Nature's Boon
+			{
+				static uint16 NATURES_BOON = 4796;
+				const bool isAffected = spell_id == NATURES_BOON;
+				const uint32 rank = caster_client->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
+
+				if (rank > 0 && isAffected) {
+					duration = 14 - (rank * 2);
+				}
+			}
+
+			// Nature's Blight
+			{
+				static uint16 KINSONG = 6239;
+				const bool isAffected = spell_id == KINSONG;
+				const uint32 rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT);
+
+				if (rank > 0 && isAffected) {
+					duration = 10 * 0.2f * rank;
+				}
+			}
+
+			// Convergence of Spirits
+			{
+				static uint16 CONVERGENCE_OF_SPIRITS = 8190;
+				const bool isAffected = spell_id == CONVERGENCE_OF_SPIRITS;
+				const uint32 rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
+
+				if (rank > 0 && isAffected) {
+					duration = 1 * rank;
+				}
+			}
+		}
+
 
 		// Paladin
 		else if (caster_client->GetClass() == PALADIN) {
@@ -3477,21 +3525,6 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 			}
 		}
 
-		// Shadowknight
-		else if (caster_client->GetClass() == SHADOWKNIGHT) {
-
-			// Reaper's Strike
-			{
-				static uint16 REAPER_STRIKE_RECOURSE = 6299;
-				const bool isAffected = spell_id == REAPER_STRIKE_RECOURSE;
-				const uint32 rank = caster_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE);
-
-				if (rank > 0 && isAffected) {
-					duration = 10 * 0.2f * rank;
-				}
-			}
-		}
-
 		// Rogue
 		else if (caster_client->GetClass() == ROGUE) {
 
@@ -3500,6 +3533,21 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				static uint16 ASSASSINS_TAINT = 6240;
 				const bool isAffected = spell_id == ASSASSINS_TAINT;
 				const uint32 rank = caster_client->GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT);
+
+				if (rank > 0 && isAffected) {
+					duration = 10 * 0.2f * rank;
+				}
+			}
+		}
+
+		// Shadowknight
+		else if (caster_client->GetClass() == SHADOWKNIGHT) {
+
+			// Reaper's Strike
+			{
+				static uint16 REAPER_STRIKE_RECOURSE = 6299;
+				const bool isAffected = spell_id == REAPER_STRIKE_RECOURSE;
+				const uint32 rank = caster_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE);
 
 				if (rank > 0 && isAffected) {
 					duration = 10 * 0.2f * rank;
@@ -3599,43 +3647,6 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 
 				if (rank > 0 && isAffected) {
 					duration = 10 * 0.2f * rank;
-				}
-			}
-		}
-
-		// Druid
-		else if (caster_client->GetClass() == DRUID) {
-
-			// Nature's Boon
-			{
-				static uint16 NATURES_BOON = 4796;
-				const bool isAffected = spell_id == NATURES_BOON;
-				const uint32 rank = caster_client->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
-
-				if (rank > 0 && isAffected) {
-					duration = 14 - (rank * 2);
-				}
-			}
-
-			// Nature's Blight
-			{
-				static uint16 KINSONG = 6239;
-				const bool isAffected = spell_id == KINSONG;
-				const uint32 rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT);
-
-				if (rank > 0 && isAffected) {
-					duration = 10 * 0.2f * rank;
-				}
-			}
-
-			// Convergence of Spirits
-			{
-				static uint16 CONVERGENCE_OF_SPIRITS = 8190;
-				const bool isAffected = spell_id == CONVERGENCE_OF_SPIRITS;
-				const uint32 rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
-
-				if (rank > 0 && isAffected) {
-					duration = 1 * rank;
 				}
 			}
 		}
