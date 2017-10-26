@@ -441,7 +441,7 @@ void NPC::AddLootTable() {
 		if (GetLevel() >= 55 && zone->random.Int(1, 200) == 1) {
 			AddItem(100006, 1, false); //elunium
 		}
-		if (GetLevel() >= 55 && zone->random.Int(1, 20) == 1) {
+		if (GetLevel() >= 55 && zone->random.Int(1, 40) == 1) {
 			AddItem(100048, 1, false); //elunium shard
 		}
 		AddCardTable();
@@ -456,7 +456,7 @@ void NPC::AddLootTable(uint32 ldid) {
 		if (GetLevel() >= 55 && zone->random.Int(1, 200) == 1) {
 			AddItem(100006, 1, false); //elunium
 		}
-		if (GetLevel() >= 55 && zone->random.Int(1, 20) == 1) {
+		if (GetLevel() >= 55 && zone->random.Int(1, 40) == 1) {
 			AddItem(100048, 1, false); //elunium shard
 		}
 		AddCardTable();
