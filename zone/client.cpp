@@ -9837,36 +9837,37 @@ void Client::AddRestedExperience(uint32 lastUpdate) {
 	//Message(13, "Rested: %f (rate: %f) expNeeded: %u", m_epp.rested_exp, expRate, expNeeded);
 }
 
-uint8 Client::GetRottenCoreCounters() {
-	if (m_epp.rotten_core_timeout < time(nullptr)) {
-		if (m_epp.rotten_core > 0) {
-			Message(MT_WornOff, "Your counters have faded.");
-		}
-		m_epp.rotten_core = 0;
-	}
-	return m_epp.rotten_core;
+uint8 Client::GetCoreCounter() {
+	if (m_epp.core_counter_timeout < time(nullptr)) ResetCoreCounter();	
+	return m_epp.core_counter;
 }
 
-void Client::AddRottenCoreCounter(uint8 amount) {
+void Client::ResetCoreCounter() {
+	if (m_epp.core_counter > 0) Log(Logs::General, Logs::Build, "Your counters have faded.");
+	m_epp.core_counter = 0;
+	m_epp.core_counter_timeout = 0;
+}
+
+void Client::AddCoreCounter(uint8 amount) {
 	
-	if (m_epp.rotten_core_timeout < time(nullptr)) {
-		m_epp.rotten_core = 0;
+	if (m_epp.core_counter_timeout < time(nullptr)) {
+		m_epp.core_counter = 0;
 	}
-	m_epp.rotten_core += amount;
+	m_epp.core_counter += amount;
 	//cap cores
 	uint8 rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
 	if (rank > 0) {
-		if (m_epp.rotten_core > rank) {
-			m_epp.rotten_core = rank;
+		if (m_epp.core_counter > rank) {
+			m_epp.core_counter = rank;
 		}
 	}
 	rank = GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
 	if (rank > 0) {
-		if (m_epp.rotten_core > rank * 2) {
-			m_epp.rotten_core = rank * 2;
+		if (m_epp.core_counter > rank * 2) {
+			m_epp.core_counter = rank * 2;
 		}
 	}
-	m_epp.rotten_core_timeout = time(nullptr) + 60 - (m_epp.rotten_core * 4);
+	m_epp.core_counter_timeout = time(nullptr) + 60 - (m_epp.core_counter * 4);
 }
 
 //Return a class name based on most used class
@@ -11037,7 +11038,10 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_DRU_DEEPROOTS) return "Deep Roots";
 		else if (id == RB_DRU_NATURESBLIGHT) return "Natures Blight";
 		break;
-	
+	case MONK:
+		if (id == RB_MNK_INTENSIFIEDTRAINING) return "Intensified Training";
+		else if (id == RB_MNK_FAMILIARITY) return "Familiarity";
+
 	case MAGICIAN:
 		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";
 		else if (id == RB_MAG_QUICKSUMMONING) return "Quick Summoning";
@@ -11171,7 +11175,11 @@ std::string Client::GetBuildName(uint32 id) {
 }
 
 bool Client::IsSwornEnemyActive() {	
-	return(m_epp.sworn_enemy_id > 0 && m_epp.sworn_enemy_timeout >= time(nullptr));
+	return(m_epp.focus_enemy_id > 0 && m_epp.focus_enemy_timeout >= time(nullptr));
+}
+
+bool Client::IsSwornEnemyID(uint16 id) {
+	return(m_epp.focus_enemy_id == id);
 }
 
 bool Client::IsStanding() {

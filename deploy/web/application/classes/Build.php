@@ -888,6 +888,17 @@ class Build {
 
 			//==================MONK======================
 			case "monk":
+			$newSkill = new stdClass();
+			$newSkill->title = "Intensified Training";
+			$newSkill->desc = 'When using Tiger Claw, Eagle Strike, Tail Whip or similar special attacks, gives a chance to deal a puma-like proc dealing level * <em data-base="1">1</em> damage <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-intensifiedtraining.png";
+			$skills[0] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Familiarity";
+			$newSkill->desc = 'Every time a special attack lands on an enemy, the monk gains <em data-base="10">10</em> armor against the target<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-familiarity.png";
+			$skills[2] = $newSkill;
 			break;
 
 			//==================NECROMANCER======================

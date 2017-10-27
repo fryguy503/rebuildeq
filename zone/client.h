@@ -1281,13 +1281,15 @@ public:
 	void TrainAARank(uint32 rankId, uint32 rankLevel = 1, uint32 charges = 0);
 	std::string GetBuildName(uint32 id);
 	bool IsSwornEnemyActive();
+	bool IsSwornEnemyID(uint16 id);
 	bool IsBuildAvailable();
 	uint32 GetBuildRank(uint8 classid, uint32 rankid);
 	void DoRestedStatus();
 	bool InRestedArea();
 	void AddRestedExperience(uint32 lastUpdate);
-	uint8 GetRottenCoreCounters();
-	void AddRottenCoreCounter(uint8 amount);
+	uint8 GetCoreCounter();
+	void ResetCoreCounter();
+	void AddCoreCounter(uint8 amount);
 
 	std::string GetBuildClassName();
 	std::string GetBaseClassName();

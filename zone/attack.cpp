@@ -972,6 +972,15 @@ void Mob::MeleeMitigation(Mob *attacker, DamageHitInfo &hit, ExtraAttackOptions 
 	if (IsClient() && attacker->IsClient())
 		mitigation = mitigation * 80 / 100; // 2004 PvP changes
 
+
+	if (IsClient() && 
+		CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) && 
+		CastToClient()->IsSwornEnemyActive() &&
+		CastToClient()->IsSwornEnemyID(attacker->GetID())) {
+		Log(Logs::General, Logs::Build, "Familiarity changed mitigation from %i to %i.", mitigation, mitigation + 10 * CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) * CastToClient()->GetCoreCounter());
+		mitigation += 10 * CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) * CastToClient()->GetCoreCounter();		
+	}
+
 	if (opts) {
 		mitigation *= (1.0f - opts->armor_pen_percent);
 		mitigation -= opts->armor_pen_flat;
@@ -1772,6 +1781,43 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
 			}
 		}
+
+		if (!IsFromSpell &&
+				(my_hit.skill == EQEmu::skills::SkillTigerClaw ||
+				my_hit.skill == EQEmu::skills::SkillRoundKick ||
+				my_hit.skill == EQEmu::skills::SkillEagleStrike ||
+				my_hit.skill == EQEmu::skills::SkillDragonPunch ||
+				my_hit.skill == EQEmu::skills::SkillTailRake ||
+				my_hit.skill == EQEmu::skills::SkillFlyingKick
+				)
+			){
+
+			rank = GetBuildRank(MONK, RB_MNK_INTENSIFIEDTRAINING);
+			if (rank > 0) {
+				chance = 800;
+				proc_damage = GetLevel() * 5.0f * (0.25f * rank);
+				if (proc_damage < 20) proc_damage = 20;
+				Log(Logs::General, Logs::Build, "Intensified Training %u hit for %i damage.", rank, proc_damage);
+				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
+			}
+
+			rank = GetBuildRank(MONK, RB_MNK_FAMILIARITY);
+			if (rank > 0 && other->IsNPC()) {
+
+				if (IsSwornEnemyActive() && IsSwornEnemyID(other->GetID())) { //same target, add counter
+					Log(Logs::General, Logs::Build, "Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * GetCoreCounter()), other->GetCleanName());
+					AddCoreCounter(1);
+				}
+				else {
+					GetEPP().focus_enemy_id = GetID();
+					GetEPP().focus_enemy_timeout = time(nullptr) + 60;
+					ResetCoreCounter();
+					if (GetCoreCounter() < 20) AddCoreCounter(1);
+					Log(Logs::General, Logs::Build, "Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * GetCoreCounter()), other->GetCleanName());
+				}
+			}
+		}
+
 		return true;
 	}
 	else {
@@ -4024,7 +4070,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				rank = attacker_client->CastToClient()->GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
 				if (rank > 0) {
 
-					uint8 counters = attacker_client->GetRottenCoreCounters();
+					uint8 counters = attacker_client->GetCoreCounter();
 					if (counters > 0) {
 						bonus_damage = damage * 0.05f * counters;
 						if (bonus_damage < 1) bonus_damage = 1;
@@ -4037,7 +4083,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 
 				rank = attacker_client->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
 				if (rank > 0) {
-					uint8 counters = attacker_client->GetRottenCoreCounters();
+					uint8 counters = attacker_client->GetCoreCounter();
 					if (counters > 0) {
 						bonus_damage = damage * 0.03f * counters;
 						if (bonus_damage < 1) bonus_damage = 1;

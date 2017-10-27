@@ -707,7 +707,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								//Divine Stun Hate bonus
 								rank = casterClient->GetBuildRank(PALADIN, RB_PAL_DIVINESTUN);
 								if (rank > 0 && casterClient->IsSwornEnemyActive()) {
-									auto aggroMob = entity_list.GetMobID(casterClient->GetEPP().sworn_enemy_id);
+									auto aggroMob = entity_list.GetMobID(casterClient->GetEPP().focus_enemy_id);
 
 									if (aggroMob != nullptr && aggroMob->GetID() > 0 && aggroMob->IsNPC() && aggroMob->GetHP() > 0) {
 										casterClient->Message(270, "%s intensifies his hatred towards you.", aggroMob->GetCleanName());
@@ -1287,13 +1287,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							IsNPC()) { //target is an NPC
 							
 							uint16 rank = caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_DIVINESTUN);
-							if (caster->CastToClient()->GetEPP().sworn_enemy_timeout < time(nullptr)) {
-								caster->CastToClient()->GetEPP().sworn_enemy_id = GetID();
-								caster->CastToClient()->GetEPP().sworn_enemy_timeout = time(nullptr) + 18;
+							if (caster->CastToClient()->GetEPP().focus_enemy_timeout < time(nullptr)) {
+								caster->CastToClient()->GetEPP().focus_enemy_id = GetID();
+								caster->CastToClient()->GetEPP().focus_enemy_timeout = time(nullptr) + 18;
 								caster->Message(270, "Divine Stun %u has marked %s with divine anger.", rank, GetCleanName());
 							}
-							else if (CastToClient()->GetEPP().sworn_enemy_id == GetID()) { //Refresh timeout
-								CastToClient()->GetEPP().sworn_enemy_timeout = time(nullptr) + 18;
+							else if (CastToClient()->GetEPP().focus_enemy_id == GetID()) { //Refresh timeout
+								CastToClient()->GetEPP().focus_enemy_timeout = time(nullptr) + 18;
 								caster->Message(270, "Divine Stun %u has marked %s with divine anger again.", rank, GetCleanName());
 							}
 						}

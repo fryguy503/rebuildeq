@@ -1909,12 +1909,12 @@ void Mob::Taunt(NPC *who, bool always_succeed, int chance_bonus, bool FromSpell,
 	}
 	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SWORNENEMY) > 0) {
 		uint16 rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SWORNENEMY);
-		if (CastToClient()->GetEPP().sworn_enemy_timeout < time(nullptr)) {
-			CastToClient()->GetEPP().sworn_enemy_id = who->GetID();
-			CastToClient()->GetEPP().sworn_enemy_timeout = time(nullptr) + 18;
+		if (CastToClient()->GetEPP().focus_enemy_timeout < time(nullptr)) {
+			CastToClient()->GetEPP().focus_enemy_id = who->GetID();
+			CastToClient()->GetEPP().focus_enemy_timeout = time(nullptr) + 18;
 			Message(270, "%s has been marked as your sworn enemy.", who->GetCleanName());						
-		} else if (CastToClient()->GetEPP().sworn_enemy_id == who->GetID()) { //Refresh timeout
-			CastToClient()->GetEPP().sworn_enemy_timeout = time(nullptr) + 18;
+		} else if (CastToClient()->GetEPP().focus_enemy_id == who->GetID()) { //Refresh timeout
+			CastToClient()->GetEPP().focus_enemy_timeout = time(nullptr) + 18;
 		}
 	}
 	// All values used based on live parses after taunt was updated in 2006.

@@ -66,8 +66,8 @@ struct ExtendedProfile_Struct {
 	uint32				encounter_unclaimed_rewards; //Any time an encounter finishes, this is a counter for that.
 	bool				in_rested_area; //True when in an rested area
 	float				rested_exp; //Experienced while rested
-	uint8				rotten_core; //SK only skill, not saved, a temp buff
-	uint32				rotten_core_timeout; //SK only skill, timeout for temp buff	
+	uint8				core_counter; //SK only skill, not saved, a temp buff
+	uint32				core_counter_timeout; //SK only skill, timeout for temp buff	
 	uint16				evade_mob_id; //Evade once mechanic id
 	uint32				evade_mob_timeout; //Evade once mechanic timeout
 	bool				show_rb_echo; //Show Build Skill echos
@@ -76,8 +76,8 @@ struct ExtendedProfile_Struct {
 	bool				use_pet_taunt; //Use pet taunt by default?
 	bool				use_full_dps; //Show full dps on a mob's death?
 	bool				use_self_dps; //Show self dps on a mob's death?
-	int					sworn_enemy_timeout; //SK only skill, timeout for sworn enemy
-	uint16				sworn_enemy_id; //SK only skill, target of sworn enemy
+	int					focus_enemy_timeout; //SK only skill, timeout for sworn enemy
+	uint16				focus_enemy_id; //SK only skill, target of sworn enemy
 	int					blood_oath_timeout; //SK only skill, timeout for blood oath effect cooldown
 	int					ooc_last_expiration; //When OOC Regen triggers, this timestamp is snapshotted. If zero, it's assumed to reset to now
 };

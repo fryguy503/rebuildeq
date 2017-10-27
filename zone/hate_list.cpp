@@ -681,18 +681,18 @@ void HateList::OnDeathTrigger()
 		if (mobHated->IsClient()) {
 			uint8 rank = mobHated->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
 			if (rank > 0) {
-				uint32 counters = mobHated->CastToClient()->GetRottenCoreCounters();
-				mobHated->CastToClient()->AddRottenCoreCounter(1);
-				if (counters < mobHated->CastToClient()->GetRottenCoreCounters()) {
-					mobHated->Message(MT_FocusEffect, "Rotten Core %u increased to %u counters.", rank, mobHated->CastToClient()->GetRottenCoreCounters());
+				uint32 counters = mobHated->CastToClient()->GetCoreCounter();
+				mobHated->CastToClient()->AddCoreCounter(1);
+				if (counters < mobHated->CastToClient()->GetCoreCounter()) {
+					mobHated->Message(MT_FocusEffect, "Rotten Core %u increased to %u counters.", rank, mobHated->CastToClient()->GetCoreCounter());
 				}
 			}
 			rank = mobHated->CastToClient()->GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
 			if (rank > 0) {
-				uint32 counters = mobHated->CastToClient()->GetRottenCoreCounters();
-				mobHated->CastToClient()->AddRottenCoreCounter(1);
-				if (counters < mobHated->CastToClient()->GetRottenCoreCounters()) {
-					mobHated->Message(MT_FocusEffect, "Killing Spree %u increased to %u counters.", rank, mobHated->CastToClient()->GetRottenCoreCounters());
+				uint32 counters = mobHated->CastToClient()->GetCoreCounter();
+				mobHated->CastToClient()->AddCoreCounter(1);
+				if (counters < mobHated->CastToClient()->GetCoreCounter()) {
+					mobHated->Message(MT_FocusEffect, "Killing Spree %u increased to %u counters.", rank, mobHated->CastToClient()->GetCoreCounter());
 				}
 			}
 		}

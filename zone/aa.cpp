@@ -1213,26 +1213,21 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		if (IsTaskActivityActive(307, 11)) UpdateTaskActivity(FEAT_GETTINGSTARTED, 11, 1);
 	}
 
-	if (rank_id == aaLeechTouch && GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) < 1 ||
-		rank_id == aaActOfValor && GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) < 1 ||
-		rank_id == aaAncestralAid && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) < 1 ||
-		rank_id == aaDeathPeace2 && GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH) < 1 ||
-		rank_id == aaDivineStun && GetBuildRank(PALADIN, RB_PAL_DIVINESTUN) < 1 ||
-		rank_id == aaSteadfastServant && GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) < 1 ||
-		rank_id == aaPurifySoul && GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) < 1 ||
-		rank_id == aaSpiritCall && GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL) < 1 ||
-		rank_id == aaVirulentParalysis && GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS) < 1 ||
-		rank_id == aaRabidBear && GetBuildRank(SHAMAN, RB_SHM_RABIDBEAR) < 1 ||
-		rank_id == aaAncestralGuard && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALGUARD) < 1 ||
-		rank_id == aaFeralSwipe && GetBuildRank(SHAMAN, RB_SHM_FERALSWIPE) < 1 ||
-		rank_id == aaCannibalization && GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE) < 1 ||
-		rank_id == aaParagonofSpirit && GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT) < 1 ||
-		rank_id == aaBoastfulBellow && GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW) < 1 ||
-		rank_id == aaHandofPiety && GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY) < 1 ||
+	if (rank_id == aaBoastfulBellow && GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW) < 1 ||
 		rank_id == aaCacophony && GetBuildRank(BARD, RB_BRD_CACOPHONY) < 1 ||
 		rank_id == aaDanceofBlades && GetBuildRank(BARD, RB_BRD_DANCEOFBLADES) < 1 ||
-		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
-		rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) < 1 ||
+		rank_id == aaShieldofNotes && GetBuildRank(BARD, RB_BRD_SHIELDOFNOTES) < 1 ||
+		rank_id == aaSongofStone && GetBuildRank(BARD, RB_BRD_SONGOFSTONE) < 1 ||
+
+		rank_id == aaDivineAvatar && GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) < 1 ||
+		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION) < 1 ||
+		rank_id == aaDivineArbitration && GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) < 1 ||
+		rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
+		rank_id == aaDivineRetribution && GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION) < 1 ||
+		rank_id == aaTurnUndead2 && GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) < 1 ||
+		rank_id == aaIntensityoftheResolute && GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE) < 1 ||
+		rank_id == aaExquisiteBenediction && GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION) < 1 ||
+
 		rank_id == aaTeleportBind && GetBuildRank(DRUID, RB_DRU_TELEPORTBIND) < 1 ||
 		rank_id == aaEntrap && GetBuildRank(DRUID, RB_DRU_ENTRAP) < 1 ||
 		rank_id == aaExodus && GetBuildRank(DRUID, RB_DRU_EXODUS) < 1 ||
@@ -1243,8 +1238,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaSpiritoftheWood && GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) < 1 ||
 		rank_id == aaNaturesBoon && GetBuildRank(DRUID, RB_DRU_NATURESBOON) < 1 ||
 		rank_id == aaNaturesGuardian && GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN) < 1 ||
-		rank_id == aaShieldofNotes && GetBuildRank(BARD, RB_BRD_SHIELDOFNOTES) < 1 ||
-		rank_id == aaSongofStone && GetBuildRank(BARD, RB_BRD_SONGOFSTONE) < 1 ||
+
 		rank_id == aaSharedHealth && GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) < 1 ||
 		rank_id == aaDimensionalShield && GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD) < 1 ||
 		rank_id == aaHostintheShell && GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) < 1 ||
@@ -1262,14 +1256,28 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaHeartofFlames && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES) < 1 ||
 		rank_id == aaCompanionofNecessity && GetBuildRank(MAGICIAN, RB_MAG_COMPANIONOFNECESSITY) < 1 ||
 		rank_id == aaServantofRo && GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) < 1 ||
-		rank_id == aaDivineAvatar && GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) < 1 ||
-		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION) < 1 ||
-		rank_id == aaDivineArbitration && GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) < 1 ||
-		rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
-		rank_id == aaDivineRetribution && GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION) < 1 ||
-		rank_id == aaTurnUndead2 && GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) < 1 ||
-		rank_id == aaIntensityoftheResolute && GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE) < 1 ||		
-		rank_id == aaExquisiteBenediction && GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION) < 1 ||
+
+		rank_id == aaHandofPiety && GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY) < 1 ||
+		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||
+
+		rank_id == aaActOfValor && GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) < 1 ||
+		rank_id == aaDivineStun && GetBuildRank(PALADIN, RB_PAL_DIVINESTUN) < 1 ||
+		
+		rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) < 1 ||
+
+		rank_id == aaLeechTouch && GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) < 1 ||
+		rank_id == aaDeathPeace2 && GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH) < 1 ||
+		rank_id == aaSteadfastServant && GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) < 1 ||
+
+		rank_id == aaAncestralAid && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) < 1 ||
+		rank_id == aaPurifySoul && GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) < 1 ||
+		rank_id == aaSpiritCall && GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL) < 1 ||
+		rank_id == aaVirulentParalysis && GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS) < 1 ||
+		rank_id == aaRabidBear && GetBuildRank(SHAMAN, RB_SHM_RABIDBEAR) < 1 ||
+		rank_id == aaAncestralGuard && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALGUARD) < 1 ||
+		rank_id == aaFeralSwipe && GetBuildRank(SHAMAN, RB_SHM_FERALSWIPE) < 1 ||
+		rank_id == aaCannibalization && GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE) < 1 ||
+		rank_id == aaParagonofSpirit && GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT) < 1 ||		
 		( //Lesson of the Devoted is used by multiple classes different builds
 			rank_id == aaLessonoftheDevoted && 				
 			GetBuildRank(BARD, RB_BRD_KINSONG) < 1 &&
