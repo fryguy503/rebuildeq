@@ -313,7 +313,7 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_PROMISE);
 		if (rank > 0 && mana_cost > 0) {
 			int reduced = mana_cost * (0.1 * rank);			
-			Log(Logs::General, Logs::Build, "Promise reduced mana cost by %i", rank);
+			BuildEcho(StringFormat("Promise reduced mana cost by %i", rank));
 			mana_cost -= rank;
 			if (mana_cost < 1) mana_cost = 0;			
 		}
@@ -3505,6 +3505,20 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 
 				if (rank > 0 && isAffected) {
 					duration = 1 * rank;
+				}
+			}
+		}
+
+		// Druid
+		else if (caster_client->GetClass() == MONK) {
+			// GRACE OF THE ORDER
+			{
+				static uint16 GRACE = 6238;
+				const bool isAffected = spell_id == GRACE;
+				const uint32 rank = caster->CastToClient()->GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER);
+
+				if (rank > 0 && isAffected) {
+					duration = 6 * 0.2f * rank;
 				}
 			}
 		}

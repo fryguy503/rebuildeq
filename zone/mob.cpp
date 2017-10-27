@@ -6780,7 +6780,7 @@ const char* Mob::RaceName()
 	if (GetRace() == 325) return "Rallos Ogre";
 	if (GetRace() == 326) return "Spider (PoP)";
 	if (GetRace() == 327) return "Crystal Spider";
-	if (GetRace() == 328) return "Tower Model (Zebuxoruk’s Cage)";
+	if (GetRace() == 328) return "Tower Model (Zebuxorukï¿½s Cage)";
 	if (GetRace() == 329) return "Portal (BoT/SSRA Portal model)";
 	if (GetRace() == 330) return "Guktan";
 	if (GetRace() == 331) return "Troll Pirate";
@@ -6851,7 +6851,7 @@ const char* Mob::RaceName()
 	if (GetRace() == 395) return "Aneuk (GoD/SoD)";
 	if (GetRace() == 396) return "Kyv
 	if (GetRace() == 397) return "Noc
-	if (GetRace() == 398) return "Ra’Tuk
+	if (GetRace() == 398) return "Raï¿½Tuk
 	if (GetRace() == 399) return "Tunat Muram
 	if (GetRace() == 400) return "Huvul
 	if (GetRace() == 401) return
@@ -6880,7 +6880,7 @@ const char* Mob::RaceName()
 	if (GetRace() == 423) return "Dragon Bones";
 	if (GetRace() == 424) return "Lightning Warrior Armor Pile";
 	if (GetRace() == 425) return "Crystal";
-	if (GetRace() == 426) return "Jagged Portal – pr
+	if (GetRace() == 426) return "Jagged Portal ï¿½ pr
 	Dragons of Norrath:
 	if (GetRace() == 427) return "Large Purse";
 	if (GetRace() == 428) return "Rock Pile";
@@ -6930,7 +6930,7 @@ const char* Mob::RaceName()
 	if (GetRace() == 471) return "Zombie (New)";
 	if (GetRace() == 472) return "Roboboar";
 	if (GetRace() == 473) return "Fairy (New)";
-	if (GetRace() == 474) return "Black Witheran – kr*/
+	if (GetRace() == 474) return "Black Witheran ï¿½ kr*/
 
 	if ((GetRace() == 39)) return "Gnoll";
 	if ((GetRace() == 38)) return "Spider";

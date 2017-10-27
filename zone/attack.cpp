@@ -293,8 +293,14 @@ bool Mob::CheckHitChance(Mob* other, DamageHitInfo &hit)
 		return true;
 
 	auto avoidance = defender->GetTotalDefense();
+	if (defender->IsClient() && defender->GetTarget() == this) {
+		uint32 rank = defender->CastToClient()->GetBuildRank(MONK, RB_MNK_DESTINY);		
+		avoidance += (avoidance * 0.01f * rank);
+	}
+
 	if (avoidance == -1) // some sort of auto avoid disc
 		return false;
+
 	/*
 	if (IsClient() && 
 		hit.tohit <= //this normally would hit
@@ -334,7 +340,7 @@ bool Mob::CheckHitChance(Mob* other, DamageHitInfo &hit)
 
 		Log(Logs::Detail, Logs::Attack, "Duelist hit chance: %.2f. Hit roll %.2f", chancetohit, tohit_roll);
 		if (tohit_roll > chancetohit) {			
-			if (ShowBuildEcho()) CastToClient()->Message(MT_FocusEffect, "Duelist %u caused %s to miss.", CastToClient()->GetBuildRank(ROGUE, RB_ROG_DUELIST), other->GetCleanName());
+			BuildEcho(StringFormat("Duelist %u caused %s to miss.", CastToClient()->GetBuildRank(ROGUE, RB_ROG_DUELIST), other->GetCleanName()));
 		}
 	}
 	
@@ -977,7 +983,7 @@ void Mob::MeleeMitigation(Mob *attacker, DamageHitInfo &hit, ExtraAttackOptions 
 		CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) && 
 		CastToClient()->IsSwornEnemyActive() &&
 		CastToClient()->IsSwornEnemyID(attacker->GetID())) {
-		Log(Logs::General, Logs::Build, "Familiarity changed mitigation from %i to %i.", mitigation, mitigation + 10 * CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) * CastToClient()->GetCoreCounter());
+		BuildEcho(StringFormat("Familiarity changed mitigation from %i to %i.", mitigation, mitigation + 10 * CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) * CastToClient()->GetCoreCounter()));
 		mitigation += 10 * CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) * CastToClient()->GetCoreCounter();		
 	}
 
@@ -1518,6 +1524,9 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		my_hit.offense = offense(my_hit.skill); // we need this a few times
 		my_hit.hand = Hand;
 
+		//RB_MNK_EXPOSEWEAKNESS is a raw bonus based on hit chance bonus
+		hit_chance_bonus += (hit_chance_bonus * 0.01 * expose_weakness);
+
 		if (opts) {
 			my_hit.base_damage *= opts->damage_percent;
 			my_hit.base_damage += opts->damage_flat;
@@ -1527,7 +1536,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		}
 		if (Hand == EQEmu::inventory::slotSecondary && IsClient() && GetBuildRank(BARD, RB_BRD_OFFHANDATTACK) > 0) {
 			int hcb = (hit_chance_bonus * 0.05f * GetBuildRank(BARD, RB_BRD_OFFHANDATTACK));
-			if (IsClient() && CastToClient()->ShowBuildEcho()) Message(MT_FocusEffect, "Offhand Attack %u gave a %i->%i bonus.", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb);
+			BuildEcho(StringFormat("Offhand Attack %u gave a %i->%i bonus.", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb));
 			if (hcb < 1) {
 				hcb = 1;
 			}
@@ -1540,15 +1549,15 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				int isb = (hit_chance_bonus * 0.02f * rank);
 				int isd = (my_hit.damage_done * 0.02f * rank);
 				if (isd > 0 && isb > 0) {
-					if (IsClient() && CastToClient()->ShowBuildEcho()) Message(MT_NonMelee, "Innate Songblade %u gave a %i->%i bonus to hit and %i to damage.", rank, hit_chance_bonus, isb, isd);
+					BuildEcho(StringFormat("Innate Songblade %u gave a %i->%i bonus to hit and %i to damage.", rank, hit_chance_bonus, isb, isd));
 					hit_chance_bonus += isb;
 					my_hit.damage_done += isd;
 				}
 			}
-
+			
 			rank = GetBuildRank(MONK, RB_MNK_RELENTLESSTRAINING);
 			if (rank > 0) {				
-				if (IsClient() && CastToClient()->ShowBuildEcho()) Message(MT_NonMelee, "Relentless Training %u gave a %i bonus to damage.", rank, (my_hit.damage_done * 0.1f * rank));
+				BuildEcho(StringFormat("Relentless Training %u gave a %i bonus to damage.", rank, (my_hit.damage_done * 0.1f * rank)));
 				my_hit.damage_done += (my_hit.damage_done * 0.1f * rank);
 			}
 		}
@@ -1611,7 +1620,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 						
 			rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
 			if (rank > 0) {
-				if (CastToClient()->ShowBuildEcho()) Message(MT_FocusEffect, "Spiritual Awakening %u gave %u mana", rank, rank);
+				BuildEcho(StringFormat("Spiritual Awakening %u gave %u mana", rank, rank));
 				entity_list.LogManaEvent(this, this, rank);
 				SetMana(GetMana() + rank);
 
@@ -1801,13 +1810,12 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				)
 			){
 
-
 			rank = GetBuildRank(MONK, RB_MNK_INTENSIFIEDTRAINING);
 			if (rank > 0) {
 				chance = 800;
 				proc_damage = GetLevel() * 5.0f * (0.25f * rank);
 				if (proc_damage < 20) proc_damage = 20;
-				Log(Logs::General, Logs::Build, "Intensified Training %u hit for %i damage.", rank, proc_damage);
+				BuildEcho(StringFormat("Intensified Training %u hit for %i damage.", rank, proc_damage));
 				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
 			}
 
@@ -1815,7 +1823,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			if (rank > 0 && other->IsNPC()) {
 
 				if (IsSwornEnemyActive() && IsSwornEnemyID(other->GetID())) { //same target, add counter
-					Log(Logs::General, Logs::Build, "Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * GetCoreCounter()), other->GetCleanName());
+					BuildEcho(StringFormat("Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * GetCoreCounter()), other->GetCleanName()));
 					AddCoreCounter(1);
 				}
 				else {
@@ -1823,7 +1831,15 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					GetEPP().focus_enemy_timeout = time(nullptr) + 60;
 					ResetCoreCounter();
 					if (GetCoreCounter() < 20) AddCoreCounter(1);
-					Log(Logs::General, Logs::Build, "Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * GetCoreCounter()), other->GetCleanName());
+					BuildEcho(StringFormat("Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * GetCoreCounter()), other->GetCleanName()));
+				}
+			}
+
+			rank = GetBuildRank(MONK, RB_MNK_EXPOSEWEAKNESS);
+			if (rank > 0 && other->IsNPC()) {
+				if (zone->random.Roll(int(5 * rank))) {
+					expose_weakness = rank;
+					BuildEcho(StringFormat("Expose Weakness %u has exposed vulnerability on %s, increasing accuracy.", rank, other->GetCleanName()));
 				}
 			}
 		}
@@ -3385,19 +3401,19 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 			switch(zone->random.Int(0,2)) {
 				case 0:
 					heal_amount = (uint32)(GetMaxHP() * rank * 0.02f);
-					if (CastToClient()->ShowBuildEcho()) CastToClient()->Message(MT_Spells, "Treeform %u healed you for %i.", rank, heal_amount);
+					BuildEcho(StringFormat("Treeform %u healed you for %i.", rank, heal_amount));
 					HealDamage(heal_amount, this);
 					break;
 				case 1:
 					mana_amount = (uint32)(GetMaxMana() * rank * 0.02f);
-					if (CastToClient()->ShowBuildEcho()) CastToClient()->Message(MT_Spells, "Treeform %u gave you %i mana.", rank, mana_amount);
+					BuildEcho(StringFormat("Treeform %u gave you %i mana.", rank, mana_amount));
 					entity_list.LogManaEvent(this, this, mana_amount);
 					SetMana((GetMana() + mana_amount));
 					CastToClient()->SendManaUpdate();
 					break;
 				case 2:
 					int damage_amount = (uint32)(GetMaxHP() * rank * 0.02f);
-					if (CastToClient()->ShowBuildEcho()) CastToClient()->Message(MT_Spells, "Treeform %u damaged %s for %i.", rank, attacker->GetCleanName(), damage_amount);
+					BuildEcho(StringFormat("Treeform %u damaged %s for %i.", rank, attacker->GetCleanName(), damage_amount));
 					DS += ((spell_ds) ? 1 : -1) * damage_amount;
 					break;
 			}
@@ -4066,14 +4082,14 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				rank = attacker_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH);
 				if (rank > 0 && (skill_used == EQEmu::skills::Skill2HBlunt || skill_used == EQEmu::skills::Skill2HPiercing || skill_used ==  EQEmu::skills::Skill2HSlashing)) {
 					bonus_damage = damage * 0.05f * rank;
-					if (attacker_client->ShowBuildEcho()) attacker_client->Message(MT_FocusEffect, "Blood Oath %u added %i bonus damage.", rank, bonus_damage);
+					attacker_client->BuildEcho(StringFormat("Blood Oath %u added %i bonus damage.", rank, bonus_damage));
 					damage += bonus_damage;
 				}
 
 				rank = attacker_client->GetBuildRank(PALADIN, RB_PAL_KNIGHTSADVANTAGE);
 				if (rank > 0 && (skill_used == EQEmu::skills::Skill2HBlunt || skill_used == EQEmu::skills::Skill2HPiercing || skill_used == EQEmu::skills::Skill2HSlashing)) {
 					bonus_damage = damage * 0.05f * rank;
-					if (attacker_client->ShowBuildEcho()) attacker_client->Message(MT_FocusEffect, "Knight's Advantage %u added %i bonus damage.", rank, bonus_damage);
+					attacker_client->BuildEcho(StringFormat("Knight's Advantage %u added %i bonus damage.", rank, bonus_damage));
 					damage += bonus_damage;
 				}
 
@@ -4085,7 +4101,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 						bonus_damage = damage * 0.05f * counters;
 						if (bonus_damage < 1) bonus_damage = 1;
 						if (bonus_damage > 100) {
-							if (attacker_client->ShowBuildEcho()) attacker_client->Message(MT_FocusEffect, "Killing Spree %u added %i bonus damage with %u counters.", rank, bonus_damage, counters);
+							attacker_client->BuildEcho(StringFormat("Killing Spree %u added %i bonus damage with %u counters.", rank, bonus_damage, counters));
 						}						
 						damage += bonus_damage;
 					}
@@ -4097,7 +4113,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					if (counters > 0) {
 						bonus_damage = damage * 0.03f * counters;
 						if (bonus_damage < 1) bonus_damage = 1;
-						if (attacker_client->ShowBuildEcho()) attacker_client->Message(MT_FocusEffect, "Rotten Core %u added %i bonus damage with %u counters.", rank, bonus_damage, counters);
+						attacker_client->BuildEcho(StringFormat("Rotten Core %u added %i bonus damage with %u counters.", rank, bonus_damage, counters));
 						damage += bonus_damage;
 					}
 				}
@@ -4125,7 +4141,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					}
 
 					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
-					if (attacker->CastToClient()->ShowBuildEcho()) attacker->Message(MT_FocusEffect, "Leech Touch %u added %i bonus damage.", rank, int32((float)damage * 0.04 * (float)rank));
+					attacker->BuildEcho(StringFormat("Leech Touch %u added %i bonus damage.", rank, int32((float)damage * 0.04 * (float)rank)));
 					damage += int32((float)damage * 0.04f * (float)rank);
 				}
 
@@ -4155,7 +4171,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				zone->random.Roll((int)(4 * CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH)))) {
 				int damageReduction = (int)(float)(damage * (float)0.05f * (float)CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH));				
 				if (damageReduction > 0) {
-					if (CastToClient()->ShowBuildEcho()) CastToClient()->Message(MT_FocusEffect, "Armor of Faith %u reduced damage from %s by %i.", CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH), attacker->GetCleanName(), damageReduction);
+					BuildEcho(StringFormat("Armor of Faith %u reduced damage from %s by %i.", CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH), attacker->GetCleanName(), damageReduction));
 					damage -= damageReduction;
 				}
 			}
@@ -4168,7 +4184,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 		if (spell_id == 3650 && IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMPATHETICSOUL) > 0) {
 			rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMPATHETICSOUL);
 			int empDamage = 40 * rank;
-			if (attacker->ShowBuildEcho()) attacker->CastToClient()->Message(MT_FocusEffect, "Empathetic Soul %u added %i bonus damage.", rank, empDamage);
+			BuildEcho(StringFormat("Empathetic Soul %u added %i bonus damage.", rank, empDamage));
 			damage += empDamage;
 		}
 
@@ -4683,7 +4699,7 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 		) {
 		int32 zDamage = caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR) * 0.01f * amount;
 		int zCount = caster->hate_list.DamageNearby(caster, zDamage, 50, this, caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR));
-		if (caster->ShowBuildEcho()) caster->Message(MT_FocusEffect, "Zealot's Fervor %u hit %i enemies for %i points of non-melee damage.", caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR), zCount, zDamage);
+		caster->BuildEcho(StringFormat("Zealot's Fervor %u hit %i enemies for %i points of non-melee damage.", caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR), zCount, zDamage));
 	}
 
 	if (acthealed > 100) {
@@ -5213,7 +5229,7 @@ void Mob::TryCriticalHit(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *
 		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);		
 		if (rank > 0 && defender->GetHPRatio() >= 90.0f && hit.skill == EQEmu::skills::SkillBackstab && CastToClient()->sneaking) {
 			Log(Logs::Detail, Logs::Attack, "Sneak Attack crit? %u %i %i skill : %i", rank, CastToClient()->hidden, CastToClient()->sneaking, hit.skill);
-			if (ShowBuildEcho()) CastToClient()->Message(MT_FocusEffect, "Sneak Attack %u catches %s off guard.", rank, defender->GetCleanName());
+			BuildEcho(StringFormat("Sneak Attack %u catches %s off guard.", rank, defender->GetCleanName()));
 			crit_chance += 10 * rank;
 
 			CastToClient()->sneaking = false; //Disable sneak
@@ -5259,16 +5275,16 @@ void Mob::TryCriticalHit(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *
 
 				CastToClient()->sneaking = false; //Disable sneak
 				CastToClient()->SendAppearancePacket(AT_Sneak, 0);
-				Log(Logs::Detail, Logs::Build, "HIDDEN_DAGGER: Sneak Attack %u, throwing skill: %i", rank, hit.skill);
+				BuildEcho(StringFormat("HIDDEN_DAGGER: Sneak Attack %u, throwing skill: %i", rank, hit.skill));
 				if (zone->random.Roll(rank * 15) &&
 					GetLevel() >= defender->GetLevel()) {
 					//Harmony = 3601
 					//defender->SpellFinished(3601, defender);								
 					CastToClient()->Message(MT_FocusEffect, "Hidden Dagger %u muffles %s.", rank, defender->GetCleanName());
-					Log(Logs::Detail, Logs::LogCategory::Build, "HIDDEN_DAGGER: Failed chance roll or too low level");
+					BuildEcho(StringFormat("HIDDEN_DAGGER: Failed chance roll or too low level"));
 				}
 				else {
-					Log(Logs::Detail, Logs::LogCategory::Build, "HIDDEN_DAGGER: Failed chance roll or too low level");
+					BuildEcho(StringFormat("HIDDEN_DAGGER: Failed chance roll or too low level"));
 				}
 			}
 
@@ -6182,6 +6198,13 @@ void Client::SetAttackTimer()
 			//we have a weapon, use its delay
 			delay = 100 * ItemToUse->Delay;
 
+		uint32 rank = GetBuildRank(MONK, RB_MNK_WUSQUICKENING);
+		if (rank > 0) {
+			BuildEcho(StringFormat("Wu's Quickening %u delay changed from %i to %i", rank, delay, (delay - (100 * rank))));
+			delay -= 100 * rank;
+			if (delay < 700) delay = 700;
+		}
+
 		speed = delay / haste_mod;
 
 		if (ItemToUse && ItemToUse->ItemType == EQEmu::item::ItemTypeBow) {
@@ -6408,5 +6431,5 @@ void Mob::DoOffHandAttackRounds(Mob *target, ExtraAttackOptions *opts)
 void Mob::SetMuffled(bool muffled)
 {
 	this->is_muffled = muffled;
-	Log(Logs::Detail, Logs::Build, "Muffled status is now %d", muffled);
+	BuildEcho(StringFormat("Muffled status is now %d", muffled));
 }

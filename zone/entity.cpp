@@ -3811,10 +3811,15 @@ void EntityList::AddTempPetsToHateList(Mob *owner, Mob* other, bool bFrenzy)
 	}
 }
 
-bool Entity::ShowBuildEcho() {
-	if (!IsClient()) return false;
-	return (CastToClient()->GetEPP().show_rb_echo == 1);
+void Entity::BuildEcho(std::string message) {
+	if (!IsClient() ||
+		CastToClient()->GetEPP().show_rb_echo != 1) {
+		return;
+	}
+	
+	CastToClient()->Message(MT_FocusEffect, message.c_str());
 }
+
 
 bool Entity::CheckCoordLosNoZLeaps(float cur_x, float cur_y, float cur_z,
 		float trg_x, float trg_y, float trg_z, float perwalk)

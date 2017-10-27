@@ -230,6 +230,8 @@ public:
 
 
 	std::vector<DPS_Struct> DPS();
+	//Monk effect to cause a mob to show weakness.
+	int expose_weakness;
 
 	void EngageReset();
 	uint32 EngageEnd();
@@ -1506,7 +1508,6 @@ protected:
 	bool is_muffled;
 	int npc_assist_cap;
 	Timer assist_cap_timer; // clear assist cap so more nearby mobs can be called for help
-
 
 	int patrol;
 	glm::vec3 m_FearWalkTarget;

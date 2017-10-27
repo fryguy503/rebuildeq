@@ -9570,6 +9570,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Primal Fusion\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == MONK && i == RB_MNK_GRACEOFTHEORDER && GetAA(aaLessonoftheDevoted) < 1) {
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
 					TrainAARank(aaHandofPiety);
 					Message(15, "You have unlocked the AA \"Hand of Piety\"! Find the hotkey in your Alternate Advancement Window.");
@@ -9843,7 +9848,7 @@ uint8 Client::GetCoreCounter() {
 }
 
 void Client::ResetCoreCounter() {
-	if (m_epp.core_counter > 0) Log(Logs::General, Logs::Build, "Your counters have faded.");
+	if (m_epp.core_counter > 0) BuildEcho(StringFormat("Your counters have faded."));
 	m_epp.core_counter = 0;
 	m_epp.core_counter_timeout = 0;
 }
@@ -11043,6 +11048,9 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MNK_FAMILIARITY) return "Familiarity";
 		else if (id == RB_MNK_BLOCK) return "Block";
 		else if (id == RB_MNK_RELENTLESSTRAINING) return "Relentless Training";
+		else if (id == RB_MNK_DESTINY) return "Destiny";
+		else if (id == RB_MNK_WUSQUICKENING) return "Wu's Quickening";
+		else if (id == RB_MNK_GRACEOFTHEORDER) return "Grace of the Order";
 		break;
 	case MAGICIAN:
 		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";

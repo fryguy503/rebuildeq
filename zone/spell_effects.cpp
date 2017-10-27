@@ -285,7 +285,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								(spell_id == 239 || spell_id == 93 || spell_id == 92 || spell_id == 252 || spell_id == 91 || spell_id == 419 || spell_id == 52 || spell_id == 405 || spell_id == 27 || spell_id == 115 || spell_id == 217 || spell_id == 1439 || spell_id == 406 || spell_id == 418 || spell_id == 664 || spell_id == 57 || spell_id == 1436 || spell_id == 29 || spell_id == 420 || spell_id == 433 || spell_id == 671 || spell_id == 1603 || spell_id == 1529 || spell_id == 1605 || spell_id == 2518 || spell_id == 1606 || spell_id == 1607 || spell_id == 2126 || spell_id == 2877 || spell_id == 1740)) {
 								if (zone->random.Roll(3 * rank)) {
 
-									if (caster->ShowBuildEcho()) caster->Message(MT_FocusEffect, "Lingering Pain %i activated.", rank);
+									caster->BuildEcho(StringFormat("Lingering Pain %i activated.", rank));
 									if (caster_level > 54) AddBuff(caster, 4105, 2);
 									else if (caster_level > 50) AddBuff(caster, 1601, 2);
 									else if (caster_level > 45) AddBuff(caster, 1600, 2);
@@ -341,7 +341,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							if (rank > 0 && (spell.spell_category == 1 || spell.spell_category == 2)) {
 								static const float BaseDamageBonus = 0.02f;		// 2% per rank
 								int bonusDamage = rank * BaseDamageBonus * dmg;
-								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Strike %u added %i bonus damage.", rank, -bonusDamage);
+								casterClient->BuildEcho(StringFormat("Strike %u added %i bonus damage.", rank, -bonusDamage));
 								dmg += bonusDamage;
 							}
 
@@ -351,13 +351,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								static const float BaseDamageBonus = 0.02f;		// 2% per rank
 								static const float BaseManaBonus = 0.01f;		// 1% per rank
 								int bonusDamage = rank * BaseDamageBonus * dmg;
-								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Ward of Rebuke %u added %i bonus damage.", rank, -bonusDamage);
+								casterClient->BuildEcho(StringFormat("Ward of Rebuke %u added %i bonus damage.", rank, -bonusDamage));
 								dmg += bonusDamage;
 
 								int manaAmount = rank * BaseManaBonus * -dmg;
 								entity_list.LogManaEvent(caster, caster, manaAmount);
 								casterClient->SetMana(casterClient->GetMana() + manaAmount);
-								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Ward of Rebuke %u gifted %i mana.", rank, manaAmount);
+								casterClient->BuildEcho(StringFormat("Ward of Rebuke %u gifted %i mana.", rank, manaAmount));
 							}
 
 							// Chosen
@@ -366,7 +366,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								static const float BaseDamageBonus = 0.25f;		// 25% per rank
 
 								int bonusDamage = rank * BaseDamageBonus * dmg;
-								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Chosen %u added %i bonus damage.", rank, -bonusDamage);
+								casterClient->BuildEcho(StringFormat("Chosen %u added %i bonus damage.", rank, -bonusDamage));
 
 								dmg += bonusDamage;
 							}
@@ -389,7 +389,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									if (healAmount < 1) healAmount = 1;
 									if (manaAmount < 1) manaAmount = 1;
 
-									if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Elixir of Might %u gifted %i health and %i mana.", rank, healAmount, manaAmount);
+									casterClient->BuildEcho(StringFormat("Elixir of Might %u gifted %i health and %i mana.", rank, healAmount, manaAmount));
 
 									casterClient->HealDamage(healAmount, caster);
 									entity_list.LogManaEvent(caster, caster, manaAmount);
@@ -404,7 +404,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 								int bonusDamage = rank * BaseBonusDamage * dmg;
 								if (bonusDamage > 0) bonusDamage = -1;
-								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Flame of Light %u added %i bonus damage.", rank, -bonusDamage);
+								casterClient->BuildEcho(StringFormat("Flame of Light %u added %i bonus damage.", rank, -bonusDamage));
 
 								dmg += bonusDamage;
 							}
@@ -421,7 +421,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									bonus_damage *= 4;
 									is_quad = true;
 								}
-								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Festering Spear %u added %i %s bonus damage.", rank, -bonus_damage, (is_quad) ? "QUAD" : "");
+								casterClient->BuildEcho(StringFormat("Festering Spear %u added %i %s bonus damage.", rank, -bonus_damage, (is_quad) ? "QUAD" : ""));
 								dmg += bonus_damage;
 							}
 
@@ -431,7 +431,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								(spell_id == 113 || spell_id == 114 || spell_id == 330 || spell_id == 324
 								 || spell_id == 410  || spell_id == 1663)) { //blade spells
 								int bonus_damage = (rank * 0.04 * -dmg);
-								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Shock of Swords %u added %i bonus damage.", rank, bonus_damage);
+								casterClient->BuildEcho(StringFormat("Shock of Swords %u added %i bonus damage.", rank, bonus_damage));
 								dmg -= bonus_damage;
 							}
 
@@ -439,7 +439,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
 							if (rank > 0 && caster != this) { // Ancient Wrath does not affect spells cast on self.
 								int bonus = dmg * 0.1f * rank * -1;
-								if (casterClient->ShowBuildEcho()) casterClient->Message(MT_FocusEffect, "Ancient Wrath %u added %i bonus damage.", rank, bonus);
+								casterClient->BuildEcho(StringFormat("Ancient Wrath %u added %i bonus damage.", rank, bonus));
 								dmg -= bonus;
 							}
 
@@ -464,7 +464,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								rank > 0) {
 								int mana_amount = -dmg * 0.05f * rank;
 								if (mana_amount < rank) mana_amount = rank;
-								if (caster->ShowBuildEcho()) caster->Message(MT_FocusEffect, "Siphon of Death %u siphoned %i mana.", rank, mana_amount);
+								caster->BuildEcho(StringFormat("Siphon of Death %u siphoned %i mana.", rank, mana_amount));
 								entity_list.LogManaEvent(caster, caster, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}	

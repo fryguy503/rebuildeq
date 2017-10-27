@@ -1284,6 +1284,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE) < 1 &&			
 			GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) < 1 &&
 			GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) < 1 &&
+			GetBuildRank(DRUID, RB_MNK_GRACEOFTHEORDER) < 1 &&
 			GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) < 1 &&
 			GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1 &&
 			GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
@@ -1372,7 +1373,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION);
 		if (rb_rank > 0) {
 			cooldown = cooldown - (rb_rank * 43200); //12 hours per rank
-			Log(Logs::General, Logs::Build, "Divine Resurrection %u reduced cooldown by %i", rb_rank, (rb_rank * 43200));
+			BuildEcho(StringFormat("Divine Resurrection %u reduced cooldown by %i", rb_rank, (rb_rank * 43200)));
 		}
 	} else if (rank_id == aaAppraisal) {
 		rb_rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
@@ -1521,6 +1522,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		else if (GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE)) spellid = 6233;
 		else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) spellid = 6233;
 		else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION)) spellid = 6276;
+		else if (GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER)) spellid = 6238;
 		else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION)) spellid = 6234;
 		else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT)) spellid = 6240;
 		else if (GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON)) spellid = 6241;

@@ -911,6 +911,30 @@ class Build {
 			$newSkill->desc = 'Increases damage of Tiger Claw, Eagle Strike, Tail Whip and other special attacks by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-relentlesstraining.png";
 			$skills[6] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Expose Weakness";
+			$newSkill->desc = 'When using Tiger Claw, Eagle Strike, Tail Whip and other special attacks, gives a <em data-base="5">5</em>% chance to mark the target, increasing accuracy of all attacking allies by <em data-base="10">10</em><span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-exposeweakness.png";
+			$skills[8] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Destiny";
+			$newSkill->desc = 'When you have an enemy targeted, increases avoidance by <em data-base="1">1</em>% <span class="perLevel"> per rank</span>';
+			$newSkill->image = "/images/builds/icons/rb-mnk-destiny.png";
+			$skills[10] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Wu's Quickening";
+			$newSkill->desc = 'Reduces delay of your primary weapon by <em data-base="1">1</em> <span class="perLevel"> per rank</span>, to a minimum of 7.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-wusquickening.png";
+			$skills[13] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Grace of the Order";
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, increasing max health by 15% and a 250dd stun for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-wusquickening.png";
+			$skills[16] = $newSkill;
 			break;
 
 			//==================NECROMANCER======================
