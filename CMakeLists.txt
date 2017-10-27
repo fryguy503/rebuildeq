@@ -52,13 +52,18 @@ IF(MSVC OR MINGW)
 	ENDIF(CMAKE_CL_64)
 ENDIF(MSVC OR MINGW)
 
-SET(NATS_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats_x64/include")
 
-SET(PROTOBUF_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x64/include")
+
 
 # on rebuild, i'm shifting the output directory to the deploy dir
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server")
 
+# include dirs are universal
+SET(NATS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats")
+SET(PROTOBUF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf")
+
+SET(NATS_INCLUDE_DIR "${NATS_ROOT}/include")
+SET(PROTOBUF_INCLUDE_DIR "${PROTOBUF_ROOT}/include")
 
 IF(MSVC)	
 	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
@@ -68,8 +73,7 @@ IF(MSVC)
 	    set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
 	endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
 
-	SET(NATS_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats_x64/lib/nats.lib")
-	SET(PROTOBUF_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x64/lib/libprotobufd.lib")
+	
 
 	#Set our default locations for zlib/mysql based on x86/x64
 	IF(CMAKE_CL_64)
@@ -85,14 +89,16 @@ IF(MSVC)
 		ELSE()
 			SET(SODIUM_LIBRARY_HINTS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/libsodium/x64/Release/v110/dynamic")
 		ENDIF()
-		SET(NATS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats_x64")
-		SET(PROTOBUF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x64")
+		SET(NATS_LIBRARY "${NATS_ROOT}/lib_x64/nats.lib")
+		SET(PROTOBUF_LIBRARY "${PROTOBUF_ROOT}/lib_x64/libprotobufd.lib")
 	ELSE(CMAKE_CL_64)
 		SET(ZLIB_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/zlib_x86")
 		SET(MYSQL_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/mysql_x86")
 		SET(LUA_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/luaj_x86")
 		SET(SODIUM_INCLUDE_HINTS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/libsodium/include")
 		SET(OPENSSL_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/openssl_x86")
+		SET(NATS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats_x86")
+		SET(PROTOBUF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x86")
 		IF(MSVC_VERSION GREATER 1800)
 			SET(SODIUM_LIBRARY_HINTS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/libsodium/Win32/Release/v140/dynamic")
 		ELSEIF(MSVC_VERSION EQUAL 1800)
@@ -100,6 +106,8 @@ IF(MSVC)
 		ELSE()
 			SET(SODIUM_LIBRARY_HINTS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/libsodium/Win32/Release/v110/dynamic")
 		ENDIF()
+		SET(NATS_LIBRARY "${NATS_ROOT}/lib_x86/nats.lib")
+		SET(PROTOBUF_LIBRARY "${PROTOBUF_ROOT}/lib_x86/libprotobufd.lib")
 	ENDIF(CMAKE_CL_64)
 
 	#disable CRT warnings on windows cause they're annoying as shit and we use C functions everywhere
@@ -151,9 +159,9 @@ IF(MSVC)
 
 	ADD_DEFINITIONS(-DNOMINMAX)
 ELSE(MSVC)
-
-	SET(NATS_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats_x64/linux-lib/libnats.so")
-	SET(PROTOBUF_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x64/lib/libprotobuf.so")
+	
+	SET(NATS_LIBRARY "${NATS_ROOT}/lib_x64/libnats.so")
+	SET(PROTOBUF_LIBRARY "${PROTOBUF_ROOT}/lib_x64/libprotobuf.so")
 
 	#Normally set by perl but we don't use the perl flags anymore so we set it.
 	ADD_DEFINITIONS(-DHAS_UNION_SEMUN)
