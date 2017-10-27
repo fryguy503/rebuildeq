@@ -899,6 +899,18 @@ class Build {
 			$newSkill->desc = 'Every time a special attack lands on an enemy, the monk gains <em data-base="10">10</em> armor against the target<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-familiarity.png";
 			$skills[2] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Block";
+			$newSkill->desc = 'Increases block chance by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-block.png";
+			$skills[4] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Relentless Training";
+			$newSkill->desc = 'Increases damage of Tiger Claw, Eagle Strike, Tail Whip and other special attacks by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-relentlesstraining.png";
+			$skills[6] = $newSkill;
 			break;
 
 			//==================NECROMANCER======================

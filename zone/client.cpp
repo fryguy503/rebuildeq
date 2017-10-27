@@ -11041,7 +11041,9 @@ std::string Client::GetBuildName(uint32 id) {
 	case MONK:
 		if (id == RB_MNK_INTENSIFIEDTRAINING) return "Intensified Training";
 		else if (id == RB_MNK_FAMILIARITY) return "Familiarity";
-
+		else if (id == RB_MNK_BLOCK) return "Block";
+		else if (id == RB_MNK_RELENTLESSTRAINING) return "Relentless Training";
+		break;
 	case MAGICIAN:
 		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";
 		else if (id == RB_MAG_QUICKSUMMONING) return "Quick Summoning";

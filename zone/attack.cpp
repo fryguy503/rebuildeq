@@ -1534,13 +1534,22 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			hit_chance_bonus += hcb;
 		}
 
-		if (IsClient() && GetBuildRank(BARD, RB_BRD_INNATESONGBLADE) > 0) {
-			int isb = (hit_chance_bonus * 0.02f * GetBuildRank(BARD, RB_BRD_INNATESONGBLADE));
-			int isd = (my_hit.damage_done * 0.02f * GetBuildRank(BARD, RB_BRD_INNATESONGBLADE));
-			if (isd > 0 && isb > 0) {
-				if (IsClient() && CastToClient()->ShowBuildEcho()) Message(MT_NonMelee, "Innate Songblade %u gave a %i->%i bonus to hit and %i to damage.", GetBuildRank(BARD, RB_BRD_INNATESONGBLADE), hit_chance_bonus, isb, isd);
-				hit_chance_bonus += isb;
-				my_hit.damage_done += isd;
+		if (IsClient()) {
+			uint32 rank = GetBuildRank(BARD, RB_BRD_INNATESONGBLADE);
+			if (rank > 0) {
+				int isb = (hit_chance_bonus * 0.02f * rank);
+				int isd = (my_hit.damage_done * 0.02f * rank);
+				if (isd > 0 && isb > 0) {
+					if (IsClient() && CastToClient()->ShowBuildEcho()) Message(MT_NonMelee, "Innate Songblade %u gave a %i->%i bonus to hit and %i to damage.", rank, hit_chance_bonus, isb, isd);
+					hit_chance_bonus += isb;
+					my_hit.damage_done += isd;
+				}
+			}
+
+			rank = GetBuildRank(MONK, RB_MNK_RELENTLESSTRAINING);
+			if (rank > 0) {				
+				if (IsClient() && CastToClient()->ShowBuildEcho()) Message(MT_NonMelee, "Relentless Training %u gave a %i bonus to damage.", rank, (my_hit.damage_done * 0.1f * rank));
+				my_hit.damage_done += (my_hit.damage_done * 0.1f * rank);
 			}
 		}
 
@@ -1791,6 +1800,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				my_hit.skill == EQEmu::skills::SkillFlyingKick
 				)
 			){
+
 
 			rank = GetBuildRank(MONK, RB_MNK_INTENSIFIEDTRAINING);
 			if (rank > 0) {
