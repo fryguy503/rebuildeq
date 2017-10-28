@@ -1177,6 +1177,10 @@ public:
 	//Figure out the tier of the mob or player
 	int GetTier();
 
+	int GetRogueBonusDamage(int dmg);
+
+	int GetManaTapBonus(int dmg);
+
 	// Bots HealRotation methods
 #ifdef BOTS
 	bool IsHealRotationTarget() { return (m_target_of_heal_rotation.use_count() && m_target_of_heal_rotation.get()); }

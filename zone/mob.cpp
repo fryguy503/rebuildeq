@@ -7264,3 +7264,23 @@ int Mob::GetTier() {
 
 	return 0;
 }
+
+//This is a formula that gives rogues bonus damage to normal melee attacks.
+int Mob::GetRogueBonusDamage(int dmg) {
+	if (!IsClient()) return 0;
+	if (GetClass() != ROGUE) return 0;
+	if (GetLevel() >= 50) return (dmg * 1.0f);
+	if (GetLevel() >= 40) return (dmg * 0.75f);
+	if (GetLevel() >= 30) return (dmg * 0.50f);
+	if (GetLevel() >= 20) return (dmg * 0.25f);
+	if (GetLevel() >= 10) return (dmg * 0.10f);
+	return 0;
+}
+
+//This is for casters to give a mana tap on melee, passively
+int Mob::GetManaTapBonus(int dmg) {
+	if (!IsClient()) return 0;
+	if (GetClass() != SHAMAN || GetClass() != CLERIC || GetClass() != DRUID) return 0;
+
+	return (dmg * 0.1f);
+}

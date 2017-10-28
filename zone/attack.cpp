@@ -1137,6 +1137,7 @@ int Mob::GetWeaponDamage(Mob *against, const EQEmu::ItemInstance *weapon_item, u
 						GetLevel(), rec_level, weapon_item->GetItemWeaponDamage(true));
 				else
 					dmg = weapon_item->GetItemWeaponDamage(true);
+				dmg += GetRogueBonusDamage(dmg);
 				dmg = dmg <= 0 ? 1 : dmg;
 			}
 			else {
@@ -1181,7 +1182,7 @@ int Mob::GetWeaponDamage(Mob *against, const EQEmu::ItemInstance *weapon_item, u
 				else {
 					dmg = weapon_item->GetItemWeaponDamage(true);
 				}
-
+				dmg += GetRogueBonusDamage(dmg);
 				dmg = dmg <= 0 ? 1 : dmg;
 			}
 		}
@@ -1504,7 +1505,9 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			my_hit.min_damage = ucDamageBonus;
 			hate += ucDamageBonus;
 		}
+
 #endif
+
 		//Live AA - Sinister Strikes *Adds weapon damage bonus to offhand weapon.
 		if (Hand == EQEmu::inventory::slotSecondary) {
 			if (aabonuses.SecondaryDmgInc || itembonuses.SecondaryDmgInc || spellbonuses.SecondaryDmgInc){
@@ -1799,6 +1802,16 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
 			}
 		}
+
+		if (Hand == EQEmu::inventory::slotPrimary) {
+			int mana_amount = GetManaTapBonus(my_hit.damage_done);
+			if (mana_amount > 0) {
+				entity_list.LogManaEvent(this, this, mana_amount);
+				SetMana((GetMana() + mana_amount));
+				CastToClient()->SendManaUpdate();
+			}
+		}
+
 
 		if (!IsFromSpell &&
 				(my_hit.skill == EQEmu::skills::SkillTigerClaw ||
