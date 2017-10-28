@@ -272,6 +272,22 @@ const Encounter* Entity::CastToEncounter() const
 	return static_cast<const Encounter *>(this);
 }
 
+
+int Entity::GetBuildRank(uint8 classid, uint32 id) {
+	if (!IsClient()) return 0;	
+	Client *c = CastToClient();
+	if (c->GetClass() != classid) return 0;	 	//ignore classes not applicable
+	if (sizeof(c->GetEPP().build) < id) return 0;	 //ignore invalid build structs
+
+	char n = c->GetEPP().build[id];
+
+	//max rank is 5, minimum is 0
+	if ((uint32(n - '0')) <= 5 && (uint32(n - '0')) > 0) {
+		return (uint32(n - '0'));
+	}
+	return 0;
+}
+
 #ifdef BOTS
 Bot *Entity::CastToBot()
 {
@@ -4886,3 +4902,4 @@ void EntityList::SendAlternateAdvancementStats() {
 		c.second->SendAlternateAdvancementPoints();
 	}
 }
+

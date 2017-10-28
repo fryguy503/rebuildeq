@@ -1825,6 +1825,8 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				)
 			){
 
+			DoDivineSurge();
+
 			rank = GetBuildRank(MONK, RB_MNK_INTENSIFIEDTRAINING);
 			if (rank > 0) {
 				chance = 800;
@@ -4697,24 +4699,31 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 	else
 		acthealed = amount;
 
-	if (caster && caster->IsClient() && caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE) > 0) {
-		if (zone->random.Roll((int)(1 * caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE)))) {
-			int manaAmount = (int)((float)acthealed * (float)0.01f * (float)caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE));
-			if (manaAmount > 0) {
-				entity_list.LogManaEvent(this, this, manaAmount);
-				SetMana(GetMana() + manaAmount);
-				Message(MT_Spells, "%s's Refreshing Breeze %u gave you %i mana.", caster->GetCleanName(), caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE), manaAmount);
+	if (caster) {
+		int rank = caster->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE);
+
+		if (rank > 0) {
+			if (zone->random.Roll((int)(1 * rank))) {
+				int manaAmount = (int)((float)acthealed * (float)0.01f * (float)rank);
+				if (manaAmount > 0) {
+					entity_list.LogManaEvent(this, this, manaAmount);
+					SetMana(GetMana() + manaAmount);
+					Message(MT_Spells, "%s's Refreshing Breeze %i gave you %i mana.", caster->GetCleanName(), rank, manaAmount);
+				}
 			}
 		}
-	}
 
-	if (caster && caster->IsClient() && 
-		caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR) > 0 &&
-		caster != this //cannot use on self
-		) {
-		int32 zDamage = caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR) * 0.01f * amount;
-		int zCount = caster->hate_list.DamageNearby(caster, zDamage, 50, this, caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR));
-		caster->BuildEcho(StringFormat("Zealot's Fervor %u hit %i enemies for %i points of non-melee damage.", caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR), zCount, zDamage));
+		rank = caster->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR);
+		if (rank > 0 &&
+			caster != this //cannot use on self
+			) {
+			int32 zDamage = rank * 0.01f * amount;
+			int zCount = caster->hate_list.DamageNearby(caster, zDamage, 50, this, rank);
+			caster->BuildEcho(StringFormat("Zealot's Fervor %i hit %i enemies for %i points of non-melee damage.", rank, zCount, zDamage));
+		}
+
+		rank = GetBuildRank(MONK, RB_MNK_INNERCHAKRA);
+		if (rank > 0) acthealed += (rank * 0.04 * acthealed);
 	}
 
 	if (acthealed > 100) {

@@ -107,6 +107,8 @@ public:
 	const Beacon	*CastToBeacon() const;
 	const Encounter *CastToEncounter() const;
 
+	int GetBuildRank(uint8 classid, uint32 id);
+
 	inline const uint16& GetID() const { return id; }
 	inline const time_t& GetSpawnTimeStamp() const { return spawn_timestamp; }
 

@@ -9639,8 +9639,14 @@ void Client::Handle_OP_Mend(const EQApplicationPacket *app)
 		Message(13, "Ability recovery time not yet met.");
 		return;
 	}
-	p_timers.Start(pTimerMend, MendReuseTime - 1);
-
+	
+	uint32 rank = GetBuildRank(MONK, RB_MNK_HASTENEDMEND);
+	if (rank > 0) {
+		p_timers.Start(pTimerMend, MendReuseTime - (rank));
+	}
+	else {
+		p_timers.Start(pTimerMend, MendReuseTime - 1);
+	}
 	int mendhp = GetMaxHP() / 4;
 	int currenthp = GetHP();
 	if (zone->random.Int(0, 199) < (int)GetSkill(EQEmu::skills::SkillMend)) {

@@ -1283,7 +1283,6 @@ public:
 	bool IsSwornEnemyActive();
 	bool IsSwornEnemyID(uint16 id);
 	bool IsBuildAvailable();
-	uint32 GetBuildRank(uint8 classid, uint32 rankid);
 	void DoRestedStatus();
 	bool InRestedArea();
 	void AddRestedExperience(uint32 lastUpdate);
@@ -1319,6 +1318,7 @@ public:
 
 	void DoMendingAura(int amount);
 
+	void DoDivineSurge();
 	void CheckRegionTypeChanges();
 
 	int32 CalcATK();

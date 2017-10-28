@@ -933,8 +933,22 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Grace of the Order";
 			$newSkill->desc = 'Grants the Lesson of the Devoted AA, increasing max health by 15% and a 250dd stun for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mnk-wusquickening.png";
+			$newSkill->image = "/images/builds/icons/rb-mnk-graceoftheorder.png";
 			$skills[16] = $newSkill;
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Hastened Mend";
+			$newSkill->desc = 'Decrease the reuse timer of Mend by <em data-base="1">1</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-hastenedmend.png";
+			$skills[18] = $newSkill;
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Inner Chakra";
+			$newSkill->desc = 'Heals received while using feign death, including mend, heal for an additional <em data-base="4">4</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-innerchakra.png";
+			$skills[20] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Channel Chakra";
@@ -945,8 +959,14 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Mending Aura";
 			$newSkill->desc = 'When you use Mend, you have a <em data-base="10">10</em>% chance to heal the rest of the group within <em data-base="10">10</em> meters for <em data-base="20">20</em>% the healed amount<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mnk-channelchakra.png";
+			$newSkill->image = "/images/builds/icons/rb-mnk-mendingaura.png";
 			$skills[24] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Divine Surge";
+			$newSkill->desc = 'When you use Tiger Claw, Eagle Strike, Tail Whip or other special attacks, you have a <em data-base="5">5</em>% chance to recover <em data-base="10">10</em> mana and endurance to the group<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-divinesurge.png";
+			$skills[26] = $newSkill;
 			break;
 
 			//==================NECROMANCER======================
@@ -1432,10 +1452,6 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-shd-hungeringaura.png";	
 			$skills[4] = $newSkill;
 			
-
-
-
-
 			$newSkill = new stdClass();
 			$newSkill->title = "Steadfast Servant";
 			$newSkill->desc = 'Grants the Steadfast Servant AA, summoning a pet at <em data-base="+20">+20</em>% power<span class="perLevel"> per rank</span>.';

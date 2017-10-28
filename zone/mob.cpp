@@ -7279,8 +7279,7 @@ int Mob::GetRogueBonusDamage(int dmg) {
 
 //Check if Channel Chakra should be triggered
 void Mob::CheckChannelChakra(int dmg) {
-	if (!IsClient()) return;
-	uint32 rank = CastToClient()->GetBuildRank(MONK, RB_MNK_CHANNELCHAKRA);
+	uint32 rank = GetBuildRank(MONK, RB_MNK_CHANNELCHAKRA);
 	if (rank < 1) return;
 	if (GetHPRatio() > (rank * 0.1f)) return;
 	if (dmg < 1) return;

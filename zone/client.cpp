@@ -9728,26 +9728,6 @@ void Client::TrainAARank(uint32 rankId, uint32 rankLevel, uint32 charges) {
 	SaveAA();
 }
 
-uint32 Client::GetBuildRank(uint8 classid, uint32 id) {
-	//ignore classes not applicable
-	if (GetClass() != classid) {
-		return 0;
-	}
-
-	//ignore invalid build structs
-	if (sizeof(m_epp.build) < id) {
-		return 0;
-	}
-
-	char n = m_epp.build[id];
-
-	//max rank is 5, minimum is 0
-	if ((uint32(n - '0')) <= 5 && (uint32(n - '0')) > 0) {
-		return (uint32(n - '0'));
-	}
-	return 0;
-}
-
 void Client::DoRestedStatus() {
 
 	if (IsDead() || IsLD()) {
@@ -11080,8 +11060,12 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MNK_DESTINY) return "Destiny";
 		else if (id == RB_MNK_WUSQUICKENING) return "Wu's Quickening";
 		else if (id == RB_MNK_GRACEOFTHEORDER) return "Grace of the Order";
+		else if (id == RB_MNK_HASTENEDMEND) return "Hastened Mend";
+		else if (id == RB_MNK_INNERCHAKRA) return "Inner Chakra";
 		else if (id == RB_MNK_CHANNELCHAKRA) return "Channel Chakra";
 		else if (id == RB_MNK_MENDINGAURA) return "Mending Aura";
+		else if (id == RB_MNK_DIVINESURGE) return "Divine Surge";
+
 		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";
@@ -11367,6 +11351,7 @@ void Client::DoMendingAura(int amount) {
 					if (dist2 > range2) continue;
 					raid->members[i].member->Message(MT_Spells, "%s has healed you for %i.", GetCleanName(), amount);
 					healCount++;
+					raid->members[i].member->HealDamage(amount, this);
 				}
 			}
 		}
@@ -11374,5 +11359,72 @@ void Client::DoMendingAura(int amount) {
 
 	if (healCount > 0) {
 		BuildEcho(StringFormat("Mending Aura %u spreads your mend to %i allies within %i meters.", rank, healCount, int(rank*10)));
+	}
+}
+
+
+void Client::DoDivineSurge() {
+	uint32 rank = GetBuildRank(MONK, RB_MNK_DIVINESURGE);
+	if (rank < 1) return;
+	if (!zone->random.Roll(int(rank * 5))) return;
+	int healCount = 0;
+	int amount = 0;
+	Mob *target = nullptr;
+
+	if (this->IsGrouped()) {							
+		auto group = this->GetGroup(); //iterate group
+		for (int i = 0; i < 6; ++i) {
+
+			target = group->members[i];
+			if (target) continue; //target grouped
+			if (!target->IsClient()) continue; //Is a client
+			if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+			if (target->CastToClient()->IsDead()) continue; //not dead
+			
+			float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
+			float range2 = (rank * 10) * (rank * 10);
+			if (dist2 > range2) continue;
+
+			healCount++;
+			if (this->GetID() == target->GetID()) target->Message(MT_Spells, "You recover %i endurance.", amount);
+			else target->Message(MT_Spells, "%s has given you %i mana and endurance.", GetCleanName(), amount);
+			
+			target->SetEndurance(target->GetEndurance() + amount);
+			target->CastToClient()->SendEnduranceUpdate();
+			entity_list.LogManaEvent(this, target, amount);
+			target->SetMana((target->GetMana() + amount));
+			target->CastToClient()->SendManaUpdate();
+		}
+	}
+	else if (this->IsRaidGrouped()) { //Raid healing
+		auto raid = this->GetRaid();
+
+		uint32 gid = raid->GetGroup(this->CastToClient());
+		if (gid < 12) {
+			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+				target = raid->members[i].member;
+				if (target) continue; //target grouped
+				if (!target->IsClient()) continue; //Is a client
+				if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+				if (target->CastToClient()->IsDead()) continue; //not dead
+				
+				float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
+				float range2 = (rank * 10) * (rank * 10);
+				if (dist2 > range2) continue;
+				healCount++;
+				if (this->GetID() == target->GetID()) target->Message(MT_Spells, "You recover %i endurance.", amount);
+				else target->Message(MT_Spells, "%s has given you %i mana and endurance.", GetCleanName(), amount);
+
+				entity_list.LogManaEvent(this, target, amount);
+				target->SetMana((target->GetMana() + amount));
+				target->CastToClient()->SendManaUpdate();
+				target->SetEndurance(target->GetEndurance() + amount);
+				target->CastToClient()->SendEnduranceUpdate();
+			}
+		}
+	}
+
+	if (healCount > 0) {
+		BuildEcho(StringFormat("Mending Aura %u spreads your mend to %i allies within %i meters.", rank, healCount, int(rank * 10)));
 	}
 }
