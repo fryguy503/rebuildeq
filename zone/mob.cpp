@@ -7277,6 +7277,19 @@ int Mob::GetRogueBonusDamage(int dmg) {
 	return 0;
 }
 
+//Check if Channel Chakra should be triggered
+void Mob::CheckChannelChakra(int dmg) {
+	if (!IsClient()) return;
+	uint32 rank = CastToClient()->GetBuildRank(MONK, RB_MNK_CHANNELCHAKRA);
+	if (rank < 1) return;
+	if (GetHPRatio() > (rank * 0.1f)) return;
+	if (dmg < 1) return;
+	int healAmount = dmg * rank * 0.02f;
+	if (healAmount < 1) return;
+	BuildEcho(StringFormat("Channel Chakra %u healed you for %i.", rank, healAmount));
+	HealDamage(healAmount, this);
+}
+
 //This is for casters to give a mana tap on melee, passively
 int Mob::GetManaTapBonus(int dmg) {
 	if (!IsClient()) return 0;

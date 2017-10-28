@@ -1317,6 +1317,8 @@ public:
 
 	void DoDivineStunEffect(Mob * target);
 
+	void DoMendingAura(int amount);
+
 	void CheckRegionTypeChanges();
 
 	int32 CalcATK();

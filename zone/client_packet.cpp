@@ -9655,6 +9655,7 @@ void Client::Handle_OP_Mend(const EQApplicationPacket *app)
 		SetHP(GetHP() + mendhp);
 		SendHPUpdate();
 		Message_StringID(4, MEND_SUCCESS);
+		DoMendingAura(mendhp);
 	}
 	else {
 		/* the purpose of the following is to make the chance to worsen wounds much less common,

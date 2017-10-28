@@ -1139,6 +1139,7 @@ int Mob::GetWeaponDamage(Mob *against, const EQEmu::ItemInstance *weapon_item, u
 					dmg = weapon_item->GetItemWeaponDamage(true);
 				dmg += GetRogueBonusDamage(dmg);
 				dmg = dmg <= 0 ? 1 : dmg;
+				CheckChannelChakra(dmg);
 			}
 			else {
 				return 0;
@@ -1184,6 +1185,7 @@ int Mob::GetWeaponDamage(Mob *against, const EQEmu::ItemInstance *weapon_item, u
 				}
 				dmg += GetRogueBonusDamage(dmg);
 				dmg = dmg <= 0 ? 1 : dmg;
+				CheckChannelChakra(dmg);
 			}
 		}
 		else {

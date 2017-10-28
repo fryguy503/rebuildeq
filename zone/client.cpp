@@ -2159,6 +2159,7 @@ void Client::SendClientMoneyUpdate(uint8 type,uint32 amount){
 
 
 bool Client::TakeMoneyFromPPOrBank(uint64 copper, bool updateclient) {
+	if (copper == 0) return true;
 	//First try player inventory
 	if (this->TakeMoneyFromPP(copper, updateclient)) {
 		return true;
@@ -2452,6 +2453,7 @@ void Client::SendMoneyUpdate() {
 }
 
 bool Client::HasMoneyInInvOrBank(int64 Copper) {
+	if (Copper == 0) return true;
 	if (this->HasMoney(Copper)) {
 		return true;
 	}
@@ -2464,6 +2466,7 @@ bool Client::HasMoneyInInvOrBank(int64 Copper) {
 }
 
 bool Client::HasMoneyInBank(int64 Copper) {
+	if (Copper == 0) return true;
 	if ((static_cast<uint64>(m_pp.copper_bank) +
 		(static_cast<uint64>(m_pp.silver_bank) * 10) +
 		(static_cast<uint64>(m_pp.gold_bank) * 100) +
@@ -2473,7 +2476,7 @@ bool Client::HasMoneyInBank(int64 Copper) {
 }
 
 bool Client::HasMoney(uint64 Copper) {
-
+	if (Copper == 0) return true;
 	if ((static_cast<uint64>(m_pp.copper) +
 		(static_cast<uint64>(m_pp.silver) * 10) +
 		(static_cast<uint64>(m_pp.gold) * 100) +
@@ -11042,16 +11045,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_DRU_STINGINGAFFLICTION) return "Stinging Affliction";
 		else if (id == RB_DRU_DEEPROOTS) return "Deep Roots";
 		else if (id == RB_DRU_NATURESBLIGHT) return "Natures Blight";
-		break;
-	case MONK:
-		if (id == RB_MNK_INTENSIFIEDTRAINING) return "Intensified Training";
-		else if (id == RB_MNK_FAMILIARITY) return "Familiarity";
-		else if (id == RB_MNK_BLOCK) return "Block";
-		else if (id == RB_MNK_RELENTLESSTRAINING) return "Relentless Training";
-		else if (id == RB_MNK_DESTINY) return "Destiny";
-		else if (id == RB_MNK_WUSQUICKENING) return "Wu's Quickening";
-		else if (id == RB_MNK_GRACEOFTHEORDER) return "Grace of the Order";
-		break;
+		break;	
 	case MAGICIAN:
 		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";
 		else if (id == RB_MAG_QUICKSUMMONING) return "Quick Summoning";
@@ -11077,6 +11071,17 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MAG_QUICKDAMAGE) return "Quick Damage";
 		else if (id == RB_MAG_HEARTOFFLAMES) return "Heart of Flames";
 		else if (id == RB_MAG_PRIMALFUSION) return "Primal Fusion";
+		break;
+	case MONK:
+		if (id == RB_MNK_INTENSIFIEDTRAINING) return "Intensified Training";
+		else if (id == RB_MNK_FAMILIARITY) return "Familiarity";
+		else if (id == RB_MNK_BLOCK) return "Block";
+		else if (id == RB_MNK_RELENTLESSTRAINING) return "Relentless Training";
+		else if (id == RB_MNK_DESTINY) return "Destiny";
+		else if (id == RB_MNK_WUSQUICKENING) return "Wu's Quickening";
+		else if (id == RB_MNK_GRACEOFTHEORDER) return "Grace of the Order";
+		else if (id == RB_MNK_CHANNELCHAKRA) return "Channel Chakra";
+		else if (id == RB_MNK_MENDINGAURA) return "Mending Aura";
 		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";
@@ -11314,4 +11319,60 @@ void Client::DoDivineStunEffect(Mob* target) {
 	healTarget->Message(MT_Spells, "%s has healed you for %i with their Divine Bash.", healTarget->GetCleanName(), healAmount);
 	GetActSpellHealing(200, healAmount, this); //emulate minor healing for actspellhealing
 	healTarget->HealDamage(healAmount, this);
+}
+
+
+void Client::DoMendingAura(int amount) {
+	uint32 rank = GetBuildRank(MONK, RB_MNK_MENDINGAURA);
+	if (rank < 1) return;
+	if (!zone->random.Roll(int(rank * 2))) return;
+	int healCount = 0;
+	
+	if (this->IsGrouped()) {
+		//Give heal to group (and RAID)									
+		auto group = this->GetGroup(); //iterate group
+		for (int i = 0; i < 6; ++i) {
+			if (group->members[i] &&  //target grouped
+				group->members[i]->IsClient() && //Is a client												
+				this->GetID() != group->members[i]->GetID() && //not me
+				this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
+				!group->members[i]->CastToClient()->IsDead() //and not dead
+				) {
+
+				float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
+				float range2 = (rank * 10) * (rank * 10);
+				if (dist2 > range2) continue;
+				healCount++;
+				group->members[i]->Message(MT_Spells, "%s has healed you for %i.", GetCleanName(), amount);
+				group->members[i]->HealDamage(amount, this);				
+			}
+		}
+	}
+	else if (this->IsRaidGrouped()) { //Raid healing
+		auto raid = this->GetRaid();
+
+		uint32 gid = raid->GetGroup(this->CastToClient());
+		if (gid < 12) {
+			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+				if (raid->members[i].member &&  //is raid member
+					raid->members[i].GroupNumber == gid && //in group
+					raid->members[i].member->IsClient() && //Is a client
+					raid->members[i].member != this && //not me
+					raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
+					!raid->members[i].member->IsDead() //and not dead
+					) {
+
+					float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
+					float range2 = (rank * 10) * (rank * 10);
+					if (dist2 > range2) continue;
+					raid->members[i].member->Message(MT_Spells, "%s has healed you for %i.", GetCleanName(), amount);
+					healCount++;
+				}
+			}
+		}
+	}
+
+	if (healCount > 0) {
+		BuildEcho(StringFormat("Mending Aura %u spreads your mend to %i allies within %i meters.", rank, healCount, int(rank*10)));
+	}
 }

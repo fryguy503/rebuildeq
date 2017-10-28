@@ -935,6 +935,18 @@ class Build {
 			$newSkill->desc = 'Grants the Lesson of the Devoted AA, increasing max health by 15% and a 250dd stun for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-wusquickening.png";
 			$skills[16] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Channel Chakra";
+			$newSkill->desc = 'While your health is less than <em data-base="10">10</em>%, and no enemy is actively attacking you, your normal melee attacks now lifetap for <em data-base="2">2</em>% damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-channelchakra.png";
+			$skills[22] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Mending Aura";
+			$newSkill->desc = 'When you use Mend, you have a <em data-base="10">10</em>% chance to heal the rest of the group within <em data-base="10">10</em> meters for <em data-base="20">20</em>% the healed amount<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-channelchakra.png";
+			$skills[24] = $newSkill;
 			break;
 
 			//==================NECROMANCER======================
@@ -1432,7 +1444,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Zevfeer's Feast";
-			$newSkill->desc = 'Improves Siphon Strength and Abduct Strength to tap the target for HP and Mana for up to <em data-base="+1">+1</em>% your maximum health and mana<span class="perLevel"> per rank</span> to give it to group.';
+			$newSkill->desc = 'Improves Siphon Strength and Abduct Strength to tap the target for HP and Mana for up to <em data-base="1">1</em>% your maximum health and mana<span class="perLevel"> per rank</span> to give it to group.';
 			$newSkill->image = "/images/builds/icons/rb-shd-zevfeersfeast.png";	
 			$skills[8] = $newSkill;
 			

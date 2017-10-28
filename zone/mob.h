@@ -1179,6 +1179,7 @@ public:
 
 	int GetRogueBonusDamage(int dmg);
 
+	void CheckChannelChakra(int dmg);
 	int GetManaTapBonus(int dmg);
 
 	// Bots HealRotation methods
