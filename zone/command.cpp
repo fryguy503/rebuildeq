@@ -4597,7 +4597,10 @@ void command_buff(Client *c, const Seperator *sep) {
 		cost = 1000;
 	}
 	displayCost = StringFormat("%u platinum", (cost / 1000));
-	
+	if (c->GetLevel() < 10) {
+		displayCost = "nothing";
+		cost = 0;
+	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
 		if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4621,87 +4624,63 @@ void command_buff(Client *c, const Seperator *sep) {
 		duration *= 10;
 
 		if (level < 35) target->QuickBuff(target, 144, duration); //regeneration 34
-		else if (level < 40) target->QuickBuff(target, 137, duration); //pack regen 39
-		else if (level < 43) target->QuickBuff(target, 145, duration); //chloro 42
-		else if (level < 46) target->QuickBuff(target, 138, duration); //pack chloro 45
-		else if (level < 55) target->QuickBuff(target, 1568, duration); //regrowuth 54
-		else if (level < 59) target->QuickBuff(target, 1569, duration); //regrowth of grove 58 /grpp
-		else target->QuickBuff(target, 2520, duration); //nature's recov - 60
+		else if (level < 50) target->QuickBuff(target, 145, duration); //chloro 42
+		else target->QuickBuff(target, 1568, duration); //regrowuth 54
 
-		if (level < 2) target->QuickBuff(target, 26, duration); //skin like wood 1
-		else if (level < 10) target->QuickBuff(target, 2511, duration); //prot of wood 9
-		else if (level < 15) target->QuickBuff(target, 263, duration); //skin like rock 14
-		else if (level < 20) target->QuickBuff(target, 2512, duration); //prot of rock 19
-		else if (level < 25) target->QuickBuff(target, 421, duration); //skin like steel 24
-		else if (level < 28) target->QuickBuff(target, 2513, duration); //prot like steel 27
-		else if (level < 37) target->QuickBuff(target, 422, duration); //skin like diamond 36
-		else if (level < 40) target->QuickBuff(target, 2514, duration); //prot diamond 39
-		else if (level < 47) target->QuickBuff(target, 423, duration); //skin like nature 46
-		else if (level < 50) target->QuickBuff(target, 2515, duration); //prot of nature 49
-		else if (level < 58) target->QuickBuff(target, 1559, duration); //natureskin 57
-		else if (level < 60) target->QuickBuff(target, 2188, duration); //prot cabbage 59
-		else target->QuickBuff(target, 1442, duration); //prot glades 60
+		if (level < 10) target->QuickBuff(target, 26, duration); //skin like wood 1
+		else if (level < 20) target->QuickBuff(target, 2511, duration); //prot of wood 9
+		else if (level < 25) target->QuickBuff(target, 263, duration); //skin like rock 14
+		else if (level < 30) target->QuickBuff(target, 2512, duration); //prot of rock 19
+		else if (level < 35) target->QuickBuff(target, 421, duration); //skin like steel 24
+		else if (level < 40) target->QuickBuff(target, 2513, duration); //prot like steel 27
+		else if (level < 45) target->QuickBuff(target, 422, duration); //skin like diamond 36
+		else if (level < 50) target->QuickBuff(target, 2514, duration); //prot diamond 39
+		else if (level < 55) target->QuickBuff(target, 423, duration); //skin like nature 46
+		else target->QuickBuff(target, 2515, duration); //prot of nature 49
 
-		if (level < 8) target->QuickBuff(target, 256, duration); //shield of thistles 7
-		else if (level < 18) target->QuickBuff(target, 273, duration); //shield of barbs 17
-		else if (level < 28) target->QuickBuff(target, 129, duration); //shield of brambles 27
-		else if (level < 38) target->QuickBuff(target, 432, duration); //shield of spikes 37
-		else if (level < 47) target->QuickBuff(target, 356, duration); //shield of thorns 47
-		else if (level < 50) target->QuickBuff(target, 1727, duration); //legacy of spike 49
-		else if (level < 58) target->QuickBuff(target, 1560, duration); //shield of blades 58
-		else target->QuickBuff(target, 1561, duration); //legacy of thorns 59
+		if (level < 10) target->QuickBuff(target, 256, duration); //shield of thistles 7
+		else if (level < 20) target->QuickBuff(target, 273, duration); //shield of barbs 17
+		else if (level < 30) target->QuickBuff(target, 129, duration); //shield of brambles 27
+		else if (level < 40) target->QuickBuff(target, 432, duration); //shield of spikes 37
+		else if (level < 50) target->QuickBuff(target, 356, duration); //shield of thorns 47
+		else if (level < 55) target->QuickBuff(target, 1727, duration); //legacy of spike 49
+		else target->QuickBuff(target, 1560, duration); //shield of blades 58
 
-		if (level < 2) target->QuickBuff(target, 268, duration); //str of earth 1
+		/*if (level < 2) target->QuickBuff(target, 268, duration); //str of earth 1
 		else if (level < 35) target->QuickBuff(target, 429, duration); //str of stone 34
-		else target->QuickBuff(target, 430, duration); //storm str 44
+		else target->QuickBuff(target, 430, duration); //storm str 44*/
 
+		/*
+		//no longer gives clarity
 		if (level > 40) target->QuickBuff(target, 1693, duration);
-		else target->QuickBuff(target, 174, duration);
+		else target->QuickBuff(target, 174, duration);*/
 
-		c->QuickBuff(target, 278, duration);
-		//target->QuickBuff(target, 278, duration); //sow
+		target->QuickBuff(target, 278, duration);
 
 		if (c->HasPet()) {
 			target = c->GetPet();
 			if (level < 35) target->QuickBuff(target, 144, duration); //regeneration 34
-			else if (level < 40) target->QuickBuff(target, 137, duration); //pack regen 39
-			else if (level < 43) target->QuickBuff(target, 145, duration);  //chloro 42
-			else if (level < 46) target->QuickBuff(target, 138, duration); //pack chloro 45
-			else if (level < 55) target->QuickBuff(target, 1568, duration); //regrowuth 54
-			else if (level < 59) target->QuickBuff(target, 1569, duration); //regrowth of grove 58 /grpp
-			else target->QuickBuff(target, 2520, duration); //nature's recov - 60
+			else if (level < 50) target->QuickBuff(target, 145, duration); //chloro 42
+			else target->QuickBuff(target, 1568, duration); //regrowuth 54
 
-			if (level < 2) target->QuickBuff(target, 26, duration); //skin like wood 1
-			else if (level < 10) target->QuickBuff(target, 2511, duration); //prot of wood 9
-			else if (level < 15) target->QuickBuff(target, 263, duration); //skin like rock 14
-			else if (level < 20) target->QuickBuff(target, 2512, duration); //prot of rock 19
-			else if (level < 25) target->QuickBuff(target, 421, duration); //skin like steel 24
-			else if (level < 28) target->QuickBuff(target, 2513, duration); //prot like steel 27
-			else if (level < 37) target->QuickBuff(target, 422, duration); //skin like diamond 36
-			else if (level < 40) target->QuickBuff(target, 2514, duration); //prot diamond 39
-			else if (level < 47) target->QuickBuff(target, 423, duration); //skin like nature 46
-			else if (level < 50) target->QuickBuff(target, 2515, duration); //prot of nature 49
-			else if (level < 58) target->QuickBuff(target, 1559, duration); //natureskin 57
-			else if (level < 60) target->QuickBuff(target, 2188, duration); //prot cabbage 59
-			else target->QuickBuff(target, 1442, duration); //prot glades 60
+			if (level < 10) target->QuickBuff(target, 26, duration); //skin like wood 1
+			else if (level < 20) target->QuickBuff(target, 2511, duration); //prot of wood 9
+			else if (level < 25) target->QuickBuff(target, 263, duration); //skin like rock 14
+			else if (level < 30) target->QuickBuff(target, 2512, duration); //prot of rock 19
+			else if (level < 35) target->QuickBuff(target, 421, duration); //skin like steel 24
+			else if (level < 40) target->QuickBuff(target, 2513, duration); //prot like steel 27
+			else if (level < 45) target->QuickBuff(target, 422, duration); //skin like diamond 36
+			else if (level < 50) target->QuickBuff(target, 2514, duration); //prot diamond 39
+			else if (level < 55) target->QuickBuff(target, 423, duration); //skin like nature 46
+			else target->QuickBuff(target, 2515, duration); //prot of nature 49
 
-			if (level < 8) target->QuickBuff(target, 256, duration); //shield of thistles 7
-			else if (level < 18) target->QuickBuff(target, 273, duration); //shield of barbs 17
-			else if (level < 28) target->QuickBuff(target, 129, duration); //shield of brambles 27
-			else if (level < 38) target->QuickBuff(target, 432, duration); //shield of spikes 37
-			else if (level < 47) target->QuickBuff(target, 356, duration); //shield of thorns 47
-			else if (level < 50) target->QuickBuff(target, 1727, duration); //legacy of spike 49
-			else if (level < 58) target->QuickBuff(target, 1560, duration); //shield of blades 58
-			else target->QuickBuff(target, 1561, duration); //legacy of thorns 59
-
-			if (level < 2) target->QuickBuff(target, 268, duration); //str of earth 1
-			else if (level < 35) target->QuickBuff(target, 429, duration); //str of stone 34
-			else target->QuickBuff(target, 430, duration); //storm str 44
-
-			if (level > 30) target->QuickBuff(target, 1693, duration);
-			else target->QuickBuff(target, 174, duration);
-			//target->AddBuff(target, 278, duration); //sow
-			c->QuickBuff(target, 278, duration);
+			if (level < 10) target->QuickBuff(target, 256, duration); //shield of thistles 7
+			else if (level < 20) target->QuickBuff(target, 273, duration); //shield of barbs 17
+			else if (level < 30) target->QuickBuff(target, 129, duration); //shield of brambles 27
+			else if (level < 40) target->QuickBuff(target, 432, duration); //shield of spikes 37
+			else if (level < 50) target->QuickBuff(target, 356, duration); //shield of thorns 47
+			else if (level < 55) target->QuickBuff(target, 1727, duration); //legacy of spike 49
+			else target->QuickBuff(target, 1560, duration); //shield of blades 58
 		}
 		if (c->IsClient() && c->CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 		{
@@ -4788,22 +4767,26 @@ void command_return(Client *c, const Seperator *sep) {
 			c->Message(0, "No return point is currently available.");
 			return;
 		}
-		if (!c->HasMoneyInInvOrBank(cost)) {
-			c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
-			return;
-		}
+		if (c->GetLevel() >= 10) {
+			if (!c->HasMoneyInInvOrBank(cost)) {
+				c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
+				return;
+			}
 
-		if (!c->TakeMoneyFromPPOrBank(cost, true)) {
-			char *hacker_str = nullptr;
-			MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
-			database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
-			safe_delete_array(hacker_str);
-			c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
-			return;
-		}
+			if (!c->TakeMoneyFromPPOrBank(cost, true)) {
+				char *hacker_str = nullptr;
+				MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
+				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+				safe_delete_array(hacker_str);
+				c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
+				return;
+			}
 
-		c->Message(0, "You paid %s to return to %s.", displayCost.c_str(), returnZoneName.c_str());
-		
+			c->Message(0, "You paid %s to return to %s.", displayCost.c_str(), returnZoneName.c_str());
+		}
+		else {
+			c->Message(0, "You return to %s for free since you are below level 10.", displayCost.c_str(), returnZoneName.c_str());
+		}
 		
 		//zone to safe coords
 		c->MovePC(zoneid, 0.0f, 0.0f, 0.0f, 0.0f, 0, ZoneToSafeCoords);
@@ -4812,9 +4795,19 @@ void command_return(Client *c, const Seperator *sep) {
 		return;
 	}
 	if (returnZoneName == "") {
-		c->Message(0, "It costs %s to use #return at your level. You have not died recently. ( %s )", displayCost.c_str(), c->CreateSayLink("#return info", "info").c_str());
+		if (c->GetLevel() >= 10) {
+			c->Message(0, "It costs %s to use #return at your level. You have not died recently. ( %s )", displayCost.c_str(), c->CreateSayLink("#return info", "info").c_str());
+		}
+		else {
+			c->Message(0, "It costs nothing to use #return until level 10. You have not died recently. ( %s )", c->CreateSayLink("#return info", "info").c_str());
+		}
 	} else {
-		c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ] ( %s )", displayCost.c_str(), returnZoneName.c_str(), c->CreateSayLink("#return confirm", "confirm").c_str(), c->CreateSayLink("#return info", "info").c_str());
+		if (c->GetLevel() >= 10) {
+			c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ] ( %s )", displayCost.c_str(), returnZoneName.c_str(), c->CreateSayLink("#return confirm", "confirm").c_str(), c->CreateSayLink("#return info", "info").c_str());
+		}
+		else {
+			c->Message(0, "It costs nothing to use #return until level 10. Your last death was at %s. Teleport? [ %s ] ( %s )", returnZoneName.c_str(), c->CreateSayLink("#return confirm", "confirm").c_str(), c->CreateSayLink("#return info", "info").c_str());
+		}
 	}
 }
 
@@ -4834,16 +4827,20 @@ void command_rez(Client *c, const Seperator *sep) {
 		cost = 1000;
 	}
 	displayCost = StringFormat("%u platinum", (cost / 1000));
+	if (c->GetLevel() < 10) {
+		displayCost == "nothing";
+		cost = 0;
+	}
 
 	Corpse *corpse = entity_list.GetUnrezzedCorpseByOwner(c);
-
+	
 	//no corpses found
 	if (!corpse) {
 		c->Message(0, "At level %u, it will cost you %s to summon and resurrect one of your corpses in this zone. There are no corpses in this zone that are eligible.", c->GetLevel(), displayCost.c_str());
 		return;
 	}
 
-	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {		
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
 		if (!c->HasMoneyInInvOrBank(cost)) {
 			c->Message(0, "Not enough money to summon and resurrect a corpse in zone.");
 			return;
@@ -6318,6 +6315,7 @@ void command_feat(Client *c, const Seperator *sep)
 		//Feat("pet", "Pet Naming", "naming", FEAT_PETNAMING, 65535, 0, 0, 0),		
 		Feat("pet", "Pet Discipline", "discipline", FEAT_PETDISCIPLINE, 65535, aaPetDiscipline, 1, 0),
 		Feat("class", "Charm of Defense", "defense", FEAT_CHARMOFDEFENSE, 21, 0, 0, 100045),
+		Feat("class", "Charm of Mana", "defense", FEAT_CHARMOFMANA, 546, 0, 0, 100088),
 		Feat("general", "Frontal Stun Immunity", "stun", FEAT_FRONTSTUN, 65535, 0, 0, 0),
 		//Feat("general", "Cursed Fragments", "cursed", FEAT_CURSEDFRAGMENTS, 65535, 0, 0, 0),
 		Feat("aa", "Innate Runspeed", "runspeed", FEAT_INNATERUNSPEED, 65535, aaInnateRunSpeed, 3, 0),
