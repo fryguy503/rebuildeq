@@ -6068,6 +6068,7 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 				if (c->IsSwornEnemyActive() && c->IsSwornEnemyID(defender->GetID())) { //same target, add counter
 					BuildEcho(StringFormat("Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * c->GetCoreCounter()), defender->GetCleanName()));
 					c->AddCoreCounter(1);
+					c->GetEPP().focus_enemy_timeout = time(nullptr) + 60;
 				}
 				else {
 					c->GetEPP().focus_enemy_id = defender->GetID();
