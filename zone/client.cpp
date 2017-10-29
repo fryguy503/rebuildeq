@@ -10982,7 +10982,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_CLR_HARKENTHEGODS) return "Harken the Gods";
 		else if (id == RB_CLR_BLESSINGOFHASTE) return "Blessing of Haste";
 		else if (id == RB_CLR_DIVINEHAMMER) return "Divine Hammer";
-		else if (id == RB_CLR_AVATARSBOON) return "Avatar's Boon";
+		else if (id == RB_CLR_DEATHPACT) return "Death Pact";
 		else if (id == RB_CLR_AUGMENTEDRETRIBUTION) return "Augmented Retribution";
 		else if (id == RB_CLR_DIVINEAVATAR) return "Divine Avatar";
 		else if (id == RB_CLR_INSTILLLIFE) return "Instill Life";
@@ -11000,7 +11000,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_CLR_TURNUNDEAD) return "Turn Undead";
 		else if (id == RB_CLR_EXQUISITEBENEDICTION) return "Exquisite Benediction";
 		else if (id == RB_CLR_MARKOFRETRIBUTION) return "Mark of Retribution";
-		else if (id == RB_CLR_PIOUSZEALOT) return "Pious Zealot";
+		else if (id == RB_CLR_MARKOFKARN) return "Mark of Karn";
 		break;
 	case DRUID:
 		if (id == RB_DRU_ENTRAP) return "Entrap";

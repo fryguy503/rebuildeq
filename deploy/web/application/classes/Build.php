@@ -464,14 +464,14 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Hammer";
-			$newSkill->desc = 'Grants a passive ability that gives you a <em data-base="8">8</em>% chance to use Hand of the God proc<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'The cleric gains a <em data-base="60">60</em> mod proc that causes the Hand of the God spell, dealing 75-150 damage randomly.';
 			$newSkill->image = "/images/builds/icons/rb-clr-divinehammer.png";	
 			$skills[8] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Avatar's Boon";
-			$newSkill->desc = 'Gives a <em data-base="2">2</em>% chance that the next ally you heal is blessed with Avatar\s Boon, granting <em data-base="2">2</em>% of the next damage dealt by the player to return as mana to the cleric<span class="perLevel"> per rank</span>. NOT IMPLEMENTED';
-			$newSkill->image = "/images/builds/icons/rb-clr-avatarsboon.png";	
+			$newSkill->title = "Mark of Karn";
+			$newSkill->desc = 'Healing an ally with a single target spell, while they target an enemy, will cause the target to be affected by the Mark of Karn, healing allies who hit the enemy, for 0 to <em data-base="1">1</em>ticks randomly.';
+			$newSkill->image = "/images/builds/icons/rb-clr-piouszealot.png";
 			$skills[10] = $newSkill;
 
 			$newSkill = new stdClass();
@@ -577,9 +577,9 @@ class Build {
 			$skills[49] = $newSkill;
 			
 			$newSkill = new stdClass();
-			$newSkill->title = "Pious Zealot";
-			$newSkill->desc = 'Summons a pet that will heal group members for <em data-base="2">2</em>%<span class="perLevel"> per rank</span> of the cleric\'s max hp if a nearby ally goes below 20%hp. CURRENTLY NOT IMPLEMENTED';
-			$newSkill->image = "/images/builds/icons/rb-clr-piouszealot.png";	
+			$newSkill->title = "Death Pact";
+			$newSkill->desc = 'Healing an ally with a single target spell gives them a 0 to <em data-base="1">1</em> tick duration random death pact buff<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-avatarsboon.png";	
 			$skills[52] = $newSkill;
 			break;
 
