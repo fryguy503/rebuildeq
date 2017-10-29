@@ -9652,7 +9652,7 @@ void Client::Handle_OP_Mend(const EQApplicationPacket *app)
 	if (zone->random.Int(0, 199) < (int)GetSkill(EQEmu::skills::SkillMend)) {
 
 		int criticalchance = spellbonuses.CriticalMend + itembonuses.CriticalMend + aabonuses.CriticalMend;
-
+		
 		if (zone->random.Int(0, 99) < criticalchance) {
 			mendhp *= 2;
 			Message_StringID(4, MEND_CRITICAL);

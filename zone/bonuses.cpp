@@ -677,6 +677,8 @@ void Mob::ApplyAABonuses(const AA::Rank &rank, StatBonuses *newbon)
 			newbon->FocusEffects[focus] = static_cast<uint8>(effect);
 			continue;
 		}
+		int monkBonus = 0;
+		int buildRank = 0;
 
 		switch (effect) {
 		case SE_ACv2:
@@ -873,7 +875,15 @@ void Mob::ApplyAABonuses(const AA::Rank &rank, StatBonuses *newbon)
 			newbon->SeeInvis = base1;
 			break;
 		case SE_BaseMovementSpeed:
-			newbon->BaseMovementSpeed += base1;
+			monkBonus = 0;
+			buildRank = GetBuildRank(MONK, RB_MNK_COWARDLYSTANCE);
+			if (buildRank > 0) {
+				monkBonus = (1-GetHPRatio()) * 10 * buildRank;
+			}
+
+			if (monkBonus > base1) newbon->BaseMovementSpeed += monkBonus;
+			else newbon->BaseMovementSpeed += base1;
+			
 			break;
 		case SE_IncreaseRunSpeedCap:
 			newbon->IncreaseRunSpeedCap += base1;

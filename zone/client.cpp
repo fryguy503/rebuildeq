@@ -11074,6 +11074,10 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MNK_IMPROVEDMEND) return "Improved Mend";
 		else if (id == RB_MNK_PURIFYBODY) return "Purify Body";
 		else if (id == RB_MNK_TRANQUILITY) return "Tranquility";
+		else if (id == RB_MNK_AGILEFEET) return "Agile Feet";
+		else if (id == RB_MNK_COWARDLYSTANCE) return "Cowardly Stance";
+		else if (id == RB_MNK_THUNDERFOOT) return "Thunderfoot";
+		else if (id == RB_MNK_STOICMIND) return "Stoic Mind";
 		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";

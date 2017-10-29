@@ -985,6 +985,30 @@ class Build {
 			$newSkill->desc = 'When you are not affected by negative effects, not under feign death, nor are engaged by an enemy, you regenerate <em data-base="2">2</em>% max health passively<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-tranquility.png";
 			$skills[34] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Agile Feet";
+			$newSkill->desc = 'Increases your chance to resist snares by <em data-base="2">2</em>% <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-agilefeet.png";
+			$skills[36] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Cowardly Stance";
+			$newSkill->desc = 'Increases your movement speed by up to <em data-base="10">10</em>% based on missing health. Does not stack with movement buffs<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-cowardlystance.png";
+			$skills[38] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Thunderfoot";
+			$newSkill->desc = 'Grants a passive spell block that recovers every level - <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-thunderfoot.png";
+			$skills[40] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Stoic Mind";
+			$newSkill->desc = 'While your health is not below <em data-base="2">2</em>%, your resistance to spells is increased by <em data-base="3">3</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-stoicmind.png";
+			$skills[38] = $newSkill;
 			break;
 
 			//==================NECROMANCER======================

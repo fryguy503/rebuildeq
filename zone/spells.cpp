@@ -4301,7 +4301,40 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob *spelltar, bool reflect, bool use_r
 
 		if(spell_effectiveness < 100)
 		{
-			if(spell_effectiveness == 0 || !IsPartialCapableSpell(spell_id) )
+			bool isResisted = false;
+			int rank = spelltar->GetBuildRank(MONK, RB_MNK_AGILEFEET);
+			if (rank > 0) {
+				if (IsEffectInSpell(spell_id, SE_MovementSpeed) && IsDetrimentalSpell(spell_id)) {
+					if (zone->random.Roll(2 * rank)) {
+						isResisted = true;
+						spelltar->BuildEcho(StringFormat("Agile Feet %d resisted the snare spell.", rank));
+					}
+				}
+			}
+
+			rank = spelltar->GetBuildRank(MONK, RB_MNK_STOICMIND);
+			if (rank > 0) {
+				if (IsDetrimentalSpell(spell_id)) {
+					if (GetHPRatio() >= (1 - (rank * 0.02))) {
+						if (zone->random.Roll(3 * rank)) {
+							isResisted = true;
+							spelltar->BuildEcho(StringFormat("Agile Feet %d resisted the spell.", rank));
+						}
+					}
+					
+				}
+			}
+
+			rank = spelltar->GetBuildRank(MONK, RB_MNK_THUNDERFOOT);
+			if (rank > 0) {
+				if (IsDetrimentalSpell(spell_id) && spelltar->CastToClient()->GetEPP().passive_timeout <= time(nullptr)) {
+					spelltar->CastToClient()->GetEPP().passive_timeout  = time(nullptr) + (spelltar->GetLevel() - (rank * 6));
+					isResisted = true;
+					spelltar->BuildEcho(StringFormat("Thunderfoot %d resisted the spell.", rank));
+				}
+			}
+
+			if(spell_effectiveness == 0 || !IsPartialCapableSpell(spell_id) || isResisted)
 			{
 				Log(Logs::Detail, Logs::Spells, "Spell %d was completely resisted by %s", spell_id, spelltar->GetName());
 
