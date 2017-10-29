@@ -383,7 +383,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Bard's Wish";
-			$newSkill->desc = 'All songs are sung <em data-base="0.2">0.2</em> seconds faster<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When rank 5, all songs last an additional tick.';
 			$newSkill->image = "/images/builds/icons/rb-brd-bardswish.png";	
 			$skills[34] = $newSkill;
 

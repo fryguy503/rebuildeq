@@ -607,16 +607,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 
 	//CastToClient()->Message(0, "Cast Time: %i", cast_time);
 	//Reduce cast time if it's a bard song, and you have bard's wish
-	if (IsBardSong(spell_id) && IsClient() &&
-		CastToClient()->GetBuildRank(BARD, RB_BRD_BARDSWISH) > 4 &&
-		cast_time == 3000) {
-		
-		//198 * rank
-		cast_time -= cast_time * 0.066 * CastToClient()->GetBuildRank(BARD, RB_BRD_BARDSWISH);		
-		orgcasttime = cast_time; //Tell client the cast time proper too
-		//CastToClient()->Message(0, "Cast Time2: %i", cast_time);
-	}
-
+	
 	// ok we know it has a cast time so we can start the timer now
 	spellend_timer.Start(cast_time);
 
@@ -2962,6 +2953,7 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 	if(!target)
 		target = caster;
 	
+	int rank;
 	if(caster->IsClient() && spell_id == 37903) { // heart of flame
 		int rank = caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES);
 		return rank; // one tick per rank: 6 - 30 seconds
@@ -2969,7 +2961,7 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 	formula = spells[spell_id].buffdurationformula;
 	duration = spells[spell_id].buffduration;
-	
+
 	int castlevel = caster->GetCasterLevel(spell_id);
 	if(caster_level_override > 0)
 		castlevel = caster_level_override;
@@ -3436,6 +3428,11 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		// Bard
 		if (caster_client->GetClass() == BARD) {
 
+			int rank = caster->GetBuildRank(BARD, RB_BRD_BARDSWISH);
+			if (IsBardSong && rank == 5 && duration == 3) {
+				caster->BuildEcho(StringFormat("Bard's Wish %i increased duration by 1 tick.", rank));
+				duration = 4;
+			}
 			// Lingering Twilight
 			{
 				static uint16 KELINS_LUCID_LULLABY = 724;
