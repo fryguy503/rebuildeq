@@ -1176,11 +1176,10 @@ public:
 
 	//Figure out the tier of the mob or player
 	int GetTier();
-
 	int GetRogueBonusDamage(int dmg);
-
 	void CheckChannelChakra(int dmg);
 	int GetManaTapBonus(int dmg);
+	int GetAggroCount();
 
 	// Bots HealRotation methods
 #ifdef BOTS

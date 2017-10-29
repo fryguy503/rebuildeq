@@ -4001,9 +4001,7 @@ void command_setallbuilds(Client *c, const Seperator *sep) {
 		return;
 	}
 
-	const int id = atoi(sep->arg[1]);
-	
-	const int rank = atoi(sep->arg[2]);
+	const int rank = atoi(sep->arg[1]);
 	// Check: Valid input (rank range).
 	if (rank < 0 || rank > 5) {
 		c->Message(0, "Usage: #setallbuilds <rank(0-5)>");
@@ -4654,12 +4652,12 @@ void command_buff(Client *c, const Seperator *sep) {
 		//no longer gives clarity
 		if (level > 40) target->QuickBuff(target, 1693, duration);
 		else target->QuickBuff(target, 174, duration);*/
-
-		target->QuickBuff(target, 278, duration);
+		if (zone->CanCastOutdoor()) target->QuickBuff(target, 278, duration);
+		
 
 		if (c->HasPet()) {
 			target = c->GetPet();
-			if (level < 35) target->QuickBuff(target, 144, duration); //regeneration 34
+			if (level < 35 && level > 34) target->QuickBuff(target, 144, duration); //regeneration 34
 			else if (level < 50) target->QuickBuff(target, 145, duration); //chloro 42
 			else target->QuickBuff(target, 1568, duration); //regrowuth 54
 
@@ -4674,7 +4672,7 @@ void command_buff(Client *c, const Seperator *sep) {
 			else if (level < 55) target->QuickBuff(target, 423, duration); //skin like nature 46
 			else target->QuickBuff(target, 2515, duration); //prot of nature 49
 
-			if (level < 10) target->QuickBuff(target, 256, duration); //shield of thistles 7
+			if (level < 10 && level >= 7) target->QuickBuff(target, 256, duration); //shield of thistles 7
 			else if (level < 20) target->QuickBuff(target, 273, duration); //shield of barbs 17
 			else if (level < 30) target->QuickBuff(target, 129, duration); //shield of brambles 27
 			else if (level < 40) target->QuickBuff(target, 432, duration); //shield of spikes 37
@@ -4692,7 +4690,9 @@ void command_buff(Client *c, const Seperator *sep) {
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %s to receive buffs. [ %s ]", c->GetLevel(), displayCost.c_str(), c->CreateSayLink("#buff confirm", "Confirm").c_str());
+		std::string outdoor = "You will get SoW due to being outdoors.";
+		if (zone->CanCastOutdoor()) outdoor = "You will NOT get SoW, you are indoors.";
+		c->Message(0, "At level %u, it will cost you %s to receive buffs, %s [ %s ]", c->GetLevel(), displayCost.c_str(), outdoor.c_str(), c->CreateSayLink("#buff confirm", "Confirm").c_str());
 	}
 }
 

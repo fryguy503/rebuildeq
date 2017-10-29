@@ -296,16 +296,18 @@ bool Mob::CheckHitChance(Mob* other, DamageHitInfo &hit)
 
 	if (defender->IsClient() && defender->GetTarget() == this) {
 		rank = defender->CastToClient()->GetBuildRank(MONK, RB_MNK_DESTINY);		
+
 		avoidance += (avoidance * 0.01f * rank);
+		defender->BuildEcho(StringFormat("Destiny %i increases avoidance by %i", rank, (avoidance * 0.01f * rank)));
 	}
 
 	if (avoidance == -1) // some sort of auto avoid disc
 		return false;
 
-	if (defender->GetHPRatio() >= 0.99f) {
+	if (defender->GetHPRatio() >= 99.0f) {
 		rank = defender->GetBuildRank(MONK, RB_MNK_MIRROR);
 		if (rank > 0 && zone->random.Roll(rank * 2)) {
-			defender->BuildEcho(StringFormat("Mirror %i evades an attack by %s", rank, GetCleanName()));
+			defender->BuildEcho(StringFormat("Mirror %i evades an attack by %s", rank, other->GetCleanName()));
 			return false;
 		}
 	}
@@ -1569,9 +1571,10 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			}
 			
 			rank = GetBuildRank(MONK, RB_MNK_RELENTLESSTRAINING);
-			if (rank > 0) {				
-				BuildEcho(StringFormat("Relentless Training %u gave a %i bonus to damage.", rank, (my_hit.damage_done * 0.1f * rank)));
-				my_hit.damage_done += (my_hit.damage_done * 0.1f * rank);
+			if (rank > 0) {
+				int rtd = (my_hit.damage_done * 0.1f * rank);
+				BuildEcho(StringFormat("Relentless Training %u gave a %i bonus to damage.", rank, rtd));
+				my_hit.damage_done += rtd;
 			}
 		}
 
@@ -1819,53 +1822,6 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				entity_list.LogManaEvent(this, this, mana_amount);
 				SetMana((GetMana() + mana_amount));
 				CastToClient()->SendManaUpdate();
-			}
-		}
-
-
-		if (!IsFromSpell &&
-				(my_hit.skill == EQEmu::skills::SkillTigerClaw ||
-				my_hit.skill == EQEmu::skills::SkillRoundKick ||
-				my_hit.skill == EQEmu::skills::SkillEagleStrike ||
-				my_hit.skill == EQEmu::skills::SkillDragonPunch ||
-				my_hit.skill == EQEmu::skills::SkillTailRake ||
-				my_hit.skill == EQEmu::skills::SkillFlyingKick
-				)
-			){
-
-			DoDivineSurge();
-
-			rank = GetBuildRank(MONK, RB_MNK_INTENSIFIEDTRAINING);
-			if (rank > 0) {
-				chance = 800;
-				proc_damage = GetLevel() * 5.0f * (0.25f * rank);
-				if (proc_damage < 20) proc_damage = 20;
-				BuildEcho(StringFormat("Intensified Training %u hit for %i damage.", rank, proc_damage));
-				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
-			}
-
-			rank = GetBuildRank(MONK, RB_MNK_FAMILIARITY);
-			if (rank > 0 && other->IsNPC()) {
-
-				if (IsSwornEnemyActive() && IsSwornEnemyID(other->GetID())) { //same target, add counter
-					BuildEcho(StringFormat("Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * GetCoreCounter()), other->GetCleanName()));
-					AddCoreCounter(1);
-				}
-				else {
-					GetEPP().focus_enemy_id = GetID();
-					GetEPP().focus_enemy_timeout = time(nullptr) + 60;
-					ResetCoreCounter();
-					if (GetCoreCounter() < 20) AddCoreCounter(1);
-					BuildEcho(StringFormat("Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * GetCoreCounter()), other->GetCleanName()));
-				}
-			}
-
-			rank = GetBuildRank(MONK, RB_MNK_EXPOSEWEAKNESS);
-			if (rank > 0 && other->IsNPC()) {
-				if (zone->random.Roll(int(5 * rank))) {
-					expose_weakness = rank;
-					BuildEcho(StringFormat("Expose Weakness %u has exposed vulnerability on %s, increasing accuracy.", rank, other->GetCleanName()));
-				}
 			}
 		}
 
@@ -6069,6 +6025,8 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 
 	TryCriticalHit(defender, hit, opts);
 
+	int rank;
+
 	hit.damage_done += hit.min_damage;
 	if (IsClient()) {
 		int extra = 0;
@@ -6082,6 +6040,53 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			break;
 		}
 		hit.damage_done += extra;
+
+
+
+		if (hit.skill == EQEmu::skills::SkillTigerClaw ||
+			hit.skill == EQEmu::skills::SkillKick ||
+			hit.skill == EQEmu::skills::SkillRoundKick ||
+			hit.skill == EQEmu::skills::SkillEagleStrike ||
+			hit.skill == EQEmu::skills::SkillDragonPunch ||
+			hit.skill == EQEmu::skills::SkillTailRake ||
+			hit.skill == EQEmu::skills::SkillFlyingKick) {
+			Client *c = CastToClient();
+			c->DoDivineSurge();
+
+			rank = GetBuildRank(MONK, RB_MNK_INTENSIFIEDTRAINING);
+			if (rank > 0) {
+				int chance = 3000;
+				int proc_damage = GetLevel() * 5.0f * (0.25f * rank);
+				if (proc_damage < 20) proc_damage = 20;
+				//BuildEcho(StringFormat("Intensified Training %u hit for %i damage.", rank, proc_damage));
+				c->BuildProcCalc(chance, 1, defender, proc_damage, hit.skill);
+			}
+
+			rank = GetBuildRank(MONK, RB_MNK_FAMILIARITY);
+			if (rank > 0 && defender->IsNPC()) {
+
+				if (c->IsSwornEnemyActive() && c->IsSwornEnemyID(defender->GetID())) { //same target, add counter
+					BuildEcho(StringFormat("Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * c->GetCoreCounter()), defender->GetCleanName()));
+					c->AddCoreCounter(1);
+				}
+				else {
+					c->GetEPP().focus_enemy_id = defender->GetID();
+					c->GetEPP().focus_enemy_timeout = time(nullptr) + 60;
+					c->ResetCoreCounter();
+					if (c->GetCoreCounter() < 20) c->AddCoreCounter(1);
+					BuildEcho(StringFormat("Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * c->GetCoreCounter()), defender->GetCleanName()));
+				}
+			}
+
+			rank = GetBuildRank(MONK, RB_MNK_EXPOSEWEAKNESS);
+			if (rank > 0 && defender->IsNPC()) {
+				if (zone->random.Roll(int(5 * rank))) {
+					expose_weakness = rank;
+					BuildEcho(StringFormat("Expose Weakness %u has exposed vulnerability on %s, increasing accuracy.", rank, defender->GetCleanName()));
+				}
+			}
+		}
+
 	}
 
 	// this appears where they do special attack dmg mods

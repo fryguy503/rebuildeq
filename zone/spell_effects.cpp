@@ -275,6 +275,17 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								this->AddBuff(caster, 242, 2);
 							}
 
+							rank = casterClient->GetBuildRank(MONK, RB_MNK_MOVINGMOUNTAINS);
+							if (rank > 0 && 
+								spell_id == 5225 && 
+								caster->GetLevel() > GetLevel() &&
+								IsNPC() &&
+								!IsPet() &&
+								GetAggroCount() == 0 && 
+								zone->random.Roll(rank * 2)) {
+								GMMove(caster->GetX(), caster->GetY(), caster->GetZ(), GetReciprocalHeading(caster->GetHeading()));
+							}
+
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH);
 							if (rank > 0 && spell_id == 13531) {
 								dmg -= zone->random.Real(5, 10) * rank * GetLevel();
@@ -568,10 +579,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
               						else if (level >= 31 && caster_level >= 31) caster->QuickBuff(this, 431, duration);     //shifting shield 20
               						else if (level >= 20 && caster_level >= 20) caster->QuickBuff(this, 649, duration);     //protect 20
               						else if (level >= 11 && caster_level >= 11) caster->QuickBuff(this, 283, duration);     //turtle skin 11
-              						else caster->QuickBuff(this, 274, duration);                                            //scale skin
-              		
-              						caster->QuickBuff(this, 278, duration);                                                 //spirit of wolf
+              						else caster->QuickBuff(this, 274, duration);                                            //scale skin              		
               					}
+
+								if (zone->CanCastOutdoor()) caster->QuickBuff(this, 278, duration);                                                 //spirit of wolf
 
               					if (rank > 0 && str == 0) { //STR
               						if (level >= 57 && caster_level >= 57) caster->QuickBuff(this, 1593, duration);         //maniacal strength 57
@@ -626,10 +637,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									else if (level >= 37 && caster_level >= 37) caster->QuickBuff(this, 432, duration); //shield of spikes 37
 									else if (level >= 27 && caster_level >= 27) caster->QuickBuff(this, 129, duration); //shield of brambles 27
 									else if (level >= 17 && caster_level >= 17) caster->QuickBuff(this, 273, duration); //shield of barbs 17
-									else caster->QuickBuff(this, 256, duration); //shield of thistles 7		
-									caster->QuickBuff(this, 278, duration); //Spirit of wolf duration is based on natural stats
-									//SpellFinished(278, this);
+									else caster->QuickBuff(this, 256, duration); //shield of thistles 
 								}
+								if (zone->CanCastOutdoor()) caster->QuickBuff(this, 278, duration); //Spirit of wolf duration is based on natural stats
 
 								if (rank > 3) { //HP
 									if (level >= 60 && caster_level >= 60) caster->QuickBuff(this, 1442, duration); //prot glades 60

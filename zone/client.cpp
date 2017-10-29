@@ -9583,11 +9583,6 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Purify Body\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == MONK && i == RB_MNK_MOVINGMOUNTAINS && GetAA(aaMovingMountains) < 1) {
-					TrainAARank(aaLessonoftheDevoted);
-					Message(15, "You have unlocked the AA \"Moving Mountains\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
 				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
 					TrainAARank(aaHandofPiety);
 					Message(15, "You have unlocked the AA \"Hand of Piety\"! Find the hotkey in your Alternate Advancement Window.");
@@ -11210,7 +11205,6 @@ bool Client::IsStanding() {
 
 bool Client::IsBuildAvailable() {
 	if (GetClass() == ENCHANTER ||
-		GetClass() == MONK ||
 		GetClass() == NECROMANCER ||
 		GetClass() == RANGER ||
 		GetClass() == WARRIOR ||

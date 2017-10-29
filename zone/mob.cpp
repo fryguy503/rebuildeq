@@ -6984,6 +6984,7 @@ std::vector<DPS_Struct> Mob::DPS() {
 void Mob::AddManaEvent(Mob *other, int total, int net, bool is_dealer) {
 	if (other == nullptr) return;
 	if (IsPet()) return;
+	if (GetAggroCount() == 0 && GetHPRatio() > 99) return;
 
 	int level = other->GetLevel();
 	int ent_id = other->GetID();
@@ -7069,6 +7070,7 @@ void Mob::AddHPEvent(Mob *other, int total, int net, bool is_dealer) {
 	if (other == nullptr) return;
 	if (IsPet()) return;
 	if (total == 0) return;
+	if (GetAggroCount() == 0 && GetHPRatio() > 99) return;
 
 	int level = other->GetLevel();
 	int ent_id = other->GetID();
@@ -7294,7 +7296,7 @@ int Mob::GetRogueBonusDamage(int dmg) {
 void Mob::CheckChannelChakra(int dmg) {
 	uint32 rank = GetBuildRank(MONK, RB_MNK_CHANNELCHAKRA);
 	if (rank < 1) return;
-	if (GetHPRatio() > (rank * 0.1f)) return;
+	if (GetHPRatio() > (rank * 10.0f)) return;
 	if (dmg < 1) return;
 	int healAmount = dmg * rank * 0.02f;
 	if (healAmount < 1) return;
@@ -7308,4 +7310,9 @@ int Mob::GetManaTapBonus(int dmg) {
 	if (GetClass() != SHAMAN || GetClass() != CLERIC || GetClass() != DRUID) return 0;
 
 	return (dmg * 0.1f);
+}
+
+//Count the number of monsters aggro'd on mob
+int Mob::GetAggroCount() {
+	return hate_list.GetAggroCount();
 }

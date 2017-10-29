@@ -4315,7 +4315,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob *spelltar, bool reflect, bool use_r
 			rank = spelltar->GetBuildRank(MONK, RB_MNK_STOICMIND);
 			if (rank > 0) {
 				if (IsDetrimentalSpell(spell_id)) {
-					if (GetHPRatio() >= (1 - (rank * 0.02))) {
+					if (GetHPRatio() >= (100 - (rank * 2))) {
 						if (zone->random.Roll(3 * rank)) {
 							isResisted = true;
 							spelltar->BuildEcho(StringFormat("Agile Feet %d resisted the spell.", rank));

@@ -3829,7 +3829,7 @@ void EntityList::AddTempPetsToHateList(Mob *owner, Mob* other, bool bFrenzy)
 
 void Entity::BuildEcho(std::string message) {
 	if (!IsClient() ||
-		CastToClient()->GetEPP().show_rb_echo != 1) {
+		!CastToClient()->GetEPP().show_rb_echo) {
 		return;
 	}
 	

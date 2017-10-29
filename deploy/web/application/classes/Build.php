@@ -890,7 +890,7 @@ class Build {
 			case "monk":
 			$newSkill = new stdClass();
 			$newSkill->title = "Intensified Training";
-			$newSkill->desc = 'When using Tiger Claw, Eagle Strike, Tail Whip or similar special attacks, gives a chance to deal a puma-like proc dealing level * <em data-base="1">1</em> damage <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When using Kick, Tiger Claw, Eagle Strike, Tail Whip or similar special attacks, gives a chance to deal a puma-like proc dealing level * <em data-base="1">1</em> damage <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-intensifiedtraining.png";
 			$skills[0] = $newSkill;
 
@@ -982,7 +982,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Tranquility";
-			$newSkill->desc = 'When you are not affected by negative effects, not under feign death, nor are engaged by an enemy, you regenerate <em data-base="2">2</em>% max health passively<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you are not affected by negative effects, not under feign death, nor are engaged by an enemy, you regenerate <em data-base="2">2</em>% of missing health per tick <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-tranquility.png";
 			$skills[34] = $newSkill;
 
@@ -1032,7 +1032,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Moving Mountains";
-			$newSkill->desc = 'Grants the Moving Mountains AA, allowing you to pull enemies to your location  <em data-base="2">2</em>%, your resistance to spells is increased by <em data-base="3">3</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you use the throw stone ability, you now have a <em data-base="2">2</em>% chance summon an unattended enemy to your location <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-movingmountains.png";
 			$skills[52] = $newSkill;
 			break;
