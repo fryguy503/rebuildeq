@@ -1008,7 +1008,33 @@ class Build {
 			$newSkill->title = "Stoic Mind";
 			$newSkill->desc = 'While your health is not below <em data-base="2">2</em>%, your resistance to spells is increased by <em data-base="3">3</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-stoicmind.png";
-			$skills[38] = $newSkill;
+			$skills[42] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Grounded Essence";
+			$newSkill->desc = 'Gives a <em data-base="2">2</em>% to resist an attempt at being summoned by an enemy<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-groundedessence.png";
+			$skills[44] = $newSkill;
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Slow Heart Rate";
+			$newSkill->desc = 'Gives a <em data-base="1">1</em>% chance on feign death to make all enemies forget you<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-slowheartrate.png";
+			$skills[46] = $newSkill;
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Mirror";
+			$newSkill->desc = 'While your health is at 99% or higher, your chance to evade attacks is increased by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-mirror.png";
+			$skills[49] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Moving Mountains";
+			$newSkill->desc = 'Grants the Moving Mountains AA, allowing you to pull enemies to your location  <em data-base="2">2</em>%, your resistance to spells is increased by <em data-base="3">3</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-movingmountains.png";
+			$skills[52] = $newSkill;
 			break;
 
 			//==================NECROMANCER======================

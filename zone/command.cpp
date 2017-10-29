@@ -1030,7 +1030,7 @@ void command_summon(Client *c, const Seperator *sep)
 			c->Message(0, "Usage: #summon [charname] Either target or charname is required");
 		return;
 	}
-
+	
 	if(!t)
 		return;
 

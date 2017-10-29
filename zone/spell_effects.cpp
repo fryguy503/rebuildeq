@@ -2405,19 +2405,29 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						}
 					else {
 						CastToClient()->SetFeigned(true);
+						rank = GetBuildRank(MONK, RB_MNK_SLOWHEARTRATE);
+						if (rank > 0 && zone->random.Roll(rank)) {
+							entity_list.ClearZoneFeignAggro(CastToClient());
+							BuildEcho(StringFormat("Slow Heart Rate %i has caused a memblur.", rank));
+							Message(0, "Your enemies have forgotten you!");
+						}
+
 						//Shin: Embrace Death Perk
-						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH) > 0) {
-							uint32 healAmount = GetMaxHP()* (0.01f * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH));
-							Message(MT_FocusEffect, "Embrace Death has healed you for %i.", healAmount);
+						rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH);
+						if (rank > 0) {
+							uint32 healAmount = GetMaxHP()* (0.01f * rank);
+							Message(MT_FocusEffect, "Embrace Death %i has healed you for %i.", rank, healAmount);
 							if (healAmount < 0 || healAmount > 50000) {
 								healAmount = 1;
 							}
 							HealDamage(healAmount);
 						}
-						if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACESHADOW) > 0) {
-							if (zone->random.Roll((int)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACESHADOW) * 20)) {
+						rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACESHADOW);
+						if (rank > 0) {
+							if (zone->random.Roll(rank * 20)) {
 								SpellFinished(522, this, EQEmu::CastingSlot::Item, 0, -1, spells[522].ResistDiff); //invis
 								SpellFinished(1420, this, EQEmu::CastingSlot::Item, 0, -1, spells[1420].ResistDiff); //ivu
+								BuildEcho(StringFormat("Embrace Shadow %i has given you invisibility", rank));
 							}
 						}
 					}
@@ -3638,6 +3648,26 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						SE_SpellTrigger_HasCast = true;
 				}
 				break;
+			}
+
+			case SE_KnockTowardCaster: {
+
+				if (caster->IsClient()) {
+					if (caster->GetLevel() < GetLevel()) {
+						caster->Message(10, "%s is too high level to be moved.", GetCleanName());
+						break;
+					}
+					if (!IsNPC()) {
+						caster->Message(10, "%s is not an NPC.", GetCleanName());
+						break;
+					}
+					if (IsPet()) {
+						caster->Message(10, "%s does not work on pets.", GetCleanName());
+						break;
+					}
+				}
+				GMMove(caster->GetX(), caster->GetY(), caster->GetZ(), GetReciprocalHeading(caster->GetHeading()));
+
 			}
 
 			// Handled Elsewhere

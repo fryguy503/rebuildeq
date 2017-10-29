@@ -2712,12 +2712,19 @@ bool Mob::HateSummon() {
 
 		timer->Start(summon_timer_duration);
 	}
-
+	int rank;
 	// get summon target
 	SetTarget(GetHateTop());
 	if(target)
-	{
+	{		
 		if(summon_level == 1) {
+			rank = target->GetBuildRank(MONK, RB_MNK_GROUNDEDESSENCE);
+			if (rank > 0 && zone->random.Roll(rank * 2)) {
+				target->BuildEcho(StringFormat("Grounded Essence %i resisted a summon attempt.", rank));
+				entity_list.MessageClose(this, true, 500, MT_Say, "%s says,'How dare you evade me, %s!' ", GetCleanName(), target->GetCleanName());
+				return true;
+			}
+
 			entity_list.MessageClose(this, true, 500, MT_Say, "%s says,'You will not evade me, %s!' ", GetCleanName(), target->GetCleanName() );
 
 			if (target->IsClient()) {
@@ -2737,6 +2744,12 @@ bool Mob::HateSummon() {
 
 			return true;
 		} else if(summon_level == 2) {
+			rank = target->GetBuildRank(MONK, RB_MNK_GROUNDEDESSENCE);
+			if (rank > 0 && zone->random.Roll(rank * 2)) {
+				target->BuildEcho(StringFormat("Grounded Essence %i resisted a summon attempt.", rank));
+				entity_list.MessageClose(this, true, 500, MT_Say, "%s says,'How dare you evade me, %s!' ", GetCleanName(), target->GetCleanName());
+				return false;
+			}
 			entity_list.MessageClose(this, true, 500, MT_Say, "%s says,'You will not evade me, %s!'", GetCleanName(), target->GetCleanName());
 			GMMove(target->GetX(), target->GetY(), target->GetZ());
 		}

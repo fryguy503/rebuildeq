@@ -9583,6 +9583,10 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Purify Body\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == MONK && i == RB_MNK_MOVINGMOUNTAINS && GetAA(aaMovingMountains) < 1) {
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Moving Mountains\"! Find the hotkey in your Alternate Advancement Window.");
+				}
 
 				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
 					TrainAARank(aaHandofPiety);
@@ -11078,6 +11082,9 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MNK_COWARDLYSTANCE) return "Cowardly Stance";
 		else if (id == RB_MNK_THUNDERFOOT) return "Thunderfoot";
 		else if (id == RB_MNK_STOICMIND) return "Stoic Mind";
+		else if (id == RB_MNK_GROUNDEDESSENCE) return "Grounded Essence";
+		else if (id == RB_MNK_MOVINGMOUNTAINS) return "Moving Mountains";
+		else if (id == RB_MNK_SLOWHEARTRATE) return "Slow Heart Rate";
 		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";

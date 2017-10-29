@@ -1258,6 +1258,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaServantofRo && GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) < 1 ||
 
 		rank_id == aaPurifyBody && GetBuildRank(MONK, RB_MNK_PURIFYBODY) < 1 ||
+		rank_id == aaMovingMountains && GetBuildRank(MONK, RB_MNK_MOVINGMOUNTAINS) < 1 ||
 
 		rank_id == aaHandofPiety && GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY) < 1 ||
 		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		

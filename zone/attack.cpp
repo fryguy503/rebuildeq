@@ -291,16 +291,24 @@ bool Mob::CheckHitChance(Mob* other, DamageHitInfo &hit)
 
 	if (defender->IsClient() && defender->CastToClient()->IsSitting())
 		return true;
-
+	int rank;
 	auto avoidance = defender->GetTotalDefense();
+
 	if (defender->IsClient() && defender->GetTarget() == this) {
-		uint32 rank = defender->CastToClient()->GetBuildRank(MONK, RB_MNK_DESTINY);		
+		rank = defender->CastToClient()->GetBuildRank(MONK, RB_MNK_DESTINY);		
 		avoidance += (avoidance * 0.01f * rank);
 	}
 
 	if (avoidance == -1) // some sort of auto avoid disc
 		return false;
 
+	if (defender->GetHPRatio() >= 0.99f) {
+		rank = defender->GetBuildRank(MONK, RB_MNK_MIRROR);
+		if (rank > 0 && zone->random.Roll(rank * 2)) {
+			defender->BuildEcho(StringFormat("Mirror %i evades an attack by %s", rank, GetCleanName()));
+			return false;
+		}
+	}
 	/*
 	if (IsClient() && 
 		hit.tohit <= //this normally would hit
