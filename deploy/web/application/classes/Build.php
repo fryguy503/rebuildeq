@@ -341,8 +341,8 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jonthon's Whistle";
-			$newSkill->desc = 'Jonthon\'s Self Haste Songs have improved haste, as well as grants a proc line similar to puma that deals your level * 2.5<span class="perLevel"> per rank</span>. If you do not use a jonthon whistle, it still deals half damage procs.';
-			$newSkill->image = "/images/builds/icons/rb-brd-jonathonswhistle.png";	
+			$newSkill->desc = 'Jonthon\'s Self Haste Songs have improved haste, as well the bard has a passive 300 mod proc that deals (level * 2 * <em data-base="0.2">0.2</em>) magic damage.';
+			$newSkill->image = "/images/builds/icons/rb-brd-jonathonswhistle.png";
 			$skills[18] = $newSkill;
 
 			$newSkill = new stdClass();
@@ -440,8 +440,8 @@ class Build {
 			case "cleric":
 			$newSkill = new stdClass();
 			$newSkill->title = "Believe";
-			$newSkill->desc = 'The cleric procs a puma-like proc at half damage of other similar puma procs, and half the damage is health back to the cleric.';
-			$newSkill->image = "/images/builds/icons/rb-clr-believe.png";	
+			$newSkill->desc = 'The cleric gains a 300 mod proc that deals (level * 0.75 * <em data-base="0.2">0.2</em>) magic damage, and half the damage is health back to the cleric.';
+			$newSkill->image = "/images/builds/icons/rb-clr-believe.png";
 			$skills[0] = $newSkill;
 
 			$newSkill = new stdClass();
@@ -664,7 +664,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Awakening";
-			$newSkill->desc = 'Any successful melee hit on an enemy by the druid grants <em data-base="1">1</em> mana and now has a puma-like proc for level * 1.25<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'The druid gains a 300 mod proc that deals (level * 1.5 * <em data-base="0.2">0.2</em>) magic damage and melee hits tap <em data-base="1">1</em> mana from the target.';
 			$newSkill->image = "/images/builds/icons/rb-dru-spiritualawakening.png";
 			$skills[26] = $newSkill;
 
@@ -890,7 +890,7 @@ class Build {
 			case "monk":
 			$newSkill = new stdClass();
 			$newSkill->title = "Intensified Training";
-			$newSkill->desc = 'When using Kick, Tiger Claw, Eagle Strike, Tail Whip or similar special attacks, gives a chance to deal a puma-like proc dealing level * <em data-base="1">1</em> damage <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'The monk gains a 300 mod proc that deals (level * 1.25 * <em data-base="0.2">0.2</em>) magic damage.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-intensifiedtraining.png";
 			$skills[0] = $newSkill;
 
@@ -1196,30 +1196,34 @@ class Build {
 			case "rogue":
 			$newSkill = new stdClass();
 			$newSkill->title = "Appraisal";
-			$newSkill->desc = 'Grants the Appraisal AA, granting a self buff that will give a puma-like proc dealing level * 2.5 damage for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'The rogue gains a 400 mod proc that deals (level * 3 * <em data-base="0.2">0.2</em>) magic damage.';
 			$newSkill->image = "/images/builds/icons/rb-rog-appraisal.png";
 			$skills[0] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Killing Spree";
 			$newSkill->desc = 'Each time a creature is successfully killed, the rogue gains a killing spree counter. For a limited time, attacks deal an additional <em data-base="5">5</em>% damage per counter, with a cap of <em data-base="2">2</em> counters<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-killingspree.png";
 			$skills[2] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Thief's Eyes";
 			$newSkill->desc = 'Increases chance to hit by <em data-base="2">2</em>% with all skills <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-thiefseyes.png";			
 			$skills[4] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Sinister Strikes";
 			$newSkill->desc = 'Increases offhand damage bonus by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-sinisterstrikes.png";	
 			$skills[6] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Sneak Attack";
 			$newSkill->desc = 'If a rogue is sneaking and uses a backstab while an enemy is greater than 70% hp, their chance to hit with a backstab increases by <em data-base="2000">2000</em>% and critical chance increases by <em data-base="10">10</em>% <span class="perLevel"> per rank</span>.';
-
 			$newSkill->image = "/images/builds/icons/rb-rog-sneakattack.png";	
 			$skills[8] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Focused Stab";
 			$newSkill->desc = 'Backstab has a <em data-base="5">5</em>% better chance to hit<span class="perLevel"> per rank</span> and when maxxed, allows backstabs from front.';
@@ -1440,7 +1444,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fury";
-			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma that deals your level * 2.5 damage at <em data-base="20">20</em>% effectiveness and increases duration by <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>. If Fury is not on, it still deals half proc damage.';
+			$newSkill->desc = 'The shaman gains a 400 mod proc that deals (level * 1.5 * <em data-base="0.2">0.2</em>) magic damage.';
 			$newSkill->image = "/images/builds/icons/rb-shm-fury.png";
 			$skills[36] = $newSkill;
 			

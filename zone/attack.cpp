@@ -1640,11 +1640,10 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				entity_list.LogManaEvent(this, this, rank);
 				SetMana(GetMana() + rank);
 
-				
 				chance = 300;
-				proc_damage = GetLevel() * 2.5f * (0.25f * rank) / 2;
-				if (proc_damage < 20) {
-					proc_damage = 20;
+				proc_damage = GetLevel() * 1.5f * (0.2f * rank);
+				if (proc_damage < 10) {
+					proc_damage = 10;
 				}
 				
 				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
@@ -1652,23 +1651,11 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			
 			rank = GetBuildRank(SHAMAN, RB_SHM_FURY);
 			if (rank > 0) {
-				spellid = 271; //Fury spell
 				chance = 400;
-				//If you don't have buff up, it still does half damage.
-				proc_damage = GetLevel() * 2.5f * (0.25f * rank) / 2;
-				
-				//Check if they have fleeting fury on
-				int buff_count = GetMaxTotalSlots();
-				for (int i = 0; i < buff_count; i++)
-				{
-					if (buffs[i].spellid == spellid) {
-						proc_damage *= 2;
-						break;
-					}
-				}
-				
-				if (proc_damage < 20) {
-					proc_damage = 20;
+				proc_damage = GetLevel() * 1.5f * (0.2f * rank);
+								
+				if (proc_damage < 10) {
+					proc_damage = 10;
 				}
 				
 				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
@@ -1676,11 +1663,11 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			
 			rank = GetBuildRank(CLERIC, RB_CLR_BELIEVE);
 			if (rank > 0) {
-				chance = 400;
-				proc_damage = GetLevel() * 1.25f * (0.25f * rank);
+				chance = 300;
+				proc_damage = GetLevel() * 0.75f * (0.2f * rank);
 				
-				if (proc_damage < 20) {
-					proc_damage = 20;
+				if (proc_damage < 10) {
+					proc_damage = 10;
 				}
 				
 				if (BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill)) {
@@ -1742,8 +1729,8 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 
 			rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
 			if (rank > 0) {
-				chance = 300;
-				proc_damage = GetLevel() * 2.5f * (0.25f * rank);
+				chance = 400;
+				proc_damage = GetLevel() * 3.0f * (0.2f * rank);
 				if (proc_damage < 20) {
 					proc_damage = 20;
 				}
@@ -1795,23 +1782,25 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			if (rank > 0) {
 				chance = 300 + (chance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY)); //Chance boost from harmonic affinity on jonthon whistle
 				
-				//If you aren't playing song, it still does half damage.
-				proc_damage = (GetLevel() * 2.5f * (0.25f * rank)) / 2;
-				
-				//Check if they have a haste song on
-				int buff_count = GetMaxTotalSlots();
-				for (int i = 0; i < buff_count; i++)
-				{
-					if ((buffs[i].spellid == 734 || buffs[i].spellid == 749 || buffs[i].spellid == 1762)) {
-						proc_damage *= 2;
-						break;
-					}
-				}
+				proc_damage = (GetLevel() * 2.0f * (0.2f * rank));
 				
 				if (proc_damage < 20) {
 					proc_damage = 20;
 				}
 				
+				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
+			}
+
+			rank = GetBuildRank(MONK, RB_MNK_INTENSIFIEDTRAINING);
+			if (rank > 0) {
+				chance = 300;
+
+				proc_damage = (GetLevel() * 1.25f * (0.2f * rank));
+
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+
 				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
 			}
 		}
@@ -6047,15 +6036,6 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			hit.skill == EQEmu::skills::SkillFlyingKick) {
 			Client *c = CastToClient();
 			c->DoDivineSurge();
-
-			rank = GetBuildRank(MONK, RB_MNK_INTENSIFIEDTRAINING);
-			if (rank > 0) {
-				int chance = 3000;
-				int proc_damage = GetLevel() * 5.0f * (0.25f * rank);
-				if (proc_damage < 20) proc_damage = 20;
-				//BuildEcho(StringFormat("Intensified Training %u hit for %i damage.", rank, proc_damage));
-				c->BuildProcCalc(chance, 1, defender, proc_damage, hit.skill);
-			}
 
 			rank = GetBuildRank(MONK, RB_MNK_FAMILIARITY);
 			if (rank > 0 && defender->IsNPC()) {
