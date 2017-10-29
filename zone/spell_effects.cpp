@@ -1274,6 +1274,13 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					if (IsClient())
 						stun_resist += aabonuses.StunResist;
 
+					//SHD Mental REsistance
+					rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_MENTALRESISTANCE);
+					if (rank > 0 && zone->random.Roll(2 * rank)) {
+						BuildEcho(StringFormat("Mental Resistance %i resisted stun effect.", rank));
+						Message_StringID(MT_Stun, SHAKE_OFF_STUN);
+					}
+
 					if (stun_resist <= 0 || zone->random.Int(0,99) >= stun_resist) {
 						Log(Logs::Detail, Logs::Combat, "Stunned. We had %d percent resist chance.", stun_resist);
 
