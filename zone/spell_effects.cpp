@@ -1707,6 +1707,31 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					break;
 				}
 
+				rank = GetBuildRank(MONK, RB_MNK_PURIFYBODY);
+				if (rank > 0) {
+					if (zone->random.Roll(15 * rank)) {
+
+						//Attempt to remove all Deterimental buffs.
+						int buff_count = GetMaxTotalSlots();
+						for (int slot = 0; slot < buff_count; slot++) {
+							if (buffs[slot].spellid != SPELL_UNKNOWN &&
+								IsDetrimentalSpell(buffs[slot].spellid))
+							{
+								if (caster && TryDispel(caster->GetLevel(), buffs[slot].casterlevel, effect_value)) {
+									BuffFadeBySlot(slot);
+								}
+							}
+						}
+						Message(MT_Spells, "You have been purified.");
+					}
+					else {
+						Message(MT_Spells, "Purify Body failed.");
+					}
+					break;
+				}
+				
+
+
 				int buff_count = GetMaxTotalSlots();
 				for(int slot = 0; slot < buff_count; slot++) {
 					if (buffs[slot].spellid != SPELL_UNKNOWN &&

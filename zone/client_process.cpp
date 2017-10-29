@@ -537,6 +537,7 @@ bool Client::Process() {
 			DoStaminaUpdate();
 			RefreshBuild();
 			DoEncounterCheck();
+			CalcMonkTranquility();
 			uint8 rank;
 			rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH);
 			if (rank > 0) {

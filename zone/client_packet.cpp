@@ -9640,7 +9640,7 @@ void Client::Handle_OP_Mend(const EQApplicationPacket *app)
 		return;
 	}
 	
-	uint32 rank = GetBuildRank(MONK, RB_MNK_HASTENEDMEND);
+	int rank = GetBuildRank(MONK, RB_MNK_HASTENEDMEND);
 	if (rank > 0) {
 		p_timers.Start(pTimerMend, MendReuseTime - (rank));
 	}
@@ -9656,6 +9656,13 @@ void Client::Handle_OP_Mend(const EQApplicationPacket *app)
 		if (zone->random.Int(0, 99) < criticalchance) {
 			mendhp *= 2;
 			Message_StringID(4, MEND_CRITICAL);
+		}
+
+		rank = GetBuildRank(MONK, RB_MNK_IMPROVEDMEND);
+		
+		if (zone->random.Roll(int(rank * 5))) {
+			BuildEcho(StringFormat("Improved Mend %i healed you for an additional %i hitpoints.", rank, (mendhp * rank * 0.1f)));
+			mendhp += (mendhp * rank * 0.1f);
 		}
 		entity_list.LogHPEvent(this, this, mendhp);
 		SetHP(GetHP() + mendhp);

@@ -1319,6 +1319,8 @@ public:
 	void DoMendingAura(int amount);
 
 	void DoDivineSurge();
+	void CalcMonkTranquility();
+	bool HasNegativeEffects();
 	void CheckRegionTypeChanges();
 
 	int32 CalcATK();

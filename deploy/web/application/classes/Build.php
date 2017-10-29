@@ -154,7 +154,7 @@ class Build {
 			case "cleric":
 			$build->fullName = "Cleric";
 			$build->monogram = 2;
-			$build->desc = "Clerics are classically known as the best healers in the game.<br> Their 3 styles focus on melee, healing spells, or offensive spells.";
+			$build->desc = "Clerics are a healer class using Godly blessings.<br>They are rebuilt to no longer be definitive healers<br> compared to Shaman and Druid.";
 			$build->styles[0] = "Templar";
 			$build->styles[1] = "Bishop";
 			$build->styles[2] = "Archon";
@@ -191,7 +191,7 @@ class Build {
 			case "monk":
 			$build->fullName = "Monk";
 			$build->monogram = 7;
-			$build->desc = "Monks are disciplined fighters.<br> Their 3 styles focus on either melee dps, supporting others with chakra abilities, or utility pulling.";
+			$build->desc = "Monks are disciplined fighters.<br> We have lowered the damage of monks compared to rogues, <br>and given them a swiss-army knife approach with more utility.";
 			$build->styles[0] = "Master";
 			$build->styles[1] = "Transcendant";
 			$build->styles[2] = "Ashenhand";
@@ -231,7 +231,7 @@ class Build {
 			case "rogue":
 			$build->fullName = "Rogue";
 			$build->monogram = 9;
-			$build->desc = "Rogues are thieves who specialize in deception.<br> Their 3 styles focus on dealing damage, being an evasive tank, or stealing.";
+			$build->desc = "Rogues are thieves who specialize in damage.<br> We have designed rogues to be top melee damage dealers.";
 			$build->styles[0] = "Assassin";
 			$build->styles[1] = "Deceiver";
 			$build->styles[2] = "Bandit";
@@ -967,6 +967,24 @@ class Build {
 			$newSkill->desc = 'When you use Tiger Claw, Eagle Strike, Tail Whip or other special attacks, you have a <em data-base="5">5</em>% chance to recover <em data-base="10">10</em> mana and endurance to the group<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-divinesurge.png";
 			$skills[26] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Improved Mend";
+			$newSkill->desc = 'When you use Mend, you have a <em data-base="5">5</em>% chance to heal <em data-base="10">10</em>% extra health<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-improvedmend.png";
+			$skills[28] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Purify Body";
+			$newSkill->desc = 'Grants the Purify Body AA, causing a <em data-base="15">15</em>% chance that all negative effects on self are cured<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-purifybody.png";
+			$skills[31] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Tranquility";
+			$newSkill->desc = 'When you are not affected by negative effects, not under feign death, nor are engaged by an enemy, you regenerate <em data-base="2">2</em>% max health passively<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-tranquility.png";
+			$skills[34] = $newSkill;
 			break;
 
 			//==================NECROMANCER======================

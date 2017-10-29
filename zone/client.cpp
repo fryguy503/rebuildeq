@@ -9578,6 +9578,12 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == MONK && i == RB_MNK_PURIFYBODY && GetAA(aaPurifyBody) < 1) {
+					TrainAARank(aaPurification);
+					Message(15, "You have unlocked the AA \"Purify Body\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+
 				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
 					TrainAARank(aaHandofPiety);
 					Message(15, "You have unlocked the AA \"Hand of Piety\"! Find the hotkey in your Alternate Advancement Window.");
@@ -11065,7 +11071,9 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MNK_CHANNELCHAKRA) return "Channel Chakra";
 		else if (id == RB_MNK_MENDINGAURA) return "Mending Aura";
 		else if (id == RB_MNK_DIVINESURGE) return "Divine Surge";
-
+		else if (id == RB_MNK_IMPROVEDMEND) return "Improved Mend";
+		else if (id == RB_MNK_PURIFYBODY) return "Purify Body";
+		else if (id == RB_MNK_TRANQUILITY) return "Tranquility";
 		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";
@@ -11427,4 +11435,34 @@ void Client::DoDivineSurge() {
 	if (healCount > 0) {
 		BuildEcho(StringFormat("Mending Aura %u spreads your mend to %i allies within %i meters.", rank, healCount, int(rank * 10)));
 	}
+}
+
+//Calculate the amount of out combat regen monks get via tranquility
+void Client::CalcMonkTranquility() {
+	int rank = GetBuildRank(MONK, RB_MNK_TRANQUILITY);
+	if (rank < 1) return;
+	if (GetFeigned()) return;
+	if (AggroCount > 0) return;
+	if (HasNegativeEffects()) return;
+	//if (!rest_timer.Check(true)) return;
+	if (IsSitting()) return; //don't regen if sitting down
+	int heal_amount = (GetMaxHP() - GetHP());
+	if (heal_amount < 1) return;
+	heal_amount = (heal_amount * 0.02f * rank);
+	BuildEcho(StringFormat("Tranquility %i healed you for %i hitpoints.", rank, heal_amount));
+	entity_list.LogHPEvent(this, this, heal_amount);
+	SetHP(GetHP() + heal_amount);
+}
+
+//Check to see if player has negative effects
+bool Client::HasNegativeEffects() {
+	int buff_count = GetMaxTotalSlots();
+	for (int slot = 0; slot < buff_count; slot++) {
+		if (buffs[slot].spellid != SPELL_UNKNOWN &&
+			IsDetrimentalSpell(buffs[slot].spellid))
+		{
+			return true;
+		}
+	}
+	return false;
 }
