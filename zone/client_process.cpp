@@ -1946,22 +1946,24 @@ void Client::CalcRestState() {
 	}
 	
 
-
+	Mob * target = nullptr;
 	float rest_regen_percent = RuleI(Character, RestRegenPercent);
 	int group_size = 1; //start at 1, it's me.
 	if (this->IsGrouped()) {
 		auto group = this->GetGroup(); //iterate group
 		for (int i = 0; i < 6; ++i) {
-			if (group->members[i] &&  //target grouped
-				group->members[i]->IsClient() && //Is a client
-				this->GetID() != group->members[i]->GetID() && //not me
-				this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
-				!group->members[i]->CastToClient()->IsDead() //and not dead
-				) {
-				
-				if (DistanceSquared(m_Position, group->members[i]->GetPosition()) > (100 * 100)) continue; //Not within 100m				
-				group_size++;
-			}
+			target = group->members[i];
+			if (target == nullptr) continue; //target grouped
+			if (!target->IsClient()) continue; //Is a client
+			if (target->GetID() == this->GetID()) continue; //not me
+			if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+			Client *c = target->CastToClient();
+			if (c->IsDead()) continue; //not dead
+
+			float dist2 = DistanceSquared(m_Position, target->GetPosition());
+			float range2 = 100 * 100;
+			if (dist2 > range2) continue;	
+			group_size++;			
 		}
 	}
 	else if (this->IsRaidGrouped()) { //Raid healing
@@ -1970,18 +1972,18 @@ void Client::CalcRestState() {
 		uint32 gid = raid->GetGroup(this->CastToClient());
 		if (gid < 12) {
 			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-				if (raid->members[i].member &&  //is raid member
-					raid->members[i].GroupNumber == gid && //in group
-					raid->members[i].member->IsClient() && //Is a client
-					raid->members[i].member != this && //not me
-					raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
-					!raid->members[i].member->IsDead() //and not dead
-					) {
+				target = raid->members[i].member;
+				if (target == nullptr) continue; //target grouped
+				if (!target->IsClient()) continue; //Is a client
+				if (target->GetID() == this->GetID()) continue; //not me
+				if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+				Client *c = target->CastToClient();
+				if (c->IsDead()) continue; //not dead
 
-					if (DistanceSquared(m_Position, raid->members[i].member->GetPosition()) > (100 * 100)) continue; //Not within 100m
-
-					group_size++;
-				}
+				float dist2 = DistanceSquared(m_Position, target->GetPosition());
+				float range2 = 100 * 100;
+				if (dist2 > range2) continue;
+				group_size++;
 			}
 		}
 	}

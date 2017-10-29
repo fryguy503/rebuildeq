@@ -3093,9 +3093,9 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 	Mob* myowner = this->GetOwner();
 	Mob* targetmob = this->GetTarget();
 	bool on_hatelist = CheckAggro(other);
-
+	
 	if(other){
-
+		Mob *target = nullptr;
 		//This causes group and raid members to also aggro when an entity is placed on a hate list.
 		if (other->IsClient() && !other->CastToClient()->IsDead() && this->GetHPRatio() < 90.0f) { //if a player and not dead
 			if (other->IsGrouped()) { //if in a group
@@ -3103,29 +3103,25 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 				//other->CastToClient()->Message(0, "You triggered a hate system!");
 				auto group = other->GetGroup(); //iterate group
 				for (int i = 0; i < 6; ++i) {
+					target = group->members[i];
+					if (target == nullptr) continue; //target grouped
+					if (!target->IsClient()) continue; //Is a client
+					if (target->GetID() == other->GetID()) continue; //not me
+					if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+					if (target->CastToClient()->IsDead()) continue; //not dead
+					if (target->CastToClient()->feigned) continue; //not feigned
+					if (target->CastToClient()->hidden) continue; //not hidden
+
+					float dist2 = DistanceSquared(m_Position, target->GetPosition());
+					float range2 = 150 * 150;
+					if (dist2 > range2) continue;
+
+					bool on_hatelist = CheckAggro(target);
+					AddRampage(target);
+					if (on_hatelist) continue;
 					
-					if (group->members[i] &&  //target grouped
-						group->members[i]->IsClient() && //Is a client
-						other->GetID() != group->members[i]->GetID() && //not me
-						other->GetZoneID() == group->members[i]->GetZoneID() && //in same zone
-						!group->members[i]->CastToClient()->IsDead() && //not dead
-						!group->members[i]->CastToClient()->feigned && //not feigned
-						!group->members[i]->CastToClient()->hidden && //not hiding
-						DistanceSquared(GetPosition(), group->members[i]->GetPosition()) < (150 * 150) //and within range
-						) {
-						//group->members[i]->CastToClient()->Message(0, "You're being added to a hate list via group!");
-						//Find group member on hate list
-
-						bool on_hatelist = CheckAggro(group->members[i]);
-						AddRampage(group->members[i]);
-
-						if (!on_hatelist) {
-							hate_list.AddEntToHateList(group->members[i], 50, 0, bFrenzy, !iBuffTic); //Just toss 50, 100 is default on initial aggro.
-							group->members[i]->CastToClient()->AddAutoXTarget(this);
-						}
-						
-
-					}
+					hate_list.AddEntToHateList(target, 50, 0, bFrenzy, !iBuffTic); //Just toss 50, 100 is default on initial aggro.
+					target->CastToClient()->AddAutoXTarget(this);										
 				}
 			}
 			else if (other->IsRaidGrouped()) {
@@ -3133,26 +3129,25 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 				uint32 gid = raid->GetGroup(other->CastToClient());
 				if (gid < 12) {
 					for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-						if (raid->members[i].member &&  //is raid member
-							raid->members[i].GroupNumber == gid && //in group
-							raid->members[i].member->IsClient() && //Is a client
-							raid->members[i].member != other && //not me
-							raid->members[i].member->CastToMob()->GetZoneID() == other->GetZoneID() && //in same zone as aggro player
-							!raid->members[i].member->IsDead() && //and not dead
-							!raid->members[i].member->feigned && //not feigned
-							!raid->members[i].member->hidden && //not hiding
-							DistanceSquared(GetPosition(), raid->members[i].member->GetPosition()) < (150 * 150) //and within range
-							) {
-							//raid->members[i].member->CastToClient()->Message(0, "You're being added to a hate list via raid!");
-							//Find raid member on hate list
-							bool on_hatelist = CheckAggro(raid->members[i].member);
-							AddRampage(raid->members[i].member);
+						target = raid->members[i].member;
+						if (target == nullptr) continue; //target grouped
+						if (!target->IsClient()) continue; //Is a client
+						if (target->GetID() == other->GetID()) continue; //not me
+						if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+						if (target->CastToClient()->IsDead()) continue; //not dead
+						if (target->CastToClient()->feigned) continue; //not feigned
+						if (target->CastToClient()->hidden) continue; //not hidden
 
-							if (!on_hatelist) {
-								hate_list.AddEntToHateList(raid->members[i].member, 50, 0, bFrenzy, !iBuffTic); //Just toss 50, 100 is default on initial aggro.
-								raid->members[i].member->CastToClient()->AddAutoXTarget(this);
-							}
-						}
+						float dist2 = DistanceSquared(m_Position, target->GetPosition());
+						float range2 = 150 * 150;
+						if (dist2 > range2) continue;
+
+						bool on_hatelist = CheckAggro(target);
+						AddRampage(target);
+						if (on_hatelist) continue;
+
+						hate_list.AddEntToHateList(target, 50, 0, bFrenzy, !iBuffTic); //Just toss 50, 100 is default on initial aggro.
+						target->CastToClient()->AddAutoXTarget(this);
 					}
 				}
 			}
@@ -4428,7 +4423,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 							}
 							rank = attacker->CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEBASH);
 							if (rank > 0) {
-								attacker->CastToClient()->DoDivineStunEffect(this);
+								attacker->CastToClient()->DoDivineStunEffect();
 							}
 
 						}

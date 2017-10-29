@@ -736,32 +736,28 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 											//Give heal to group (and RAID)									
 											auto group = this->GetGroup(); //iterate group
 											for (int i = 0; i < 6; ++i) {
-												if (group->members[i] &&  //target grouped
-													group->members[i]->IsClient() && //Is a client												
-													this->GetID() != group->members[i]->GetID() && //not me
-													this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
-													!group->members[i]->CastToClient()->IsDead() //and not dead
-													) {
+												target = group->members[i];
+												if (target == nullptr) continue; //target grouped
+												if (!target->IsClient()) continue; //Is a client
+												if (target->GetID() == this->GetID()) continue; //not me
+												if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+												Client *c = target->CastToClient();
+												if (c->IsDead()) continue; //not dead
+
+												float dist2 = DistanceSquared(m_Position, target->GetPosition());
+												float range2 = 100 * 100;
+												if (dist2 > range2) continue;
 
 
-													float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
-													float range2 = 100 * 100;
-													if (dist2 <= range2) {
-
-														if (group->members[i] == caster) {
-															group->members[i]->Message(MT_Spells, "You have healed yourself for %i.", dmg);
-														}
-														else {
-															caster->Message(MT_Spells, "You have healed %s for %i.", group->members[i]->GetCleanName(), dmg);
-															group->members[i]->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
-														}
-														dmg = caster->GetActSpellHealing(spell_id, dmg, this);
-														group->members[i]->HealDamage(dmg, caster);
-													}
-
-
-
+												if (target == caster) {
+													c->Message(MT_Spells, "You have healed yourself for %i.", dmg);
 												}
+												else {
+													c->Message(MT_Spells, "You have healed %s for %i.", group->members[i]->GetCleanName(), dmg);
+													caster->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
+												}
+												dmg = caster->GetActSpellHealing(spell_id, dmg, this);
+												c->HealDamage(dmg, caster);
 											}
 										}
 										else if (this->IsRaidGrouped()) { //Raid healing
@@ -770,28 +766,28 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 											uint32 gid = raid->GetGroup(this->CastToClient());
 											if (gid < 12) {
 												for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-													if (raid->members[i].member &&  //is raid member
-														raid->members[i].GroupNumber == gid && //in group
-														raid->members[i].member->IsClient() && //Is a client
-														raid->members[i].member != this && //not me
-														raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
-														!raid->members[i].member->IsDead() //and not dead
-														) {
+													target = raid->members[i].member;
+													if (target == nullptr) continue; //target grouped
+													if (!target->IsClient()) continue; //Is a client
+													if (target->GetID() == this->GetID()) continue; //not me
+													if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+													Client *c = target->CastToClient();
+													if (c->IsDead()) continue; //not dead
 
-														float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
-														float range2 = 100 * 100;
-														if (dist2 <= range2) {
-															if (raid->members[i].member == caster) {
-																raid->members[i].member->Message(MT_Spells, "You have healed yourself for %i.", dmg);
-															}
-															else {
-																caster->Message(MT_Spells, "You have healed %s for %i.", raid->members[i].member->GetCleanName(), dmg);
-																raid->members[i].member->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
-															}
-															dmg = caster->GetActSpellHealing(spell_id, dmg, this);
-															raid->members[i].member->HealDamage(dmg, caster);
-														}
+													float dist2 = DistanceSquared(m_Position, target->GetPosition());
+													float range2 = 100 * 100;
+													if (dist2 > range2) continue;
+
+
+													if (target == caster) {
+														c->Message(MT_Spells, "You have healed yourself for %i.", dmg);
 													}
+													else {
+														c->Message(MT_Spells, "You have healed %s for %i.", c->GetCleanName(), dmg);
+														caster->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
+													}
+													dmg = caster->GetActSpellHealing(spell_id, dmg, this);
+													c->HealDamage(dmg, caster);
 												}
 											}
 										}

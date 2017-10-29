@@ -1314,7 +1314,7 @@ public:
 	bool DoEvadeOnce();
 	int GetCharacterItemScore();
 
-	void DoDivineStunEffect(Mob * target);
+	void DoDivineStunEffect();
 
 	void DoMendingAura(int amount);
 

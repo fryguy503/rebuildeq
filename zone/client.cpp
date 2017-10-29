@@ -4086,26 +4086,25 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 		rank = GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);
 		if (rank > 0) {
 			int mana_bonus = rank * 20;
-			
+			Mob* target = nullptr;
 			if (this->IsGrouped() && IsClient()) {
 				Message(MT_FocusEffect, "Untapped Potential %u gives the group %i mana.", rank, mana_bonus);
 				auto group = this->GetGroup(); //iterate group
 				for (int i = 0; i < MAX_GROUP_MEMBERS; i++) {
-					if (group->members[i] == nullptr) continue;					
-					if (!group->members[i]->IsClient()) continue;					
-					Client *c = group->members[i]->CastToClient();
-					if (c->GetZoneID() != GetZoneID()) continue;
-					if (GetID() == c->GetID()) continue;
-					if (c->IsDead()) continue;					
+					target = group->members[i];
+					if (target == nullptr) continue; //target grouped
+					if (!target->IsClient()) continue; //Is a client
+					if (target->GetID() == this->GetID()) continue; //not me
+					if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+					Client *c = target->CastToClient();
+					if (c->IsDead()) continue; //not dead
 
-					float dist2 = DistanceSquared(m_Position, c->GetPosition());
+					float dist2 = DistanceSquared(m_Position, target->GetPosition());
 					float range2 = 100 * 100;
-
-					if (dist2 <= range2) {
-						c->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
-						entity_list.LogManaEvent(this, c, mana_bonus);
-						c->SetMana(c->GetMana() + mana_bonus);
-					}
+					if (dist2 > range2) continue;
+					c->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
+					entity_list.LogManaEvent(this, c, mana_bonus);
+					c->SetMana(c->GetMana() + mana_bonus);
 				}
 			}
 			else if (this->IsRaidGrouped()) { //Raid healing
@@ -4115,22 +4114,20 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 				uint32 gid = raid->GetGroup(this->CastToClient());
 				if (gid < 12) {
 					for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-						if (raid->members[i].member &&  //is raid member
-							raid->members[i].GroupNumber == gid && //in group
-							raid->members[i].member->IsClient() && //Is a client
-							raid->members[i].member != this && //not me
-							raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
-							!raid->members[i].member->IsDead() //and not dead
-							) {
+						target = raid->members[i].member;
+						if (target == nullptr) continue; //target grouped
+						if (!target->IsClient()) continue; //Is a client
+						if (target->GetID() == this->GetID()) continue; //not me
+						if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+						Client *c = target->CastToClient();
+						if (c->IsDead()) continue; //not dead
 
-							float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
-							float range2 = 100 * 100;
-							if (dist2 <= range2) {
-								raid->members[i].member->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
-								entity_list.LogManaEvent(this, raid->members[i].member, mana_bonus);
-								raid->members[i].member->SetMana(raid->members[i].member->GetMana() + mana_bonus);
-							}
-						}
+						float dist2 = DistanceSquared(m_Position, target->GetPosition());
+						float range2 = 100 * 100;
+						if (dist2 > range2) continue;
+						c->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
+						entity_list.LogManaEvent(this, c, mana_bonus);
+						c->SetMana(c->GetMana() + mana_bonus);
 					}
 				}
 			}
@@ -11259,29 +11256,32 @@ int Client::GetCharacterItemScore() {
 }
 
 //Attempt to do the divine stun effect
-void Client::DoDivineStunEffect(Mob* target) {
+void Client::DoDivineStunEffect() {
 	uint32 rank = GetBuildRank(CLERIC, RB_CLR_DIVINEBASH);
 	if (rank < 1) return;
 	if (!zone->random.Roll(int(rank * 1))) return;	
 
 	Mob* healTarget = nullptr;
+	Mob* target = nullptr;
 	//caster->Message(MT_Spells, "Rodcet's Gift %u spreads your healing power.", rank);
 	if (IsGrouped()) {						
 		auto group = GetGroup(); //iterate group
 		for (int i = 0; i < 6; ++i) {
-			if (group->members[i] &&  //target grouped
-				group->members[i]->IsClient() && //Is a client												
-				this->GetID() != group->members[i]->GetID() && //not me
-				this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
-				!group->members[i]->CastToClient()->IsDead() //and not dead
-				) {
 
-				float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
-				float range2 = 50 * 50; //50m radius
-				if (dist2 > range2) continue;
-				if (healTarget == nullptr) healTarget = group->members[i];
-				if (healTarget->GetHPRatio() > group->members[i]->GetHPRatio()) healTarget = group->members[i];				
-			}
+			target = group->members[i];
+			if (target == nullptr) continue; //target grouped
+			if (!target->IsClient()) continue; //Is a client
+			if (target->GetID() == this->GetID()) continue; //not me
+			if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+			Client *c = target->CastToClient();
+			if (c->IsDead()) continue; //not dead
+
+			float dist2 = DistanceSquared(m_Position, target->GetPosition());
+			float range2 = 50 * 50;
+			if (dist2 > range2) continue;
+
+			if (healTarget == nullptr) healTarget = target;
+			if (healTarget->GetHPRatio() > target->GetHPRatio()) healTarget = target;
 		}
 	}
 	else if (this->IsRaidGrouped()) { //Raid healing
@@ -11290,21 +11290,20 @@ void Client::DoDivineStunEffect(Mob* target) {
 		uint32 gid = raid->GetGroup(this);
 		if (gid < 12) {
 			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-				if (raid->members[i].member &&  //is raid member
-					raid->members[i].GroupNumber == gid && //in group
-					raid->members[i].member->IsClient() && //Is a client
-					raid->members[i].member != this && //not me
-					raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
-					!raid->members[i].member->IsDead() //and not dead
-					) {
+				target = raid->members[i].member;
+				if (target == nullptr) continue; //target grouped
+				if (!target->IsClient()) continue; //Is a client
+				if (target->GetID() == this->GetID()) continue; //not me
+				if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+				Client *c = target->CastToClient();
+				if (c->IsDead()) continue; //not dead
 
-					float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
-					float range2 = 50 * 50;
-					if (dist2 > range2) return;
+				float dist2 = DistanceSquared(m_Position, target->GetPosition());
+				float range2 = 50 * 50;
+				if (dist2 > range2) continue;
 
-					if (healTarget == nullptr) healTarget = raid->members[i].member;
-					if (healTarget->GetHPRatio() > raid->members[i].member->GetHPRatio()) healTarget = raid->members[i].member;
-				}
+				if (healTarget == nullptr) healTarget = target;
+				if (healTarget->GetHPRatio() > target->GetHPRatio()) healTarget = target;
 			}
 		}
 	}
@@ -11324,25 +11323,28 @@ void Client::DoMendingAura(int amount) {
 	if (rank < 1) return;
 	if (!zone->random.Roll(int(rank * 2))) return;
 	int healCount = 0;
-	
+	Mob *target = nullptr;
+
 	if (this->IsGrouped()) {
 		//Give heal to group (and RAID)									
 		auto group = this->GetGroup(); //iterate group
 		for (int i = 0; i < 6; ++i) {
-			if (group->members[i] &&  //target grouped
-				group->members[i]->IsClient() && //Is a client												
-				this->GetID() != group->members[i]->GetID() && //not me
-				this->GetZoneID() == group->members[i]->GetZoneID() && //in same zone												
-				!group->members[i]->CastToClient()->IsDead() //and not dead
-				) {
+			target = group->members[i];
+			if (target == nullptr) continue; //target grouped
+			if (!target->IsClient()) continue; //Is a client
+			if (target->GetID() == this->GetID()) continue; //not me
+			if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+			Client *c = target->CastToClient();
+			if (c->IsDead()) continue; //not dead
 
-				float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
-				float range2 = (rank * 10) * (rank * 10);
-				if (dist2 > range2) continue;
-				healCount++;
-				group->members[i]->Message(MT_Spells, "%s has healed you for %i.", GetCleanName(), amount);
-				group->members[i]->HealDamage(amount, this);				
-			}
+			float dist2 = DistanceSquared(m_Position, target->GetPosition());
+			float range2 = 50 * 50;
+			if (dist2 > range2) continue;
+
+			healCount++;
+			c->Message(MT_Spells, "%s has healed you for %i.", GetCleanName(), amount);
+			c->HealDamage(amount, this);
+			
 		}
 	}
 	else if (this->IsRaidGrouped()) { //Raid healing
@@ -11351,21 +11353,21 @@ void Client::DoMendingAura(int amount) {
 		uint32 gid = raid->GetGroup(this->CastToClient());
 		if (gid < 12) {
 			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-				if (raid->members[i].member &&  //is raid member
-					raid->members[i].GroupNumber == gid && //in group
-					raid->members[i].member->IsClient() && //Is a client
-					raid->members[i].member != this && //not me
-					raid->members[i].member->CastToMob()->GetZoneID() == this->GetZoneID() && //in same zone as aggro player
-					!raid->members[i].member->IsDead() //and not dead
-					) {
+				target = raid->members[i].member;
+				if (target == nullptr) continue; //target grouped
+				if (!target->IsClient()) continue; //Is a client
+				if (target->GetID() == this->GetID()) continue; //not me
+				if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+				Client *c = target->CastToClient();
+				if (c->IsDead()) continue; //not dead
 
-					float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
-					float range2 = (rank * 10) * (rank * 10);
-					if (dist2 > range2) continue;
-					raid->members[i].member->Message(MT_Spells, "%s has healed you for %i.", GetCleanName(), amount);
-					healCount++;
-					raid->members[i].member->HealDamage(amount, this);
-				}
+				float dist2 = DistanceSquared(m_Position, target->GetPosition());
+				float range2 = 50 * 50;
+				if (dist2 > range2) continue;
+
+				healCount++;
+				c->Message(MT_Spells, "%s has healed you for %i.", GetCleanName(), amount);
+				c->HealDamage(amount, this);
 			}
 		}
 	}
@@ -11387,9 +11389,8 @@ void Client::DoDivineSurge() {
 	if (this->IsGrouped()) {							
 		auto group = this->GetGroup(); //iterate group
 		for (int i = 0; i < 6; ++i) {
-
 			target = group->members[i];
-			if (target) continue; //target grouped
+			if (target == nullptr) continue; //target grouped
 			if (!target->IsClient()) continue; //Is a client
 			if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
 			if (target->CastToClient()->IsDead()) continue; //not dead
@@ -11411,12 +11412,11 @@ void Client::DoDivineSurge() {
 	}
 	else if (this->IsRaidGrouped()) { //Raid healing
 		auto raid = this->GetRaid();
-
 		uint32 gid = raid->GetGroup(this->CastToClient());
 		if (gid < 12) {
 			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
 				target = raid->members[i].member;
-				if (target) continue; //target grouped
+				if (target == nullptr) continue; //target grouped
 				if (!target->IsClient()) continue; //Is a client
 				if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
 				if (target->CastToClient()->IsDead()) continue; //not dead

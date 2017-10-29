@@ -4011,8 +4011,12 @@ void command_setallbuilds(Client *c, const Seperator *sep) {
 	
 	// Get a session, this allows RefreshBuild to detect that changes have happened.
 	c->GetSession();
-
+	
 	std::string build = "55555555555555555555555555555555555555555555555555555";
+	if (rank == 1) build = "11111111111111111111111111111111111111111111111111111";
+	if (rank == 2) build = "22222222222222222222222222222222222222222222222222222";
+	if (rank == 3) build = "33333333333333333333333333333333333333333333333333333";
+	if (rank == 4) build = "44444444444444444444444444444444444444444444444444444";
 
 	std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %i", EscapeString(build).c_str(), (int)c->CharacterID());
 	auto results = database.QueryDatabase(query);
