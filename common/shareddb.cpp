@@ -1704,6 +1704,7 @@ void SharedDatabase::LoadSpells(void *data, int max_spells) {
 		for (y = 0; y < 16; y++)
 			sp[tempid].deities[y]=atoi(row[126+y]);
 
+		sp[tempid].new_icon=atoi(row[144]);
 		sp[tempid].uninterruptable=atoi(row[146]) != 0;
 		sp[tempid].ResistDiff=atoi(row[147]);
 		sp[tempid].dot_stacking_exempt = atoi(row[148]) != 0;
@@ -1910,8 +1911,8 @@ void SharedDatabase::LoadBaseData(void *data, int max_level) {
 		bd->base_hp = atof(row[2]);
 		bd->base_mana = atof(row[3]);
 		bd->base_end = atof(row[4]);
-		bd->unk1 = atof(row[5]);
-		bd->unk2 = atof(row[6]);
+		bd->hp_regen = atof(row[5]);
+		bd->end_regen = atof(row[6]);
 		bd->hp_factor = atof(row[7]);
 		bd->mana_factor = atof(row[8]);
 		bd->endurance_factor = atof(row[9]);

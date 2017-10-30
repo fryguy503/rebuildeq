@@ -51,6 +51,7 @@ public:
 	inline int16		WorldAdmin() const	{ return pworldadmin; }
 	inline const char*	GetLSKey() const	{ return plskey; }
 	inline const char* GetIdentity() const { return identity; }
+	inline const int8	GetOnline() const	{ return pOnline; }
 
 	// Account stuff
 	inline uint32		AccountID() const		{ return paccountid; }

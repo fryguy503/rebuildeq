@@ -60,6 +60,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 	const SPDat_Spell_Struct &spell = spells[spell_id];
 
+	if (spell.disallow_sit && IsBuffSpell(spell_id) && IsClient() && (CastToClient()->IsSitting() || CastToClient()->GetHorseId() != 0))
+		return false;
+
 	bool c_override = false;
 	if (caster && caster->IsClient() && GetCastedSpellInvSlot() > 0) {
 		const EQEmu::ItemInstance *inst = caster->CastToClient()->GetInv().GetItem(GetCastedSpellInvSlot());
@@ -135,6 +138,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 		buffs[buffslot].magic_rune = 0;
 		buffs[buffslot].numhits = 0;
 
+		if (spells[spell_id].numhits > 0) {
+
+			int numhit = spells[spell_id].numhits;
+
+			numhit += numhit * caster->GetFocusEffect(focusFcLimitUse, spell_id) / 100;
+			numhit += caster->GetFocusEffect(focusIncreaseNumHits, spell_id);
+			buffs[buffslot].numhits = numhit;
+		}
+
 		if (spells[spell_id].EndurUpkeep > 0)
 			SetEndurUpkeep(true);
 
@@ -182,14 +194,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 		}
 	}
 
-	if(spells[spell_id].numhits > 0 && buffslot >= 0){
-
-		int numhit = spells[spell_id].numhits;
-
-		numhit += numhit*caster->GetFocusEffect(focusFcLimitUse, spell_id)/100;
-		numhit += caster->GetFocusEffect(focusIncreaseNumHits, spell_id);
-		buffs[buffslot].numhits = numhit;
-	}
 
 	if (!IsPowerDistModSpell(spell_id))
 		SetSpellPowerDistanceMod(0);
@@ -855,8 +859,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				}
 				if (spell_id == 2755 && caster) //Lifeburn
 				{
-					dmg = -1 * caster->GetHP(); // just your current HP or should it be Max HP?
+					dmg = caster->GetHP(); // just your current HP
 					caster->SetHP(dmg / 4); // 2003 patch notes say ~ 1/4 HP. Should this be 1/4 your current HP or do 3/4 max HP dmg? Can it kill you?
+					dmg = -dmg;
 				}
 				if (spell_id == 6276 && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) // Primal Spirit Buff
 				{
@@ -1515,7 +1520,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							SetHeading(CalculateHeadingToTarget(ClosestMob->GetX(), ClosestMob->GetY()));
 							SetTarget(ClosestMob);
 							CastToClient()->SendTargetCommand(ClosestMob->GetID());
-							SendPosUpdate(2);
+							SendPositionUpdate(2);
 						}
 						else
 							Message_StringID(clientMessageError, SENSE_NOTHING);
@@ -3684,6 +3689,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				break;
 			}
 
+			case SE_PersistentEffect:
+				MakeAura(spell_id);
+				break;
+
 			case SE_KnockTowardCaster: {
 
 				if (caster->IsClient()) {
@@ -3701,7 +3710,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					}
 				}
 				GMMove(caster->GetX(), caster->GetY(), caster->GetZ(), GetReciprocalHeading(caster->GetHeading()));
-
+				break;
 			}
 
 			// Handled Elsewhere
@@ -4903,7 +4912,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 		case SE_Fear: {
 			if (zone->random.Roll(RuleI(Spells, FearBreakCheckChance))) {
-				float resist_check = ResistSpell(spells[buff.spellid].resisttype, buff.spellid, caster);
+				float resist_check = ResistSpell(spells[buff.spellid].resisttype, buff.spellid, caster,0,0,true);
 
 				if (resist_check == 100)
 					break;
@@ -4914,16 +4923,6 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 			break;
 		}
 
-		case SE_Hunger: {
-			// this procedure gets called 7 times for every once that the stamina update occurs so we add
-			// 1/7 of the subtraction.
-			// It's far from perfect, but works without any unnecessary buff checks to bog down the server.
-			if (IsClient()) {
-				CastToClient()->m_pp.hunger_level += 5;
-				CastToClient()->m_pp.thirst_level += 5;
-			}
-			break;
-		}
 		case SE_Invisibility:
 		case SE_InvisVsAnimals:
 		case SE_InvisVsUndead: {
@@ -7370,7 +7369,8 @@ bool Mob::TryDeathSave() {
 
 bool Mob::AffectedBySpellExcludingSlot(int slot, int effect)
 {
-	for (int i = 0; i <= EFFECT_COUNT; i++)
+	int buff_count = GetMaxTotalSlots();
+	for (int i = 0; i < buff_count; i++)
 	{
 		if (i == slot)
 			continue;

@@ -134,17 +134,15 @@ void NPC::PauseWandering(int pausetime)
 {	// causes wandering to stop but is resumable
 	// 0 pausetime means pause until resumed
 	// otherwise automatically resume when time is up
-	if (GetGrid() != 0)
-	{
+	if (GetGrid() != 0) {
+		moving = false;
 		DistractedFromGrid = true;
 		Log(Logs::Detail, Logs::Pathing, "Paused Wandering requested. Grid %d. Resuming in %d ms (0=not until told)", GetGrid(), pausetime);
 		SendPosition();
-		if (pausetime<1)
-		{	// negative grid number stops him dead in his tracks until ResumeWandering()
+		if (pausetime < 1) {	// negative grid number stops him dead in his tracks until ResumeWandering()
 			SetGrid(0 - GetGrid());
 		}
-		else
-		{	// specified waiting time, he'll resume after that
+		else {	// specified waiting time, he'll resume after that
 			AI_walking_timer->Start(pausetime * 1000); // set the timer
 		}
 	}
@@ -453,7 +451,7 @@ float Mob::CalculateHeadingToTarget(float in_x, float in_y) {
 	return (256 * (360 - angle) / 360.0f);
 }
 
-bool Mob::MakeNewPositionAndSendUpdate(float x, float y, float z, int speed, bool checkZ) {
+bool Mob::MakeNewPositionAndSendUpdate(float x, float y, float z, int speed) {
 	if (GetID() == 0)
 		return true;
 
@@ -497,7 +495,8 @@ bool Mob::MakeNewPositionAndSendUpdate(float x, float y, float z, int speed, boo
 		m_Position.y = new_y;
 		m_Position.z = new_z;
 
-		if(fix_z_timer.Check() && !this->IsEngaged())
+		if(fix_z_timer.Check() && 
+			(!this->IsEngaged() || flee_mode || currently_fleeing))
 			this->FixZ();
 
 		tar_ndx++;
@@ -614,12 +613,12 @@ bool Mob::MakeNewPositionAndSendUpdate(float x, float y, float z, int speed, boo
 
 	if (IsClient())
 	{
-		SendPosUpdate(1);
+		SendPositionUpdate(1);
 		CastToClient()->ResetPositionTimer();
 	}
 	else
 	{
-		SendPosUpdate();
+		SendPositionUpdate();
 		SetAppearance(eaStanding, false);
 	}
 
@@ -628,7 +627,7 @@ bool Mob::MakeNewPositionAndSendUpdate(float x, float y, float z, int speed, boo
 }
 
 bool Mob::CalculateNewPosition2(float x, float y, float z, int speed, bool checkZ, bool calcHeading) {
-	return MakeNewPositionAndSendUpdate(x, y, z, speed, checkZ);
+	return MakeNewPositionAndSendUpdate(x, y, z, speed);
 }
 
 bool Mob::CalculateNewPosition(float x, float y, float z, int speed, bool checkZ, bool calcHeading) {
@@ -702,7 +701,7 @@ bool Mob::CalculateNewPosition(float x, float y, float z, int speed, bool checkZ
 		this->SetMoving(true);
 		moved = true;
 		m_Delta = glm::vec4(m_Position.x - nx, m_Position.y - ny, m_Position.z - nz, 0.0f);
-		SendPosUpdate();
+		SendPositionUpdate();
 	}
 	tar_ndx++;
 
@@ -839,7 +838,8 @@ void Mob::SendToFixZ(float new_x, float new_y, float new_z) {
 	}
 }
 
-void Mob::FixZ() {
+void Mob::FixZ(int32 z_find_offset /*= 5*/)
+{
 
 	BenchTimer timer;
 	timer.reset();
@@ -850,13 +850,14 @@ void Mob::FixZ() {
 			(zone->HasWaterMap() && !zone->watermap->InWater(glm::vec3(m_Position))))
 		{
 			/* Any more than 5 in the offset makes NPC's hop/snap to ceiling in small corridors */
-			float new_z = this->FindGroundZ(m_Position.x, m_Position.y, 5);
+			float new_z = this->FindGroundZ(m_Position.x, m_Position.y, z_find_offset);
+			new_z += this->GetZOffset();
 
 			auto duration = timer.elapsed();
 
 			Log(
 				Logs::Moderate, 
-				Logs::Pathing, 
+				Logs::FixZ,
 				"Mob::FixZ() (%s) returned %4.3f at %4.3f, %4.3f, %4.3f - Took %lf", 
 				this->GetCleanName(), 
 				new_z, 
@@ -866,7 +867,7 @@ void Mob::FixZ() {
 				duration
 			);
 
-			if ((new_z > -2000) && std::abs(m_Position.z - new_z) < 35) {
+			if ((new_z > -2000) && new_z != BEST_Z_INVALID) {
 				if (RuleB(Map, MobZVisualDebug))
 					this->SendAppearanceEffect(78, 0, 0, 0, 0);
 				
@@ -876,12 +877,119 @@ void Mob::FixZ() {
 				if (RuleB(Map, MobZVisualDebug))
 					this->SendAppearanceEffect(103, 0, 0, 0, 0);
 
-				Log(Logs::General, Logs::Debug, "%s is failing to find Z %f", this->GetCleanName(), std::abs(m_Position.z - new_z));
+				Log(Logs::General, Logs::FixZ, "%s is failing to find Z %f", this->GetCleanName(), std::abs(m_Position.z - new_z));
 			}
 
 			last_z = m_Position.z;
 		}
 	}
+}
+
+float Mob::GetZOffset() const {
+	float offset = 3.125f;
+
+	switch (race) {
+		case 436:
+			offset = 0.577f;
+			break;
+		case 430:
+			offset = 0.5f;
+			break;
+		case 432:
+			offset = 1.9f;
+			break;
+		case 435:
+			offset = 0.93f;
+			break;
+		case 450:
+			offset = 0.938f;
+			break;
+		case 479:
+			offset = 0.8f;
+			break;
+		case 451:
+			offset = 0.816f;
+			break;
+		case 437:
+			offset = 0.527f;
+			break;
+		case 439:
+			offset = 1.536f;
+			break;
+		case 415:
+			offset = 1.0f;
+			break;
+		case 438:
+			offset = 0.776f;
+			break;
+		case 452:
+			offset = 0.776f;
+			break;
+		case 441:
+			offset = 0.816f;
+			break;
+		case 440:
+			offset = 0.938f;
+			break;
+		case 468:
+			offset = 1.0f;
+			break;
+		case 459:
+			offset = 1.0f;
+			break;
+		case 462:
+			offset = 1.5f;
+			break;
+		case 530:
+			offset = 1.2f;
+			break;
+		case 549:
+			offset = 0.5f;
+			break;
+		case 548:
+			offset = 0.5f;
+			break;
+		case 547:
+			offset = 0.5f;
+			break;
+		case 604:
+			offset = 1.2f;
+			break;
+		case 653:
+			offset = 5.9f;
+			break;
+		case 658:
+			offset = 4.0f;
+			break;
+		case 323:
+			offset = 5.0f;
+			break;
+		case 663:
+			offset = 5.0f;
+			break;
+		case 664:
+			offset = 4.0f;
+			break;
+		case 703:
+			offset = 9.0f;
+			break;
+		case 688:
+			offset = 5.0f;
+			break;
+		case 669:
+			offset = 7.0f;
+			break;
+		case 687:
+			offset = 2.0f;
+			break;
+		case 686:
+			offset = 2.0f;
+			break;
+		default:
+			offset = 3.125f;
+	}
+
+	return 0.2 * GetSize() * offset;
 }
 
 int	ZoneDatabase::GetHighestGrid(uint32 zoneid) {

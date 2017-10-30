@@ -80,8 +80,10 @@ public:
 	inline	void SetLeader(Mob* newleader){ leader=newleader; };
 	inline	Mob* GetLeader() { return leader; };
 	const char*	GetLeaderName() { return membername[0]; };
-	void	SendHPPacketsTo(Mob* newmember);
-	void	SendHPPacketsFrom(Mob* newmember);
+	void	SendHPManaEndPacketsTo(Mob* newmember);
+	void	SendHPPacketsFrom(Mob* member);
+	void	SendManaPacketFrom(Mob* member);
+	void SendEndurancePacketFrom(Mob* member);
 	bool	UpdatePlayer(Mob* update);
 	void	MemberZoned(Mob* removemob);
 	inline	bool IsLeader(Mob* leadertest) { return leadertest==leader; };
@@ -138,6 +140,7 @@ public:
 	inline int GetLeadershipAA(int AAID) { return LeaderAbilities.ranks[AAID]; }
 	void	ClearAllNPCMarks();
 	void	QueueHPPacketsForNPCHealthAA(Mob* sender, const EQApplicationPacket* app);
+	void	QueueClients(Mob *sender, const EQApplicationPacket *app, bool ack_required = true, bool ignore_sender = true, float distance = 0);
 	void	ChangeLeader(Mob* newleader);
 	const char *GetClientNameByIndex(uint8 index);
 	void UpdateXTargetMarkedNPC(uint32 Number, Mob *m);

@@ -305,6 +305,7 @@ union
 	uint8 DestructibleUnk8;
 	uint32 DestructibleUnk9;
 	bool targetable_with_hotkey;
+	bool show_name;
 
 };
 
@@ -550,6 +551,7 @@ struct BlockedBuffs_Struct
 /*86*/ uint16 Flags;
 };
 
+// same for adding
 struct RemoveNimbusEffect_Struct
 {
 /*00*/ uint32 spawnid;			// Spawn ID
@@ -853,6 +855,7 @@ static const uint32 MAX_PP_REF_SPELLBOOK = 480;	// Set for Player Profile size r
 static const uint32 MAX_PP_REF_MEMSPELL = 9; // Set for Player Profile size retain
 
 static const uint32 MAX_PP_SKILL		= PACKET_SKILL_ARRAY_SIZE;	// 100 - actual skills buffer size
+static const uint32 MAX_PP_INNATE_SKILL	= 25;
 static const uint32 MAX_PP_AA_ARRAY		= 240;
 static const uint32 MAX_GROUP_MEMBERS	= 6;
 static const uint32 MAX_RECAST_TYPES	= 20;
@@ -992,7 +995,8 @@ struct PlayerProfile_Struct
 /*4768*/	int32				platinum_shared;	// Platinum shared between characters
 /*4772*/	uint8				unknown4808[24];
 /*4796*/	uint32				skills[MAX_PP_SKILL];	// [400] List of skills	// 100 dword buffer
-/*5196*/	uint8				unknown5132[184];
+/*5196*/	uint32				InnateSkills[MAX_PP_INNATE_SKILL];
+/*5296*/	uint8				unknown5132[84];
 /*5380*/	uint32				pvp2;				//
 /*5384*/	uint32				unknown5420;		//
 /*5388*/	uint32				pvptype;			//
@@ -4763,6 +4767,7 @@ struct BuffIconEntry_Struct
 	uint32 spell_id;
 	int32 tics_remaining;
 	uint32 num_hits;
+	char caster[64];
 };
 
 struct BuffIcon_Struct
@@ -4772,6 +4777,7 @@ struct BuffIcon_Struct
 	uint16 count;
 	uint8 type; // 0 = self buff window, 1 = self target window, 4 = group, 5 = PC, 7 = NPC
 	int32 tic_timer;
+	int32 name_lengths; // so ahh we kind of do these packets hacky, this is the total length of all the names to make creating the real packets in the translators easier
 	BuffIconEntry_Struct entries[0];
 };
 
@@ -5331,6 +5337,24 @@ struct fling_struct {
 /* 24 */ float new_z;
 /* 28 */
 };
+
+// used when action == 0
+struct AuraCreate_Struct {
+/* 00 */	uint32 action; // 0 = add, 1 = delete, 2 = reset
+/* 04 */	uint32 type; // unsure -- normal auras show 1 clicky (ex. Circle of Power) show 0
+/* 08 */	char aura_name[64];
+/* 72 */	uint32 entity_id;
+/* 76 */	uint32 icon;
+/* 80 */
+};
+
+// used when action == 1
+struct AuraDestory_Struct {
+/* 00 */	uint32 action; // 0 = add, 1 = delete, 2 = reset
+/* 04 */	uint32 entity_id;
+/* 08 */
+};
+// I think we can assume it's just action for 2, client doesn't seem to do anything with the rest of the data in that case
 
 // Restore structure packing to default
 #pragma pack()

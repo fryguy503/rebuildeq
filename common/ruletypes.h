@@ -66,11 +66,12 @@ RULE_INT(Character, AutosaveIntervalS, 300)	//0=disabled
 RULE_INT(Character, HPRegenMultiplier, 100)
 RULE_INT(Character, ManaRegenMultiplier, 100)
 RULE_INT(Character, EnduranceRegenMultiplier, 100)
+RULE_BOOL(Character, OldMinMana, false) // this is used for servers that want to follow older skill cap formulas so they can still have some regen w/o mediate
 RULE_INT(Character, ConsumptionMultiplier, 100) //item's hunger restored = this value * item's food level, 100 = normal, 50 = people eat 2x as fast, 200 = people eat 2x as slow
 RULE_BOOL(Character, HealOnLevel, false)
 RULE_BOOL(Character, FeignKillsPet, false)
 RULE_INT(Character, ItemManaRegenCap, 15)
-RULE_INT(Character, ItemHealthRegenCap, 35)
+RULE_INT(Character, ItemHealthRegenCap, 30)
 RULE_INT(Character, ItemDamageShieldCap, 30)
 RULE_INT(Character, ItemAccuracyCap, 150)
 RULE_INT(Character, ItemAvoidanceCap, 100)
@@ -91,10 +92,12 @@ RULE_INT(Character, HasteCap, 100) // Haste cap for non-v3(overhaste) haste.
 RULE_INT(Character, SkillUpModifier, 100) //skill ups are at 100%
 RULE_BOOL(Character, SharedBankPlat, false) //off by default to prevent duping for now
 RULE_BOOL(Character, BindAnywhere, false)
-RULE_INT(Character, RestRegenPercent, 0) // Set to >0 to enable rest state bonus HP and mana regen.
+RULE_BOOL(Character, RestRegenEnabled, true) // Enable OOC Regen
+RULE_INT(Character, RestRegenHP, 180) // seconds until full from 0. this is actually zone setable, but most or all zones are 180
+RULE_INT(Character, RestRegenMana, 180) // seconds until full from 0. this is actually zone setable, but most or all zones are 180
+RULE_INT(Character, RestRegenEnd, 180) // seconds until full from 0. this is actually zone setable, but most or all zones are 180
 RULE_INT(Character, RestRegenTimeToActivate, 30) // Time in seconds for rest state regen to kick in.
 RULE_INT(Character, RestRegenRaidTimeToActivate, 300) // Time in seconds for rest state regen to kick in with a raid target.
-RULE_BOOL(Character, RestRegenEndurance, false) // Whether rest regen will work for endurance or not.
 RULE_INT(Character, KillsPerGroupLeadershipAA, 250) // Number of dark blues or above per Group Leadership AA
 RULE_INT(Character, KillsPerRaidLeadershipAA, 250) // Number of dark blues or above per Raid Leadership AA
 RULE_INT(Character, MaxFearDurationForPlayerCharacter, 4) //4 tics, each tic calculates every 6 seconds.
@@ -117,7 +120,8 @@ RULE_BOOL(Character, EnableDiscoveredItems, true) // If enabled, it enables EVEN
 RULE_BOOL(Character, EnableXTargetting, true) // Enable Extended Targetting Window, for users with UF and later clients.
 RULE_BOOL(Character, EnableAggroMeter, true) // Enable Aggro Meter, for users with RoF and later clients.
 RULE_BOOL(Character, KeepLevelOverMax, false) // Don't delevel a character that has somehow gone over the level cap
-RULE_INT(Character, FoodLossPerUpdate, 35) // How much food/water you lose per stamina update
+RULE_INT(Character, FoodLossPerUpdate, 32) // How much food/water you lose per stamina update
+RULE_BOOL(Character, EnableHungerPenalties, false) // being hungry/thirsty has negative effects -- it does appear normal live servers do not have penalties
 RULE_INT(Character, BaseInstrumentSoftCap, 36) // Softcap for instrument mods, 36 commonly referred to as "3.6" as well.
 RULE_BOOL(Character, UseSpellFileSongCap, true) // When they removed the AA that increased the cap they removed the above and just use the spell field
 RULE_INT(Character, BaseRunSpeedCap, 158) // Base Run Speed Cap, on live it's 158% which will give you a runspeed of 1.580 hard capped to 225.
@@ -134,7 +138,6 @@ RULE_INT(Character, TradeskillUpMakePoison, 2) // Make Poison skillup rate adjus
 RULE_INT(Character, TradeskillUpPottery, 4) // Pottery skillup rate adjust. Lower is faster.
 RULE_INT(Character, TradeskillUpResearch, 1) // Research skillup rate adjust. Lower is faster.
 RULE_INT(Character, TradeskillUpTinkering, 2) // Tinkering skillup rate adjust. Lower is faster.
-RULE_BOOL(Character, SpamHPUpdates, false) // if your server has stupid amounts of HP that causes client display issues, turn this on!
 RULE_BOOL(Character, MarqueeHPUpdates, false) // Will show Health % in center of screen < 100%
 RULE_INT(Character, IksarCommonTongue, 95) // 95 By default (live-like?)
 RULE_INT(Character, OgreCommonTongue, 95) // 95 By default (live-like?)
@@ -153,7 +156,7 @@ RULE_BOOL(Character, AllowMQTarget, false) // Disables putting players in the 'h
 RULE_BOOL(Character, UseOldBindWound, false) // Uses the original bind wound behavior
 RULE_BOOL(Character, GrantHoTTOnCreate, false) // Grant Health of Target's Target leadership AA on character creation
 RULE_BOOL(Character, UseOldConSystem, false) // Grant Health of Target's Target leadership AA on character creation
-
+RULE_BOOL(Character, OPClientUpdateVisualDebug, false) // Shows a pulse and forward directional particle each time the client sends its position to server
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(Mercs)
@@ -206,6 +209,7 @@ RULE_INT(Skills, MaxTrainSpecializations, 50)	// Max level a GM trainer will tra
 RULE_INT(Skills, SwimmingStartValue, 100)
 RULE_BOOL(Skills, TrainSenseHeading, false)
 RULE_INT(Skills, SenseHeadingStartValue, 200)
+RULE_BOOL(Skills, SelfLanguageLearning, true)
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(Pets)
@@ -255,7 +259,6 @@ RULE_BOOL(World, StartZoneSameAsBindOnCreation, true) //Should the start zone AL
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(Zone)
-RULE_INT(Zone, NPCPositonUpdateTicCount, 32) //ms between intervals of sending a position update to the entire zone.
 RULE_INT(Zone, ClientLinkdeadMS, 180000) //the time a client remains link dead on the server after a sudden disconnection
 RULE_INT(Zone, GraveyardTimeMS, 1200000) //ms time until a player corpse is moved to a zone's graveyard, if one is specified for the zone
 RULE_BOOL(Zone, EnableShadowrest, 1) // enables or disables the shadowrest zone feature for player corpses. Default is turned on.
@@ -311,7 +314,7 @@ RULE_BOOL(Pathing, AggroReturnToGrid, true)	// Enable pathing for aggroed roamin
 RULE_BOOL(Pathing, Guard, true)		// Enable pathing for mobs moving to their guard point.
 RULE_BOOL(Pathing, Find, true)		// Enable pathing for FindPerson requests from the client.
 RULE_BOOL(Pathing, Fear, true)		// Enable pathing for fear
-RULE_REAL(Pathing, ZDiffThreshold, 10)	// If a mob las LOS to it's target, it will run to it if the Z difference is < this.
+RULE_REAL(Pathing, ZDiffThresholdNew, 80)	// If a mob las LOS to it's target, it will run to it if the Z difference is < this.
 RULE_INT(Pathing, LOSCheckFrequency, 1000)	// A mob will check for LOS to it's target this often (milliseconds).
 RULE_INT(Pathing, RouteUpdateFrequencyShort, 1000)	// How often a new route will be calculated if the target has moved.
 RULE_INT(Pathing, RouteUpdateFrequencyLong, 5000)	// How often a new route will be calculated if the target has moved.
@@ -584,6 +587,8 @@ RULE_INT(Range, DamageMessages, 50)
 RULE_INT(Range, SpellMessages, 75)
 RULE_INT(Range, SongMessages, 75)
 RULE_INT(Range, MobPositionUpdates, 600)
+RULE_INT(Range, ClientPositionUpdates, 300)
+RULE_INT(Range, ClientForceSpawnUpdateRange, 1000)
 RULE_INT(Range, CriticalDamage, 80)
 RULE_INT(Range, ClientNPCScan, 300)
 RULE_CATEGORY_END()

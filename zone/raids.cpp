@@ -145,6 +145,13 @@ void Raid::AddMember(Client *c, uint32 group, bool rleader, bool groupleader, bo
 		}
 	}
 
+	Raid *raid_update = nullptr;
+	raid_update = c->GetRaid();
+	if (raid_update) {
+		raid_update->SendHPManaEndPacketsTo(c);
+		raid_update->SendHPManaEndPacketsFrom(c);
+	}
+
 	auto pack = new ServerPacket(ServerOP_RaidAdd, sizeof(ServerRaidGeneralAction_Struct));
 	ServerRaidGeneralAction_Struct *rga = (ServerRaidGeneralAction_Struct*)pack->pBuffer;
 	rga->rid = GetID();
@@ -316,6 +323,10 @@ void Raid::SaveRaidLeaderAA()
 
 void Raid::UpdateGroupAAs(uint32 gid)
 {
+
+	if (gid < 0 || gid > MAX_RAID_GROUPS)
+		return;
+
 	Client *gl = GetGroupLeader(gid);
 
 	if (gl)
@@ -482,6 +493,14 @@ uint32 Raid::GetPlayerIndex(const char *name){
 		}
 	}
 	return 0; //should never get to here if we do everything else right, set it to 0 so we never crash things that rely on it.
+}
+
+uint32 Raid::GetPlayerIndex(Client *c)
+{
+	for (int i = 0; i < MAX_RAID_MEMBERS; ++i)
+		if (c == members[i].member)
+			return i;
+	return 0xFFFFFFFF; // return sentinel value, make sure you check it unlike the above function
 }
 
 Client *Raid::GetClientByIndex(uint16 index)
@@ -1541,70 +1560,126 @@ void Raid::MemberZoned(Client *c)
 		group_mentor[gid].mentoree = nullptr;
 }
 
-void Raid::SendHPPacketsTo(Client *c)
+void Raid::SendHPManaEndPacketsTo(Client *client)
 {
-	if(!c)
+	if(!client)
 		return;
 
-	uint32 gid = this->GetGroup(c);
-	EQApplicationPacket hpapp;
+	uint32 group_id = this->GetGroup(client);
+
+	EQApplicationPacket hp_packet;
 	EQApplicationPacket outapp(OP_MobManaUpdate, sizeof(MobManaUpdate_Struct));
-	for(int x = 0; x < MAX_RAID_MEMBERS; x++)
-	{
-		if(members[x].member)
-		{
-			if((members[x].member != c) && (members[x].GroupNumber == gid))
-			{
-				members[x].member->CreateHPPacket(&hpapp);
-				c->QueuePacket(&hpapp, false);
-				safe_delete_array(hpapp.pBuffer);
-				hpapp.size = 0;
-				if (c->ClientVersion() >= EQEmu::versions::ClientVersion::SoD)
-				{
+
+	for(int x = 0; x < MAX_RAID_MEMBERS; x++) {
+		if(members[x].member) {
+			if((members[x].member != client) && (members[x].GroupNumber == group_id)) {
+
+				members[x].member->CreateHPPacket(&hp_packet);
+				client->QueuePacket(&hp_packet, false);
+				safe_delete_array(hp_packet.pBuffer);
+
+				hp_packet.size = 0;
+				if (client->ClientVersion() >= EQEmu::versions::ClientVersion::SoD) {
+
 					outapp.SetOpcode(OP_MobManaUpdate);
-					MobManaUpdate_Struct *mmus = (MobManaUpdate_Struct *)outapp.pBuffer;
-					mmus->spawn_id = members[x].member->GetID();
-					mmus->mana = members[x].member->GetManaPercent();
-					c->QueuePacket(&outapp, false);
+					MobManaUpdate_Struct *mana_update = (MobManaUpdate_Struct *)outapp.pBuffer;
+					mana_update->spawn_id = members[x].member->GetID();
+					mana_update->mana = members[x].member->GetManaPercent();
+					client->QueuePacket(&outapp, false);
+
 					outapp.SetOpcode(OP_MobEnduranceUpdate);
-					MobEnduranceUpdate_Struct *meus = (MobEnduranceUpdate_Struct *)outapp.pBuffer;
-					meus->endurance = members[x].member->GetEndurancePercent();
-					c->QueuePacket(&outapp, false);
+					MobEnduranceUpdate_Struct *endurance_update = (MobEnduranceUpdate_Struct *)outapp.pBuffer;
+					endurance_update->endurance = members[x].member->GetEndurancePercent();
+					client->QueuePacket(&outapp, false);
 				}
 			}
 		}
 	}
 }
 
-void Raid::SendHPPacketsFrom(Mob *m)
+void Raid::SendHPManaEndPacketsFrom(Mob *mob)
 {
-	if(!m)
+	if(!mob)
 		return;
 
-	uint32 gid = 0;
-	if(m->IsClient())
-		gid = this->GetGroup(m->CastToClient());
+	uint32 group_id = 0;
+	
+	if(mob->IsClient())
+		group_id = this->GetGroup(mob->CastToClient());
+
 	EQApplicationPacket hpapp;
 	EQApplicationPacket outapp(OP_MobManaUpdate, sizeof(MobManaUpdate_Struct));
 
-	m->CreateHPPacket(&hpapp);
-	for(int x = 0; x < MAX_RAID_MEMBERS; x++)
-	{
-		if(members[x].member)
-		{
-			if(!m->IsClient() || ((members[x].member != m->CastToClient()) && (members[x].GroupNumber == gid)))
-			{
+	mob->CreateHPPacket(&hpapp);
+	
+	for(int x = 0; x < MAX_RAID_MEMBERS; x++) {
+		if(members[x].member) {
+			if(!mob->IsClient() || ((members[x].member != mob->CastToClient()) && (members[x].GroupNumber == group_id))) {
 				members[x].member->QueuePacket(&hpapp, false);
-				if (members[x].member->ClientVersion() >= EQEmu::versions::ClientVersion::SoD)
-				{
+				if (members[x].member->ClientVersion() >= EQEmu::versions::ClientVersion::SoD) {
 					outapp.SetOpcode(OP_MobManaUpdate);
-					MobManaUpdate_Struct *mmus = (MobManaUpdate_Struct *)outapp.pBuffer;
-					mmus->spawn_id = m->GetID();
-					mmus->mana = m->GetManaPercent();
+					MobManaUpdate_Struct *mana_update = (MobManaUpdate_Struct *)outapp.pBuffer;
+					mana_update->spawn_id = mob->GetID();
+					mana_update->mana = mob->GetManaPercent();
 					members[x].member->QueuePacket(&outapp, false);
+					
 					outapp.SetOpcode(OP_MobEnduranceUpdate);
-					MobEnduranceUpdate_Struct *meus = (MobEnduranceUpdate_Struct *)outapp.pBuffer;
-					meus->endurance = m->GetEndurancePercent();
+					MobEnduranceUpdate_Struct *endurance_update = (MobEnduranceUpdate_Struct *)outapp.pBuffer;
+					endurance_update->endurance = mob->GetEndurancePercent();
+					members[x].member->QueuePacket(&outapp, false);
+				}
+			}
+		}
+	}
+}
+
+void Raid::SendManaPacketFrom(Mob *mob)
+{
+	if (!mob)
+		return;
+
+	uint32 group_id = 0;
+
+	if (mob->IsClient())
+		group_id = this->GetGroup(mob->CastToClient());
+
+	EQApplicationPacket outapp(OP_MobManaUpdate, sizeof(MobManaUpdate_Struct));
+
+	for (int x = 0; x < MAX_RAID_MEMBERS; x++) {
+		if (members[x].member) {
+			if (!mob->IsClient() || ((members[x].member != mob->CastToClient()) && (members[x].GroupNumber == group_id))) {
+				if (members[x].member->ClientVersion() >= EQEmu::versions::ClientVersion::SoD) {
+					outapp.SetOpcode(OP_MobManaUpdate);
+					MobManaUpdate_Struct *mana_update = (MobManaUpdate_Struct *)outapp.pBuffer;
+					mana_update->spawn_id = mob->GetID();
+					mana_update->mana = mob->GetManaPercent();
+					members[x].member->QueuePacket(&outapp, false);
+				}
+			}
+		}
+	}
+}
+
+void Raid::SendEndurancePacketFrom(Mob *mob)
+{
+	if (!mob)
+		return;
+
+	uint32 group_id = 0;
+
+	if (mob->IsClient())
+		group_id = this->GetGroup(mob->CastToClient());
+
+	EQApplicationPacket outapp(OP_MobManaUpdate, sizeof(MobManaUpdate_Struct));
+
+	for (int x = 0; x < MAX_RAID_MEMBERS; x++) {
+		if (members[x].member) {
+			if (!mob->IsClient() || ((members[x].member != mob->CastToClient()) && (members[x].GroupNumber == group_id))) {
+				if (members[x].member->ClientVersion() >= EQEmu::versions::ClientVersion::SoD) {
+					outapp.SetOpcode(OP_MobEnduranceUpdate);
+					MobEnduranceUpdate_Struct *endurance_update = (MobEnduranceUpdate_Struct *)outapp.pBuffer;
+					endurance_update->spawn_id = mob->GetID();
+					endurance_update->endurance = mob->GetEndurancePercent();
 					members[x].member->QueuePacket(&outapp, false);
 				}
 			}
@@ -1710,3 +1785,42 @@ void Raid::SetDirtyAutoHaters()
 
 }
 
+void Raid::QueueClients(Mob *sender, const EQApplicationPacket *app, bool ack_required /*= true*/, bool ignore_sender /*= true*/, float distance /*= 0*/, bool group_only /*= true*/) {
+	if (sender && sender->IsClient()) {
+
+		uint32 group_id = this->GetGroup(sender->CastToClient());
+
+		/* If this is a group only packet and we're not in a group -- return */
+		if (!group_id == 0xFFFFFFFF && group_only)
+			return;
+
+		for (uint32 i = 0; i < MAX_RAID_MEMBERS; i++) {
+			if (!members[i].member)
+				continue;
+
+			if (!members[i].member->IsClient())
+				continue;
+
+			if (ignore_sender && members[i].member == sender)
+				continue;
+
+			if (group_only && members[i].GroupNumber != group_id)
+				continue;
+
+			/* If we don't have a distance requirement - send to all members */
+			if (distance == 0) {
+				members[i].member->CastToClient()->QueuePacket(app, ack_required);
+			}
+			else {
+				/* If negative distance - we check if current distance is greater than X */
+				if (distance <= 0 && DistanceSquared(sender->GetPosition(), members[i].member->GetPosition()) >= (distance * distance)) {
+					members[i].member->CastToClient()->QueuePacket(app, ack_required);
+				}
+				/* If positive distance - we check if current distance is less than X */
+				else if (distance >= 0 && DistanceSquared(sender->GetPosition(), members[i].member->GetPosition()) <= (distance * distance)) {
+					members[i].member->CastToClient()->QueuePacket(app, ack_required);
+				}
+			}
+		}
+	}
+}

@@ -337,6 +337,7 @@ int command_init(void)
 		command_add("reloadqst", " - Clear quest cache (any argument causes it to also stop all timers)", 150, command_reloadqst) ||
 		command_add("reloadrulesworld", "Executes a reload of all rules in world specifically.", 80, command_reloadworldrules) ||
 		command_add("reloadstatic", "- Reload Static Zone Data", 150, command_reloadstatic) ||
+		command_add("reloadtraps", "- Repops all traps in the current zone.", 80, command_reloadtraps) ||
 		command_add("reloadtitles", "- Reload player titles from the database",  150, command_reloadtitles) ||
 		command_add("reloadworld", "[0|1] - Clear quest cache (0 - no repop, 1 - repop)", 255, command_reloadworld) ||
 		command_add("reloadzps", "- Reload zone points from database", 150, command_reloadzps) ||		
@@ -404,6 +405,7 @@ int command_init(void)
 		command_add("titlesuffix", "[text] [1 = create title table row] - Set your or your player target's title suffix", 50, command_titlesuffix) ||
 		command_add("traindisc", "[level] - Trains all the disciplines usable by the target, up to level specified. (may freeze client for a few seconds)", 150, command_traindisc) ||
 		command_add("toggle", " - Toggle server options", 0, command_toggle) ||
+		command_add("trapinfo", "- Gets infomation about the traps currently spawned in the zone.", 81, command_trapinfo) ||		
 		command_add("tune",  "Calculate ideal statical values related to combat.",  100, command_tune) ||
 		command_add("undyeme", "- Remove dye from all of your armor slots", 50, command_undyeme) ||
 		command_add("unfreeze", "- Unfreeze your target", 80, command_unfreeze) ||
@@ -5035,6 +5037,8 @@ void command_depopzone(Client *c, const Seperator *sep)
 void command_repop(Client *c, const Seperator *sep)
 {
 	int timearg = 1;
+	int delay = 0;
+
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "force") == 0) {
 		timearg++;
 
@@ -5053,13 +5057,19 @@ void command_repop(Client *c, const Seperator *sep)
 	}
 
 	if (!sep->IsNumber(timearg)) {
-        c->Message(0, "Zone depoped. Repoping now.");
+        c->Message(0, "Zone depopped - repopping now.");
+
 		zone->Repop();
+
+		/* Force a spawn2 timer trigger so we don't delay actually spawning the NPC's */
+		zone->spawn2_timer.Trigger();
 		return;
 	}
 
     c->Message(0, "Zone depoped. Repop in %i seconds",  atoi(sep->arg[timearg]));
-	zone->Repop(atoi(sep->arg[timearg])*1000);
+	zone->Repop(atoi(sep->arg[timearg]) * 1000);
+
+	zone->spawn2_timer.Trigger();
 }
 
 void command_repopclose(Client *c, const Seperator *sep)
@@ -8619,7 +8629,7 @@ void command_ginfo(Client *c, const Seperator *sep)
 void command_hp(Client *c, const Seperator *sep)
 {
 	c->SendHPUpdate();
-	c->SendManaUpdatePacket();
+	c->CheckManaEndUpdate();
 }
 
 void command_aggro(Client *c, const Seperator *sep)
@@ -8671,7 +8681,7 @@ void command_bestz(Client *c, const Seperator *sep) {
 
 		float best_z = zone->zonemap->FindBestZ(me, &hit);
 
-		if (best_z != -999999)
+		if (best_z != BEST_Z_INVALID)
 		{
 			c->Message(0, "Z is %.3f at (%.3f, %.3f).",  best_z, me.x, me.y);
 		}
@@ -12443,6 +12453,16 @@ void command_reloadperlexportsettings(Client *c, const Seperator *sep)
 	}
 }
 
+void command_trapinfo(Client *c, const Seperator *sep)
+{
+	entity_list.GetTrapInfo(c);
+}
+
+void command_reloadtraps(Client *c, const Seperator *sep)
+{
+	entity_list.UpdateAllTraps(true, true);
+	c->Message(CC_Default, "Traps reloaded for %s.", zone->GetShortName());
+}
 
 // All new code added to command.cpp should be BEFORE this comment line. Do no append code to this file below the BOTS code block.
 #ifdef BOTS

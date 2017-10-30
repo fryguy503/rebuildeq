@@ -906,15 +906,15 @@ int32 Merc::CalcMaxMana()
 		max_mana = 0;
 	}
 
-	if (cur_mana > max_mana) {
-		cur_mana = max_mana;
+	if (current_mana > max_mana) {
+		current_mana = max_mana;
 	}
 
 	int mana_perc_cap = spellbonuses.ManaPercCap[0];
 	if(mana_perc_cap) {
 		int curMana_cap = (max_mana * mana_perc_cap) / 100;
-		if (cur_mana > curMana_cap  || (spellbonuses.ManaPercCap[1] && cur_mana > spellbonuses.ManaPercCap[1]))
-			cur_mana = curMana_cap;
+		if (current_mana > curMana_cap  || (spellbonuses.ManaPercCap[1] && current_mana > spellbonuses.ManaPercCap[1]))
+			current_mana = curMana_cap;
 	}
 
 #if EQDEBUG >= 11
@@ -1154,7 +1154,7 @@ void Merc::CalcRestState() {
 	// The bot must have been out of combat for RuleI(Character, RestRegenTimeToActivate) seconds,
 	// must be sitting down, and must not have any detrimental spells affecting them.
 	//
-	if(!RuleI(Character, RestRegenPercent))
+	if(!RuleB(Character, RestRegenEnabled))
 		return;
 
 	RestRegenHP = RestRegenMana = RestRegenEndurance = 0;
@@ -1174,12 +1174,11 @@ void Merc::CalcRestState() {
 		}
 	}
 
-	RestRegenHP = (GetMaxHP() * RuleI(Character, RestRegenPercent) / 100);
+	RestRegenHP = 6 * (GetMaxHP() / RuleI(Character, RestRegenHP));
 
-	RestRegenMana = (GetMaxMana() * RuleI(Character, RestRegenPercent) / 100);
+	RestRegenMana = 6 * (GetMaxMana() / RuleI(Character, RestRegenMana));
 
-	if(RuleB(Character, RestRegenEndurance))
-		RestRegenEndurance = (GetMaxEndurance() * RuleI(Character, RestRegenPercent) / 100);
+	RestRegenEndurance = 6 * (GetMaxEndurance() / RuleI(Character, RestRegenEnd));
 }
 
 bool Merc::HasSkill(EQEmu::skills::SkillType skill_id) const {
@@ -1211,6 +1210,7 @@ void Merc::FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho) {
 		ns->spawn.flymode = 0;
 		ns->spawn.NPC = 1;                                      // 0=player,1=npc,2=pc corpse,3=npc corpse
 		ns->spawn.IsMercenary = 1;
+		ns->spawn.show_name = true;
 
 		UpdateActiveLight();
 		ns->spawn.light = m_Light.Type[EQEmu::lightsource::LightActive];
@@ -1593,7 +1593,7 @@ void Merc::AI_Process() {
 				}
 
 				if(IsMoving())
-					SendPosUpdate();
+					SendPositionUpdate();
 				else
 					SendPosition();
 			}
@@ -1718,7 +1718,7 @@ void Merc::AI_Process() {
 				}
 
 				if(IsMoving())
-					SendPosUpdate();
+					SendPositionUpdate();
 				else
 					SendPosition();
 			}
@@ -4991,7 +4991,7 @@ void Merc::ScaleStats(int scalepercent, bool setmax) {
 		max_mana = (int)((float)base_mana * scalerate);
 		base_mana = max_mana;
 		if (setmax)
-			cur_mana = max_mana;
+			current_mana = max_mana;
 	}
 
 	if (base_end)

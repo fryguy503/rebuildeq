@@ -120,12 +120,11 @@ Client::Client(EQStreamInterface* ieqs)
 	0,
 	0
 	),
-	//these must be listed in the order they appear in client.h
 	position_timer(250),
 	hpupdate_timer(2000),
 	camp_timer(29000),
 	process_timer(100),
-	stamina_timer(40000),
+	consume_food_timer(CONSUMPTION_TIMER),
 	zoneinpacket_timer(1000),
 	linkdead_timer(RuleI(Zone,ClientLinkdeadMS)),
 	dead_timer(2000),
@@ -159,10 +158,16 @@ Client::Client(EQStreamInterface* ieqs)
 	m_AutoAttackTargetLocation(0.0f, 0.0f, 0.0f),
 	last_region_type(RegionTypeUnsupported),
 	m_dirtyautohaters(false),
-	npc_close_scan_timer(6000)
+	npc_close_scan_timer(6000),
+	hp_self_update_throttle_timer(300),
+	hp_other_update_throttle_timer(500),
+	position_update_timer(10000),
+	tmSitting(0)
 {
-	for(int cf=0; cf < _FilterCount; cf++)
-		ClientFilters[cf] = FilterShow;
+
+	for (int client_filter = 0; client_filter < _FilterCount; client_filter++)
+		ClientFilters[client_filter] = FilterShow;
+
 	character_id = 0;
 	conn_state = NoPacketsReceived;
 	client_data_loaded = false;
@@ -192,8 +197,10 @@ Client::Client(EQStreamInterface* ieqs)
 	strcpy(identity, "");
 	tellsoff = false;
 	last_reported_mana = 0;
-	last_reported_endur = 0;
-	gmhideme = false;
+	last_reported_endurance = 0;
+	last_reported_endurance_percent = 0;
+	last_reported_mana_percent = 0;
+	gm_hide_me = false;
 	AFK = false;
 	LFG = false;
 	LFGFromLevel = 0;
@@ -257,7 +264,7 @@ Client::Client(EQStreamInterface* ieqs)
 	memset(&m_epp, 0, sizeof(m_epp));
 	PendingTranslocate = false;
 	PendingSacrifice = false;
-	BoatID = 0;
+	controlling_boat_id = 0;
 
 	KarmaUpdateTimer = new Timer(RuleI(Chat, KarmaUpdateIntervalMS));
 	GlobalChatLimiterTimer = new Timer(RuleI(Chat, IntervalDurationMS));
@@ -266,11 +273,12 @@ Client::Client(EQStreamInterface* ieqs)
 	m_ClientVersion = EQEmu::versions::ClientVersion::Unknown;
 	m_ClientVersionBit = 0;
 	AggroCount = 0;
-	RestRegenHP = 0;
-	RestRegenMana = 0;
-	RestRegenEndurance = 0;
+	ooc_regen = false;
+	AreaHPRegen = 1.0f;
+	AreaManaRegen = 1.0f;
+	AreaEndRegen = 1.0f;
 	XPRate = 100;
-	cur_end = 0;
+	current_endurance = 0;
 
 	m_TimeSinceLastPositionCheck = 0;
 	m_DistanceSinceLastPositionCheck = 0.0f;
@@ -288,7 +296,7 @@ Client::Client(EQStreamInterface* ieqs)
 	HideCorpseMode = HideCorpseNone;
 	PendingGuildInvitation = false;
 
-	cur_end = 0;
+	current_endurance = 0;
 
 	InitializeBuffSlots();
 
@@ -325,6 +333,11 @@ Client::Client(EQStreamInterface* ieqs)
 
 	interrogateinv_flag = false;
 
+	trapid = 0;
+
+	for (int i = 0; i < InnateSkillMax; ++i)
+		m_pp.InnateSkills[i] = InnateDisabled;
+
 	AI_Init();
 }
 
@@ -359,7 +372,7 @@ Client::~Client() {
 		m_tradeskill_object = nullptr;
 	}
 
-	close_npcs.clear();
+	close_mobs.clear();
 
 	if(IsDueling() && GetDuelTarget() != 0) {
 		Entity* entity = entity_list.GetID(GetDuelTarget());
@@ -633,8 +646,8 @@ bool Client::Save(uint8 iCommitNow) {
 		m_pp.cur_hp = GetHP();
 	}
 
-	m_pp.mana = cur_mana;
-	m_pp.endurance = cur_end;
+	m_pp.mana = current_mana;
+	m_pp.endurance = current_endurance;
 
 	/* Save Character Currency */
 	database.SaveCharacterCurrency(CharacterID(), &m_pp);
@@ -687,13 +700,18 @@ bool Client::Save(uint8 iCommitNow) {
 		m_pp.tribute_time_remaining = 0xFFFFFFFF; m_pp.tribute_active = 0;
 	}
 
+	if (m_pp.hunger_level < 0)
+		m_pp.hunger_level = 0;
+
+	if (m_pp.thirst_level < 0)
+		m_pp.thirst_level = 0;
+
 	p_timers.Store(&database);
 
 	database.SaveCharacterTribute(this->CharacterID(), &m_pp);
 	SaveTaskState(); /* Save Character Task */
 
-	m_pp.hunger_level = EQEmu::Clamp(m_pp.hunger_level, 0, 50000);
-	m_pp.thirst_level = EQEmu::Clamp(m_pp.thirst_level, 0, 50000);
+	Log(Logs::General, Logs::Food, "Client::Save - hunger_level: %i thirst_level: %i", m_pp.hunger_level, m_pp.thirst_level);
 
 	// perform snapshot before SaveCharacterData() so that m_epp will contain the updated time
 	if (RuleB(Character, ActiveInvSnapshots) && time(nullptr) >= GetNextInvSnapshotTime()) {
@@ -1249,9 +1267,14 @@ void Client::ChannelMessageSend(const char* from, const char* to, uint8 chan_num
 	strcpy(&cm->message[0], buffer);
 	QueuePacket(&app);
 
-	if ((chan_num == 2) && (ListenerSkill < 100)) {	// group message in unmastered language, check for skill up
-		if (m_pp.languages[language] <= lang_skill)
-			CheckLanguageSkillIncrease(language, lang_skill);
+	bool senderCanTrainSelf = RuleB(Client, SelfLanguageLearning);
+	bool weAreNotSender = strcmp(this->GetCleanName(), cm->sender);
+
+	if (senderCanTrainSelf || weAreNotSender) {
+		if ((chan_num == 2) && (ListenerSkill < 100)) {	// group message in unmastered language, check for skill up
+			if (m_pp.languages[language] <= lang_skill)
+				CheckLanguageSkillIncrease(language, lang_skill);
+		}
 	}
 }
 
@@ -1854,67 +1877,86 @@ const int32& Client::SetMana(int32 amount) {
 		amount = 0;
 	if (amount > GetMaxMana())
 		amount = GetMaxMana();
-	if (amount != cur_mana)
+	if (amount != current_mana)
 		update = true;
-	cur_mana = amount;
+	current_mana = amount;
 	if (update)
 		Mob::SetMana(amount);
-	SendManaUpdatePacket();
-	return cur_mana;
+	CheckManaEndUpdate();
+	return current_mana;
 }
 
-void Client::SendManaUpdatePacket() {
+void Client::CheckManaEndUpdate() {
 	if (!Connected())
 		return;
 
-	if (ClientVersion() >= EQEmu::versions::ClientVersion::SoD) {
-		SendManaUpdate();
-		SendEnduranceUpdate();
-	}
+	if (last_reported_mana != current_mana || last_reported_endurance != current_endurance) {
 
-	if (last_reported_mana != cur_mana || last_reported_endur != cur_end) {
+		if (ClientVersion() >= EQEmu::versions::ClientVersion::SoD) {
+			SendManaUpdate();
+			SendEnduranceUpdate();
+		}
 
 		auto outapp = new EQApplicationPacket(OP_ManaChange, sizeof(ManaChange_Struct));
-		ManaChange_Struct* manachange = (ManaChange_Struct*)outapp->pBuffer;
-		manachange->new_mana = cur_mana;
-		manachange->stamina = cur_end;
-		manachange->spell_id = casting_spell_id;
-		manachange->keepcasting = 1;
+		ManaChange_Struct* mana_change = (ManaChange_Struct*)outapp->pBuffer;
+		mana_change->new_mana = current_mana;
+		mana_change->stamina = current_endurance;
+		mana_change->spell_id = casting_spell_id;
+		mana_change->keepcasting = 1;
 		outapp->priority = 6;
 		QueuePacket(outapp);
 		safe_delete(outapp);
 
-		Group *g = GetGroup();
+		/* Let others know when our mana percent has changed */
+		if (this->GetManaPercent() != last_reported_mana_percent) {
+			Group *group = this->GetGroup();
+			Raid *raid = this->GetRaid();
 
-		if(g)
-		{
-			outapp = new EQApplicationPacket(OP_MobManaUpdate, sizeof(MobManaUpdate_Struct));
-			auto outapp2 =
-			    new EQApplicationPacket(OP_MobEnduranceUpdate, sizeof(MobEnduranceUpdate_Struct));
+			if (raid) {
+				raid->SendManaPacketFrom(this);
+			}
+			else if (group) {
+				group->SendManaPacketFrom(this);
+			}
 
-			MobManaUpdate_Struct *mmus = (MobManaUpdate_Struct *)outapp->pBuffer;
-			MobEnduranceUpdate_Struct *meus = (MobEnduranceUpdate_Struct *)outapp2->pBuffer;
+			auto mana_packet = new EQApplicationPacket(OP_ManaUpdate, sizeof(ManaUpdate_Struct));
+			ManaUpdate_Struct* mana_update = (ManaUpdate_Struct*)mana_packet->pBuffer;
+			mana_update->cur_mana = GetMana();
+			mana_update->max_mana = GetMaxMana();
+			mana_update->spawn_id = GetID();
+			QueuePacket(mana_packet);
+			entity_list.QueueClientsByXTarget(this, mana_packet, false);
+			safe_delete(mana_packet);
 
-			mmus->spawn_id = meus->spawn_id = GetID();
-
-			mmus->mana = GetManaPercent();
-			meus->endurance = GetEndurancePercent();
-
-
-			for(int i = 0; i < MAX_GROUP_MEMBERS; ++i)
-				if (g->members[i] && g->members[i]->IsClient() && (g->members[i] != this) && (g->members[i]->CastToClient()->ClientVersion() >= EQEmu::versions::ClientVersion::SoD))
-				{
-					g->members[i]->CastToClient()->QueuePacket(outapp);
-					g->members[i]->CastToClient()->QueuePacket(outapp2);
-				}
-
-			safe_delete(outapp);
-			safe_delete(outapp2);
+			last_reported_mana_percent = this->GetManaPercent();
 		}
 
+		/* Let others know when our endurance percent has changed */
+		if (this->GetEndurancePercent() != last_reported_endurance_percent) {
+			Group *group = this->GetGroup();
+			Raid *raid = this->GetRaid();
 
-		last_reported_mana = cur_mana;
-		last_reported_endur = cur_end;
+			if (raid) {
+				raid->SendEndurancePacketFrom(this);
+			}
+			else if (group) {
+				group->SendEndurancePacketFrom(this);
+			}
+
+			auto endurance_packet = new EQApplicationPacket(OP_EnduranceUpdate, sizeof(EnduranceUpdate_Struct));
+			EnduranceUpdate_Struct* endurance_update = (EnduranceUpdate_Struct*)endurance_packet->pBuffer;
+			endurance_update->cur_end = GetEndurance();
+			endurance_update->max_end = GetMaxEndurance();
+			endurance_update->spawn_id = GetID();
+			QueuePacket(endurance_packet);
+			entity_list.QueueClientsByXTarget(this, endurance_packet, false);
+			safe_delete(endurance_packet);
+
+			last_reported_endurance_percent = this->GetEndurancePercent();
+		}
+
+		last_reported_mana = current_mana;
+		last_reported_endurance = current_endurance;
 	}
 }
 
@@ -1922,12 +1964,11 @@ void Client::SendManaUpdatePacket() {
 void Client::SendManaUpdate()
 {
 	auto mana_app = new EQApplicationPacket(OP_ManaUpdate, sizeof(ManaUpdate_Struct));
-	ManaUpdate_Struct* mus = (ManaUpdate_Struct*)mana_app->pBuffer;
-	mus->cur_mana = GetMana();
-	mus->max_mana = GetMaxMana();
-	mus->spawn_id = GetID();
+	ManaUpdate_Struct* mana_update = (ManaUpdate_Struct*)mana_app->pBuffer;
+	mana_update->cur_mana = GetMana();
+	mana_update->max_mana = GetMaxMana();
+	mana_update->spawn_id = GetID();
 	QueuePacket(mana_app);
-	entity_list.QueueClientsByXTarget(this, mana_app, false);
 	safe_delete(mana_app);
 }
 
@@ -1935,12 +1976,11 @@ void Client::SendManaUpdate()
 void Client::SendEnduranceUpdate()
 {
 	auto end_app = new EQApplicationPacket(OP_EnduranceUpdate, sizeof(EnduranceUpdate_Struct));
-	EnduranceUpdate_Struct* eus = (EnduranceUpdate_Struct*)end_app->pBuffer;
-	eus->cur_end = GetEndurance();
-	eus->max_end = GetMaxEndurance();
-	eus->spawn_id = GetID();
+	EnduranceUpdate_Struct* endurance_update = (EnduranceUpdate_Struct*)end_app->pBuffer;
+	endurance_update->cur_end = GetEndurance();
+	endurance_update->max_end = GetMaxEndurance();
+	endurance_update->spawn_id = GetID();
 	QueuePacket(end_app);
-	entity_list.QueueClientsByXTarget(this, end_app, false);
 	safe_delete(end_app);
 }
 
@@ -1956,6 +1996,7 @@ void Client::FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho)
 	ns->spawn.guildID	= GuildID();
 //	ns->spawn.linkdead	= IsLD() ? 1 : 0;
 //	ns->spawn.pvp		= GetPVP() ? 1 : 0;
+	ns->spawn.show_name = true;
 
 
 	strcpy(ns->spawn.title, m_pp.title);
@@ -1984,7 +2025,7 @@ void Client::FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho)
 }
 
 bool Client::GMHideMe(Client* client) {
-	if (gmhideme) {
+	if (gm_hide_me) {
 		if (client == 0)
 			return true;
 		else if (admin > client->Admin())
@@ -3373,9 +3414,9 @@ void Client::SetHideMe(bool flag)
 {
 	EQApplicationPacket app;
 
-	gmhideme = flag;
+	gm_hide_me = flag;
 
-	if(gmhideme)
+	if(gm_hide_me)
 	{
 		database.SetHideMe(AccountID(),true);
 		CreateDespawnPacket(&app, false);
@@ -3923,8 +3964,8 @@ void Client::SetEndurance(int32 newEnd)
 		newEnd = GetMaxEndurance();
 	}
 
-	cur_end = newEnd;
-	SendManaUpdatePacket();
+	current_endurance = newEnd;
+	CheckManaEndUpdate();
 }
 
 void Client::SacrificeConfirm(Client *caster)
@@ -4586,7 +4627,7 @@ bool Client::GroupFollow(Client* inviter) {
 		}
 
 		database.RefreshGroupFromDB(this);
-		group->SendHPPacketsTo(this);
+		group->SendHPManaEndPacketsTo(this);
 		//send updates to clients out of zone...
 		group->SendGroupJoinOOZ(this);
 		return true;
@@ -4775,7 +4816,7 @@ void Client::IncrementAggroCount() {
 	//
 	AggroCount++;
 
-	if(!RuleI(Character, RestRegenPercent))
+	if(!RuleB(Character, RestRegenEnabled))
 		return;
 
 	// If we already had aggro before this method was called, the combat indicator should already be up for SoF clients,
@@ -4812,7 +4853,7 @@ void Client::DecrementAggroCount() {
 
 	AggroCount--;
 
-	if(!RuleI(Character, RestRegenPercent))
+	if(!RuleB(Character, RestRegenEnabled))
 		return;
 
 	// Something else is still aggro on us, can't rest yet.
@@ -6566,7 +6607,7 @@ void Client::LocateCorpse()
 		SetHeading(CalculateHeadingToTarget(ClosestCorpse->GetX(), ClosestCorpse->GetY()));
 		SetTarget(ClosestCorpse);
 		SendTargetCommand(ClosestCorpse->GetID());
-		SendPosUpdate(2);
+		SendPositionUpdate(2);
 	}
 	else if(!GetTarget())
 		Message_StringID(clientMessageError, SENSE_CORPSE_NONE);
@@ -6903,7 +6944,7 @@ void Client::SendStatsWindow(Client* client, bool use_window)
 				cap_regen_field = itoa(CalcHPRegenCap());
 				spell_regen_field = itoa(spellbonuses.HPRegen);
 				aa_regen_field = itoa(aabonuses.HPRegen);
-				total_regen_field = itoa(CalcHPRegen());
+				total_regen_field = itoa(CalcHPRegen(true));
 				break;
 			}
 			case 1: {
@@ -6916,7 +6957,7 @@ void Client::SendStatsWindow(Client* client, bool use_window)
 					cap_regen_field = itoa(CalcManaRegenCap());
 					spell_regen_field = itoa(spellbonuses.ManaRegen);
 					aa_regen_field = itoa(aabonuses.ManaRegen);
-					total_regen_field = itoa(CalcManaRegen());
+					total_regen_field = itoa(CalcManaRegen(true));
 				}
 				else { continue; }
 				break;
@@ -6930,7 +6971,7 @@ void Client::SendStatsWindow(Client* client, bool use_window)
 				cap_regen_field = itoa(CalcEnduranceRegenCap());
 				spell_regen_field = itoa(spellbonuses.EnduranceRegen);
 				aa_regen_field = itoa(aabonuses.EnduranceRegen);
-				total_regen_field = itoa(CalcEnduranceRegen());
+				total_regen_field = itoa(CalcEnduranceRegen(true));
 				break;
 			}
 			default: { break; }
@@ -8776,51 +8817,52 @@ void Client::SetConsumption(int32 in_hunger, int32 in_thirst)
 
 void Client::Consume(const EQEmu::ItemData *item, uint8 type, int16 slot, bool auto_consume)
 {
-   if(!item) { return; }
+	if (!item)
+		return;
 
-	uint32 cons_mod = 180;
+	int increase = item->CastTime_ * 100;
+	if (!auto_consume) // force feeding is half as effective
+		increase /= 2;
 
-	int32 metabolism_bonus = spellbonuses.Metabolism + itembonuses.Metabolism + aabonuses.Metabolism;
+	if (increase < 0) // wasn't food? oh well
+		return;
 
-	if (metabolism_bonus)
-		cons_mod = cons_mod * metabolism_bonus * RuleI(Character, ConsumptionMultiplier) / 10000;
-	else
-		 cons_mod = cons_mod * RuleI(Character, ConsumptionMultiplier) / 100;
+	if (type == EQEmu::item::ItemTypeFood) {
+		increase = mod_food_value(item, increase);
 
-	if (type == EQEmu::item::ItemTypeFood)
-   {
-	   int hchange = item->CastTime_ * cons_mod;
-	   hchange = mod_food_value(item, hchange);
+		if (increase < 0)
+			return;
 
-	   if(hchange < 0) { return; }
+		m_pp.hunger_level += increase;
 
-	   m_pp.hunger_level += hchange;
-	   DeleteItemInInventory(slot, 1, false);
+		Log(Logs::General, Logs::Food, "Consuming food, points added to hunger_level: %i - current_hunger: %i",
+		    increase, m_pp.hunger_level);
 
-	   if(!auto_consume) //no message if the client consumed for us
-		   entity_list.MessageClose_StringID(this, true, 50, 0, EATING_MESSAGE, GetName(), item->Name);
-
-#if EQDEBUG >= 5
-       Log(Logs::General, Logs::None, "Eating from slot:%i", (int)slot);
-#endif
-   }
-   else
-   {
-	   int tchange = item->CastTime_ * cons_mod;
-	   tchange = mod_drink_value(item, tchange);
-
-	   if(tchange < 0) { return; }
-
-		m_pp.thirst_level += tchange;
 		DeleteItemInInventory(slot, 1, false);
 
-		if(!auto_consume) //no message if the client consumed for us
+		if (!auto_consume) // no message if the client consumed for us
+			entity_list.MessageClose_StringID(this, true, 50, 0, EATING_MESSAGE, GetName(), item->Name);
+
+		Log(Logs::General, Logs::Food, "Eating from slot: %i", (int)slot);
+
+	} else {
+		increase = mod_drink_value(item, increase);
+
+		if (increase < 0)
+			return;
+
+		m_pp.thirst_level += increase;
+
+		DeleteItemInInventory(slot, 1, false);
+
+		Log(Logs::General, Logs::Food, "Consuming drink, points added to thirst_level: %i current_thirst: %i",
+		    increase, m_pp.thirst_level);
+
+		if (!auto_consume) // no message if the client consumed for us
 			entity_list.MessageClose_StringID(this, true, 50, 0, DRINKING_MESSAGE, GetName(), item->Name);
 
-#if EQDEBUG >= 5
-        Log(Logs::General, Logs::None, "Drinking from slot:%i", (int)slot);
-#endif
-   }
+		Log(Logs::General, Logs::Food, "Drinking from slot: %i", (int)slot);
+	}
 }
 
 void Client::SendMarqueeMessage(uint32 type, uint32 priority, uint32 fade_in, uint32 fade_out, uint32 duration, std::string msg)
@@ -8960,8 +9002,8 @@ void Client::SendHPUpdateMarquee(){
 		return;
 
 	/* Health Update Marquee Display: Custom*/
-	int8 health_percentage = (int8)(this->cur_hp * 100 / this->max_hp);
-	if (health_percentage == 100)
+	uint8 health_percentage = (uint8)(this->cur_hp * 100 / this->max_hp);
+	if (health_percentage >= 100)
 		return;
 
 	std::string health_update_notification = StringFormat("Health: %u%%", health_percentage);
@@ -9269,6 +9311,199 @@ void Client::SetPetCommandState(int button, int state)
 	pcs->state = state;
 	FastQueuePacket(&app);
 }
+
+bool Client::CanMedOnHorse()
+{
+	// no horse is false
+	if (GetHorseId() == 0)
+		return false;
+
+	// can't med while attacking
+	if (auto_attack)
+		return false;
+
+	return animation == 0 && m_Delta.x == 0.0f && m_Delta.y == 0.0f; // TODO: animation is SpeedRun
+}
+
+void Client::EnableAreaHPRegen(int value)
+{
+	AreaHPRegen = value * 0.001f;
+	SendAppearancePacket(AT_AreaHPRegen, value, false);
+}
+
+void Client::DisableAreaHPRegen()
+{
+	AreaHPRegen = 1.0f;
+	SendAppearancePacket(AT_AreaHPRegen, 1000, false);
+}
+
+void Client::EnableAreaManaRegen(int value)
+{
+	AreaManaRegen = value * 0.001f;
+	SendAppearancePacket(AT_AreaManaRegen, value, false);
+}
+
+void Client::DisableAreaManaRegen()
+{
+	AreaManaRegen = 1.0f;
+	SendAppearancePacket(AT_AreaManaRegen, 1000, false);
+}
+
+void Client::EnableAreaEndRegen(int value)
+{
+	AreaEndRegen = value * 0.001f;
+	SendAppearancePacket(AT_AreaEndRegen, value, false);
+}
+
+void Client::DisableAreaEndRegen()
+{
+	AreaEndRegen = 1.0f;
+	SendAppearancePacket(AT_AreaEndRegen, 1000, false);
+}
+
+void Client::EnableAreaRegens(int value)
+{
+	EnableAreaHPRegen(value);
+	EnableAreaManaRegen(value);
+	EnableAreaEndRegen(value);
+}
+
+void Client::DisableAreaRegens()
+{
+	DisableAreaHPRegen();
+	DisableAreaManaRegen();
+	DisableAreaEndRegen();
+}
+
+void Client::InitInnates()
+{
+	// this function on the client also inits the level one innate skills (like swimming, hide, etc)
+	// we won't do that here, lets just do the InnateSkills for now. Basically translation of what the client is doing
+	// A lot of these we could probably have ignored because they have no known use or are 100% client side
+	// but I figured just in case we'll do them all out
+	//
+	// The client calls this in a few places. When you remove a vision buff and in SetHeights, which is called in
+	// illusions, mounts, and a bunch of other cases. All of the calls to InitInnates are wrapped in restoring regen
+	// besides the call initializing the first time
+	auto race = GetRace();
+	auto class_ = GetClass();
+
+	for (int i = 0; i < InnateSkillMax; ++i)
+		m_pp.InnateSkills[i] = InnateDisabled;
+
+	m_pp.InnateSkills[InnateInspect] = InnateEnabled;
+	m_pp.InnateSkills[InnateOpen] = InnateEnabled;
+	if (race >= RT_FROGLOK_3) {
+		if (race == RT_SKELETON_2 || race == RT_FROGLOK_3)
+			m_pp.InnateSkills[InnateUltraVision] = InnateEnabled;
+		else
+			m_pp.InnateSkills[InnateInfravision] = InnateEnabled;
+	}
+	switch (race) {
+	case RT_BARBARIAN:
+	case RT_BARBARIAN_2:
+		m_pp.InnateSkills[InnateSlam] = InnateEnabled;
+break;
+	case RT_ERUDITE:
+	case RT_ERUDITE_2:
+		m_pp.InnateSkills[InnateLore] = InnateEnabled;
+		break;
+	case RT_WOOD_ELF:
+	case RT_GUARD_3:
+		m_pp.InnateSkills[InnateInfravision] = InnateEnabled;
+		break;
+	case RT_HIGH_ELF:
+	case RT_GUARD_2:
+		m_pp.InnateSkills[InnateInfravision] = InnateEnabled;
+		m_pp.InnateSkills[InnateLore] = InnateEnabled;
+		break;
+	case RT_DARK_ELF:
+	case RT_DARK_ELF_2:
+	case RT_VAMPIRE_2:
+		m_pp.InnateSkills[InnateUltraVision] = InnateEnabled;
+		break;
+	case RT_TROLL:
+	case RT_TROLL_2:
+		m_pp.InnateSkills[InnateRegen] = InnateEnabled;
+		m_pp.InnateSkills[InnateSlam] = InnateEnabled;
+		m_pp.InnateSkills[InnateInfravision] = InnateEnabled;
+		break;
+	case RT_DWARF:
+	case RT_DWARF_2:
+		m_pp.InnateSkills[InnateInfravision] = InnateEnabled;
+		break;
+	case RT_OGRE:
+	case RT_OGRE_2:
+		m_pp.InnateSkills[InnateInfravision] = InnateEnabled;
+		m_pp.InnateSkills[InnateSlam] = InnateEnabled;
+		m_pp.InnateSkills[InnateNoBash] = InnateEnabled;
+		m_pp.InnateSkills[InnateBashDoor] = InnateEnabled;
+		break;
+	case RT_HALFLING:
+	case RT_HALFLING_2:
+		m_pp.InnateSkills[InnateInfravision] = InnateEnabled;
+		break;
+	case RT_GNOME:
+		m_pp.InnateSkills[InnateInfravision] = InnateEnabled;
+		m_pp.InnateSkills[InnateLore] = InnateEnabled;
+		break;
+	case RT_IKSAR:
+		m_pp.InnateSkills[InnateRegen] = InnateEnabled;
+		m_pp.InnateSkills[InnateInfravision] = InnateEnabled;
+		break;
+	case RT_VAH_SHIR:
+		m_pp.InnateSkills[InnateInfravision] = InnateEnabled;
+		break;
+	case RT_FROGLOK_2:
+	case RT_GHOST:
+	case RT_GHOUL:
+	case RT_SKELETON:
+	case RT_VAMPIRE:
+	case RT_WILL_O_WISP:
+	case RT_ZOMBIE:
+	case RT_SPECTRE:
+	case RT_GHOST_2:
+	case RT_GHOST_3:
+	case RT_DRAGON_2:
+	case RT_INNORUUK:
+		m_pp.InnateSkills[InnateUltraVision] = InnateEnabled;
+		break;
+	case RT_HUMAN:
+	case RT_GUARD:
+	case RT_BEGGAR:
+	case RT_HUMAN_2:
+	case RT_HUMAN_3:
+	case RT_FROGLOK_3: // client does froglok weird, but this should work out fine
+		break;
+	default:
+		m_pp.InnateSkills[InnateInfravision] = InnateEnabled;
+		break;
+	}
+
+	switch (class_) {
+	case DRUID:
+		m_pp.InnateSkills[InnateHarmony] = InnateEnabled;
+		break;
+	case BARD:
+		m_pp.InnateSkills[InnateReveal] = InnateEnabled;
+		break;
+	case ROGUE:
+		m_pp.InnateSkills[InnateSurprise] = InnateEnabled;
+		m_pp.InnateSkills[InnateReveal] = InnateEnabled;
+		break;
+	case RANGER:
+		m_pp.InnateSkills[InnateAwareness] = InnateEnabled;
+		break;
+	case MONK:
+		m_pp.InnateSkills[InnateSurprise] = InnateEnabled;
+		m_pp.InnateSkills[InnateAwareness] = InnateEnabled;
+	default:
+		break;
+	}
+}
+
+
+
 
 //Get session grabs a previous session or creates a new one, generating a timeout (or refreshing it) based on time since last call
 const char* Client::GetSession() {

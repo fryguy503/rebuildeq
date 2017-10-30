@@ -57,7 +57,11 @@ bool NPC::AICastSpell(Mob* tar, uint8 iChance, uint32 iSpellTypes) {
 	if(AI_HasSpells() == false)
 		return false;
 
-	if (iChance < 100) {
+	// Rooted mobs were just standing around when tar out of range.
+	// Any sane mob would cast if they can.
+	bool cast_only_option = (IsRooted() && !CombatRange(tar));
+
+	if (!cast_only_option && iChance < 100) {
 		if (zone->random.Int(0, 100) >= iChance)
 			return false;
 	}
@@ -1001,12 +1005,16 @@ void Mob::AI_Process() {
 			if (this->GetTarget()) {
 				/* If we are engaged, moving and following client, let's look for best Z more often */
 				float target_distance = DistanceNoZ(this->GetPosition(), this->GetTarget()->GetPosition());
-				if (target_distance >= 50) {
-					this->FixZ();
-				}
-				else if (!this->CheckLosFN(this->GetTarget())) {
+				this->FixZ();
+
+				if (target_distance <= 15 && !this->CheckLosFN(this->GetTarget())) {
 					Mob* target = this->GetTarget();
-					this->GMMove(target->GetX(), target->GetY(), target->GetZ(), target->GetHeading());
+
+					m_Position.x = target->GetX();
+					m_Position.y = target->GetY();
+					m_Position.z = target->GetZ();
+					m_Position.w = target->GetHeading();
+					SendPosition();
 				}
 			}
 		}
@@ -1290,7 +1298,7 @@ void Mob::AI_Process() {
 				if (AI_PursueCastCheck()) {
 					//we did something, so do not process movement.
 				}
-				else if (AI_movement_timer->Check())
+				else if (AI_movement_timer->Check() && target)
 				{
 					if (!IsRooted()) {
 						Log(Logs::Detail, Logs::AI, "Pursuing %s while engaged.", target->GetName());
@@ -1527,12 +1535,17 @@ void NPC::AI_DoMovement() {
 				roambox_movingto_x = zone->random.Real(roambox_min_x+1,roambox_max_x-1);
 			if (roambox_movingto_y > roambox_max_y || roambox_movingto_y < roambox_min_y)
 				roambox_movingto_y = zone->random.Real(roambox_min_y+1,roambox_max_y-1);
+			Log(Logs::Detail, Logs::AI, 
+				"Roam Box: d=%.3f (%.3f->%.3f,%.3f->%.3f): Go To (%.3f,%.3f)",
+				roambox_distance, roambox_min_x, roambox_max_x, roambox_min_y, 
+				roambox_max_y, roambox_movingto_x, roambox_movingto_y);
 		}
 
-		Log(Logs::Detail, Logs::AI, "Roam Box: d=%.3f (%.3f->%.3f,%.3f->%.3f): Go To (%.3f,%.3f)",
-			roambox_distance, roambox_min_x, roambox_max_x, roambox_min_y, roambox_max_y, roambox_movingto_x, roambox_movingto_y);
-		if (!CalculateNewPosition2(roambox_movingto_x, roambox_movingto_y, GetZ(), walksp, true))
+		// Keep calling with updates, using wherever we are in Z.
+		if (!MakeNewPositionAndSendUpdate(roambox_movingto_x, 
+				roambox_movingto_y, m_Position.z, walksp))
 		{
+			this->FixZ(); // FixZ on final arrival point.
 			roambox_movingto_x = roambox_max_x + 1; // force update
 			pLastFightingDelayMoving = Timer::GetCurrentTime() + RandomTimer(roambox_min_delay, roambox_delay);
 			SetMoving(false);
@@ -1560,15 +1573,17 @@ void NPC::AI_DoMovement() {
 				if (m_CurrentWayPoint.x == GetX() && m_CurrentWayPoint.y == GetY())
 				{	// are we there yet? then stop
 					Log(Logs::Detail, Logs::AI, "We have reached waypoint %d (%.3f,%.3f,%.3f) on grid %d", cur_wp, GetX(), GetY(), GetZ(), GetGrid());
-					if (cur_wp_pause != 0) {
-						SetWaypointPause();
-						SetAppearance(eaStanding, false);
-						SetMoving(false);
-						if (m_CurrentWayPoint.w >= 0.0) {
-							SetHeading(m_CurrentWayPoint.w);
-						}
-						SendPosition();
+					
+					SetWaypointPause();
+					SetAppearance(eaStanding, false);
+					SetMoving(false);
+					if (m_CurrentWayPoint.w >= 0.0) {
+						SetHeading(m_CurrentWayPoint.w);
 					}
+
+					this->FixZ();
+
+					SendPosition();
 
 					//kick off event_waypoint arrive
 					char temp[16];

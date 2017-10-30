@@ -268,7 +268,7 @@ Mob* QuestManager::spawn2(int npc_type, int grid, int unused, const glm::vec4& p
 		{
 			npc->AssignWaypoints(grid);
 		}
-		npc->SendPosUpdate();
+		npc->SendPositionUpdate();
 		return npc;
 	}
 	return nullptr;
@@ -290,7 +290,7 @@ Mob* QuestManager::unique_spawn(int npc_type, int grid, int unused, const glm::v
 		{
 			npc->AssignWaypoints(grid);
 		}
-		npc->SendPosUpdate();
+		npc->SendPositionUpdate();
 		return npc;
 	}
 	return nullptr;
@@ -1713,7 +1713,7 @@ void QuestManager::respawn(int npcTypeID, int grid) {
 		if(grid > 0)
 			owner->CastToNPC()->AssignWaypoints(grid);
 
-		owner->SendPosUpdate();
+		owner->SendPositionUpdate();
 	}
 }
 

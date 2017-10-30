@@ -199,6 +199,27 @@ struct RespawnOption
 	float heading;
 };
 
+// do not ask what all these mean because I have no idea!
+// named from the client's CEverQuest::GetInnateDesc, they're missing some
+enum eInnateSkill {
+	InnateEnabled = 0,
+	InnateAwareness = 1,
+	InnateBashDoor = 2,
+	InnateBreathFire = 3,
+	InnateHarmony = 4,
+	InnateInfravision = 6,
+	InnateLore = 8,
+	InnateNoBash = 9,
+	InnateRegen = 10,
+	InnateSlam = 11,
+	InnateSurprise = 12,
+	InnateUltraVision = 13,
+	InnateInspect = 14,
+	InnateOpen = 15,
+	InnateReveal = 16,
+	InnateSkillMax = 25, // size of array in client
+	InnateDisabled = 255
+};
 
 const uint32 POPUPID_UPDATE_SHOWSTATSWINDOW = 1000000;
 
@@ -222,7 +243,7 @@ public:
 	Client(EQStreamInterface * ieqs);
 	~Client();
 
-	std::unordered_map<NPC *, float> close_npcs;
+	std::unordered_map<Mob *, float> close_mobs;
 	bool is_client_moving;
 
 	//abstract virtual function implementations required by base abstract class
@@ -300,6 +321,7 @@ public:
 	const char* GetBuyerWelcomeMessage() { return BuyerWelcomeMessage.c_str(); }
 
 	void FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho);
+	bool ShouldISpawnFor(Client *c) { return !GMHideMe(c) && !IsHoveringForRespawn(); }
 	virtual bool Process();
 	void LogMerchant(Client* player, Mob* merchant, uint32 quantity, uint32 price, const EQEmu::ItemData* item, bool buying);
 	void SendPacketQueue(bool Block = true);
@@ -321,7 +343,7 @@ public:
 	bool GetRevoked() const { return revoked; }
 	void SetRevoked(bool rev) { revoked = rev; }
 	inline uint32 GetIP() const { return ip; }
-	inline bool GetHideMe() const { return gmhideme; }
+	inline bool GetHideMe() const { return gm_hide_me; }
 	void SetHideMe(bool hm);
 	inline uint16 GetPort() const { return port; }
 	bool IsDead() const { return(dead); }
@@ -405,6 +427,16 @@ public:
 	int32 CalcBaseMana();
 	const int32& SetMana(int32 amount);
 	int32 CalcManaRegenCap();
+
+	// guild pool regen shit. Sends a SpawnAppearance with a value that regens to value * 0.001
+	void EnableAreaHPRegen(int value);
+	void DisableAreaHPRegen();
+	void EnableAreaManaRegen(int value);
+	void DisableAreaManaRegen();
+	void EnableAreaEndRegen(int value);
+	void DisableAreaEndRegen();
+	void EnableAreaRegens(int value);
+	void DisableAreaRegens();
 
 	void ServerFilter(SetServerFilter_Struct* filter);
 	void BulkSendTraderInventory(uint32 char_id);
@@ -540,12 +572,12 @@ public:
 	/*Endurance and such*/
 	void CalcMaxEndurance(); //This calculates the maximum endurance we can have
 	int32 CalcBaseEndurance(); //Calculates Base End
-	int32 CalcEnduranceRegen(); //Calculates endurance regen used in DoEnduranceRegen()
-	int32 GetEndurance() const {return cur_end;} //This gets our current endurance
+	int32 CalcEnduranceRegen(bool bCombat = false); //Calculates endurance regen used in DoEnduranceRegen()
+	int32 GetEndurance() const {return current_endurance;} //This gets our current endurance
 	int32 GetMaxEndurance() const {return max_end;} //This gets our endurance from the last CalcMaxEndurance() call
 	int32 CalcEnduranceRegenCap();
 	int32 CalcHPRegenCap();
-	inline uint8 GetEndurancePercent() { return (uint8)((float)cur_end / (float)max_end * 100.0f); }
+	inline uint8 GetEndurancePercent() { return (uint8)((float)current_endurance / (float)max_end * 100.0f); }
 	void SetEndurance(int32 newEnd); //This sets the current endurance to the new value
 	void DoEnduranceRegen(); //This Regenerates endurance
 	void DoEnduranceUpkeep(); //does the endurance upkeep
@@ -665,7 +697,7 @@ public:
 	void RefreshGuildInfo();
 
 
-	void SendManaUpdatePacket();
+	void CheckManaEndUpdate();
 	void SendManaUpdate();
 	void SendEnduranceUpdate();
 	uint8 GetFace() const { return m_pp.face; }
@@ -725,6 +757,7 @@ public:
 	void SendTradeskillDetails(uint32 recipe_id);
 	bool TradeskillExecute(DBTradeskillRecipe_Struct *spec);
 	void CheckIncreaseTradeskill(int16 bonusstat, int16 stat_modifier, float skillup_modifier, uint16 success_modifier, EQEmu::skills::SkillType tradeskill);
+	void InitInnates();
 
 	void GMKill();
 	inline bool IsMedding() const {return medding;}
@@ -767,6 +800,9 @@ public:
 	void SummonHorse(uint16 spell_id);
 	void SetHorseId(uint16 horseid_in);
 	uint16 GetHorseId() const { return horseId; }
+	bool CanMedOnHorse();
+
+	bool CanFastRegen() const { return ooc_regen; }
 
 	void NPCSpawn(NPC *target_npc, const char *identifier, uint32 extra = 0);
 
@@ -869,6 +905,7 @@ public:
 	void SetHunger(int32 in_hunger);
 	void SetThirst(int32 in_thirst);
 	void SetConsumption(int32 in_hunger, int32 in_thirst);
+	bool IsStarved() const { if (GetGM() || !RuleB(Character, EnableHungerPenalties)) return false; return m_pp.hunger_level == 0 || m_pp.thirst_level == 0; }
 
 	bool CheckTradeLoreConflict(Client* other);
 	bool CheckTradeNonDroppable();
@@ -1080,7 +1117,7 @@ public:
 	void Signal(uint32 data);
 	Mob *GetBindSightTarget() { return bind_sight_target; }
 	void SetBindSightTarget(Mob *n) { bind_sight_target = n; }
-	const uint16 GetBoatID() const { return BoatID; }
+	const uint16 GetBoatID() const { return controlling_boat_id; }
 	void SendRewards();
 	bool TryReward(uint32 claim_id);
 	QGlobalCache *GetQGlobals() { return qGlobals; }
@@ -1325,6 +1362,8 @@ public:
 
 	int32 CalcATK();
 
+	uint32 trapid; //ID of trap player has triggered. This is cleared when the player leaves the trap's radius, or it despawns.
+
 protected:
 	friend class Mob;
 	void CalcItemBonuses(StatBonuses* newbon);
@@ -1404,13 +1443,13 @@ private:
 	int32 CalcCorrup();
 	int32 CalcMaxHP();
 	int32 CalcBaseHP();
-	int32 CalcHPRegen();
-	int32 CalcManaRegen();
+	int32 CalcHPRegen(bool bCombat = false);
+	int32 CalcManaRegen(bool bCombat = false);
 	int32 CalcBaseManaRegen();
 	uint32 GetClassHPFactor();
 	void DoHPRegen();
 	void DoManaRegen();
-	void DoStaminaUpdate();
+	void DoStaminaHungerUpdate();
 	void CalcRestState();
 
 	uint32 pLastUpdate;
@@ -1437,7 +1476,7 @@ private:
 	bool duelaccepted;
 	std::list<uint32> keyring;
 	bool tellsoff; // GM /toggle
-	bool gmhideme;
+	bool gm_hide_me;
 	bool LFG;
 	bool LFP;
 	uint8 LFGFromLevel;
@@ -1457,7 +1496,7 @@ private:
 	uint32 weight;
 	bool berserk;
 	bool dead;
-	uint16 BoatID;
+	uint16 controlling_boat_id;
 	uint16 TrackingID;
 	uint16 CustomerID;
 	uint16 TraderID;
@@ -1470,9 +1509,10 @@ private:
 	std::string BuyerWelcomeMessage;
 	bool AbilityTimer;
 	int Haste; //precalced value
+	uint32 tmSitting; // time stamp started sitting, used for HP regen bonus added on MAY 5, 2004
 
 	int32 max_end;
-	int32 cur_end;
+	int32 current_endurance;
 
 	PlayerProfile_Struct m_pp;
 	ExtendedProfile_Struct m_epp;
@@ -1518,7 +1558,7 @@ private:
 	Timer hpupdate_timer;
 	Timer camp_timer;
 	Timer process_timer;
-	Timer stamina_timer;
+	Timer consume_food_timer;
 	Timer zoneinpacket_timer;
 	Timer linkdead_timer;
 	Timer dead_timer;
@@ -1546,8 +1586,12 @@ private:
 	Timer helm_toggle_timer;
 	Timer aggro_meter_timer;
 	Timer npc_close_scan_timer;
+	Timer hp_self_update_throttle_timer; /* This is to prevent excessive packet sending under trains/fast combat */
+	Timer hp_other_update_throttle_timer; /* This is to keep clients from DOSing the server with macros that change client targets constantly */
+	Timer position_update_timer; /* Timer used when client hasn't updated within a 10 second window */
 
-    glm::vec3 m_Proximity;
+	glm::vec3 m_Proximity;
+	glm::vec4 last_major_update_position;
 
 	void BulkSendInventoryItems();
 
@@ -1562,13 +1606,17 @@ private:
 	bool tgb;
 	bool instalog;
 	int32 last_reported_mana;
-	int32 last_reported_endur;
+	int32 last_reported_endurance;
+
+	int8 last_reported_mana_percent;
+	int8 last_reported_endurance_percent;
 
 	unsigned int AggroCount; // How many mobs are aggro on us.
 
-	unsigned int RestRegenHP;
-	unsigned int RestRegenMana;
-	unsigned int RestRegenEndurance;
+	bool ooc_regen;
+	float AreaHPRegen;
+	float AreaManaRegen;
+	float AreaEndRegen;
 
 	bool EngagedRaidTarget;
 	uint32 SavedRaidRestTimer;

@@ -38,6 +38,7 @@
 	#include <unistd.h>
 #endif
 
+#include "../common/data_verification.h"
 #include "../common/rulesys.h"
 #include "../common/skills.h"
 #include "../common/spdat.h"
@@ -63,64 +64,49 @@ extern EntityList entity_list;
 bool Client::Process() {
 	bool ret = true;
 
-	if (Connected() || IsLD())
-	{
+	if (Connected() || IsLD()) {
 		// try to send all packets that weren't sent before
-		if (!IsLD() && zoneinpacket_timer.Check())
-		{
+		if (!IsLD() && zoneinpacket_timer.Check()) {
 			SendAllPackets();
 		}
 
-		if (adventure_request_timer)
-		{
-			if (adventure_request_timer->Check())
-			{
+		if (adventure_request_timer) {
+			if (adventure_request_timer->Check()) {
 				safe_delete(adventure_request_timer);
 			}
 		}
 
-		if (adventure_create_timer)
-		{
-			if (adventure_create_timer->Check())
-			{
+		if (adventure_create_timer) {
+			if (adventure_create_timer->Check()) {
 				safe_delete(adventure_create_timer);
 			}
 		}
 
-		if (adventure_leave_timer)
-		{
-			if (adventure_leave_timer->Check())
-			{
+		if (adventure_leave_timer) {
+			if (adventure_leave_timer->Check()) {
 				safe_delete(adventure_leave_timer);
 			}
 		}
 
-		if (adventure_door_timer)
-		{
-			if (adventure_door_timer->Check())
-			{
+		if (adventure_door_timer) {
+			if (adventure_door_timer->Check()) {
 				safe_delete(adventure_door_timer);
 			}
 		}
 
-		if (adventure_stats_timer)
-		{
-			if (adventure_stats_timer->Check())
-			{
+		if (adventure_stats_timer) {
+			if (adventure_stats_timer->Check()) {
 				safe_delete(adventure_stats_timer);
 			}
 		}
 
-		if (adventure_leaderboard_timer)
-		{
-			if (adventure_leaderboard_timer->Check())
-			{
+		if (adventure_leaderboard_timer) {
+			if (adventure_leaderboard_timer->Check()) {
 				safe_delete(adventure_leaderboard_timer);
 			}
 		}
 
-		if (dead)
-		{
+		if (dead) {
 			SetHP(-100);
 			if (RespawnFromHoverTimer.Check())
 				HandleRespawnFromHover(0);
@@ -134,8 +120,13 @@ bool Client::Process() {
 		if (hpupdate_timer.Check(false))
 			SendHPUpdate();
 
+		/* I haven't naturally updated my position in 10 seconds, updating manually */
+		if (!is_client_moving && position_update_timer.Check()) {
+			SendPositionUpdate();
+		}
+
 		if (mana_timer.Check())
-			SendManaUpdatePacket();
+			CheckManaEndUpdate();
 
 		if (dead && dead_timer.Check()) {
 			database.MoveCharacterToZone(GetName(), database.GetZoneName(m_pp.binds[0].zoneId));
@@ -253,21 +244,34 @@ bool Client::Process() {
 
 		/* Build a close range list of NPC's  */
 		if (npc_close_scan_timer.Check()) {
+			close_mobs.clear();
 
-			close_npcs.clear();
+			/* Force spawn updates when traveled far */
+			bool force_spawn_updates = false;
+			float client_update_range = (RuleI(Range, ClientForceSpawnUpdateRange) *  RuleI(Range, ClientForceSpawnUpdateRange));
+			if (DistanceSquared(last_major_update_position, m_Position) >= client_update_range) {
+				last_major_update_position = m_Position;
+				force_spawn_updates = true;
+			}
 
-			auto &npc_list = entity_list.GetNPCList();
+			float scan_range = (RuleI(Range, ClientNPCScan) * RuleI(Range, ClientNPCScan));
+			auto &mob_list = entity_list.GetMobList();
+			for (auto itr = mob_list.begin(); itr != mob_list.end(); ++itr) {
+				Mob* mob = itr->second;
 
-			float scan_range = RuleI(Range, ClientNPCScan);
-			for (auto itr = npc_list.begin(); itr != npc_list.end(); ++itr) {
-				NPC* npc = itr->second;
-				float distance = DistanceNoZ(m_Position, npc->GetPosition());
-				if(distance <= scan_range) {
-					close_npcs.insert(std::pair<NPC *, float>(npc, distance));
+				float distance = DistanceSquared(m_Position, mob->GetPosition());
+				if (mob->IsNPC()) {
+					if (distance <= scan_range) {
+						close_mobs.insert(std::pair<Mob *, float>(mob, distance));
+					}
+					else if (mob->GetAggroRange() > scan_range) {
+						close_mobs.insert(std::pair<Mob *, float>(mob, distance));
+					}
 				}
-				else if (npc->GetAggroRange() > scan_range) {
-					close_npcs.insert(std::pair<NPC *, float>(npc, distance));
-				}
+
+				if (force_spawn_updates && mob != this && distance <= client_update_range)
+					mob->SendPositionUpdateToClient(this);
+
 			}
 		}
 
@@ -448,14 +452,14 @@ bool Client::Process() {
 				{
 					animation = 0;
 					m_Delta = glm::vec4(0.0f, 0.0f, 0.0f, m_Delta.w);
-					SendPosUpdate(2);
+					SendPositionUpdate(2);
 				}
 			}
 
 			// Send a position packet every 8 seconds - if not done, other clients
 			// see this char disappear after 10-12 seconds of inactivity
 			if (position_timer_counter >= 36) { // Approx. 4 ticks per second
-				entity_list.SendPositionUpdates(this, pLastUpdateWZ, 500, GetTarget(), true);
+				entity_list.SendPositionUpdates(this, pLastUpdateWZ, RuleI(Range, MobPositionUpdates), GetTarget(), true);
 				pLastUpdate = Timer::GetCurrentTime();
 				pLastUpdateWZ = pLastUpdate;
 				position_timer_counter = 0;
@@ -519,6 +523,10 @@ bool Client::Process() {
 		if (endupkeep_timer.Check() && !dead) {
 			DoEnduranceUpkeep();
 		}
+
+		// this is independent of the tick timer
+		if (consume_food_timer.Check())
+			DoStaminaHungerUpdate();
 
 		if (tic_timer.Check() && !dead) {
 			if (dps.size() > 0 && GetAggroCount() == 0) {
@@ -638,11 +646,17 @@ bool Client::Process() {
 	// only if client is not feigned
 	if (zone->CanDoCombat() && ret && !GetFeigned() && client_scan_npc_aggro_timer.Check()) {
 		int npc_scan_count = 0;
-		for (auto it = close_npcs.begin(); it != close_npcs.end(); ++it) {
-			NPC *npc = it->first;
+		for (auto it = close_mobs.begin(); it != close_mobs.end(); ++it) {
+			Mob *mob = it->first;
 
-			if (npc->CheckWillAggro(this) && !npc->CheckAggro(this)) {
-				npc->AddToHateList(this, 25);
+			if (!mob)
+				continue;
+
+			if (mob->IsClient())
+				continue;
+
+			if (mob->CheckWillAggro(this) && !mob->CheckAggro(this)) {
+				mob->AddToHateList(this, 25);
 			}
 			npc_scan_count++;
 		}
@@ -742,6 +756,8 @@ void Client::OnDisconnect(bool hard_disconnect) {
 			QServ->PlayerLogEvent(Player_Log_Connect_State, this->CharacterID(), event_desc);
 		}
 	}
+
+	RemoveAllAuras();
 
 	Mob *Other = trade->With();
 	if(Other)
@@ -1847,37 +1863,48 @@ void Client::DoManaRegen() {
 	SendManaUpdatePacket();
 }
 
-
-void Client::DoStaminaUpdate() {
-	if(!stamina_timer.Check())
-		return;
-
+void Client::DoStaminaHungerUpdate()
+{
 	auto outapp = new EQApplicationPacket(OP_Stamina, sizeof(Stamina_Struct));
-	Stamina_Struct* sta = (Stamina_Struct*)outapp->pBuffer;
+	Stamina_Struct *sta = (Stamina_Struct *)outapp->pBuffer;
 
-	if(zone->GetZoneID() != 151) {
+	Log(Logs::General, Logs::Food, "Client::DoStaminaHungerUpdate() hunger_level: %i thirst_level: %i before loss",
+	    m_pp.hunger_level, m_pp.thirst_level);
+
+	if (zone->GetZoneID() != 151 && !GetGM()) {
 		int loss = RuleI(Character, FoodLossPerUpdate);
-		if (m_pp.hunger_level > 0)
-			m_pp.hunger_level-=loss;
-		if (m_pp.thirst_level > 0)
-			m_pp.thirst_level-=loss;
-		sta->food = m_pp.hunger_level > 6000 ? 6000 : m_pp.hunger_level;
-		sta->water = m_pp.thirst_level> 6000 ? 6000 : m_pp.thirst_level;
-	}
-	else {
+		if (GetHorseId() != 0)
+			loss *= 3;
+
+		m_pp.hunger_level = EQEmu::Clamp(m_pp.hunger_level - loss, 0, 6000);
+		m_pp.thirst_level = EQEmu::Clamp(m_pp.thirst_level - loss, 0, 6000);
+		if (spellbonuses.hunger) {
+			m_pp.hunger_level = EQEmu::ClampLower(m_pp.hunger_level, 3500);
+			m_pp.thirst_level = EQEmu::ClampLower(m_pp.thirst_level, 3500);
+		}
+		sta->food = m_pp.hunger_level;
+		sta->water = m_pp.thirst_level;
+	} else {
 		// No auto food/drink consumption in the Bazaar
 		sta->food = 6000;
 		sta->water = 6000;
 	}
+
+	Log(Logs::General, Logs::Food,
+	    "Client::DoStaminaHungerUpdate() Current hunger_level: %i = (%i minutes left) thirst_level: %i = (%i "
+	    "minutes left) - after loss",
+	    m_pp.hunger_level, m_pp.hunger_level, m_pp.thirst_level, m_pp.thirst_level);
+
 	FastQueuePacket(&outapp);
 }
 
 void Client::DoEnduranceRegen()
 {
-	if(GetEndurance() >= GetMaxEndurance())
-		return;
+	// endurance has some negative mods that could result in a negative regen when starved
+	int regen = CalcEnduranceRegen();
 
-	SetEndurance(GetEndurance() + CalcEnduranceRegen() + RestRegenEndurance);
+	if (regen < 0 || (regen > 0 && GetEndurance() < GetMaxEndurance()))
+		SetEndurance(GetEndurance() + regen);
 }
 
 void Client::DoEnduranceUpkeep() {
@@ -1925,12 +1952,13 @@ void Client::CalcRestState() {
 	// This method calculates rest state HP and mana regeneration.
 	// The client must have been out of combat for RuleI(Character, RestRegenTimeToActivate) seconds,
 	// must be sitting down, and must not have any detrimental spells affecting them.
-	if(!RuleI(Character, RestRegenPercent))
+	//
+	if(!RuleB(Character, RestRegenEnabled))
 		return;
 
-	RestRegenHP = RestRegenMana = RestRegenEndurance = 0;
+	ooc_regen = false;
 
-	if(AggroCount || !IsSitting())
+	if(AggroCount || !(IsSitting() || CanMedOnHorse()))
 		return;
 
 	if(!rest_timer.Check(false))
@@ -1944,7 +1972,8 @@ void Client::CalcRestState() {
 					return;
 		}
 	}
-	
+
+	RestRegenHP = (GetMaxHP() * RuleI(Character, RestRegenPercent) / 100);
 
 	Mob * target = nullptr;
 	float rest_regen_percent = RuleI(Character, RestRegenPercent);

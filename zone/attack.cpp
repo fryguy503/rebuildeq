@@ -137,9 +137,7 @@ EQEmu::skills::SkillType Mob::AttackAnimation(int Hand, const EQEmu::ItemInstanc
 	if (Hand == EQEmu::inventory::slotSecondary)	// DW anim
 		type = animDualWield;
 
-	if (attack_anim_timer.Check()) {
-		DoAnim(type, 0, false);
-	}
+	DoAnim(type, 0, false);
 
 	return skillinuse;
 }
@@ -1361,6 +1359,7 @@ int Client::DoDamageCaps(int base_damage)
 	return std::min(cap, base_damage);
 }
 
+// other is the defender, this is the attacker
 void Mob::DoAttack(Mob *other, DamageHitInfo &hit, ExtraAttackOptions *opts)
 {
 	if (!other)
@@ -1387,6 +1386,20 @@ void Mob::DoAttack(Mob *other, DamageHitInfo &hit, ExtraAttackOptions *opts)
 
 	if (hit.damage_done >= 0) {
 		if (other->CheckHitChance(this, hit)) {
+			if (IsNPC() && other->IsClient() && other->animation > 0 && GetLevel() >= 5 && BehindMob(other, GetX(), GetY())) {
+				// ~ 12% chance
+				if (zone->random.Roll(12)) {
+					int stun_resist2 = other->spellbonuses.FrontalStunResist + other->itembonuses.FrontalStunResist + other->aabonuses.FrontalStunResist;
+					int stun_resist = other->spellbonuses.StunResist + other->itembonuses.StunResist + other->aabonuses.StunResist;
+					if (zone->random.Roll(stun_resist2)) {
+						other->Message_StringID(MT_Stun, AVOID_STUNNING_BLOW);
+					} else if (zone->random.Roll(stun_resist)) {
+						other->Message_StringID(MT_Stun, SHAKE_OFF_STUN);
+					} else {
+						other->Stun(3000); // yuck -- 3 seconds
+					}
+				}
+			}
 			other->MeleeMitigation(this, hit, opts);
 			if (hit.damage_done > 0) {
 				ApplyDamageTable(hit);
@@ -3084,6 +3097,9 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 	if (other == this)
 		return;
 
+	if (other->IsTrap())
+		return;
+
 	if (damage < 0) {
 		hate = 1;
 	}
@@ -4288,7 +4304,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 		// pets that have GHold will never automatically add NPCs
 		// pets that have Hold and no Focus will add NPCs if they're engaged
 		// pets that have Hold and Focus will not add NPCs
-		if (pet && !pet->IsFamiliar() && !pet->GetSpecialAbility(IMMUNE_AGGRO) && !pet->IsEngaged() && attacker && attacker != this && !attacker->IsCorpse() && !pet->IsGHeld())
+		if (pet && !pet->IsFamiliar() && !pet->GetSpecialAbility(IMMUNE_AGGRO) && !pet->IsEngaged() && attacker && attacker != this && !attacker->IsCorpse() && !pet->IsGHeld() && !attacker->IsTrap())
 		{
 			if (!pet->IsHeld()) {
 				Log(Logs::Detail, Logs::Aggro, "Sending pet %s into battle due to attack.", pet->GetName());
@@ -4508,7 +4524,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 
 					Teleport(new_pos);
 					if (position_update_melee_push_timer.Check()) {
-						SendPosUpdate();
+						SendPositionUpdate();
 					}
 				}
 			}
@@ -4900,10 +4916,10 @@ void Mob::TryWeaponProc(const EQEmu::ItemInstance *inst, const EQEmu::ItemData *
 		float WPC = ProcChance * (100.0f + // Proc chance for this weapon
 				static_cast<float>(weapon->ProcRate)) / 100.0f;
 		if (zone->random.Roll(WPC)) {	// 255 dex = 0.084 chance of proc. No idea what this number should be really.
-			if (weapon->Proc.Level > ourlevel) {
+			if (weapon->Proc.Level2 > ourlevel) {
 				Log(Logs::Detail, Logs::Combat,
-						"Tried to proc (%s), but our level (%d) is lower than required (%d)",
-						weapon->Name, ourlevel, weapon->Proc.Level);
+					"Tried to proc (%s), but our level (%d) is lower than required (%d)",
+					weapon->Name, ourlevel, weapon->Proc.Level2);
 				if (IsPet()) {
 					Mob *own = GetOwner();
 					if (own)
@@ -4938,7 +4954,7 @@ void Mob::TryWeaponProc(const EQEmu::ItemInstance *inst, const EQEmu::ItemData *
 				float APC = ProcChance * (100.0f + // Proc chance for this aug
 					static_cast<float>(aug->ProcRate)) / 100.0f;
 				if (zone->random.Roll(APC)) {
-					if (aug->Proc.Level > ourlevel) {
+					if (aug->Proc.Level2 > ourlevel) {
 						if (IsPet()) {
 							Mob *own = GetOwner();
 							if (own)

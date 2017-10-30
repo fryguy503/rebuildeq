@@ -664,6 +664,8 @@ void EntityList::AddNPC(NPC *npc, bool SendSpawnPacket, bool dontqueue)
 
 	parse->EventNPC(EVENT_SPAWN, npc, nullptr, "", 0);
 
+	npc->FixZ(1);
+
 	uint16 emoteid = npc->GetEmoteID();
 	if (emoteid != 0)
 		npc->DoNPCEmote(ONSPAWN, emoteid);
@@ -675,6 +677,8 @@ void EntityList::AddNPC(NPC *npc, bool SendSpawnPacket, bool dontqueue)
 			QueueClients(npc, app);
 			npc->SendArmorAppearance();
 			npc->SetAppearance(npc->GetGuardPointAnim(),false);
+			if (!npc->IsTargetable())
+				npc->SendTargetable(false);
 			safe_delete(app);
 		} else {
 			auto ns = new NewSpawn_Struct;
@@ -815,6 +819,8 @@ void EntityList::CheckSpawnQueue()
 				NPC *pnpc = it->second;
 				pnpc->SendArmorAppearance();
 				pnpc->SetAppearance(pnpc->GetGuardPointAnim(), false);
+				if (!pnpc->IsTargetable())
+					pnpc->SendTargetable(false);
 			}
 			safe_delete(outapp);
 			iterator.RemoveCurrent();
@@ -1258,12 +1264,9 @@ void EntityList::SendZoneSpawns(Client *client)
 	auto it = mob_list.begin();
 	while (it != mob_list.end()) {
 		Mob *ent = it->second;
-		if (!(ent->InZone()) || (ent->IsClient())) {
-			if (ent->CastToClient()->GMHideMe(client) ||
-					ent->CastToClient()->IsHoveringForRespawn()) {
-				++it;
-				continue;
-			}
+		if (!ent->InZone() || !ent->ShouldISpawnFor(client)) {
+			++it;
+			continue;
 		}
 
 		app = new EQApplicationPacket;
@@ -1291,17 +1294,16 @@ void EntityList::SendZoneSpawnsBulk(Client *client)
 	for (auto it = mob_list.begin(); it != mob_list.end(); ++it) {
 		spawn = it->second;
 		if (spawn && spawn->GetID() > 0 && spawn->Spawned()) {
-			if (spawn->IsClient() && (spawn->CastToClient()->GMHideMe(client) ||
-					spawn->CastToClient()->IsHoveringForRespawn()))
+			if (!spawn->ShouldISpawnFor(client))
 				continue;
 
 #if 1
 			const glm::vec4& spos = spawn->GetPosition();
-			
+
 			delaypkt = false;
 			if (DistanceSquared(cpos, spos) > dmax || (spawn->IsClient() && (spawn->GetRace() == MINOR_ILL_OBJ || spawn->GetRace() == TREE)))
 				delaypkt = true;
-			
+
 			if (delaypkt) {
 				app = new EQApplicationPacket;
 				spawn->CreateSpawnPacket(app);
@@ -1433,10 +1435,10 @@ void EntityList::RemoveFromTargets(Mob *mob, bool RemoveFromXTargets)
 			continue;
 
 		if (RemoveFromXTargets) {
-			if (m->IsClient() && mob->CheckAggro(m))
+			if (m->IsClient() && (mob->CheckAggro(m) || mob->IsOnFeignMemory(m->CastToClient())))
 				m->CastToClient()->RemoveXTarget(mob, false);
 			// FadingMemories calls this function passing the client.
-			else if (mob->IsClient() && m->CheckAggro(mob))
+			else if (mob->IsClient() && (m->CheckAggro(mob) || m->IsOnFeignMemory(mob->CastToClient())))
 				mob->CastToClient()->RemoveXTarget(m, false);
 		}
 
@@ -1475,7 +1477,7 @@ void EntityList::RefreshAutoXTargets(Client *c)
 		if (!m || m->GetHP() <= 0)
 			continue;
 
-		if (m->CheckAggro(c) && !c->IsXTarget(m)) {
+		if ((m->CheckAggro(c) || m->IsOnFeignMemory(c)) && !c->IsXTarget(m)) {
 			c->AddAutoXTarget(m, false); // we only call this before a bulk, so lets not send right away
 			break;
 		}
@@ -2318,6 +2320,9 @@ bool EntityList::RemoveMob(uint16 delete_id)
 
 	auto it = mob_list.find(delete_id);
 	if (it != mob_list.end()) {
+
+		RemoveMobFromClientCloseLists(it->second);
+
 		if (npc_list.count(delete_id))
 			entity_list.RemoveNPC(delete_id);
 		else if (client_list.count(delete_id))
@@ -2340,6 +2345,8 @@ bool EntityList::RemoveMob(Mob *delete_mob)
 	auto it = mob_list.begin();
 	while (it != mob_list.end()) {
 		if (it->second == delete_mob) {
+			RemoveMobFromClientCloseLists(it->second);
+
 			safe_delete(it->second);
 			if (!corpse_list.count(it->first))
 				free_ids.push(it->first);
@@ -2359,10 +2366,9 @@ bool EntityList::RemoveNPC(uint16 delete_id)
 		// make sure its proximity is removed
 		RemoveProximity(delete_id);
 		// remove from client close lists
-		RemoveNPCFromClientCloseLists(npc);
+		RemoveMobFromClientCloseLists(npc->CastToMob());
 		// remove from the list
 		npc_list.erase(it);
-		
 
 		// remove from limit list if needed
 		if (npc_limit_list.count(delete_id))
@@ -2372,11 +2378,11 @@ bool EntityList::RemoveNPC(uint16 delete_id)
 	return false;
 }
 
-bool EntityList::RemoveNPCFromClientCloseLists(NPC *npc)
+bool EntityList::RemoveMobFromClientCloseLists(Mob *mob)
 {
 	auto it = client_list.begin();
 	while (it != client_list.end()) {
-		it->second->close_npcs.erase(npc);
+		it->second->close_mobs.erase(mob);
 		++it;
 	}
 	return false;
@@ -2647,12 +2653,13 @@ void EntityList::RemoveFromHateLists(Mob *mob, bool settoone)
 	auto it = npc_list.begin();
 	while (it != npc_list.end()) {
 		if (it->second->CheckAggro(mob)) {
-			if (!settoone)
+			if (!settoone) {
 				it->second->RemoveFromHateList(mob);
-			else
+				if (mob->IsClient())
+					mob->CastToClient()->RemoveXTarget(it->second, false); // gotta do book keeping
+			} else {
 				it->second->SetHateAmountOnEnt(mob, 1);
-			if (mob->IsClient())
-				mob->CastToClient()->RemoveXTarget(it->second, false); // gotta do book keeping
+			}
 		}
 		++it;
 	}
@@ -2670,10 +2677,9 @@ void EntityList::RemoveDebuffs(Mob *caster)
 // Currently, a new packet is sent per entity.
 // @todo: Come back and use FLAG_COMBINED to pack
 // all updates into one packet.
-void EntityList::SendPositionUpdates(Client *client, uint32 cLastUpdate,
-		float range, Entity *alwayssend, bool iSendEvenIfNotChanged)
+void EntityList::SendPositionUpdates(Client *client, uint32 cLastUpdate, float update_range, Entity *always_send, bool iSendEvenIfNotChanged)
 {
-	range = range * range;
+	update_range = (update_range * update_range);
 
 	EQApplicationPacket *outapp = 0;
 	PlayerPositionUpdateServer_Struct *ppu = 0;
@@ -2681,27 +2687,37 @@ void EntityList::SendPositionUpdates(Client *client, uint32 cLastUpdate,
 
 	auto it = mob_list.begin();
 	while (it != mob_list.end()) {
-		if (outapp == 0) {
-			outapp = new EQApplicationPacket(OP_ClientUpdate, sizeof(PlayerPositionUpdateServer_Struct));
-			ppu = (PlayerPositionUpdateServer_Struct*)outapp->pBuffer;
-		}
+		
 		mob = it->second;
-		if (mob && !mob->IsCorpse() && (it->second != client)
+
+		if (
+			mob && !mob->IsCorpse() 
+			&& (it->second != client)
 			&& (mob->IsClient() || iSendEvenIfNotChanged || (mob->LastChange() >= cLastUpdate))
-			&& (!it->second->IsClient() || !it->second->CastToClient()->GMHideMe(client))) {
+			&& (it->second->ShouldISpawnFor(client))
+		) {
+			if (
+				update_range == 0 
+				|| (it->second == always_send) 
+				|| mob->IsClient() 
+				|| (DistanceSquared(mob->GetPosition(), client->GetPosition()) <= update_range)
+			) {
+				if (mob && mob->IsClient() && mob->GetID() > 0) {
+					client->QueuePacket(outapp, false, Client::CLIENT_CONNECTED);
 
-			//bool Grouped = client->HasGroup() && mob->IsClient() && (client->GetGroup() == mob->CastToClient()->GetGroup());
+					if (outapp == 0) {
+						outapp = new EQApplicationPacket(OP_ClientUpdate, sizeof(PlayerPositionUpdateServer_Struct));
+						ppu = (PlayerPositionUpdateServer_Struct*)outapp->pBuffer;
+					}
 
-			//if (range == 0 || (iterator.GetData() == alwayssend) || Grouped || (mob->DistNoRootNoZ(*client) <= range)) {
-			if (range == 0 || (it->second == alwayssend) || mob->IsClient() || (DistanceSquared(mob->GetPosition(), client->GetPosition()) <= range)) {
-				mob->MakeSpawnUpdate(ppu);
-			}
-			if(mob && mob->IsClient() && mob->GetID()>0) {
-				client->QueuePacket(outapp, false, Client::CLIENT_CONNECTED);
+					mob->MakeSpawnUpdate(ppu);
+
+					safe_delete(outapp);
+					outapp = 0;
+				}
 			}
 		}
-		safe_delete(outapp);
-		outapp = 0;
+		
 		++it;
 	}
 
@@ -3100,7 +3116,10 @@ void EntityList::ClearAggro(Mob* targ)
 				c->RemoveXTarget(it->second, false);
 			it->second->RemoveFromHateList(targ);
 		}
-		it->second->RemoveFromFeignMemory(targ->CastToClient()); //just in case we feigned
+		if (c && it->second->IsOnFeignMemory(c)) {
+			it->second->RemoveFromFeignMemory(c); //just in case we feigned
+			c->RemoveXTarget(it->second, false);
+		}
 		++it;
 	}
 }
@@ -3109,7 +3128,8 @@ void EntityList::ClearFeignAggro(Mob *targ)
 {
 	auto it = npc_list.begin();
 	while (it != npc_list.end()) {
-		if (it->second->CheckAggro(targ)) {
+		// add Feign Memory check because sometimes weird stuff happens
+		if (it->second->CheckAggro(targ) || (targ->IsClient() && it->second->IsOnFeignMemory(targ->CastToClient()))) {
 			if (it->second->GetSpecialAbility(IMMUNE_FEIGN_DEATH)) {
 				++it;
 				continue;

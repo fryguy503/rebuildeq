@@ -1276,6 +1276,7 @@ namespace SoF
 		OUT(copper_cursor);
 
 		OUT_array(skills, structs::MAX_PP_SKILL);	// 1:1 direct copy (100 dword)
+		OUT_array(InnateSkills, structs::MAX_PP_INNATE_SKILL);  // 1:1 direct copy (25 dword)
 
 		//	OUT(unknown04760[236]);
 		OUT(toxicity);
@@ -2097,7 +2098,7 @@ namespace SoF
 		int k;
 		for (r = 0; r < entrycount; r++, eq++, emu++) {
 
-			eq->showname = 1; //New Field - Toggles Name Display on or off - 0 = off, 1 = on
+			eq->showname = emu->show_name ? 1 : 0; //New Field - Toggles Name Display on or off - 0 = off, 1 = on
 			eq->linkdead = 0; //New Field - Toggles LD on or off after name - 0 = off, 1 = on
 			eq->statue = 0; //New Field - 1 freezes animation
 			eq->showhelm = emu->showhelm;
@@ -2136,10 +2137,10 @@ namespace SoF
 			eq->findable = emu->findable;
 			if (emu->bodytype >= 66)
 			{
-				eq->bodytype = 11;	//non-targetable
-				eq->showname = 0;	//no visible name
-				eq->race = 127;		//invisible man
-				eq->gender = 0;		//invisible men are gender 0
+				eq->bodytype = 11;      //non-targetable
+				eq->showname = 0;       //no visible name
+				eq->race = 127;         //invisible man
+				eq->gender = 0;         //invisible men are gender 0
 			}
 			else
 			{

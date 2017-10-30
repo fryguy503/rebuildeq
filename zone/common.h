@@ -105,6 +105,8 @@
 #define PET_BUTTON_FOCUS		8
 #define PET_BUTTON_SPELLHOLD	9
 
+#define AURA_HARDCAP		2
+
 typedef enum {	//focus types
 	focusSpellHaste = 1,
 	focusSpellDuration,
@@ -204,6 +206,16 @@ typedef enum {	//fear states
 } FearState;
 
 enum { FlyMode0 = 0, FlyMode1 = 1, Flymode2 = 2, FlyMode3 = 3 };
+
+// This is actually FlyMode, from MQ2
+enum GravityBehavior {
+	Ground,
+	Flying,
+	Levitating,
+	Water,
+	Floating, // boat
+	LevitateWhileRunning
+};
 
 struct TradeEntity;
 class Trade;
@@ -536,6 +548,9 @@ struct StatBonuses {
 	int16	FeignedCastOnChance;				// Percent Value
 	bool	PetCommands[PET_MAXCOMMANDS];		// SPA 267
 	int	FeignedMinionChance;				// SPA 281 base1 = chance, just like normal FD
+	int aura_slots;
+	int trap_slots;
+	bool hunger; // Song of Sustenance -- min caps to 3500
 };
 
 typedef struct
@@ -589,6 +604,11 @@ enum {	//type arguments to DoAnim
 
 };
 
+enum {
+	SKILLUP_UNKNOWN = 0,
+	SKILLUP_SUCCESS = 1,
+	SKILLUP_FAILURE = 2
+};
 
 typedef enum {
 	petFamiliar,		//only listens to /pet get lost

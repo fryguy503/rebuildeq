@@ -1605,6 +1605,7 @@ namespace SoD
 		OUT(copper_cursor);
 
 		OUT_array(skills, structs::MAX_PP_SKILL);	// 1:1 direct copy (100 dword)
+		OUT_array(InnateSkills, structs::MAX_PP_INNATE_SKILL);  // 1:1 direct copy (25 dword)
 
 		//	OUT(unknown04760[236]);
 		OUT(toxicity);
@@ -2560,7 +2561,7 @@ namespace SoD
 				PacketSize += strlen(emu->DestructibleString) + 1;
 			}
 
-			bool ShowName = 1;
+			bool ShowName = emu->show_name;
 			if (emu->bodytype >= 66)
 			{
 				emu->race = 127;

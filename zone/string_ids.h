@@ -19,6 +19,7 @@
 #define PROC_TOOLOW					126		//Your will is not sufficient to command this weapon.
 #define PROC_PETTOOLOW				127		//Your pet's will is not sufficient to command its weapon.
 #define YOU_FLURRY					128		//You unleash a flurry of attacks.
+#define FAILED_DISARM_TRAP			129		//You failed to disarm the trap.
 #define DOORS_LOCKED				130		//It's locked and you're not holding the key.
 #define DOORS_CANT_PICK				131		//This lock cannot be picked.
 #define DOORS_INSUFFICIENT_SKILL	132		//You are not sufficiently skilled to pick this lock.
@@ -98,6 +99,7 @@
 #define DUP_LORE					290		//Duplicate lore items are not allowed.
 #define TGB_ON						293		//Target other group buff is *ON*.
 #define TGB_OFF						294		//Target other group buff is *OFF*.
+#define DISARMED_TRAP				305		//You have disarmed the trap.
 #define LDON_SENSE_TRAP1			306		//You do not Sense any traps.
 #define TRADESKILL_NOCOMBINE		334		//You cannot combine these items in this container type!
 #define TRADESKILL_FAILED			336		//You lacked the skills to fashion the items together.
@@ -114,6 +116,8 @@
 #define MEND_WORSEN					351		//You have worsened your wounds!
 #define MEND_FAIL					352		//You have failed to mend your wounds.
 #define LDON_SENSE_TRAP2			367		//You have not detected any traps.
+#define TRAP_TOO_FAR				368		//You are too far away from that trap to affect it.
+#define FAIL_DISARM_DETECTED_TRAP	370		//You fail to disarm the detected trap.
 #define LOOT_LORE_ERROR				371		//You cannot loot this Lore Item. You already have one.
 #define PICK_LORE					379		//You cannot pick up a lore item you already possess.
 #define CONSENT_DENIED				390		//You do not have consent to summon that corpse.
@@ -286,6 +290,7 @@
 #define TRADESKILL_LEARN_RECIPE		3457	//You have learned the recipe %1!
 #define EXPEDITION_MIN_REMAIN		3551	//You only have %1 minutes remaining before this expedition comes to an end.
 #define LOOT_NOT_ALLOWED			3562	//You are not allowed to loot the item: %1.
+#define NOT_YOUR_TRAP				3671	//You cannot remove this, you are only allowed to remove traps you have set.
 #define NO_CAST_ON_PET				4045	//You cannot cast this spell on your pet.
 #define REWIND_WAIT					4059	//You must wait a bit longer before using the rewind command again.
 #define CORPSEDRAG_LIMIT			4061	//You are already dragging as much as you can!
@@ -361,6 +366,7 @@
 #define GAIN_GROUP_LEADERSHIP_EXP	8788	//
 #define GAIN_RAID_LEADERSHIP_EXP	8789	//
 #define BUFF_MINUTES_REMAINING		8799	//%1 (%2 minutes remaining)
+#define NO_MORE_TRAPS				9002	//You have already placed your maximum number of traps.
 #define FEAR_TOO_HIGH				9035	//Your target is too high of a level for your fear spell.
 #define SLOW_MOSTLY_SUCCESSFUL		9029	//Your spell was mostly successful.
 #define SLOW_PARTIALLY_SUCCESSFUL	9030	// Your spell was partially successful.
@@ -375,6 +381,7 @@
 #define SHAKE_OFF_STUN				9077	//You shake off the stun effect!
 #define STRIKETHROUGH_STRING		9078	//You strike through your opponent's defenses!
 #define SPELL_REFLECT				9082	//%1's spell has been reflected by %2.
+#define NO_MORE_AURAS				9160	//You do not have sufficient focus to maintain that ability.
 #define NEW_SPELLS_AVAIL			9149	//You have new spells available to you. Check the merchants near your guild master.
 #define FD_CAST_ON_NO_BREAK			9174	//The strength of your will allows you to resume feigning death.
 #define SNEAK_RESTRICT				9240	//You can not use this ability because you have not been hidden for long enough.
@@ -418,6 +425,7 @@
 #define SENSE_ANIMAL				12472	//You sense an animal in this direction.
 #define SENSE_SUMMONED				12473	//You sense a summoned being in this direction.
 #define SENSE_NOTHING				12474	//You don't sense anything.
+#define SENSE_TRAP					12475	//You sense a trap in this direction.
 #define LDON_SENSE_TRAP3			12476	//You don't sense any traps.
 #define INTERRUPT_SPELL_OTHER		12478	//%1's casting is interrupted!
 #define YOU_HIT_NONMELEE			12481	//You were hit by non-melee for %1 damage.
