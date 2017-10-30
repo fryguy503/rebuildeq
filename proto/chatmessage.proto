@@ -1,6 +1,10 @@
 syntax = "proto3";
+package eqproto;
 
 message ChatMessage {
-  string sender = 1;
-  string message = 2;
+  int32 channel = 1;
+  int32 language = 2;
+  string from = 3;
+  string to = 4;
+  string message = 5;
 }

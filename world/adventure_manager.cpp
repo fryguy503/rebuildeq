@@ -2230,6 +2230,7 @@ void AdventureManager::Load()
 }
 
 void AdventureManager::RefreshItemScore() {
+	Log(Logs::General, Logs::World_Server, "Refreshing Itemscores...");
 	std::vector<CharData_Struct*> chars;
 	std::map<int, int> itemScores;
 	if (!database.GetAllCharacters(chars)) {

@@ -30,9 +30,13 @@
 #include <google/protobuf/extension_set.h>  // IWYU pragma: export
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
+namespace eqproto {
 class ChatMessage;
 class ChatMessageDefaultTypeInternal;
 extern ChatMessageDefaultTypeInternal _ChatMessage_default_instance_;
+}  // namespace eqproto
+
+namespace eqproto {
 
 namespace protobuf_chatmessage_2eproto {
 // Internal implementation detail -- do not call these.
@@ -51,7 +55,7 @@ void InitDefaults();
 
 // ===================================================================
 
-class ChatMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:ChatMessage) */ {
+class ChatMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:eqproto.ChatMessage) */ {
  public:
   ChatMessage();
   virtual ~ChatMessage();
@@ -132,23 +136,37 @@ class ChatMessage : public ::google::protobuf::Message /* @@protoc_insertion_poi
 
   // accessors -------------------------------------------------------
 
-  // string sender = 1;
-  void clear_sender();
-  static const int kSenderFieldNumber = 1;
-  const ::std::string& sender() const;
-  void set_sender(const ::std::string& value);
+  // string from = 3;
+  void clear_from();
+  static const int kFromFieldNumber = 3;
+  const ::std::string& from() const;
+  void set_from(const ::std::string& value);
   #if LANG_CXX11
-  void set_sender(::std::string&& value);
+  void set_from(::std::string&& value);
   #endif
-  void set_sender(const char* value);
-  void set_sender(const char* value, size_t size);
-  ::std::string* mutable_sender();
-  ::std::string* release_sender();
-  void set_allocated_sender(::std::string* sender);
+  void set_from(const char* value);
+  void set_from(const char* value, size_t size);
+  ::std::string* mutable_from();
+  ::std::string* release_from();
+  void set_allocated_from(::std::string* from);
 
-  // string message = 2;
+  // string to = 4;
+  void clear_to();
+  static const int kToFieldNumber = 4;
+  const ::std::string& to() const;
+  void set_to(const ::std::string& value);
+  #if LANG_CXX11
+  void set_to(::std::string&& value);
+  #endif
+  void set_to(const char* value);
+  void set_to(const char* value, size_t size);
+  ::std::string* mutable_to();
+  ::std::string* release_to();
+  void set_allocated_to(::std::string* to);
+
+  // string message = 5;
   void clear_message();
-  static const int kMessageFieldNumber = 2;
+  static const int kMessageFieldNumber = 5;
   const ::std::string& message() const;
   void set_message(const ::std::string& value);
   #if LANG_CXX11
@@ -160,12 +178,27 @@ class ChatMessage : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::std::string* release_message();
   void set_allocated_message(::std::string* message);
 
-  // @@protoc_insertion_point(class_scope:ChatMessage)
+  // int32 channel = 1;
+  void clear_channel();
+  static const int kChannelFieldNumber = 1;
+  ::google::protobuf::int32 channel() const;
+  void set_channel(::google::protobuf::int32 value);
+
+  // int32 language = 2;
+  void clear_language();
+  static const int kLanguageFieldNumber = 2;
+  ::google::protobuf::int32 language() const;
+  void set_language(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:eqproto.ChatMessage)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::internal::ArenaStringPtr sender_;
+  ::google::protobuf::internal::ArenaStringPtr from_;
+  ::google::protobuf::internal::ArenaStringPtr to_;
   ::google::protobuf::internal::ArenaStringPtr message_;
+  ::google::protobuf::int32 channel_;
+  ::google::protobuf::int32 language_;
   mutable int _cached_size_;
   friend struct protobuf_chatmessage_2eproto::TableStruct;
 };
@@ -181,99 +214,180 @@ class ChatMessage : public ::google::protobuf::Message /* @@protoc_insertion_poi
 #endif  // __GNUC__
 // ChatMessage
 
-// string sender = 1;
-inline void ChatMessage::clear_sender() {
-  sender_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+// int32 channel = 1;
+inline void ChatMessage::clear_channel() {
+  channel_ = 0;
 }
-inline const ::std::string& ChatMessage::sender() const {
-  // @@protoc_insertion_point(field_get:ChatMessage.sender)
-  return sender_.GetNoArena();
+inline ::google::protobuf::int32 ChatMessage::channel() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChatMessage.channel)
+  return channel_;
 }
-inline void ChatMessage::set_sender(const ::std::string& value) {
+inline void ChatMessage::set_channel(::google::protobuf::int32 value) {
   
-  sender_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ChatMessage.sender)
+  channel_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.ChatMessage.channel)
+}
+
+// int32 language = 2;
+inline void ChatMessage::clear_language() {
+  language_ = 0;
+}
+inline ::google::protobuf::int32 ChatMessage::language() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChatMessage.language)
+  return language_;
+}
+inline void ChatMessage::set_language(::google::protobuf::int32 value) {
+  
+  language_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.ChatMessage.language)
+}
+
+// string from = 3;
+inline void ChatMessage::clear_from() {
+  from_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& ChatMessage::from() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChatMessage.from)
+  return from_.GetNoArena();
+}
+inline void ChatMessage::set_from(const ::std::string& value) {
+  
+  from_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:eqproto.ChatMessage.from)
 }
 #if LANG_CXX11
-inline void ChatMessage::set_sender(::std::string&& value) {
+inline void ChatMessage::set_from(::std::string&& value) {
   
-  sender_.SetNoArena(
+  from_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:ChatMessage.sender)
+  // @@protoc_insertion_point(field_set_rvalue:eqproto.ChatMessage.from)
 }
 #endif
-inline void ChatMessage::set_sender(const char* value) {
+inline void ChatMessage::set_from(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
-  sender_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ChatMessage.sender)
+  from_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:eqproto.ChatMessage.from)
 }
-inline void ChatMessage::set_sender(const char* value, size_t size) {
+inline void ChatMessage::set_from(const char* value, size_t size) {
   
-  sender_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+  from_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ChatMessage.sender)
+  // @@protoc_insertion_point(field_set_pointer:eqproto.ChatMessage.from)
 }
-inline ::std::string* ChatMessage::mutable_sender() {
+inline ::std::string* ChatMessage::mutable_from() {
   
-  // @@protoc_insertion_point(field_mutable:ChatMessage.sender)
-  return sender_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  // @@protoc_insertion_point(field_mutable:eqproto.ChatMessage.from)
+  return from_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::std::string* ChatMessage::release_sender() {
-  // @@protoc_insertion_point(field_release:ChatMessage.sender)
+inline ::std::string* ChatMessage::release_from() {
+  // @@protoc_insertion_point(field_release:eqproto.ChatMessage.from)
   
-  return sender_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  return from_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline void ChatMessage::set_allocated_sender(::std::string* sender) {
-  if (sender != NULL) {
+inline void ChatMessage::set_allocated_from(::std::string* from) {
+  if (from != NULL) {
     
   } else {
     
   }
-  sender_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), sender);
-  // @@protoc_insertion_point(field_set_allocated:ChatMessage.sender)
+  from_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from);
+  // @@protoc_insertion_point(field_set_allocated:eqproto.ChatMessage.from)
 }
 
-// string message = 2;
+// string to = 4;
+inline void ChatMessage::clear_to() {
+  to_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& ChatMessage::to() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChatMessage.to)
+  return to_.GetNoArena();
+}
+inline void ChatMessage::set_to(const ::std::string& value) {
+  
+  to_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:eqproto.ChatMessage.to)
+}
+#if LANG_CXX11
+inline void ChatMessage::set_to(::std::string&& value) {
+  
+  to_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:eqproto.ChatMessage.to)
+}
+#endif
+inline void ChatMessage::set_to(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  to_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:eqproto.ChatMessage.to)
+}
+inline void ChatMessage::set_to(const char* value, size_t size) {
+  
+  to_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:eqproto.ChatMessage.to)
+}
+inline ::std::string* ChatMessage::mutable_to() {
+  
+  // @@protoc_insertion_point(field_mutable:eqproto.ChatMessage.to)
+  return to_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ChatMessage::release_to() {
+  // @@protoc_insertion_point(field_release:eqproto.ChatMessage.to)
+  
+  return to_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ChatMessage::set_allocated_to(::std::string* to) {
+  if (to != NULL) {
+    
+  } else {
+    
+  }
+  to_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), to);
+  // @@protoc_insertion_point(field_set_allocated:eqproto.ChatMessage.to)
+}
+
+// string message = 5;
 inline void ChatMessage::clear_message() {
   message_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline const ::std::string& ChatMessage::message() const {
-  // @@protoc_insertion_point(field_get:ChatMessage.message)
+  // @@protoc_insertion_point(field_get:eqproto.ChatMessage.message)
   return message_.GetNoArena();
 }
 inline void ChatMessage::set_message(const ::std::string& value) {
   
   message_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:ChatMessage.message)
+  // @@protoc_insertion_point(field_set:eqproto.ChatMessage.message)
 }
 #if LANG_CXX11
 inline void ChatMessage::set_message(::std::string&& value) {
   
   message_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
-  // @@protoc_insertion_point(field_set_rvalue:ChatMessage.message)
+  // @@protoc_insertion_point(field_set_rvalue:eqproto.ChatMessage.message)
 }
 #endif
 inline void ChatMessage::set_message(const char* value) {
   GOOGLE_DCHECK(value != NULL);
   
   message_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:ChatMessage.message)
+  // @@protoc_insertion_point(field_set_char:eqproto.ChatMessage.message)
 }
 inline void ChatMessage::set_message(const char* value, size_t size) {
   
   message_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:ChatMessage.message)
+  // @@protoc_insertion_point(field_set_pointer:eqproto.ChatMessage.message)
 }
 inline ::std::string* ChatMessage::mutable_message() {
   
-  // @@protoc_insertion_point(field_mutable:ChatMessage.message)
+  // @@protoc_insertion_point(field_mutable:eqproto.ChatMessage.message)
   return message_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* ChatMessage::release_message() {
-  // @@protoc_insertion_point(field_release:ChatMessage.message)
+  // @@protoc_insertion_point(field_release:eqproto.ChatMessage.message)
   
   return message_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -284,7 +398,7 @@ inline void ChatMessage::set_allocated_message(::std::string* message) {
     
   }
   message_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), message);
-  // @@protoc_insertion_point(field_set_allocated:ChatMessage.message)
+  // @@protoc_insertion_point(field_set_allocated:eqproto.ChatMessage.message)
 }
 
 #ifdef __GNUC__
@@ -294,6 +408,8 @@ inline void ChatMessage::set_allocated_message(::std::string* message) {
 
 // @@protoc_insertion_point(namespace_scope)
 
+
+}  // namespace eqproto
 
 // @@protoc_insertion_point(global_scope)
 

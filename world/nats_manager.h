@@ -4,6 +4,7 @@
 #include "../common/global_define.h"
 #include "../common/types.h"
 #include "../common/timer.h"
+#include "../common/proto/chatmessage.pb.h"
 #include "nats.h"
 #include <map>
 #include <list>
@@ -15,6 +16,7 @@ public:
 	~NatsManager();
 
 	void Process();
+	void BroadcastMessage(eqproto::ChatMessage* message);
 	void Save();
 	void Load();
 protected:
@@ -23,6 +25,7 @@ protected:
 	natsStatistics *stats = NULL;
 	natsOptions *opts = NULL;
 	natsSubscription *testSub = NULL;
+	natsSubscription *broadcastMessageSub = NULL;
 	//int testSubMax = 100;
 };
 

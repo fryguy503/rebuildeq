@@ -1,7 +1,10 @@
 #include "nats_manager.h"
 #include "nats.h"
+#include "zonelist.h"
 #include "../common/eqemu_logsys.h"
 #include "../common/proto/chatmessage.pb.h"
+
+extern ZSList zoneserver_list;
 
 NatsManager::NatsManager()
 {
@@ -22,15 +25,45 @@ NatsManager::~NatsManager()
 
 //This doesn't work. It seems to loop once or twice then stop.
 void NatsManager::Process()
-{
+{	
 	natsMsg *msg = NULL;
-	for (int count = 0; (s == NATS_OK) && count < 100 /*&& (count < testSubMax)*/; count++)
+	s = NATS_OK;
+	for (int count = 0; (s == NATS_OK) && count < 5; count++)
 	{
 		s = natsSubscription_NextMsg(&msg, testSub, 1);
 		if (s != NATS_OK) break;
 		Log(Logs::General, Logs::World_Server, "Got Message '%s'", natsMsg_GetData(msg));
 		natsMsg_Destroy(msg);
 	}
+	s = NATS_OK;
+	for (int count = 0; (s == NATS_OK) && count < 5; count++)
+	{
+		s = natsSubscription_NextMsg(&msg, broadcastMessageSub, 1);
+		if (s != NATS_OK) break;
+		Log(Logs::General, Logs::World_Server, "Got Broadcast Message '%s'", natsMsg_GetData(msg));
+		eqproto::ChatMessage chatMessage;
+		if (!chatMessage.ParseFromString(natsMsg_GetData(msg))) {
+			Log(Logs::General, Logs::World_Server, "Failed to marshal");
+			natsMsg_Destroy(msg);
+			continue;
+		}
+		natsMsg_Destroy(msg);
+		BroadcastMessage(&chatMessage);
+
+	}
+}
+
+//Send a message to all zone servers.
+void NatsManager::BroadcastMessage(eqproto::ChatMessage* message)
+{
+	Log(Logs::General, Logs::World_Server, "Broadcasting Message");
+	char tmpname[64];
+	tmpname[0] = '*';
+	strcpy(&tmpname[1], message->from().c_str());
+	//TODO: add To support on tells	
+	int channel = message->channel();
+	if (channel < 1) channel = 5; //default to ooc
+	zoneserver_list.SendChannelMessage(tmpname, 0, channel, message->language(), message->message().c_str());
 }
 
 void NatsManager::Save()
@@ -65,7 +98,8 @@ void NatsManager::Load()
 	}
 
 	//Subscribe to test
-	s = natsConnection_SubscribeSync(&testSub, conn, subj);
+	s = natsConnection_SubscribeSync(&testSub, conn, "test");
+	s = natsConnection_SubscribeSync(&broadcastMessageSub, conn, "BroadcastMessage");
 
 	// For maximum performance, set no limit on the number of pending messages.
 	if (s == NATS_OK)
