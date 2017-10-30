@@ -1190,6 +1190,9 @@ void Corpse::LootItem(Client *client, const EQApplicationPacket *app)
 		// do we want this to have a fail option too?
 		parse->EventItem(EVENT_LOOT, client, inst, this, buf, 0);
 
+		// safe to ACK now
+		client->QueuePacket(app);
+
 		if (!IsPlayerCorpse() && RuleB(Character, EnableDiscoveredItems)) {
 			if (client && !client->GetGM() && !client->IsDiscovered(inst->GetItem()->ID))
 				client->DiscoverItem(inst->GetItem()->ID);
