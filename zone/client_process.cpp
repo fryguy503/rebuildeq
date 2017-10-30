@@ -542,7 +542,6 @@ bool Client::Process() {
 			DoManaRegen();
 			DoEnduranceRegen();
 			BuffProcess();
-			DoStaminaUpdate();
 			RefreshBuild();
 			DoEncounterCheck();
 			CalcMonkTranquility();
@@ -1860,7 +1859,7 @@ void Client::DoManaRegen() {
 		return;
 	entity_list.LogManaEvent(this, this, CalcManaRegen() + RestRegenMana);
 	SetMana(GetMana() + CalcManaRegen() + RestRegenMana);
-	SendManaUpdatePacket();
+	SendManaUpdate();
 }
 
 void Client::DoStaminaHungerUpdate()
@@ -1957,7 +1956,9 @@ void Client::CalcRestState() {
 		return;
 
 	ooc_regen = false;
-
+	RestRegenHP = 0;
+	RestRegenEndurance = 0;
+	RestRegenMana = 0;
 	if(AggroCount || !(IsSitting() || CanMedOnHorse()))
 		return;
 
@@ -2017,29 +2018,19 @@ void Client::CalcRestState() {
 		}
 	}
 	if (group_size < 1) group_size = 1;
-
 	
-
-	//step is group_size +1 * 0.1, aka 0.3 to 0.7
-	float step = ((float)(group_size+1) * 0.2f);
-	
-	//How many ticks player has been out of combat regen eligable
-	int ooc_tick = ((time(nullptr) - this->m_epp.ooc_last_expiration) / 6);
-	Log(Logs::Detail, Logs::LogCategory::OOC, "OOC tick: %i, regen: %f, step: %f, group size: %i", ooc_tick, rest_regen_percent, step, group_size);
-	
-	rest_regen_percent = (step * ooc_tick) + (rest_regen_percent + group_size);
-	
-	//Clamp
-	if (rest_regen_percent > 15) rest_regen_percent = 15;	
-	if (rest_regen_percent < 2) rest_regen_percent = 2;
-
-	
+	rest_regen_percent = group_size;
 
 	RestRegenHP = (GetMaxHP() * rest_regen_percent / 100);
-
-	RestRegenMana = (GetMaxMana() * rest_regen_percent / 100);
-	
+	RestRegenMana = (GetMaxMana() * rest_regen_percent / 100);	
 	RestRegenEndurance = (GetMaxEndurance() * rest_regen_percent / 100);
+
+	if (RestRegenHP < 0) RestRegenHP = 0;
+	if (RestRegenHP > 1000) RestRegenHP = 1000;
+	if (RestRegenMana < 0) RestRegenMana = 0;
+	if (RestRegenMana > 1000) RestRegenMana = 1000;
+	if (RestRegenEndurance < 0) RestRegenEndurance = 0;
+	if (RestRegenEndurance > 1000) RestRegenEndurance = 1000;
 	Log(Logs::Detail, Logs::LogCategory::OOC, "OOC Regen: %f, HP: %i, MP: %i, EP: %i", rest_regen_percent, RestRegenHP, RestRegenMana, RestRegenEndurance);
 }
 

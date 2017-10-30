@@ -253,7 +253,7 @@ Mob* QuestManager::encounterspawn(int npc_type, int level, const glm::vec4& posi
 	npc->AddLootTable();
 	
 	entity_list.AddNPC(npc, true, true);
-	npc->SendPosUpdate();
+	npc->SendPositionUpdate();
 	return npc;	
 }
 

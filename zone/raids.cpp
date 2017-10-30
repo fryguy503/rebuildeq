@@ -685,7 +685,6 @@ void Raid::BalanceMana(int32 penalty, uint32 gid, float range, Mob* caster, int3
 				if (members[gi].member->GetMaxMana() > 0) {
 					distance = DistanceSquared(caster->GetPosition(), members[gi].member->GetPosition());
 					if(distance <= range2){
-
 						manataken_tmp = members[gi].member->GetMaxMana() - members[gi].member->GetMana();
 						if (limit && (manataken_tmp > limit))
 							manataken_tmp = limit;

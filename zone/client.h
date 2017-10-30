@@ -1526,6 +1526,10 @@ private:
 	void NPCSpawn(const Seperator* sep);
 	uint32 GetEXPForLevel(uint16 level);
 
+	unsigned int RestRegenHP;
+	unsigned int RestRegenMana;
+	unsigned int RestRegenEndurance;
+
 	bool CanBeInZone();
 	void SendLogoutPackets();
 	void SendZoneInPackets();

@@ -247,6 +247,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							if (mana_amount < 1) mana_amount = 1;
 							if (casterClient != this) casterClient->Message(MT_FocusEffect, "Nature's Guardian %u gifted %i mana to %s.", rank, mana_amount, GetCleanName());
 							Message(MT_FocusEffect, "%s's Nature's Guardian %u gifted %i mana.", casterClient->GetCleanName(), rank, mana_amount);
+
+							entity_list.LogManaEvent(casterClient,this, mana_amount);
 							SetMana(GetMana() + mana_amount);
 							break;
 						}
@@ -1000,6 +1002,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 #ifdef SPELL_EFFECT_SPAM
 				snprintf(effect_desc, _EDLEN, "Current Mana Once: %+i", effect_value);
 #endif
+				entity_list.LogManaEvent(caster, this, effect_value);
 				SetMana(GetMana() + effect_value);
 				break;
 			}

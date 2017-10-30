@@ -245,7 +245,7 @@ void Mob::MakePet2(uint16 npc_type, uint8 level) {
 	
 	NPC* npc = new NPC(enpc, nullptr, GetPet()->GetPosition(), FlyMode3);
 	entity_list.AddNPC(npc, true, true);
-	npc->SendPosUpdate();
+	npc->SendPositionUpdate();
 	SetPet2ID(npc->GetID());
 	//Message(0, "Spawned, entity # %u", npc->GetID());
 }

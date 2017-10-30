@@ -92,6 +92,7 @@ RULE_INT(Character, HasteCap, 100) // Haste cap for non-v3(overhaste) haste.
 RULE_INT(Character, SkillUpModifier, 100) //skill ups are at 100%
 RULE_BOOL(Character, SharedBankPlat, false) //off by default to prevent duping for now
 RULE_BOOL(Character, BindAnywhere, false)
+RULE_INT(Character, RestRegenPercent, 0) // Set to >0 to enable rest state bonus HP and mana regen.
 RULE_BOOL(Character, RestRegenEnabled, true) // Enable OOC Regen
 RULE_INT(Character, RestRegenHP, 180) // seconds until full from 0. this is actually zone setable, but most or all zones are 180
 RULE_INT(Character, RestRegenMana, 180) // seconds until full from 0. this is actually zone setable, but most or all zones are 180
