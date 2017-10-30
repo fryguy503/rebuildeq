@@ -316,27 +316,32 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_LINGERINGPAIN);
 							if (rank > 0 && spells[spell_id].classes[DRUID] > (GetLevel() - 15) &&
-								(spell_id == 239 || spell_id == 93 || spell_id == 92 || spell_id == 252 || spell_id == 91 || spell_id == 419 || spell_id == 52 || spell_id == 405 || spell_id == 27 || spell_id == 115 || spell_id == 217 || spell_id == 1439 || spell_id == 406 || spell_id == 418 || spell_id == 664 || spell_id == 57 || spell_id == 1436 || spell_id == 29 || spell_id == 420 || spell_id == 433 || spell_id == 671 || spell_id == 1603 || spell_id == 1529 || spell_id == 1605 || spell_id == 2518 || spell_id == 1606 || spell_id == 1607 || spell_id == 2126 || spell_id == 2877 || spell_id == 1740)) {
-								if (zone->random.Roll(3 * rank)) {
+								(spell_id == 239 || spell_id == 93 || spell_id == 92 || spell_id == 252 || spell_id == 91 || spell_id == 419 || spell_id == 52 || spell_id == 405 || spell_id == 27 || spell_id == 115 || spell_id == 217 || spell_id == 1439 || spell_id == 406 || spell_id == 418 || spell_id == 664 || spell_id == 57 || spell_id == 1436 || spell_id == 29 || spell_id == 420 || spell_id == 433 || spell_id == 671 || spell_id == 1603 || spell_id == 1529 || spell_id == 1605 || spell_id == 2518 || spell_id == 1606 || spell_id == 1607 || spell_id == 2126 || spell_id == 2877 || spell_id == 1740)
+								) {
 
-									caster->BuildEcho(StringFormat("Lingering Pain %i activated.", rank));
-									if (caster_level > 54) AddBuff(caster, 4105, 2);
-									else if (caster_level > 50) AddBuff(caster, 1601, 2);
-									else if (caster_level > 45) AddBuff(caster, 1600, 2);
-									else if (caster_level > 40) AddBuff(caster, 4104, 2);
-									else if (caster_level > 35) AddBuff(caster, 665, 2);
-									else if (caster_level > 28) AddBuff(caster, 259, 2);
-									else if (caster_level > 18) AddBuff(caster, 78, 2);
-									else if (caster_level > 5) AddBuff(caster, 264, 2);
-									else AddBuff(caster, 239, 2);
+								int duration = zone->random.Int(0, rank);
+								caster->BuildEcho(StringFormat("Lingering Pain %i activated for %i ticks.", rank, duration));
+									
+								if (duration > 0) {
+									if (caster_level > 54) AddBuff(caster, 4105, duration);
+									else if (caster_level > 50) AddBuff(caster, 1601, duration);
+									else if (caster_level > 45) AddBuff(caster, 1600, duration);
+									else if (caster_level > 40) AddBuff(caster, 4104, duration);
+									else if (caster_level > 35) AddBuff(caster, 665, duration);
+									else if (caster_level > 28) AddBuff(caster, 259, duration);
+									else if (caster_level > 18) AddBuff(caster, 78, duration);
+									else if (caster_level > 5) AddBuff(caster, 264, duration);
+									else AddBuff(caster, 239, duration);
 								}
 							}
 
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_WHIRLINGDISASTER);
-							if (rank > 0 && spells[spell_id].classes[DRUID] > (GetLevel() - 15) &&
+							if (rank > 0 && ((GetLevel() + 5) <= caster->GetLevel()) &&
 								(spell_id == 239 || spell_id == 93 || spell_id == 92 || spell_id == 252 || spell_id == 91 || spell_id == 419 || spell_id == 52 || spell_id == 405 || spell_id == 27 || spell_id == 115 || spell_id == 217 || spell_id == 1439 || spell_id == 406 || spell_id == 418 || spell_id == 664 || spell_id == 57 || spell_id == 1436 || spell_id == 29 || spell_id == 420 || spell_id == 433 || spell_id == 671 || spell_id == 1603 || spell_id == 1529 || spell_id == 1605 || spell_id == 2518 || spell_id == 1606 || spell_id == 1607 || spell_id == 2126 || spell_id == 2877 || spell_id == 1740)) {
+								int duration = zone->random.Int(0, rank);
 
-								if (zone->random.Roll(2 * rank)) {
+								if (duration > 1) {
+									duration /= 2; //cut duration in half
 									if ((GetSpecialAbility(UNSTUNABLE) ||
 										(caster && (!caster->IsNPC() ||
 											(caster->IsNPC() && !RuleB(Spells, NPCIgnoreBaseImmunity))))))
@@ -353,8 +358,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 											stun_resist += aabonuses.StunResist;
 
 										if (stun_resist <= 0 || zone->random.Int(0, 99) >= stun_resist) {
-											caster->Message(MT_FocusEffect, "Whirling Disaster %u stunned %s.", rank, GetCleanName());
-											Stun(2);
+											caster->BuildEcho(StringFormat("Whirling Disaster %u stunned %s for %i seconds.", rank, GetCleanName(), duration));
+											Stun(duration);
 										}
 									}
 								}
@@ -3996,8 +4001,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					}
 
 					rank = casterClient->GetBuildRank(DRUID, RB_DRU_BLESSINGOFRO);
-					if (rank > 0 && zone->random.Roll(5 * rank)) {		
-						int infect_count = caster->hate_list.InfectNearby(caster, spell_id, (10 * rank), this, 10);
+					int maxInfect = zone->random.Int(0, rank);
+					if (rank > 0 && maxInfect > 0) {		
+						int infect_count = caster->hate_list.InfectNearby(caster, spell_id, (5 * rank), this, maxInfect);
 						if (infect_count > 0) {
 							caster->Message(MT_FocusEffect, "Blessing of Ro %u spread to %i nearby enemies.", rank, infect_count);
 						}
@@ -4602,36 +4608,36 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 					if (rank > 0) {
 						float dist2 = DistanceSquared(m_Position, caster->GetPosition());						
 						float multiplier = 1.0f;
-						if (dist2 <= (50 * 50)) {
+						if (dist2 <= (20 * 20)) {
 							multiplier = 1.0f;
 						}
-						else if (dist2 <= (100 * 100)) {
+						else if (dist2 <= (40 * 40)) {
 							multiplier = 0.9f;
 						}
-						else if (dist2 <= (150 * 150)) {
+						else if (dist2 <= (60 * 60)) {
 							multiplier = 0.8f;
 						}
-						else if (dist2 <= (200 * 200)) {
+						else if (dist2 <= (80 * 80)) {
 							multiplier = 0.7f;
 						}
-						else if (dist2 <= (250 * 250)) {
+						else if (dist2 <= (100 * 100)) {
 							multiplier = 0.6f;
 						}
 						else {
 							multiplier = 0.5f;
 						}
 						if (multiplier > 0) {
-							int bonus_damage = effect_value * multiplier * 0.2f * rank;
+							int bonus_damage = effect_value * multiplier * 0.1f * rank;
 							if (bonus_damage > 0) bonus_damage = -1;
 							caster_client->Message(MT_DoTDamage, "Focused Swarm %u caused %i bonus damage to %s.", rank, -bonus_damage, GetCleanName());
 							effect_value += bonus_damage;
 						}
 					}
 					rank = caster_client->GetBuildRank(DRUID, RB_DRU_INTENSITY);
-					if (rank > 0 && zone->random.Roll(3 * rank)) {
-						int bonus_damage = effect_value * 3;
+					if (rank > 0) {
+						int bonus_damage = effect_value * 0.1f * rank;
 						if (bonus_damage > 0) bonus_damage = -1;
-						caster_client->Message(MT_DoTDamage, "Intensity %u caused %i bonus damage to %s.", rank, -bonus_damage, GetCleanName());
+						caster_client->BuildEcho(StringFormat("Intensity %u caused %i bonus damage to %s.", rank, -bonus_damage, GetCleanName()));
 						effect_value += bonus_damage;
 					}
 				}

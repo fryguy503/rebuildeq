@@ -1664,6 +1664,14 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			rank = GetBuildRank(CLERIC, RB_CLR_BELIEVE);
 			if (rank > 0) {
 				chance = 300;
+				if (GetTarget() != nullptr && 
+					GetTarget()->IsNPC() && 
+					(
+						GetTarget()->GetBodyType() == BT_Undead || 
+						GetTarget()->GetBodyType() == BT_SummonedUndead || 
+						GetTarget()->GetBodyType() == BT_Vampire
+					)) chance += (20 * GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION));
+
 				proc_damage = GetLevel() * 0.75f * (0.2f * rank);
 				
 				if (proc_damage < 10) {
@@ -1678,7 +1686,16 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			
 			rank = GetBuildRank(CLERIC, RB_CLR_DIVINEHAMMER);
 			if (rank > 0) {
-				chance = GetProcChances(60 * rank, Hand);
+				chance = 60 * rank;
+				if (GetTarget() != nullptr &&
+					GetTarget()->IsNPC() &&
+					(
+						GetTarget()->GetBodyType() == BT_Undead ||
+						GetTarget()->GetBodyType() == BT_SummonedUndead ||
+						GetTarget()->GetBodyType() == BT_Vampire
+						)) chance += (20 * GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION));
+
+				chance = GetProcChances(chance, Hand);
 				spellid = 2173;
 				
 				if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance))

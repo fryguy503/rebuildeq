@@ -548,7 +548,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fist of the Gods";
-			$newSkill->desc = 'Grants +<em data-base="1">1</em> bane damage versus undead<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants <em data-base="1">1</em> bane damage versus undead<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-fistofthegods.png";	
 			$skills[40] = $newSkill;
 			
@@ -566,7 +566,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Exquisite Benediction";
-			$newSkill->desc = 'Grants the Exquisite Benediction AA that summons a pet that heals nearby allies for <em data-base="50">50</em> hp per <span class="perLevel"> per rank</span> per tick and reduces the cooldown by <em data-base="3">3</em> minutes <span class="perLevel"> per rank</span>. CURRENTLY DOES NOT WORK';
+			$newSkill->desc = 'While meleeing an undead creature, increases proc chance of all build procs by <em data-base="20">20</em>';
 			$newSkill->image = "/images/builds/icons/rb-clr-exquisitebenediction.png";	
 			$skills[46] = $newSkill;
 			
@@ -658,9 +658,9 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit of the Wood";
-			$newSkill->desc = 'Grants the Spirit of the Wood AA, which casts buffs scaled based on your level.<br>Rank 1: Strength<br>Rank 2: Resists<br>Rank 3: HP Regen<br>Rank 4: HP (Wood Line)<br>Rank 5: Damage Shield';
+			$newSkill->desc = 'Grants the Spirit of the Wood AA, which casts buffs scaled based on your level and the target\'s level.<br>Rank 1: Strength<br>Rank 2: Resists<br>Rank 3: HP Regen<br>Rank 4: HP (Wood Line)<br>Rank 5: Damage Shield';
 			$newSkill->image = "/images/builds/icons/rb-dru-spiritofthewood.png";
-			$skills[24] = $newSkill;			
+			$skills[24] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Awakening";
@@ -688,32 +688,32 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Intensity";
-			$newSkill->desc = 'When an enemy is affected by a damage over time, there is a <em data-base="3">3</em>% chance the DoT will do triple damage on a single tick.';
+			$newSkill->desc = 'When an enemy is affected by a damage over time, it deals <em data-base="10">10</em>% more damage.';
 			$newSkill->image = "/images/builds/icons/rb-dru-intensity.png";	
 			$skills[36] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Pain";
-			$newSkill->desc = 'When a direct spell is casted, there is a <em data-base="3">3</em>% chance that a short duration DoT will also affect the target if the spell casted was obtained within 15 levels of the enemy\'s level<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When a direct spell is casted, a 0 to <em data-base="1">1</em> tick duration DoT will also affect the target if the spell casted was obtained within 15 levels of the enemy\'s level<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-lingeringpain.png";	
 			$skills[38] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Focused Swarm";
-			$newSkill->desc = 'When standing nearby a mob, DoTs now deal <em data-base="20">20</em>% more damage. This damage bonus reduces by 10% for every 50m you\'re away from an enemy, with a minimum of <em data-base="10">10</em>% more damage.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When standing nearby a mob, DoTs now deal <em data-base="10">10</em>% more damage. This damage bonus reduces by 10% for every 20m you\'re away from an enemy, with a minimum of <em data-base="10">10</em>% more damage.<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-focusedswarm.png";	
 			$skills[40] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Blessing of Ro";
-			$newSkill->desc = 'All Ro debuffs now have a <em data-base="5">5</em>% chance to spread to enemies within <em data-base="10">10</em>m of an affected target if they are on the aggro list of the druid.';
+			$newSkill->desc = 'All Ro debuffs now spread to 0 to <em data-base="1">1</em> additional enemies within <em data-base="5">5</em>m of an affected target if they are on the aggro list of the druid.';
 			$newSkill->image = "/images/builds/icons/rb-dru-blessingofro.png";	
 			$skills[42] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Whirling Disaster";
-			$newSkill->desc = 'Direct Damage spells now also have a <em data-base="2">2</em>% chance to stun a target for 2 seconds if the spell casted was obtained within 15 levels of the enemy\'s level<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-dru-whirlingdisaster.png";	
+			$newSkill->desc = 'Direct Damage spells now also stun for (0 to <em data-base="1">1</em>/2) seconds if the target is at least 5 levels below the druid.';
+			$newSkill->image = "/images/builds/icons/rb-dru-whirlingdisaster.png";
 			$skills[44] = $newSkill;
 
 			$newSkill = new stdClass();
