@@ -73,9 +73,10 @@ func testRequestReply() {
 }*/
 
 func testBroadcastMessage() {
-	message := &eqproto.ChatMessage{
+	message := &eqproto.ChannelMessage{
 		From:    "Someone",
 		Message: "Test",
+		Channel: 6, //5 is ooc, 6 is bc
 	}
 	d, err := proto.Marshal(message)
 	if err != nil {

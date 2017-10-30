@@ -2,7 +2,7 @@
 #include "nats.h"
 #include "zonelist.h"
 #include "../common/eqemu_logsys.h"
-#include "../common/proto/chatmessage.pb.h"
+#include "../common/proto/channelmessage.pb.h"
 
 extern ZSList zoneserver_list;
 
@@ -41,7 +41,7 @@ void NatsManager::Process()
 		s = natsSubscription_NextMsg(&msg, broadcastMessageSub, 1);
 		if (s != NATS_OK) break;
 		Log(Logs::General, Logs::World_Server, "Got Broadcast Message '%s'", natsMsg_GetData(msg));
-		eqproto::ChatMessage chatMessage;
+		eqproto::ChannelMessage chatMessage;
 		if (!chatMessage.ParseFromString(natsMsg_GetData(msg))) {
 			Log(Logs::General, Logs::World_Server, "Failed to marshal");
 			natsMsg_Destroy(msg);
@@ -54,7 +54,7 @@ void NatsManager::Process()
 }
 
 //Send a message to all zone servers.
-void NatsManager::BroadcastMessage(eqproto::ChatMessage* message)
+void NatsManager::BroadcastMessage(eqproto::ChannelMessage* message)
 {
 	Log(Logs::General, Logs::World_Server, "Broadcasting Message");
 	char tmpname[64];
@@ -73,14 +73,6 @@ void NatsManager::Save()
 
 void NatsManager::Load()
 {	
-
-	
-	/*// This is a simple protobuf example I have cooked in.
-	ChatMessage chatMessage;
-	chatMessage.set_sender("shin");
-	chatMessage.set_message("hello");
-	Log(Logs::General, Logs::World_Server, "Protobuf test: '%s'", chatMessage.SerializeAsString().c_str());
-	*/
 	int64_t         last = 0;
 	int64_t			start = 0;
 

@@ -2,7 +2,7 @@
 #include "nats_process.h"
 
 #include "../common/eqemu_logsys.h"
-#include "../common/proto/chatmessage.pb.h"
+#include "../common/proto/channelmessage.pb.h"
 
 
 Nats::Nats()

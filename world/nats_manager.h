@@ -4,7 +4,7 @@
 #include "../common/global_define.h"
 #include "../common/types.h"
 #include "../common/timer.h"
-#include "../common/proto/chatmessage.pb.h"
+#include "../common/proto/channelmessage.pb.h"
 #include "nats.h"
 #include <map>
 #include <list>
@@ -16,7 +16,7 @@ public:
 	~NatsManager();
 
 	void Process();
-	void BroadcastMessage(eqproto::ChatMessage* message);
+	void BroadcastMessage(eqproto::ChannelMessage* message);
 	void Save();
 	void Load();
 protected:
