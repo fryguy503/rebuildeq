@@ -11179,8 +11179,6 @@ void Client::ResetBuild() {
 	}
 	
 	SendAlternateAdvancementTable();
-
-	Message(0, "Your build has been successfully reset!");
 }
 
 std::string Client::GetBuildName(uint32 id) {

@@ -3930,55 +3930,113 @@ void command_bind(Client *c, const Seperator *sep)
 void command_builds(Client *c, const Seperator *sep)
 {
 	if (c->IsTaskActivityActive(307, 7)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 7, 1);
-	uint8 level_req = 75;
+	uint8 freeLevel = 10;
 	if (!c->IsBuildAvailable()) {
 		c->Message(0, "This class does not yet have builds available. It will be coming soon!");
 		return;
 	}
-
 	c->RefreshBuild();
 	
-	//Reset build
-	if (sep->arg[1] && strcasecmp(sep->arg[1], "reset") == 0) {
+	
+
+	auto calculateCost = [](Client* pClient) -> uint64 {
+		const auto clientLevel = pClient->GetLevel();
+		uint8 freeLevel = 10;
+		// Free!
+		if (clientLevel < freeLevel) return 0;
+
+		uint64 cost = 0;
+		cost = (uint64)((float)(1000 * (float)((float)clientLevel / (float)60)) * 1000);
+		if (clientLevel < 20) cost /= 4;
+		if (clientLevel < 40) cost /= 3;
+		if (clientLevel < 50) cost /= 2;
 		
-		//Reset confirm
-		if (sep->arg[2] && strcasecmp(sep->arg[2], "confirm") == 0) {
-			if (c->GetLevel() >= level_req) { //Removed level req
-				c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
+		cost /= 2; //while testing, cut in half
+		if (cost < 1000) {
+			cost = 1000;
+		}
+
+
+		return cost;
+	};
+
+	const auto cost = calculateCost(c);
+
+	
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "reset") != 0) { //don't reset builds, just list
+		const char *windowTitle = "Builds";
+		uint8 unspent = c->GetBuildUnspentPoints();
+		std::string unspentMessage = "";
+		if (unspent > 0) {
+			unspentMessage = StringFormat("<c \"#FFDF00\">You have %u point%s available to spend.</c><br>", unspent, (unspent == 1) ? "" : "s");
+		}
+
+
+		// align=\"center\"
+		std::string windowText = StringFormat("<table align=\"center\" width=\"100%\"><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\">Click To Review Your Build</a></td></tr></table>",
+			c->GetBaseClassName().c_str(),
+			c->GetSession()
+		);
+
+		windowText.append(unspentMessage);
+
+		windowText.append(c->GetBuildReport());
+		c->SendPopupToClient(windowTitle, windowText.c_str());
+		std::string resetCost = "free until level 10";
+		if (c->GetLevel() >= freeLevel) {
+			resetCost = StringFormat("%i platinum at level %i", (cost / 1000), c->GetLevel());
+		}
+		c->Message(0, "You can %s your build choices for %s.", c->CreateSayLink("#builds reset", "reset").c_str(), resetCost.c_str());
+		return;
+	} else { //reset builds
+		//GM override ability.
+		if (c->Admin() > 200 && //account flagged GM
+			c->GetPP().gm > 0) { //is green
+
+			if (c->GetTarget() == nullptr ||
+				!c->GetTarget()->IsClient()) {
+				c->Message(0, "Not a valid target for resetting a build.");
 				return;
 			}
+			c->GetTarget()->CastToClient()->ResetBuild();
+			c->GetTarget()->Message(0, "Your build points were reset by the GM %s.", c->GetCleanName());
+			c->Message(0, "You reset the build points of %s.", c->GetTarget()->GetCleanName());
+			return;
+		}
+
+		//Reset confirm
+		if (sep->arg[2] && strcasecmp(sep->arg[2], "confirm") == 0) {
+			if (c->GetLevel() >= freeLevel && cost > 0) {
+				// Handle: Not enough money.
+				if (!c->HasMoneyInInvOrBank(cost)) {
+					c->Message(0, "Not enough money to reset.");
+					return;
+				}
+				// FYI This is not needed. If it triggers there is a bug in HasMoneyInInvOrBank..
+				if (!c->TakeMoneyFromPPOrBank(cost, true)) {
+					char *hacker_str = nullptr;
+					MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy build reset and didn't have enough money\n");
+					database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+					safe_delete_array(hacker_str);
+					return;
+				}				
+				c->Message(0, "You paid %u platinum to reset your build choices.", cost / 1000);
+				c->ResetBuild();
+				return;
+			}
+			c->Message(0, "Your reset your build choices for free.");
 			c->ResetBuild();
 			return;
 		}
 
-		if (c->GetLevel() < level_req) {
-			c->Message(0, "You can reset your skills for free while testing. [ %s ]", c->CreateSayLink("#builds reset confirm", "confirm").c_str());
-		} else {
-			c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
+
+		//show cost if #builds or #builds reset
+		std::string resetCost = "free";
+		if (c->GetLevel() >= freeLevel) {
+			resetCost = StringFormat("%u platinum at level %i", (cost / 1000), c->GetLevel());
 		}
+		c->Message(0, "Would you like to reset your build choices for %s? [ %s ] ", resetCost.c_str(), c->CreateSayLink("#builds reset confirm", "confirm").c_str());
 		return;
-	}
-	
-	const char *windowTitle = "Builds";
-	uint8 unspent = c->GetBuildUnspentPoints();
-	std::string unspentMessage = "";
-	if (unspent > 0) {
-		unspentMessage = StringFormat("<c \"#FFDF00\">You have %u point%s available to spend.</c><br>", unspent, (unspent == 1) ? "" : "s");
-	}
-
-
-	// align=\"center\"
-	std::string windowText = StringFormat("<table align=\"center\" width=\"100%\"><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\">Click To Review Your Build</a></td></tr></table>",
-		c->GetBaseClassName().c_str(),
-		c->GetSession()
-	);
-
-	windowText.append(unspentMessage);
-	
-	windowText.append(c->GetBuildReport());
-	c->SendPopupToClient(windowTitle, windowText.c_str());
-	if (c->GetLevel() < level_req) {
-		c->Message(0, "You are eligible to %s your build choices.", c->CreateSayLink("#builds reset", "reset").c_str());
 	}
 
 

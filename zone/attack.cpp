@@ -4662,14 +4662,15 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 	if (caster) {
 		int rank = caster->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE);
 
-		if (rank > 0) {
-			if (zone->random.Roll((int)(1 * rank))) {
-				int manaAmount = (int)((float)acthealed * (float)0.01f * (float)rank);
-				if (manaAmount > 0) {
-					entity_list.LogManaEvent(this, this, manaAmount);
-					SetMana(GetMana() + manaAmount);
-					Message(MT_Spells, "%s's Refreshing Breeze %i gave you %i mana.", caster->GetCleanName(), rank, manaAmount);
-				}
+		if (rank > 0 && 
+			spell_id != 3261 && //not hand of piety
+			caster != this) { //not caster
+			int manaAmount = (int)((float)acthealed * (float)0.005f * (float)rank);
+			if (manaAmount > 0) {
+				entity_list.LogManaEvent(this, this, manaAmount);
+				SetMana(GetMana() + manaAmount);
+				Message(MT_Spells, "%s's Refreshing Breeze %i gave you %i mana.", caster->GetCleanName(), rank, manaAmount);
+				caster->BuildEcho(StringFormat("Refreshing Breeze %i gave %s %i mana.", rank, GetCleanName(), manaAmount));
 			}
 		}
 

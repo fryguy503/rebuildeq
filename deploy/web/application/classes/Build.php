@@ -1044,7 +1044,7 @@ class Build {
 			case "paladin":
 			$newSkill = new stdClass();
 			$newSkill->title = "Rodcet's Gift";
-			$newSkill->desc = 'Instant healing spells have a <em data-base="2">2</em>% chance to heal the entire group<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Single target healing spells now spread to allies within <em data-base="10">10</em>m of the healed target, healing them for <em data-base="2">2</em>% the original heal amount<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-pal-rodcetsgift.png";
 			$skills[0] = $newSkill;
 
@@ -1062,15 +1062,15 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Refreshing Breeze";
-			$newSkill->desc = 'Instant heals have a <em data-base="1">1</em>% chance to grant <em data-base="1">1</em>% of the healing as mana to the healed target<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'All healing except Hand of Piety give healed targets <em data-base="0.5">0.5</em>% of amount healed as mana<span class="perLevel"> per rank</span>. Does not work when healing yourself.';
 			$newSkill->image = "/images/builds/icons/rb-pal-refreshingbreeze.png";
 			$skills[6] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Elixir of Might";
-			$newSkill->desc = 'Instrument of Nife and Divine Might proc effects now also grant a <em data-base="5">5</em>% chance to heal the Paladin for <em data-base="10">10</em>% of damage dealt as well as gain <em data-base="2">2</em> mana<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-pal-elixirofmight.png";
-			$skills[8] = $newSkill;
+			$newSkill->title = "Brell's Blessing";
+			$newSkill->desc = 'Courage now grants Paladin buffs<br>Rank 1: AC<br>Rank 2: HP Line 1<br>Rank 3: HP Symbol Line<br>Rank 4: HP Line 2 (Brell)<br>Rank 5: Double duration.';
+			$newSkill->image = "/images/builds/icons/rb-pal-brellsblessing.png";
+			$skills[8] = $newSkill;			
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Soul Cleansing";
@@ -1078,18 +1078,17 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-pal-soulcleansing.png";
 			$skills[10] = $newSkill;
 
-			$newSkill = new stdClass();
-			$newSkill->title = "Brell's Blessing";
-			$newSkill->desc = 'Courage now grants Paladin buffs<br>Rank 1: AC<br>Rank 2: HP Line 1<br>Rank 3: HP Symbol Line<br>Rank 4: HP Line 2 (Brell)<br>Rank 5: Double duration.';
-			$newSkill->image = "/images/builds/icons/rb-pal-brellsblessing.png";
-			$skills[13] = $newSkill;
-
-			$newSkill = new stdClass();
+ 			$newSkill = new stdClass();
 			$newSkill->title = "Wave of Marr";
 			$newSkill->desc = 'All wave-based group spells cost <em data-base="10">10</em>% less mana to cast<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-pal-waveofmarr.png";
-			$skills[16] = $newSkill;
+			$skills[13] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Ward of Tunare";
+			$newSkill->desc = 'Passively grants Ward of Tunare, causing a <em data-base="5">5</em>% chance a heal for <em data-base="40">40</em> hitpoints plus <em data-base="1">1</em>% Max Hitpoints <span class="perLevel"> per rank</span>. Triggers when taking damage from an enemy you have targetted.';
+			$newSkill->image = "/images/builds/icons/rb-pal-wardoftunare.png";
+			$skills[16] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Shield of Nife";
@@ -1128,11 +1127,11 @@ class Build {
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Ward of Tunare";
-			$newSkill->desc = 'Passively grants Ward of Tunare, causing a <em data-base="5">5</em>% chance a heal for <em data-base="40">40</em> hitpoints plus <em data-base="1">1</em>% Max Hitpoints <span class="perLevel"> per rank</span>. Triggers when taking damage from an enemy you have targetted.';
-			$newSkill->image = "/images/builds/icons/rb-pal-wardoftunare.png";
+			$newSkill->title = "Elixir of Might";
+			$newSkill->desc = 'Instrument of Nife and Divine Might proc effects now also grant a <em data-base="5">5</em>% chance to heal the Paladin for <em data-base="10">10</em>% of damage dealt as well as gain <em data-base="2">2</em> mana<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-pal-elixirofmight.png";
 			$skills[31] = $newSkill;
-
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Flames of Redemption";
 			$newSkill->desc = 'Grants the Lesson of the Devoted AA, causing flames of redemption buff improving healing effectiveness by 25% and the flames of redemption DD proc for<em data-base="12">12</em> seconds <span class="perLevel"> per rank</span>.';

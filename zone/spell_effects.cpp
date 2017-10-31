@@ -760,71 +760,60 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								}
 
 								//Rodcet's Gift
-								if (casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT) > 0 &&
-									this->IsClient()) {
-									rank = casterClient->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT);
+								rank = caster->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT);
+								if (rank > 0) {
+									int healCount = 0;
+									int healTotal = dmg;
+									int amount = int(dmg * 2 * rank);
+									if (IsGrouped()) {
+										auto group = GetGroup(); //iterate group
+										for (int i = 0; i < 6; ++i) {
+											target = group->members[i];
+											if (target == nullptr) continue; //target grouped
+											if (!target->IsClient()) continue; //Is a client
+											if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+											if (target->CastToClient()->IsDead()) continue; //not dead
+											if (this != target) continue; //not person who received spell effect
 
-									if (zone->random.Roll(rank * 2)) { //2 * rank % chance
-										caster->Message(MT_Spells, "Rodcet's Gift %u spreads your healing power.", rank);
-										if (this->IsGrouped()) {
-											//Give heal to group (and RAID)									
-											auto group = this->GetGroup(); //iterate group
-											for (int i = 0; i < 6; ++i) {
-												target = group->members[i];
+											float dist2 = DistanceSquared(m_Position, target->GetPosition());
+											float range2 = (rank * 10) * (rank * 10);
+											if (dist2 > range2) continue;
+
+											healCount++;
+											amount = GetActSpellHealing(spell_id, amount, this);
+											if (this->GetID() == target->GetID()) target->Message(MT_Spells, "Rodcet's Gift %i healed you for %i hitpoints.", rank, amount);
+											else target->Message(MT_Spells, "%s's Rodcet Gift %i healed you for %i hitpoints.", caster->GetCleanName(), rank, amount);											
+											caster->HealDamage(amount, target);
+											healTotal += amount;
+										}
+									}
+									else if (this->IsRaidGrouped()) { //Raid healing
+										auto raid = this->GetRaid();
+										uint32 gid = raid->GetGroup(this->CastToClient());
+										if (gid < 12) {
+											for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+												target = raid->members[i].member;
 												if (target == nullptr) continue; //target grouped
 												if (!target->IsClient()) continue; //Is a client
-												if (target->GetID() == this->GetID()) continue; //not me
 												if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
-												Client *c = target->CastToClient();
-												if (c->IsDead()) continue; //not dead
+												if (target->CastToClient()->IsDead()) continue; //not dead
+												if (this != target) continue; //not person who received spell effect
 
 												float dist2 = DistanceSquared(m_Position, target->GetPosition());
-												float range2 = 100 * 100;
+												float range2 = (rank * 10) * (rank * 10);
 												if (dist2 > range2) continue;
 
-
-												if (target == caster) {
-													c->Message(MT_Spells, "You have healed yourself for %i.", dmg);
-												}
-												else {
-													c->Message(MT_Spells, "You have healed %s for %i.", group->members[i]->GetCleanName(), dmg);
-													caster->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
-												}
-												dmg = caster->GetActSpellHealing(spell_id, dmg, this);
-												c->HealDamage(dmg, caster);
-											}
+												healCount++;
+												amount = GetActSpellHealing(spell_id, amount, this);
+												if (this->GetID() == target->GetID()) target->Message(MT_Spells, "Rodcet's Gift %i healed you for %i hitpoints.", rank, amount);
+												else target->Message(MT_Spells, "%s's Rodcet Gift %i healed you for %i hitpoints.", caster->GetCleanName(), rank, amount);
+												caster->HealDamage(amount, target);
+												healTotal += amount;
+											}											
 										}
-										else if (this->IsRaidGrouped()) { //Raid healing
-											auto raid = this->GetRaid();
-
-											uint32 gid = raid->GetGroup(this->CastToClient());
-											if (gid < 12) {
-												for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-													target = raid->members[i].member;
-													if (target == nullptr) continue; //target grouped
-													if (!target->IsClient()) continue; //Is a client
-													if (target->GetID() == this->GetID()) continue; //not me
-													if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
-													Client *c = target->CastToClient();
-													if (c->IsDead()) continue; //not dead
-
-													float dist2 = DistanceSquared(m_Position, target->GetPosition());
-													float range2 = 100 * 100;
-													if (dist2 > range2) continue;
-
-
-													if (target == caster) {
-														c->Message(MT_Spells, "You have healed yourself for %i.", dmg);
-													}
-													else {
-														c->Message(MT_Spells, "You have healed %s for %i.", c->GetCleanName(), dmg);
-														caster->Message(MT_Spells, "%s has healed you for %i.", caster->GetCleanName(), dmg);
-													}
-													dmg = caster->GetActSpellHealing(spell_id, dmg, this);
-													c->HealDamage(dmg, caster);
-												}
-											}
-										}
+									}
+									if (healCount > 0) {
+										BuildEcho(StringFormat("Rodcet's Gift %i healed %i allies for %i hitpoints.", rank, healCount, healTotal));
 									}
 								}
 							}

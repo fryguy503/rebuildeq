@@ -2020,6 +2020,7 @@ void Client::CalcRestState() {
 	if (group_size < 1) group_size = 1;
 	
 	rest_regen_percent = group_size;
+	if (GetLevel() >= 40) rest_regen_percent /= 2; //cut ooc regen in half once 40.
 
 	RestRegenHP = (GetMaxHP() * rest_regen_percent / 100);
 	RestRegenMana = (GetMaxMana() * rest_regen_percent / 100);	
