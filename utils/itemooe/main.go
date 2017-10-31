@@ -1112,7 +1112,10 @@ func buildList() (ids []int64) {
 		9959,  //Band of Swirling Air
 	}
 
-	for i := int64(32969); i < 99212; i++ {
+	for i := int64(32969); i < 47001; i++ {
+		ids = append(ids, i)
+	}
+	for i := int64(47002); i < 99212; i++ {
 		ids = append(ids, i)
 	}
 	for i := int64(102000); i < 132486; i++ {
