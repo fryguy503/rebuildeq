@@ -3415,6 +3415,11 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 	if (IsClient() && CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) > 0 && spell_id == 4549) {
 		duration = 2 * caster->CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR);
 	}
+
+	int rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTION);
+	if (rank > 0 && spell_id == 292) { //rogue casts mesmerize
+		duration = zone->random.Int(0, rank);
+	}
 	
 	if (duration == 0) {
 		Log(Logs::Detail, Logs::Spells, "Buff %d failed to add because its duration came back as 0.", spell_id);

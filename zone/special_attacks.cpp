@@ -193,10 +193,10 @@ void Mob::DoSpecialAttackDamage(Mob *who, EQEmu::skills::SkillType skill, int32 
 	DoAttack(who, my_hit);
 
 	if (skill == EQEmu::skills::SkillBackstab && IsClient()) {
-		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_JARRINGSTAB);
-		if (rank > 0 && zone->random.Roll(2 * rank) && who) { //s/b 2
-			int hate_count = who->hate_list.LoseHatredNearby(this, (rank * 200), 200, who, 6);
-			entity_list.MessageClose(this, true, 300, MT_NonMelee, "%s causes %s to blink %i times.", GetCleanName(), who->GetCleanName(), hate_count);			
+		int rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_JARRINGSTAB);
+		if (rank > 0 && who) { //s/b 2
+			int hate_count = who->hate_list.LoseHatredNearby(this, (rank * 20), 200, who, 6);
+			BuildEcho(StringFormat("Jarring Stab %i reduced hate by %i to %i nearby enemies.", rank, rank * 20, hate_count));
 		}
 	}
 
@@ -616,8 +616,13 @@ void Mob::RogueBackstab(Mob* other, bool min_damage, int ReuseTime)
 	}
 
 	int base_damage = GetBaseSkillDamage(EQEmu::skills::SkillBackstab, other);
+	int rank = GetBuildRank(ROGUE, RB_ROG_VITALORGANS);
+	if (rank > 0) {
+		BuildEcho(StringFormat("Vital Organs %i added %i bonus damage to backstab.", rank, (base_damage * 0.1f * rank)));
+		base_damage += (base_damage * 0.1f * rank);
+	}
 	hate = base_damage;
-
+	
 	DoSpecialAttackDamage(other, EQEmu::skills::SkillBackstab, base_damage, 0, hate, ReuseTime);
 	DoAnim(anim1HPiercing, 0, false);
 }

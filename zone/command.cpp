@@ -3951,11 +3951,10 @@ void command_builds(Client *c, const Seperator *sep)
 		if (clientLevel < 40) cost /= 3;
 		if (clientLevel < 50) cost /= 2;
 		
-		cost /= 2; //while testing, cut in half
+		cost /= 10; //while testing, cut price
 		if (cost < 1000) {
 			cost = 1000;
 		}
-
 
 		return cost;
 	};

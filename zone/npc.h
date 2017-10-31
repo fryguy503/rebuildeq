@@ -431,6 +431,7 @@ public:
 	std::vector<SpecialLoot_Struct> SpecialLoot(bool card_only);
 
 	bool IgnoreDespawn() { return ignore_despawn; }
+	bool is_hidden_stash_used;
 
 protected:
 
@@ -548,8 +549,6 @@ protected:
 
 	bool raid_target;
 	uint8	probability;
-	//Stores how many times the NPC has been triggered by hidden stash
-	int hidden_stash_counter;
 	bool ignore_despawn; //NPCs with this set to 1 will ignore the despawn value in spawngroup
 
 

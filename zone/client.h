@@ -1358,6 +1358,7 @@ public:
 	void DoDivineSurge();
 	void CalcMonkTranquility();
 	bool HasNegativeEffects();
+	void DoZevfeersFeast(int amount);
 	void CheckRegionTypeChanges();
 
 	int32 CalcATK();

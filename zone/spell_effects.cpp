@@ -240,6 +240,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						Client * casterClient = caster->CastToClient();
 						uint8 level = GetLevel();
 						uint8 caster_level = casterClient->GetLevel();
+						
 
 						rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN);
 						if (rank > 0 && spell_id == 8193 && IsClient()) { //This only works on player characters.
@@ -297,6 +298,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (caster->IsClient()) {
 							Client * casterClient = caster->CastToClient();
 							uint8 caster_level = casterClient->GetLevel();
+
+							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST);
+							if (rank > 0 && (spell_id == 341 || spell_id == 502 || spell_id == 445 || spell_id == 446 || spell_id == 525 || spell_id == 447)) {
+								casterClient->DoZevfeersFeast(dmg);
+							}
+
 
 							rank = casterClient->GetBuildRank(ROGUE, RB_ROG_MOSSSTONE);
 							if (rank > 0 && spell_id == 5225 && GetHPRatio() <= 20 && zone->random.Roll(20 * rank) && !HasSpellEffect(SE_MovementSpeed)) {
@@ -424,22 +431,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								static const float BaseHealth = 0.1;			// 10% per rank (50% max)
 								static const float BaseMana = 2;				// 2 mana per rank. (10 max)
 
-								const auto roll = zone->random.Real(0.0, 1.0);
-								const auto reqRoll = (double)rank * TriggerChance;
+								int healAmount = rank * BaseHealth * dmg;
+								int manaAmount = rank * BaseMana;
+								if (healAmount < 1) healAmount = 1;
+								if (manaAmount < 1) manaAmount = 1;
 
-								// Success!
-								if (roll <= reqRoll) {
-									int healAmount = rank * BaseHealth * dmg;
-									int manaAmount = rank * BaseMana;
-									if (healAmount < 1) healAmount = 1;
-									if (manaAmount < 1) manaAmount = 1;
+								casterClient->BuildEcho(StringFormat("Elixir of Might %u gifted %i health and %i mana.", rank, healAmount, manaAmount));
 
-									casterClient->BuildEcho(StringFormat("Elixir of Might %u gifted %i health and %i mana.", rank, healAmount, manaAmount));
-
-									casterClient->HealDamage(healAmount, caster);
-									entity_list.LogManaEvent(caster, caster, manaAmount);
-									casterClient->SetMana(casterClient->GetMana() + manaAmount);
-								}
+								casterClient->HealDamage(healAmount, caster);
+								entity_list.LogManaEvent(caster, caster, manaAmount);
+								casterClient->SetMana(casterClient->GetMana() + manaAmount);
 							}
 
 							// Flame of Light
@@ -1340,11 +1341,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							spell_id == 123 || spell_id == 3975 || spell_id == 124 || spell_id == 2587) &&
 							caster->IsClient() &&  //Casted by a paladin client
 							caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_FRAIL) > 0 && //Has frail							
-							IsNPC() && //target is an NPC
-							zone->random.Roll((int)caster->CastToClient()->GetBuildRank(PALADIN, RB_PAL_FRAIL))
+							IsNPC() //target is an NPC							
 							) {
 							caster->Message(MT_Spells, "%s looks frail.", this->GetCleanName());
-							caster->SpellFinished(230, this);
+							caster->SpellFinished(1592, this);
 						}
 
 						if(spell_id == 958 && 
@@ -4011,104 +4011,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (infect_count > 0) {
 							caster->Message(MT_FocusEffect, "Blessing of Ro %u spread to %i nearby enemies.", rank, infect_count);
 						}
-					}
-
-					if (caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST) > 0 && (spell_id == 343 || spell_id == 2575)) {
-						uint32 dmg;
-						int manaAmount;
-						if (spell_id == 343) { //siphon strength
-							dmg = (caster->GetMaxHP() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));
-							if (dmg < 1) {
-								dmg = 1;
-							}
-							Damage(caster, dmg, spell_id, spell.skill, false, 0, false);
-						}
-						if (spell_id == 2575) { //abduct strength
-							dmg = (caster->GetMaxHP() * 0.01 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));
-							if (dmg < 1) {
-								dmg = 1;
-							}
-							Damage(caster, dmg, spell_id, spell.skill, false, 0, false);
-						}
-						float range, distance;
-						range = caster->GetAOERange(3409);
-						float range2 = range*range;
-						int mana_amount = (caster->GetMaxMana() * 0.005 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST));
-						if (mana_amount < 1) {
-							mana_amount = 5;
-						}
-						if (caster->IsGrouped()) {
-							Group *caster_group = entity_list.GetGroupByMob(caster);
-							if (caster_group) {
-								for (int z = 0; z < MAX_GROUP_MEMBERS; z++) {
-									if (caster_group->members[z] == caster) {
-										//caster->Message(0, "Group! %i %i", dmg, mana_amount);
-										caster->HealDamage(dmg, caster, 3409);
-										entity_list.LogManaEvent(caster, caster, mana_amount);
-										caster->SetMana(caster->GetMana() + mana_amount);
-										if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
-											caster->HealDamage(dmg, caster->GetPet());
-										}
-									}
-									else if (caster_group->members[z] != nullptr) {
-										distance = DistanceSquared(caster->GetPosition(), caster_group->members[z]->GetPosition());
-										if (distance <= range2) {
-											caster_group->members[z]->HealDamage(dmg, caster, 3409);
-											entity_list.LogManaEvent(caster, caster_group->members[z], mana_amount);
-											caster_group->members[z]->SetMana(caster_group->members[z]->GetMana() + mana_amount);
-											if (caster_group->members[z]->GetPet() && !caster_group->members[z]->GetPet()->IsCharmed()) {
-												caster_group->members[z]->GetPet()->HealDamage(dmg, caster);
-											}
-										}
-									}
-								}
-							}
-						}
-						else if (caster->IsRaidGrouped()) {
-
-							Raid *target_raid = entity_list.GetRaidByClient(caster->CastToClient());
-							uint32 gid = 0xFFFFFFFF;
-							if (target_raid) {
-								gid = target_raid->GetGroup(caster->GetName());
-								if (gid < 12) {
-									//Cast on raid
-
-									for (int x = 0; x < MAX_RAID_MEMBERS; x++) { //iterate raid
-										if (target_raid->members[x].member == caster) { //if member is the caster										
-											caster->HealDamage(dmg, caster, 3409);
-											entity_list.LogManaEvent(caster, caster, mana_amount);
-											caster->SetMana(caster->GetMana() + mana_amount);
-											if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
-												caster->HealDamage(dmg, caster->GetPet(), 3409);
-											}
-										}
-										else if (target_raid->members[x].member != nullptr) {
-											if (target_raid->members[x].GroupNumber == gid) { //in raid group id
-												distance = DistanceSquared(caster->GetPosition(), target_raid->members[x].member->GetPosition()); //get distance
-												if (distance <= range2) { //in distance
-													target_raid->members[x].member->HealDamage(dmg, caster, 3409);
-													entity_list.LogManaEvent(caster, target_raid->members[x].member, mana_amount);
-													target_raid->members[x].member->SetMana(target_raid->members[x].member->GetMana() + mana_amount);
-													if (target_raid->members[x].member->GetPet() && !target_raid->members[x].member->GetPet()->IsCharmed()) {
-														target_raid->members[x].member->HealDamage(dmg, caster, 3409);
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-						else { //not grouped
-						 //caster->Message(0, "Lifesteal! %i %i", dmg, mana_amount);
-							caster->HealDamage(dmg, caster, 3409);
-							entity_list.LogManaEvent(caster, caster, mana_amount);
-							caster->SetMana(caster->GetMana() + mana_amount);
-							if (caster->GetPet() && !caster->GetPet()->IsCharmed()) {
-								caster->HealDamage(dmg, caster->GetPet(), 3409);
-							}
-						}
-					}
+					}					
 					break;
 				}
 			}

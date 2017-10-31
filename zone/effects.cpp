@@ -396,31 +396,53 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 			}
 		}
 
+		int rank = target->GetBuildRank(PALADIN, RB_PAL_WARDOFTUNARE);
+		if (rank > 0 && this != target) {
+			target->BuildEcho(StringFormat("Ward of Tunare %i gave a bonus %i healing.", rank, value * 0.06f * rank));
+			value += (value * 0.06f * rank);
+		}
 
-		uint32 rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_INSTILLLIFE);
+		rank = target->GetBuildRank(PALADIN, RB_SHD_BANSHEESMIRROR);
+		if (rank > 0 && this != target) {
+			target->BuildEcho(StringFormat("Banshee's Mirror %i gave a bonus %i healing.", rank, value * 0.06f * rank));
+			value += (value * 0.06f * rank);
+		}
+
+
+		rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_INSTILLLIFE);
 		if (IsClient() && rank > 0 && zone->random.Roll(int(2 * rank))) {
-			int healAmount = (int)(target->GetMaxHP() * 0.02 * rank);
+			int healAmount = (int)(target->GetMaxHP() * 0.02f * rank);
 			CastToClient()->Message(MT_Spells, "Instill Life %u gave a bonus %i healing.", rank, healAmount);
 			value += healAmount;
 		}
 
-		rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
-		if (IsClient() && rank > 0) {			
-			int healAmount = (int)(value * 0.10 * rank);
-			CastToClient()->Message(MT_Spells, "Spiritual Healing %u gave a bonus %i healing.", rank, healAmount);
+
+		rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_REINFORCETORPOR);
+		if (rank > 0 && (spell_id == 19127 || spell_id == 1576)) {
+			int healAmount = (int)(value * 0.1f * rank);
+			BuildEcho(StringFormat("Reinforce Torpor %i gave a bonus %i healing.", rank, healAmount));			
 			value += healAmount;
 		}
 
+		rank = GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
+		if (rank > 0 && target != nullptr && target != this) {
+			int healAmount = (int)(value * 0.05f * rank);
+			BuildEcho(StringFormat("Spiritual Healing %u healed you for %i hitpoints.", rank, healAmount));
+			entity_list.LogHPEvent(this, this, healAmount);
+			HealDamage(healAmount, this);
+		}
+
+
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
 		if (IsClient() && rank > 0) {			
-			int healAmount = (int)(value * 0.05 * rank);
+			int healAmount = (int)(value * 0.05f * rank);
 			CastToClient()->Message(MT_Spells, "Convergence of Spirits %u gave a bonus %i healing.", rank, healAmount);
 			value += healAmount;
 		}
 
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
 		if (IsClient() && rank > 0) {			
-			int healAmount = (int)(value * 0.05 * rank);
+			int healAmount = (int)(value * 0.05f * rank);
 			CastToClient()->Message(MT_Spells, "Nature's Boon %u gave a bonus %i healing.", rank, healAmount);
 			value += healAmount;
 		}

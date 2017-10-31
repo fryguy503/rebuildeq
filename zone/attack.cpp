@@ -1756,6 +1756,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
 			if (rank > 0) {
 				chance = 400;
+				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) chance += (chance * 0.1 * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
 				proc_damage = GetLevel() * 3.0f * (0.2f * rank);
 				if (proc_damage < 20) {
 					proc_damage = 20;
@@ -1767,6 +1768,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			rank = GetBuildRank(ROGUE, RB_ROG_MUGGINGSHOT);
 			if (rank > 0) {
 				chance = rank * 100;
+				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) chance += (chance * 0.1 * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
 				bool is_interrupt = false;
 				if (Hand == EQEmu::inventory::slotSecondary) { //Get offhand
 					switch (my_hit.skill) {
@@ -4143,12 +4145,12 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				entity_list.MessageClose(this, true, RuleI(Range, SpellMessages), MT_Emote, "%s beams a smile at %s", attacker->GetCleanName(), this->GetCleanName());
 			}
 
+			rank = GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH);
 			if (attacker && attacker->GetBodyType() == BT_Undead &&
-				IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH) > 0 &&
-				zone->random.Roll((int)(4 * CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH)))) {
-				int damageReduction = (int)(float)(damage * (float)0.05f * (float)CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH));				
+				rank > 0) {
+				int damageReduction = (int)(float)(damage * (float)0.025f * (float)rank);		
 				if (damageReduction > 0) {
-					BuildEcho(StringFormat("Armor of Faith %u reduced damage from %s by %i.", CastToClient()->GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH), attacker->GetCleanName(), damageReduction));
+					BuildEcho(StringFormat("Armor of Faith %u reduced damage from %s by %i.", rank, attacker->GetCleanName(), damageReduction));
 					damage -= damageReduction;
 				}
 			}
@@ -4169,73 +4171,49 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 		if (IsClient() && attacker && attacker->IsNPC()) { //If the attacked player is in a group, and being attacked by an NPC
 
 			uint32 heal_amount;
-
-			rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_BANSHEESMIRROR);
-			heal_amount = (uint32)(GetMaxHP() * rank * 0.01f) + (uint32)(40 * rank);
-			if (rank > 0 && 
-				GetTarget() == attacker &&
-				damage > (heal_amount / 4) &&
-				zone->random.Roll((int)(5 * rank))) {
-				CastToClient()->Message(MT_Spells, "Banshee's Mirror %u healed you for %i.", rank, heal_amount);
-				HealDamage(heal_amount, this);
-			}
-
-			rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_WARDOFTUNARE);
-			heal_amount = (uint32)(GetMaxHP() * rank * 0.01f) + (uint32)(40 * rank);
-			if (rank > 0 && 
-				GetTarget() == attacker &&
-				damage > (heal_amount / 4) &&
-				zone->random.Roll((int)(5 * rank))) {
-				CastToClient()->Message(MT_Spells, "Ward of Tunare %u healed you for %i.", rank, heal_amount);
-				HealDamage(heal_amount, this);
-			}
-
+			Mob * target;
 			//Holy Servant
 			if (CastToClient()->IsGrouped()) { //In group
 				Group *caster_group = entity_list.GetGroupByMob(this);
 				if (caster_group) {
 					for (int z = 0; z < MAX_GROUP_MEMBERS; z++) {
-						if (caster_group->members[z] == nullptr ||
-							!caster_group->members[z]->IsClient() ||
-							caster_group->members[z] == this ||
-							caster_group->members[z]->GetZoneID() != GetZoneID() ||
-							caster_group->members[z]->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT) < 1 ||
-							caster_group->members[z]->animation == ANIM_SIT
+						target = caster_group->members[z];
+
+						if (target == nullptr ||
+							!target->IsClient() ||
+							target == this ||
+							target->GetZoneID() != GetZoneID() ||
+							target->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT) < 1 ||
+							target->animation == ANIM_SIT
 							//caster_group->members[z]->IsMezzed() ||
 							//caster_group->members[z]->IsAIControlled() || //don't block while charmed
 							//!caster_group->members[z]->IsCasting() || //don't block while casting
 							) {
 							continue;
 						}
+						rank = target->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT);
 						//Check distance from paladin
-						float distance = DistanceSquared(GetPosition(), caster_group->members[z]->GetPosition());
-						if (distance > (100 * 100)) {
+						float distance = DistanceSquared(GetPosition(), target->GetPosition());
+						if (distance > (rank * 2 * rank * 2)) {
 							continue;
-						}
+						}						
 
-						rank = caster_group->members[z]->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT);
-							
-						if (!zone->random.Roll((int)(2 * rank))) { //Only block if 2%*rank chance
-							continue;
-						}
-
-						int damage_reduction = (int)((float)damage * (float)0.05 * (float)rank);
+						int damage_reduction = (int)((float)damage * (float)0.025 * (float)rank);
 						if (damage_reduction < 1) {
 							continue;
 						}
 
 						damage -= damage_reduction;
-
-						Message(MT_Spells, "%s's Holy Servant %u has taken %i damage for you.", caster_group->members[z]->GetCleanName(), rank, damage_reduction);
+						if (damage < 1) damage = 1;
+						Message(MT_Spells, "%s's Holy Servant %u has taken %i damage for you.", target->GetCleanName(), rank, damage_reduction);
 
 						int damage_reduction2 = damage_reduction;
-						damage_reduction2 -= (int)((float)damage_reduction * 0.02 * (float)rank);
-						caster_group->members[z]->CastToClient()->Message(MT_Spells, "Holy Servant %u has drawn %i damage from %s and has given it to you.", rank, damage_reduction2, attacker->GetCleanName());
+						damage_reduction2 -= (int)((float)damage_reduction * 0.02f * (float)rank);
+						caster_group->members[z]->CastToClient()->Message(MT_Spells, "Holy Servant %u has drawn %i damage from %s and has dealt %i to you.", rank, damage_reduction, damage_reduction2, attacker->GetCleanName());
 
 						//deal dmg to paladin
 						caster_group->members[z]->CommonDamage(attacker, damage_reduction2, spell_id, skill_used, avoidable, buffslot, iBuffTic, special);
-
-						break; //Don't let more paladins reduce this damage
+						//break; //Don't let more paladins reduce this damage
 					}
 				}
 			}

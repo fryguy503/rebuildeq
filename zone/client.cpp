@@ -4119,11 +4119,13 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 	QueuePacket(outapp);
 	safe_delete(outapp);
 	if (type != PickPocketFailed) {
-		uint8 rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTION);
-		if (rank > 0 && zone->random.Roll(rank * 10)) {
+		int rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTION);
+		if (rank > 0) {
 			Message(MT_FocusEffect, "Your Sleight Distraction %u distracts %s.", rank, from->GetCleanName());
+			SpellFinished(292, from);
 			EvadeOnce(this);
 		}
+		
 		rank = GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);
 		if (rank > 0) {
 			int mana_bonus = rank * 20;
@@ -11709,4 +11711,62 @@ bool Client::HasNegativeEffects() {
 		}
 	}
 	return false;
+}
+
+void Client::DoZevfeersFeast(int amount) {
+	int rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST);
+	if (rank < 1) return;
+	int manaCount = 0;
+	int manaTotal = 0;
+	amount = amount * 0.01f * rank;
+	Mob * target = nullptr;
+
+	if (IsGrouped()) {
+		auto group = GetGroup(); //iterate group
+		for (int i = 0; i < 6; ++i) {
+			target = group->members[i];
+			if (target == nullptr) continue; //target grouped
+			if (!target->IsClient()) continue; //Is a client
+			if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+			if (target->CastToClient()->IsDead()) continue; //not dead
+			if (this == target) continue; //not person who lifetapped
+
+			float dist2 = DistanceSquared(m_Position, target->GetPosition());
+			float range2 = (rank * 10) * (rank * 10);
+			if (dist2 > range2) continue;
+
+			manaCount++;
+			target->Message(MT_Spells, "%s's Zevfeer's Feast has given you %i mana.", GetCleanName(), rank, amount);
+			entity_list.LogManaEvent(this, target, amount);
+			target->SetMana(target->GetMana() + amount);
+			manaTotal += amount;
+		}
+	}
+	else if (this->IsRaidGrouped()) { //Raid healing
+		auto raid = this->GetRaid();
+		uint32 gid = raid->GetGroup(this->CastToClient());
+		if (gid < 12) {
+			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+				target = raid->members[i].member;
+				if (target == nullptr) continue; //target grouped
+				if (!target->IsClient()) continue; //Is a client
+				if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+				if (target->CastToClient()->IsDead()) continue; //not dead
+				if (this == target) continue; //not person who lifetapped
+
+				float dist2 = DistanceSquared(m_Position, target->GetPosition());
+				float range2 = (rank * 10) * (rank * 10);
+				if (dist2 > range2) continue;
+
+				manaCount++;
+				target->Message(MT_Spells, "%s's Zevfeer's Feast has given you %i mana.", GetCleanName(), rank, amount);
+				entity_list.LogManaEvent(this, target, amount);
+				target->SetMana(target->GetMana() + amount);
+				manaTotal += amount;
+			}
+		}
+	}
+	if (manaCount > 0) {
+		BuildEcho(StringFormat("Zevfeer's Feast %i gave %i mana to %i allies.", rank, manaCount, manaTotal));
+	}
 }

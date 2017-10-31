@@ -1509,41 +1509,61 @@ void NPC::PickPocket(Client* thief)
 	int steal_skill = thief->GetSkill(EQEmu::skills::SkillPickPockets);
 	int steal_chance = steal_skill * 100 / (5 * over_level + 5);
 
+	
+
 	// Determine whether to steal money or an item.
 	uint32 money[6] = { 0, ((steal_skill >= 125) ? (GetPlatinum()) : (0)), ((steal_skill >= 60) ? (GetGold()) : (0)), GetSilver(), GetCopper(), 0 };
 	bool has_coin = ((money[PickPocketPlatinum] | money[PickPocketGold] | money[PickPocketSilver] | money[PickPocketCopper]) != 0);
 	bool steal_item = (steal_skill >= steal_chance && (zone->random.Roll(50) || !has_coin));
-	if (thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH) > 0 &&
-		zone->random.Roll((int)(thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH) * 2))) {
-		switch (zone->random.Int(1, 9)) {			
+	int rank = thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH);
+	int duration = zone->random.Int(0, rank);
+	if (rank > 0 && duration > 0) {		
+		switch (zone->random.Int(1, 9)) {
 		case 1:
-			thief->QuickBuff(thief, 880, zone->random.Int(1,5)); //dulsehound (str/regen)
+			thief->QuickBuff(thief, 880, duration); //dulsehound (str/regen)
 			break;
 		case 2:
-			thief->QuickBuff(thief, 885, zone->random.Int(1, 5)); //graveyard dust (str/agi/atkspeed)
+			thief->QuickBuff(thief, 885, duration); //graveyard dust (str/agi/atkspeed)
 			break;
 		case 3:
-			thief->QuickBuff(thief, 884, zone->random.Int(1, 5)); //calimony (hp regen, hp buff)
+			thief->QuickBuff(thief, 884, duration); //calimony (hp regen, hp buff)
 			break;
 		case 4:
-			thief->QuickBuff(thief, 1331, zone->random.Int(1, 5)); //skin of flame ds
+			thief->QuickBuff(thief, 1331, duration); //skin of flame ds
 			break;
 		case 5:
-			thief->QuickBuff(thief, 883, zone->random.Int(1, 5)); //potion of assailing (str/agi/atk)
+			thief->QuickBuff(thief, 883, duration); //potion of assailing (str/agi/atk)
 			break;
 		case 6:
-			thief->QuickBuff(thief, 879, zone->random.Int(1, 5)); //troll's essence (str/regen)
+			thief->QuickBuff(thief, 879, duration); //troll's essence (str/regen)
 			break;
 		case 7:
-			thief->QuickBuff(thief, 1166, zone->random.Int(1, 5)); //draconic rage (150 dd)
+			thief->QuickBuff(thief, 1166, duration); //draconic rage (150 dd)
 			break;
 		case 8:
-			thief->QuickBuff(thief, 6914, zone->random.Int(1, 5)); //potion of healing V
+			thief->QuickBuff(thief, 6914, duration); //potion of healing V
 			break;
 		case 9:
-			thief->QuickBuff(thief, 2434, zone->random.Int(1, 5)); //avatar
+			thief->QuickBuff(thief, 2434, duration); //avatar
 			break;
 		}
+	}
+
+	rank = thief->GetBuildRank(ROGUE, RB_ROG_HIDDENSTASH);
+	if (!is_hidden_stash_used && steal_chance > steal_skill && rank > 0) {
+		is_hidden_stash_used = true;
+		int amount = 1;
+		int maxAmount = 1;
+		if (GetLevel() > 50) maxAmount = 10 * rank;
+		else if (GetLevel() > 40) maxAmount = 5 * rank;
+		else if (GetLevel() > 30) maxAmount = 3 * rank;
+		else if (GetLevel() > 20) maxAmount = 2 * rank;
+		else if (GetLevel() > 10) maxAmount = rank;
+		amount = zone->random.Int(amount, maxAmount);
+		thief->Message(MT_Skills, "You have found a hidden stash (%i).", rank, amount);
+		thief->AddMoneyToPP(0, 0, 0, amount, false);
+		thief->SendPickPocketResponse(this, amount, PickPocketPlatinum);
+		return;
 	}
 
 	// still needs to have FindFreeSlot vs PutItemInInventory issue worked out
@@ -1594,56 +1614,55 @@ void NPC::PickPocket(Client* thief)
 		return;
 	}
 
-	if (steal_item || 
-		thief->GetBuildRank(ROGUE, RB_ROG_HIDDENSTASH) < 1 ||
-		!zone->random.Roll((int)thief->GetBuildRank(ROGUE, RB_ROG_HIDDENSTASH) * 2) ||
-		this->hidden_stash_counter > 2) {
+
+	while (!steal_item && has_coin) {
+		uint32 coin_amount = zone->random.Int(1, (steal_skill / 25) + 1);
+
+		int coin_type = PickPocketPlatinum;
+		while (coin_type <= PickPocketCopper) {
+			if (money[coin_type]) {
+				if (coin_amount > money[coin_type])
+					coin_amount = money[coin_type];
+				break;
+			}
+			++coin_type;
+		}
+		if (coin_type > PickPocketCopper)
+			break;
+
+		memset(money, 0, (sizeof(int) * 6));
+		money[coin_type] = coin_amount;
+
+		if (zone->random.Roll(steal_chance)) { // Successful coin pickpocket
+			switch (coin_type) {
+			case PickPocketPlatinum:
+				SetPlatinum(GetPlatinum() - coin_amount);
+				break;
+			case PickPocketGold:
+				SetGold(GetGold() - coin_amount);
+				break;
+			case PickPocketSilver:
+				SetSilver(GetSilver() - coin_amount);
+				break;
+			case PickPocketCopper:
+				SetCopper(GetCopper() - coin_amount);
+				break;
+			default: // has_coin..but, doesn't have coin?
+				thief->SendPickPocketResponse(this, 0, PickPocketFailed);
+				return;
+			}
+
+			thief->AddMoneyToPP(money[PickPocketCopper], money[PickPocketSilver], money[PickPocketGold], money[PickPocketPlatinum], false);
+			thief->SendPickPocketResponse(this, coin_amount, coin_type);
+			return;
+		}
+
 		thief->SendPickPocketResponse(this, 0, PickPocketFailed);
 		return;
 	}
 
-	uint32 coin_amount = zone->random.Int(1, (steal_skill / 25) + 1);
-	int coin_type = PickPocketPlatinum;
-	while (coin_type <= PickPocketCopper) {
-		if (money[coin_type]) {
-			if (coin_amount > money[coin_type])
-				coin_amount = money[coin_type];
-			break;
-		}
-		++coin_type;
-	}
-	if (coin_type <= PickPocketCopper) {
-		int amount;
-		std::string cash_type = "";
-		switch (coin_type) {
-		case PickPocketPlatinum:
-			SetPlatinum(GetPlatinum() - coin_amount);
-			thief->AddMoneyToPP(0, 0, 0, money[PickPocketPlatinum], false);
-			amount = money[PickPocketPlatinum];
-			cash_type = "platinum";
-			break;
-		case PickPocketGold:
-			thief->AddMoneyToPP(0, 0, money[PickPocketGold], 0, false);
-			amount = money[PickPocketPlatinum];
-			cash_type = "gold";
-			break;
-		case PickPocketSilver:
-			thief->AddMoneyToPP(0, money[PickPocketSilver], 0, 0, false);
-			amount = money[PickPocketPlatinum];
-			cash_type = "silver";
-			break;
-		case PickPocketCopper:
-			thief->AddMoneyToPP(money[PickPocketCopper], 0, 0, 0, false);
-			amount = money[PickPocketPlatinum];
-			cash_type = "copper";
-			break;
-		}
-		this->hidden_stash_counter++;
-		thief->Message(MT_Skills, "Hidden Stash Rank %u has stolen %i %s. (%s has been stolen %i times);", thief->GetBuildRank(ROGUE, RB_ROG_HIDDENSTASH), amount, cash_type.c_str(), this->hidden_stash_counter);		
-	}
-
-	//thief->Message(0, "This target's pockets are empty");
-	//thief->SendPickPocketResponse(this, 0, PickPocketFailed);
+	thief->Message(0, "This target's pockets are empty");
+	thief->SendPickPocketResponse(this, 0, PickPocketFailed);
 }
 
 void Mob::NPCSpecialAttacks(const char* parse, int permtag, bool reset, bool remove) {
