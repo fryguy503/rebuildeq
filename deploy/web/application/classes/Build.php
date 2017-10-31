@@ -598,7 +598,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Tree Form";
-			$newSkill->desc = 'Treeform grants defense proc, where each time you are hit there is a <em data-base="1">1</em> chance to either: Be healed for <em data-base="2">2</em>% of your max health, gain mana for <em data-base="2">2</em>% of your max mana, or deal <em data-base="2">2</em>% of your max health as damage to the attacker<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Treeform grants a passive where each time you are hit, <em data-base="2">2</em>% of the damage is converted into mana<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-treeform.png";
 			$skills[2] = $newSkill;
 

@@ -7333,14 +7333,18 @@ int Mob::GetTier() {
 }
 
 //This is a formula that gives rogues bonus damage to normal melee attacks.
-int Mob::GetRogueBonusDamage(int dmg) {
+int Mob::GetMeleeDamageAdjustments(int dmg) {
 	if (!IsClient()) return 0;
-	if (GetClass() != ROGUE) return 0;
-	if (GetLevel() >= 50) return (dmg * 1.0f);
-	if (GetLevel() >= 40) return (dmg * 0.75f);
-	if (GetLevel() >= 30) return (dmg * 0.50f);
-	if (GetLevel() >= 20) return (dmg * 0.25f);
-	if (GetLevel() >= 10) return (dmg * 0.10f);
+	if (GetClass() == ROGUE) {
+		if (GetLevel() >= 50) return (dmg * 1.0f);
+		if (GetLevel() >= 40) return (dmg * 0.75f);
+		if (GetLevel() >= 30) return (dmg * 0.50f);
+		if (GetLevel() >= 20) return (dmg * 0.25f);
+		if (GetLevel() >= 10) return (dmg * 0.10f);
+	}
+	else if (GetClass() == SHADOWKNIGHT || GetClass() == PALADIN) {
+		return -(dmg * 0.25f);
+	}
 	return 0;
 }
 
@@ -7359,9 +7363,10 @@ void Mob::CheckChannelChakra(int dmg) {
 //This is for casters to give a mana tap on melee, passively
 int Mob::GetManaTapBonus(int dmg) {
 	if (!IsClient()) return 0;
-	if (GetClass() != SHAMAN || GetClass() != CLERIC || GetClass() != DRUID) return 0;
-
-	return (dmg * 0.1f);
+	if (GetClass() != SHAMAN && GetClass() != CLERIC && GetClass() != DRUID) return 0;
+	int manaBonus = int(dmg * 0.1f);
+	if (manaBonus > 0) BuildEcho(StringFormat("Mana Tap gave you %i mana.", manaBonus));	
+	return manaBonus;
 }
 
 //Count the number of monsters aggro'd on mob

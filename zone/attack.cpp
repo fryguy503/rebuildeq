@@ -1148,7 +1148,7 @@ int Mob::GetWeaponDamage(Mob *against, const EQEmu::ItemInstance *weapon_item, u
 						GetLevel(), rec_level, weapon_item->GetItemWeaponDamage(true));
 				else
 					dmg = weapon_item->GetItemWeaponDamage(true);
-				dmg += GetRogueBonusDamage(dmg);
+				dmg += GetMeleeDamageAdjustments(dmg);
 				dmg = dmg <= 0 ? 1 : dmg;
 				CheckChannelChakra(dmg);
 			}
@@ -1194,7 +1194,7 @@ int Mob::GetWeaponDamage(Mob *against, const EQEmu::ItemInstance *weapon_item, u
 				else {
 					dmg = weapon_item->GetItemWeaponDamage(true);
 				}
-				dmg += GetRogueBonusDamage(dmg);
+				dmg += GetMeleeDamageAdjustments(dmg);
 				dmg = dmg <= 0 ? 1 : dmg;
 				CheckChannelChakra(dmg);
 			}
@@ -1828,6 +1828,19 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				}
 
 				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
+			}
+		}
+
+
+		rank = other->GetBuildRank(DRUID, RB_DRU_TREEFORM);
+		if (rank > 0 && IsNPC() && !IsPet()) {
+			int mana_amount = 0;
+			mana_amount = int(my_hit.damage_done * rank * 0.02f);
+			if (mana_amount > 0) {
+				BuildEcho(StringFormat("Treeform %u gave you %i mana.", rank, mana_amount));
+				entity_list.LogManaEvent(this, this, mana_amount);
+				SetMana((GetMana() + mana_amount));
+				CastToClient()->SendManaUpdate();
 			}
 		}
 
@@ -3382,34 +3395,7 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 		if (rank > 0 && spellid == 37903) {
 			DS *= (0.20f * rank);
 		}
-
-		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TREEFORM);
-		if (rank > 0 && zone->random.Roll((int)(rank))) {
-
-			int heal_amount = 0;
-			int mana_amount = 0;
-
-			switch(zone->random.Int(0,2)) {
-				case 0:
-					heal_amount = (uint32)(GetMaxHP() * rank * 0.02f);
-					BuildEcho(StringFormat("Treeform %u healed you for %i.", rank, heal_amount));
-					HealDamage(heal_amount, this);
-					break;
-				case 1:
-					mana_amount = (uint32)(GetMaxMana() * rank * 0.02f);
-					BuildEcho(StringFormat("Treeform %u gave you %i mana.", rank, mana_amount));
-					entity_list.LogManaEvent(this, this, mana_amount);
-					SetMana((GetMana() + mana_amount));
-					CastToClient()->SendManaUpdate();
-					break;
-				case 2:
-					int damage_amount = (uint32)(GetMaxHP() * rank * 0.02f);
-					BuildEcho(StringFormat("Treeform %u damaged %s for %i.", rank, attacker->GetCleanName(), damage_amount));
-					DS += ((spell_ds) ? 1 : -1) * damage_amount;
-					break;
-			}
-		}		
-
+		
 		rank = this->CastToClient()->GetBuildRank(DRUID, RB_DRU_REGENERATION);
 		if (rank > 0) {
 			DS += ((spell_ds) ? 1 : -1) * 2 * rank;
