@@ -3508,7 +3508,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 			}
 		}
 
-		// Druid
+		// Monk
 		else if (caster_client->GetClass() == MONK) {
 			// GRACE OF THE ORDER
 			{

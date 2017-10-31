@@ -896,13 +896,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Familiarity";
-			$newSkill->desc = 'Every time a special attack lands on an enemy, the monk gains <em data-base="10">10</em> armor against the target<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Every time a special attack lands on an enemy, the monk gains <em data-base="2">2</em> armor against the target<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-familiarity.png";
 			$skills[2] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Block";
-			$newSkill->desc = 'Increases block chance by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases block by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-block.png";
 			$skills[4] = $newSkill;
 
@@ -914,7 +914,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Expose Weakness";
-			$newSkill->desc = 'When using Tiger Claw, Eagle Strike, Tail Whip and other special attacks, gives a <em data-base="5">5</em>% chance to mark the target, increasing accuracy of all attacking allies by <em data-base="10">10</em><span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When using Tiger Claw, Eagle Strike, Tail Whip and other special attacks, increases accuracy of all attacking allies by 0 to <em data-base="2">2</em><span class="perLevel"> per rank</span> vs that enemy.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-exposeweakness.png";
 			$skills[8] = $newSkill;
 
@@ -938,11 +938,10 @@ class Build {
 
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Hastened Mend";
-			$newSkill->desc = 'Decrease the reuse timer of Mend by <em data-base="1">1</em> seconds<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mnk-hastenedmend.png";
+			$newSkill->title = "Partial Mending";
+			$newSkill->desc = 'When mend fails, the monk still heals for <em data-base="10">10</em>% of the mending amount<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-partialmending.png";
 			$skills[18] = $newSkill;
-
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Inner Chakra";
@@ -952,37 +951,37 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Channel Chakra";
-			$newSkill->desc = 'While your health is less than <em data-base="10">10</em>%, and no enemy is actively attacking you, your normal melee attacks now lifetap for <em data-base="2">2</em>% damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While your health is less than <em data-base="10">10</em>%, and no enemy is actively attacking you, your normal melee attacks lifetap for <em data-base="2">2</em>% damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-channelchakra.png";
 			$skills[22] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Mending Aura";
-			$newSkill->desc = 'When you use Mend, you have a <em data-base="10">10</em>% chance to heal the rest of the group within <em data-base="10">10</em> meters for <em data-base="20">20</em>% the healed amount<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you use Mend, you now heal the rest of the group within <em data-base="10">10</em> meters for <em data-base="5">5</em>% the mend heal amount<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-mendingaura.png";
 			$skills[24] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Surge";
-			$newSkill->desc = 'When you use Tiger Claw, Eagle Strike, Tail Whip or other special attacks, you have a <em data-base="5">5</em>% chance to recover <em data-base="10">10</em> mana and endurance to the group<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you land Tiger Claw, Eagle Strike, Tail Whip or other special attacks, your group recovers <em data-base="5">5</em> mana and endurance<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-divinesurge.png";
 			$skills[26] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Improved Mend";
-			$newSkill->desc = 'When you use Mend, you have a <em data-base="5">5</em>% chance to heal <em data-base="10">10</em>% extra health<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you use Mend, you heal an additional 5% to <em data-base="10">10</em>% hitpoints<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-improvedmend.png";
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Purify Body";
-			$newSkill->desc = 'Grants the Purify Body AA, causing a <em data-base="15">15</em>% chance that all negative effects on self are cured<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Purify Body AA, curing <em data-base="1">1</em> detrimental effect on the monk<span class="perLevel"> per rank</span>. At rank 5, it will also cure resurrection sickness.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-purifybody.png";
 			$skills[31] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Tranquility";
-			$newSkill->desc = 'When you are not affected by negative effects, not under feign death, nor are engaged by an enemy, you regenerate <em data-base="2">2</em>% of missing health per tick <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you are not affected by negative effects, not under feign death, nor are engaged by an enemy, and in a full group, you regenerate <em data-base="2">2</em>% of your total missing health per tick <span class="perLevel"> per rank</span>. Lesser group sizes give reduced healing.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-tranquility.png";
 			$skills[34] = $newSkill;
 
@@ -1000,7 +999,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Thunderfoot";
-			$newSkill->desc = 'Grants a passive spell block that recovers every level - <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants a passive spell block that returns when used after (level - <em data-base="6">6</em>) seconds<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-thunderfoot.png";
 			$skills[40] = $newSkill;
 
@@ -1019,7 +1018,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Slow Heart Rate";
-			$newSkill->desc = 'Gives a <em data-base="1">1</em>% chance on feign death to make all enemies forget you<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you feign death with health below <em data-base="2">2</em>%<span class="perLevel"> per rank</span>, your feign death will cause all enemies to immediately forget you';
 			$newSkill->image = "/images/builds/icons/rb-mnk-slowheartrate.png";
 			$skills[46] = $newSkill;
 
@@ -1032,7 +1031,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Moving Mountains";
-			$newSkill->desc = 'When you use the throw stone ability, you now have a <em data-base="2">2</em>% chance summon an unattended enemy to your location <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you use the throw stone ability against an enemy lower level than you, you now knockback the enemy <em data-base="1">1</em>m<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-movingmountains.png";
 			$skills[52] = $newSkill;
 			break;
@@ -1106,7 +1105,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Purification";
-			$newSkill->desc = 'Grants the Purification AA, causing a <em data-base="15">15</em>% chance that all negative effects on self are cured<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Purification AA, curing <em data-base="1">1</em> detrimental effect on the paladin<span class="perLevel"> per rank</span>. At rank 5, it will also cure resurrection sickness.';
 			$newSkill->image = "/images/builds/icons/rb-pal-purification.png";
 			$skills[22] = $newSkill;
 

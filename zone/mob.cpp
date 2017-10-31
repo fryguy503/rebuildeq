@@ -7368,3 +7368,67 @@ int Mob::GetManaTapBonus(int dmg) {
 int Mob::GetAggroCount() {
 	return hate_list.GetAggroCount();
 }
+
+
+
+void Mob::DoKnockback(Mob *caster, int away)
+{
+	if (away < 1) return;
+
+	float caster_x, caster_y, amount, cur_x, my_x, cur_y, my_y, x_vector, y_vector, hypot;
+
+	// Set values so we can run through all gravity effects and then apply the culmative move at the end
+	// instead of many small moves if the mob/client had more than 1 gravity effect on them
+	cur_x = my_x = GetX();
+	cur_y = my_y = GetY();
+
+	caster_x = caster->GetX();
+	caster_y = caster->GetY();
+	
+
+	amount = std::abs(away) / (100.0f); // to bring the values in line, arbitarily picked
+
+	x_vector = cur_x - caster_x;
+	y_vector = cur_y - caster_y;
+	hypot = sqrt(x_vector*x_vector + y_vector*y_vector);
+
+	if (hypot <= 5) return; // dont want to be inside the mob, even though we can, it looks bad
+
+	x_vector /= hypot;
+	y_vector /= hypot;
+
+	cur_x = cur_x + (x_vector * amount * away);
+	cur_y = cur_y + (y_vector * amount * away);
+
+	if ((std::abs(my_x - cur_x) > 0.01) || (std::abs(my_y - cur_y) > 0.01)) {
+		float new_ground = GetGroundZ(cur_x, cur_y);
+		// If we cant get LoS on our new spot then keep checking up to 5 units up.
+		if (!CheckLosFN(cur_x, cur_y, new_ground, GetSize())) {
+			for (float z_adjust = 0.1f; z_adjust < 5; z_adjust += 0.1f) {
+				if (CheckLosFN(cur_x, cur_y, new_ground + z_adjust, GetSize())) {
+					new_ground += z_adjust;
+					break;
+				}
+			}
+			// If we still fail, then lets only use the x portion(ie sliding around a wall)
+			if (!CheckLosFN(cur_x, my_y, new_ground, GetSize())) {
+				// If that doesnt work, try the y
+				if (!CheckLosFN(my_x, cur_y, new_ground, GetSize())) {
+					// If everything fails, then lets do nothing
+					return;
+				}
+				else {
+					cur_x = my_x;
+				}
+			}
+			else {
+				cur_y = my_y;
+			}
+		}
+
+		if (IsClient())
+			this->CastToClient()->MovePC(zone->GetZoneID(), zone->GetInstanceID(), cur_x, cur_y, new_ground, GetHeading() * 2); // I know the heading thing is weird(chance of movepc to halve the heading value, too lazy to figure out why atm)
+		else
+			this->GMMove(cur_x, cur_y, new_ground, GetHeading());
+	}
+}

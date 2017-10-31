@@ -292,11 +292,14 @@ bool Mob::CheckHitChance(Mob* other, DamageHitInfo &hit)
 	int rank;
 	auto avoidance = defender->GetTotalDefense();
 
-	if (defender->IsClient() && defender->GetTarget() == this) {
+	if (defender->IsClient() && defender->GetTarget() == attacker) {
 		rank = defender->CastToClient()->GetBuildRank(MONK, RB_MNK_DESTINY);		
+		if (rank > 0) {
+			int avoidBonus = int(avoidance * 0.01f * rank);
 
-		avoidance += (avoidance * 0.01f * rank);
-		defender->BuildEcho(StringFormat("Destiny %i increases avoidance by %i", rank, (avoidance * 0.01f * rank)));
+			avoidance += avoidBonus;
+			if (avoidBonus > 0) defender->BuildEcho(StringFormat("Destiny %i increased avoidance by %i", rank, int(avoidance * 0.01f * rank)));
+		}
 	}
 
 	if (avoidance == -1) // some sort of auto avoid disc
@@ -305,7 +308,7 @@ bool Mob::CheckHitChance(Mob* other, DamageHitInfo &hit)
 	if (defender->GetHPRatio() >= 99.0f) {
 		rank = defender->GetBuildRank(MONK, RB_MNK_MIRROR);
 		if (rank > 0 && zone->random.Roll(rank * 2)) {
-			defender->BuildEcho(StringFormat("Mirror %i evades an attack by %s", rank, other->GetCleanName()));
+			defender->BuildEcho(StringFormat("Mirror %i evaded an attack by %s", rank, other->GetCleanName()));
 			return false;
 		}
 	}
@@ -991,8 +994,8 @@ void Mob::MeleeMitigation(Mob *attacker, DamageHitInfo &hit, ExtraAttackOptions 
 		CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) && 
 		CastToClient()->IsSwornEnemyActive() &&
 		CastToClient()->IsSwornEnemyID(attacker->GetID())) {
-		BuildEcho(StringFormat("Familiarity changed mitigation from %i to %i.", mitigation, mitigation + 10 * CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) * CastToClient()->GetCoreCounter()));
-		mitigation += 10 * CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) * CastToClient()->GetCoreCounter();		
+		BuildEcho(StringFormat("Familiarity changed mitigation from %i to %i.", mitigation, mitigation + 2 * CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) * CastToClient()->GetCoreCounter()));
+		mitigation += 2 * CastToClient()->GetBuildRank(MONK, RB_MNK_FAMILIARITY) * CastToClient()->GetCoreCounter();
 	}
 
 	if (opts) {
@@ -1581,13 +1584,6 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					hit_chance_bonus += isb;
 					my_hit.damage_done += isd;
 				}
-			}
-			
-			rank = GetBuildRank(MONK, RB_MNK_RELENTLESSTRAINING);
-			if (rank > 0) {
-				int rtd = (my_hit.damage_done * 0.1f * rank);
-				BuildEcho(StringFormat("Relentless Training %u gave a %i bonus to damage.", rank, rtd));
-				my_hit.damage_done += rtd;
 			}
 		}
 
@@ -2649,6 +2645,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 		//First, verify a client participated in some capacity to the fight
 		bool isClientParticipating = false;
 		for (auto&& d : DPS()) {
+			if (engage_duration < EngageEnd() - d.engage_start) engage_duration = EngageEnd() - d.engage_start;
 			if (d.acct_id == 0) continue;
 			isClientParticipating = true;
 			break;
@@ -2660,11 +2657,6 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 					my_hp_self_loss_net = d.hp_self_loss_net;
 					my_hp_target_loss_net = d.hp_target_loss_net;
 				}
-
-				int my_engage_duration = EngageEnd() - d.engage_start;
-				if (my_engage_duration < 1) my_engage_duration = 1;
-				if (my_engage_duration > engage_duration) engage_duration = my_engage_duration;
-
 				if (d.ent_id == GetID()) is_dying = 1;
 
 				std::string query = StringFormat("INSERT INTO dps_log (fight_id,  time, acct_id, name, hp_self_gain_total, hp_self_gain_net, hp_self_loss_total, hp_self_loss_net, hp_target_gain_total, hp_target_gain_net, hp_target_loss_total, hp_target_loss_net, mana_self_gain_total, mana_self_gain_net, mana_self_loss_total, mana_self_loss_net, mana_target_gain_total, mana_target_gain_net, mana_target_loss_total, mana_target_loss_net, class, level, tier, aggro_count, is_dying, type_id) VALUES(\"%s\", %i, %i, \"%s\", %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i);",					
@@ -2730,7 +2722,8 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 
 		float my_dps_loss = (float)((float)my_hp_self_loss_net / engage_duration);
 		float my_dps_target_loss = (float)((float)my_hp_target_loss_net / engage_duration);
-		c->Message(MT_CritMelee, "------ %s DPS over %i seconds ----------", GetCleanName(), engage_duration);
+		
+		c->Message(MT_CritMelee, "------ %s DPS Report %d seconds ----------", GetCleanName(), engage_duration);
 		c->Message(MT_CritMelee, "- dealt %i damage (%.1f DPS)", my_hp_self_loss_net, my_dps_loss);
 		c->Message(MT_CritMelee, "- took %i damage (%.1f DPS)", my_hp_target_loss_net, my_dps_target_loss);
 		c->Message(MT_CritMelee, "------ Participants ----------");
@@ -6074,24 +6067,36 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			if (rank > 0 && defender->IsNPC()) {
 
 				if (c->IsSwornEnemyActive() && c->IsSwornEnemyID(defender->GetID())) { //same target, add counter
-					BuildEcho(StringFormat("Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * c->GetCoreCounter()), defender->GetCleanName()));
-					c->AddCoreCounter(1);
-					c->GetEPP().focus_enemy_timeout = time(nullptr) + 60;
+					if (c->GetCoreCounter() < 20) {
+						c->AddCoreCounter(1);
+						c->GetEPP().focus_enemy_timeout = time(nullptr) + 60;
+						BuildEcho(StringFormat("Familiarity %u has increased your AC by %i against %s.", rank, (rank * 2 * c->GetCoreCounter()), defender->GetCleanName()));
+					}
 				}
 				else {
 					c->GetEPP().focus_enemy_id = defender->GetID();
-					c->GetEPP().focus_enemy_timeout = time(nullptr) + 60;
 					c->ResetCoreCounter();
-					if (c->GetCoreCounter() < 20) c->AddCoreCounter(1);
-					BuildEcho(StringFormat("Familiarity %u has increased your AC by %i against %s.", rank, (rank * 10 * c->GetCoreCounter()), defender->GetCleanName()));
+					c->AddCoreCounter(1);
+					c->GetEPP().focus_enemy_timeout = time(nullptr) + 60;
+					BuildEcho(StringFormat("Familiarity %u has set your AC bonus to %i against %s.", rank, (rank * 2 * c->GetCoreCounter()), defender->GetCleanName()));
 				}
 			}
 
 			rank = GetBuildRank(MONK, RB_MNK_EXPOSEWEAKNESS);
 			if (rank > 0 && defender->IsNPC()) {
-				if (zone->random.Roll(int(5 * rank))) {
-					expose_weakness = rank;
-					BuildEcho(StringFormat("Expose Weakness %u has exposed vulnerability on %s, increasing accuracy.", rank, defender->GetCleanName()));
+				int new_weakness = zone->random.Int(0, rank);
+				if (new_weakness > 0 && new_weakness > expose_weakness) {
+					expose_weakness = new_weakness;
+					BuildEcho(StringFormat("Expose Weakness %u has exposed vulnerability on %s, increasing accuracy by %i.", rank, defender->GetCleanName(), expose_weakness));
+				}
+			}
+
+			rank = GetBuildRank(MONK, RB_MNK_RELENTLESSTRAINING);
+			if (rank > 0) {
+				int rtd = (hit.damage_done * 0.1f * rank);
+				if (rtd > 0) {
+					BuildEcho(StringFormat("Relentless Training %i gave a %i bonus to damage.", rank, rtd));
+					hit.damage_done += rtd;
 				}
 			}
 		}

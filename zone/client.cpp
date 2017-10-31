@@ -10092,7 +10092,7 @@ void Client::AddCoreCounter(uint8 amount) {
 			m_epp.core_counter = rank * 2;
 		}
 	}
-	m_epp.core_counter_timeout = time(nullptr) + 60 - (m_epp.core_counter * 4);
+	m_epp.core_counter_timeout = time(nullptr) + 60;
 }
 
 //Return a class name based on most used class
@@ -11297,7 +11297,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MNK_DESTINY) return "Destiny";
 		else if (id == RB_MNK_WUSQUICKENING) return "Wu's Quickening";
 		else if (id == RB_MNK_GRACEOFTHEORDER) return "Grace of the Order";
-		else if (id == RB_MNK_HASTENEDMEND) return "Hastened Mend";
+		else if (id == RB_MNK_PARTIALMENDING) return "Partial Mending";
 		else if (id == RB_MNK_INNERCHAKRA) return "Inner Chakra";
 		else if (id == RB_MNK_CHANNELCHAKRA) return "Channel Chakra";
 		else if (id == RB_MNK_MENDINGAURA) return "Mending Aura";
@@ -11556,10 +11556,9 @@ void Client::DoDivineStunEffect() {
 void Client::DoMendingAura(int amount) {
 	uint32 rank = GetBuildRank(MONK, RB_MNK_MENDINGAURA);
 	if (rank < 1) return;
-	if (!zone->random.Roll(int(rank * 2))) return;
 	int healCount = 0;
 	Mob *target = nullptr;
-
+	amount = amount * 0.05f * rank;
 	if (this->IsGrouped()) {
 		//Give heal to group (and RAID)									
 		auto group = this->GetGroup(); //iterate group
@@ -11616,9 +11615,8 @@ void Client::DoMendingAura(int amount) {
 void Client::DoDivineSurge() {
 	uint32 rank = GetBuildRank(MONK, RB_MNK_DIVINESURGE);
 	if (rank < 1) return;
-	if (!zone->random.Roll(int(rank * 5))) return;
 	int healCount = 0;
-	int amount = 0;
+	int amount = 5 * rank;
 	Mob *target = nullptr;
 
 	if (this->IsGrouped()) {							
@@ -11672,7 +11670,8 @@ void Client::DoDivineSurge() {
 		}
 	}
 
-	if (healCount > 0) {
+	if (healCount > 1) {
+		healCount--; //exclude self
 		BuildEcho(StringFormat("Mending Aura %u spreads your mend to %i allies within %i meters.", rank, healCount, int(rank * 10)));
 	}
 }
@@ -11687,8 +11686,15 @@ void Client::CalcMonkTranquility() {
 	//if (!rest_timer.Check(true)) return;
 	if (IsSitting()) return; //don't regen if sitting down
 	int heal_amount = (GetMaxHP() - GetHP());
+	
+	int groupcount = 1;
+	if (IsGrouped()) {
+		auto *g = GetGroup();		
+		if (g != nullptr && g->GroupCount() > 1) groupcount = g->GroupCount();
+	}
+
+	heal_amount = int(heal_amount * 0.003f * rank * groupcount);
 	if (heal_amount < 1) return;
-	heal_amount = (heal_amount * 0.02f * rank);
 	BuildEcho(StringFormat("Tranquility %i healed you for %i hitpoints.", rank, heal_amount));
 	entity_list.LogHPEvent(this, this, heal_amount);
 	SetHP(GetHP() + heal_amount);

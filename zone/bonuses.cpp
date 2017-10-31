@@ -1613,6 +1613,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 		rank = CastToClient()->GetBuildRank(MONK, RB_MNK_BLOCK);
 		if (rank > 0) {
+			BuildEcho(StringFormat("Block %i increased block chance from %i to %i.", rank, new_bonus->IncreaseBlockChance, (2 * rank)));
 			new_bonus->IncreaseBlockChance += (2 * rank);
 		}
 	}

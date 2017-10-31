@@ -9638,17 +9638,18 @@ void Client::Handle_OP_Mend(const EQApplicationPacket *app)
 		return;
 	}
 	
-	int rank = GetBuildRank(MONK, RB_MNK_HASTENEDMEND);
-	if (rank > 0) {
-		p_timers.Start(pTimerMend, MendReuseTime - (rank));
-	}
-	else {
-		p_timers.Start(pTimerMend, MendReuseTime - 1);
-	}
+	p_timers.Start(pTimerMend, MendReuseTime - 1);
+	int rank;
+	rank = GetBuildRank(MONK, RB_MNK_PARTIALMENDING);
+
 	int mendhp = GetMaxHP() / 4;
 	int currenthp = GetHP();
-	if (zone->random.Int(0, 199) < (int)GetSkill(EQEmu::skills::SkillMend)) {
+	int roll = zone->random.Int(0, 199);
+	if (roll < (int)GetSkill(EQEmu::skills::SkillMend)) mendhp = 0;
+	if (mendhp == 0 && rank > 0) mendhp = (GetMaxHP() / 4) * 0.1f * rank;
 
+	if (mendhp > 0) {
+		
 		int criticalchance = spellbonuses.CriticalMend + itembonuses.CriticalMend + aabonuses.CriticalMend;
 		
 		if (zone->random.Int(0, 99) < criticalchance) {
@@ -9657,10 +9658,10 @@ void Client::Handle_OP_Mend(const EQApplicationPacket *app)
 		}
 
 		rank = GetBuildRank(MONK, RB_MNK_IMPROVEDMEND);
-		
-		if (zone->random.Roll(int(rank * 5))) {
-			BuildEcho(StringFormat("Improved Mend %i healed you for an additional %i hitpoints.", rank, (mendhp * rank * 0.1f)));
-			mendhp += (mendhp * rank * 0.1f);
+		if (rank >  0) {
+			int bonusMend = mendhp * 0.01f * zone->random.Int(5, rank * 10);		
+			BuildEcho(StringFormat("Improved Mend %i healed you for an additional %i hitpoints.", rank, bonusMend));
+			mendhp += bonusMend;
 		}
 		entity_list.LogHPEvent(this, this, mendhp);
 		SetHP(GetHP() + mendhp);

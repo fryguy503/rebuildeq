@@ -309,15 +309,15 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								spell_id == 5225 && 
 								caster->GetLevel() > GetLevel() &&
 								IsNPC() &&
-								!IsPet() &&
-								GetAggroCount() == 0 && 
-								zone->random.Roll(rank * 2)) {
-								GMMove(caster->GetX(), caster->GetY(), caster->GetZ(), GetReciprocalHeading(caster->GetHeading()));
+								!IsPet()) {
+								DoKnockback(caster, rank);
 							}
 
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH);
 							if (rank > 0 && spell_id == 13531) {
-								dmg -= zone->random.Real(5, 10) * rank * GetLevel();
+								int bashBonus = zone->random.Real(5, 10) * rank * GetLevel();
+								caster->BuildEcho(StringFormat("Bash of Death %i added %i damage.", rank, bashBonus));
+								dmg -= bashBonus;
 							}
 
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_LINGERINGPAIN);
@@ -1758,24 +1758,23 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 				rank = GetBuildRank(MONK, RB_MNK_PURIFYBODY);
 				if (rank > 0) {
-					if (zone->random.Roll(15 * rank)) {
-
-						//Attempt to remove all Deterimental buffs.
-						int buff_count = GetMaxTotalSlots();
-						for (int slot = 0; slot < buff_count; slot++) {
-							if (buffs[slot].spellid != SPELL_UNKNOWN &&
-								IsDetrimentalSpell(buffs[slot].spellid))
-							{
-								if (caster && TryDispel(caster->GetLevel(), buffs[slot].casterlevel, effect_value)) {
-									BuffFadeBySlot(slot);
-								}
+					int cureCount = 0;
+					
+					//Attempt to remove all Deterimental buffs.
+					int buff_count = GetMaxTotalSlots();
+					for (int slot = 0; slot < buff_count; slot++) {
+						if (buffs[slot].spellid != SPELL_UNKNOWN &&
+							IsDetrimentalSpell(buffs[slot].spellid))
+						{
+							if (caster && TryDispel(caster->GetLevel(), buffs[slot].casterlevel, effect_value)) {
+								BuffFadeBySlot(slot);
+								cureCount++;
+								if (cureCount >= rank) break;
 							}
 						}
-						Message(MT_Spells, "You have been purified.");
 					}
-					else {
-						Message(MT_Spells, "Purify Body failed.");
-					}
+					if (cureCount > 0) Message(MT_Spells, "Purify Body %i cured %i negative effects.", rank, cureCount);
+					else Message(MT_Spells, "Purify Body %i failed to cure any negative effects.", rank);
 					break;
 				}
 				
@@ -1824,22 +1823,26 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_Purify:
 			{
-				if (IsClient() && 
-					CastToClient()->GetBuildRank(PALADIN, RB_PAL_PURIFICATION) > 0 &&
-					!zone->random.Roll((int)(15 * CastToClient()->GetBuildRank(PALADIN, RB_PAL_PURIFICATION)))) {
-					Message(MT_Spells, "Purification failed.");
-					break;
-				}
-				//Attempt to remove all Deterimental buffs.
-				int buff_count = GetMaxTotalSlots();
-				for(int slot = 0; slot < buff_count; slot++) {
-					if (buffs[slot].spellid != SPELL_UNKNOWN &&
-						IsDetrimentalSpell(buffs[slot].spellid))
-					{
-						if (caster && TryDispel(caster->GetLevel(),buffs[slot].casterlevel, effect_value)){
-							BuffFadeBySlot(slot);
+				rank = GetBuildRank(MONK, RB_PAL_PURIFICATION);
+				if (rank > 0) {
+					int cureCount = 0;
+
+					//Attempt to remove all Deterimental buffs.
+					int buff_count = GetMaxTotalSlots();
+					for (int slot = 0; slot < buff_count; slot++) {
+						if (buffs[slot].spellid != SPELL_UNKNOWN &&
+							IsDetrimentalSpell(buffs[slot].spellid))
+						{
+							if (caster && TryDispel(caster->GetLevel(), buffs[slot].casterlevel, effect_value)) {
+								BuffFadeBySlot(slot);
+								cureCount++;
+								if (cureCount >= rank) break;
+							}
 						}
 					}
+					if (cureCount > 0) Message(MT_Spells, "Purification %i cured %i negative effects.", rank, cureCount);
+					else Message(MT_Spells, "Purification %i failed to cure any negative effects.", rank);
+					break;
 				}
 				break;
 			}
@@ -2448,7 +2451,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					else {
 						CastToClient()->SetFeigned(true);
 						rank = GetBuildRank(MONK, RB_MNK_SLOWHEARTRATE);
-						if (rank > 0 && zone->random.Roll(rank)) {
+						if (rank > 0 && GetHPRatio() <= rank *2) {
 							entity_list.ClearZoneFeignAggro(CastToClient());
 							BuildEcho(StringFormat("Slow Heart Rate %i has caused a memblur.", rank));
 							Message(0, "Your enemies have forgotten you!");

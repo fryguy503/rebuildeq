@@ -4658,7 +4658,7 @@ void command_buff(Client *c, const Seperator *sep) {
 		//no longer gives clarity
 		if (level > 40) target->QuickBuff(target, 1693, duration);
 		else target->QuickBuff(target, 174, duration);*/
-		if (zone->CanCastOutdoor()) target->QuickBuff(target, 278, duration);
+		if (!zone->CanCastOutdoor()) target->QuickBuff(target, 278, duration);
 		
 
 		if (c->HasPet()) {
@@ -4697,7 +4697,7 @@ void command_buff(Client *c, const Seperator *sep) {
 	}
 	else {
 		std::string outdoor = "You will get SoW due to being outdoors.";
-		if (zone->CanCastOutdoor()) outdoor = "You will NOT get SoW, you are indoors.";
+		if (!zone->CanCastOutdoor()) outdoor = "You will NOT get SoW, you are indoors.";
 		c->Message(0, "At level %u, it will cost you %s to receive buffs, %s [ %s ]", c->GetLevel(), displayCost.c_str(), outdoor.c_str(), c->CreateSayLink("#buff confirm", "Confirm").c_str());
 	}
 }
