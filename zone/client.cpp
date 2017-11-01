@@ -10527,7 +10527,7 @@ void Client::EmoteEncounter() {
 	}
 
 	const char *windowTitle = "You sense an encounter nearby";
-	std::string windowText = StringFormat("An encounter has triggered nearby. Rally your friends quickly and type in '/say #encounter' to begin.");	
+	std::string windowText = StringFormat("An encounter has triggered nearby. Rally your friends quickly and type in '/say #encounter trigger' to begin.");	
 	this->SendPopupToClient(windowTitle, windowText.c_str());
 
 	switch (m_epp.encounter_type) {

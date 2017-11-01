@@ -1005,11 +1005,21 @@ bool ZoneDatabase::LoadCharacterData(uint32 character_id, PlayerProfile_Struct* 
 bool ZoneDatabase::LoadAccountCustom(uint32 account_id, ExtendedProfile_Struct* m_epp) {
 	std::string query = StringFormat("SELECT next_encounter_time, encounter_timeout FROM account_custom WHERE account_id = %i LIMIT 1", account_id);
 	auto results = database.QueryDatabase(query);
-	
-	auto row = results.begin();
-	m_epp->next_encounter_time = atoi(row[0]);
-	m_epp->encounter_timeout = atoi(row[1]);
-	return true;
+	if (results.Success()) {
+		if (results.RowCount() == 1) {
+			auto row = results.begin();
+			m_epp->next_encounter_time = atoi(row[0]);
+			m_epp->encounter_timeout = atoi(row[1]);
+			return true;
+		}
+		else { //No record in DB yet for account_custom, let's fix that.
+			
+		}
+	}
+	int next_daily_claim = time(nullptr) + 72000;
+	std::string query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", c->AccountID(), next_daily_claim);
+	auto results = database.QueryDatabase(query);
+
 }
 
 

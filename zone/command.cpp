@@ -3930,7 +3930,7 @@ void command_bind(Client *c, const Seperator *sep)
 void command_builds(Client *c, const Seperator *sep)
 {
 	if (c->IsTaskActivityActive(307, 7)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 7, 1);
-	uint8 freeLevel = 60;
+	uint8 freeLevel = 61;
 	if (!c->IsBuildAvailable()) {
 		c->Message(0, "This class does not yet have builds available. It will be coming soon!");
 		return;
