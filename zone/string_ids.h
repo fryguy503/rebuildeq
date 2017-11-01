@@ -19,6 +19,7 @@
 #define PROC_TOOLOW					126		//Your will is not sufficient to command this weapon.
 #define PROC_PETTOOLOW				127		//Your pet's will is not sufficient to command its weapon.
 #define YOU_FLURRY					128		//You unleash a flurry of attacks.
+#define FAILED_DISARM_TRAP			129		//You failed to disarm the trap.
 #define DOORS_LOCKED				130		//It's locked and you're not holding the key.
 #define DOORS_CANT_PICK				131		//This lock cannot be picked.
 #define DOORS_INSUFFICIENT_SKILL	132		//You are not sufficiently skilled to pick this lock.
@@ -46,6 +47,7 @@
 #define FISHING_FAILED				168		//You didn't catch anything.
 #define FISHING_POLE_BROKE			169		//Your fishing pole broke!
 #define FISHING_SUCCESS				170		//You caught, something...
+#define FISHING_SUCCESS_FISH_NAME	421		//You caught %1!
 #define FISHING_SPILL_BEER			171		//You spill your beer while bringing in your line.
 #define FISHING_LOST_BAIT			172		//You lost your bait!
 #define SPELL_FIZZLE				173		//Your spell fizzles!
@@ -97,6 +99,7 @@
 #define DUP_LORE					290		//Duplicate lore items are not allowed.
 #define TGB_ON						293		//Target other group buff is *ON*.
 #define TGB_OFF						294		//Target other group buff is *OFF*.
+#define DISARMED_TRAP				305		//You have disarmed the trap.
 #define LDON_SENSE_TRAP1			306		//You do not Sense any traps.
 #define TRADESKILL_NOCOMBINE		334		//You cannot combine these items in this container type!
 #define TRADESKILL_FAILED			336		//You lacked the skills to fashion the items together.
@@ -113,6 +116,8 @@
 #define MEND_WORSEN					351		//You have worsened your wounds!
 #define MEND_FAIL					352		//You have failed to mend your wounds.
 #define LDON_SENSE_TRAP2			367		//You have not detected any traps.
+#define TRAP_TOO_FAR				368		//You are too far away from that trap to affect it.
+#define FAIL_DISARM_DETECTED_TRAP	370		//You fail to disarm the detected trap.
 #define LOOT_LORE_ERROR				371		//You cannot loot this Lore Item. You already have one.
 #define PICK_LORE					379		//You cannot pick up a lore item you already possess.
 #define CONSENT_DENIED				390		//You do not have consent to summon that corpse.
@@ -163,6 +168,12 @@
 #define PVP_ON						552		//You are now player kill and follow the ways of Discord.
 #define GENERIC_STRINGID_SAY		554		//%1 says '%T2'
 #define CANNOT_WAKE					555		//%1 tells you, 'I am unable to wake %2, master.'
+#define PET_HOLD_SET_ON				698		//The pet hold mode has been set to on.
+#define PET_HOLD_SET_OFF			699		//The pet hold mode has been set to off.
+#define PET_FOCUS_SET_ON			700		//The pet focus mode has been set to on.
+#define PET_FOCUS_SET_OFF			701		//The pet focus mode has been set to off.
+#define PET_SPELLHOLD_SET_ON		702		//The pet spellhold mode has been set to on.
+#define PET_SPELLHOLD_SET_OFF		703		//The pet spellhold mode has been set to off.
 #define GUILD_NAME_IN_USE			711		//You cannot create a guild with that name, that guild already exists on this server.
 #define GM_GAINXP					1002	//[GM] You have gained %1 AXP and %2 EXP (%3).
 #define MALE_SLAYUNDEAD				1007	//%1's holy blade cleanses his target!(%2)
@@ -255,6 +266,7 @@
 #define MEMBER_OF_YOUR_GUILD		1429
 #define OFFICER_OF_YOUR_GUILD		1430
 #define LEADER_OF_YOUR_GUILD		1431
+#define TRADE_HAS_BEEN_CANCELLED	1449
 #define RECEIVED_PLATINUM			1452	//You receive %1 Platinum from %2.
 #define RECEIVED_GOLD				1453	//You receive %1 Gold from %2.
 #define RECEIVED_SILVER				1454	//You receive %1 Silver from %2.
@@ -277,6 +289,8 @@
 #define TRADESKILL_MISSING_COMPONENTS	3456	//Sorry, but you don't have everything you need for this recipe in your general inventory.
 #define TRADESKILL_LEARN_RECIPE		3457	//You have learned the recipe %1!
 #define EXPEDITION_MIN_REMAIN		3551	//You only have %1 minutes remaining before this expedition comes to an end.
+#define LOOT_NOT_ALLOWED			3562	//You are not allowed to loot the item: %1.
+#define NOT_YOUR_TRAP				3671	//You cannot remove this, you are only allowed to remove traps you have set.
 #define NO_CAST_ON_PET				4045	//You cannot cast this spell on your pet.
 #define REWIND_WAIT					4059	//You must wait a bit longer before using the rewind command again.
 #define CORPSEDRAG_LIMIT			4061	//You are already dragging as much as you can!
@@ -285,6 +299,7 @@
 #define CORPSEDRAG_BEGIN			4064	//You begin to drag %1.
 #define CORPSEDRAG_STOPALL			4065	//You stop dragging the corpses.
 #define CORPSEDRAG_STOP				4066	//You stop dragging the corpse.
+#define SOS_KEEPS_HIDDEN			4086	//Your Shroud of Stealth keeps you hidden from watchful eyes.␣␣
 #define	TARGET_TOO_CLOSE			4602	//You are too close to your target. Get farther away.
 #define WHOALL_NO_RESULTS			5029	//There are no players in EverQuest that match those who filters.
 #define TELL_QUEUED_MESSAGE			5045	//You told %1 '%T2. %3'
@@ -297,7 +312,9 @@
 #define ADVENTURE_COMPLETE			5147	//You received %1 points for successfully completing the adventure.
 #define SUCCOR_FAIL					5169	//The portal collapes before you can escape!
 #define PET_ATTACKING				5501	//%1 tells you, 'Attacking %2 Master.'
+#define AVOID_STUNNING_BLOW			5753	//You avoid the stunning blow.
 #define FATAL_BOW_SHOT				5745	//%1 performs a FATAL BOW SHOT!!
+#define SUSPECT_SEES_YOU			5746	//You suspect that this being can see you.
 #define MELEE_SILENCE				5806	//You *CANNOT* use this melee ability, you are suffering from amnesia!
 #define DISCIPLINE_REUSE_MSG		5807	//You can use the ability %1 again in %2 hour(s) %3 minute(s) %4 seconds.
 #define DISCIPLINE_REUSE_MSG2		5808	//You can use the ability %1 again in %2 minute(s) %3 seconds.
@@ -316,6 +333,12 @@
 #define SENTINEL_TRIG_YOU			6724	//You have triggered your sentinel.
 #define SENTINEL_TRIG_OTHER			6725	//%1 has triggered your sentinel.
 #define IDENTIFY_SPELL				6765	//Item Lore: %1.
+#define PET_NOW_HOLDING				6834	//Now holding, Master.  I will not start attacks until ordered.
+#define PET_ON_GHOLD				6843	//Pet greater hold has been set to on.
+#define PET_OFF_GHOLD				6846	//Pet greater hold has been set to off.
+#define PET_GHOLD_ON_MSG			6847	//Now greater holding master.  I will only attack something new if ordered.
+#define PET_ON_REGROUPING			6854	//Now regrouping, master.
+#define PET_OFF_REGROUPING			6855	//No longer regrouping, master.
 #define BUFF_NOT_BLOCKABLE			7608	//You cannot block this effect.
 #define LDON_DONT_KNOW_TRAPPED		7552	//You do not know if this object is trapped.
 #define LDON_HAVE_DISARMED			7553	//You have disarmed %1!
@@ -343,6 +366,7 @@
 #define GAIN_GROUP_LEADERSHIP_EXP	8788	//
 #define GAIN_RAID_LEADERSHIP_EXP	8789	//
 #define BUFF_MINUTES_REMAINING		8799	//%1 (%2 minutes remaining)
+#define NO_MORE_TRAPS				9002	//You have already placed your maximum number of traps.
 #define FEAR_TOO_HIGH				9035	//Your target is too high of a level for your fear spell.
 #define SLOW_MOSTLY_SUCCESSFUL		9029	//Your spell was mostly successful.
 #define SLOW_PARTIALLY_SUCCESSFUL	9030	// Your spell was partially successful.
@@ -354,9 +378,10 @@
 #define HIT_NON_MELEE				9073	//%1 hit %2 for %3 points of non-melee damage.
 #define GLOWS_BLUE					9074	//Your %1 glows blue.
 #define GLOWS_RED					9075	//Your %1 glows red.
-#define SHAKE_OFF_STUN				9077
+#define SHAKE_OFF_STUN				9077	//You shake off the stun effect!
 #define STRIKETHROUGH_STRING		9078	//You strike through your opponent's defenses!
 #define SPELL_REFLECT				9082	//%1's spell has been reflected by %2.
+#define NO_MORE_AURAS				9160	//You do not have sufficient focus to maintain that ability.
 #define NEW_SPELLS_AVAIL			9149	//You have new spells available to you. Check the merchants near your guild master.
 #define FD_CAST_ON_NO_BREAK			9174	//The strength of your will allows you to resume feigning death.
 #define SNEAK_RESTRICT				9240	//You can not use this ability because you have not been hidden for long enough.
@@ -400,6 +425,7 @@
 #define SENSE_ANIMAL				12472	//You sense an animal in this direction.
 #define SENSE_SUMMONED				12473	//You sense a summoned being in this direction.
 #define SENSE_NOTHING				12474	//You don't sense anything.
+#define SENSE_TRAP					12475	//You sense a trap in this direction.
 #define LDON_SENSE_TRAP3			12476	//You don't sense any traps.
 #define INTERRUPT_SPELL_OTHER		12478	//%1's casting is interrupted!
 #define YOU_HIT_NONMELEE			12481	//You were hit by non-melee for %1 damage.
@@ -476,6 +502,7 @@
 #define FEAT_MYSTICALATTUNING 306
 #define FEAT_GETTINGSTARTED 307
 #define FEAT_PETAFFINITY 308
+#define FEAT_CHARMOFMANA 309
 
 //Tiers
 #define TIER_1 501
@@ -515,6 +542,32 @@
 #define RB_BRD_LINGERINGTWILIGHT 49
 #define RB_BRD_FADINGMEMORIES 52
 
+
+#define RB_CLR_BELIEVE 0
+#define RB_CLR_WARDOFVIE 2
+#define RB_CLR_HARKENTHEGODS 4
+#define RB_CLR_BLESSINGOFHASTE 6
+#define RB_CLR_DIVINEHAMMER 8
+#define RB_CLR_MARKOFKARN 10
+#define RB_CLR_AUGMENTEDRETRIBUTION 13
+#define RB_CLR_DIVINEAVATAR 16
+#define RB_CLR_INSTILLLIFE 18
+#define RB_CLR_DIVINEBASH 20
+#define RB_CLR_INTENSITYOFTHERESOLUTE 22
+#define RB_CLR_CELESTIALREGENERATION 24
+#define RB_CLR_DIVINEARBITRATION 26
+#define RB_CLR_DIVINERESURRECTION 28
+#define RB_CLR_PROMISE 31
+#define RB_CLR_HARMONICBALANCE 34
+#define RB_CLR_STRIKE 36
+#define RB_CLR_WARDOFREBUKE 38
+#define RB_CLR_FISTOFTHEGODS 40
+#define RB_CLR_DIVINERETRIBUTION 42
+#define RB_CLR_TURNUNDEAD 44
+#define RB_CLR_EXQUISITEBENEDICTION 46
+#define RB_CLR_MARKOFRETRIBUTION 49
+#define RB_CLR_DEATHPACT 52
+
 #define RB_DRU_ENTRAP 0
 #define RB_DRU_TREEFORM 2
 #define RB_DRU_TELEPORTBIND 4
@@ -540,21 +593,71 @@
 #define RB_DRU_DEEPROOTS 49
 #define RB_DRU_NATURESBLIGHT 52
 
+#define RB_MAG_SUMMONINGFOCUS 0
+#define RB_MAG_QUICKSUMMONING 2
+#define RB_MAG_IMPROVEDRECLAIMENERGY 4
+#define RB_MAG_MODULATIONSHARD 6
+#define RB_MAG_COMPANIONSDURABILITY 8
+#define RB_MAG_SUSPENDEDMINION 10
+#define RB_MAG_MENDCOMPANION 13
+#define RB_MAG_COMPANIONOFNECESSITY 16
+#define RB_MAG_SHAREDHEALTH 18
+#define RB_MAG_HOSTINTHESHELL 20
+#define RB_MAG_TURNSUMMONED 22
+#define RB_MAG_FRENZIEDBURNOUT 24
+#define RB_MAG_ELEMENTALALACRITY 26
+#define RB_MAG_CALLOFTHEHERO 28
+#define RB_MAG_CLOCKWORKMERCHANT 31
+#define RB_MAG_SERVANTOFRO 34
+#define RB_MAG_DIMENSIONALSHIELD 36
+#define RB_MAG_HEARTOFSTONE 38
+#define RB_MAG_HEARTOFVAPOR 40
+#define RB_MAG_SHOCKOFSWORDS 42
+#define RB_MAG_HEARTOFICE 44
+#define RB_MAG_QUICKDAMAGE 46
+#define RB_MAG_HEARTOFFLAMES 49
+#define RB_MAG_PRIMALFUSION 52
+
+#define RB_MNK_INTENSIFIEDTRAINING 0
+#define RB_MNK_FAMILIARITY 2
+#define RB_MNK_BLOCK 4
+#define RB_MNK_RELENTLESSTRAINING 6
+#define RB_MNK_EXPOSEWEAKNESS 8
+#define RB_MNK_DESTINY 10
+#define RB_MNK_WUSQUICKENING 13
+#define RB_MNK_GRACEOFTHEORDER 16
+#define RB_MNK_PARTIALMENDING 18
+#define RB_MNK_INNERCHAKRA 20
+#define RB_MNK_CHANNELCHAKRA 22
+#define RB_MNK_MENDINGAURA 24
+#define RB_MNK_DIVINESURGE 26
+#define RB_MNK_IMPROVEDMEND 28
+#define RB_MNK_PURIFYBODY 31
+#define RB_MNK_TRANQUILITY 34 
+#define RB_MNK_AGILEFEET 36
+#define RB_MNK_COWARDLYSTANCE 38
+#define RB_MNK_THUNDERFOOT 40
+#define RB_MNK_STOICMIND 42
+#define RB_MNK_GROUNDEDESSENCE 44
+#define RB_MNK_SLOWHEARTRATE 46
+#define RB_MNK_MIRROR 49
+#define RB_MNK_MOVINGMOUNTAINS 52
+
 #define RB_PAL_RODCETSGIFT 0
 #define RB_PAL_HANDOFPIETY 2
 #define RB_PAL_INSTILLPURPOSE 4
 #define RB_PAL_REFRESHINGBREEZE 6
-#define RB_PAL_ELIXIROFMIGHT 8
+#define RB_PAL_BRELLSBLESSING 8
 #define RB_PAL_SOULCLEANSING 10
-#define RB_PAL_BRELLSBLESSING 13
-#define RB_PAL_WAVEOFMARR 16
+#define RB_PAL_WAVEOFMARR 13
+#define RB_PAL_WARDOFTUNARE 16
 #define RB_PAL_SHIELDOFNIFE 18
 #define RB_PAL_ARMOROFFAITH 20
 #define RB_PAL_PURIFICATION 22
 #define RB_PAL_HOLYSERVANT 24
 #define RB_PAL_DIVINESTUN 26
 #define RB_PAL_ACTOFVALOR 28
-#define RB_PAL_WARDOFTUNARE 31
+#define RB_PAL_ELIXIROFMIGHT 31
 #define RB_PAL_FLAMESOFREDEMPTION 34
 #define RB_PAL_ZEALOTSFERVOR 36
 #define RB_PAL_KNIGHTSADVANTAGE 38
@@ -639,56 +742,6 @@
 #define RB_SHM_MARKOFSLOTH 46
 #define RB_SHM_FERALSWIPE 49
 #define RB_SHM_PARAGONOFSPIRIT 52
-
-#define RB_MAG_SUMMONINGFOCUS 0
-#define RB_MAG_QUICKSUMMONING 2
-#define RB_MAG_IMPROVEDRECLAIMENERGY 4
-#define RB_MAG_MODULATIONSHARD 6
-#define RB_MAG_COMPANIONSDURABILITY 8
-#define RB_MAG_SUSPENDEDMINION 10
-#define RB_MAG_MENDCOMPANION 13
-#define RB_MAG_COMPANIONOFNECESSITY 16
-#define RB_MAG_SHAREDHEALTH 18
-#define RB_MAG_HOSTINTHESHELL 20
-#define RB_MAG_TURNSUMMONED 22
-#define RB_MAG_FRENZIEDBURNOUT 24
-#define RB_MAG_ELEMENTALALACRITY 26
-#define RB_MAG_CALLOFTHEHERO 28
-#define RB_MAG_CLOCKWORKMERCHANT 31
-#define RB_MAG_SERVANTOFRO 34
-#define RB_MAG_DIMENSIONALSHIELD 36
-#define RB_MAG_HEARTOFSTONE 38
-#define RB_MAG_HEARTOFVAPOR 40
-#define RB_MAG_SHOCKOFSWORDS 42
-#define RB_MAG_HEARTOFICE 44
-#define RB_MAG_QUICKDAMAGE 46
-#define RB_MAG_HEARTOFFLAMES 49
-#define RB_MAG_PRIMALFUSION 52
-
-#define RB_CLR_BELIEVE 0
-#define RB_CLR_WARDOFVIE 2
-#define RB_CLR_HARKENTHEGODS 4
-#define RB_CLR_BLESSINGOFHASTE 6
-#define RB_CLR_DIVINEHAMMER 8
-#define RB_CLR_AVATARSBOON 10
-#define RB_CLR_AUGMENTEDRETRIBUTION 13
-#define RB_CLR_DIVINEAVATAR 16
-#define RB_CLR_INSTILLLIFE 18
-#define RB_CLR_DIVINEBASH 20
-#define RB_CLR_INTENSIFIEDRESOLUTION 22
-#define RB_CLR_CELESTIALBREEZE 24
-#define RB_CLR_DIVINEARBITRATION 26
-#define RB_CLR_DIVINERESURRECTION 28
-#define RB_CLR_PROMISE 31
-#define RB_CLR_HARMONICBALANCE 34
-#define RB_CLR_STRIKE 36
-#define RB_CLR_WARDOFREBUKE 38
-#define RB_CLR_FISTOFTHEGODS 40
-#define RB_CLR_DIVINERETRIBUTION 42
-#define RB_CLR_TURNUNDEAD 44
-#define RB_CLR_EXQUISITEBENEDICTION 46
-#define RB_CLR_MARKOFRETRIBUTION 49
-#define RB_CLR_PIOUSZEALOT 52
 
 #endif
 

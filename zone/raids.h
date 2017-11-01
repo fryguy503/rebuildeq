@@ -20,6 +20,7 @@
 
 #include "../common/types.h"
 #include "groups.h"
+#include "xtargetautohaters.h"
 
 class Client;
 class EQApplicationPacket;
@@ -141,6 +142,7 @@ public:
 	//keeps me from having to keep iterating through the list
 	//when I want lots of data from the same entry
 	uint32	GetPlayerIndex(const char *name);
+	uint32	GetPlayerIndex(Client *c);
 	//for perl interface
 	Client *GetClientByIndex(uint16 index);
 	const char *GetClientNameByIndex(uint8 index);
@@ -171,8 +173,10 @@ public:
 	bool	LearnMembers();
 	void	VerifyRaid();
 	void	MemberZoned(Client *c);
-	void	SendHPPacketsTo(Client *c);
-	void	SendHPPacketsFrom(Mob *m);
+	void	SendHPManaEndPacketsTo(Client *c);
+	void	SendHPManaEndPacketsFrom(Mob *mob);
+	void	SendManaPacketFrom(Mob *mob);
+	void	SendEndurancePacketFrom(Mob *mob);
 	void	RaidSay(const char *msg, Client *c);
 	void	RaidGroupSay(const char *msg, Client *c);
 
@@ -230,6 +234,11 @@ public:
 	inline int GetMentorPercent(uint32 group_id) { return group_mentor[group_id].mentor_percent; }
 	inline Client *GetMentoree(uint32 group_id) { return group_mentor[group_id].mentoree; }
 
+	void SetDirtyAutoHaters();
+	inline XTargetAutoHaters *GetXTargetAutoMgr() { return &m_autohatermgr; }
+
+	void	QueueClients(Mob *sender, const EQApplicationPacket *app, bool ack_required = true, bool ignore_sender = true, float distance = 0, bool group_only = true);
+
 	RaidMember members[MAX_RAID_MEMBERS];
 	char leadername[64];
 protected:
@@ -244,6 +253,8 @@ protected:
 	GroupLeadershipAA_Struct group_aa[MAX_RAID_GROUPS];
 
 	GroupMentor group_mentor[MAX_RAID_GROUPS];
+
+	XTargetAutoHaters m_autohatermgr;
 };
 
 

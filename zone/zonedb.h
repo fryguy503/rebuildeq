@@ -16,7 +16,7 @@ class NPC;
 class Petition;
 class Spawn2;
 class SpawnGroupList;
-class ItemInst;
+class Trap;
 struct CharacterEventLog_Struct;
 struct Door;
 struct ExtendedProfile_Struct;
@@ -24,6 +24,12 @@ struct NPCType;
 struct PlayerCorpse_Struct;
 struct ZonePoint;
 struct npcDecayTimes_Struct;
+
+namespace EQEmu
+{
+	class ItemInstance;
+}
+
 template <class TYPE> class LinkedList;
 
 //#include "doors.h"
@@ -40,7 +46,7 @@ struct wplist {
 #pragma pack(1)
 struct DBnpcspells_entries_Struct {
 	int16	spellid;
-	uint16	type;
+	uint32	type;
 	uint8	minlevel;
 	uint8	maxlevel;
 	int16	manacost;
@@ -118,6 +124,19 @@ struct PetRecord {
 	uint32 equipmentset;	// default equipment for the pet
 };
 
+struct AuraRecord {
+	uint32 npc_type;
+	char name[64]; // name shown in UI if shown and spawn name
+	int spell_id;
+	int distance;
+	int aura_type;
+	int spawn_type;
+	int movement;
+	int duration; // seconds some live for 90 mins (normal) others for 2 mins (traps)
+	int icon; // -1 will use the buffs NEW_ICON
+	int cast_time; // seconds some auras recast on a timer, most seem to be every 12 seconds
+};
+
 // Actual pet info for a client.
 struct PetInfo {
 	uint16	SpellID;
@@ -125,7 +144,7 @@ struct PetInfo {
 	uint32	HP;
 	uint32	Mana;
 	float	size;
-	SpellBuff_Struct	Buffs[BUFF_COUNT];
+	SpellBuff_Struct	Buffs[PET_BUFF_COUNT];
 	uint32	Items[EQEmu::legacy::EQUIPMENT_SIZE];
 	char	Name[64];
 };
@@ -224,11 +243,11 @@ public:
 	virtual ~ZoneDatabase();
 
 	/* Objects and World Containers  */
-	void	LoadWorldContainer(uint32 parentid, ItemInst* container);
-	void	SaveWorldContainer(uint32 zone_id, uint32 parent_id, const ItemInst* container);
+	void	LoadWorldContainer(uint32 parentid, EQEmu::ItemInstance* container);
+	void	SaveWorldContainer(uint32 zone_id, uint32 parent_id, const EQEmu::ItemInstance* container);
 	void	DeleteWorldContainer(uint32 parent_id,uint32 zone_id);
-	uint32	AddObject(uint32 type, uint32 icon, const Object_Struct& object, const ItemInst* inst);
-	void	UpdateObject(uint32 id, uint32 type, uint32 icon, const Object_Struct& object, const ItemInst* inst);
+	uint32	AddObject(uint32 type, uint32 icon, const Object_Struct& object, const EQEmu::ItemInstance* inst);
+	void	UpdateObject(uint32 id, uint32 type, uint32 icon, const Object_Struct& object, const EQEmu::ItemInstance* inst);
 	void	DeleteObject(uint32 id);
 	Ground_Spawns*	LoadGroundSpawns(uint32 zone_id, int16 version, Ground_Spawns* gs);
 
@@ -239,7 +258,7 @@ public:
 	void	DeleteTraderItem(uint32 char_id);
 	void	DeleteTraderItem(uint32 char_id,uint16 slot_id);
 
-	ItemInst* LoadSingleTraderItem(uint32 char_id, int uniqueid);
+	EQEmu::ItemInstance* LoadSingleTraderItem(uint32 char_id, int uniqueid);
 	Trader_Struct* LoadTraderItem(uint32 char_id);
 	TraderCharges_Struct* LoadTraderItemWithCharges(uint32 char_id);
 
@@ -255,6 +274,8 @@ public:
 
 	void SaveBuffs(Client *c);
 	void LoadBuffs(Client *c);
+	void SaveAuras(Client *c);
+	void LoadAuras(Client *c);
 	void LoadPetInfo(Client *c);
 	void SavePetInfo(Client *c);
 	void RemoveTempFactions(Client *c);
@@ -268,6 +289,7 @@ public:
 	bool	LoadCharacterDisciplines(uint32 character_id, PlayerProfile_Struct* pp);
 	bool	LoadCharacterSkills(uint32 character_id, PlayerProfile_Struct* pp);
 	bool	LoadCharacterData(uint32 character_id, PlayerProfile_Struct* pp, ExtendedProfile_Struct* m_epp);
+	bool	LoadAccountCustom(uint32 account_id, ExtendedProfile_Struct* m_epp);
 	bool	LoadCharacterCurrency(uint32 character_id, PlayerProfile_Struct* pp);
 	bool	LoadCharacterBindPoint(uint32 character_id, PlayerProfile_Struct* pp);
 	bool	LoadCharacterMaterialColor(uint32 character_id, PlayerProfile_Struct* pp);
@@ -399,6 +421,7 @@ public:
 	void		AddLootDropToNPC(NPC* npc, uint32 lootdrop_id, ItemList* itemlist, uint8 droplimit, uint8 mindrop);
 	uint32		GetMaxNPCSpellsID();
 	uint32		GetMaxNPCSpellsEffectsID();
+	bool GetAuraEntry(uint16 spell_id, AuraRecord &record);
 
 	DBnpcspells_Struct*				GetNPCSpells(uint32 iDBSpellsID);
 	DBnpcspellseffects_Struct*		GetNPCSpellsEffects(uint32 iDBSpellsEffectsID);
@@ -427,7 +450,7 @@ public:
 	void	DeleteMerchantTemp(uint32 npcid, uint32 slot);
 
 	/* Tradeskills  */
-	bool	GetTradeRecipe(const ItemInst* container, uint8 c_type, uint32 some_id, uint32 char_id, DBTradeskillRecipe_Struct *spec);
+	bool	GetTradeRecipe(const EQEmu::ItemInstance* container, uint8 c_type, uint32 some_id, uint32 char_id, DBTradeskillRecipe_Struct *spec);
 	bool	GetTradeRecipe(uint32 recipe_id, uint8 c_type, uint32 some_id, uint32 char_id, DBTradeskillRecipe_Struct *spec);
 	uint32	GetZoneForage(uint32 ZoneID, uint8 skill); /* for foraging */
 	uint32	GetZoneFishing(uint32 ZoneID, uint8 skill, uint32 &npc_id, uint8 &npc_chance);
@@ -449,7 +472,7 @@ public:
 	int32	GetDoorsCount(uint32* oMaxID, const char *zone_name, int16 version);
 	int32	GetDoorsCountPlusOne(const char *zone_name, int16 version);
 	int32	GetDoorsDBCountPlusOne(const char *zone_name, int16 version);
-	void	InsertDoor(uint32 did, uint16 ddoorid, const char* ddoor_name, const glm::vec4& position, uint8 dopentype, uint16 dguildid, uint32 dlockpick, uint32 dkeyitem, uint8 ddoor_param, uint8 dinvert, int dincline, uint16 dsize);
+	void	InsertDoor(uint32 did, uint16 ddoorid, const char* ddoor_name, const glm::vec4& position, uint8 dopentype, uint16 dguildid, uint32 dlockpick, uint32 dkeyitem, uint8 ddoor_param, uint8 dinvert, int dincline, uint16 dsize, bool ddisabletimer = false);
 
 	/* Blocked Spells   */
 	int32	GetBlockedSpellsCount(uint32 zoneid);
@@ -457,7 +480,7 @@ public:
 
 	/* Traps   */
 	bool	LoadTraps(const char* zonename, int16 version);
-	char*	GetTrapMessage(uint32 trap_id);
+	bool	SetTrapData(Trap* trap, bool repopnow = false);
 
 	/* Time   */
 	uint32	GetZoneTZ(uint32 zoneid, uint32 version);

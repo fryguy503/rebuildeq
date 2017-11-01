@@ -54,8 +54,7 @@
 #include "../common/string_util.h"
 #include "../say_link.h"
 #include "../common/eqemu_logsys.h"
-#include "../common/emu_legacy.h"
-#include "../common/classes.h"
+
 
 #include "command.h"
 #include "guild_mgr.h"
@@ -170,6 +169,7 @@ int command_init(void)
 #endif
 		command_add("builds", "- Get a list of every build in game", 0, command_builds) ||
 		command_add("setbuild", "- Set a build", 255, command_setbuild) ||
+		command_add("setallbuilds", "- Set all builds to specified amount", 255, command_setallbuilds) ||
 		command_add("buff", "- Pay platinum to receive buffs", 0, command_buff) ||
 		command_add("refer", "- Refer-a-friend reward system", 0, command_refer) ||
 		command_add("camerashake",  "Shakes the camera on everyone's screen globally.",  80, command_camerashake) ||
@@ -177,8 +177,8 @@ int command_init(void)
 		command_add("chat", "[channel num] [message] - Send a channel message to all zones", 200, command_chat) ||
 		command_add("checklos", "- Check for line of sight to your target", 50, command_checklos) ||
 		command_add("clearinvsnapshots", "[use rule] - Clear inventory snapshot history (true - elapsed entries, false - all entries)", 200, command_clearinvsnapshots) ||
-		command_add("connectworldserver", "- Make zone attempt to connect to worldserver", 200, command_connectworldserver) ||
 		command_add("corpse", "- Manipulate corpses, use with no arguments for help", 50, command_corpse) ||
+		command_add("corpsefix", "Attempts to bring corpses from underneath the ground within close proximity of the player", 0, command_corpsefix) ||
 		command_add("crashtest", "- Crash the zoneserver", 255, command_crashtest) ||
 		command_add("cvs", "- Summary of client versions currently online.", 200, command_cvs) ||
 		command_add("damage", "[amount] - Damage your target", 100, command_damage) ||
@@ -253,7 +253,8 @@ int command_init(void)
 		command_add("ipban", "[IP address] - Ban IP by character name", 200, command_ipban) ||
 		command_add("iplookup", "[charname] - Look up IP address of charname", 200, command_iplookup) ||
 		command_add("iteminfo", "- Get information about the item on your cursor", 100, command_iteminfo) ||
-		command_add("itemsearch", "[search criteria] - Search for an item", 100, command_itemsearch) ||
+		command_add("itemscore", "- Get itemscore of the item on your cursor", 0, command_itemscore) ||
+		command_add("itemsearch", "[search criteria] - Search for an item", 100, command_itemsearch) ||		
 		command_add("issue", "- Report an issue with the server", 0, command_issue) ||
 		command_add("kick", "[charname] - Disconnect charname", 150, command_kick) ||
 		command_add("kill", "- Kill your target", 100, command_kill) ||
@@ -336,6 +337,7 @@ int command_init(void)
 		command_add("reloadqst", " - Clear quest cache (any argument causes it to also stop all timers)", 150, command_reloadqst) ||
 		command_add("reloadrulesworld", "Executes a reload of all rules in world specifically.", 80, command_reloadworldrules) ||
 		command_add("reloadstatic", "- Reload Static Zone Data", 150, command_reloadstatic) ||
+		command_add("reloadtraps", "- Repops all traps in the current zone.", 80, command_reloadtraps) ||
 		command_add("reloadtitles", "- Reload player titles from the database",  150, command_reloadtitles) ||
 		command_add("reloadworld", "[0|1] - Clear quest cache (0 - no repop, 1 - repop)", 255, command_reloadworld) ||
 		command_add("reloadzps", "- Reload zone points from database", 150, command_reloadzps) ||		
@@ -361,6 +363,7 @@ int command_init(void)
 		command_add("setcrystals", "[value] - Set your or your player target's available radiant or ebon crystals", 100, command_setcrystals) ||
 		command_add("setfaction", "[faction number] - Sets targeted NPC's faction in the database", 170, command_setfaction) ||
 		command_add("setgraveyard", "[zone name] - Creates a graveyard for the specified zone based on your target's LOC.",  200, command_setgraveyard) ||
+		command_add("setidentity", "[name] - Set a user's identity.", 200, command_setidentity) ||
 		command_add("setlanguage", "[language ID] [value] - Set your target's language skillnum to value", 50, command_setlanguage) ||
 		command_add("setlsinfo", "[email] [password] - Set login server email address and password (if supported by login server)", 50, command_setlsinfo) ||
 		command_add("setpass", "[accountname] [password] - Set local password for accountname", 150, command_setpass) ||
@@ -402,6 +405,7 @@ int command_init(void)
 		command_add("titlesuffix", "[text] [1 = create title table row] - Set your or your player target's title suffix", 50, command_titlesuffix) ||
 		command_add("traindisc", "[level] - Trains all the disciplines usable by the target, up to level specified. (may freeze client for a few seconds)", 150, command_traindisc) ||
 		command_add("toggle", " - Toggle server options", 0, command_toggle) ||
+		command_add("trapinfo", "- Gets infomation about the traps currently spawned in the zone.", 81, command_trapinfo) ||		
 		command_add("tune",  "Calculate ideal statical values related to combat.",  100, command_tune) ||
 		command_add("undyeme", "- Remove dye from all of your armor slots", 50, command_undyeme) ||
 		command_add("unfreeze", "- Unfreeze your target", 80, command_unfreeze) ||
@@ -451,12 +455,12 @@ int command_init(void)
 		auto iter_cs = command_settings.find(iter_cl->first);
 		if (iter_cs == command_settings.end()) {
 			if (iter_cl->second->access == 0)
-				Log.Out(Logs::General, Logs::Commands, "command_init(): Warning: Command '%s' defaulting to access level 0!", iter_cl->first.c_str());
+				Log(Logs::General, Logs::Commands, "command_init(): Warning: Command '%s' defaulting to access level 0!", iter_cl->first.c_str());
 			continue;
 		}
 
 		iter_cl->second->access = iter_cs->second.first;
-		Log.Out(Logs::General, Logs::Commands, "command_init(): - Command '%s' set to access level %d.", iter_cl->first.c_str(), iter_cs->second.first);
+		Log(Logs::General, Logs::Commands, "command_init(): - Command '%s' set to access level %d.", iter_cl->first.c_str(), iter_cs->second.first);
 		if (iter_cs->second.second.empty())
 			continue;
 
@@ -465,14 +469,14 @@ int command_init(void)
 			if (iter_aka->empty())
 				continue;
 			if (commandlist.find(*iter_aka) != commandlist.end()) {
-				Log.Out(Logs::General, Logs::Commands, "command_init(): Warning: Alias '%s' already exists as a command - skipping!", iter_aka->c_str());
+				Log(Logs::General, Logs::Commands, "command_init(): Warning: Alias '%s' already exists as a command - skipping!", iter_aka->c_str());
 				continue;
 			}
 
 			commandlist[*iter_aka] = iter_cl->second;
 			commandaliases[*iter_aka] = iter_cl->first;
 
-			Log.Out(Logs::General, Logs::Commands, "command_init(): - Alias '%s' added to command '%s'.", iter_aka->c_str(), commandaliases[*iter_aka].c_str());
+			Log(Logs::General, Logs::Commands, "command_init(): - Alias '%s' added to command '%s'.", iter_aka->c_str(), commandaliases[*iter_aka].c_str());
 		}
 	}
 
@@ -512,21 +516,21 @@ void command_deinit(void)
 int command_add(std::string command_name, const char *desc, int access, CmdFuncPtr function)
 {
 	if (command_name.empty()) {
-		Log.Out(Logs::General, Logs::Error, "command_add() - Command added with empty name string - check command.cpp.");
+		Log(Logs::General, Logs::Error, "command_add() - Command added with empty name string - check command.cpp.");
 		return -1;
 	}
 	if (function == nullptr) {
-		Log.Out(Logs::General, Logs::Error, "command_add() - Command '%s' added without a valid function pointer - check command.cpp.", command_name.c_str());
+		Log(Logs::General, Logs::Error, "command_add() - Command '%s' added without a valid function pointer - check command.cpp.", command_name.c_str());
 		return -1;
 	}
 	if (commandlist.count(command_name) != 0) {
-		Log.Out(Logs::General, Logs::Error, "command_add() - Command '%s' is a duplicate command name - check command.cpp.", command_name.c_str());
+		Log(Logs::General, Logs::Error, "command_add() - Command '%s' is a duplicate command name - check command.cpp.", command_name.c_str());
 		return -1;
 	}
 	for (auto iter = commandlist.begin(); iter != commandlist.end(); ++iter) {
 		if (iter->second->function != function)
 			continue;
-		Log.Out(Logs::General, Logs::Error, "command_add() - Command '%s' equates to an alias of '%s' - check command.cpp.", command_name.c_str(), iter->first.c_str());
+		Log(Logs::General, Logs::Error, "command_add() - Command '%s' equates to an alias of '%s' - check command.cpp.", command_name.c_str(), iter->first.c_str());
 		return -1;
 	}
 
@@ -580,11 +584,11 @@ int command_realdispatch(Client *c, const char *message)
 	}
 
 	if(cur->access >= COMMANDS_LOGGING_MIN_STATUS) {
-		Log.Out(Logs::General, Logs::Commands, "%s (%s) used command: %s (target=%s)",  c->GetName(), c->AccountName(), message, c->GetTarget()?c->GetTarget()->GetName():"NONE");
+		Log(Logs::General, Logs::Commands, "%s (%s) used command: %s (target=%s)",  c->GetName(), c->AccountName(), message, c->GetTarget()?c->GetTarget()->GetName():"NONE");
 	}
 
 	if(cur->function == nullptr) {
-		Log.Out(Logs::General, Logs::Error, "Command '%s' has a null function\n",  cstr.c_str());
+		Log(Logs::General, Logs::Error, "Command '%s' has a null function\n",  cstr.c_str());
 		return(-1);
 	} else {
 		//dispatch C++ command
@@ -769,24 +773,15 @@ void command_wc(Client *c, const Seperator *sep)
 		uint32 hero_forge_model = 0;
 		uint32 wearslot = atoi(sep->arg[1]);
 
+		// Hero Forge
 		if (sep->argnum > 2)
 		{
 			hero_forge_model = atoi(sep->arg[3]);
-			if (hero_forge_model > 0)
-			{
-				// Conversion to simplify the command arguments
-				// Hero's Forge model is actually model * 1000 + texture * 100 + wearslot
-				hero_forge_model *= 1000;
-				hero_forge_model += (atoi(sep->arg[2]) * 100);
-				hero_forge_model += wearslot;
 
-				// For Hero's Forge, slot 7 is actually for Robes, but it still needs to use slot 1 in the packet
-				if (wearslot == 7)
-				{
-					wearslot = 1;
-				}
+			if (hero_forge_model != 0 && hero_forge_model < 1000) {
+				// Shorthand Hero Forge ID. Otherwise use the value the user entered.
+				hero_forge_model = (hero_forge_model * 100) + wearslot;
 			}
-
 		}
 		/*
 		// Leaving here to add color option to the #wc command eventually
@@ -851,17 +846,6 @@ void command_setanim(Client *c, const Seperator *sep)
 		c->GetTarget()->SetAppearance(EmuAppearance(num));
 	} else
 		c->Message(0, "Usage: #setanim [animnum]");
-}
-
-void command_connectworldserver(Client *c, const Seperator *sep)
-{
-	if(worldserver.Connected())
-		c->Message(0, "Error: Already connected to world server");
-	else
-	{
-		c->Message(0, "Attempting to connect to world server...");
-		worldserver.AsyncConnect();
-	}
 }
 
 void command_serverinfo(Client *c, const Seperator *sep)
@@ -1008,30 +992,6 @@ void command_summon(Client *c, const Seperator *sep)
 
 	if(sep->arg[1][0] != 0)		// arg specified
 	{
-		if (strcasecmp(sep->arg[1], "eid") == 0) {
-			if (!sep->arg[2]) {
-				c->Message(0, "Usage: #summon eid #");
-				return;
-			}
-			uint8 eid = atoi(sep->arg[2]);
-			if (eid < 1) {
-				c->Message(0, "Invalid eid: %s", sep->arg[2]);
-				return;
-			}
-		
-			NPC *t = entity_list.GetNPCByID(eid);
-			if (t == nullptr) {
-				c->Message(0, "NPC not found: %u", eid);
-				return;
-			}
-
-			c->Message(0, "Summoning NPC %s to %1.1f, %1.1f, %1.1f", t->GetName(), c->GetX(), c->GetY(), c->GetZ());
-			t->CastToNPC()->GMMove(c->GetX(), c->GetY(), c->GetZ(), c->GetHeading());
-			t->CastToNPC()->SaveGuardSpot(true);
-			return;
-		}
-
-
 		Client* client = entity_list.GetClientByName(sep->arg[1]);
 		if (client != 0)	// found player in zone
 			t=client->CastToMob();
@@ -1055,6 +1015,7 @@ void command_summon(Client *c, const Seperator *sep)
 				szp->x_pos = c->GetX(); // May need to add a factor of 8 in here..
 				szp->y_pos = c->GetY();
 				szp->z_pos = c->GetZ();
+				szp->instance_id = zone->GetInstanceID();
 				worldserver.SendPacket(pack);
 				safe_delete(pack);
 			}
@@ -1071,7 +1032,7 @@ void command_summon(Client *c, const Seperator *sep)
 			c->Message(0, "Usage: #summon [charname] Either target or charname is required");
 		return;
 	}
-
+	
 	if(!t)
 		return;
 
@@ -1330,7 +1291,7 @@ void command_viewpetition(Client *c, const Seperator *sep)
     if (!results.Success())
         return;
 
-    Log.Out(Logs::General, Logs::Normal, "View petition request from %s, petition number: %i",  c->GetName(), atoi(sep->argplus[1]) );
+    Log(Logs::General, Logs::Normal, "View petition request from %s, petition number: %i",  c->GetName(), atoi(sep->argplus[1]) );
 
     if (results.RowCount() == 0) {
         c->Message(13,"There was an error in your request: ID not found! Please check the Id and try again.");
@@ -1355,7 +1316,7 @@ void command_petitioninfo(Client *c, const Seperator *sep)
     if (!results.Success())
         return;
 
-    Log.Out(Logs::General, Logs::Normal, "Petition information request from %s, petition number:",  c->GetName(), atoi(sep->argplus[1]) );
+    Log(Logs::General, Logs::Normal, "Petition information request from %s, petition number:",  c->GetName(), atoi(sep->argplus[1]) );
 
     if (results.RowCount() == 0) {
 		c->Message(13,"There was an error in your request: ID not found! Please check the Id and try again.");
@@ -1381,7 +1342,7 @@ void command_delpetition(Client *c, const Seperator *sep)
 	if (!results.Success())
         return;
 
-    Log.Out(Logs::General, Logs::Normal, "Delete petition request from %s, petition number:",  c->GetName(), atoi(sep->argplus[1]) );
+    Log(Logs::General, Logs::Normal, "Delete petition request from %s, petition number:",  c->GetName(), atoi(sep->argplus[1]) );
 
 }
 
@@ -1546,17 +1507,14 @@ void command_npcstats(Client *c, const Seperator *sep)
 		dps = c->GetTarget()->CastToNPC()->GetMaxDamage() * num_hits*(100/c->GetTarget()->CastToNPC()->GetAttackDelay()) / 20.0f;
 
 		c->Message(0, "NPC Stats:");
-		c->Message(0, "Name: %s   NpcID: %u, EntityID: %i",  c->GetTarget()->GetName(), c->GetTarget()->GetNPCTypeID(), c->GetTarget()->GetID());
+		c->Message(0, "Name: %s   NpcID: %u",  c->GetTarget()->GetName(), c->GetTarget()->GetNPCTypeID());
 		c->Message(0, "Race: %i  Level: %i  Class: %i  Material: %i",  c->GetTarget()->GetRace(), c->GetTarget()->GetLevel(), c->GetTarget()->GetClass(), c->GetTarget()->GetTexture());
-		c->Message(0, "Current HP: %i  Max HP: %i",  c->GetTarget()->GetHP(), c->GetTarget()->GetMaxHP());		
-		c->Message(0, "Specials: %s", specials.c_str());
-		c->Message(0, "Min Damage: %i Max Damage: %i", c->GetTarget()->CastToNPC()->GetMinDamage(), c->GetTarget()->CastToNPC()->GetMaxDamage());
-		c->Message(0, "Attack Delay: %u, Theory DPS: %.2f", c->GetTarget()->CastToNPC()->GetAttackDelay(), dps);
+		c->Message(0, "Current HP: %i  Max HP: %i",  c->GetTarget()->GetHP(), c->GetTarget()->GetMaxHP());
 		//c->Message(0, "Weapon Item Number: %s", c->GetTarget()->GetWeapNo());
 		c->Message(0, "Gender: %i  Size: %f  Bodytype: %d",  c->GetTarget()->GetGender(), c->GetTarget()->GetSize(), c->GetTarget()->GetBodyType());
 		c->Message(0, "Runspeed: %.3f  Walkspeed: %.3f",  static_cast<float>(0.025f * c->GetTarget()->GetRunspeed()), static_cast<float>(0.025f * c->GetTarget()->GetWalkspeed()));
 		c->Message(0, "Spawn Group: %i  Grid: %i",  c->GetTarget()->CastToNPC()->GetSp2(), c->GetTarget()->CastToNPC()->GetGrid());
-		c->Message(0, "EmoteID: %i, FactionID: %i, MyFactionVs: %i", c->GetTarget()->CastToNPC()->GetEmoteID(), c->GetTarget()->GetPrimaryFaction(),  c->FactionLevelRaw(c->GetTarget()->GetPrimaryFaction()));
+		c->Message(0, "EmoteID: %i",  c->GetTarget()->CastToNPC()->GetEmoteID());
 		c->GetTarget()->CastToNPC()->QueryLoot(c);
 	}
 }
@@ -1634,7 +1592,7 @@ void command_permaclass(Client *c, const Seperator *sep)
 		c->Message(0,"Target is not a client.");
 	else {
 		c->Message(0, "Setting %s's class...Sending to char select.",  t->GetName());
-		Log.Out(Logs::General, Logs::Normal, "Class change request from %s for %s, requested class:%i",  c->GetName(), t->GetName(), atoi(sep->arg[1]) );
+		Log(Logs::General, Logs::Normal, "Class change request from %s for %s, requested class:%i",  c->GetName(), t->GetName(), atoi(sep->arg[1]) );
 		t->SetBaseClass(atoi(sep->arg[1]));
 		t->Save();
 		t->Kick();
@@ -1656,7 +1614,7 @@ void command_permarace(Client *c, const Seperator *sep)
 		c->Message(0,"Target is not a client.");
 	else {
 		c->Message(0, "Setting %s's race - zone to take effect", t->GetName());
-		Log.Out(Logs::General, Logs::Normal, "Permanant race change request from %s for %s, requested race:%i",  c->GetName(), t->GetName(), atoi(sep->arg[1]) );
+		Log(Logs::General, Logs::Normal, "Permanant race change request from %s for %s, requested race:%i",  c->GetName(), t->GetName(), atoi(sep->arg[1]) );
 		uint32 tmp = Mob::GetDefaultGender(atoi(sep->arg[1]), t->GetBaseGender());
 		t->SetBaseRace(atoi(sep->arg[1]));
 		t->SetBaseGender(tmp);
@@ -1680,7 +1638,7 @@ void command_permagender(Client *c, const Seperator *sep)
 		c->Message(0,"Target is not a client.");
 	else {
 		c->Message(0, "Setting %s's gender - zone to take effect", t->GetName());
-		Log.Out(Logs::General, Logs::Normal, "Permanant gender change request from %s for %s, requested gender:%i",  c->GetName(), t->GetName(), atoi(sep->arg[1]) );
+		Log(Logs::General, Logs::Normal, "Permanant gender change request from %s for %s, requested gender:%i",  c->GetName(), t->GetName(), atoi(sep->arg[1]) );
 		t->SetBaseGender(atoi(sep->arg[1]));
 		t->Save();
 		t->SendIllusionPacket(atoi(sep->arg[1]));
@@ -2017,7 +1975,7 @@ void command_dbspawn2(Client *c, const Seperator *sep)
 {
 
 	if (sep->IsNumber(1) && sep->IsNumber(2) && sep->IsNumber(3)) {
-		Log.Out(Logs::General, Logs::Normal, "Spawning database spawn");
+		Log(Logs::General, Logs::Normal, "Spawning database spawn");
 		uint16 cond = 0;
 		int16 cond_min = 0;
 		if(sep->IsNumber(4)) {
@@ -2277,14 +2235,14 @@ void command_castspell(Client *c, const Seperator *sep)
 		else
 			if (c->GetTarget() == 0)
 				if(c->Admin() >= commandInstacast)
-					c->SpellFinished(spellid, 0, USE_ITEM_SPELL_SLOT, 0, -1, spells[spellid].ResistDiff);
+					c->SpellFinished(spellid, 0, EQEmu::CastingSlot::Item, 0, -1, spells[spellid].ResistDiff);
 				else
-					c->CastSpell(spellid, 0, USE_ITEM_SPELL_SLOT, 0);
+					c->CastSpell(spellid, 0, EQEmu::CastingSlot::Item, 0);
 			else
 				if(c->Admin() >= commandInstacast)
-					c->SpellFinished(spellid, c->GetTarget(), 10, 0, -1, spells[spellid].ResistDiff);
+					c->SpellFinished(spellid, c->GetTarget(), EQEmu::CastingSlot::Item, 0, -1, spells[spellid].ResistDiff);
 				else
-					c->CastSpell(spellid, c->GetTarget()->GetID(), USE_ITEM_SPELL_SLOT, 0);
+					c->CastSpell(spellid, c->GetTarget()->GetID(), EQEmu::CastingSlot::Item, 0);
 	}
 }
 
@@ -2340,7 +2298,7 @@ void command_setlanguage(Client *c, const Seperator *sep)
 	}
 	else
 	{
-		Log.Out(Logs::General, Logs::Normal, "Set language request from %s, target:%s lang_id:%i value:%i",  c->GetName(), c->GetTarget()->GetName(), atoi(sep->arg[1]), atoi(sep->arg[2]) );
+		Log(Logs::General, Logs::Normal, "Set language request from %s, target:%s lang_id:%i value:%i",  c->GetName(), c->GetTarget()->GetName(), atoi(sep->arg[1]), atoi(sep->arg[2]) );
 		uint8 langid = (uint8)atoi(sep->arg[1]);
 		uint8 value = (uint8)atoi(sep->arg[2]);
 		c->GetTarget()->CastToClient()->SetLanguageSkill( langid, value );
@@ -2365,7 +2323,7 @@ void command_setskill(Client *c, const Seperator *sep)
 		c->Message(0, "       x = 0 to %d",  HIGHEST_CAN_SET_SKILL);
 	}
 	else {
-		Log.Out(Logs::General, Logs::Normal, "Set skill request from %s, target:%s skill_id:%i value:%i",  c->GetName(), c->GetTarget()->GetName(), atoi(sep->arg[1]), atoi(sep->arg[2]) );
+		Log(Logs::General, Logs::Normal, "Set skill request from %s, target:%s skill_id:%i value:%i",  c->GetName(), c->GetTarget()->GetName(), atoi(sep->arg[1]), atoi(sep->arg[2]) );
 		int skill_num = atoi(sep->arg[1]);
 		uint16 skill_value = atoi(sep->arg[2]);
 		if (skill_num <= EQEmu::skills::HIGHEST_SKILL)
@@ -2385,7 +2343,7 @@ void command_setskillall(Client *c, const Seperator *sep)
 	}
 	else {
 		if (c->Admin() >= commandSetSkillsOther || c->GetTarget()==c || c->GetTarget()==0) {
-			Log.Out(Logs::General, Logs::Normal, "Set ALL skill request from %s, target:%s",  c->GetName(), c->GetTarget()->GetName());
+			Log(Logs::General, Logs::Normal, "Set ALL skill request from %s, target:%s",  c->GetName(), c->GetTarget()->GetName());
 			uint16 level = atoi(sep->arg[1]);
 			for (EQEmu::skills::SkillType skill_num = EQEmu::skills::Skill1HBlunt; skill_num <= EQEmu::skills::HIGHEST_SKILL; skill_num = (EQEmu::skills::SkillType)(skill_num + 1)) {
 				c->GetTarget()->CastToClient()->SetSkill(skill_num, level);
@@ -2502,14 +2460,14 @@ void command_texture(Client *c, const Seperator *sep)
 		// Player Races Wear Armor, so Wearchange is sent instead
 		int i;
 		if (!c->GetTarget())
-			for (i = EQEmu::legacy::MATERIAL_BEGIN; i <= EQEmu::legacy::MATERIAL_TINT_END; i++)
+			for (i = EQEmu::textures::textureBegin; i <= EQEmu::textures::LastTintableTexture; i++)
 			{
 				c->SendTextureWC(i, texture);
 			}
 		else if ((c->GetTarget()->GetRace() > 0 && c->GetTarget()->GetRace() <= 12) ||
 			c->GetTarget()->GetRace() == 128 || c->GetTarget()->GetRace() == 130 ||
 			c->GetTarget()->GetRace() == 330 || c->GetTarget()->GetRace() == 522) {
-			for (i = EQEmu::legacy::MATERIAL_BEGIN; i <= EQEmu::legacy::MATERIAL_TINT_END; i++)
+			for (i = EQEmu::textures::textureBegin; i <= EQEmu::textures::LastTintableTexture; i++)
 			{
 				c->GetTarget()->SendTextureWC(i, texture);
 			}
@@ -2630,12 +2588,12 @@ void command_peekinv(Client *c, const Seperator *sep)
 	}
 
 	Client* targetClient = c->GetTarget()->CastToClient();
-	const ItemInst* inst_main = nullptr;
-	const ItemInst* inst_sub = nullptr;
-	const EQEmu::Item_Struct* item_data = nullptr;
+	const EQEmu::ItemInstance* inst_main = nullptr;
+	const EQEmu::ItemInstance* inst_sub = nullptr;
+	const EQEmu::ItemData* item_data = nullptr;
 	std::string item_link;
-	EQEmu::saylink::SayLinkEngine linker;
-	linker.SetLinkType(linker.SayLinkItemInst);
+	EQEmu::SayLinkEngine linker;
+	linker.SetLinkType(EQEmu::saylink::SayLinkItemInst);
 
 	c->Message(0, "Displaying inventory for %s...",  targetClient->GetName());
 
@@ -2652,14 +2610,14 @@ void command_peekinv(Client *c, const Seperator *sep)
 	}
 
 	if ((scopeWhere & peekWorn) && (targetClient->ClientVersion() >= EQEmu::versions::ClientVersion::SoF)) {
-		inst_main = targetClient->GetInv().GetItem(EQEmu::legacy::SlotPowerSource);
+		inst_main = targetClient->GetInv().GetItem(EQEmu::inventory::slotPowerSource);
 		item_data = (inst_main == nullptr) ? nullptr : inst_main->GetItem();
 		linker.SetItemInst(inst_main);
 
 		item_link = linker.GenerateLink();
 
 		c->Message((item_data == nullptr), "WornSlot: %i, Item: %i (%s), Charges: %i",
-			EQEmu::legacy::SlotPowerSource, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
+			EQEmu::inventory::slotPowerSource, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 	}
 
 	// inv
@@ -2673,7 +2631,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 		c->Message((item_data == nullptr), "InvSlot: %i, Item: %i (%s), Charges: %i",
 			indexMain, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
-		for (uint8 indexSub = SUB_INDEX_BEGIN; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::legacy::ITEM_CONTAINER_SIZE); ++indexSub) {
+		for (uint8 indexSub = EQEmu::inventory::containerBegin; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 			inst_sub = inst_main->GetItem(indexSub);
 			item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 			linker.SetItemInst(inst_sub);
@@ -2681,7 +2639,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 			item_link = linker.GenerateLink();
 
 			c->Message((item_data == nullptr), "  InvBagSlot: %i (Slot #%i, Bag #%i), Item: %i (%s), Charges: %i",
-				Inventory::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
+				EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
 		}
 	}
 
@@ -2693,7 +2651,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 			item_link = linker.GenerateLink();
 
 			c->Message(1, "CursorSlot: %i, Item: %i (%s), Charges: %i",
-				EQEmu::legacy::SlotCursor, 0, item_link.c_str(), 0);
+				EQEmu::inventory::slotCursor, 0, item_link.c_str(), 0);
 		}
 		else {
 			int cursorDepth = 0;
@@ -2705,9 +2663,9 @@ void command_peekinv(Client *c, const Seperator *sep)
 				item_link = linker.GenerateLink();
 
 				c->Message((item_data == nullptr), "CursorSlot: %i, Depth: %i, Item: %i (%s), Charges: %i",
-					EQEmu::legacy::SlotCursor, cursorDepth, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
+					EQEmu::inventory::slotCursor, cursorDepth, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
-				for (uint8 indexSub = SUB_INDEX_BEGIN; (cursorDepth == 0) && inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::legacy::ITEM_CONTAINER_SIZE); ++indexSub) {
+				for (uint8 indexSub = EQEmu::inventory::containerBegin; (cursorDepth == 0) && inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 					inst_sub = inst_main->GetItem(indexSub);
 					item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 					linker.SetItemInst(inst_sub);
@@ -2715,7 +2673,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 					item_link = linker.GenerateLink();
 
 					c->Message((item_data == nullptr), "  CursorBagSlot: %i (Slot #%i, Bag #%i), Item: %i (%s), Charges: %i",
-						Inventory::CalcSlotId(EQEmu::legacy::SlotCursor, indexSub), EQEmu::legacy::SlotCursor, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
+						EQEmu::InventoryProfile::CalcSlotId(EQEmu::inventory::slotCursor, indexSub), EQEmu::inventory::slotCursor, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
 				}
 			}
 		}
@@ -2744,7 +2702,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 		c->Message((item_data == nullptr), "BankSlot: %i, Item: %i (%s), Charges: %i",
 			indexMain, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
-		for (uint8 indexSub = SUB_INDEX_BEGIN; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::legacy::ITEM_CONTAINER_SIZE); ++indexSub) {
+		for (uint8 indexSub = EQEmu::inventory::containerBegin; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 			inst_sub = inst_main->GetItem(indexSub);
 			item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 			linker.SetItemInst(inst_sub);
@@ -2752,7 +2710,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 			item_link = linker.GenerateLink();
 
 			c->Message((item_data == nullptr), "  BankBagSlot: %i (Slot #%i, Bag #%i), Item: %i (%s), Charges: %i",
-				Inventory::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
+				EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
 		}
 	}
 
@@ -2766,7 +2724,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 		c->Message((item_data == nullptr), "SharedBankSlot: %i, Item: %i (%s), Charges: %i",
 			indexMain, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
-		for (uint8 indexSub = SUB_INDEX_BEGIN; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::legacy::ITEM_CONTAINER_SIZE); ++indexSub) {
+		for (uint8 indexSub = EQEmu::inventory::containerBegin; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 			inst_sub = inst_main->GetItem(indexSub);
 			item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 			linker.SetItemInst(inst_sub);
@@ -2774,7 +2732,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 			item_link = linker.GenerateLink();
 
 			c->Message((item_data == nullptr), "  SharedBankBagSlot: %i (Slot #%i, Bag #%i), Item: %i (%s), Charges: %i",
-				Inventory::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
+				EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
 		}
 	}
 
@@ -2789,7 +2747,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 		c->Message((item_data == nullptr), "TradeSlot: %i, Item: %i (%s), Charges: %i",
 			indexMain, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
-		for (uint8 indexSub = SUB_INDEX_BEGIN; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::legacy::ITEM_CONTAINER_SIZE); ++indexSub) {
+		for (uint8 indexSub = EQEmu::inventory::containerBegin; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 			inst_sub = inst_main->GetItem(indexSub);
 			item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 			linker.SetItemInst(inst_sub);
@@ -2797,7 +2755,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 			item_link = linker.GenerateLink();
 
 			c->Message((item_data == nullptr), "  TradeBagSlot: %i (Slot #%i, Bag #%i), Item: %i (%s), Charges: %i",
-				Inventory::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
+				EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
 		}
 	}
 
@@ -2811,7 +2769,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 		else {
 			c->Message(0, "[WorldObject DBID: %i (entityid: %i)]",  objectTradeskill->GetDBID(), objectTradeskill->GetID());
 
-			for (int16 indexMain = SLOT_BEGIN; indexMain < EQEmu::legacy::TYPE_WORLD_SIZE; ++indexMain) {
+			for (int16 indexMain = EQEmu::inventory::slotBegin; indexMain < EQEmu::legacy::TYPE_WORLD_SIZE; ++indexMain) {
 				inst_main = objectTradeskill->GetItem(indexMain);
 				item_data = (inst_main == nullptr) ? nullptr : inst_main->GetItem();
 				linker.SetItemInst(inst_main);
@@ -2821,7 +2779,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 				c->Message((item_data == nullptr), "WorldSlot: %i, Item: %i (%s), Charges: %i",
 					(EQEmu::legacy::WORLD_BEGIN + indexMain), ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
-				for (uint8 indexSub = SUB_INDEX_BEGIN; inst_main && inst_main->IsType(EQEmu::item::ItemClassBag) && (indexSub < EQEmu::legacy::ITEM_CONTAINER_SIZE); ++indexSub) {
+				for (uint8 indexSub = EQEmu::inventory::containerBegin; inst_main && inst_main->IsType(EQEmu::item::ItemClassBag) && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 					inst_sub = inst_main->GetItem(indexSub);
 					item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 					linker.SetItemInst(inst_sub);
@@ -2865,7 +2823,7 @@ void command_interrogateinv(Client *c, const Seperator *sep)
 	}
 
 	Client* target = nullptr;
-	std::map<int16, const ItemInst*> instmap;
+	std::map<int16, const EQEmu::ItemInstance*> instmap;
 	bool log = false;
 	bool silent = false;
 	bool error = false;
@@ -3070,6 +3028,11 @@ void command_reloadqst(Client *c, const Seperator *sep)
 
 }
 
+void command_corpsefix(Client *c, const Seperator *sep)
+{
+	entity_list.CorpseFix(c);
+}
+
 void command_reloadworld(Client *c, const Seperator *sep)
 {
 	c->Message(0, "Reloading quest cache and repopping zones worldwide.");
@@ -3216,7 +3179,7 @@ void command_listpetition(Client *c, const Seperator *sep)
 	if (!results.Success())
         return;
 
-    Log.Out(Logs::General, Logs::Normal, "Petition list requested by %s",  c->GetName());
+    Log(Logs::General, Logs::Normal, "Petition list requested by %s",  c->GetName());
 
     if (results.RowCount() == 0)
         return;
@@ -3230,16 +3193,16 @@ void command_listpetition(Client *c, const Seperator *sep)
 void command_equipitem(Client *c, const Seperator *sep)
 {
 	uint32 slot_id = atoi(sep->arg[1]);
-	if (sep->IsNumber(1) && ((slot_id >= EQEmu::legacy::EQUIPMENT_BEGIN) && (slot_id <= EQEmu::legacy::EQUIPMENT_END) || (slot_id == EQEmu::legacy::SlotPowerSource))) {
-		const ItemInst* from_inst = c->GetInv().GetItem(EQEmu::legacy::SlotCursor);
-		const ItemInst* to_inst = c->GetInv().GetItem(slot_id); // added (desync issue when forcing stack to stack)
+	if (sep->IsNumber(1) && ((slot_id >= EQEmu::legacy::EQUIPMENT_BEGIN) && (slot_id <= EQEmu::legacy::EQUIPMENT_END) || (slot_id == EQEmu::inventory::slotPowerSource))) {
+		const EQEmu::ItemInstance* from_inst = c->GetInv().GetItem(EQEmu::inventory::slotCursor);
+		const EQEmu::ItemInstance* to_inst = c->GetInv().GetItem(slot_id); // added (desync issue when forcing stack to stack)
 		bool partialmove = false;
 		int16 movecount;
 
 		if (from_inst && from_inst->IsClassCommon()) {
 			auto outapp = new EQApplicationPacket(OP_MoveItem, sizeof(MoveItem_Struct));
 			MoveItem_Struct* mi	= (MoveItem_Struct*)outapp->pBuffer;
-			mi->from_slot = EQEmu::legacy::SlotCursor;
+			mi->from_slot = EQEmu::inventory::slotCursor;
 			mi->to_slot			= slot_id;
 			// mi->number_in_stack	= from_inst->GetCharges(); // replaced with con check for stacking
 
@@ -3874,7 +3837,7 @@ void command_lastname(Client *c, const Seperator *sep)
 
 	if(c->GetTarget() && c->GetTarget()->IsClient())
 		t=c->GetTarget()->CastToClient();
-	Log.Out(Logs::General, Logs::Normal, "#lastname request from %s for %s",  c->GetName(), t->GetName());
+	Log(Logs::General, Logs::Normal, "#lastname request from %s for %s",  c->GetName(), t->GetName());
 
 	if(strlen(sep->arg[1]) <= 70)
 		t->ChangeLastName(sep->arg[1]);
@@ -3967,55 +3930,112 @@ void command_bind(Client *c, const Seperator *sep)
 void command_builds(Client *c, const Seperator *sep)
 {
 	if (c->IsTaskActivityActive(307, 7)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 7, 1);
-	uint8 level_req = 75;
+	uint8 freeLevel = 10;
 	if (!c->IsBuildAvailable()) {
 		c->Message(0, "This class does not yet have builds available. It will be coming soon!");
 		return;
 	}
-
 	c->RefreshBuild();
 	
-	//Reset build
-	if (sep->arg[1] && strcasecmp(sep->arg[1], "reset") == 0) {
+	
+
+	auto calculateCost = [](Client* pClient) -> uint64 {
+		const auto clientLevel = pClient->GetLevel();
+		uint8 freeLevel = 10;
+		// Free!
+		if (clientLevel < freeLevel) return 0;
+
+		uint64 cost = 0;
+		cost = (uint64)((float)(1000 * (float)((float)clientLevel / (float)60)) * 1000);
+		if (clientLevel < 20) cost /= 4;
+		if (clientLevel < 40) cost /= 3;
+		if (clientLevel < 50) cost /= 2;
 		
-		//Reset confirm
-		if (sep->arg[2] && strcasecmp(sep->arg[2], "confirm") == 0) {
-			if (c->GetLevel() >= level_req) { //Removed level req
-				c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
+		cost /= 10; //while testing, cut price
+		if (cost < 1000) {
+			cost = 1000;
+		}
+
+		return cost;
+	};
+
+	const auto cost = calculateCost(c);
+
+	
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "reset") != 0) { //don't reset builds, just list
+		const char *windowTitle = "Builds";
+		uint8 unspent = c->GetBuildUnspentPoints();
+		std::string unspentMessage = "";
+		if (unspent > 0) {
+			unspentMessage = StringFormat("<c \"#FFDF00\">You have %u point%s available to spend.</c><br>", unspent, (unspent == 1) ? "" : "s");
+		}
+
+
+		// align=\"center\"
+		std::string windowText = StringFormat("<table align=\"center\" width=\"100%\"><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\">Click To Review Your Build</a></td></tr></table>",
+			c->GetBaseClassName().c_str(),
+			c->GetSession()
+		);
+
+		windowText.append(unspentMessage);
+
+		windowText.append(c->GetBuildReport());
+		c->SendPopupToClient(windowTitle, windowText.c_str());
+		std::string resetCost = "free until level 10";
+		if (c->GetLevel() >= freeLevel) {
+			resetCost = StringFormat("%i platinum at level %i", (cost / 1000), c->GetLevel());
+		}
+		c->Message(0, "You can %s your build choices for %s.", c->CreateSayLink("#builds reset", "reset").c_str(), resetCost.c_str());
+		return;
+	} else { //reset builds
+		//GM override ability.
+		if (c->Admin() > 200 && //account flagged GM
+			c->GetPP().gm > 0) { //is green
+
+			if (c->GetTarget() == nullptr ||
+				!c->GetTarget()->IsClient()) {
+				c->Message(0, "Not a valid target for resetting a build.");
 				return;
 			}
+			c->GetTarget()->CastToClient()->ResetBuild();
+			c->GetTarget()->Message(0, "Your build points were reset by the GM %s.", c->GetCleanName());
+			c->Message(0, "You reset the build points of %s.", c->GetTarget()->GetCleanName());
+			return;
+		}
+
+		//Reset confirm
+		if (sep->arg[2] && strcasecmp(sep->arg[2], "confirm") == 0) {
+			if (c->GetLevel() >= freeLevel && cost > 0) {
+				// Handle: Not enough money.
+				if (!c->HasMoneyInInvOrBank(cost)) {
+					c->Message(0, "Not enough money to reset.");
+					return;
+				}
+				// FYI This is not needed. If it triggers there is a bug in HasMoneyInInvOrBank..
+				if (!c->TakeMoneyFromPPOrBank(cost, true)) {
+					char *hacker_str = nullptr;
+					MakeAnyLenString(&hacker_str, "Zone Cheat: attempted to buy build reset and didn't have enough money\n");
+					database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+					safe_delete_array(hacker_str);
+					return;
+				}				
+				c->Message(0, "You paid %u platinum to reset your build choices.", cost / 1000);
+				c->ResetBuild();
+				return;
+			}
+			c->Message(0, "Your reset your build choices for free.");
 			c->ResetBuild();
 			return;
 		}
 
-		if (c->GetLevel() < level_req) {
-			c->Message(0, "You can reset your skills for free while testing. [ %s ]", c->CreateSayLink("#builds reset confirm", "confirm").c_str());
-		} else {
-			c->Message(0, "Since you are level %u, you must now find quests to reset your build points.", c->GetLevel());
+
+		//show cost if #builds or #builds reset
+		std::string resetCost = "free";
+		if (c->GetLevel() >= freeLevel) {
+			resetCost = StringFormat("%u platinum at level %i", (cost / 1000), c->GetLevel());
 		}
+		c->Message(0, "Would you like to reset your build choices for %s? [ %s ] ", resetCost.c_str(), c->CreateSayLink("#builds reset confirm", "confirm").c_str());
 		return;
-	}
-	
-	const char *windowTitle = "Builds";
-	uint8 unspent = c->GetBuildUnspentPoints();
-	std::string unspentMessage = "";
-	if (unspent > 0) {
-		unspentMessage = StringFormat("<c \"#FFDF00\">You have %u point%s available to spend.</c><br>", unspent, (unspent == 1) ? "" : "s");
-	}
-
-
-	// align=\"center\"
-	std::string windowText = StringFormat("<table align=\"center\" width=\"100%\"><tr><td><a href=\"http://rebuildeq.com/builds/%s/%s/\">Click To Review Your Build</a></td></tr></table>",
-		c->GetBaseClassName().c_str(),
-		c->GetSession()
-	);
-
-	windowText.append(unspentMessage);
-	
-	windowText.append(c->GetBuildReport());
-	c->SendPopupToClient(windowTitle, windowText.c_str());
-	if (c->GetLevel() < level_req) {
-		c->Message(0, "You are eligible to %s your build choices.", c->CreateSayLink("#builds reset", "reset").c_str());
 	}
 
 
@@ -4030,6 +4050,43 @@ void command_builds(Client *c, const Seperator *sep)
 	//	c->Message(0, "%s to view your build inside EQ.", c->CreateSayLink("#builds link", "click").c_str());
 	//}
 	return;
+}
+
+
+void command_setallbuilds(Client *c, const Seperator *sep) {
+	// Check: Valid input (count and type).
+	if (sep->argnum != 1 || !sep->IsNumber(1)) {
+		c->Message(0, "Usage: #setallbuilds rank");
+		return;
+	}
+
+	const int rank = atoi(sep->arg[1]);
+	// Check: Valid input (rank range).
+	if (rank < 0 || rank > 5) {
+		c->Message(0, "Usage: #setallbuilds <rank(0-5)>");
+		return;
+	}
+
+	
+	// Get a session, this allows RefreshBuild to detect that changes have happened.
+	c->GetSession();
+	
+	std::string build = "55555555555555555555555555555555555555555555555555555";
+	if (rank == 1) build = "11111111111111111111111111111111111111111111111111111";
+	if (rank == 2) build = "22222222222222222222222222222222222222222222222222222";
+	if (rank == 3) build = "33333333333333333333333333333333333333333333333333333";
+	if (rank == 4) build = "44444444444444444444444444444444444444444444444444444";
+
+	std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %i", EscapeString(build).c_str(), (int)c->CharacterID());
+	auto results = database.QueryDatabase(query);
+	if (!results.Success()) {
+		c->Message(13, "Failed to set build.");
+		return;
+	}
+	c->Message(15, "Successfully updated your build.");
+		
+	// Trigger refresh on target.
+	c->RefreshBuild();
 }
 
 void command_setbuild(Client *c, const Seperator *sep) {
@@ -4249,7 +4306,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 				auto row = results.begin();
 				unclaimed_rewards = atoi(row[0]);
 				uint32 unclaimed_rewards_total = atoi(row[1]);
-				c->Message(0, "[GM] %s [%s] (%u) has %u unclaimed rewards and %u total rewards ever, and next encounter is: %u", c->GetTarget()->CastToClient()->GetCleanName(), c->GetTarget()->CastToClient()->Identity(), c->GetTarget()->CastToClient()->AccountID(), unclaimed_rewards, unclaimed_rewards_total, c->GetEPP().next_encounter_time);
+				c->Message(0, "[GM] %s [%s] (%u) has %u unclaimed rewards and %u total rewards ever, and next encounter is in %u seconds", c->GetTarget()->CastToClient()->GetCleanName(), c->GetTarget()->CastToClient()->Identity(), c->GetTarget()->CastToClient()->AccountID(), unclaimed_rewards, unclaimed_rewards_total, (time(nullptr) > c->GetEPP().next_encounter_time) ? 0 : c->GetEPP().next_encounter_time - time(nullptr));
 			} else {
 				c->Message(0, "Target failed to get a record result");
 			}
@@ -4277,13 +4334,13 @@ void command_encounter(Client *c, const Seperator *sep) {
 			auto results = database.QueryDatabase(query);
 			if (!results.Success()) {
 				c->Message(13, "Claiming reward failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
-				Log.Out(Logs::General, Logs::Normal, "Creating account_custom failed with error user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+				Log(Logs::General, Logs::Normal, "Creating account_custom failed with error user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 				return;
 			}
 		}
 
 	} else {
-		Log.Out(Logs::General, Logs::Normal, "Failed to select unclaimed_encounter_rewards for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+		Log(Logs::General, Logs::Normal, "Failed to select unclaimed_encounter_rewards for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 		return;
 	}
 
@@ -4295,7 +4352,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting daily claim failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
-			Log.Out(Logs::General, Logs::Normal, "Daily claim increment failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Daily claim increment failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(15, "You have acquired the daily login reward [ %s ]! In 20 hours a new reward will be available to claim.", c->CreateSayLink("#encounter claim", "claim").c_str());
@@ -4308,7 +4365,7 @@ void command_encounter(Client *c, const Seperator *sep) {
 			return;
 		}
 
-		ItemInst *CursorItemInst = c->GetInv().GetItem(EQEmu::legacy::SlotCursor);
+		EQEmu::ItemInstance *CursorItemInst = c->GetInv().GetItem(EQEmu::inventory::slotCursor);
 		if (CursorItemInst) {
 			c->Message(13, "Your cursor must be empty before claiming a reward.");
 			return;
@@ -4329,13 +4386,13 @@ void command_encounter(Client *c, const Seperator *sep) {
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Claiming reward failed. The admins have been notified."); // Update failed!MySQL gave the following error : ");
-			Log.Out(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());			
+			Log(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());			
 			return;
 		}		
 
-		const EQEmu::Item_Struct * item = database.GetItem(itemid);
+		const EQEmu::ItemData * item = database.GetItem(itemid);
 		if (!c->SummonItem(itemid)) { //
-			Log.Out(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u", c->CharacterID());
+			Log(Logs::General, Logs::Normal, "Summon Item Failed during #encounter claim for user %u", c->CharacterID());
 			c->Message(13, "Something went wrong during the claim. The admins have been notified.");
 			return;
 		}
@@ -4467,7 +4524,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 		return;
 	}
 	// Check: Prevent #teleport if not full health.
-	if (c->GetHPRatio() < 100) {
+	if (c->GetHPRatio() < 99) {
 		c->Message(0, "This command does not work until full health.");
 		return;
 	}
@@ -4584,7 +4641,7 @@ void command_buff(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
-	if (c->GetHPRatio() < 100) {
+	if (c->GetHPRatio() < 99) {
 		c->Message(0, "This command does not work until full health.");
 		return;
 	}
@@ -4601,7 +4658,10 @@ void command_buff(Client *c, const Seperator *sep) {
 		cost = 1000;
 	}
 	displayCost = StringFormat("%u platinum", (cost / 1000));
-	
+	if (c->GetLevel() < 10) {
+		displayCost = "nothing";
+		cost = 0;
+	}
 
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
 		if (!c->HasMoneyInInvOrBank(cost)) {
@@ -4625,87 +4685,63 @@ void command_buff(Client *c, const Seperator *sep) {
 		duration *= 10;
 
 		if (level < 35) target->QuickBuff(target, 144, duration); //regeneration 34
-		else if (level < 40) target->QuickBuff(target, 137, duration); //pack regen 39
-		else if (level < 43) target->QuickBuff(target, 145, duration); //chloro 42
-		else if (level < 46) target->QuickBuff(target, 138, duration); //pack chloro 45
-		else if (level < 55) target->QuickBuff(target, 1568, duration); //regrowuth 54
-		else if (level < 59) target->QuickBuff(target, 1569, duration); //regrowth of grove 58 /grpp
-		else target->QuickBuff(target, 2520, duration); //nature's recov - 60
+		else if (level < 50) target->QuickBuff(target, 145, duration); //chloro 42
+		else target->QuickBuff(target, 1568, duration); //regrowuth 54
 
-		if (level < 2) target->QuickBuff(target, 26, duration); //skin like wood 1
-		else if (level < 10) target->QuickBuff(target, 2511, duration); //prot of wood 9
-		else if (level < 15) target->QuickBuff(target, 263, duration); //skin like rock 14
-		else if (level < 20) target->QuickBuff(target, 2512, duration); //prot of rock 19
-		else if (level < 25) target->QuickBuff(target, 421, duration); //skin like steel 24
-		else if (level < 28) target->QuickBuff(target, 2513, duration); //prot like steel 27
-		else if (level < 37) target->QuickBuff(target, 422, duration); //skin like diamond 36
-		else if (level < 40) target->QuickBuff(target, 2514, duration); //prot diamond 39
-		else if (level < 47) target->QuickBuff(target, 423, duration); //skin like nature 46
-		else if (level < 50) target->QuickBuff(target, 2515, duration); //prot of nature 49
-		else if (level < 58) target->QuickBuff(target, 1559, duration); //natureskin 57
-		else if (level < 60) target->QuickBuff(target, 2188, duration); //prot cabbage 59
-		else target->QuickBuff(target, 1442, duration); //prot glades 60
+		if (level < 10) target->QuickBuff(target, 26, duration); //skin like wood 1
+		else if (level < 20) target->QuickBuff(target, 2511, duration); //prot of wood 9
+		else if (level < 25) target->QuickBuff(target, 263, duration); //skin like rock 14
+		else if (level < 30) target->QuickBuff(target, 2512, duration); //prot of rock 19
+		else if (level < 35) target->QuickBuff(target, 421, duration); //skin like steel 24
+		else if (level < 40) target->QuickBuff(target, 2513, duration); //prot like steel 27
+		else if (level < 45) target->QuickBuff(target, 422, duration); //skin like diamond 36
+		else if (level < 50) target->QuickBuff(target, 2514, duration); //prot diamond 39
+		else if (level < 55) target->QuickBuff(target, 423, duration); //skin like nature 46
+		else target->QuickBuff(target, 2515, duration); //prot of nature 49
 
-		if (level < 8) target->QuickBuff(target, 256, duration); //shield of thistles 7
-		else if (level < 18) target->QuickBuff(target, 273, duration); //shield of barbs 17
-		else if (level < 28) target->QuickBuff(target, 129, duration); //shield of brambles 27
-		else if (level < 38) target->QuickBuff(target, 432, duration); //shield of spikes 37
-		else if (level < 47) target->QuickBuff(target, 356, duration); //shield of thorns 47
-		else if (level < 50) target->QuickBuff(target, 1727, duration); //legacy of spike 49
-		else if (level < 58) target->QuickBuff(target, 1560, duration); //shield of blades 58
-		else target->QuickBuff(target, 1561, duration); //legacy of thorns 59
+		if (level < 10) target->QuickBuff(target, 256, duration); //shield of thistles 7
+		else if (level < 20) target->QuickBuff(target, 273, duration); //shield of barbs 17
+		else if (level < 30) target->QuickBuff(target, 129, duration); //shield of brambles 27
+		else if (level < 40) target->QuickBuff(target, 432, duration); //shield of spikes 37
+		else if (level < 50) target->QuickBuff(target, 356, duration); //shield of thorns 47
+		else if (level < 55) target->QuickBuff(target, 1727, duration); //legacy of spike 49
+		else target->QuickBuff(target, 1560, duration); //shield of blades 58
 
-		if (level < 2) target->QuickBuff(target, 268, duration); //str of earth 1
+		/*if (level < 2) target->QuickBuff(target, 268, duration); //str of earth 1
 		else if (level < 35) target->QuickBuff(target, 429, duration); //str of stone 34
-		else target->QuickBuff(target, 430, duration); //storm str 44
+		else target->QuickBuff(target, 430, duration); //storm str 44*/
 
+		/*
+		//no longer gives clarity
 		if (level > 40) target->QuickBuff(target, 1693, duration);
-		else target->QuickBuff(target, 174, duration);
-
-		c->QuickBuff(target, 278, duration);
-		//target->QuickBuff(target, 278, duration); //sow
+		else target->QuickBuff(target, 174, duration);*/
+		if (!zone->CanCastOutdoor()) target->QuickBuff(target, 278, duration);
+		
 
 		if (c->HasPet()) {
 			target = c->GetPet();
-			if (level < 35) target->QuickBuff(target, 144, duration); //regeneration 34
-			else if (level < 40) target->QuickBuff(target, 137, duration); //pack regen 39
-			else if (level < 43) target->QuickBuff(target, 145, duration);  //chloro 42
-			else if (level < 46) target->QuickBuff(target, 138, duration); //pack chloro 45
-			else if (level < 55) target->QuickBuff(target, 1568, duration); //regrowuth 54
-			else if (level < 59) target->QuickBuff(target, 1569, duration); //regrowth of grove 58 /grpp
-			else target->QuickBuff(target, 2520, duration); //nature's recov - 60
+			if (level < 35 && level > 34) target->QuickBuff(target, 144, duration); //regeneration 34
+			else if (level < 50) target->QuickBuff(target, 145, duration); //chloro 42
+			else target->QuickBuff(target, 1568, duration); //regrowuth 54
 
-			if (level < 2) target->QuickBuff(target, 26, duration); //skin like wood 1
-			else if (level < 10) target->QuickBuff(target, 2511, duration); //prot of wood 9
-			else if (level < 15) target->QuickBuff(target, 263, duration); //skin like rock 14
-			else if (level < 20) target->QuickBuff(target, 2512, duration); //prot of rock 19
-			else if (level < 25) target->QuickBuff(target, 421, duration); //skin like steel 24
-			else if (level < 28) target->QuickBuff(target, 2513, duration); //prot like steel 27
-			else if (level < 37) target->QuickBuff(target, 422, duration); //skin like diamond 36
-			else if (level < 40) target->QuickBuff(target, 2514, duration); //prot diamond 39
-			else if (level < 47) target->QuickBuff(target, 423, duration); //skin like nature 46
-			else if (level < 50) target->QuickBuff(target, 2515, duration); //prot of nature 49
-			else if (level < 58) target->QuickBuff(target, 1559, duration); //natureskin 57
-			else if (level < 60) target->QuickBuff(target, 2188, duration); //prot cabbage 59
-			else target->QuickBuff(target, 1442, duration); //prot glades 60
+			if (level < 10) target->QuickBuff(target, 26, duration); //skin like wood 1
+			else if (level < 20) target->QuickBuff(target, 2511, duration); //prot of wood 9
+			else if (level < 25) target->QuickBuff(target, 263, duration); //skin like rock 14
+			else if (level < 30) target->QuickBuff(target, 2512, duration); //prot of rock 19
+			else if (level < 35) target->QuickBuff(target, 421, duration); //skin like steel 24
+			else if (level < 40) target->QuickBuff(target, 2513, duration); //prot like steel 27
+			else if (level < 45) target->QuickBuff(target, 422, duration); //skin like diamond 36
+			else if (level < 50) target->QuickBuff(target, 2514, duration); //prot diamond 39
+			else if (level < 55) target->QuickBuff(target, 423, duration); //skin like nature 46
+			else target->QuickBuff(target, 2515, duration); //prot of nature 49
 
-			if (level < 8) target->QuickBuff(target, 256, duration); //shield of thistles 7
-			else if (level < 18) target->QuickBuff(target, 273, duration); //shield of barbs 17
-			else if (level < 28) target->QuickBuff(target, 129, duration); //shield of brambles 27
-			else if (level < 38) target->QuickBuff(target, 432, duration); //shield of spikes 37
-			else if (level < 47) target->QuickBuff(target, 356, duration); //shield of thorns 47
-			else if (level < 50) target->QuickBuff(target, 1727, duration); //legacy of spike 49
-			else if (level < 58) target->QuickBuff(target, 1560, duration); //shield of blades 58
-			else target->QuickBuff(target, 1561, duration); //legacy of thorns 59
-
-			if (level < 2) target->QuickBuff(target, 268, duration); //str of earth 1
-			else if (level < 35) target->QuickBuff(target, 429, duration); //str of stone 34
-			else target->QuickBuff(target, 430, duration); //storm str 44
-
-			if (level > 30) target->QuickBuff(target, 1693, duration);
-			else target->QuickBuff(target, 174, duration);
-			//target->AddBuff(target, 278, duration); //sow
-			c->QuickBuff(target, 278, duration);
+			if (level < 10 && level >= 7) target->QuickBuff(target, 256, duration); //shield of thistles 7
+			else if (level < 20) target->QuickBuff(target, 273, duration); //shield of barbs 17
+			else if (level < 30) target->QuickBuff(target, 129, duration); //shield of brambles 27
+			else if (level < 40) target->QuickBuff(target, 432, duration); //shield of spikes 37
+			else if (level < 50) target->QuickBuff(target, 356, duration); //shield of thorns 47
+			else if (level < 55) target->QuickBuff(target, 1727, duration); //legacy of spike 49
+			else target->QuickBuff(target, 1560, duration); //shield of blades 58
 		}
 		if (c->IsClient() && c->CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 		{
@@ -4717,7 +4753,9 @@ void command_buff(Client *c, const Seperator *sep) {
 		return;
 	}
 	else {
-		c->Message(0, "At level %u, it will cost you %s to receive buffs. [ %s ]", c->GetLevel(), displayCost.c_str(), c->CreateSayLink("#buff confirm", "Confirm").c_str());
+		std::string outdoor = "You will get SoW due to being outdoors.";
+		if (!zone->CanCastOutdoor()) outdoor = "You will NOT get SoW, you are indoors.";
+		c->Message(0, "At level %u, it will cost you %s to receive buffs, %s [ %s ]", c->GetLevel(), displayCost.c_str(), outdoor.c_str(), c->CreateSayLink("#buff confirm", "Confirm").c_str());
 	}
 }
 
@@ -4743,7 +4781,7 @@ void command_return(Client *c, const Seperator *sep) {
 		c->Message(0, "This command does not work while in combat.");
 		return;
 	}
-	if (c->GetHPRatio() < 100) {
+	if (c->GetHPRatio() < 99) {
 		c->Message(0, "This command does not work until full health.");
 		return;
 	}
@@ -4792,22 +4830,26 @@ void command_return(Client *c, const Seperator *sep) {
 			c->Message(0, "No return point is currently available.");
 			return;
 		}
-		if (!c->HasMoneyInInvOrBank(cost)) {
-			c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
-			return;
-		}
+		if (c->GetLevel() >= 10) {
+			if (!c->HasMoneyInInvOrBank(cost)) {
+				c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
+				return;
+			}
 
-		if (!c->TakeMoneyFromPPOrBank(cost, true)) {
-			char *hacker_str = nullptr;
-			MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
-			database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
-			safe_delete_array(hacker_str);
-			c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
-			return;
-		}
+			if (!c->TakeMoneyFromPPOrBank(cost, true)) {
+				char *hacker_str = nullptr;
+				MakeAnyLenString(&hacker_str, "Buff Cheat: attempted to buy buffs and didn't have enough money\n");
+				database.SetMQDetectionFlag(c->AccountName(), c->GetName(), hacker_str, zone->GetShortName());
+				safe_delete_array(hacker_str);
+				c->Message(0, "Not enough money to return to %s.", returnZoneName.c_str());
+				return;
+			}
 
-		c->Message(0, "You paid %s to return to %s.", displayCost.c_str(), returnZoneName.c_str());
-		
+			c->Message(0, "You paid %s to return to %s.", displayCost.c_str(), returnZoneName.c_str());
+		}
+		else {
+			c->Message(0, "You return to %s for free since you are below level 10.", displayCost.c_str(), returnZoneName.c_str());
+		}
 		
 		//zone to safe coords
 		c->MovePC(zoneid, 0.0f, 0.0f, 0.0f, 0.0f, 0, ZoneToSafeCoords);
@@ -4816,9 +4858,19 @@ void command_return(Client *c, const Seperator *sep) {
 		return;
 	}
 	if (returnZoneName == "") {
-		c->Message(0, "It costs %s to use #return at your level. You have not died recently. ( %s )", displayCost.c_str(), c->CreateSayLink("#return info", "info").c_str());
+		if (c->GetLevel() >= 10) {
+			c->Message(0, "It costs %s to use #return at your level. You have not died recently. ( %s )", displayCost.c_str(), c->CreateSayLink("#return info", "info").c_str());
+		}
+		else {
+			c->Message(0, "It costs nothing to use #return until level 10. You have not died recently. ( %s )", c->CreateSayLink("#return info", "info").c_str());
+		}
 	} else {
-		c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ] ( %s )", displayCost.c_str(), returnZoneName.c_str(), c->CreateSayLink("#return confirm", "confirm").c_str(), c->CreateSayLink("#return info", "info").c_str());
+		if (c->GetLevel() >= 10) {
+			c->Message(0, "It costs %s to use #return at your level. Your last death was at %s. Teleport? [ %s ] ( %s )", displayCost.c_str(), returnZoneName.c_str(), c->CreateSayLink("#return confirm", "confirm").c_str(), c->CreateSayLink("#return info", "info").c_str());
+		}
+		else {
+			c->Message(0, "It costs nothing to use #return until level 10. Your last death was at %s. Teleport? [ %s ] ( %s )", returnZoneName.c_str(), c->CreateSayLink("#return confirm", "confirm").c_str(), c->CreateSayLink("#return info", "info").c_str());
+		}
 	}
 }
 
@@ -4838,16 +4890,20 @@ void command_rez(Client *c, const Seperator *sep) {
 		cost = 1000;
 	}
 	displayCost = StringFormat("%u platinum", (cost / 1000));
+	if (c->GetLevel() < 10) {
+		displayCost == "nothing";
+		cost = 0;
+	}
 
 	Corpse *corpse = entity_list.GetUnrezzedCorpseByOwner(c);
-
+	
 	//no corpses found
 	if (!corpse) {
 		c->Message(0, "At level %u, it will cost you %s to summon and resurrect one of your corpses in this zone. There are no corpses in this zone that are eligible.", c->GetLevel(), displayCost.c_str());
 		return;
 	}
 
-	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {		
+	if (sep->arg[1] && strcasecmp(sep->arg[1], "confirm") == 0) {
 		if (!c->HasMoneyInInvOrBank(cost)) {
 			c->Message(0, "Not enough money to summon and resurrect a corpse in zone.");
 			return;
@@ -4915,7 +4971,7 @@ void command_issue(Client *c, const Seperator *sep) {
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Deleting an issue failed. The admins have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "#issue creation failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "#issue creation failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "You have deleted issue #%u.", issue_id);
@@ -4928,7 +4984,7 @@ void command_issue(Client *c, const Seperator *sep) {
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Listing issues failed. The admins have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "#issue list failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "#issue list failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
 			return;
 		}
 		if (results.RowCount() == 0) {
@@ -4974,7 +5030,8 @@ void command_issue(Client *c, const Seperator *sep) {
 
 	std::string itemname = "";
 	uint32 itemid = 0;
-	auto inst = c->GetInv()[EQEmu::legacy::SlotCursor];
+	
+	const EQEmu::ItemInstance * inst = c->GetInv()[EQEmu::inventory::slotCursor];
 	if (inst) { 
 		auto item = inst->GetItem();
 		if (item) {
@@ -5011,7 +5068,7 @@ void command_issue(Client *c, const Seperator *sep) {
 	auto results = database.QueryDatabase(query);
 	if (!results.Success()) {
 		c->Message(13, "Creating an issue failed. The admins have been notified.");
-		Log.Out(Logs::General, Logs::Normal, "#issue creation failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
+		Log(Logs::General, Logs::Normal, "#issue creation failed for user %u: %s", c->CharacterID(), results.ErrorMessage().c_str());
 		return;		
 	}
 
@@ -5037,6 +5094,8 @@ void command_depopzone(Client *c, const Seperator *sep)
 void command_repop(Client *c, const Seperator *sep)
 {
 	int timearg = 1;
+	int delay = 0;
+
 	if (sep->arg[1] && strcasecmp(sep->arg[1], "force") == 0) {
 		timearg++;
 
@@ -5055,13 +5114,19 @@ void command_repop(Client *c, const Seperator *sep)
 	}
 
 	if (!sep->IsNumber(timearg)) {
-        c->Message(0, "Zone depoped. Repoping now.");
+        c->Message(0, "Zone depopped - repopping now.");
+
 		zone->Repop();
+
+		/* Force a spawn2 timer trigger so we don't delay actually spawning the NPC's */
+		zone->spawn2_timer.Trigger();
 		return;
 	}
 
     c->Message(0, "Zone depoped. Repop in %i seconds",  atoi(sep->arg[timearg]));
-	zone->Repop(atoi(sep->arg[timearg])*1000);
+	zone->Repop(atoi(sep->arg[timearg]) * 1000);
+
+	zone->spawn2_timer.Trigger();
 }
 
 void command_repopclose(Client *c, const Seperator *sep)
@@ -5479,16 +5544,20 @@ void command_goto(Client *c, const Seperator *sep)
 
 void command_iteminfo(Client *c, const Seperator *sep)
 {
-	auto inst = c->GetInv()[EQEmu::legacy::SlotCursor];
-	if (!inst) { c->Message(13, "Error: You need an item on your cursor for this command"); }
+	auto inst = c->GetInv()[EQEmu::inventory::slotCursor];
+	if (!inst) {
+		c->Message(13, "Error: You need an item on your cursor for this command");
+		return;
+	}
 	auto item = inst->GetItem();
 	if (!item) {
-		Log.Out(Logs::General, Logs::Inventory, "(%s) Command #iteminfo processed an item with no data pointer");
+		Log(Logs::General, Logs::Inventory, "(%s) Command #iteminfo processed an item with no data pointer");
 		c->Message(13, "Error: This item has no data reference");
+		return;
 	}
 
-	EQEmu::saylink::SayLinkEngine linker;
-	linker.SetLinkType(linker.SayLinkItemInst);
+	EQEmu::SayLinkEngine linker;
+	linker.SetLinkType(EQEmu::saylink::SayLinkItemInst);
 	linker.SetItemInst(inst);
 
 	auto item_link = linker.GenerateLink();
@@ -5522,6 +5591,43 @@ void command_iteminfo(Client *c, const Seperator *sep)
 
 	if (c->Admin() >= 200)
 		c->Message(0, ">> MinStatus: %u", item->MinStatus);
+}
+
+
+void command_itemscore(Client *c, const Seperator *sep)
+{
+
+	int itemScore = c->CastToClient()->GetCharacterItemScore();
+	int maxItemScore = 0;
+	std::string tmp_value;
+	RuleManager::Instance()->GetRule(StringFormat("ItemScore:Class%i", c->GetClass()).c_str(), tmp_value);
+	maxItemScore = std::stoi(tmp_value);
+	if (itemScore < 1) itemScore = 1;
+	if (itemScore > maxItemScore) maxItemScore = itemScore;
+
+	const char *windowTitle = "ItemScore";
+	std::string windowText = StringFormat("Your total ItemScore is: <c \"#FFDF00\">%i</c> (%i%%)<br>", itemScore, (itemScore * 100 / maxItemScore));
+		
+	auto inst = c->GetInv()[EQEmu::inventory::slotCursor];
+	if (inst) {
+		windowText.append(StringFormat("<c \"#4444DD\">Cursor</c> (%s) ItemScore: %i<br>", inst->GetItem()->Name, inst->GetItemScore()));
+	}
+
+	int x;
+	//const EQEmu::ItemInstance* inst = nullptr;
+	std::string itemBreakdown = "";
+	for (x = EQEmu::legacy::EQUIPMENT_BEGIN; x < EQEmu::legacy::EQUIPMENT_END; x++) {
+		inst = c->GetInv().GetItem(x);
+		if (!inst) continue;
+		itemBreakdown.append(StringFormat("<c \"#4444DD\">%s</c> (%s) ItemScore: %i<br>", inst->GetSlotName(x).c_str(), inst->GetItem()->Name, inst->GetItemScore()));
+	}
+	windowText.append(itemBreakdown);
+	
+
+	windowText.append("<br>ItemScore is a tally of all worn items, calculated based on modifiers of each stat, includes augments, and scaled in percent based on best known geared character of your class on server.<br>The best known geared player data is updated every 24 hours, and the formula for ItemScore is subject to change.<br>");
+	c->Message(0, "Your ItemScore is %i (%i%%). Use #itemscore with an item on cursor to get it's score.", itemScore, (itemScore * 100 / maxItemScore));
+
+	c->SendPopupToClient(windowTitle, windowText.c_str());
 }
 
 void command_uptime(Client *c, const Seperator *sep)
@@ -5589,7 +5695,7 @@ void command_time(Client *c, const Seperator *sep)
 		}
 		c->Message(13, "Setting world time to %s:%i (Timezone: 0)...",  sep->arg[1], minutes);
 		zone->SetTime(atoi(sep->arg[1])+1, minutes);
-		Log.Out(Logs::General, Logs::Zone_Server, "%s :: Setting world time to %s:%i (Timezone: 0)...", c->GetCleanName(), sep->arg[1], minutes);
+		Log(Logs::General, Logs::Zone_Server, "%s :: Setting world time to %s:%i (Timezone: 0)...", c->GetCleanName(), sep->arg[1], minutes);
 	}
 	else {
 		c->Message(13, "To set the Time: #time HH [MM]");
@@ -5604,7 +5710,7 @@ void command_time(Client *c, const Seperator *sep)
 			zone->zone_time.getEQTimeZoneMin()
 			);
 		c->Message(13, "It is now %s.", timeMessage);
-		Log.Out(Logs::General, Logs::Zone_Server, "Current Time is: %s", timeMessage);
+		Log(Logs::General, Logs::Zone_Server, "Current Time is: %s", timeMessage);
 	}
 }
 
@@ -5738,10 +5844,10 @@ void command_guild(Client *c, const Seperator *sep)
 			}
 
 			if(guild_id == GUILD_NONE) {
-				Log.Out(Logs::Detail, Logs::Guilds, "%s: Removing %s (%d) from guild with GM command.",  c->GetName(),
+				Log(Logs::Detail, Logs::Guilds, "%s: Removing %s (%d) from guild with GM command.",  c->GetName(),
 					sep->arg[2], charid);
 			} else {
-				Log.Out(Logs::Detail, Logs::Guilds, "%s: Putting %s (%d) into guild %s (%d) with GM command.",  c->GetName(),
+				Log(Logs::Detail, Logs::Guilds, "%s: Putting %s (%d) into guild %s (%d) with GM command.",  c->GetName(),
 					sep->arg[2], charid,
 					guild_mgr.GetGuildName(guild_id), guild_id);
 			}
@@ -5790,7 +5896,7 @@ void command_guild(Client *c, const Seperator *sep)
 				return;
 			}
 
-			Log.Out(Logs::Detail, Logs::Guilds, "%s: Setting %s (%d)'s guild rank to %d with GM command.",  c->GetName(),
+			Log(Logs::Detail, Logs::Guilds, "%s: Setting %s (%d)'s guild rank to %d with GM command.",  c->GetName(),
 				sep->arg[2], charid, rank);
 
 			if(!guild_mgr.SetGuildRank(charid, rank))
@@ -5832,7 +5938,7 @@ void command_guild(Client *c, const Seperator *sep)
 
 				uint32 id = guild_mgr.CreateGuild(sep->argplus[3], leader);
 
-				Log.Out(Logs::Detail, Logs::Guilds, "%s: Creating guild %s with leader %d with GM command. It was given id %lu.",  c->GetName(),
+				Log(Logs::Detail, Logs::Guilds, "%s: Creating guild %s with leader %d with GM command. It was given id %lu.",  c->GetName(),
 					sep->argplus[3], leader, (unsigned long)id);
 
 				if (id == GUILD_NONE)
@@ -5871,7 +5977,7 @@ void command_guild(Client *c, const Seperator *sep)
 				}
 			}
 
-			Log.Out(Logs::Detail, Logs::Guilds, "%s: Deleting guild %s (%d) with GM command.",  c->GetName(),
+			Log(Logs::Detail, Logs::Guilds, "%s: Deleting guild %s (%d) with GM command.",  c->GetName(),
 				guild_mgr.GetGuildName(id), id);
 
 			if (!guild_mgr.DeleteGuild(id))
@@ -5905,7 +6011,7 @@ void command_guild(Client *c, const Seperator *sep)
 				}
 			}
 
-			Log.Out(Logs::Detail, Logs::Guilds, "%s: Renaming guild %s (%d) to '%s' with GM command.",  c->GetName(),
+			Log(Logs::Detail, Logs::Guilds, "%s: Renaming guild %s (%d) to '%s' with GM command.",  c->GetName(),
 				guild_mgr.GetGuildName(id), id, sep->argplus[3]);
 
 			if (!guild_mgr.RenameGuild(id, sep->argplus[3]))
@@ -5956,7 +6062,7 @@ void command_guild(Client *c, const Seperator *sep)
 					}
 				}
 
-				Log.Out(Logs::Detail, Logs::Guilds, "%s: Setting leader of guild %s (%d) to %d with GM command.",  c->GetName(),
+				Log(Logs::Detail, Logs::Guilds, "%s: Setting leader of guild %s (%d) to %d with GM command.",  c->GetName(),
 					guild_mgr.GetGuildName(id), id, leader);
 
 				if(!guild_mgr.SetGuildLeader(id, leader))
@@ -6063,36 +6169,32 @@ void command_dps(Client *c, const Seperator *sep)
 		c->Message(0, "Target %s not engaged.", (target->IsCorpse() ? "was" : "is"));		
 		return;
 	}
+	int my_hp_self_loss_net = 0;
+	int my_hp_target_loss_net = 0;
+	int engage_duration = 1;
 
-	float dps = 0;
-	float net_hps_taken = 0;
-	float net_hps_dealt = 0;
-	int total_damage = 0;
-	uint32 engage_start = target->EngageEnd() - 1;
+	for (auto&& d : target->DPS()) {
+		if (d.ent_id == target->GetID()) {
+			my_hp_self_loss_net = d.hp_self_loss_net;
+			my_hp_target_loss_net = d.hp_target_loss_net;
+			if (engage_duration > time(nullptr) - d.engage_start) engage_duration = time(nullptr) - d.engage_start;
+		}
+	}
 
-	c->Message(MT_CritMelee, "-----DPS for %s-----", target->GetCleanName());
+	float my_dps_loss = (float)((float)my_hp_self_loss_net / engage_duration);
+	float my_dps_target_loss = (float)((float)my_hp_target_loss_net / engage_duration);
+	c->Message(MT_CritMelee, "------ %s DPS over %i seconds ----------", target->GetCleanName(), engage_duration);
+	c->Message(MT_CritMelee, "- dealt %i damage (%.1f DPS)", my_hp_self_loss_net, my_dps_loss);
+	c->Message(MT_CritMelee, "- took %i damage (%.1f DPS)", my_hp_target_loss_net, my_dps_target_loss);
+	c->Message(MT_CritMelee, "------ Participants ----------");
 	for (auto&& d : target->DPS()) {
 
-		if ((target->EngageEnd() - d.engage_start) > 1) {
-			dps = (float)((float)d.total_damage / (target->EngageEnd() - d.engage_start));
-			net_hps_taken = (float)((float)d.net_healing_taken / (target->EngageEnd() - d.engage_start));
-			net_hps_dealt = (float)((float)d.net_healing_dealt / (target->EngageEnd() - d.engage_start));
-		} else {
-			dps = d.total_damage;
-			net_hps_taken = d.net_healing_taken;
-			net_hps_dealt = d.net_healing_dealt;
-		}
-		total_damage += d.total_damage;
-
-		if ((target->EngageEnd() - d.engage_start) > 1) dps = (float)((float)d.total_damage / (target->EngageEnd() - d.engage_start));
-		else 
-		if (engage_start > d.engage_start) engage_start = d.engage_start;
-		c->Message(MT_CritMelee, "%s: %i dmg over %is, (%.2f DPS)", d.character_name.c_str(), d.total_damage, ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), dps);
-		//c->Message(MT_CritMelee, "%s over %is [%i dmg (%.2f DPS)] [%i hp taken (%.2f HPS)] [%i hp dealt (%.2f HPS)]", d.character_name.c_str(), ((target->EngageEnd() - d.engage_start) < 1) ? 1 : (target->EngageEnd() - d.engage_start), d.total_damage,  dps, d.net_healing_taken, net_hps_taken, d.net_healing_dealt, net_hps_dealt);
+		float cur_dps = (float)((float)d.hp_target_loss_net / engage_duration);
+		//float cur_hps_taken = (float)((float)d.hp_self_gain_net / engage_duration);
+		//float cur_hps_dealt = (float)((float)d.hp_target_gain_net / engage_duration);
+		c->Message(MT_CritMelee, "- %s: %i damage (%.1f DPS)", d.character_name.c_str(), d.hp_target_loss_net, cur_dps);
 	}
-	if ((target->EngageEnd() - engage_start) > 1) dps = (float)((float)total_damage / (target->EngageEnd() - engage_start));
-	else dps = total_damage;
-	c->Message(MT_CritMelee, "%s %i taken over %is (%.2f RDPS)", target->GetCleanName(), total_damage, ((target->EngageEnd() - engage_start) < 1) ? 1 : (target->EngageEnd() - engage_start), dps);
+
 }
 
 void command_doanim(Client *c, const Seperator *sep)
@@ -6192,7 +6294,7 @@ void command_exp(Client *c, const Seperator *sep)
 		}
 
 
-		auto inst = c->GetInv()[EQEmu::legacy::SlotCursor];
+		auto inst = c->GetInv()[EQEmu::inventory::slotCursor];
 		if (inst) { 
 			c->Message(0, "Your cursor needs to be empty to run this command."); 
 			return;
@@ -6283,6 +6385,7 @@ void command_feat(Client *c, const Seperator *sep)
 		//Feat("pet", "Pet Naming", "naming", FEAT_PETNAMING, 65535, 0, 0, 0),		
 		Feat("pet", "Pet Discipline", "discipline", FEAT_PETDISCIPLINE, 65535, aaPetDiscipline, 1, 0),
 		Feat("class", "Charm of Defense", "defense", FEAT_CHARMOFDEFENSE, 21, 0, 0, 100045),
+		Feat("class", "Charm of Mana", "defense", FEAT_CHARMOFMANA, 546, 0, 0, 100088),
 		Feat("general", "Frontal Stun Immunity", "stun", FEAT_FRONTSTUN, 65535, 0, 0, 0),
 		//Feat("general", "Cursed Fragments", "cursed", FEAT_CURSEDFRAGMENTS, 65535, 0, 0, 0),
 		Feat("aa", "Innate Runspeed", "runspeed", FEAT_INNATERUNSPEED, 65535, aaInnateRunSpeed, 3, 0),
@@ -6663,7 +6766,7 @@ void command_scribespells(Client *c, const Seperator *sep)
 	t->Message(0, "Scribing spells to spellbook.");
 	if(t != c)
 		c->Message(0, "Scribing spells for %s.",  t->GetName());
-	Log.Out(Logs::General, Logs::Normal, "Scribe spells request for %s from %s, levels: %u -> %u",  t->GetName(), c->GetName(), min_level, max_level);
+	Log(Logs::General, Logs::Normal, "Scribe spells request for %s from %s, levels: %u -> %u",  t->GetName(), c->GetName(), min_level, max_level);
 
 	for(curspell = 0, book_slot = t->GetNextAvailableSpellBookSlot(), count = 0; curspell < SPDAT_RECORDS && book_slot < MAX_PP_SPELLBOOK; curspell++, book_slot = t->GetNextAvailableSpellBookSlot(book_slot))
 	{
@@ -6720,7 +6823,7 @@ void command_scribespell(Client *c, const Seperator *sep) {
 		if(t != c)
 			c->Message(0, "Scribing spell: %s (%i) for %s.",  spells[spell_id].name, spell_id, t->GetName());
 
-		Log.Out(Logs::General, Logs::Normal, "Scribe spell: %s (%i) request for %s from %s.",  spells[spell_id].name, spell_id, t->GetName(), c->GetName());
+		Log(Logs::General, Logs::Normal, "Scribe spell: %s (%i) request for %s from %s.",  spells[spell_id].name, spell_id, t->GetName(), c->GetName());
 
 		if (spells[spell_id].classes[WARRIOR] != 0 && spells[spell_id].skill != 52 && spells[spell_id].classes[t->GetPP().class_ - 1] > 0 && !IsDiscipline(spell_id)) {
 			book_slot = t->GetNextAvailableSpellBookSlot();
@@ -6767,7 +6870,7 @@ void command_unscribespell(Client *c, const Seperator *sep) {
 			if(t != c)
 				c->Message(0, "Unscribing spell: %s (%i) for %s.",  spells[spell_id].name, spell_id, t->GetName());
 
-			Log.Out(Logs::General, Logs::Normal, "Unscribe spell: %s (%i) request for %s from %s.",  spells[spell_id].name, spell_id, t->GetName(), c->GetName());
+			Log(Logs::General, Logs::Normal, "Unscribe spell: %s (%i) request for %s from %s.",  spells[spell_id].name, spell_id, t->GetName(), c->GetName());
 		}
 		else {
 			t->Message(13, "Unable to unscribe spell: %s (%i) from your spellbook. This spell is not scribed.",  spells[spell_id].name, spell_id);
@@ -6885,7 +6988,7 @@ void command_summonitem(Client *c, const Seperator *sep)
 	size_t link_open = cmd_msg.find('\x12');
 	size_t link_close = cmd_msg.find_last_of('\x12');
 	if (link_open != link_close && (cmd_msg.length() - link_open) > EQEmu::legacy::TEXT_LINK_BODY_LENGTH) {
-		EQEmu::saylink::SayLinkBody_Struct link_body;
+		EQEmu::SayLinkBody_Struct link_body;
 		EQEmu::saylink::DegenerateLinkBody(link_body, cmd_msg.substr(link_open + 1, EQEmu::legacy::TEXT_LINK_BODY_LENGTH));
 		itemid = link_body.item_id;
 	}
@@ -6902,7 +7005,7 @@ void command_summonitem(Client *c, const Seperator *sep)
 	}
 
 	int16 item_status = 0;
-	const EQEmu::Item_Struct* item = database.GetItem(itemid);
+	const EQEmu::ItemData* item = database.GetItem(itemid);
 	if (item) {
 		item_status = static_cast<int16>(item->MinStatus);
 	}
@@ -6941,7 +7044,7 @@ void command_giveitem(Client *c, const Seperator *sep)
 		Client *t = c->GetTarget()->CastToClient();
 		uint32 itemid = atoi(sep->arg[1]);
 		int16 item_status = 0;
-		const EQEmu::Item_Struct* item = database.GetItem(itemid);
+		const EQEmu::ItemData* item = database.GetItem(itemid);
 		if(item) {
 			item_status = static_cast<int16>(item->MinStatus);
 		}
@@ -6994,10 +7097,10 @@ void command_itemsearch(Client *c, const Seperator *sep)
 	{
 		const char *search_criteria=sep->argplus[1];
 
-		const EQEmu::Item_Struct* item = nullptr;
+		const EQEmu::ItemData* item = nullptr;
 		std::string item_link;
-		EQEmu::saylink::SayLinkEngine linker;
-		linker.SetLinkType(linker.SayLinkItemData);
+		EQEmu::SayLinkEngine linker;
+		linker.SetLinkType(EQEmu::saylink::SayLinkItemData);
 
 		if (Seperator::IsNumber(search_criteria)) {
 			item = database.GetItem(atoi(search_criteria));
@@ -7015,13 +7118,13 @@ void command_itemsearch(Client *c, const Seperator *sep)
 			return;
 		}
 
-		int count = NOT_USED;
+		int count = 0;
 		char sName[64];
 		char sCriteria[255];
 		strn0cpy(sCriteria, search_criteria, sizeof(sCriteria));
 		strupr(sCriteria);
 		char* pdest;
-		uint32 it = NOT_USED;
+		uint32 it = 0;
 		while ((item = database.IterateItems(&it))) {
 			strn0cpy(sName, item->Name, sizeof(sName));
 			strupr(sName);
@@ -8507,16 +8610,16 @@ void command_path(Client *c, const Seperator *sep)
 }
 
 void Client::Undye() {
-	for (int cur_slot = EQEmu::legacy::MATERIAL_BEGIN; cur_slot <= EQEmu::legacy::MATERIAL_END; cur_slot++) {
+	for (int cur_slot = EQEmu::textures::textureBegin; cur_slot <= EQEmu::textures::LastTexture; cur_slot++) {
 		uint8 slot2=SlotConvert(cur_slot);
-		ItemInst* inst = m_inv.GetItem(slot2);
+		EQEmu::ItemInstance* inst = m_inv.GetItem(slot2);
 
 		if(inst != nullptr) {
 			inst->SetColor(inst->GetItem()->Color);
 			database.SaveInventory(CharacterID(), inst, slot2);
 		}
 
-		m_pp.item_tint[cur_slot].Color = 0;
+		m_pp.item_tint.Slot[cur_slot].Color = 0;
 		SendWearChange(cur_slot);
 	}
 
@@ -8582,7 +8685,7 @@ void command_ginfo(Client *c, const Seperator *sep)
 void command_hp(Client *c, const Seperator *sep)
 {
 	c->SendHPUpdate();
-	c->SendManaUpdatePacket();
+	c->CheckManaEndUpdate();
 }
 
 void command_aggro(Client *c, const Seperator *sep)
@@ -8634,7 +8737,7 @@ void command_bestz(Client *c, const Seperator *sep) {
 
 		float best_z = zone->zonemap->FindBestZ(me, &hit);
 
-		if (best_z != -999999)
+		if (best_z != BEST_Z_INVALID)
 		{
 			c->Message(0, "Z is %.3f at (%.3f, %.3f).",  best_z, me.x, me.y);
 		}
@@ -9196,7 +9299,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "You have %s verbose build echos.", ((c->GetEPP().show_rb_echo) ? "enabled" : "disabled"));
@@ -9210,7 +9313,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "You have %s the new consider system.", ((c->GetEPP().use_new_con) ? "enabled" : "disabled"));
@@ -9223,7 +9326,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "You will now cast beneficial spells on %s instead of an enemy target.", ((c->GetEPP().use_self_target) ? "self" : "target's target"));
@@ -9236,7 +9339,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "Pet taunting is now %s by default.", ((c->GetEPP().use_pet_taunt) ? "enabled" : "disabled"));
@@ -9249,7 +9352,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "Full DPS is now %s by default.", ((c->GetEPP().use_full_dps) ? "enabled" : "disabled"));
@@ -9262,7 +9365,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		auto results = database.QueryDatabase(query);
 		if (!results.Success()) {
 			c->Message(13, "Setting option failed. The devs have been notified.");
-			Log.Out(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
+			Log(Logs::General, Logs::Normal, "Option failed for user %u: %s", c->AccountID(), results.ErrorMessage().c_str());
 			return;
 		}
 		c->Message(0, "Self DPS is now %s by default.", ((c->GetEPP().use_self_dps) ? "enabled" : "disabled"));
@@ -9306,7 +9409,7 @@ void command_traindisc(Client *c, const Seperator *sep)
 	t->Message(0, "Training disciplines");
 	if(t != c)
 		c->Message(0, "Training disciplines for %s.",  t->GetName());
-	Log.Out(Logs::General, Logs::Normal, "Train disciplines request for %s from %s, levels: %u -> %u",  t->GetName(), c->GetName(), min_level, max_level);
+	Log(Logs::General, Logs::Normal, "Train disciplines request for %s from %s, levels: %u -> %u",  t->GetName(), c->GetName(), min_level, max_level);
 
 	for(curspell = 0, count = 0; curspell < SPDAT_RECORDS; curspell++)
 	{
@@ -9326,7 +9429,7 @@ void command_traindisc(Client *c, const Seperator *sep)
 						break;	//continue the 1st loop
 					} else if(t->GetPP().disciplines.values[r] == 0) {
 						t->GetPP().disciplines.values[r] = curspell;
-						database.SaveCharacterDisc(c->CharacterID(), r, curspell);
+						database.SaveCharacterDisc(t->CharacterID(), r, curspell);
 						t->SendDisciplineUpdate();
 						t->Message(0, "You have learned a new discipline!");
 						count++;	//success counter
@@ -9387,6 +9490,31 @@ void command_setgraveyard(Client *c, const Seperator *sep)
 
 	return;
 }
+
+
+void command_setidentity(Client *c, const Seperator *sep)
+{
+	if (!c->GetTarget() || c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) {
+		c->Message(0, "Need to target a player to use this command.");
+		return;
+	}
+
+	if (!sep->arg[1][0]) {
+		c->Message(0, "Usage: #setidentity [name]");
+		return;
+	}
+
+	auto name = sep->arg[1];
+
+	if (!database.SetIdentity(c->AccountID(), name)) {
+		c->Message(0, "Setting identity failed.");
+		return;
+	}
+	
+	c->Message(0, "Successfully changed identity, the player will need to relog for this to take effect.");
+	return;
+}
+
 
 void command_deletegraveyard(Client *c, const Seperator *sep)
 {
@@ -10224,9 +10352,9 @@ void command_object(Client *c, const Seperator *sep)
 		// Verify no other objects already in this spot (accidental double-click of Hotkey?)
 		query = StringFormat(
 		    "SELECT COUNT(*) FROM object WHERE zoneid = %u "
-		    "AND version=%u AND (posx BETWEEN %.1f AND %.1f) "
-		    "AND (posy BETWEEN %.1f AND %.1f) "
-		    "AND (posz BETWEEN %.1f AND %.1f)",
+		    "AND version=%u AND (xpos BETWEEN %.1f AND %.1f) "
+		    "AND (ypos BETWEEN %.1f AND %.1f) "
+		    "AND (zpos BETWEEN %.1f AND %.1f)",
 		    zone->GetZoneID(), zone->GetInstanceVersion(), od.x - 0.2f,
 		    od.x + 0.2f,	       // Yes, we're actually using a bounding box instead of a radius.
 		    od.y - 0.2f, od.y + 0.2f,  // Much less processing power used this way.
@@ -11754,14 +11882,14 @@ void command_zopp(Client *c, const Seperator *sep)
 			packettype = ItemPacketTrade;
 		}
 		else {
-			packettype = ItemPacketSummonItem;
+			packettype = ItemPacketLimbo;
 		}
 
 		int16 slotid = atoi(sep->arg[2]);
 		uint32 itemid = atoi(sep->arg[3]);
 		int16 charges = sep->argnum == 4 ? atoi(sep->arg[4]) : 1; // defaults to 1 charge if not specified
 
-		const EQEmu::Item_Struct* FakeItem = database.GetItem(itemid);
+		const EQEmu::ItemData* FakeItem = database.GetItem(itemid);
 
 		if (!FakeItem) {
 			c->Message(13, "Error: Item [%u] is not a valid item id.",  itemid);
@@ -11769,7 +11897,7 @@ void command_zopp(Client *c, const Seperator *sep)
 		}
 
 		int16 item_status = 0;
-		const EQEmu::Item_Struct* item = database.GetItem(itemid);
+		const EQEmu::ItemData* item = database.GetItem(itemid);
 		if(item) {
 			item_status = static_cast<int16>(item->MinStatus);
 		}
@@ -11783,7 +11911,7 @@ void command_zopp(Client *c, const Seperator *sep)
 			c->Message(0, "Processing request..results may cause unpredictable behavior.");
 		}
 
-		ItemInst* FakeItemInst = database.CreateItem(FakeItem, charges);
+		EQEmu::ItemInstance* FakeItemInst = database.CreateItem(FakeItem, charges);
 		c->SendItemPacket(slotid, FakeItemInst, packettype);
 		c->Message(0, "Sending zephyr op packet to client - [%s] %s (%u) with %i %s to slot %i.",
 			   packettype == ItemPacketTrade ? "Trade" : "Summon",  FakeItem->Name, itemid, charges,
@@ -12147,7 +12275,7 @@ void command_logtest(Client *c, const Seperator *sep){
 		uint32 i = 0;
 		t = std::clock();
 		for (i = 0; i < atoi(sep->arg[1]); i++){
-			Log.Out(Logs::General, Logs::Debug, "[%u] Test #2... Took %f seconds", i, ((float)(std::clock() - t)) / CLOCKS_PER_SEC);
+			Log(Logs::General, Logs::Debug, "[%u] Test #2... Took %f seconds", i, ((float)(std::clock() - t)) / CLOCKS_PER_SEC);
 		}
 
 	}
@@ -12179,22 +12307,22 @@ void command_logs(Client *c, const Seperator *sep){
 					c->Message(0, "[Category ID | console | file | gmsay | Category Description]");
 					redisplay_columns = 0;
 				}
-				c->Message(0, StringFormat("--- %i | %u | %u | %u | %s",  i, Log.log_settings[i].log_to_console, Log.log_settings[i].log_to_file, Log.log_settings[i].log_to_gmsay, Logs::LogCategoryName[i]).c_str());
+				c->Message(0, StringFormat("--- %i | %u | %u | %u | %s",  i, LogSys.log_settings[i].log_to_console, LogSys.log_settings[i].log_to_file, LogSys.log_settings[i].log_to_gmsay, Logs::LogCategoryName[i]).c_str());
 				redisplay_columns++;
 			}
 		}
 		/* #logs set */
 		if (strcasecmp(sep->arg[1], "set") == 0){
 			if (strcasecmp(sep->arg[2], "console") == 0){
-				Log.log_settings[atoi(sep->arg[3])].log_to_console = atoi(sep->arg[4]);
+				LogSys.log_settings[atoi(sep->arg[3])].log_to_console = atoi(sep->arg[4]);
 				logs_set = 1;
 			}
 			else if (strcasecmp(sep->arg[2], "file") == 0){
-				Log.log_settings[atoi(sep->arg[3])].log_to_file = atoi(sep->arg[4]);
+				LogSys.log_settings[atoi(sep->arg[3])].log_to_file = atoi(sep->arg[4]);
 				logs_set = 1;
 			}
 			else if (strcasecmp(sep->arg[2], "gmsay") == 0){
-				Log.log_settings[atoi(sep->arg[3])].log_to_gmsay = atoi(sep->arg[4]);
+				LogSys.log_settings[atoi(sep->arg[3])].log_to_gmsay = atoi(sep->arg[4]);
 				logs_set = 1;
 			}
 			else{
@@ -12208,11 +12336,11 @@ void command_logs(Client *c, const Seperator *sep){
 			/* We use a general 'is_category_enabled' now, let's update when we update any output settings
 				This is used in hot places of code to check if its enabled in any way before triggering logs
 			*/
-			if (sep->arg[4] > 0){
-				Log.log_settings[atoi(sep->arg[3])].is_category_enabled = 1;
+			if (atoi(sep->arg[4]) > 0){
+				LogSys.log_settings[atoi(sep->arg[3])].is_category_enabled = 1;
 			}
 			else{
-				Log.log_settings[atoi(sep->arg[3])].is_category_enabled = 0;
+				LogSys.log_settings[atoi(sep->arg[3])].is_category_enabled = 0;
 			}
 		}
 	}
@@ -12235,7 +12363,7 @@ void command_mysqltest(Client *c, const Seperator *sep)
 			auto results = database.QueryDatabase(query);
 		}
 	}
-	Log.Out(Logs::General, Logs::Debug, "MySQL Test... Took %f seconds", ((float)(std::clock() - t)) / CLOCKS_PER_SEC);
+	Log(Logs::General, Logs::Debug, "MySQL Test... Took %f seconds", ((float)(std::clock() - t)) / CLOCKS_PER_SEC);
 }
 
 void command_resetaa_timer(Client *c, const Seperator *sep) {
@@ -12381,6 +12509,16 @@ void command_reloadperlexportsettings(Client *c, const Seperator *sep)
 	}
 }
 
+void command_trapinfo(Client *c, const Seperator *sep)
+{
+	entity_list.GetTrapInfo(c);
+}
+
+void command_reloadtraps(Client *c, const Seperator *sep)
+{
+	entity_list.UpdateAllTraps(true, true);
+	c->Message(CC_Default, "Traps reloaded for %s.", zone->GetShortName());
+}
 
 // All new code added to command.cpp should be BEFORE this comment line. Do no append code to this file below the BOTS code block.
 #ifdef BOTS
@@ -12389,8 +12527,13 @@ void command_reloadperlexportsettings(Client *c, const Seperator *sep)
 void command_bot(Client *c, const Seperator *sep)
 {
 	std::string bot_message = sep->msg;
-	bot_message = bot_message.substr(bot_message.find_first_not_of("#bot"));
-	bot_message[0] = BOT_COMMAND_CHAR;
+	if (bot_message.compare("#bot") == 0) {
+		bot_message[0] = BOT_COMMAND_CHAR;
+	}
+	else {
+		bot_message = bot_message.substr(bot_message.find_first_not_of("#bot"));
+		bot_message[0] = BOT_COMMAND_CHAR;
+	}
 	
 	if (bot_command_dispatch(c, bot_message.c_str()) == -2) {
 		if (parse->PlayerHasQuestSub(EVENT_COMMAND)) {

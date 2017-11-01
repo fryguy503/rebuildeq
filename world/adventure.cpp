@@ -177,7 +177,6 @@ void Adventure::SetStatus(AdventureStatus new_status)
 		ut->instance_id = instance_id;
 		ut->new_duration = adventure_template->duration + 60;
 
-		pack->Deflate();
 		zoneserver_list.SendPacket(0, instance_id, pack);
 		safe_delete(pack);
 	}
@@ -192,7 +191,6 @@ void Adventure::SetStatus(AdventureStatus new_status)
 		ut->instance_id = instance_id;
 		ut->new_duration = 1860;
 
-		pack->Deflate();
 		zoneserver_list.SendPacket(0, instance_id, pack);
 		safe_delete(pack);
 	}
@@ -207,7 +205,6 @@ void Adventure::SetStatus(AdventureStatus new_status)
 		ut->instance_id = instance_id;
 		ut->new_duration = 1860;
 
-		pack->Deflate();
 		zoneserver_list.SendPacket(0, instance_id, pack);
 		safe_delete(pack);
 	}
@@ -313,7 +310,7 @@ void Adventure::Finished(AdventureWinStatus ws)
 					af->win = false;
 					af->points = 0;
 				}
-				pack->Deflate();
+
 				zoneserver_list.SendPacket(current->zone(), current->instance(), pack);
 				database.UpdateAdventureStatsEntry(database.GetCharacterID((*iter).c_str()), GetTemplate()->theme, (ws != AWS_Lose) ? true : false);
 				delete pack;
@@ -383,7 +380,7 @@ void Adventure::MoveCorpsesToGraveyard()
 	std::list<uint32> dbid_list;
 	std::list<uint32> charid_list;
 
-	std::string query = StringFormat("SELECT id, charid FROM character_corpses WHERE instanceid=%d", GetInstanceID());
+	std::string query = StringFormat("SELECT id, charid FROM character_corpses WHERE instance_id=%d", GetInstanceID());
 	auto results = database.QueryDatabase(query);
 	if(!results.Success())
 
@@ -398,8 +395,8 @@ void Adventure::MoveCorpsesToGraveyard()
 		float z = GetTemplate()->graveyard_z;
 
 		query = StringFormat("UPDATE character_corpses "
-                            "SET zoneid = %d, instanceid = 0, "
-                            "x = %f, y = %f, z = %f WHERE instanceid = %d",
+                            "SET zone_id = %d, instance_id = 0, "
+                            "x = %f, y = %f, z = %f WHERE instance_id = %d",
                             GetTemplate()->graveyard_zone_id,
                             x, y, z, GetInstanceID());
 		database.QueryDatabase(query);

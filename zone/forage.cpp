@@ -69,7 +69,7 @@ uint32 ZoneDatabase::GetZoneForage(uint32 ZoneID, uint8 skill) {
 
         item[index] = atoi(row[0]);
         chance[index] = atoi(row[1]) + chancepool;
-        Log.Out(Logs::General, Logs::Error, "Possible Forage: %d with a %d chance", item[index], chance[index]);
+        Log(Logs::General, Logs::Error, "Possible Forage: %d with a %d chance", item[index], chance[index]);
         chancepool = chance[index];
     }
 
@@ -153,9 +153,9 @@ uint32 ZoneDatabase::GetZoneFishing(uint32 ZoneID, uint8 skill, uint32 &npc_id, 
 //we need this function to immediately determine, after we receive OP_Fishing, if we can even try to fish, otherwise we have to wait a while to get the failure
 bool Client::CanFish() {
 	//make sure we still have a fishing pole on:
-	const ItemInst* Pole = m_inv[EQEmu::legacy::SlotPrimary];
+	const EQEmu::ItemInstance* Pole = m_inv[EQEmu::inventory::slotPrimary];
 	int32 bslot = m_inv.HasItemByUse(EQEmu::item::ItemTypeFishingBait, 1, invWhereWorn | invWherePersonal);
-	const ItemInst* Bait = nullptr;
+	const EQEmu::ItemInstance* Bait = nullptr;
 	if (bslot != INVALID_INDEX)
 		Bait = m_inv.GetItem(bslot);
 
@@ -196,7 +196,7 @@ bool Client::CanFish() {
 
 		float step_size = RuleR(Watermap, FishingLineStepSize);
 
-		for(float i = 0.0f; i < len; i += step_size) {
+		for(float i = 0.0f; i < LineLength; i += step_size) {
 			glm::vec3 dest(rodPosition.x, rodPosition.y, m_Position.z - i);
 
 			bool in_lava = zone->watermap->InLava(dest);
@@ -253,7 +253,7 @@ void Client::GoFish()
 
 	//make sure we still have a fishing pole on:
 	int32 bslot = m_inv.HasItemByUse(EQEmu::item::ItemTypeFishingBait, 1, invWhereWorn | invWherePersonal);
-	const ItemInst* Bait = nullptr;
+	const EQEmu::ItemInstance* Bait = nullptr;
 	if (bslot != INVALID_INDEX)
 		Bait = m_inv.GetItem(bslot);
 
@@ -304,10 +304,16 @@ void Client::GoFish()
 			food_id = common_fish_ids[index];
 		}
 
-		const EQEmu::Item_Struct* food_item = database.GetItem(food_id);
+		const EQEmu::ItemData* food_item = database.GetItem(food_id);
 
-		Message_StringID(MT_Skills, FISHING_SUCCESS);
-		ItemInst* inst = database.CreateItem(food_item, 1);
+		if (food_item->ItemType  != EQEmu::item::ItemTypeFood) {
+			Message_StringID(MT_Skills, FISHING_SUCCESS);
+		}
+		else {
+			Message_StringID(MT_Skills, FISHING_SUCCESS_FISH_NAME, food_item->Name);
+		}
+
+		EQEmu::ItemInstance* inst = database.CreateItem(food_item, 1);
 		if(inst != nullptr) {
 			if(CheckLoreConflict(inst->GetItem()))
 			{
@@ -317,12 +323,12 @@ void Client::GoFish()
 			else
 			{
 				PushItemOnCursor(*inst);
-				SendItemPacket(EQEmu::legacy::SlotCursor, inst, ItemPacketSummonItem);
+				SendItemPacket(EQEmu::inventory::slotCursor, inst, ItemPacketLimbo);
 				if(RuleB(TaskSystem, EnableTaskSystem))
 					UpdateTasksForItem(ActivityFish, food_id);
 
 				safe_delete(inst);
-				inst = m_inv.GetItem(EQEmu::legacy::SlotCursor);
+				inst = m_inv.GetItem(EQEmu::inventory::slotCursor);
 			}
 
 			if(inst) {
@@ -354,7 +360,7 @@ void Client::GoFish()
 	//and then swap out items in primary slot... too lazy to fix right now
 	if (zone->random.Int(0, 49) == 1) {
 		Message_StringID(MT_Skills, FISHING_POLE_BROKE);	//Your fishing pole broke!
-		DeleteItemInInventory(EQEmu::legacy::SlotPrimary, 0, true);
+		DeleteItemInInventory(EQEmu::inventory::slotPrimary, 0, true);
 	}
 
 	if (CheckIncreaseSkill(EQEmu::skills::SkillFishing, nullptr, 5))
@@ -396,10 +402,10 @@ void Client::ForageItem(bool guarantee) {
 			foragedfood = common_food_ids[index];
 		}
 
-		const EQEmu::Item_Struct* food_item = database.GetItem(foragedfood);
+		const EQEmu::ItemData* food_item = database.GetItem(foragedfood);
 
 		if(!food_item) {
-			Log.Out(Logs::General, Logs::Error, "nullptr returned from database.GetItem in ClientForageItem");
+			Log(Logs::General, Logs::Error, "nullptr returned from database.GetItem in ClientForageItem");
 			return;
 		}
 
@@ -421,7 +427,7 @@ void Client::ForageItem(bool guarantee) {
 			}
 
 		Message_StringID(MT_Skills, stringid);
-		ItemInst* inst = database.CreateItem(food_item, 1);
+		EQEmu::ItemInstance* inst = database.CreateItem(food_item, 1);
 		if(inst != nullptr) {
 			// check to make sure it isn't a foraged lore item
 			if(CheckLoreConflict(inst->GetItem()))
@@ -431,12 +437,12 @@ void Client::ForageItem(bool guarantee) {
 			}
 			else {
 				PushItemOnCursor(*inst);
-				SendItemPacket(EQEmu::legacy::SlotCursor, inst, ItemPacketSummonItem);
+				SendItemPacket(EQEmu::inventory::slotCursor, inst, ItemPacketLimbo);
 				if(RuleB(TaskSystem, EnableTaskSystem))
 					UpdateTasksForItem(ActivityForage, foragedfood);
 
 				safe_delete(inst);
-				inst = m_inv.GetItem(EQEmu::legacy::SlotCursor);
+				inst = m_inv.GetItem(EQEmu::inventory::slotCursor);
 			}
 
 			if(inst) {

@@ -33,8 +33,8 @@
                     <li><a href="/guide/encounter/" class="external {if !empty($page) && $page == 'guide' and $action == 'encounter'}signup{/if}">Encounter Events</a></li>
                     <li><a href="/guide/rested/" class="external {if !empty($page) && $page == 'guide' and $action == 'rested'}signup{/if}">Rested Experience</a></li>*}
                     <li><a href="/changelog/" class="external {if !empty($page) && $page == 'changelog'}signup{/if}">Changelog</a></li>
-                    <li><a href="/guide/zone/" class="external {if !empty($page) && $page == 'zone'}signup{/if}">Zones</a></li>
-                    {*<li><a href="/online/" class="external {if !empty($page) && $page == 'changelog'}signup{/if}">Who is Online</a></li>*}
+                    <li><a href="/guide/zone/" class="external {if !empty($page) && $page == 'zone'}signup{/if}">Zones</a></li>                    
+                    <li><a href="/guide/fragment/" class="external {if !empty($page) && $page == 'fragment'}signup{/if}">Fragment List</a></li>
                     <li><a href="/donate/" class="external {if !empty($page) && $page == 'donate'}signup{/if}">Donate</a></li>
                   </ul>
                 </li>

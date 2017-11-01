@@ -32,7 +32,7 @@ extern WorldServer worldserver;
 extern volatile bool is_zone_loaded;
 
 void ZoneGuildManager::SendGuildRefresh(uint32 guild_id, bool name, bool motd, bool rank, bool relation) {
-	Log.Out(Logs::Detail, Logs::Guilds, "Sending guild refresh for %d to world, changes: name=%d, motd=%d, rank=d, relation=%d", guild_id, name, motd, rank, relation);
+	Log(Logs::Detail, Logs::Guilds, "Sending guild refresh for %d to world, changes: name=%d, motd=%d, rank=d, relation=%d", guild_id, name, motd, rank, relation);
 	auto pack = new ServerPacket(ServerOP_RefreshGuild, sizeof(ServerGuildRefresh_Struct));
 	ServerGuildRefresh_Struct *s = (ServerGuildRefresh_Struct *) pack->pBuffer;
 	s->guild_id = guild_id;
@@ -46,7 +46,7 @@ void ZoneGuildManager::SendGuildRefresh(uint32 guild_id, bool name, bool motd, b
 
 void ZoneGuildManager::SendCharRefresh(uint32 old_guild_id, uint32 guild_id, uint32 charid) {
 	if(guild_id == 0) {
-		Log.Out(Logs::Detail, Logs::Guilds, "Guild lookup for char %d when sending char refresh.", charid);
+		Log(Logs::Detail, Logs::Guilds, "Guild lookup for char %d when sending char refresh.", charid);
 
 		CharGuildInfo gci;
 		if(!GetCharInfo(charid, gci)) {
@@ -56,7 +56,7 @@ void ZoneGuildManager::SendCharRefresh(uint32 old_guild_id, uint32 guild_id, uin
 		}
 	}
 
-	Log.Out(Logs::Detail, Logs::Guilds, "Sending char refresh for %d from guild %d to world", charid, guild_id);
+	Log(Logs::Detail, Logs::Guilds, "Sending char refresh for %d from guild %d to world", charid, guild_id);
 
 	auto pack = new ServerPacket(ServerOP_GuildCharRefresh, sizeof(ServerGuildCharRefresh_Struct));
 	ServerGuildCharRefresh_Struct *s = (ServerGuildCharRefresh_Struct *) pack->pBuffer;
@@ -89,7 +89,7 @@ void ZoneGuildManager::SendRankUpdate(uint32 CharID)
 }
 
 void ZoneGuildManager::SendGuildDelete(uint32 guild_id) {
-	Log.Out(Logs::Detail, Logs::Guilds, "Sending guild delete for guild %d to world", guild_id);
+	Log(Logs::Detail, Logs::Guilds, "Sending guild delete for guild %d to world", guild_id);
 	auto pack = new ServerPacket(ServerOP_DeleteGuild, sizeof(ServerGuildID_Struct));
 	ServerGuildID_Struct *s = (ServerGuildID_Struct *) pack->pBuffer;
 	s->guild_id = guild_id;
@@ -261,12 +261,12 @@ void ZoneGuildManager::ProcessWorldPacket(ServerPacket *pack) {
 	switch(pack->opcode) {
 	case ServerOP_RefreshGuild: {
 		if(pack->size != sizeof(ServerGuildRefresh_Struct)) {
-			Log.Out(Logs::General, Logs::Error, "Received ServerOP_RefreshGuild of incorrect size %d, expected %d", pack->size, sizeof(ServerGuildRefresh_Struct));
+			Log(Logs::General, Logs::Error, "Received ServerOP_RefreshGuild of incorrect size %d, expected %d", pack->size, sizeof(ServerGuildRefresh_Struct));
 			return;
 		}
 		ServerGuildRefresh_Struct *s = (ServerGuildRefresh_Struct *) pack->pBuffer;
 
-		Log.Out(Logs::Detail, Logs::Guilds, "Received guild refresh from world for %d, changes: name=%d, motd=%d, rank=%d, relation=%d", s->guild_id, s->name_change, s->motd_change, s->rank_change, s->relation_change);
+		Log(Logs::Detail, Logs::Guilds, "Received guild refresh from world for %d, changes: name=%d, motd=%d, rank=%d, relation=%d", s->guild_id, s->name_change, s->motd_change, s->rank_change, s->relation_change);
 
 		//reload all the guild details from the database.
 		RefreshGuild(s->guild_id);
@@ -295,12 +295,12 @@ void ZoneGuildManager::ProcessWorldPacket(ServerPacket *pack) {
 
 	case ServerOP_GuildCharRefresh: {
 		if(pack->size != sizeof(ServerGuildCharRefresh_Struct)) {
-			Log.Out(Logs::General, Logs::Error, "Received ServerOP_RefreshGuild of incorrect size %d, expected %d", pack->size, sizeof(ServerGuildCharRefresh_Struct));
+			Log(Logs::General, Logs::Error, "Received ServerOP_RefreshGuild of incorrect size %d, expected %d", pack->size, sizeof(ServerGuildCharRefresh_Struct));
 			return;
 		}
 		ServerGuildCharRefresh_Struct *s = (ServerGuildCharRefresh_Struct *) pack->pBuffer;
 
-		Log.Out(Logs::Detail, Logs::Guilds, "Received guild member refresh from world for char %d from guild %d", s->char_id, s->guild_id);
+		Log(Logs::Detail, Logs::Guilds, "Received guild member refresh from world for char %d from guild %d", s->char_id, s->guild_id);
 
 		Client *c = entity_list.GetClientByCharID(s->char_id);
 
@@ -338,7 +338,7 @@ void ZoneGuildManager::ProcessWorldPacket(ServerPacket *pack) {
 		{
 			if(pack->size != sizeof(ServerGuildRankUpdate_Struct))
 			{
-				Log.Out(Logs::General, Logs::Error, "Received ServerOP_RankUpdate of incorrect size %d, expected %d",
+				Log(Logs::General, Logs::Error, "Received ServerOP_RankUpdate of incorrect size %d, expected %d",
 					pack->size, sizeof(ServerGuildRankUpdate_Struct));
 
 				return;
@@ -364,12 +364,12 @@ void ZoneGuildManager::ProcessWorldPacket(ServerPacket *pack) {
 
 	case ServerOP_DeleteGuild: {
 		if(pack->size != sizeof(ServerGuildID_Struct)) {
-			Log.Out(Logs::General, Logs::Error, "Received ServerOP_DeleteGuild of incorrect size %d, expected %d", pack->size, sizeof(ServerGuildID_Struct));
+			Log(Logs::General, Logs::Error, "Received ServerOP_DeleteGuild of incorrect size %d, expected %d", pack->size, sizeof(ServerGuildID_Struct));
 			return;
 		}
 		ServerGuildID_Struct *s = (ServerGuildID_Struct *) pack->pBuffer;
 
-		Log.Out(Logs::Detail, Logs::Guilds, "Received guild delete from world for guild %d", s->guild_id);
+		Log(Logs::Detail, Logs::Guilds, "Received guild delete from world for guild %d", s->guild_id);
 
 		//clear all the guild tags.
 		entity_list.RefreshAllGuildInfo(s->guild_id);
@@ -417,10 +417,10 @@ void ZoneGuildManager::ProcessWorldPacket(ServerPacket *pack) {
 
 			if (!c || !c->IsInAGuild())
 			{
-				Log.Out(Logs::Detail, Logs::Guilds,"Invalid Client or not in guild. ID=%i", FromID);
+				Log(Logs::Detail, Logs::Guilds,"Invalid Client or not in guild. ID=%i", FromID);
 				break;
 			}
-			Log.Out(Logs::Detail, Logs::Guilds,"Processing ServerOP_OnlineGuildMembersResponse");
+			Log(Logs::Detail, Logs::Guilds,"Processing ServerOP_OnlineGuildMembersResponse");
 			auto outapp = new EQApplicationPacket(OP_GuildMemberUpdate, sizeof(GuildMemberUpdate_Struct));
 			GuildMemberUpdate_Struct *gmus = (GuildMemberUpdate_Struct*)outapp->pBuffer;
 			char Name[64];
@@ -433,7 +433,7 @@ void ZoneGuildManager::ProcessWorldPacket(ServerPacket *pack) {
 				VARSTRUCT_DECODE_STRING(Name, Buffer);
 				strn0cpy(gmus->MemberName, Name, sizeof(gmus->MemberName));
 				gmus->ZoneID = VARSTRUCT_DECODE_TYPE(uint32, Buffer);
-				Log.Out(Logs::Detail, Logs::Guilds,"Sending OP_GuildMemberUpdate to %i. Name=%s ZoneID=%i",FromID,Name,gmus->ZoneID);
+				Log(Logs::Detail, Logs::Guilds,"Sending OP_GuildMemberUpdate to %i. Name=%s ZoneID=%i",FromID,Name,gmus->ZoneID);
 				c->QueuePacket(outapp);
 			}
 			safe_delete(outapp);
@@ -683,7 +683,7 @@ void GuildBankManager::SendGuildBank(Client *c)
 
 	if(Iterator == Banks.end())
 	{
-		Log.Out(Logs::General, Logs::Error, "Unable to find guild bank for guild ID %i", c->GuildID());
+		Log(Logs::General, Logs::Error, "Unable to find guild bank for guild ID %i", c->GuildID());
 
 		return;
 	}
@@ -694,7 +694,7 @@ void GuildBankManager::SendGuildBank(Client *c)
 	if (c->ClientVersionBit() & EQEmu::versions::bit_RoFAndLater) {
 		auto outapp = new EQApplicationPacket(OP_GuildBankItemList, sizeof(GuildBankItemListEntry_Struct) * 240);
 		for (int i = 0; i < GUILD_BANK_DEPOSIT_AREA_SIZE; ++i) {
-			const EQEmu::Item_Struct *Item = database.GetItem(guild_bank->Items.DepositArea[i].ItemID);
+			const EQEmu::ItemData *Item = database.GetItem(guild_bank->Items.DepositArea[i].ItemID);
 			if (Item) {
 				outapp->WriteUInt8(1);
 				outapp->WriteUInt32(guild_bank->Items.DepositArea[i].Permissions);
@@ -718,7 +718,7 @@ void GuildBankManager::SendGuildBank(Client *c)
 		outapp->SetWritePosition(outapp->GetWritePosition() + 20); // newer clients have 40 deposit slots, keep them 0 for now
 
 		for (int i = 0; i < GUILD_BANK_MAIN_AREA_SIZE; ++i) {
-			const EQEmu::Item_Struct *Item = database.GetItem(guild_bank->Items.MainArea[i].ItemID);
+			const EQEmu::ItemData *Item = database.GetItem(guild_bank->Items.MainArea[i].ItemID);
 			if (Item) {
 				outapp->WriteUInt8(1);
 				outapp->WriteUInt32(guild_bank->Items.MainArea[i].Permissions);
@@ -749,7 +749,7 @@ void GuildBankManager::SendGuildBank(Client *c)
 	{
 		if(guild_bank->Items.DepositArea[i].ItemID > 0)
 		{
-			const EQEmu::Item_Struct *Item = database.GetItem(guild_bank->Items.DepositArea[i].ItemID);
+			const EQEmu::ItemData *Item = database.GetItem(guild_bank->Items.DepositArea[i].ItemID);
 
 			if(!Item)
 				continue;
@@ -785,7 +785,7 @@ void GuildBankManager::SendGuildBank(Client *c)
 	{
 		if(guild_bank->Items.MainArea[i].ItemID > 0)
 		{
-			const EQEmu::Item_Struct *Item = database.GetItem(guild_bank->Items.MainArea[i].ItemID);
+			const EQEmu::ItemData *Item = database.GetItem(guild_bank->Items.MainArea[i].ItemID);
 
 			if(!Item)
 				continue;
@@ -856,7 +856,7 @@ bool GuildBankManager::AddItem(uint32 GuildID, uint8 Area, uint32 ItemID, int32 
 
 	if(Iterator == Banks.end())
 	{
-		Log.Out(Logs::General, Logs::Error, "Unable to find guild bank for guild ID %i", GuildID);
+		Log(Logs::General, Logs::Error, "Unable to find guild bank for guild ID %i", GuildID);
 
 		return false;
 	}
@@ -902,7 +902,7 @@ bool GuildBankManager::AddItem(uint32 GuildID, uint8 Area, uint32 ItemID, int32 
 
 	if(Slot < 0)
 	{
-		Log.Out(Logs::General, Logs::Error, "No space to add item to the guild bank.");
+		Log(Logs::General, Logs::Error, "No space to add item to the guild bank.");
 
 		return false;
 	}
@@ -916,7 +916,7 @@ bool GuildBankManager::AddItem(uint32 GuildID, uint8 Area, uint32 ItemID, int32 
 		return false;
 	}
 
-	const EQEmu::Item_Struct *Item = database.GetItem(ItemID);
+	const EQEmu::ItemData *Item = database.GetItem(ItemID);
 
 	GuildBankItemUpdate_Struct gbius;
 
@@ -982,7 +982,7 @@ int GuildBankManager::Promote(uint32 guildID, int slotID)
 
 	(*iter)->Items.DepositArea[slotID].ItemID = 0;
 
-	const EQEmu::Item_Struct *Item = database.GetItem((*iter)->Items.MainArea[mainSlot].ItemID);
+	const EQEmu::ItemData *Item = database.GetItem((*iter)->Items.MainArea[mainSlot].ItemID);
 
 	GuildBankItemUpdate_Struct gbius;
 
@@ -1038,7 +1038,7 @@ void GuildBankManager::SetPermissions(uint32 guildID, uint16 slotID, uint32 perm
 	else
 		(*iter)->Items.MainArea[slotID].WhoFor[0] = '\0';
 
-	const EQEmu::Item_Struct *Item = database.GetItem((*iter)->Items.MainArea[slotID].ItemID);
+	const EQEmu::ItemData *Item = database.GetItem((*iter)->Items.MainArea[slotID].ItemID);
 
 	GuildBankItemUpdate_Struct gbius;
 
@@ -1062,7 +1062,7 @@ void GuildBankManager::SetPermissions(uint32 guildID, uint16 slotID, uint32 perm
 	entity_list.QueueClientsGuildBankItemUpdate(&gbius, guildID);
 }
 
-ItemInst* GuildBankManager::GetItem(uint32 GuildID, uint16 Area, uint16 SlotID, uint32 Quantity)
+EQEmu::ItemInstance* GuildBankManager::GetItem(uint32 GuildID, uint16 Area, uint16 SlotID, uint32 Quantity)
 {
 	auto Iterator = GetGuildBank(GuildID);
 
@@ -1071,7 +1071,7 @@ ItemInst* GuildBankManager::GetItem(uint32 GuildID, uint16 Area, uint16 SlotID, 
 
 	GuildBankItem* BankArea = nullptr;
 
-	ItemInst* inst = nullptr;
+	EQEmu::ItemInstance* inst = nullptr;
 
 	if(Area == GuildBankDepositArea)
 	{
@@ -1169,7 +1169,7 @@ bool GuildBankManager::DeleteItem(uint32 guildID, uint16 area, uint16 slotID, ui
 
 	bool deleted = true;
 
-	const EQEmu::Item_Struct *Item = database.GetItem(BankArea[slotID].ItemID);
+	const EQEmu::ItemData *Item = database.GetItem(BankArea[slotID].ItemID);
 
 	if(!Item->Stackable || (quantity >= BankArea[slotID].Quantity)) {
         std::string query = StringFormat("DELETE FROM `guild_bank` WHERE `guildid` = %i "
@@ -1230,7 +1230,7 @@ bool GuildBankManager::MergeStacks(uint32 GuildID, uint16 SlotID)
 	if(BankArea[SlotID].ItemID == 0)
 		return false;
 
-	const EQEmu::Item_Struct *Item = database.GetItem(BankArea[SlotID].ItemID);
+	const EQEmu::ItemData *Item = database.GetItem(BankArea[SlotID].ItemID);
 
 	if(!Item->Stackable)
 		return false;
@@ -1328,7 +1328,7 @@ bool GuildBankManager::SplitStack(uint32 GuildID, uint16 SlotID, uint32 Quantity
 	if(BankArea[SlotID].Quantity <= Quantity || Quantity == 0)
 		return false;
 
-	const EQEmu::Item_Struct *Item = database.GetItem(BankArea[SlotID].ItemID);
+	const EQEmu::ItemData *Item = database.GetItem(BankArea[SlotID].ItemID);
 
 	if(!Item->Stackable)
 		return false;

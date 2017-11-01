@@ -131,6 +131,7 @@ static const uint32 MAX_PP_LANGUAGE		= 32;	// was 25
 static const uint32 MAX_PP_SPELLBOOK	= 720;	// was 480
 static const uint32 MAX_PP_MEMSPELL		= 16;	// was 12
 static const uint32 MAX_PP_SKILL		= PACKET_SKILL_ARRAY_SIZE;	// 100 - actual skills buffer size
+static const uint32 MAX_PP_INNATE_SKILL	= 25;
 static const uint32 MAX_PP_AA_ARRAY		= 300;
 static const uint32 MAX_PP_DISCIPLINES	= 200;	// was 100
 static const uint32 MAX_GROUP_MEMBERS	= 6;
@@ -163,7 +164,7 @@ struct AdventureInfo {
 ** Merth: Gave struct a name so gcc 2.96 would compile
 **
 */
-struct Color_Struct
+struct Tint_Struct
 {
 	union {
 		struct {
@@ -171,20 +172,64 @@ struct Color_Struct
 			uint8 Green;
 			uint8 Red;
 			uint8 UseTint;	// if there's a tint this is FF
-		} RGB;
+		};
 		uint32 Color;
 	};
 };
 
-struct CharSelectEquip
+struct TintProfile
+{
+	union {
+		struct {
+			Tint_Struct Head;
+			Tint_Struct Chest;
+			Tint_Struct Arms;
+			Tint_Struct Wrist;
+			Tint_Struct Hands;
+			Tint_Struct Legs;
+			Tint_Struct Feet;
+			Tint_Struct Primary;
+			Tint_Struct Secondary;
+		};
+		Tint_Struct Slot[EQEmu::textures::materialCount];
+	};
+};
+
+/*
+* Visible equiptment.
+* Size: 20 Octets
+*/
+struct Texture_Struct
 {
 	uint32 Material;
 	uint32 Unknown1;
 	uint32 EliteMaterial;
 	uint32 HeroForgeModel;
-	uint32 Material2;
-	Color_Struct Color;
+	uint32 Material2;	// Same as material?
 };
+
+// Needs more research regarding new slots
+//struct TextureProfile
+//{
+//	union {
+//		struct {
+//			Texture_Struct Head;
+//			Texture_Struct Chest;
+//			Texture_Struct Arms;
+//			Texture_Struct Wrist;
+//			Texture_Struct Hands;
+//			Texture_Struct Legs;
+//			Texture_Struct Feet;
+//			Texture_Struct Primary;
+//			Texture_Struct Secondary;
+//		};
+//		Texture_Struct Slot[EQEmu::textures::TextureCount];
+//	};
+//
+//	TextureProfile();
+//};
+
+struct CharSelectEquip : Texture_Struct, Tint_Struct {};
 
 struct CharacterSelectEntry_Struct
 {
@@ -230,21 +275,6 @@ struct CharacterSelect_Struct
 /*000*/	uint32 CharCount;	//number of chars in this packet
 /*004*/	CharacterSelectEntry_Struct Entries[0];
 };
-
-/*
-* Visible equiptment.
-* Size: 20 Octets
-*/
-struct EquipStruct
-{
-	/*00*/ uint32 Material;
-	/*04*/ uint32 Unknown1;
-	/*08*/ uint32 EliteMaterial;
-	/*12*/ uint32 HeroForgeModel;
-	/*16*/ uint32 Material2;	// Same as material?
-	/*20*/
-};
-
 
 struct Membership_Entry_Struct
 {
@@ -310,18 +340,7 @@ struct Spawn_Struct_Bitfields
 /*06*/	unsigned   sneak:1;
 /*08*/	unsigned   lfg:1;
 /*09*/	unsigned   unknown09:1;
-/*10*/	unsigned   invis:1;			// May have invis & sneak the wrong way around ... not sure how to tell which is which
-/*11*/	unsigned   invis1:1;		// GM Invis?  Can only be seen with #gm on - same for the below
-/*12*/	unsigned   invis2:1;		// This one also make the NPC/PC invis
-/*13*/	unsigned   invis3:1;		// This one also make the NPC/PC invis
-/*14*/	unsigned   invis4:1;		// This one also make the NPC/PC invis
-/*15*/	unsigned   invis6:1;		// This one also make the NPC/PC invis
-/*16*/	unsigned   invis7:1;		// This one also make the NPC/PC invis
-/*17*/	unsigned   invis8:1;		// This one also make the NPC/PC invis
-/*18*/	unsigned   invis9:1;		// This one also make the NPC/PC invis
-/*19*/	unsigned   invis10:1;		// This one also make the NPC/PC invis
-/*20*/	unsigned   invis11:1;		// This one also make the NPC/PC invis
-/*21*/	unsigned   invis12:1;		// This one also make the NPC/PC invis
+/*10*/	unsigned   invis:12;		// there are 3000 different (non-GM) invis levels
 /*22*/	unsigned   linkdead:1;		// 1 Toggles LD on or off after name. Correct for RoF
 /*23*/	unsigned   showhelm:1;
 /*24*/	unsigned   unknown24:1;		// Prefixes name with !
@@ -441,39 +460,24 @@ struct Spawn_Struct
 /*0000*/ uint32 unknown18;
 /*0000*/ uint32 unknown19;
 	 Spawn_Struct_Position Position;
-/*0000*/ union
-         {
-           struct
-           {
-               /*0000*/ Color_Struct color_helmet;    // Color of helmet item
-               /*0000*/ Color_Struct color_chest;     // Color of chest item
-               /*0000*/ Color_Struct color_arms;      // Color of arms item
-               /*0000*/ Color_Struct color_bracers;   // Color of bracers item
-               /*0000*/ Color_Struct color_hands;     // Color of hands item
-               /*0000*/ Color_Struct color_legs;      // Color of legs item
-               /*0000*/ Color_Struct color_feet;      // Color of feet item
-               /*0000*/ Color_Struct color_primary;   // Color of primary item
-               /*0000*/ Color_Struct color_secondary; // Color of secondary item
-           } equipment_colors;
-            /*0000*/ Color_Struct colors[9]; // Array elements correspond to struct equipment_colors above
-         };
+/*0000*/ TintProfile equipment_tint;
 
 // skip these bytes if not a valid player race
 /*0000*/ union
          {
            struct
            {
-               /*0000*/ EquipStruct equip_helmet;     // Equiptment: Helmet visual
-               /*0000*/ EquipStruct equip_chest;      // Equiptment: Chest visual
-               /*0000*/ EquipStruct equip_arms;       // Equiptment: Arms visual
-               /*0000*/ EquipStruct equip_bracers;    // Equiptment: Wrist visual
-               /*0000*/ EquipStruct equip_hands;      // Equiptment: Hands visual
-               /*0000*/ EquipStruct equip_legs;       // Equiptment: Legs visual
-               /*0000*/ EquipStruct equip_feet;       // Equiptment: Boots visual
-               /*0000*/ EquipStruct equip_primary;    // Equiptment: Main visual
-               /*0000*/ EquipStruct equip_secondary;  // Equiptment: Off visual
+			   /*0000*/ Texture_Struct equip_helmet;     // Equiptment: Helmet visual
+			   /*0000*/ Texture_Struct equip_chest;      // Equiptment: Chest visual
+			   /*0000*/ Texture_Struct equip_arms;       // Equiptment: Arms visual
+			   /*0000*/ Texture_Struct equip_bracers;    // Equiptment: Wrist visual
+			   /*0000*/ Texture_Struct equip_hands;      // Equiptment: Hands visual
+			   /*0000*/ Texture_Struct equip_legs;       // Equiptment: Legs visual
+			   /*0000*/ Texture_Struct equip_feet;       // Equiptment: Boots visual
+			   /*0000*/ Texture_Struct equip_primary;    // Equiptment: Main visual
+			   /*0000*/ Texture_Struct equip_secondary;  // Equiptment: Off visual
            } equip;
-           /*0000*/ EquipStruct equipment[9];
+		   /*0000*/ Texture_Struct equipment[9];
          };
 
 /*0000*/ //char title[0];  // only read if(hasTitleOrSuffix & 4)
@@ -610,7 +614,7 @@ struct MemorizeSpell_Struct {
 uint32 slot;     // Spot in the spell book/memorized slot
 uint32 spell_id; // Spell id (200 or c8 is minor healing, etc)
 uint32 scribing; // 1 if memorizing a spell, set to 0 if scribing to book, 2 if un-memming
-uint32 unknown12;
+uint32 reduction; // lowers reuse
 };
 
 /*
@@ -643,11 +647,12 @@ struct DeleteSpell_Struct
 
 struct ManaChange_Struct
 {
-	uint32	new_mana;                  // New Mana AMount
-	uint32	stamina;
-	uint32	spell_id;
-	uint32	unknown12;
-	uint32	unknown16;
+/*00*/	uint32	new_mana;		// New Mana AMount
+/*04*/	uint32	stamina;
+/*08*/	uint32	spell_id;
+/*12*/	uint8	keepcasting;	// won't stop the cast. Change mana while casting?
+/*13*/	uint8	padding[3];		// client doesn't read it, garbage data seems like
+/*16*/	int32	slot;			// -1 for normal usage slot for when we want silent interrupt? I think it does timer stuff or something. Linked Spell Reuse interrupt uses it
 };
 
 struct SwapSpell_Struct
@@ -694,67 +699,29 @@ struct SpawnAppearance_Struct
 
 struct SpellBuff_Struct
 {
-/*000*/	uint8 slotid;				// badly named... seems to be 2 for a real buff, 0 otherwise
-/*001*/	float unknown004;			// Seen 1 for no buff
-/*005*/	uint32 player_id;			// 'global' ID of the caster, for wearoff messages
-/*009*/ uint32 unknown016;
-/*013*/	uint8 bard_modifier;
-/*014*/	int32 duration;
-/*018*/ uint8 level;
-/*019*/ uint32 spellid;
-/*023*/ uint32 counters;
-/*027*/ uint8 unknown0028[53];
-/*080*/
-};
-
-struct SpellBuff_Struct_Old
-{
-/*000*/	uint8 slotid;				// badly named... seems to be 2 for a real buff, 0 otherwise
-/*001*/ uint8 level;
-/*002*/	uint8 bard_modifier;
-/*003*/	uint8 effect;				// not real
-/*004*/	float unknown004;			// Seen 1 for no buff
-/*008*/ uint32 spellid;
-/*012*/	int32 duration;
-/*016*/ uint32 unknown016;
-/*020*/	uint32 player_id;			// 'global' ID of the caster, for wearoff messages
-/*024*/ uint32 counters;
-/*028*/ uint8 unknown0028[60];
+/*000*/	uint8 effect_type;		// 0 = no buff, 2 = buff, 4 = inverse affects of buff
+/*001*/	uint8 level;			// Seen 1 for no buff
+/*002*/	uint8 unknown002;		//pretty sure padding now
+/*003*/	uint8 unknown003;   	// MQ2 used to call this "damage shield" -- don't see client referencing it, so maybe server side DS type tracking?
+/*004*/	float bard_modifier;
+/*008*/	uint32 spellid;
+/*012*/	uint32 duration;
+/*016*/	uint32 player_id;		// caster ID, pretty sure just zone ID
+/*020*/	uint32 num_hits;
+/*024*/	float y;				// referenced by SPA 441
+/*028*/	float x;				// unsure if all buffs get them
+/*032*/	float z;				// as valid data
+/*036*/	uint32 unknown036;
+/*040*/	int32 slot_data[12];	// book keeping stuff per slot (counters, rune/vie)
 /*088*/
 };
 
-// Not functional yet, but this is what the packet looks like on Live
-struct SpellBuffFade_Struct_Live {
-/*000*/	uint32 entityid;	// Player id who cast the buff
-/*004*/	uint8 unknown004;
-/*005*/	uint8 level;
-/*006*/	uint8 effect;
-/*007*/	uint8 unknown007;
-/*008*/	float unknown008;
-/*012*/	uint32 spellid;
-/*016*/	int32 duration;
-/*020*/ uint32 playerId;	// Global player ID?
-/*024*/	uint32 num_hits;
-/*028*/ uint8 unknown0028[64];
+struct SpellBuffPacket_Struct {
+/*000*/	uint32 entityid;		// Player id who cast the buff
+/*004*/	SpellBuff_Struct buff;
 /*092*/	uint32 slotid;
 /*096*/	uint32 bufffade;
 /*100*/
-};
-
-struct SpellBuffFade_Struct {
-/*000*/	uint32 entityid;
-/*004*/	uint8 slot;
-/*005*/	uint8 level;
-/*006*/	uint8 effect;
-/*007*/	uint8 unknown7;
-/*008*/	uint32 spellid;
-/*012*/	int32 duration;
-/*016*/	uint32 num_hits;
-/*020*/	uint32 unknown020;		// Global player ID?
-/*024*/ uint32 playerId;		// Player id who cast the buff
-/*028*/	uint32 slotid;
-/*032*/	uint32 bufffade;
-/*036*/
 };
 
 struct BuffRemoveRequest_Struct
@@ -1061,38 +1028,38 @@ union
 {
 	struct
 	{
-		/*00184*/ EquipStruct equip_helmet; // Equiptment: Helmet visual
-		/*00204*/ EquipStruct equip_chest; // Equiptment: Chest visual
-		/*00224*/ EquipStruct equip_arms; // Equiptment: Arms visual
-		/*00244*/ EquipStruct equip_bracers; // Equiptment: Wrist visual
-		/*00264*/ EquipStruct equip_hands; // Equiptment: Hands visual
-		/*00284*/ EquipStruct equip_legs; // Equiptment: Legs visual
-		/*00304*/ EquipStruct equip_feet; // Equiptment: Boots visual
-		/*00324*/ EquipStruct equip_primary; // Equiptment: Main visual
-		/*00344*/ EquipStruct equip_secondary; // Equiptment: Off visual
+		/*00184*/ Texture_Struct equip_helmet; // Equiptment: Helmet visual
+		/*00204*/ Texture_Struct equip_chest; // Equiptment: Chest visual
+		/*00224*/ Texture_Struct equip_arms; // Equiptment: Arms visual
+		/*00244*/ Texture_Struct equip_bracers; // Equiptment: Wrist visual
+		/*00264*/ Texture_Struct equip_hands; // Equiptment: Hands visual
+		/*00284*/ Texture_Struct equip_legs; // Equiptment: Legs visual
+		/*00304*/ Texture_Struct equip_feet; // Equiptment: Boots visual
+		/*00324*/ Texture_Struct equip_primary; // Equiptment: Main visual
+		/*00344*/ Texture_Struct equip_secondary; // Equiptment: Off visual
 		// Below slots are just guesses, but all 0s anyway...
-		/*00364*/ EquipStruct equip_charm; // Equiptment: Non-visual
-		/*00384*/ EquipStruct equip_ear1; // Equiptment: Non-visual
-		/*00404*/ EquipStruct equip_ear2; // Equiptment: Non-visual
-		/*00424*/ EquipStruct equip_face; // Equiptment: Non-visual
-		/*00444*/ EquipStruct equip_neck; // Equiptment: Non-visual
-		/*00464*/ EquipStruct equip_shoulder; // Equiptment: Non-visual
-		/*00484*/ EquipStruct equip_bracer2; // Equiptment: Non-visual
-		/*00504*/ EquipStruct equip_range; // Equiptment: Non-visual
-		/*00524*/ EquipStruct equip_ring1; // Equiptment: Non-visual
-		/*00544*/ EquipStruct equip_ring2; // Equiptment: Non-visual
-		/*00564*/ EquipStruct equip_waist; // Equiptment: Non-visual
-		/*00584*/ EquipStruct equip_powersource; // Equiptment: Non-visual
-		/*00604*/ EquipStruct equip_ammo; // Equiptment: Non-visual
+		/*00364*/ Texture_Struct equip_charm; // Equiptment: Non-visual
+		/*00384*/ Texture_Struct equip_ear1; // Equiptment: Non-visual
+		/*00404*/ Texture_Struct equip_ear2; // Equiptment: Non-visual
+		/*00424*/ Texture_Struct equip_face; // Equiptment: Non-visual
+		/*00444*/ Texture_Struct equip_neck; // Equiptment: Non-visual
+		/*00464*/ Texture_Struct equip_shoulder; // Equiptment: Non-visual
+		/*00484*/ Texture_Struct equip_bracer2; // Equiptment: Non-visual
+		/*00504*/ Texture_Struct equip_range; // Equiptment: Non-visual
+		/*00524*/ Texture_Struct equip_ring1; // Equiptment: Non-visual
+		/*00544*/ Texture_Struct equip_ring2; // Equiptment: Non-visual
+		/*00564*/ Texture_Struct equip_waist; // Equiptment: Non-visual
+		/*00584*/ Texture_Struct equip_powersource; // Equiptment: Non-visual
+		/*00604*/ Texture_Struct equip_ammo; // Equiptment: Non-visual
 	} equip;
-	/*00184*/ EquipStruct equipment[22];
+	/*00184*/ Texture_Struct equipment[22];
 };
 /*00624*/ uint32 equip2_count;			// Seen 9
-/*00628*/ EquipStruct equipment2[9];	// Appears to be Visible slots, but all 0s
+/*00628*/ Texture_Struct equipment2[9];	// Appears to be Visible slots, but all 0s
 /*00808*/ uint32 tint_count;			// Seen 9
-/*00812*/ Color_Struct item_tint[9];	// RR GG BB 00
+/*00812*/ TintProfile item_tint;		// RR GG BB 00
 /*00848*/ uint32 tint_count2;			// Seen 9
-/*00852*/ Color_Struct item_tint2[9];	// RR GG BB 00
+/*00852*/ TintProfile item_tint2;		// RR GG BB 00
 /*00888*/ uint8   haircolor;			// Player hair color
 /*00889*/ uint8   beardcolor;			// Player beard color
 /*00890*/ uint32 unknown_rof5;			//
@@ -1130,8 +1097,8 @@ union
 /*01012*/ AA_Array  aa_array[MAX_PP_AA_ARRAY];	// [300] 3600 bytes - AAs 12 bytes each
 /*04612*/ uint32 skill_count;					// Seen 100
 /*04616*/ uint32 skills[MAX_PP_SKILL];			// [100] 400 bytes - List of skills
-/*05016*/ uint32 unknown15_count;				// Seen 25
-/*05020*/ uint32 unknown_rof15[25];				// Most are 255 or 0
+/*05016*/ uint32 InnateSkills_count;				// Seen 25
+/*05020*/ uint32 InnateSkills[MAX_PP_INNATE_SKILL];	// Most are 255 or 0
 /*05120*/ uint32 discipline_count;				// Seen 200
 /*05124*/ Disciplines_Struct  disciplines;		// [200] 800 bytes Known disciplines
 /*05924*/ uint32 timestamp_count;				// Seen 20
@@ -1415,7 +1382,7 @@ struct WearChange_Struct{
 /*010*/ uint32 elite_material;	// 1 for Drakkin Elite Material
 /*014*/ uint32 hero_forge_model; // New to VoA
 /*018*/ uint32 unknown18; // New to RoF
-/*022*/ Color_Struct color;
+/*022*/ Tint_Struct color;
 /*026*/ uint8 wear_slot_id;
 /*027*/
 };
@@ -2044,7 +2011,7 @@ struct LootingItem_Struct {
 /*004*/	uint32	looter;
 /*008*/	uint16	slot_id;
 /*010*/	uint16	unknown10;
-/*012*/	uint32	auto_loot;
+/*012*/	int32	auto_loot;
 /*016*/	uint32	unknown16;
 /*020*/
 };
@@ -2145,7 +2112,7 @@ struct OnLevelMessage_Struct {
 /*0000*/	uint32  ButtonName1_Count;
 /*0000*/	char	ButtonName1[25];
 /*0000*/	uint8	Buttons;
-/*0000*/	uint8	Unknown4275;	// Something to do with audio controls
+/*0000*/	uint8	SoundControls;	// Something to do with audio controls
 /*0000*/	uint32  Duration;
 /*0000*/	uint32  PopupID;	// If none zero, a response packet with 00 00 00 00 <PopupID> is returned on clicking the left button
 /*0000*/	uint32  NegativeID;	// If none zero, a response packet with 01 00 00 00 <NegativeID> is returned on clicking the right button
@@ -2473,7 +2440,7 @@ struct AdventureLeaderboard_Struct
 /*struct Item_Shop_Struct {
 	uint16 merchantid;
 	uint8 itemtype;
-	Item_Struct item;
+	ItemData item;
 	uint8 iss_unknown001[6];
 };*/
 
@@ -3632,27 +3599,6 @@ struct PetitionBug_Struct{
 	uint32	time;
 	uint32	unknown168;
 	char	text[1028];
-};
-
-struct DyeStruct
-{
-	union
-	{
-		struct
-		{
-			struct Color_Struct head;
-			struct Color_Struct chest;
-			struct Color_Struct arms;
-			struct Color_Struct wrists;
-			struct Color_Struct hands;
-			struct Color_Struct legs;
-			struct Color_Struct feet;
-			struct Color_Struct primary;	// you can't actually dye this
-			struct Color_Struct secondary;	// or this
-		}
-		dyes;
-		struct Color_Struct dye[9];
-	};
 };
 
 struct ApproveZone_Struct {

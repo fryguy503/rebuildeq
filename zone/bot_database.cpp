@@ -49,11 +49,11 @@ bool BotDatabase::Connect(const char* host, const char* user, const char* passwd
 	uint32 errnum = 0;
 	char errbuf[MYSQL_ERRMSG_SIZE];
 	if (!Open(host, user, passwd, database, port, &errnum, errbuf)) {
-		Log.Out(Logs::General, Logs::Error, "Failed to connect to bot database: Error: %s", errbuf);
+		Log(Logs::General, Logs::Error, "Failed to connect to bot database: Error: %s", errbuf);
 		return false;
 	}
 	else {
-		Log.Out(Logs::General, Logs::Status, "Using bot database '%s' at %s:%d", database, host, port);
+		Log(Logs::General, Logs::Status, "Using bot database '%s' at %s:%d", database, host, port);
 		return true;
 	}
 }
@@ -82,11 +82,71 @@ bool BotDatabase::LoadBotCommandSettings(std::map<std::string, std::pair<uint8, 
 	return true;
 }
 
+static uint8 spell_casting_chances[MaxSpellTypes][PLAYER_CLASS_COUNT][MaxStances][cntHSND];
+
+bool BotDatabase::LoadBotSpellCastingChances()
+{
+	memset(spell_casting_chances, 0, sizeof(spell_casting_chances));
+
+	query =
+		"SELECT"
+		" `spell_type_index`,"
+		" `class_id`,"
+		" `stance_index`,"
+		" `nHSND_value`,"
+		" `pH_value`,"
+		" `pS_value`,"
+		" `pHS_value`,"
+		" `pN_value`,"
+		" `pHN_value`,"
+		" `pSN_value`,"
+		" `pHSN_value`,"
+		" `pD_value`,"
+		" `pHD_value`,"
+		" `pSD_value`,"
+		" `pHSD_value`,"
+		" `pND_value`,"
+		" `pHND_value`,"
+		" `pSND_value`,"
+		" `pHSND_value`"
+		"FROM"
+		" `bot_spell_casting_chances`";
+
+	auto results = QueryDatabase(query);
+	if (!results.Success() || !results.RowCount())
+		return false;
+
+	for (auto row = results.begin(); row != results.end(); ++row) {
+		uint8 spell_type_index = atoi(row[0]);
+		if (spell_type_index >= MaxSpellTypes)
+			continue;
+		uint8 class_index = atoi(row[1]);
+		if (class_index < WARRIOR || class_index > BERSERKER)
+			continue;
+		--class_index;
+		uint8 stance_index = atoi(row[2]);
+		if (stance_index >= MaxStances)
+			continue;
+
+		for (uint8 conditional_index = nHSND; conditional_index < cntHSND; ++conditional_index) {
+			uint8 value = atoi(row[3 + conditional_index]);
+			if (!value)
+				continue;
+			if (value > 100)
+				value = 100;
+
+			spell_casting_chances[spell_type_index][class_index][stance_index][conditional_index] = value;
+		}
+	}
+
+	return true;
+}
+
 
 /* Bot functions   */
 bool BotDatabase::QueryNameAvailablity(const std::string& bot_name, bool& available_flag)
 {
-	if (bot_name.empty() || bot_name.size() > 15 || !database.CheckNameFilter(bot_name.c_str()) || !database.CheckUsedName(bot_name.c_str()))
+	if (bot_name.empty() || bot_name.size() > 60 || !database.CheckUsedName(bot_name.c_str()))
 		return false;
 
 	query = StringFormat("SELECT `id` FROM `vw_bot_character_mobs` WHERE `name` LIKE '%s' LIMIT 1", bot_name.c_str());
@@ -334,7 +394,13 @@ bool BotDatabase::LoadBot(const uint32 bot_id, Bot*& loaded_bot)
 	loaded_bot = new Bot(bot_id, atoi(row[0]), atoi(row[1]), atof(row[14]), atoi(row[6]), tempNPCStruct);
 	if (loaded_bot) {
 		loaded_bot->SetShowHelm((atoi(row[43]) > 0 ? true : false));
-		loaded_bot->SetFollowDistance(atoi(row[44]));
+		uint32 bfd = atoi(row[44]);
+		if (bfd < 1)
+			bfd = 1;
+		if (bfd > BOT_FOLLOW_DISTANCE_DEFAULT_MAX)
+			bfd = BOT_FOLLOW_DISTANCE_DEFAULT_MAX;
+		loaded_bot->SetFollowDistance(bfd);
+		
 	}
 
 	return true;
@@ -471,7 +537,7 @@ bool BotDatabase::SaveNewBot(Bot* bot_inst, uint32& bot_id)
 		bot_inst->GetPR(),
 		bot_inst->GetDR(),
 		bot_inst->GetCorrup(),
-		BOT_DEFAULT_FOLLOW_DISTANCE
+		BOT_FOLLOW_DISTANCE_DEFAULT
 	);
 	auto results = QueryDatabase(query);
 	if (!results.Success())
@@ -617,7 +683,8 @@ bool BotDatabase::LoadBuffs(Bot* bot_inst)
 		" `caston_x`,"
 		" `caston_y`,"
 		" `caston_z`,"
-		" `extra_di_chance`"
+		" `extra_di_chance`,"
+		" `instrument_mod`"
 		" FROM `bot_buffs`"
 		" WHERE `bot_id` = '%u'",
 		bot_inst->GetBotID()
@@ -657,6 +724,7 @@ bool BotDatabase::LoadBuffs(Bot* bot_inst)
 		bot_buffs[buff_count].caston_y = atoi(row[14]);
 		bot_buffs[buff_count].caston_z = atoi(row[15]);
 		bot_buffs[buff_count].ExtraDIChance = atoi(row[16]);
+		bot_buffs[buff_count].instrument_mod = atoi(row[17]);
 		bot_buffs[buff_count].casterid = 0;
 		++buff_count;
 	}
@@ -1023,7 +1091,7 @@ bool BotDatabase::QueryInventoryCount(const uint32 bot_id, uint32& item_count)
 	return true;
 }
 
-bool BotDatabase::LoadItems(const uint32 bot_id, Inventory& inventory_inst)
+bool BotDatabase::LoadItems(const uint32 bot_id, EQEmu::InventoryProfile& inventory_inst)
 {
 	if (!bot_id)
 		return false;
@@ -1058,13 +1126,13 @@ bool BotDatabase::LoadItems(const uint32 bot_id, Inventory& inventory_inst)
 	
 	for (auto row = results.begin(); row != results.end(); ++row) {
 		int16 slot_id = atoi(row[0]);
-		if ((slot_id < EQEmu::legacy::EQUIPMENT_BEGIN || slot_id > EQEmu::legacy::EQUIPMENT_END) && slot_id != EQEmu::legacy::SlotPowerSource)
+		if ((slot_id < EQEmu::legacy::EQUIPMENT_BEGIN || slot_id > EQEmu::legacy::EQUIPMENT_END) && slot_id != EQEmu::inventory::slotPowerSource)
 			continue;
 
 		uint32 item_id = atoi(row[1]);
 		uint16 item_charges = (uint16)atoi(row[2]);
 
-		ItemInst* item_inst = database.CreateItem(
+		EQEmu::ItemInstance* item_inst = database.CreateItem(
 			item_id,
 			item_charges,
 			(uint32)atoul(row[9]),
@@ -1075,12 +1143,14 @@ bool BotDatabase::LoadItems(const uint32 bot_id, Inventory& inventory_inst)
 			(uint32)atoul(row[14])
 		);
 		if (!item_inst) {
-			Log.Out(Logs::General, Logs::Error, "Warning: bot_id '%i' has an invalid item_id '%i' in inventory slot '%i'", bot_id, item_id, slot_id);
+			Log(Logs::General, Logs::Error, "Warning: bot_id '%i' has an invalid item_id '%i' in inventory slot '%i'", bot_id, item_id, slot_id);
 			continue;
 		}
 
-		if (item_charges == 255)
+		if (item_charges == 0x7FFF)
 			item_inst->SetCharges(-1);
+		else if (item_charges == 0 && item_inst->IsStackable()) // Stackable items need a minimum charge of 1 remain moveable.
+			item_inst->SetCharges(1);
 		else
 			item_inst->SetCharges(item_charges);
 
@@ -1091,7 +1161,7 @@ bool BotDatabase::LoadItems(const uint32 bot_id, Inventory& inventory_inst)
 		if (item_inst->GetItem()->Attuneable) {
 			if (atoi(row[4]))
 				item_inst->SetAttuned(true);
-			else if (((slot_id >= EQEmu::legacy::EQUIPMENT_BEGIN) && (slot_id <= EQEmu::legacy::EQUIPMENT_END) || slot_id == EQEmu::legacy::SlotPowerSource))
+			else if (((slot_id >= EQEmu::legacy::EQUIPMENT_BEGIN) && (slot_id <= EQEmu::legacy::EQUIPMENT_END) || slot_id == EQEmu::inventory::slotPowerSource))
 				item_inst->SetAttuned(true);
 		}
 
@@ -1126,7 +1196,7 @@ bool BotDatabase::LoadItems(const uint32 bot_id, Inventory& inventory_inst)
 		item_inst->SetOrnamentHeroModel((uint32)atoul(row[8]));
 
 		if (inventory_inst.PutItem(slot_id, *item_inst) == INVALID_INDEX)
-			Log.Out(Logs::General, Logs::Error, "Warning: Invalid slot_id for item in inventory: bot_id = '%i', item_id = '%i', slot_id = '%i'", bot_id, item_id, slot_id);
+			Log(Logs::General, Logs::Error, "Warning: Invalid slot_id for item in inventory: bot_id = '%i', item_id = '%i', slot_id = '%i'", bot_id, item_id, slot_id);
 
 		safe_delete(item_inst);
 	}
@@ -1159,7 +1229,7 @@ bool BotDatabase::LoadItemBySlot(Bot* bot_inst)
 
 bool BotDatabase::LoadItemBySlot(const uint32 bot_id, const uint32 slot_id, uint32& item_id)
 {
-	if (!bot_id || (slot_id > EQEmu::legacy::EQUIPMENT_END && slot_id != EQEmu::legacy::SlotPowerSource))
+	if (!bot_id || (slot_id > EQEmu::legacy::EQUIPMENT_END && slot_id != EQEmu::inventory::slotPowerSource))
 		return false;
 	
 	query = StringFormat("SELECT `item_id` FROM `bot_inventories` WHERE `bot_id` = '%i' AND `slot_id` = '%i' LIMIT 1", bot_id, slot_id);
@@ -1175,9 +1245,9 @@ bool BotDatabase::LoadItemBySlot(const uint32 bot_id, const uint32 slot_id, uint
 	return true;
 }
 
-bool BotDatabase::SaveItemBySlot(Bot* bot_inst, const uint32 slot_id, const ItemInst* item_inst)
+bool BotDatabase::SaveItemBySlot(Bot* bot_inst, const uint32 slot_id, const EQEmu::ItemInstance* item_inst)
 {
-	if (!bot_inst || !bot_inst->GetBotID() || (slot_id > EQEmu::legacy::EQUIPMENT_END && slot_id != EQEmu::legacy::SlotPowerSource))
+	if (!bot_inst || !bot_inst->GetBotID() || (slot_id > EQEmu::legacy::EQUIPMENT_END && slot_id != EQEmu::inventory::slotPowerSource))
 		return false;
 
 	if (!DeleteItemBySlot(bot_inst->GetBotID(), slot_id))
@@ -1186,10 +1256,16 @@ bool BotDatabase::SaveItemBySlot(Bot* bot_inst, const uint32 slot_id, const Item
 	if (!item_inst || !item_inst->GetID())
 		return true;
 	
-	uint32 augment_id[] = { 0, 0, 0, 0, 0, 0 };
-	for (int augment_iter = 0; augment_iter < EQEmu::legacy::ITEM_COMMON_SIZE; ++augment_iter)
+	uint32 augment_id[EQEmu::inventory::SocketCount] = { 0, 0, 0, 0, 0, 0 };
+	for (int augment_iter = EQEmu::inventory::socketBegin; augment_iter < EQEmu::inventory::SocketCount; ++augment_iter)
 		augment_id[augment_iter] = item_inst->GetAugmentItemID(augment_iter);
 	
+	uint16 item_charges = 0;
+	if (item_inst->GetCharges() >= 0)
+		item_charges = item_inst->GetCharges();
+	else
+		item_charges = 0x7FFF;
+
 	query = StringFormat(
 		"INSERT INTO `bot_inventories` ("
 		"`bot_id`,"
@@ -1230,7 +1306,7 @@ bool BotDatabase::SaveItemBySlot(Bot* bot_inst, const uint32 slot_id, const Item
 		(unsigned long)bot_inst->GetBotID(),
 		(unsigned long)slot_id,
 		(unsigned long)item_inst->GetID(),
-		(unsigned long)item_inst->GetCharges(),
+		(unsigned long)item_charges,
 		(unsigned long)item_inst->GetColor(),
 		(unsigned long)(item_inst->IsAttuned() ? 1 : 0),
 		item_inst->GetCustomDataString().c_str(),
@@ -1255,7 +1331,7 @@ bool BotDatabase::SaveItemBySlot(Bot* bot_inst, const uint32 slot_id, const Item
 
 bool BotDatabase::DeleteItemBySlot(const uint32 bot_id, const uint32 slot_id)
 {
-	if (!bot_id || (slot_id > EQEmu::legacy::EQUIPMENT_END && slot_id != EQEmu::legacy::SlotPowerSource))
+	if (!bot_id || (slot_id > EQEmu::legacy::EQUIPMENT_END && slot_id != EQEmu::inventory::slotPowerSource))
 		return false;
 
 	query = StringFormat("DELETE FROM `bot_inventories` WHERE `bot_id` = '%u' AND `slot_id` = '%u'", bot_id, slot_id);
@@ -1271,7 +1347,7 @@ bool BotDatabase::LoadEquipmentColor(const uint32 bot_id, const uint8 material_s
 	if (!bot_id)
 		return false;
 
-	int16 slot_id = Inventory::CalcSlotFromMaterial(material_slot_id);
+	int16 slot_id = EQEmu::InventoryProfile::CalcSlotFromMaterial(material_slot_id);
 	if (slot_id == INVALID_INDEX)
 		return false;
 	
@@ -1294,12 +1370,12 @@ bool BotDatabase::SaveEquipmentColor(const uint32 bot_id, const int16 slot_id, c
 		return false;
 
 	bool all_flag = (slot_id == -2);
-	if ((slot_id < EQEmu::legacy::EQUIPMENT_BEGIN || slot_id > EQEmu::legacy::EQUIPMENT_END) && slot_id != EQEmu::legacy::SlotPowerSource && !all_flag)
+	if ((slot_id < EQEmu::legacy::EQUIPMENT_BEGIN || slot_id > EQEmu::legacy::EQUIPMENT_END) && slot_id != EQEmu::inventory::slotPowerSource && !all_flag)
 		return false;
 
 	std::string where_clause;
 	if (all_flag)
-		where_clause = StringFormat(" AND `slot_id` IN ('%u', '%u', '%u', '%u', '%u', '%u', '%u')", EQEmu::legacy::SlotHead, EQEmu::legacy::SlotArms, EQEmu::legacy::SlotWrist1, EQEmu::legacy::SlotHands, EQEmu::legacy::SlotChest, EQEmu::legacy::SlotLegs, EQEmu::legacy::SlotFeet);
+		where_clause = StringFormat(" AND `slot_id` IN ('%u', '%u', '%u', '%u', '%u', '%u', '%u')", EQEmu::inventory::slotHead, EQEmu::inventory::slotArms, EQEmu::inventory::slotWrist1, EQEmu::inventory::slotHands, EQEmu::inventory::slotChest, EQEmu::inventory::slotLegs, EQEmu::inventory::slotFeet);
 	else
 		where_clause = StringFormat(" AND `slot_id` = '%u'", slot_id);
 
@@ -1309,8 +1385,8 @@ bool BotDatabase::SaveEquipmentColor(const uint32 bot_id, const int16 slot_id, c
 		" WHERE `bot_id` = '%u'"
 		" %s",
 		rgb,
-		where_clause.c_str(),
-		bot_id
+		bot_id,
+		where_clause.c_str()
 	);
 	auto results = QueryDatabase(query);
 	if (!results.Success())
@@ -1464,7 +1540,7 @@ bool BotDatabase::LoadPetBuffs(const uint32 bot_id, SpellBuff_Struct* pet_buffs)
 		return true;
 
 	int buff_index = 0;
-	for (auto row = results.begin(); row != results.end() && buff_index < BUFF_COUNT; ++row) {
+	for (auto row = results.begin(); row != results.end() && buff_index < PET_BUFF_COUNT; ++row) {
 		pet_buffs[buff_index].spellid = atoi(row[0]);
 		pet_buffs[buff_index].level = atoi(row[1]);
 		pet_buffs[buff_index].duration = atoi(row[2]);
@@ -1501,7 +1577,7 @@ bool BotDatabase::SavePetBuffs(const uint32 bot_id, const SpellBuff_Struct* pet_
 	if (!saved_pet_index)
 		return true;
 
-	for (int buff_index = 0; buff_index < BUFF_COUNT; ++buff_index) {
+	for (int buff_index = 0; buff_index < PET_BUFF_COUNT; ++buff_index) {
 		if (!pet_buffs[buff_index].spellid || pet_buffs[buff_index].spellid == SPELL_UNKNOWN)
 			continue;
 
@@ -1744,7 +1820,7 @@ bool BotDatabase::SaveAllArmorColorBySlot(const uint32 owner_id, const int16 slo
 		" AND bi.`slot_id` = '%i'",
 		owner_id,
 		rgb_value,
-		EQEmu::legacy::SlotHead, EQEmu::legacy::SlotChest, EQEmu::legacy::SlotArms, EQEmu::legacy::SlotWrist1, EQEmu::legacy::SlotWrist2, EQEmu::legacy::SlotHands, EQEmu::legacy::SlotLegs, EQEmu::legacy::SlotFeet,
+		EQEmu::inventory::slotHead, EQEmu::inventory::slotChest, EQEmu::inventory::slotArms, EQEmu::inventory::slotWrist1, EQEmu::inventory::slotWrist2, EQEmu::inventory::slotHands, EQEmu::inventory::slotLegs, EQEmu::inventory::slotFeet,
 		slot_id
 	);
 	auto results = QueryDatabase(query);
@@ -1768,7 +1844,7 @@ bool BotDatabase::SaveAllArmorColors(const uint32 owner_id, const uint32 rgb_val
 		" AND bi.`slot_id` IN ('%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u')",
 		owner_id,
 		rgb_value,
-		EQEmu::legacy::SlotHead, EQEmu::legacy::SlotChest, EQEmu::legacy::SlotArms, EQEmu::legacy::SlotWrist1, EQEmu::legacy::SlotWrist2, EQEmu::legacy::SlotHands, EQEmu::legacy::SlotLegs, EQEmu::legacy::SlotFeet
+		EQEmu::inventory::slotHead, EQEmu::inventory::slotChest, EQEmu::inventory::slotArms, EQEmu::inventory::slotWrist1, EQEmu::inventory::slotWrist2, EQEmu::inventory::slotHands, EQEmu::inventory::slotLegs, EQEmu::inventory::slotFeet
 	);
 	auto results = QueryDatabase(query);
 	if (!results.Success())
@@ -2382,21 +2458,26 @@ bool BotDatabase::LoadBotGroupsListByOwnerID(const uint32 owner_id, std::list<st
 }
 
 
-/* Bot group functions   */
-bool BotDatabase::LoadGroupedBotsByGroupID(const uint32 group_id, std::list<uint32>& group_list)
+/* Bot owner group functions   */
+// added owner ID to this function to fix groups with mulitple players grouped with bots.
+bool BotDatabase::LoadGroupedBotsByGroupID(const uint32 owner_id, const uint32 group_id, std::list<uint32>& group_list)
 {
-	if (!group_id)
+	if (!group_id || !owner_id)
 		return false;
 
 	query = StringFormat(
-		"SELECT g.`mob_id` AS bot_id"
-		" FROM `vw_groups` AS g"
-		" JOIN `bot_data` AS b"
-		" ON g.`mob_id` = b.`bot_id`"
-		" AND g.`mob_type` = 'B'"
-		" WHERE g.`group_id` = '%u'",
-		group_id
+		"SELECT `charid`"
+		" FROM `group_id`"
+		" WHERE `groupid` = '%u'"
+		" AND `charid` IN ("
+		"  SELECT `bot_id`"
+		"  FROM `bot_data`"
+		"  WHERE `owner_id` = '%u'"
+		"  )",
+		group_id,
+		owner_id
 	);
+
 	auto results = QueryDatabase(query);
 	if (!results.Success())
 		return false;
@@ -2689,6 +2770,19 @@ bool BotDatabase::DeleteAllHealRotations(const uint32 owner_id)
 
 
 /* Bot miscellaneous functions   */
+uint8 BotDatabase::GetSpellCastingChance(uint8 spell_type_index, uint8 class_index, uint8 stance_index, uint8 conditional_index) // class_index is 0-based
+{
+	if (spell_type_index >= MaxSpellTypes)
+		return 0;
+	if (class_index >= PLAYER_CLASS_COUNT)
+		return 0;
+	if (stance_index >= MaxStances)
+		return 0;
+	if (conditional_index >= cntHSND)
+		return 0;
+
+	return spell_casting_chances[spell_type_index][class_index][stance_index][conditional_index];
+}
 
 
 /* fail::Bot functions   */

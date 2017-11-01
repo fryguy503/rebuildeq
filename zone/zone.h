@@ -109,6 +109,7 @@ public:
 	inline const uint8	GetZoneType() const { return zone_type; }
 
 	inline Timer* GetInstanceTimer() { return Instance_Timer; }
+	Timer	spawn2_timer;
 
     inline glm::vec3 GetSafePoint() { return m_SafePoint; }
 	inline const uint32& graveyard_zoneid()	{ return pgraveyard_zoneid; }
@@ -295,13 +296,13 @@ public:
 
 		if (message.find("\n") != std::string::npos){
 			auto message_split = SplitString(message, '\n');
-			entity_list.MessageStatus(0, 80, Log.GetGMSayColorFromCategory(log_category), "%s", message_split[0].c_str());
+			entity_list.MessageStatus(0, 80, LogSys.GetGMSayColorFromCategory(log_category), "%s", message_split[0].c_str());
 			for (size_t iter = 1; iter < message_split.size(); ++iter) {
-				entity_list.MessageStatus(0, 80, Log.GetGMSayColorFromCategory(log_category), "--- %s", message_split[iter].c_str());
+				entity_list.MessageStatus(0, 80, LogSys.GetGMSayColorFromCategory(log_category), "--- %s", message_split[iter].c_str());
 			}
 		}
 		else{
-			entity_list.MessageStatus(0, 80, Log.GetGMSayColorFromCategory(log_category), "%s", message.c_str());
+			entity_list.MessageStatus(0, 80, LogSys.GetGMSayColorFromCategory(log_category), "%s", message.c_str());
 		}
 	}
 
@@ -351,7 +352,6 @@ private:
 
 	Timer	autoshutdown_timer;
 	Timer	clientauth_timer;
-	Timer	spawn2_timer;
 	Timer	qglobal_purge_timer;
 	Timer*	Weather_Timer;
 	Timer*	Instance_Timer;

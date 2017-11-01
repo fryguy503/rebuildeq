@@ -154,7 +154,7 @@ class Build {
 			case "cleric":
 			$build->fullName = "Cleric";
 			$build->monogram = 2;
-			$build->desc = "Clerics are classically known as the best healers in the game.<br> Their 3 styles focus on melee, healing spells, or offensive spells.";
+			$build->desc = "Clerics are a healer class using Godly blessings.<br>They are rebuilt to no longer be definitive healers<br> compared to Shaman and Druid.";
 			$build->styles[0] = "Templar";
 			$build->styles[1] = "Bishop";
 			$build->styles[2] = "Archon";
@@ -191,7 +191,7 @@ class Build {
 			case "monk":
 			$build->fullName = "Monk";
 			$build->monogram = 7;
-			$build->desc = "Monks are disciplined fighters.<br> Their 3 styles focus on either melee dps, supporting others with chakra abilities, or utility pulling.";
+			$build->desc = "Monks are disciplined fighters.<br> We have lowered the damage of monks compared to rogues, <br>and given them a swiss-army knife approach with more utility.";
 			$build->styles[0] = "Master";
 			$build->styles[1] = "Transcendant";
 			$build->styles[2] = "Ashenhand";
@@ -231,7 +231,7 @@ class Build {
 			case "rogue":
 			$build->fullName = "Rogue";
 			$build->monogram = 9;
-			$build->desc = "Rogues are thieves who specialize in deception.<br> Their 3 styles focus on dealing damage, being an evasive tank, or stealing.";
+			$build->desc = "Rogues are thieves who specialize in damage.<br> We have designed rogues to be top melee damage dealers.";
 			$build->styles[0] = "Assassin";
 			$build->styles[1] = "Deceiver";
 			$build->styles[2] = "Bandit";
@@ -341,8 +341,8 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jonthon's Whistle";
-			$newSkill->desc = 'Jonthon\'s Self Haste Songs have improved haste, as well as grants a proc line similar to puma that deals your level * 2.5<span class="perLevel"> per rank</span>. If you do not use a jonthon whistle, it still deals half damage procs.';
-			$newSkill->image = "/images/builds/icons/rb-brd-jonathonswhistle.png";	
+			$newSkill->desc = 'Jonthon\'s Self Haste Songs have improved haste, as well the bard has a passive 300 mod proc that deals (level * 2 * <em data-base="0.2">0.2</em>) magic damage.';
+			$newSkill->image = "/images/builds/icons/rb-brd-jonathonswhistle.png";
 			$skills[18] = $newSkill;
 
 			$newSkill = new stdClass();
@@ -383,7 +383,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Bard's Wish";
-			$newSkill->desc = 'All songs are sung <em data-base="0.2">0.2</em> seconds faster<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When rank 5, all songs last an additional tick.';
 			$newSkill->image = "/images/builds/icons/rb-brd-bardswish.png";	
 			$skills[34] = $newSkill;
 
@@ -434,14 +434,14 @@ class Build {
 			$newSkill->desc = 'Grants the Fading Memories AA, allowing you to escape all aggressions towards you, the mana cost is reduced by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-fadingmemories.png";	
 			$skills[52] = $newSkill;
-
 			break;
+
 			//==================CLERIC======================
 			case "cleric":
 			$newSkill = new stdClass();
 			$newSkill->title = "Believe";
-			$newSkill->desc = 'The cleric procs a puma-like proc at half damage of other similar puma procs, and half the damage is health back to the cleric.';
-			$newSkill->image = "/images/builds/icons/rb-clr-believe.png";	
+			$newSkill->desc = 'The cleric gains a 300 mod proc that deals (level * 0.75 * <em data-base="0.2">0.2</em>) magic damage, and half the damage is health back to the cleric.';
+			$newSkill->image = "/images/builds/icons/rb-clr-believe.png";
 			$skills[0] = $newSkill;
 
 			$newSkill = new stdClass();
@@ -464,19 +464,19 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Hammer";
-			$newSkill->desc = 'Grants a passive ability that gives you a <em data-base="8">8</em>% chance to use Hand of the God proc<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'The cleric gains a <em data-base="60">60</em> mod proc that causes the Hand of the God spell, dealing 75-150 damage randomly.';
 			$newSkill->image = "/images/builds/icons/rb-clr-divinehammer.png";	
 			$skills[8] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Avatar's Boon";
-			$newSkill->desc = 'Gives a <em data-base="2">2</em>% chance that the next ally you heal is blessed with Avatar\s Boon, granting <em data-base="2">2</em>% of the next damage dealt by the player to return as mana to the cleric<span class="perLevel"> per rank</span>. NOT IMPLEMENTED';
-			$newSkill->image = "/images/builds/icons/rb-clr-avatarsboon.png";	
+			$newSkill->title = "Mark of Karn";
+			$newSkill->desc = 'Healing an ally with a single target spell, while they target an enemy, will cause the target to be affected by the Mark of Karn, healing allies who hit the enemy, for 0 to <em data-base="1">1</em>ticks randomly.';
+			$newSkill->image = "/images/builds/icons/rb-clr-piouszealot.png";
 			$skills[10] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Augmented Retribution";
-			$newSkill->desc = 'Each melee attack has a <em data-base="1">1</em>% chance to proc a smite-like spell<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'The cleric gains a <em data-base="100">100</em> mod proc that deals a smite-like spell<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-augmentedretribution.png";	
 			$skills[13] = $newSkill;
 
@@ -486,11 +486,53 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-clr-divineavatar.png";	
 			$skills[16] = $newSkill;
 
-			/*$newSkill = new stdClass();
+			$newSkill = new stdClass();
 			$newSkill->title = "Instill Life";
-			$newSkill->desc = 'When an ally is healed, there is a <em data-base="1">1</em>% to also apply a heal over time effect<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When an ally is healed, there is a <em data-base="2">2</em>% chance to heal for a bonus of <em data-base="2">2</em>% the target\'s max health<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";
+			$skills[18] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Divine Bash";
+			$newSkill->desc = 'When the cleric uses bash, there is a <em data-base="1">1</em>% chance to proc a heal for <em data-base="4">4</em>% of the cleric\'s max hp per rank to a group member with lowest health<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-divinebash.png";	
+			$skills[20] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Intensity of the Resolute";
+			$newSkill->desc = 'Grants the Intensity of the Resolute AA, which casts Courage-line buffs scaled to your level.<br>Rank 1: +Spell Haste<br>Rank 2: +AC<br>Rank 3: +HP<br>Rank 4: +HPv2<br>Rank 5: +Yaulp';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";
+			$skills[22] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Celestial Regeneration";
+			$newSkill->desc = 'Grants the Celestial Regeneration AA, restoring <em data-base="36">36</em> hitpoints and <em data-base="2">2</em> mana for 8 ticks<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
-			$skills[18] = $newSkill;*/
+			$skills[24] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Divine Arbitration";
+			$newSkill->desc = 'Grants the Divine Arbitration AA, balancing the damage each member of your group has taken, with a cooldown reduction of <em data-base="30">30</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[26] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Divine Resurrection";
+			$newSkill->desc = 'Grants the Divine Resurrection AA, reviving a fallen player. Lowers cooldown by <em data-base="12">12</em> hours<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[28] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Promise";
+			$newSkill->desc = 'All heals done by the cleric now have a <em data-base="2">2</em> chance to have the mana cost reduced by <em data-base="10">10</em>% mana <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[31] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Harmonic Balance";
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, <em data-base="2">2</em> chance to have the mana cost reduced by <em data-base="10">10</em>% mana <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$skills[34] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Strike";
@@ -506,7 +548,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fist of the Gods";
-			$newSkill->desc = 'Grants +<em data-base="1">1</em> bane damage versus undead<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants <em data-base="1">1</em> bane damage versus undead<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-fistofthegods.png";	
 			$skills[40] = $newSkill;
 			
@@ -524,7 +566,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Exquisite Benediction";
-			$newSkill->desc = 'Grants the Exquisite Benediction AA that summons a pet that heals nearby allies for <em data-base="50">50</em> hp per <span class="perLevel"> per rank</span> per tick and reduces the cooldown by <em data-base="3">3</em> minutes <span class="perLevel"> per rank</span>. CURRENTLY DOES NOT WORK';
+			$newSkill->desc = 'While meleeing an undead creature, increases proc chance of all build procs by <em data-base="20">20</em>';
 			$newSkill->image = "/images/builds/icons/rb-clr-exquisitebenediction.png";	
 			$skills[46] = $newSkill;
 			
@@ -535,9 +577,9 @@ class Build {
 			$skills[49] = $newSkill;
 			
 			$newSkill = new stdClass();
-			$newSkill->title = "Pious Zealot";
-			$newSkill->desc = 'Summons a pet that will heal group members for <em data-base="2">2</em>%<span class="perLevel"> per rank</span> of the cleric\'s max hp if a nearby ally goes below 20%hp. CURRENTLY NOT IMPLEMENTED';
-			$newSkill->image = "/images/builds/icons/rb-clr-piouszealot.png";	
+			$newSkill->title = "Death Pact";
+			$newSkill->desc = 'Healing an ally with a single target spell gives them a 0 to <em data-base="1">1</em> tick duration random death pact buff<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-clr-avatarsboon.png";	
 			$skills[52] = $newSkill;
 			break;
 
@@ -556,7 +598,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Tree Form";
-			$newSkill->desc = 'Treeform grants defense proc, where each time you are hit there is a <em data-base="1">1</em> chance to either: Be healed for <em data-base="2">2</em>% of your max health, gain mana for <em data-base="2">2</em>% of your max mana, or deal <em data-base="2">2</em>% of your max health as damage to the attacker<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Treeform grants a passive where each time you are hit, <em data-base="2">2</em>% of the damage is converted into mana<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-treeform.png";
 			$skills[2] = $newSkill;
 
@@ -616,13 +658,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Spirit of the Wood";
-			$newSkill->desc = 'Grants the Spirit of the Wood AA, which casts buffs scaled based on your level.<br>Rank 1: Strength<br>Rank 2: Resists<br>Rank 3: HP Regen<br>Rank 4: HP (Wood Line)<br>Rank 5: Damage Shield';
+			$newSkill->desc = 'Grants the Spirit of the Wood AA, which casts buffs scaled based on your level and the target\'s level.<br>Rank 1: Strength<br>Rank 2: Resists<br>Rank 3: HP Regen<br>Rank 4: HP (Wood Line)<br>Rank 5: Damage Shield';
 			$newSkill->image = "/images/builds/icons/rb-dru-spiritofthewood.png";
-			$skills[24] = $newSkill;			
+			$skills[24] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Awakening";
-			$newSkill->desc = 'Any successful melee hit on an enemy by the druid grants <em data-base="1">1</em> mana and now has a puma-like proc for level * 1.25<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'The druid gains a 300 mod proc that deals (level * 1.5 * <em data-base="0.2">0.2</em>) magic damage and melee hits tap <em data-base="1">1</em> mana from the target.';
 			$newSkill->image = "/images/builds/icons/rb-dru-spiritualawakening.png";
 			$skills[26] = $newSkill;
 
@@ -646,32 +688,32 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Intensity";
-			$newSkill->desc = 'When an enemy is affected by a damage over time, there is a <em data-base="3">3</em>% chance the DoT will do triple damage on a single tick.';
+			$newSkill->desc = 'When an enemy is affected by a damage over time, it deals <em data-base="10">10</em>% more damage.';
 			$newSkill->image = "/images/builds/icons/rb-dru-intensity.png";	
 			$skills[36] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Pain";
-			$newSkill->desc = 'When a direct spell is casted, there is a <em data-base="3">3</em>% chance that a short duration DoT will also affect the target if the spell casted was obtained within 15 levels of the enemy\'s level<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When a direct spell is casted, a 0 to <em data-base="1">1</em> tick duration DoT will also affect the target if the spell casted was obtained within 15 levels of the enemy\'s level<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-lingeringpain.png";	
 			$skills[38] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Focused Swarm";
-			$newSkill->desc = 'When standing nearby a mob, DoTs now deal <em data-base="20">20</em>% more damage. This damage bonus reduces by 10% for every 50m you\'re away from an enemy, with a minimum of <em data-base="10">10</em>% more damage.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When standing nearby a mob, DoTs now deal <em data-base="10">10</em>% more damage. This damage bonus reduces by 10% for every 20m you\'re away from an enemy, with a minimum of <em data-base="10">10</em>% more damage.<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-focusedswarm.png";	
 			$skills[40] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Blessing of Ro";
-			$newSkill->desc = 'All Ro debuffs now have a <em data-base="5">5</em>% chance to spread to enemies within <em data-base="10">10</em>m of an affected target if they are on the aggro list of the druid.';
+			$newSkill->desc = 'All Ro debuffs now spread to 0 to <em data-base="1">1</em> additional enemies within <em data-base="5">5</em>m of an affected target if they are on the aggro list of the druid.';
 			$newSkill->image = "/images/builds/icons/rb-dru-blessingofro.png";	
 			$skills[42] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Whirling Disaster";
-			$newSkill->desc = 'Direct Damage spells now also have a <em data-base="2">2</em>% chance to stun a target for 2 seconds if the spell casted was obtained within 15 levels of the enemy\'s level<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-dru-whirlingdisaster.png";	
+			$newSkill->desc = 'Direct Damage spells now also stun for (0 to <em data-base="1">1</em>/2) seconds if the target is at least 5 levels below the druid.';
+			$newSkill->image = "/images/builds/icons/rb-dru-whirlingdisaster.png";
 			$skills[44] = $newSkill;
 
 			$newSkill = new stdClass();
@@ -846,6 +888,152 @@ class Build {
 
 			//==================MONK======================
 			case "monk":
+			$newSkill = new stdClass();
+			$newSkill->title = "Intensified Training";
+			$newSkill->desc = 'The monk gains a 300 mod proc that deals (level * 1.25 * <em data-base="0.2">0.2</em>) magic damage.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-intensifiedtraining.png";
+			$skills[0] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Familiarity";
+			$newSkill->desc = 'Every time a special attack lands on an enemy, the monk gains <em data-base="2">2</em> armor against the target<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-familiarity.png";
+			$skills[2] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Block";
+			$newSkill->desc = 'Increases block by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-block.png";
+			$skills[4] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Relentless Training";
+			$newSkill->desc = 'Increases damage of Tiger Claw, Eagle Strike, Tail Whip and other special attacks by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-relentlesstraining.png";
+			$skills[6] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Expose Weakness";
+			$newSkill->desc = 'When using Tiger Claw, Eagle Strike, Tail Whip and other special attacks, increases accuracy of all attacking allies by 0 to <em data-base="2">2</em><span class="perLevel"> per rank</span> vs that enemy.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-exposeweakness.png";
+			$skills[8] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Destiny";
+			$newSkill->desc = 'When you have an enemy targeted, increases avoidance by <em data-base="1">1</em>% <span class="perLevel"> per rank</span>';
+			$newSkill->image = "/images/builds/icons/rb-mnk-destiny.png";
+			$skills[10] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Wu's Quickening";
+			$newSkill->desc = 'Reduces delay of your primary weapon by <em data-base="1">1</em> <span class="perLevel"> per rank</span>, to a minimum of 7.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-wusquickening.png";
+			$skills[13] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Grace of the Order";
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, increasing max health by 15% and a 250dd stun for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-graceoftheorder.png";
+			$skills[16] = $newSkill;
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Partial Mending";
+			$newSkill->desc = 'When mend fails, the monk still heals for <em data-base="10">10</em>% of the mending amount<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-partialmending.png";
+			$skills[18] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Inner Chakra";
+			$newSkill->desc = 'Heals received while using feign death, including mend, heal for an additional <em data-base="4">4</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-innerchakra.png";
+			$skills[20] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Channel Chakra";
+			$newSkill->desc = 'While your health is less than <em data-base="10">10</em>%, and no enemy is actively attacking you, your normal melee attacks lifetap for <em data-base="2">2</em>% damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-channelchakra.png";
+			$skills[22] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Mending Aura";
+			$newSkill->desc = 'When you use Mend, you now heal the rest of the group within <em data-base="10">10</em> meters for <em data-base="5">5</em>% the mend heal amount<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-mendingaura.png";
+			$skills[24] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Divine Surge";
+			$newSkill->desc = 'When you land Tiger Claw, Eagle Strike, Tail Whip or other special attacks, your group recovers <em data-base="5">5</em> mana and endurance<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-divinesurge.png";
+			$skills[26] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Improved Mend";
+			$newSkill->desc = 'When you use Mend, you heal an additional 5% to <em data-base="10">10</em>% hitpoints<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-improvedmend.png";
+			$skills[28] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Purify Body";
+			$newSkill->desc = 'Grants the Purify Body AA, curing <em data-base="1">1</em> detrimental effect on the monk<span class="perLevel"> per rank</span>. At rank 5, it will also cure resurrection sickness.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-purifybody.png";
+			$skills[31] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Tranquility";
+			$newSkill->desc = 'When you are not affected by negative effects, not under feign death, nor are engaged by an enemy, and in a full group, you regenerate <em data-base="2">2</em>% of your total missing health per tick <span class="perLevel"> per rank</span>. Lesser group sizes give reduced healing.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-tranquility.png";
+			$skills[34] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Agile Feet";
+			$newSkill->desc = 'Increases your chance to resist snares by <em data-base="2">2</em>% <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-agilefeet.png";
+			$skills[36] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Cowardly Stance";
+			$newSkill->desc = 'Increases your movement speed by up to <em data-base="10">10</em>% based on missing health. Does not stack with movement buffs<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-cowardlystance.png";
+			$skills[38] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Thunderfoot";
+			$newSkill->desc = 'Grants a passive spell block that returns when used after (level - <em data-base="6">6</em>) seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-thunderfoot.png";
+			$skills[40] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Stoic Mind";
+			$newSkill->desc = 'While your health is not below <em data-base="2">2</em>%, your resistance to spells is increased by <em data-base="3">3</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-stoicmind.png";
+			$skills[42] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Grounded Essence";
+			$newSkill->desc = 'Gives a <em data-base="2">2</em>% to resist an attempt at being summoned by an enemy<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-groundedessence.png";
+			$skills[44] = $newSkill;
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Slow Heart Rate";
+			$newSkill->desc = 'When you feign death with health below <em data-base="2">2</em>%<span class="perLevel"> per rank</span>, your feign death will cause all enemies to immediately forget you';
+			$newSkill->image = "/images/builds/icons/rb-mnk-slowheartrate.png";
+			$skills[46] = $newSkill;
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Mirror";
+			$newSkill->desc = 'While your health is at 99% or higher, your chance to evade attacks is increased by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-mirror.png";
+			$skills[49] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Moving Mountains";
+			$newSkill->desc = 'When you use the throw stone ability against an enemy lower level than you, you now knockback the enemy <em data-base="1">1</em>m<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mnk-movingmountains.png";
+			$skills[52] = $newSkill;
 			break;
 
 			//==================NECROMANCER======================
@@ -856,7 +1044,7 @@ class Build {
 			case "paladin":
 			$newSkill = new stdClass();
 			$newSkill->title = "Rodcet's Gift";
-			$newSkill->desc = 'Instant healing spells have a <em data-base="2">2</em>% chance to heal the entire group<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Single target healing spells now spread to allies within <em data-base="10">10</em>m of the healed target, healing them for <em data-base="2">2</em>% the original heal amount<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-pal-rodcetsgift.png";
 			$skills[0] = $newSkill;
 
@@ -874,15 +1062,15 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Refreshing Breeze";
-			$newSkill->desc = 'Instant heals have a <em data-base="1">1</em>% chance to grant <em data-base="1">1</em>% of the healing as mana to the healed target<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'All healing except Hand of Piety give healed targets <em data-base="0.5">0.5</em>% of amount healed as mana<span class="perLevel"> per rank</span>. Does not work when healing yourself.';
 			$newSkill->image = "/images/builds/icons/rb-pal-refreshingbreeze.png";
 			$skills[6] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Elixir of Might";
-			$newSkill->desc = 'Instrument of Nife and Divine Might proc effects now also grant a <em data-base="5">5</em>% chance to heal the Paladin for <em data-base="10">10</em>% of damage dealt as well as gain <em data-base="2">2</em> mana<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-pal-elixirofmight.png";
-			$skills[8] = $newSkill;
+			$newSkill->title = "Brell's Blessing";
+			$newSkill->desc = 'Courage now grants Paladin buffs<br>Rank 1: AC<br>Rank 2: HP Line 1<br>Rank 3: HP Symbol Line<br>Rank 4: HP Line 2 (Brell)<br>Rank 5: Double duration.';
+			$newSkill->image = "/images/builds/icons/rb-pal-brellsblessing.png";
+			$skills[8] = $newSkill;			
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Soul Cleansing";
@@ -890,18 +1078,17 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-pal-soulcleansing.png";
 			$skills[10] = $newSkill;
 
-			$newSkill = new stdClass();
-			$newSkill->title = "Brell's Blessing";
-			$newSkill->desc = 'Courage now grants Paladin buffs<br>Rank 1: AC<br>Rank 2: HP Line 1<br>Rank 3: HP Symbol Line<br>Rank 4: HP Line 2 (Brell)<br>Rank 5: Double duration.';
-			$newSkill->image = "/images/builds/icons/rb-pal-brellsblessing.png";
-			$skills[13] = $newSkill;
-
-			$newSkill = new stdClass();
+ 			$newSkill = new stdClass();
 			$newSkill->title = "Wave of Marr";
 			$newSkill->desc = 'All wave-based group spells cost <em data-base="10">10</em>% less mana to cast<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-pal-waveofmarr.png";
-			$skills[16] = $newSkill;
+			$skills[13] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Ward of Tunare";
+			$newSkill->desc = 'Passively grants the Paladin a <em data-base="6">6</em>% bonus when healed by other allies<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-pal-wardoftunare.png";
+			$skills[16] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Shield of Nife";
@@ -911,19 +1098,19 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Armor of Faith";
-			$newSkill->desc = 'Damage taken from Undead have a <em data-base="4">4</em>% chance to be reduced by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Damage taken from Undead is reduced by <em data-base="2.5">2.5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-pal-armoroffaith.png";
 			$skills[20] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Purification";
-			$newSkill->desc = 'Grants the Purification AA, causing a <em data-base="15">15</em>% chance that all negative effects on self are cured<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Purification AA, curing <em data-base="1">1</em> detrimental effect on the paladin<span class="perLevel"> per rank</span>. At rank 5, it will also cure resurrection sickness.';
 			$newSkill->image = "/images/builds/icons/rb-pal-purification.png";
 			$skills[22] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Holy Servant";
-			$newSkill->desc = 'When a nearby group member is attacked, there is a <em data-base="2">2</em>% chance that <em data-base="5">5</em>% of the dealt damage is redirected to the paladin reduced by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When a group member within <em data-base="2">2</em>m is attacked, <em data-base="2.5">2.5</em>% of the dealt damage is redirected to the paladin and is reduced by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-pal-holyservant.png";
 			$skills[24] = $newSkill;
 
@@ -940,11 +1127,11 @@ class Build {
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Ward of Tunare";
-			$newSkill->desc = 'Passively grants Ward of Tunare, causing a <em data-base="5">5</em>% chance a heal for <em data-base="40">40</em> hitpoints plus <em data-base="1">1</em>% Max Hitpoints <span class="perLevel"> per rank</span>. Triggers when taking damage from an enemy you have targetted.';
-			$newSkill->image = "/images/builds/icons/rb-pal-wardoftunare.png";
+			$newSkill->title = "Elixir of Might";
+			$newSkill->desc = 'Instrument of Nife and Divine Might proc effects now heal the Paladin for <em data-base="10">10</em>% of damage dealt as well as gain <em data-base="2">2</em> mana<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-pal-elixirofmight.png";
 			$skills[31] = $newSkill;
-
+			
 			$newSkill = new stdClass();
 			$newSkill->title = "Flames of Redemption";
 			$newSkill->desc = 'Grants the Lesson of the Devoted AA, causing flames of redemption buff improving healing effectiveness by 25% and the flames of redemption DD proc for<em data-base="12">12</em> seconds <span class="perLevel"> per rank</span>.';
@@ -954,7 +1141,7 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Zealot's Fervor";
 			$newSkill->desc = 'When a heal is casted by a paladin, up to <em data-base="1">1</em> nearby enemies of the target are dealt <em data-base="1">1</em>% of the healing as damage. <span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/gunzerker-gunlust-0.png";	
+			$newSkill->image = "/images/builds/icons/rb-pal-zealotsfervor.png";
 			$skills[36] = $newSkill;
 
 			$newSkill = new stdClass();
@@ -989,13 +1176,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Frail";
-			$newSkill->desc = 'Stun spells have a <em data-base="1">1</em>% chance to also root the target<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Stun spells also cripple the target for 0 to <em data-base="1">1</em>ticks <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-pal-frail.png";
 			$skills[49] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Slayer";
-			$newSkill->desc = 'Grants an ability to cleanse the target, similar to Slay Undead, but works on ALL creature types, up to the level of the paladin, with a <em data-base="1">1</em>% chance<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants an ability to cleanse the target, similar to Slay Undead, but works on ALL creature types, up to the level of the paladin, with a <em data-base="100">100</em> mod proc<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-pal-slayer.png";
 			$skills[52] = $newSkill;
 			break;
@@ -1007,39 +1194,43 @@ class Build {
 			case "rogue":
 			$newSkill = new stdClass();
 			$newSkill->title = "Appraisal";
-			$newSkill->desc = 'Grants the Appraisal AA, granting a self buff that will give a puma-like proc dealing level * 2.5 damage for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'The rogue gains a 400 mod proc that deals (level * 3 * <em data-base="0.2">0.2</em>) magic damage as well as a fleeting fury buff.';
 			$newSkill->image = "/images/builds/icons/rb-rog-appraisal.png";
 			$skills[0] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Killing Spree";
 			$newSkill->desc = 'Each time a creature is successfully killed, the rogue gains a killing spree counter. For a limited time, attacks deal an additional <em data-base="5">5</em>% damage per counter, with a cap of <em data-base="2">2</em> counters<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-killingspree.png";
 			$skills[2] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Thief's Eyes";
-			$newSkill->desc = 'Increases chance to hit by <em data-base="2">2</em>% with all skills <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases accuracy by <em data-base="2">2</em>% with all skills <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-thiefseyes.png";			
 			$skills[4] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Sinister Strikes";
 			$newSkill->desc = 'Increases offhand damage bonus by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-sinisterstrikes.png";	
 			$skills[6] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Sneak Attack";
-			$newSkill->desc = 'If a rogue is sneaking and uses a backstab while an enemy is greater than 70% hp, their chance to hit with a backstab increases by <em data-base="2000">2000</em>% and critical chance increases by <em data-base="10">10</em>% <span class="perLevel"> per rank</span>.';
-
+			$newSkill->desc = 'If a rogue is sneaking and uses a backstab while an enemy is greater than 70% hp, improves chance to hit with a backstab by <em data-base="2000">2000</em>% and critical chance increases by <em data-base="10">10</em>% <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-sneakattack.png";	
 			$skills[8] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Focused Stab";
-			$newSkill->desc = 'Backstab has a <em data-base="5">5</em>% better chance to hit<span class="perLevel"> per rank</span> and when maxxed, allows backstabs from front.';
+			$newSkill->desc = 'Backstab has a <em data-base="5">5</em>% better chance to hit<span class="perLevel"> per rank</span> and when maxxed, allows a chance to backstabs from front.';
 			$newSkill->image = "/images/builds/icons/rb-rog-focusedstab.png";	
 			$skills[10] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Vital Organs";
-			$newSkill->desc = 'Backstab has a <em data-base="5">5</em>chance to deal <em data-base="25">25</em>% more damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Backstab deals <em data-base="20">20</em>% more damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-vitalorgans.png";
 			$skills[13] = $newSkill;
 
@@ -1051,13 +1242,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Sleight Distraction";
-			$newSkill->desc = 'When the rogue successfully pick pockets an enemy (even if they do not obtain an item), the enemy has a <em data-base="10">10</em>% chance to be distracted for a short duration. The next time the enemy attacks the rogue it has a very high chance of missing. <span class="perLevel"> per rank</span>';
-			$newSkill->image = "/images/builds/icons/rb-rog-sleightdistraction.png";	
+			$newSkill->desc = 'When the rogue successfully pick pockets an enemy (even if they do not obtain an item) while in a group, the enemy becomes mesmerized for 0 to <em data-base="1">1</em> ticks. The next time the enemy attacks the rogue it has a very high chance of missing. <span class="perLevel"> per rank</span>';
+			$newSkill->image = "/images/builds/icons/rb-rog-sleightdistraction.png";
 			$skills[18] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jarring Stab";
-			$newSkill->desc = 'When the rogue successfully backstabs an enemy, they have a <em data-base="2">2</em>% chance to cause all enemies that are hated by the rogue to <em data-base="20">20</em> hate<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When the rogue successfully backstabs an enemy, all enemies that are hated by the rogue have a reduction of <em data-base="20">20</em> hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-jarringstab.png";
 			$skills[20] = $newSkill;
 
@@ -1087,7 +1278,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Duelist";
-			$newSkill->desc = 'While engaged with a single enemy who is lesser level than them, the rogue gains improved evasion. Many factors decrease the effectiveness of this skill, such as the level of the enemy and how much health they have.';
+			$newSkill->desc = 'While engaged with a single enemy who is lesser level than the rogue, the rogue gains improved evasion. Many factors decrease the effectiveness of this skill, such as the level of the enemy and how much health they have.';
 			$newSkill->image = "/images/builds/icons/rb-rog-duelist.png";
 			$skills[31] = $newSkill;
 
@@ -1099,7 +1290,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Sleight of Strength";
-			$newSkill->desc = 'When the rogue successfully pick pockets, there is a <em data-base="2">2</em>%<span class="perLevel"> chance they will obtain a random beneficial buff for a short duration <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When the rogue successfully pick pockets, they gain a random beneficial buff for 0 to <em data-base="1">1</em> ticks<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-sleightofstrength.png";
 			$skills[36] = $newSkill;
 
@@ -1111,7 +1302,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Hidden Stash";
-			$newSkill->desc = 'When a rogue pickpockets, they have a <em data-base="2">2</em>% chance to find a hidden stash of coin<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When a rogue pickpockets, they dive deeper into the enemy\'s pockets to discover a hidden stash of coin<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-hiddenstash.png";
 			$skills[40] = $newSkill;
 
@@ -1178,19 +1369,19 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Healing";
-			$newSkill->desc = 'Heals recover an additional <em data-base="15">15</em>% health<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Heals to allies also heal the shaman <em data-base="5">5</em>% health<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shm-spiritualhealing.png";	
 			$skills[8] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Covenant of Spirit";
-			$newSkill->desc = 'Grants the Covenent of Spirit AA, which imbues divine intervention on the target with a <em data-base="2">2</em>% chance to save<span class="perLevel"> per rank</span>.<b>NOT IMPLEMENTED</b>';
+			$newSkill->desc = 'Grants the Covenent of Spirit AA, which imbues divine intervention on the target with a <em data-base="2">2</em>% death save success<span class="perLevel"> per rank</span>.<b>NOT IMPLEMENTED</b>';
 			$newSkill->image = "/images/builds/icons/rb-shm-covenantofspirit.png";
 			$skills[10] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Reinforce Torpor";
-			$newSkill->desc = '- NOT IMPLEMENTED - Reduces the negative effects of Stoicism and Torpor by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Stoicism and Torpor heal for an additional <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shm-reinforcetorpor.png";
 			$skills[13] = $newSkill;
 			
@@ -1203,7 +1394,7 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Cannibalize";
 			$newSkill->desc = 'Grants the Cannibalization AA, causing <em data-base="5">5</em>% current HP loss in exchange for mana at <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-shm-cannibalize.png";	
+			$newSkill->image = "/images/builds/icons/rb-shm-cannibalize.png";
 			$skills[18] = $newSkill;
 			
 			$newSkill = new stdClass();
@@ -1239,8 +1430,8 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Turgur's Echo";
-			$newSkill->desc = 'When a slow-based spell is resisted, the spell will have a <em data-base="2">2</em>% chance to try again to land.<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-shm-turgursecho.png";	
+			$newSkill->desc = 'When a slow-based spell is resisted, the spell will try to land again with <em data-base="2">2</em> less resistance<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-shm-turgursecho.png";
 			$skills[31] = $newSkill;
 			
 			$newSkill = new stdClass();
@@ -1251,7 +1442,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fury";
-			$newSkill->desc = 'Fleeting Fury now grants a proc line similar to puma that deals your level * 2.5 damage at <em data-base="20">20</em>% effectiveness and increases duration by <em data-base="6">6</em> seconds<span class="perLevel"> per rank</span>. If Fury is not on, it still deals half proc damage.';
+			$newSkill->desc = 'The shaman gains a 400 mod proc that deals (level * 1.5 * <em data-base="0.2">0.2</em>) magic damage.';
 			$newSkill->image = "/images/builds/icons/rb-shm-fury.png";
 			$skills[36] = $newSkill;
 			
@@ -1263,13 +1454,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Ancestral Guard";
-			$newSkill->desc = 'Grants the Ancestral Guard AA, granting <em data-base="2">2</em>% chance of evading damage with mitigation<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Ancestral Guard AA, granting <em data-base="2">2</em>% evasion<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shm-ancestralguard.png";
 			$skills[40] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Call of the Ancients";
-			$newSkill->desc = 'Grants the Call of the Ancients AA, summoning a spirit that deals <em data-base="1">1</em> of an enemy\'s current health (maximum <em data-base="100">100</em>) per attack<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Call of the Ancients AA, summoning a spirit that deals <em data-base="1">1</em> %of an enemy\'s current health (maximum <em data-base="100">100</em>) per attack<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shm-calloftheancients.png";
 			$skills[42] = $newSkill;
 
@@ -1315,13 +1506,13 @@ class Build {
 			//0
 			$newSkill = new stdClass();
 			$newSkill->title = "Leech Touch";
-			$newSkill->desc = 'Grants the Leech Touch AA, which replaces all normal Knight lifetaps. It will use your best lifetap, curved up, as well as improves all lifetap damage by <em data-base="4">4</em>% and grants a <em data-base="1">1</em>% chance to critical heal<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Leech Touch AA, which replaces all normal Knight lifetaps. It will use your best lifetap, curved up, as well as improves all lifetap damage by <em data-base="4">4</em>% and grants a <em data-base="1">1</em>% critical heal rate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-leechtouch.png";	
 			$skills[0] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Gouging Skin";
-			$newSkill->desc = 'When attacked, causes a <em data-base="+4">+4</em> point damage shield and <em data-base="+20">+20</em> hate<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When attacked, causes a <em data-base="4">4</em> point damage shield and <em data-base="20">20</em> hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-gougingskin.png";	
 			$skills[2] = $newSkill;
 			
@@ -1331,19 +1522,15 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-shd-hungeringaura.png";	
 			$skills[4] = $newSkill;
 			
-
-
-
-
 			$newSkill = new stdClass();
 			$newSkill->title = "Steadfast Servant";
-			$newSkill->desc = 'Grants the Steadfast Servant AA, summoning a pet at <em data-base="+20">+20</em>% power<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Steadfast Servant AA, summoning a pet at <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-steadfastservant.png";	
 			$skills[6] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Zevfeer's Feast";
-			$newSkill->desc = 'Improves Siphon Strength and Abduct Strength to tap the target for HP and Mana for up to <em data-base="+1">+1</em>% your maximum health and mana<span class="perLevel"> per rank</span> to give it to group.';
+			$newSkill->desc = 'When you use the Leech Touch AA, group members within <em data-base="10">10</em>m gain <em data-base="1">1</em>% of the damage dealt as mana<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-zevfeersfeast.png";	
 			$skills[8] = $newSkill;
 			
@@ -1355,7 +1542,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Banshee's Mirror";
-			$newSkill->desc = 'Passively grants Banshee\'s Mirror, causing a <em data-base="5">5</em>% chance a heal for <em data-base="40">40</em> hitpoints plus <em data-base="5">5</em>% Max hitpoints<span class="perLevel"> per rank</span>. Triggers when taking damage from an enemy you have targetted.';
+			$newSkill->desc = 'Passively grants the Shadow Knight a <em data-base="6">6</em>% bonus when healed by other allies<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-bansheesmirror.png";
 			$skills[13] = $newSkill;
 			
@@ -1367,37 +1554,37 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Festering Spear";
-			$newSkill->desc = 'Improve spear type spells by (level * <em data-base="1">1</em>) bonus damage, <em data-base="10">10</em>% damage, and <em data-base="1">1</em>% critical blast chance. At max rank, it has a 1% chance to cause the bonus to deal quadruple the amount. <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Improve spear type spells by (level * <em data-base="1">1</em>) bonus damage, <em data-base="10">10</em>% damage, and <em data-base="1">1</em>% critical blast chance. At max rank, it has an additional 1% chance to cause the bonus to deal quadruple the amount. <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-festeringspear.png";
 			$skills[18] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Festering Wound";
-			$newSkill->desc = 'Improves DoT damage by <em data-base="+4">+4</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Improves DoT damage by <em data-base="4">4</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-festeringwound.png";	
 			$skills[20] = $newSkill;
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Rotten Core";
-			$newSkill->desc = 'Each time a creature is successfully killed, the knight gains a rotten core counter. For a limited time, attacks deal an additional <em data-base="3">3</em>% damage per counter, with a cap of <em data-base="1">1</em> counters<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-shd-rottencore.png";	
+			$newSkill->desc = 'Each time a creature is successfully killed, the knight gains a rotten core counter. For 60 seconds, each counter adds <em data-base="3">3</em>% damage<span class="perLevel"> per rank</span> to attacks, with a cap of <em data-base="1">1</em> counters. Getting a kill resets the counter.';
+			$newSkill->image = "/images/builds/icons/rb-shd-rottencore.png";
 			$skills[22] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Pain";
-			$newSkill->desc = 'All direct damage spells have a <em data-base="1">1</em>%<span class="perLevel"> per rank</span> chance to cause bonus damage over time effects.';
+			$newSkill->desc = 'All direct damage spells cause a DoT effect for 0 to <em data-base="1">1</em> ticks<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-lingeringpain.png";
 			$skills[24] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Blood Oath";
-			$newSkill->desc = 'While using a 2 handed weapon, increases damage by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>. When the skill is rank 5, unlocks the 2 Hand Bash AA.';
+			$newSkill->desc = 'While using a 2 handed weapon, increases damage by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-bloodoath.png";	
-			$skills[26] = $newSkill;					
+			$skills[26] = $newSkill;
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Gift of Urash";
-			$newSkill->desc = 'Increases all skill damage by <em data-base="+5">+5</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases all skill damage by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-giftofurash.png";	
 			$skills[28] = $newSkill;
 		
@@ -1409,13 +1596,13 @@ class Build {
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Bash of Death";
-			$newSkill->desc = 'When you bash a target that is equal to your level or lower and the enemy is at <em data-base="10">10</em>% or less total health there is a <em data-base="7">7</em>% chance to cast harm touch<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-shd-bashofdeath.png";	
+			$newSkill->desc = 'When you bash a target that is equal to your level or lower and the enemy is at <em data-base="10">10</em>% or less total health you deal an additional (level * <em data-base="12">12</em>) <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-shd-bashofdeath.png";
 			$skills[34] = $newSkill;
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Embrace Death";
-			$newSkill->desc = 'Grants you the Death Peace AA, giving the ability to feign death as well as heal you for <em data-base="0.1">0.1</em>% maximum health on use<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants you the Death Peace AA, giving the ability to feign death as well as heal you for <em data-base="1">1</em>% of missing health<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-embracedeath.png";	
 			$skills[36] = $newSkill;
 			
@@ -1427,13 +1614,13 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Empathetic Soul";
-			$newSkill->desc = 'Improves Dark Empathy by granting an additional <em data-base="+40">+40</em> hitpoints healed and <em data-base="+0.5">+0.5</em>% max mana <span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-shd-empatheticsoul.png";	
+			$newSkill->desc = 'Improves Dark Empathy by granting an additional <em data-base="40">40</em> hitpoints healed and <em data-base="0.5">0.5</em>% max mana <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-shd-empatheticsoul.png";
 			$skills[40] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Embrace Shadow";
-			$newSkill->desc = 'Each time you feign death, grants a <em data-base="20">20</em>% chance<span class="perLevel"> per rank</span> to instantly be invisible to both living and undead creatures.';
+			$newSkill->desc = 'Each time you feign death, you are instantly be invisible to both living and undead creatures for <em data-base="1">1</em> tick<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-embraceshadow.png";	
 			$skills[42] = $newSkill;
 			
@@ -1441,13 +1628,13 @@ class Build {
 			$newSkill->title = "Siphon of Death";
 			$newSkill->desc = 'Vampiric Embrace, Scream of Death and Shroud of Death now also grant a mana tap for <em data-base="5">5</em>% of damage dealt<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-siphonofdeath.png";
-			$skills[44] = $newSkill;					
-		
+			$skills[44] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Nightmare";
-			$newSkill->desc = 'Fear now causes target to freeze in panic for <em data-base="2">2</em>seconds<span class="perLevel"> per rank</span> before fleeing.';
+			$newSkill->desc = 'Fear now causes target to be stunned in panic for 0 to <em data-base="1">1</em> seconds<span class="perLevel"> per rank</span> before fleeing.';
 			$newSkill->image = "/images/builds/icons/rb-shd-nightmare.png";
-			$skills[46] = $newSkill;					
+			$skills[46] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Mental Resistance";

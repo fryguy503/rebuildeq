@@ -36,6 +36,8 @@ Horse::Horse(Client *_owner, uint16 spell_id, const glm::vec4& position)
 	strn0cpy(name, _owner->GetCleanName(), 55);
 	strcat(name,"`s_Mount00");
 
+	IsHorse = true;
+
 	owner = _owner;
 }
 
@@ -77,7 +79,7 @@ const NPCType *Horse::BuildHorseType(uint16 spell_id) {
 	}
 
 	if (results.RowCount() != 1) {
-        Log.Out(Logs::General, Logs::Error, "No Database entry for mount: %s, check the horses table", fileName);
+        Log(Logs::General, Logs::Error, "No Database entry for mount: %s, check the horses table", fileName);
         return nullptr;
 	}
 
@@ -120,7 +122,7 @@ void Client::SummonHorse(uint16 spell_id) {
 		return;
 	}
 	if(!Horse::IsHorseSpell(spell_id)) {
-		Log.Out(Logs::General, Logs::Error, "%s tried to summon an unknown horse, spell id %d", GetName(), spell_id);
+		Log(Logs::General, Logs::Error, "%s tried to summon an unknown horse, spell id %d", GetName(), spell_id);
 		return;
 	}
 
@@ -149,6 +151,7 @@ void Client::SummonHorse(uint16 spell_id) {
 
 	uint16 tmpID = horse->GetID();
 	SetHorseId(tmpID);
+	BuffFadeBySitModifier();
 
 }
 

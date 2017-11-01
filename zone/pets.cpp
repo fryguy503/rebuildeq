@@ -245,7 +245,7 @@ void Mob::MakePet2(uint16 npc_type, uint8 level) {
 	
 	NPC* npc = new NPC(enpc, nullptr, GetPet()->GetPosition(), FlyMode3);
 	entity_list.AddNPC(npc, true, true);
-	npc->SendPosUpdate();
+	npc->SendPositionUpdate();
 	SetPet2ID(npc->GetID());
 	//Message(0, "Spawned, entity # %u", npc->GetID());
 }
@@ -316,7 +316,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	PetRecord record;
 	if (!database.GetPoweredPetEntry(pettype, act_power, &record)) {
 		Message(13, "Unable to find data for pet %s", pettype);
-		Log.Out(Logs::General, Logs::Error, "Unable to find data for pet %s, check pets table.", pettype);
+		Log(Logs::General, Logs::Error, "Unable to find data for pet %s, check pets table.", pettype);
 		return;
 	}
 
@@ -329,7 +329,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	const NPCType *base = database.LoadNPCTypesData(record.npc_type);
 	if (base == nullptr) {
 		Message(13, "Unable to load NPC data for pet %s", pettype);
-		Log.Out(Logs::General, Logs::Error, "Unable to load NPC data for pet %s (NPC ID %d), check pets and npc_types tables.", pettype, record.npc_type);
+		Log(Logs::General, Logs::Error, "Unable to load NPC data for pet %s (NPC ID %d), check pets and npc_types tables.", pettype, record.npc_type);
 		return;
 	}
 
@@ -546,21 +546,21 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 				npc_type->size = 1;
 			}
 
-			npc_type->texture = GetEquipmentMaterial(EQEmu::legacy::MaterialChest);
-			npc_type->armtexture = GetEquipmentMaterial(EQEmu::legacy::MaterialArms);
-			npc_type->legtexture = GetEquipmentMaterial(EQEmu::legacy::MaterialLegs);
-			npc_type->feettexture = GetEquipmentMaterial(EQEmu::legacy::MaterialFeet);
-			npc_type->bracertexture = GetEquipmentMaterial(EQEmu::legacy::MaterialWrist);
-			npc_type->handtexture = GetEquipmentMaterial(EQEmu::legacy::MaterialHands);
+			npc_type->texture = GetEquipmentMaterial(EQEmu::textures::armorChest);
+			npc_type->armtexture = GetEquipmentMaterial(EQEmu::textures::armorArms);
+			npc_type->legtexture = GetEquipmentMaterial(EQEmu::textures::armorLegs);
+			npc_type->feettexture = GetEquipmentMaterial(EQEmu::textures::armorFeet);
+			npc_type->bracertexture = GetEquipmentMaterial(EQEmu::textures::armorWrist);
+			npc_type->handtexture = GetEquipmentMaterial(EQEmu::textures::armorHands);
 			//npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
 			
-			npc_type->armor_tint[EQEmu::legacy::MaterialArms] = GetEquipmentColor(EQEmu::legacy::MaterialArms);
-			npc_type->armor_tint[EQEmu::legacy::MaterialChest] = GetEquipmentColor(EQEmu::legacy::MaterialChest);
-			npc_type->armor_tint[EQEmu::legacy::MaterialLegs] = GetEquipmentColor(EQEmu::legacy::MaterialLegs);
-			npc_type->armor_tint[EQEmu::legacy::MaterialFeet] = GetEquipmentColor(EQEmu::legacy::MaterialFeet);
-			npc_type->armor_tint[EQEmu::legacy::MaterialWrist] = GetEquipmentColor(EQEmu::legacy::MaterialWrist);
-			npc_type->armor_tint[EQEmu::legacy::MaterialHands] = GetEquipmentColor(EQEmu::legacy::MaterialHands);
-			//Log.Out(Logs::General, Logs::Zone_Server, "Setting Chest Armor Tint npc_type to %u with Steadfast", npc_type->armor_tint[MaterialChest]);
+			npc_type->armor_tint.Slot[EQEmu::textures::armorArms].Color = GetEquipmentColor(EQEmu::textures::armorArms);
+			npc_type->armor_tint.Slot[EQEmu::textures::armorLegs].Color = GetEquipmentColor(EQEmu::textures::armorLegs);
+			npc_type->armor_tint.Slot[EQEmu::textures::armorFeet].Color = GetEquipmentColor(EQEmu::textures::armorFeet);
+			npc_type->armor_tint.Slot[EQEmu::textures::armorWrist].Color = GetEquipmentColor(EQEmu::textures::armorWrist);
+			npc_type->armor_tint.Slot[EQEmu::textures::armorHands].Color = GetEquipmentColor(EQEmu::textures::armorHands);
+
+			//Log(Logs::General, Logs::Zone_Server, "Setting Chest Armor Tint npc_type to %u with Steadfast", npc_type->armor_tint[MaterialChest]);
 
 			//npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
 			npc_type->haircolor = GetHairColor();
@@ -574,12 +574,13 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			npc_type->drakkin_tattoo = GetDrakkinTattoo();
 			npc_type->drakkin_details = GetDrakkinDetails();
 			
-			npc_type->d_melee_texture1 = GetEquipmentMaterial(EQEmu::legacy::MaterialPrimary);
-			npc_type->d_melee_texture2 = GetEquipmentMaterial(EQEmu::legacy::MaterialSecondary);
 			
-			if (this->CastToClient()->GetInv().GetItem(EQEmu::legacy::SlotPrimary)) { //If a weapon is equipped
+			npc_type->d_melee_texture1 = GetEquipmentMaterial(EQEmu::textures::weaponPrimary);
+			npc_type->d_melee_texture2 = GetEquipmentMaterial(EQEmu::textures::weaponSecondary);
+			
+			if (this->CastToClient()->GetInv().GetItem(EQEmu::inventory::slotPrimary)) { //If a weapon is equipped
 				
-				npc_type->prim_melee_type = this->CastToClient()->GetInv().GetItem(EQEmu::legacy::SlotPrimary)->GetItem()->ItemType;
+				npc_type->prim_melee_type = this->CastToClient()->GetInv().GetItem(EQEmu::inventory::slotPrimary)->GetItem()->ItemType;
 			}
 			
 		}
@@ -602,11 +603,11 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->max_dmg = npc_type->max_dmg * 0.05 * rank; //25% dmg at max
 		//npc_type->texture = 3; // GetEquipmentMaterial(MaterialChest);
 		
-		npc_type->armtexture = GetEquipmentMaterial(EQEmu::legacy::MaterialArms);
-		npc_type->legtexture = GetEquipmentMaterial(EQEmu::legacy::MaterialLegs);
-		npc_type->feettexture = GetEquipmentMaterial(EQEmu::legacy::MaterialFeet);
-		npc_type->bracertexture = GetEquipmentMaterial(EQEmu::legacy::MaterialWrist);
-		npc_type->handtexture = GetEquipmentMaterial(EQEmu::legacy::MaterialHands);
+		npc_type->armtexture = GetEquipmentMaterial(EQEmu::textures::armorArms);
+		npc_type->legtexture = GetEquipmentMaterial(EQEmu::textures::armorLegs);
+		npc_type->feettexture = GetEquipmentMaterial(EQEmu::textures::armorFeet);
+		npc_type->bracertexture = GetEquipmentMaterial(EQEmu::textures::armorWrist);
+		npc_type->handtexture = GetEquipmentMaterial(EQEmu::textures::armorHands);
 		//npc_type->helmtexture = GetEquipmentMaterial(MaterialHead);
 		npc_type->haircolor = GetHairColor();
 		npc_type->beardcolor = GetBeardColor();
@@ -621,10 +622,10 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->drakkin_heritage = GetDrakkinHeritage();
 		npc_type->drakkin_tattoo = GetDrakkinTattoo();
 		npc_type->drakkin_details = GetDrakkinDetails();
-		npc_type->d_melee_texture1 = GetEquipmentMaterial(EQEmu::legacy::MaterialPrimary);
-		npc_type->d_melee_texture2 = GetEquipmentMaterial(EQEmu::legacy::MaterialSecondary);
-		if (this->CastToClient()->GetInv().GetItem(EQEmu::legacy::SlotPrimary)) { //If a weapon is equipped
-			npc_type->prim_melee_type = this->CastToClient()->GetInv().GetItem(EQEmu::legacy::SlotPrimary)->GetItem()->ItemType;
+		npc_type->d_melee_texture1 = GetEquipmentMaterial(EQEmu::textures::weaponPrimary);
+		npc_type->d_melee_texture2 = GetEquipmentMaterial(EQEmu::textures::weaponSecondary);
+		if (this->CastToClient()->GetInv().GetItem(EQEmu::inventory::slotPrimary)) { //If a weapon is equipped
+			npc_type->prim_melee_type = this->CastToClient()->GetInv().GetItem(EQEmu::inventory::slotPrimary)->GetItem()->ItemType;
 		}
 	}
 
@@ -647,6 +648,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	// 2 - `s Warder
 	// 3 - Random name if client, `s pet for others
 	// 4 - Keep DB name
+	// 5 - `s ward
 
 	if(spell_id == 2760 && IsClient()) {
 		// RB_DRU_SHM -- Change pet name to the client target's name
@@ -670,6 +672,10 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		// Keep the DB name
 	} else if (record.petnaming == 3 && IsClient()) {
 		strcpy(npc_type->name, GetRandPetName());
+	} else if (record.petnaming == 5 && IsClient()) {
+		strcpy(npc_type->name, this->GetName());
+		npc_type->name[24] = '\0';
+		strcat(npc_type->name, "`s_ward");
 	} else {
 		strcpy(npc_type->name, this->GetCleanName());
 		npc_type->name[25] = '\0';
@@ -752,7 +758,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			npc_type->helmtexture = monster->helmtexture;
 			npc_type->herosforgemodel = monster->herosforgemodel;
 		} else
-			Log.Out(Logs::General, Logs::Error, "Error loading NPC data for monster summoning pet (NPC ID %d)", monsterid);
+			Log(Logs::General, Logs::Error, "Error loading NPC data for monster summoning pet (NPC ID %d)", monsterid);
 
 	}
 
@@ -766,7 +772,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	// like the special back items some focused pets may receive.
 	uint32 petinv[EQEmu::legacy::EQUIPMENT_SIZE];
 	memset(petinv, 0, sizeof(petinv));
-	const EQEmu::Item_Struct *item = 0;
+	const EQEmu::ItemData *item = nullptr;
 
 	if (database.GetBasePetItems(record.equipmentset, petinv)) {
 		for (int i = 0; i < EQEmu::legacy::EQUIPMENT_SIZE; i++)
@@ -783,14 +789,14 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc->size = in_size;
 
 	/*if (this->IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) >= 5) {		
-		Log.Out(Logs::General, Logs::Zone_Server, "Before Chest Armor Tint to %u with Steadfast", npc->armor_tint[MaterialChest]);
+		Log(Logs::General, Logs::Zone_Server, "Before Chest Armor Tint to %u with Steadfast", npc->armor_tint[MaterialChest]);
 		npc->armor_tint[MaterialArms] = GetEquipmentColor(MaterialArms);
 		npc->armor_tint[MaterialChest] = GetEquipmentColor(MaterialChest);
 		npc->armor_tint[MaterialLegs] = GetEquipmentColor(MaterialLegs);
 		npc->armor_tint[MaterialFeet] = GetEquipmentColor(MaterialFeet);
 		npc->armor_tint[MaterialWrist] = GetEquipmentColor(MaterialWrist);
 		npc->armor_tint[MaterialHands] = GetEquipmentColor(MaterialHands);
-		Log.Out(Logs::General, Logs::Zone_Server, "Setting Chest Armor Tint to %u with Steadfast", npc->armor_tint[MaterialChest]);
+		Log(Logs::General, Logs::Zone_Server, "Setting Chest Armor Tint to %u with Steadfast", npc->armor_tint[MaterialChest]);
 	}*/
 
 	entity_list.AddNPC(npc, true, true);
@@ -964,10 +970,10 @@ void NPC::GetPetState(SpellBuff_Struct *pet_buffs, uint32 *items, char *name) {
 	for (int i=0; i < GetPetMaxTotalSlots(); i++) {
 		if (buffs[i].spellid != SPELL_UNKNOWN) {
 			pet_buffs[i].spellid = buffs[i].spellid;
-			pet_buffs[i].slotid = i+1;
+			pet_buffs[i].effect_type = i+1;
 			pet_buffs[i].duration = buffs[i].ticsremaining;
 			pet_buffs[i].level = buffs[i].casterlevel;
-			pet_buffs[i].effect = 10;
+			pet_buffs[i].bard_modifier = 10;
 			pet_buffs[i].counters = buffs[i].counters;
 			pet_buffs[i].bard_modifier = buffs[i].instrument_mod;
 		}
@@ -975,7 +981,7 @@ void NPC::GetPetState(SpellBuff_Struct *pet_buffs, uint32 *items, char *name) {
 			pet_buffs[i].spellid = SPELL_UNKNOWN;
 			pet_buffs[i].duration = 0;
 			pet_buffs[i].level = 0;
-			pet_buffs[i].effect = 0;
+			pet_buffs[i].bard_modifier = 10;
 			pet_buffs[i].counters = 0;
 		}
 	}
@@ -1008,10 +1014,10 @@ void NPC::SetPetState(SpellBuff_Struct *pet_buffs, uint32 *items) {
 		else {
 			buffs[i].spellid = SPELL_UNKNOWN;
 			pet_buffs[i].spellid = 0xFFFFFFFF;
-			pet_buffs[i].slotid = 0;
+			pet_buffs[i].effect_type = 0;
 			pet_buffs[i].level = 0;
 			pet_buffs[i].duration = 0;
-			pet_buffs[i].effect = 0;
+			pet_buffs[i].bard_modifier = 0;
 		}
 	}
 	for (int j1=0; j1 < GetPetMaxTotalSlots(); j1++) {
@@ -1033,10 +1039,10 @@ void NPC::SetPetState(SpellBuff_Struct *pet_buffs, uint32 *items) {
 					case SE_Illusion:
 						buffs[j1].spellid = SPELL_UNKNOWN;
 						pet_buffs[j1].spellid = SPELLBOOK_UNKNOWN;
-						pet_buffs[j1].slotid = 0;
+						pet_buffs[j1].effect_type = 0;
 						pet_buffs[j1].level = 0;
 						pet_buffs[j1].duration = 0;
-						pet_buffs[j1].effect = 0;
+						pet_buffs[j1].bard_modifier = 0;
 						x1 = EFFECT_COUNT;
 						break;
 					// We can't send appearance packets yet, put down at CompleteConnect
@@ -1050,11 +1056,11 @@ void NPC::SetPetState(SpellBuff_Struct *pet_buffs, uint32 *items) {
 		if(items[i] == 0)
 			continue;
 
-		const EQEmu::Item_Struct* item2 = database.GetItem(items[i]);
+		const EQEmu::ItemData* item2 = database.GetItem(items[i]);
 		if (item2 && item2->NoDrop != 0) {
 			//dont bother saving item charges for now, NPCs never use them
 			//and nobody should be able to get them off the corpse..?
-			AddLootDrop(item2, &itemlist, 0, 1, 127, true, true);
+			AddLootDrop(item2, &itemlist, 0, 1, 255, true, true);
 		}
 	}
 }
@@ -1086,7 +1092,7 @@ bool ZoneDatabase::GetBasePetItems(int32 equipmentset, uint32 *items) {
 	// all of the result rows. Check if we have something in the slot
 	// already. If no, add the item id to the equipment array.
 	while (curset >= 0 && depth < 5) {
-		std::string  query = StringFormat("SELECT nested_set FROM pets_equipmentset WHERE set_id = '%s'", curset);
+		std::string  query = StringFormat("SELECT nested_set FROM pets_equipmentset WHERE set_id = '%d'", curset);
 		auto results = QueryDatabase(query);
 		if (!results.Success()) {
 			return false;
@@ -1094,14 +1100,14 @@ bool ZoneDatabase::GetBasePetItems(int32 equipmentset, uint32 *items) {
 
 		if (results.RowCount() != 1) {
 			// invalid set reference, it doesn't exist
-			Log.Out(Logs::General, Logs::Error, "Error in GetBasePetItems equipment set '%d' does not exist", curset);
+			Log(Logs::General, Logs::Error, "Error in GetBasePetItems equipment set '%d' does not exist", curset);
 			return false;
 		}
 
 		auto row = results.begin();
 		nextset = atoi(row[0]);
 
-		query = StringFormat("SELECT slot, item_id FROM pets_equipmentset_entries WHERE set_id='%s'", curset);
+		query = StringFormat("SELECT slot, item_id FROM pets_equipmentset_entries WHERE set_id='%d'", curset);
 		results = QueryDatabase(query);
 		if (results.Success()) {
 			for (row = results.begin(); row != results.end(); ++row)
@@ -1123,3 +1129,10 @@ bool ZoneDatabase::GetBasePetItems(int32 equipmentset, uint32 *items) {
 	return true;
 }
 
+bool Pet::CheckSpellLevelRestriction(uint16 spell_id)
+{
+	auto owner = GetOwner();
+	if (owner)
+		return owner->CheckSpellLevelRestriction(spell_id);
+	return true;
+}

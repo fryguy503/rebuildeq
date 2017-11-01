@@ -16,6 +16,12 @@ class Controller_Web_Guide extends Template_Web_Core {
         $this->template->site->description = "List of zones disabled on RebuildEQ.";
     }
 
+     public function action_fragment() {
+        parent::before();
+        $this->template->site->title = "Fragment List";
+        $this->template->site->description = "As you travel around Norrath, fragments can be found to unlock the ability to #teleport to certain zones for a cost. These fragments are randomly spawned on creatures in a zone.";
+    }
+
 	public function action_index() {
 
 	}

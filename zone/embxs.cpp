@@ -33,7 +33,7 @@
 
 const char *getItemName(unsigned itemid) 
 { 
-  const EQEmu::Item_Struct* item = nullptr; 
+	const EQEmu::ItemData* item = nullptr;
   item = database.GetItem(itemid); 
 
   if (item) 
@@ -68,7 +68,7 @@ EXTERN_C XS(boot_qc)
 	file[255] = '\0';
 
 	if(items != 1)
-		Log.Out(Logs::General, Logs::Error, "boot_qc does not take any arguments.");
+		Log(Logs::General, Logs::Error, "boot_qc does not take any arguments.");
 	
 	char buf[128];	//shouldent have any function names longer than this.
 	
@@ -99,12 +99,16 @@ XS(XS_EQEmuIO_PRINT)
 		/* Strip newlines from log message 'str' */
 		*std::remove(str, str + strlen(str), '\n') = '\0';
 
+		std::string log_string = str;
+		if (log_string.find("did not return a true") != std::string::npos)
+			return;;
+
 		int i;
 		int pos = 0;
 		int len = 0;
 		for(i = 0; *cur != '\0'; i++, cur++) {
 			if(*cur == '\n') {
-				Log.Out(Logs::General, Logs::Quests, str);
+				Log(Logs::General, Logs::Quests, str);
 				len = 0;
 				pos = i+1;
 			} else {
@@ -112,7 +116,7 @@ XS(XS_EQEmuIO_PRINT)
 			}
 		}
 		if(len > 0) {
-			Log.Out(Logs::General, Logs::Quests, str);
+			Log(Logs::General, Logs::Quests, str);
 		}
  	}
  	

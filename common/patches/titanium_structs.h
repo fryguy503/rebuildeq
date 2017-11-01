@@ -118,7 +118,7 @@ struct AdventureInfo {
 ** Merth: Gave struct a name so gcc 2.96 would compile
 **
 */
-struct Color_Struct
+struct Tint_Struct
 {
 	union {
 		struct {
@@ -126,9 +126,51 @@ struct Color_Struct
 			uint8 Green;
 			uint8 Red;
 			uint8 UseTint;	// if there's a tint this is FF
-		} RGB;
+		};
 		uint32 Color;
 	};
+};
+
+struct TintProfile {
+	union {
+		struct {
+			Tint_Struct Head;
+			Tint_Struct Chest;
+			Tint_Struct Arms;
+			Tint_Struct Wrist;
+			Tint_Struct Hands;
+			Tint_Struct Legs;
+			Tint_Struct Feet;
+			Tint_Struct Primary;
+			Tint_Struct Secondary;
+		};
+		Tint_Struct Slot[EQEmu::textures::materialCount];
+	};
+};
+
+struct Texture_Struct
+{
+	uint32 Material;
+};
+
+struct TextureProfile
+{
+	union {
+		struct {
+			Texture_Struct Head;
+			Texture_Struct Chest;
+			Texture_Struct Arms;
+			Texture_Struct Wrist;
+			Texture_Struct Hands;
+			Texture_Struct Legs;
+			Texture_Struct Feet;
+			Texture_Struct Primary;
+			Texture_Struct Secondary;
+		};
+		Texture_Struct Slot[EQEmu::textures::materialCount];
+	};
+
+	TextureProfile();
 };
 
 /*
@@ -139,10 +181,10 @@ struct Color_Struct
 struct CharacterSelect_Struct
 {
 /*0000*/	uint32 Race[10];				// Characters Race
-/*0040*/	Color_Struct CS_Colors[10][9];	// Characters Equipment Colors
+/*0040*/	TintProfile CS_Colors[10];		// Characters Equipment Colors - packet requires length for 10 characters..but, client is limited to 8
 /*0400*/	uint8 BeardColor[10];			// Characters beard Color
 /*0410*/	uint8 HairStyle[10];			// Characters hair style
-/*0420*/	uint32 Equip[10][9];			// 0=helm, 1=chest, 2=arm, 3=bracer, 4=hand, 5=leg, 6=boot, 7=melee1, 8=melee2  (Might not be)
+/*0420*/	TextureProfile Equip[10];		// Characters texture array
 /*0780*/	uint32 SecondaryIDFile[10];		// Characters secondary IDFile number
 /*0820*/	uint8 Unknown820[10];			// 10x ff
 /*0830*/	uint8 Unknown830[2];			// 2x 00
@@ -239,22 +281,7 @@ struct Spawn_Struct {
 /*0189*/ uint32 petOwnerId;     // If this is a pet, the spawn id of owner
 /*0193*/ uint8   guildrank;      // 0=normal, 1=officer, 2=leader
 /*0194*/ uint8 unknown0194[3];
-/*0197*/ union
-         {
-             struct
-             {
-               /*0197*/ uint32 equip_helmet;    // Equipment: Helmet Visual
-               /*0201*/ uint32 equip_chest;     // Equipment: Chest Visual
-               /*0205*/ uint32 equip_arms;      // Equipment: Arms Visual
-               /*0209*/ uint32 equip_bracers;   // Equipment: Bracers Visual
-               /*0213*/ uint32 equip_hands;     // Equipment: Hands Visual
-               /*0217*/ uint32 equip_legs;      // Equipment: Legs Visual
-               /*0221*/ uint32 equip_feet;      // Equipment: Feet Visual
-               /*0225*/ uint32 equip_primary;   // Equipment: Primary Visual
-               /*0229*/ uint32 equip_secondary; // Equipment: Secondary Visual
-             } equip;
-             /*0197*/ uint32 equipment[9];  // Array elements correspond to struct equipment above
-         };
+/*0197*/ TextureProfile equipment;
 /*0233*/ float    runspeed;       // Speed when running
 /*0036*/ uint8  afk;            // 0=no, 1=afk
 /*0238*/ uint32 guildID;        // Current guild
@@ -284,22 +311,7 @@ union
 };
 /*0340*/ uint32 spawnId;        // Spawn Id
 /*0344*/ uint8 unknown0344[4];
-/*0348*/ union
-         {
-             struct
-             {
-                 /*0348*/ Color_Struct color_helmet;    // Color of helmet item
-                 /*0352*/ Color_Struct color_chest;     // Color of chest item
-                 /*0356*/ Color_Struct color_arms;      // Color of arms item
-                 /*0360*/ Color_Struct color_bracers;   // Color of bracers item
-                 /*0364*/ Color_Struct color_hands;     // Color of hands item
-                 /*0368*/ Color_Struct color_legs;      // Color of legs item
-                 /*0372*/ Color_Struct color_feet;      // Color of feet item
-                 /*0376*/ Color_Struct color_primary;   // Color of primary item
-                 /*0380*/ Color_Struct color_secondary; // Color of secondary item
-             } equipment_colors;
-             /*0348*/ Color_Struct colors[9]; // Array elements correspond to struct equipment_colors above
-         };
+/*0348*/ TintProfile equipment_tint;
 /*0384*/ uint8  lfg;            // 0=off, 1=lfg on
 /*0385*/
 
@@ -378,7 +390,7 @@ struct MemorizeSpell_Struct {
 uint32 slot;     // Spot in the spell book/memorized slot
 uint32 spell_id; // Spell id (200 or c8 is minor healing, etc)
 uint32 scribing; // 1 if memorizing a spell, set to 0 if scribing to book, 2 if un-memming
-uint32 unknown12;
+uint32 reduction; // lowers reuse
 };
 
 /*
@@ -408,13 +420,13 @@ struct DeleteSpell_Struct
 /*005*/uint8	unknowndss006[3];
 /*008*/
 };
-
 struct ManaChange_Struct
 {
-	uint32	new_mana;                  // New Mana AMount
-	uint32	stamina;
-	uint32	spell_id;
-	uint32	unknown12;
+/*00*/	uint32	new_mana;		// New Mana AMount
+/*04*/	uint32	stamina;
+/*08*/	uint32	spell_id;
+/*12*/	uint8	keepcasting;	// won't stop the cast. Change mana while casting?
+/*13*/	uint8	padding[3];		// client doesn't read it, garbage data seems like
 };
 
 struct SwapSpell_Struct
@@ -461,26 +473,19 @@ struct SpawnAppearance_Struct
 // this is used inside profile
 struct SpellBuff_Struct
 {
-/*000*/	uint8	slotid;		//badly named... seems to be 2 for a real buff, 0 otherwise
+/*000*/	uint8	effect_type;	// 0 = no buff, 2 = buff, 4 = inverse affects of buff
 /*001*/ uint8	level;
 /*002*/	uint8	bard_modifier;
-/*003*/	uint8	effect;			//not real
+/*003*/	uint8	unknown003;		// MQ2 used to call this "damage shield" -- don't see client referencing it, so maybe server side DS type tracking?
 /*004*/	uint32	spellid;
 /*008*/ int32	duration;
-/*012*/	uint32	counters;
-/*016*/	uint32	player_id;	//'global' ID of the caster, for wearoff messages
+/*012*/	uint32	counters;		// single book keeping value (counters, rune/vie)
+/*016*/	uint32	player_id;		// caster ID, pretty sure just zone ID
 };
 
-struct SpellBuffFade_Struct {
+struct SpellBuffPacket_Struct {
 /*000*/	uint32 entityid;
-/*004*/	uint8 slot;
-/*005*/	uint8 level;
-/*006*/	uint8 effect;
-/*007*/	uint8 unknown7;
-/*008*/	uint32 spellid;
-/*012*/	int32 duration;
-/*016*/	uint32 unknown016;
-/*020*/	uint32 unknown020;	//prolly global player ID
+/*004*/	SpellBuff_Struct buff;
 /*024*/	uint32 slotid;
 /*028*/	uint32 bufffade;
 /*032*/
@@ -735,6 +740,7 @@ static const uint32 MAX_PP_LANGUAGE		= 28;
 static const uint32 MAX_PP_SPELLBOOK	= 400;
 static const uint32 MAX_PP_MEMSPELL		= 9;
 static const uint32 MAX_PP_SKILL		= PACKET_SKILL_ARRAY_SIZE;	// 100 - actual skills buffer size
+static const uint32 MAX_PP_INNATE_SKILL	= 25;
 static const uint32 MAX_PP_AA_ARRAY		= 240;
 static const uint32 MAX_GROUP_MEMBERS	= 6;
 static const uint32 MAX_RECAST_TYPES	= 20;
@@ -810,9 +816,9 @@ struct PlayerProfile_Struct
 /*00176*/ uint8   hairstyle;          // Player hair style
 /*00177*/ uint8   beard;              // Player beard type
 /*00178*/ uint8 unknown00178[10];
-/*00188*/ uint32  item_material[9];   // Item texture/material of worn items
+/*00188*/ TextureProfile  item_material;   // Item texture/material of worn items
 /*00224*/ uint8 unknown00224[44];
-/*00268*/ Color_Struct item_tint[9];    // RR GG BB 00
+/*00268*/ TintProfile item_tint;    // RR GG BB 00
 /*00304*/ AA_Array  aa_array[MAX_PP_AA_ARRAY];   // AAs
 /*02224*/ uint32  points;             // Unspent Practice points
 /*02228*/ uint32  mana;               // Current mana
@@ -839,7 +845,8 @@ struct PlayerProfile_Struct
 /*04452*/ uint32  silver_cursor;      // Silver Pieces on cursor
 /*04456*/ uint32  copper_cursor;      // Copper Pieces on cursor
 /*04460*/ uint32  skills[MAX_PP_SKILL]; // [400] List of skills	// 100 dword buffer
-/*04860*/ uint8 unknown04760[136];
+/*04860*/ uint32  InnateSkills[MAX_PP_INNATE_SKILL];
+/*04960*/ uint8   unknown04760[36];
 /*04996*/ uint32  toxicity;           // Potion Toxicity (15=too toxic, each potion adds 3)
 /*05000*/ uint32  thirst_level;             // Drink (ticks till next drink)
 /*05004*/ uint32  hunger_level;             // Food (ticks till next eat)
@@ -1035,7 +1042,7 @@ struct SpecialMesg_Struct
 struct WearChange_Struct{
 /*000*/ uint16 spawn_id;
 /*002*/ uint16 material;
-/*004*/ Color_Struct color;
+/*004*/ Tint_Struct color;
 /*009*/ uint8 wear_slot_id;
 };
 
@@ -1415,7 +1422,7 @@ struct LootingItem_Struct {
 /*002*/	uint32	looter;
 /*004*/	uint16	slot_id;
 /*006*/	uint8	unknown3[2];
-/*008*/	uint32	auto_loot;
+/*008*/	int32	auto_loot;
 };
 
 struct GuildManageStatus_Struct{
@@ -1652,8 +1659,7 @@ struct Merchant_Sell_Struct {
 /*004*/	uint32	playerid;		// Player's entity id
 /*008*/	uint32	itemslot;
 		uint32	unknown12;
-/*016*/	uint8	quantity;		// Already sold
-/*017*/ uint8	Unknown016[3];
+/*016*/	uint32	quantity;
 /*020*/ uint32	price;
 };
 struct Merchant_Purchase_Struct {
@@ -2591,27 +2597,6 @@ struct PetitionBug_Struct{
 	char	text[1028];
 };
 
-struct DyeStruct
-{
-	union
-	{
-		struct
-		{
-			struct Color_Struct head;
-			struct Color_Struct chest;
-			struct Color_Struct arms;
-			struct Color_Struct wrists;
-			struct Color_Struct hands;
-			struct Color_Struct legs;
-			struct Color_Struct feet;
-			struct Color_Struct primary;	// you can't actually dye this
-			struct Color_Struct secondary;	// or this
-		}
-		dyes;
-		struct Color_Struct dye[9];
-	};
-};
-
 struct ApproveZone_Struct {
 	char	name[64];
 	uint32	zoneid;
@@ -3243,6 +3228,11 @@ struct MobHealth_Struct {
 struct AnnoyingZoneUnknown_Struct {
 	uint32	entity_id;
 	uint32	value;		//always 4
+};
+
+struct LoadSpellSet_Struct {
+	uint32 spell[MAX_PP_MEMSPELL];
+	uint32 unknown;
 };
 
 struct ApplyPoison_Struct {

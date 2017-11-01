@@ -1,0 +1,12 @@
+syntax = "proto3";
+package eqproto;
+
+message ChannelMessage {
+  int32 channel = 1;
+  int32 language = 2;
+  string from = 3;
+  string to = 4;
+  string message = 5;
+  int32 guilddbid = 6;
+  string deliverto = 7;
+}

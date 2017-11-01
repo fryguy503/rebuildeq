@@ -72,8 +72,11 @@ void Mob::CheckFlee() {
 	float run_ratio;
 	switch(con) {
 		//these values are not 100% researched
-		case CON_GREEN:
+		case CON_GRAY:
 			run_ratio = fleeratio;
+			break;
+		case CON_GREEN:
+			run_ratio = fleeratio * 9 / 10;
 			break;
 		case CON_LIGHTBLUE:
 			run_ratio = fleeratio * 9 / 10;
@@ -142,16 +145,17 @@ void Mob::CalculateNewFearpoint()
             m_FearWalkTarget = glm::vec3(Loc.x, Loc.y, Loc.z);
 			currently_fleeing = true;
 
-			Log.Out(Logs::Detail, Logs::None, "Feared to node %i (%8.3f, %8.3f, %8.3f)", Node, Loc.x, Loc.y, Loc.z);
+			Log(Logs::Detail, Logs::None, "Feared to node %i (%8.3f, %8.3f, %8.3f)", Node, Loc.x, Loc.y, Loc.z);
 			return;
 		}
 
-		Log.Out(Logs::Detail, Logs::None, "No path found to selected node. Falling through to old fear point selection.");
+		Log(Logs::Detail, Logs::None, "No path found to selected node. Falling through to old fear point selection.");
 	}
 
 	int loop = 0;
 	float ranx, rany, ranz;
-	currently_fleeing = false;
+
+	currently_fleeing = true;
 	while (loop < 100) //Max 100 tries
 	{
 		int ran = 250 - (loop*2);
@@ -159,18 +163,18 @@ void Mob::CalculateNewFearpoint()
 		ranx = GetX()+zone->random.Int(0, ran-1)-zone->random.Int(0, ran-1);
 		rany = GetY()+zone->random.Int(0, ran-1)-zone->random.Int(0, ran-1);
 		ranz = FindGroundZ(ranx,rany);
-		if (ranz == -999999)
+		if (ranz == BEST_Z_INVALID)
 			continue;
 		float fdist = ranz - GetZ();
 		if (fdist >= -12 && fdist <= 12 && CheckCoordLosNoZLeaps(GetX(),GetY(),GetZ(),ranx,rany,ranz))
 		{
-			currently_fleeing = true;
 			break;
 		}
 	}
-	if (currently_fleeing)
-        m_FearWalkTarget = glm::vec3(ranx, rany, ranz);
-	else //Break fear
-		BuffFadeByEffect(SE_Fear);
+
+	if (loop <= 100)
+	{
+		m_FearWalkTarget = glm::vec3(ranx, rany, ranz);
+	}
 }
 

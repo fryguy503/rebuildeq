@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #include "string_ids.h"
 
 #include "../common/rulesys.h"
+#include "../common/data_verification.h"
 
 #include "hate_list.h"
 #include "quest_parser_collection.h"
@@ -298,7 +299,24 @@ int HateList::GetSummonedPetCountOnHateList(Mob *hater) {
 	return pet_count;
 }
 
-Mob *HateList::GetEntWithMostHateOnList(Mob *center)
+int HateList::GetHateRatio(Mob *top, Mob *other)
+{
+	auto other_entry = Find(other);
+
+	if (!other_entry || other_entry->stored_hate_amount < 1)
+		return 0;
+
+	auto top_entry = Find(top);
+
+	if (!top_entry || top_entry->stored_hate_amount < 1)
+		return 999; // shouldn't happen if you call it right :P
+
+	return EQEmu::Clamp(static_cast<int>((other_entry->stored_hate_amount * 100) / top_entry->stored_hate_amount), 1, 999);
+}
+
+// skip is used to ignore a certain mob on the list
+// Currently used for getting 2nd on list for aggro meter
+Mob *HateList::GetEntWithMostHateOnList(Mob *center, Mob *skip)
 {
 	// hack fix for zone shutdown crashes on some servers
 	if (!zone->IsLoaded())
@@ -327,6 +345,11 @@ Mob *HateList::GetEntWithMostHateOnList(Mob *center)
 			}
 
 			if (!cur->entity_on_hatelist){
+				++iterator;
+				continue;
+			}
+
+			if (cur->entity_on_hatelist == skip) {
 				++iterator;
 				continue;
 			}
@@ -362,12 +385,20 @@ Mob *HateList::GetEntWithMostHateOnList(Mob *center)
 
 			int64 current_hate = cur->stored_hate_amount;
 
+#ifdef BOTS
+			if (cur->entity_on_hatelist->IsClient() || cur->entity_on_hatelist->IsBot()){
+
+				if (cur->entity_on_hatelist->IsClient() && cur->entity_on_hatelist->CastToClient()->IsSitting()){
+					aggro_mod += RuleI(Aggro, SittingAggroMod);
+				}
+#else
 			if (cur->entity_on_hatelist->IsClient()){
 
 				if (cur->entity_on_hatelist->CastToClient()->IsSitting()){
 					aggro_mod += RuleI(Aggro, SittingAggroMod);
 				}
-
+#endif
+				
 				if (center){
 					if (center->GetTarget() == cur->entity_on_hatelist)
 						aggro_mod += RuleI(Aggro, CurrentTargetAggroMod);
@@ -457,6 +488,11 @@ Mob *HateList::GetEntWithMostHateOnList(Mob *center)
 		while (iterator != list.end())
 		{
 			struct_HateList *cur = (*iterator);
+			if (cur->entity_on_hatelist == skip) {
+				++iterator;
+				continue;
+			}
+
 			if (center->IsNPC() && center->CastToNPC()->IsUnderwaterOnly() && zone->HasWaterMap()) {
 				if(!zone->watermap->InLiquid(glm::vec3(cur->entity_on_hatelist->GetPosition()))) {
 					skipped_count++;
@@ -574,7 +610,7 @@ int HateList::AreaRampage(Mob *caster, Mob *target, int count, ExtraAttackOption
 		auto mob = entity_list.GetMobID(id);
 		if (mob) {
 			++hit_count;
-			caster->ProcessAttackRounds(mob, opts, 1);
+			caster->ProcessAttackRounds(mob, opts);
 		}
 	}
 
@@ -645,18 +681,19 @@ void HateList::OnDeathTrigger()
 		if (mobHated->IsClient()) {
 			uint8 rank = mobHated->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
 			if (rank > 0) {
-				uint32 counters = mobHated->CastToClient()->GetRottenCoreCounters();
-				mobHated->CastToClient()->AddRottenCoreCounter(1);
-				if (counters < mobHated->CastToClient()->GetRottenCoreCounters()) {
-					mobHated->Message(MT_FocusEffect, "Rotten Core %u increased to %u counters.", rank, mobHated->CastToClient()->GetRottenCoreCounters());
+				uint32 counters = mobHated->CastToClient()->GetCoreCounter();
+				mobHated->CastToClient()->AddCoreCounter(1);
+				if (counters < mobHated->CastToClient()->GetCoreCounter()) {
+					mobHated->Message(MT_FocusEffect, "Rotten Core %u increased to %u counters.", rank, mobHated->CastToClient()->GetCoreCounter());
 				}
 			}
 			rank = mobHated->CastToClient()->GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
 			if (rank > 0) {
-				uint32 counters = mobHated->CastToClient()->GetRottenCoreCounters();
-				mobHated->CastToClient()->AddRottenCoreCounter(1);
-				if (counters < mobHated->CastToClient()->GetRottenCoreCounters()) {
-					mobHated->Message(MT_FocusEffect, "Killing Spree %u increased to %u counters.", rank, mobHated->CastToClient()->GetRottenCoreCounters());
+
+				mobHated->CastToClient()->AddCoreCounter(1);
+				uint32 counters = mobHated->CastToClient()->GetCoreCounter();
+				if (counters < mobHated->CastToClient()->GetCoreCounter()) {
+					mobHated->Message(MT_FocusEffect, "Killing Spree %u increased to %u counters.", rank, mobHated->CastToClient()->GetCoreCounter());
 				}
 			}
 		}

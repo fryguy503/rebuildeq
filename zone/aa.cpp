@@ -42,21 +42,33 @@ void Mob::TemporaryPets(uint16 spell_id, Mob *targ, const char *name_override, u
 
 	//Dook- swarms and wards
 
+	// do nothing if it's a corpse
+	if (targ != nullptr && targ->IsCorpse())
+		return;
+
+	// yep, even these need pet power!
+	int act_power = 0;
+
+	if (IsClient()) {
+		act_power = CastToClient()->GetFocusEffect(focusPetPower, spell_id);
+		act_power = CastToClient()->mod_pet_power(act_power, spell_id);
+	}
+
 	PetRecord record;
-	if(!database.GetPetEntry(spells[spell_id].teleport_zone, &record))
+	if (!database.GetPoweredPetEntry(spells[spell_id].teleport_zone, act_power, &record))
 	{
-		Log.Out(Logs::General, Logs::Error, "Unknown swarm pet spell id: %d, check pets table", spell_id);
+		Log(Logs::General, Logs::Error, "Unknown swarm pet spell id: %d, check pets table", spell_id);
 		Message(13, "Unable to find data for pet %s", spells[spell_id].teleport_zone);
 		return;
 	}
 
-	AA_SwarmPet pet;
+	SwarmPet_Struct pet;
 	pet.count = 1;
 	pet.duration = 1;
 
-	for(int x = 0; x < MAX_SWARM_PETS; x++)
+	for (int x = 0; x < MAX_SWARM_PETS; x++)
 	{
-		if(spells[spell_id].effectid[x] == SE_TemporaryPets)
+		if (spells[spell_id].effectid[x] == SE_TemporaryPets)
 		{
 			if(spell_id == 3265 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) > 0) {
 				pet.count = spells[spell_id].base[x];
@@ -78,14 +90,14 @@ void Mob::TemporaryPets(uint16 spell_id, Mob *targ, const char *name_override, u
 	NPCType *made_npc = nullptr;
 
 	const NPCType *npc_type = database.LoadNPCTypesData(pet.npc_id);
-	if(npc_type == nullptr) {
+	if (npc_type == nullptr) {
 		//log write
-		Log.Out(Logs::General, Logs::Error, "Unknown npc type for swarm pet spell id: %d", spell_id);
-		Message(0,"Unable to find pet!");
+		Log(Logs::General, Logs::Error, "Unknown npc type for swarm pet spell id: %d", spell_id);
+		Message(0, "Unable to find pet!");
 		return;
 	}
 
-	if(name_override != nullptr) {
+	if (name_override != nullptr) {
 		//we have to make a custom NPC type for this name change
 		made_npc = new NPCType;
 		memcpy(made_npc, npc_type, sizeof(NPCType));
@@ -96,7 +108,7 @@ void Mob::TemporaryPets(uint16 spell_id, Mob *targ, const char *name_override, u
 	int summon_count = 0;
 	summon_count = pet.count;
 
-	if(summon_count > MAX_SWARM_PETS)
+	if (summon_count > MAX_SWARM_PETS)
 		summon_count = MAX_SWARM_PETS;
 
 	static const glm::vec2 swarmPetLocations[MAX_SWARM_PETS] = {
@@ -105,59 +117,61 @@ void Mob::TemporaryPets(uint16 spell_id, Mob *targ, const char *name_override, u
 		glm::vec2(8, 8), glm::vec2(-8, 8), glm::vec2(8, -8), glm::vec2(-8, -8)
 	};
 
-	while(summon_count > 0) {
+	while (summon_count > 0) {
 		int pet_duration = pet.duration;
-		if(duration_override > 0)
+		if (duration_override > 0)
 			pet_duration = duration_override;
 
 		//this is a little messy, but the only way to do it right
 		//it would be possible to optimize out this copy for the last pet, but oh well
 		NPCType *npc_dup = nullptr;
-		if(made_npc != nullptr) {
+		if (made_npc != nullptr) {
 			npc_dup = new NPCType;
 			memcpy(npc_dup, made_npc, sizeof(NPCType));
 		}
 
-		NPC* npca = new NPC(
-				(npc_dup!=nullptr)?npc_dup:npc_type,	//make sure we give the NPC the correct data pointer
-				0,
-				GetPosition() + glm::vec4(swarmPetLocations[summon_count], 0.0f, 0.0f),
-				FlyMode3);
+		NPC* swarm_pet_npc = new NPC(
+			(npc_dup != nullptr) ? npc_dup : npc_type,	//make sure we give the NPC the correct data pointer
+			0,
+			GetPosition() + glm::vec4(swarmPetLocations[summon_count], 0.0f, 0.0f),
+			FlyMode3);
 
 		if (followme)
-			npca->SetFollowID(GetID());
+			swarm_pet_npc->SetFollowID(GetID());
 
-		if(!npca->GetSwarmInfo()){
-			auto nSI = new AA_SwarmPetInfo;
-			npca->SetSwarmInfo(nSI);
-			npca->GetSwarmInfo()->duration = new Timer(pet_duration*1000);
+		if (!swarm_pet_npc->GetSwarmInfo()) {
+			auto nSI = new SwarmPet;
+			swarm_pet_npc->SetSwarmInfo(nSI);
+			swarm_pet_npc->GetSwarmInfo()->duration = new Timer(pet_duration * 1000);
 		}
-		else{
-			npca->GetSwarmInfo()->duration->Start(pet_duration*1000);
+		else {
+			swarm_pet_npc->GetSwarmInfo()->duration->Start(pet_duration * 1000);
 		}
+
+		swarm_pet_npc->StartSwarmTimer(pet_duration * 1000);
 
 		//removing this prevents the pet from attacking
-		npca->GetSwarmInfo()->owner_id = GetID();
+		swarm_pet_npc->GetSwarmInfo()->owner_id = GetID();
 
 		//give the pets somebody to "love"
-		if(targ != nullptr){
-			npca->AddToHateList(targ, 1000, 1000);
+		if (targ != nullptr) {
+			swarm_pet_npc->AddToHateList(targ, 1000, 1000);
 			if (RuleB(Spells, SwarmPetTargetLock) || sticktarg)
-				npca->GetSwarmInfo()->target = targ->GetID();
+				swarm_pet_npc->GetSwarmInfo()->target = targ->GetID();
 			else
-				npca->GetSwarmInfo()->target = 0;
+				swarm_pet_npc->GetSwarmInfo()->target = 0;
 		}
 
 		//we allocated a new NPC type object, give the NPC ownership of that memory
-		if(npc_dup != nullptr)
-			npca->GiveNPCTypeData(npc_dup);
+		if (npc_dup != nullptr)
+			swarm_pet_npc->GiveNPCTypeData(npc_dup);
 
-		entity_list.AddNPC(npca, true, true);
+		entity_list.AddNPC(swarm_pet_npc, true, true);
 		summon_count--;
 	}
 
 	//the target of these swarm pets will take offense to being cast on...
-	if(targ != nullptr)
+	if (targ != nullptr)
 		targ->AddToHateList(this, 1, 0);
 
 	// The other pointers we make are handled elsewhere.
@@ -166,7 +180,7 @@ void Mob::TemporaryPets(uint16 spell_id, Mob *targ, const char *name_override, u
 
 void Mob::TypesTemporaryPets(uint32 typesid, Mob *targ, const char *name_override, uint32 duration_override, bool followme, bool sticktarg) {
 
-	AA_SwarmPet pet;
+	SwarmPet_Struct pet;
 	pet.count = 1;
 	pet.duration = 1;
 
@@ -177,7 +191,7 @@ void Mob::TypesTemporaryPets(uint32 typesid, Mob *targ, const char *name_overrid
 	const NPCType *npc_type = database.LoadNPCTypesData(typesid);
 	if(npc_type == nullptr) {
 		//log write
-		Log.Out(Logs::General, Logs::Error, "Unknown npc type for swarm pet type id: %d", typesid);
+		Log(Logs::General, Logs::Error, "Unknown npc type for swarm pet type id: %d", typesid);
 		Message(0,"Unable to find pet!");
 		return;
 	}
@@ -215,42 +229,44 @@ void Mob::TypesTemporaryPets(uint32 typesid, Mob *targ, const char *name_overrid
 			memcpy(npc_dup, made_npc, sizeof(NPCType));
 		}
 
-		NPC* npca = new NPC(
+		NPC* swarm_pet_npc = new NPC(
 				(npc_dup!=nullptr)?npc_dup:npc_type,	//make sure we give the NPC the correct data pointer
 				0,
 				GetPosition() + glm::vec4(swarmPetLocations[summon_count], 0.0f, 0.0f),
 				FlyMode3);
 
 		if (followme)
-			npca->SetFollowID(GetID());
+			swarm_pet_npc->SetFollowID(GetID());
 
-		if(!npca->GetSwarmInfo()){
-			auto nSI = new AA_SwarmPetInfo;
-			npca->SetSwarmInfo(nSI);
-			npca->GetSwarmInfo()->duration = new Timer(pet_duration*1000);
+		if(!swarm_pet_npc->GetSwarmInfo()){
+			auto nSI = new SwarmPet;
+			swarm_pet_npc->SetSwarmInfo(nSI);
+			swarm_pet_npc->GetSwarmInfo()->duration = new Timer(pet_duration*1000);
 		}
-		else{
-			npca->GetSwarmInfo()->duration->Start(pet_duration*1000);
+		else {
+			swarm_pet_npc->GetSwarmInfo()->duration->Start(pet_duration*1000);
 		}
+
+		swarm_pet_npc->StartSwarmTimer(pet_duration * 1000);
 
 		//removing this prevents the pet from attacking
-		npca->GetSwarmInfo()->owner_id = GetID();
+		swarm_pet_npc->GetSwarmInfo()->owner_id = GetID();
 
 		//give the pets somebody to "love"
 		if(targ != nullptr){
-			npca->AddToHateList(targ, 1000, 1000);
+			swarm_pet_npc->AddToHateList(targ, 1000, 1000);
 
 			if (RuleB(Spells, SwarmPetTargetLock) || sticktarg)
-				npca->GetSwarmInfo()->target = targ->GetID();
+				swarm_pet_npc->GetSwarmInfo()->target = targ->GetID();
 			else
-				npca->GetSwarmInfo()->target = 0;
+				swarm_pet_npc->GetSwarmInfo()->target = 0;
 		}
 
 		//we allocated a new NPC type object, give the NPC ownership of that memory
 		if(npc_dup != nullptr)
-			npca->GiveNPCTypeData(npc_dup);
+			swarm_pet_npc->GiveNPCTypeData(npc_dup);
 
-		entity_list.AddNPC(npca, true, true);
+		entity_list.AddNPC(swarm_pet_npc, true, true);
 		summon_count--;
 	}
 
@@ -408,7 +424,7 @@ void Mob::WakeTheDead(uint16 spell_id, Mob *target, uint32 duration)
 	auto npca = new NPC(make_npc, 0, GetPosition(), FlyMode3);
 
 	if(!npca->GetSwarmInfo()){
-		auto nSI = new AA_SwarmPetInfo;
+		auto nSI = new SwarmPet;
 		npca->SetSwarmInfo(nSI);
 		npca->GetSwarmInfo()->duration = new Timer(duration*1000);
 	}
@@ -431,8 +447,8 @@ void Mob::WakeTheDead(uint16 spell_id, Mob *target, uint32 duration)
 		uint32 sitem = 0;
 		sitem = CorpseToUse->GetWornItem(x);
 		if(sitem){
-			const EQEmu::Item_Struct * itm = database.GetItem(sitem);
-			npca->AddLootDrop(itm, &npca->itemlist, 1, 1, 127, true, true);
+			const EQEmu::ItemData * itm = database.GetItem(sitem);
+			npca->AddLootDrop(itm, &npca->itemlist, 1, 1, 255, true, true);
 		}
 	}
 
@@ -797,21 +813,21 @@ void Client::RefundAA() {
 	SendAlternateAdvancementStats();
 }
 
-AA_SwarmPetInfo::AA_SwarmPetInfo()
+SwarmPet::SwarmPet()
 {
 	target = 0;
 	owner_id = 0;
 	duration = nullptr;
 }
 
-AA_SwarmPetInfo::~AA_SwarmPetInfo()
+SwarmPet::~SwarmPet()
 {
 	target = 0;
 	owner_id = 0;
 	safe_delete(duration);
 }
 
-Mob *AA_SwarmPetInfo::GetOwner()
+Mob *SwarmPet::GetOwner()
 {
 	return entity_list.GetMobID(owner_id);
 }
@@ -875,6 +891,10 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 		rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 		if(rb_rank)
 			aai->spell_refresh = 1800 - (rb_rank-1) * 300;
+	}
+	else if (rank->id == aaIntensityoftheResolute) {
+		if (GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE))
+			aai->spell_refresh = 16;
 	} else if (rank->id == aaAncestralAid) {
 		if(GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID))
 			aai->spell_refresh = 16;
@@ -904,10 +924,16 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 		if(rb_rank) {
 			aai->spell_refresh = 2 * ((5 - rb_rank) * 5 + 10);
 		}
-	} else if (rank->id == aaBoastfulBellow) {
+	}
+	else if (rank->id == aaBoastfulBellow) {
 		rb_rank = GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW);
-		if(rb_rank) {
+		if (rb_rank) {
 			aai->spell_refresh = rank->recast_time - (rb_rank * 2);
+		}
+	} else if (rank->id == aaLessonoftheDevoted) {
+		rb_rank = GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE);
+		if (rb_rank) {
+			aai->spell_refresh = rank->recast_time - (rb_rank * 30);
 		}
 	}else {
 		aai->spell_refresh = rank->recast_time;
@@ -919,7 +945,7 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 	aai->max_level = ability->GetMaxLevel(this);
 	aai->prev_id = rank->prev_id;
 
-	if(rank->next && !CanUseAlternateAdvancementRank(rank->next) || ability->charges > 0) {
+	if((rank->next && !CanUseAlternateAdvancementRank(rank->next)) || ability->charges > 0) {
 		aai->next_id = -1;
 	} else {
 		aai->next_id = rank->next_id;
@@ -952,7 +978,7 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 void Client::SendAlternateAdvancementStats() {
 	auto outapp = new EQApplicationPacket(OP_AAExpUpdate, sizeof(AltAdvStats_Struct));
 	AltAdvStats_Struct *aps = (AltAdvStats_Struct *)outapp->pBuffer;
-	aps->experience = (uint32)(((float)330.0f * (float)m_pp.expAA) / (float)max_AAXP);
+	aps->experience = (uint32)(((float)330.0f * (float)m_pp.expAA) / (float)GetRequiredAAExperience());
 	aps->unspent = m_pp.aapoints;
 	aps->percentage = m_epp.perAA;
 	QueuePacket(outapp);
@@ -1018,7 +1044,7 @@ void Client::SendAlternateAdvancementTimers() {
 }
 
 void Client::ResetAlternateAdvancementTimer(int ability) {
-	AA::Rank *rank = zone->GetAlternateAdvancementRank(ability);
+	AA::Rank *rank = zone->GetAlternateAdvancementRank(casting_spell_aa_id);
 	if(rank) {
 		SendAlternateAdvancementTimer(rank->spell_type, 0, time(0));
 		p_timers.Clear(&database, rank->spell_type + pTimerAAStart);
@@ -1187,26 +1213,21 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		if (IsTaskActivityActive(307, 11)) UpdateTaskActivity(FEAT_GETTINGSTARTED, 11, 1);
 	}
 
-	if (rank_id == aaLeechTouch && GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) < 1 ||
-		rank_id == aaActOfValor && GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) < 1 ||
-		rank_id == aaAncestralAid && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) < 1 ||
-		rank_id == aaDeathPeace2 && GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH) < 1 ||
-		rank_id == aaDivineStun && GetBuildRank(PALADIN, RB_PAL_DIVINESTUN) < 1 ||
-		rank_id == aaSteadfastServant && GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) < 1 ||
-		rank_id == aaPurifySoul && GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) < 1 ||
-		rank_id == aaSpiritCall && GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL) < 1 ||
-		rank_id == aaVirulentParalysis && GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS) < 1 ||
-		rank_id == aaRabidBear && GetBuildRank(SHAMAN, RB_SHM_RABIDBEAR) < 1 ||
-		rank_id == aaAncestralGuard && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALGUARD) < 1 ||
-		rank_id == aaFeralSwipe && GetBuildRank(SHAMAN, RB_SHM_FERALSWIPE) < 1 ||
-		rank_id == aaCannibalization && GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE) < 1 ||
-		rank_id == aaParagonofSpirit && GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT) < 1 ||
-		rank_id == aaBoastfulBellow && GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW) < 1 ||
-		rank_id == aaHandofPiety && GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY) < 1 ||
+	if (rank_id == aaBoastfulBellow && GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW) < 1 ||
 		rank_id == aaCacophony && GetBuildRank(BARD, RB_BRD_CACOPHONY) < 1 ||
 		rank_id == aaDanceofBlades && GetBuildRank(BARD, RB_BRD_DANCEOFBLADES) < 1 ||
-		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
-		rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) < 1 ||
+		rank_id == aaShieldofNotes && GetBuildRank(BARD, RB_BRD_SHIELDOFNOTES) < 1 ||
+		rank_id == aaSongofStone && GetBuildRank(BARD, RB_BRD_SONGOFSTONE) < 1 ||
+
+		rank_id == aaDivineAvatar && GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) < 1 ||
+		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION) < 1 ||
+		rank_id == aaDivineArbitration && GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) < 1 ||
+		rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
+		rank_id == aaDivineRetribution && GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION) < 1 ||
+		rank_id == aaTurnUndead2 && GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) < 1 ||
+		rank_id == aaIntensityoftheResolute && GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE) < 1 ||
+		rank_id == aaExquisiteBenediction && GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION) < 1 ||
+
 		rank_id == aaTeleportBind && GetBuildRank(DRUID, RB_DRU_TELEPORTBIND) < 1 ||
 		rank_id == aaEntrap && GetBuildRank(DRUID, RB_DRU_ENTRAP) < 1 ||
 		rank_id == aaExodus && GetBuildRank(DRUID, RB_DRU_EXODUS) < 1 ||
@@ -1217,8 +1238,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaSpiritoftheWood && GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) < 1 ||
 		rank_id == aaNaturesBoon && GetBuildRank(DRUID, RB_DRU_NATURESBOON) < 1 ||
 		rank_id == aaNaturesGuardian && GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN) < 1 ||
-		rank_id == aaShieldofNotes && GetBuildRank(BARD, RB_BRD_SHIELDOFNOTES) < 1 ||
-		rank_id == aaSongofStone && GetBuildRank(BARD, RB_BRD_SONGOFSTONE) < 1 ||
+
 		rank_id == aaSharedHealth && GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) < 1 ||
 		rank_id == aaDimensionalShield && GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD) < 1 ||
 		rank_id == aaHostintheShell && GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) < 1 ||
@@ -1236,22 +1256,41 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaHeartofFlames && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES) < 1 ||
 		rank_id == aaCompanionofNecessity && GetBuildRank(MAGICIAN, RB_MAG_COMPANIONOFNECESSITY) < 1 ||
 		rank_id == aaServantofRo && GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO) < 1 ||
-		rank_id == aaDivineAvatar && GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) < 1 ||
-		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALBREEZE) < 1 ||
-		rank_id == aaDivineArbitration && GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION) < 1 ||
-		rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
-		rank_id == aaDivineRetribution && GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION) < 1 ||
-		rank_id == aaTurnUndead2 && GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) < 1 ||
-		rank_id == aaExquisiteBenediction && GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION) < 1 ||
+
+		rank_id == aaPurifyBody && GetBuildRank(MONK, RB_MNK_PURIFYBODY) < 1 ||
+
+		rank_id == aaHandofPiety && GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY) < 1 ||
+		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
+
+		rank_id == aaActOfValor && GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) < 1 ||
+		rank_id == aaDivineStun && GetBuildRank(PALADIN, RB_PAL_DIVINESTUN) < 1 ||
+		
+		rank_id == aaAppraisal && GetBuildRank(ROGUE, RB_ROG_APPRAISAL) < 1 ||
+
+		rank_id == aaLeechTouch && GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) < 1 ||
+		rank_id == aaDeathPeace2 && GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH) < 1 ||
+		rank_id == aaSteadfastServant && GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) < 1 ||
+
+		rank_id == aaAncestralAid && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) < 1 ||
+		rank_id == aaPurifySoul && GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) < 1 ||
+		rank_id == aaSpiritCall && GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL) < 1 ||
+		rank_id == aaVirulentParalysis && GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS) < 1 ||
+		rank_id == aaRabidBear && GetBuildRank(SHAMAN, RB_SHM_RABIDBEAR) < 1 ||
+		rank_id == aaAncestralGuard && GetBuildRank(SHAMAN, RB_SHM_ANCESTRALGUARD) < 1 ||
+		rank_id == aaFeralSwipe && GetBuildRank(SHAMAN, RB_SHM_FERALSWIPE) < 1 ||
+		rank_id == aaCannibalization && GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE) < 1 ||
+		rank_id == aaParagonofSpirit && GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT) < 1 ||		
 		( //Lesson of the Devoted is used by multiple classes different builds
-			rank_id == aaLessonoftheDevoted && 
-				GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
-				GetBuildRank(BARD, RB_BRD_KINSONG) < 1 &&
-				GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) < 1 &&
-				GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) < 1 &&
-				GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1 &&
-				GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) < 1 &&
-				GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) < 1
+			rank_id == aaLessonoftheDevoted && 				
+			GetBuildRank(BARD, RB_BRD_KINSONG) < 1 &&
+			GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE) < 1 &&			
+			GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) < 1 &&
+			GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) < 1 &&
+			GetBuildRank(DRUID, RB_MNK_GRACEOFTHEORDER) < 1 &&
+			GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) < 1 &&
+			GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1 &&
+			GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
+			GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) < 1 
 		) //end lessons
 		) {
 		Message(13, "You cannot use this ability until you unlock it via %s.", CreateSayLink("#builds", "#builds").c_str());
@@ -1323,10 +1362,21 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			else if(rb_rank == 4) cooldown = 10800; // 3 hours
 			else if(rb_rank == 5) cooldown = 3600; // 1 hours
 		}
-	} else if(rank_id == aaCalloftheHero) {
+	}
+	else if (rank_id == aaCalloftheHero) {
 		rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO);
-		if(rb_rank)
+		if (rb_rank)
 			cooldown = 2 * ((5 - rb_rank) * 5 + 10);
+	}
+	else if (rank_id == aaDivineArbitration) {
+		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION);
+		if (rb_rank > 0) cooldown = cooldown - (rb_rank * 30);
+	} else if (rank_id == aaDivineResurrection) {
+		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION);
+		if (rb_rank > 0) {
+			cooldown = cooldown - (rb_rank * 43200); //12 hours per rank
+			BuildEcho(StringFormat("Divine Resurrection %u reduced cooldown by %i", rb_rank, (rb_rank * 43200)));
+		}
 	} else if (rank_id == aaAppraisal) {
 		rb_rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
 		if(rb_rank) {
@@ -1375,7 +1425,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			}
 		}		
 	} else if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesBoon || rank_id == aaAncestralAid) {
-		if(GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) || GetBuildRank(DRUID, RB_DRU_NATURESBOON) || GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID)) {
+		if(GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) || GetBuildRank(DRUID, RB_DRU_NATURESBOON) || GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) || GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE)) {
 			cooldown = 16;
 			if (GetLevel() < 10)  manacost = 20;
 			else if (GetLevel() < 31) manacost = GetLevel() * 2.6f;
@@ -1470,21 +1520,15 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			}		
 		}
 	} else if (rank_id == aaLessonoftheDevoted) {
-		if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE)) {
-			spellid = 6236;
-		} else if (GetBuildRank(BARD, RB_BRD_KINSONG)) {
-			spellid = 6239;
-		} else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION)) {
-			spellid = 6234;
-		} else if (GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON)) {
-			spellid = 6241;
-		} else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT)) {
-			spellid = 6240;
-		} else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) {
-			spellid = 6237;
-		} else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION)) {
-			spellid = 6276;
-		}
+		if (GetBuildRank(BARD, RB_BRD_KINSONG)) spellid = 6239;		
+		else if (GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE)) spellid = 6233;
+		else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) spellid = 6233;
+		else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION)) spellid = 6276;
+		else if (GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER)) spellid = 6238;
+		else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION)) spellid = 6234;
+		else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT)) spellid = 6240;
+		else if (GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON)) spellid = 6241;
+		else if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE)) spellid = 6236;
 	} else if (rank_id == aaBoastfulBellow) {
 		rb_rank = GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW);
 		if(rb_rank) {
@@ -1534,29 +1578,37 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	}
 
 	//calculate cooldown
-	if (cooldown == 0) {
-		cooldown = rank->recast_time - GetAlternateAdvancementCooldownReduction(rank);		
-	}
-	if (cooldown < 0) {
+	cooldown = rank->recast_time - GetAlternateAdvancementCooldownReduction(rank);
+	if(cooldown < 0) {
 		cooldown = 0;
 	}
 
-	Log.Out(Logs::General, Logs::Spells, "AA rank_id %i casting spellid %i", rank_id, spellid);
+	if (!IsCastWhileInvis(spellid))
+		CommonBreakInvisible();
 
-	CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
-	SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
+	if (spells[spellid].sneak && (!hidden || (hidden && (Timer::GetCurrentTime() - tmHidden) < 4000))) {
+		Message_StringID(MT_SpellFailure, SNEAK_RESTRICT);
+		return;
+	}
 	
+	// Modern clients don't require pet targeted for AA casts that are ST_Pet
+	if (spells[spellid].targettype == ST_Pet || spells[spellid].targettype == ST_SummonedPet)
+		target_id = GetPetID();
+
 	// Bards can cast instant cast AAs while they are casting another song
-	if(spells[rank->spell].cast_time == 0 && GetClass() == BARD && IsBardSong(casting_spell_id)) {
-		if(!SpellFinished(spellid, entity_list.GetMob(target_id), ALTERNATE_ABILITY_SPELL_SLOT, spells[rank->spell].mana, -1, spells[rank->spell].ResistDiff, false)) {
+	if(spells[spellid].cast_time == 0 && GetClass() == BARD && IsBardSong(casting_spell_id)) {
+		if(!SpellFinished(spellid, entity_list.GetMob(target_id), EQEmu::CastingSlot::AltAbility, spells[spellid].mana, -1, spells[spellid].ResistDiff, false)) {
 			return;
 		}
 		ExpendAlternateAdvancementCharge(ability->id);
 	} else {
-		if(!CastSpell(spellid, target_id, ALTERNATE_ABILITY_SPELL_SLOT, -1, manacost, 0, -1, rank->spell_type + pTimerAAStart, cooldown, nullptr, rank->id)) {
+		if(!CastSpell(spellid, target_id, EQEmu::CastingSlot::AltAbility, -1, -1, 0, -1, rank->spell_type + pTimerAAStart, cooldown, nullptr, rank->id)) {
 			return;
 		}
 	}
+
+	CastToClient()->GetPTimers().Start(rank->spell_type + pTimerAAStart, cooldown);
+	SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
 }
 
 int Mob::GetAlternateAdvancementCooldownReduction(AA::Rank *rank_in) {
@@ -1601,6 +1653,10 @@ void Mob::ExpendAlternateAdvancementCharge(uint32 aa_id) {
 						if(r) {
 							CastToClient()->GetEPP().expended_aa += r->cost;
 						}
+					}
+					if (IsClient()) {
+						auto c = CastToClient();
+						c->RemoveExpendedAA(ability->first_rank_id);
 					}
 					aa_ranks.erase(iter.first);
 				}
@@ -1747,12 +1803,10 @@ bool Mob::SetAA(uint32 rank_id, uint32 new_value, uint32 charges) {
 		AA::Ability *ability = zone->GetAlternateAdvancementAbilityByRank(rank_id);
 
 		if(!ability) {
-			Message(13, "Set AA Error: AA ID Does Not Exist: %i", rank_id);
 			return false;
 		}
 
 		if(new_value > ability->GetMaxLevel(this)) {
-			Message(13, "Set AA Error: AA Rank (%i) Does Not Exist For Ability: %i", new_value, rank_id);
 			return false;
 		}
 
@@ -1889,17 +1943,17 @@ bool Mob::CanPurchaseAlternateAdvancementRank(AA::Rank *rank, bool check_price, 
 }
 
 void Zone::LoadAlternateAdvancement() {
-	Log.Out(Logs::General, Logs::Status, "Loading Alternate Advancement Data...");
+	Log(Logs::General, Logs::Status, "Loading Alternate Advancement Data...");
 	if(!database.LoadAlternateAdvancementAbilities(aa_abilities,
 		aa_ranks))
 	{
 		aa_abilities.clear();
 		aa_ranks.clear();
-		Log.Out(Logs::General, Logs::Status, "Failed to load Alternate Advancement Data");
+		Log(Logs::General, Logs::Status, "Failed to load Alternate Advancement Data");
 		return;
 	}
 
-	Log.Out(Logs::General, Logs::Status, "Processing Alternate Advancement Data...");
+	Log(Logs::General, Logs::Status, "Processing Alternate Advancement Data...");
 	for(const auto &ability : aa_abilities) {
 		ability.second->first = GetAlternateAdvancementRank(ability.second->first_rank_id);
 
@@ -1950,13 +2004,13 @@ void Zone::LoadAlternateAdvancement() {
 		}
 	}
 
-	Log.Out(Logs::General, Logs::Status, "Loaded Alternate Advancement Data");
+	Log(Logs::General, Logs::Status, "Loaded Alternate Advancement Data");
 }
 
 bool ZoneDatabase::LoadAlternateAdvancementAbilities(std::unordered_map<int, std::unique_ptr<AA::Ability>> &abilities,
 													std::unordered_map<int, std::unique_ptr<AA::Rank>> &ranks)
 {
-	Log.Out(Logs::General, Logs::Status, "Loading Alternate Advancement Abilities...");
+	Log(Logs::General, Logs::Status, "Loading Alternate Advancement Abilities...");
 	abilities.clear();
 	std::string query = "SELECT id, name, category, classes, races, deities, drakkin_heritage, status, type, charges, "
 		"grant_only, first_rank_id FROM aa_ability WHERE enabled = 1";
@@ -1982,13 +2036,13 @@ bool ZoneDatabase::LoadAlternateAdvancementAbilities(std::unordered_map<int, std
 			abilities[ability->id] = std::unique_ptr<AA::Ability>(ability);
 		}
 	} else {
-		Log.Out(Logs::General, Logs::Error, "Failed to load Alternate Advancement Abilities");
+		Log(Logs::General, Logs::Error, "Failed to load Alternate Advancement Abilities");
 		return false;
 	}
 
-	Log.Out(Logs::General, Logs::Status, "Loaded %d Alternate Advancement Abilities", (int)abilities.size());
+	Log(Logs::General, Logs::Status, "Loaded %d Alternate Advancement Abilities", (int)abilities.size());
 
-	Log.Out(Logs::General, Logs::Status, "Loading Alternate Advancement Ability Ranks...");
+	Log(Logs::General, Logs::Status, "Loading Alternate Advancement Ability Ranks...");
 	ranks.clear();
 	query = "SELECT id, upper_hotkey_sid, lower_hotkey_sid, title_sid, desc_sid, cost, level_req, spell, spell_type, recast_time, "
 		"next_id, expansion FROM aa_ranks";
@@ -2017,13 +2071,13 @@ bool ZoneDatabase::LoadAlternateAdvancementAbilities(std::unordered_map<int, std
 			ranks[rank->id] = std::unique_ptr<AA::Rank>(rank);
 		}
 	} else {
-		Log.Out(Logs::General, Logs::Error, "Failed to load Alternate Advancement Ability Ranks");
+		Log(Logs::General, Logs::Error, "Failed to load Alternate Advancement Ability Ranks");
 		return false;
 	}
 
-	Log.Out(Logs::General, Logs::Status, "Loaded %d Alternate Advancement Ability Ranks", (int)ranks.size());
+	Log(Logs::General, Logs::Status, "Loaded %d Alternate Advancement Ability Ranks", (int)ranks.size());
 
-	Log.Out(Logs::General, Logs::Status, "Loading Alternate Advancement Ability Rank Effects...");
+	Log(Logs::General, Logs::Status, "Loading Alternate Advancement Ability Rank Effects...");
 	query = "SELECT rank_id, slot, effect_id, base1, base2 FROM aa_rank_effects";
 	results = QueryDatabase(query);
 	if(results.Success()) {
@@ -2044,13 +2098,13 @@ bool ZoneDatabase::LoadAlternateAdvancementAbilities(std::unordered_map<int, std
 			}
 		}
 	} else {
-		Log.Out(Logs::General, Logs::Error, "Failed to load Alternate Advancement Ability Rank Effects");
+		Log(Logs::General, Logs::Error, "Failed to load Alternate Advancement Ability Rank Effects");
 		return false;
 	}
 
-	Log.Out(Logs::General, Logs::Status, "Loaded Alternate Advancement Ability Rank Effects");
+	Log(Logs::General, Logs::Status, "Loaded Alternate Advancement Ability Rank Effects");
 
-	Log.Out(Logs::General, Logs::Status, "Loading Alternate Advancement Ability Rank Prereqs...");
+	Log(Logs::General, Logs::Status, "Loading Alternate Advancement Ability Rank Prereqs...");
 	query = "SELECT rank_id, aa_id, points FROM aa_rank_prereqs";
 	results = QueryDatabase(query);
 	if(results.Success()) {
@@ -2069,11 +2123,11 @@ bool ZoneDatabase::LoadAlternateAdvancementAbilities(std::unordered_map<int, std
 			}
 		}
 	} else {
-		Log.Out(Logs::General, Logs::Error, "Failed to load Alternate Advancement Ability Rank Prereqs");
+		Log(Logs::General, Logs::Error, "Failed to load Alternate Advancement Ability Rank Prereqs");
 		return false;
 	}
 
-	Log.Out(Logs::General, Logs::Status, "Loaded Alternate Advancement Ability Rank Prereqs");
+	Log(Logs::General, Logs::Status, "Loaded Alternate Advancement Ability Rank Prereqs");
 
 	return true;
 }

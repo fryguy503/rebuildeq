@@ -28,6 +28,7 @@
 
 #include "queryserv.h"
 #include "quest_parser_collection.h"
+#include "lua_parser.h"
 #include "string_ids.h"
 
 #ifdef BOTS
@@ -101,9 +102,12 @@ uint32 Client::CalcEXP(uint8 conlevel) {
 		if (conlevel != 0xFF) {
 			switch (conlevel)
 			{
-			case CON_GREEN:
+			case CON_GRAY:
 				in_add_exp = 0;
 				return 0;
+			case CON_GREEN:
+				in_add_exp = in_add_exp * RuleI(Character, GreenModifier) / 100;
+				break;
 			case CON_LIGHTBLUE:
 				in_add_exp = in_add_exp * RuleI(Character, LightBlueModifier)/100;
 				break;
@@ -148,6 +152,26 @@ uint32 Client::CalcEXP(uint8 conlevel) {
 	}
 
 	return in_add_exp;
+}
+
+uint32 Client::GetExperienceForKill(Mob *against)
+{
+#ifdef LUA_EQEMU
+	uint32 lua_ret = 0;
+	bool ignoreDefault = false;
+	lua_ret = LuaParser::Instance()->GetExperienceForKill(this, against, ignoreDefault);
+
+	if (ignoreDefault) {
+		return lua_ret;
+	}
+#endif
+
+	if (against && against->IsNPC()) {
+		uint32 level = (uint32)against->GetLevel();
+		return EXP_FORMULA;
+	}
+
+	return 0;
 }
 
 void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, bool resexp) {
@@ -206,10 +230,14 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, bool resexp) {
 			if (conlevel != 0xFF && !resexp) {
 				switch (conlevel)
 				{
-					case CON_GREEN:
+					case CON_GRAY:
 						add_exp = 0;
 						add_aaxp = 0;
 						return;
+					case CON_GREEN:
+						add_exp = add_exp * RuleI(Character, GreenModifier) / 100;
+						add_aaxp = add_aaxp * RuleI(Character, GreenModifier) / 100;
+						break;
 					case CON_LIGHTBLUE:
 							add_exp = add_exp * RuleI(Character, LightBlueModifier)/100;
 							add_aaxp = add_aaxp * RuleI(Character, LightBlueModifier)/100;
@@ -331,9 +359,9 @@ void Client::AddEXP(uint32 in_add_exp, uint8 conlevel, bool resexp) {
 }
 
 void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
-	Log.Out(Logs::Detail, Logs::None, "Attempting to Set Exp for %s (XP: %u, AAXP: %u, Rez: %s)", this->GetCleanName(), set_exp, set_aaxp, isrezzexp ? "true" : "false");
-	//max_AAXP = GetEXPForLevel(52) - GetEXPForLevel(51);	//GetEXPForLevel() doesn't depend on class/race, just level, so it shouldn't change between Clients
-	max_AAXP = RuleI(AA, ExpPerPoint);	//this may be redundant since we're doing this in Client::FinishConnState2()
+	Log(Logs::Detail, Logs::None, "Attempting to Set Exp for %s (XP: %u, AAXP: %u, Rez: %s)", this->GetCleanName(), set_exp, set_aaxp, isrezzexp ? "true" : "false");
+
+	auto max_AAXP = GetRequiredAAExperience();
 	if (max_AAXP == 0 || GetEXPForLevel(GetLevel()) == 0xFFFFFFFF) {
 		Message(13, "Error in Client::SetEXP. EXP not set.");
 		return; // Must be invalid class/race
@@ -513,21 +541,20 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 
 		//figure out how many AA points we get from the exp were setting
 		m_pp.aapoints = set_aaxp / max_AAXP;
-		Log.Out(Logs::Detail, Logs::None, "Calculating additional AA Points from AAXP for %s: %u / %u = %.1f points", this->GetCleanName(), set_aaxp, max_AAXP, (float)set_aaxp / (float)max_AAXP);
+		Log(Logs::Detail, Logs::None, "Calculating additional AA Points from AAXP for %s: %u / %u = %.1f points", this->GetCleanName(), set_aaxp, max_AAXP, (float)set_aaxp / (float)max_AAXP);
 
 		//get remainder exp points, set in PP below
 		set_aaxp = set_aaxp - (max_AAXP * m_pp.aapoints);
 
 		//add in how many points we had
 		m_pp.aapoints += last_unspentAA;
-		//set_aaxp = m_pp.expAA % max_AAXP;
 
 		//figure out how many points were actually gained
 		/*uint32 gained = m_pp.aapoints - last_unspentAA;*/	//unused
 
 		//Message(15, "You have gained %d skill points!!", m_pp.aapoints - last_unspentAA);
 		char val1[20]={0};
-		Message_StringID(MT_Experience, GAIN_ABILITY_POINT,ConvertArray(m_pp.aapoints, val1),m_pp.aapoints == 1 ? "" : "(s)");	//You have gained an ability point! You now have %1 ability point%2.
+		Message_StringID(MT_Experience, GAIN_ABILITY_POINT, ConvertArray(m_pp.aapoints, val1),m_pp.aapoints == 1 ? "" : "(s)");	//You have gained an ability point! You now have %1 ability point%2.
 		
 		/* QS: PlayerLogAARate */
 		if (RuleB(QueryServ, PlayerLogAARate)){
@@ -679,15 +706,14 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 		char val1[20]={0};
 		char val2[20]={0};
 		char val3[20]={0};
-		Message_StringID(MT_Experience, GM_GAINXP,ConvertArray(set_aaxp,val1),ConvertArray(set_exp,val2),ConvertArray(GetEXPForLevel(GetLevel()+1),val3));	//[GM] You have gained %1 AXP and %2 EXP (%3).
-		//Message(15, "[GM] You now have %d / %d EXP and %d / %d AA exp.", set_exp, GetEXPForLevel(GetLevel()+1), set_aaxp, max_AAXP);
+		Message_StringID(MT_Experience, GM_GAINXP, ConvertArray(set_aaxp,val1),ConvertArray(set_exp,val2),ConvertArray(GetEXPForLevel(GetLevel()+1),val3));	//[GM] You have gained %1 AXP and %2 EXP (%3).
 	}
 }
 
 void Client::SetLevel(uint8 set_level, bool command)
 {
 	if (GetEXPForLevel(set_level) == 0xFFFFFFFF) {
-		Log.Out(Logs::General, Logs::Error, "Client::SetLevel() GetEXPForLevel(%i) = 0xFFFFFFFF", set_level);
+		Log(Logs::General, Logs::Error, "Client::SetLevel() GetEXPForLevel(%i) = 0xFFFFFFFF", set_level);
 		return;
 	}
 
@@ -745,7 +771,7 @@ void Client::SetLevel(uint8 set_level, bool command)
 	safe_delete(outapp);
 	this->SendAppearancePacket(AT_WhoLevel, set_level); // who level change
 
-	Log.Out(Logs::General, Logs::Normal, "Setting Level for %s to %i", GetName(), set_level);
+	Log(Logs::General, Logs::Normal, "Setting Level for %s to %i", GetName(), set_level);
 
 	CalcBonuses();
 
@@ -791,10 +817,10 @@ void Client::UpdateSkillsAndSpells() {
 			if (this->GetClass() == BARD && curspell != 744 && curspell != 3567 && curspell != 743 && curspell != 1748 && curspell != 4210 && curspell != 707 && curspell != 730 && curspell != 703 && curspell != 1764 && curspell != 3566 && curspell != 1747 && curspell != 742 && curspell != 704 && curspell != 3681 && curspell != 3682 && curspell != 7 && curspell != 2609 && curspell != 1759 && curspell != 1448 && curspell != 723 && curspell != 1287 && curspell != 1763 && curspell != 1765 && curspell != 2608 && curspell != 2607 && curspell != 714 && curspell != 709 && curspell != 711 && curspell != 710 && curspell != 745 && curspell != 708 && curspell != 2604 && curspell != 1760 && curspell != 716 && curspell != 713 && curspell != 715 && curspell != 712 && curspell != 1452 && curspell != 2610 && curspell != 1762 && curspell != 1760 && curspell != 1757 && curspell != 2606 && curspell != 747 && curspell != 1449 && curspell != 749 && curspell != 702 && curspell != 740 && curspell != 701 && curspell != 734 && curspell != 700 && curspell != 719 && curspell != 1749 && curspell != 718 && curspell != 748 && curspell != 2603 && curspell != 729 && curspell != 2602 && curspell != 737 && curspell != 2601 && curspell != 4586 && curspell != 4587 && curspell != 4585 && curspell != 1750 && curspell != 2605 && curspell != 717 && curspell != 1752 && curspell != 1450 && curspell != 1755 && curspell != 739 && curspell != 4084 && curspell != 4086 && curspell != 4083 && curspell != 4085 && curspell != 721 && curspell != 735 && curspell != 728 && curspell != 750 && curspell != 725 && curspell != 726 && curspell != 727 && curspell != 1197 && curspell != 1100 && curspell != 1753 && curspell != 1754 && curspell != 868 && curspell != 741 && curspell != 724 && curspell != 1756 && curspell != 706 && curspell != 2936 && curspell != 1761 && curspell != 736 && curspell != 1451 && curspell != 1758 && curspell != 1751 && curspell != 746 && curspell != 738 && curspell != 705 && curspell != 1758 && curspell != 1751 && curspell != 738 && curspell != 720) {
 				continue;
 			}
-			else if (this->GetClass() == CLERIC && curspell != 11 && curspell != 14 && curspell != 200 && curspell != 201 && curspell != 202 && curspell != 203 && curspell != 205 && curspell != 207 && curspell != 208 && curspell != 209 && curspell != 210 && curspell != 215 && curspell != 216 && curspell != 211 && curspell != 212 && curspell != 17 && curspell != 213 && curspell != 218 && curspell != 36 && curspell != 501 && curspell != 560 && curspell != 227 && curspell != 229 && curspell != 2501 && curspell != 219 && curspell != 223 && curspell != 230 && curspell != 224 && curspell != 4056 && curspell != 50 && curspell != 221 && curspell != 231 && curspell != 12 && curspell != 35 && curspell != 226 && curspell != 235 && curspell != 485 && curspell != 2168 && curspell != 232 && curspell != 234 && curspell != 225 && curspell != 233 && curspell != 48 && curspell != 16 && curspell != 3575 && curspell != 368 && curspell != 47 && curspell != 123 && curspell != 228 && curspell != 43 && curspell != 248 && curspell != 89 && curspell != 2169 && curspell != 2502 && curspell != 413 && curspell != 15 && curspell != 37 && curspell != 4088 && curspell != 126 && curspell != 128 && curspell != 486 && curspell != 2170 && curspell != 244 && curspell != 95 && curspell != 117 && curspell != 4057 && curspell != 18 && curspell != 2503 && curspell != 414 && curspell != 59 && curspell != 131 && curspell != 391 && curspell != 663 && curspell != 52 && curspell != 96 && curspell != 130 && curspell != 2175 && curspell != 329 && curspell != 135 && curspell != 62 && curspell != 9 && curspell != 124 && curspell != 487 && curspell != 504 && curspell != 2171 && curspell != 312 && curspell != 480 && curspell != 53 && curspell != 60 && curspell != 662 && curspell != 134 && curspell != 1445 && curspell != 405 && curspell != 19 && curspell != 3576 && curspell != 127 && curspell != 45 && curspell != 63 && curspell != 115 && curspell != 1443 && curspell != 388 && curspell != 2946 && curspell != 49 && curspell != 61 && curspell != 13 && curspell != 2504 && curspell != 415 && curspell != 3692 && curspell != 4089 && curspell != 675 && curspell != 44 && curspell != 488 && curspell != 2172 && curspell != 314 && curspell != 118 && curspell != 64 && curspell != 1444 && curspell != 406 && curspell != 672 && curspell != 136 && curspell != 20 && curspell != 4053 && curspell != 125 && curspell != 132 && curspell != 392 && curspell != 664 && curspell != 1411 && curspell != 97 && curspell != 2505 && curspell != 416 && curspell != 6902 && curspell != 1518 && curspell != 1532 && curspell != 1547 && curspell != 1726 && curspell != 3693 && curspell != 1520 && curspell != 1533 && curspell != 1536 && curspell != 1542 && curspell != 2506 && curspell != 1519 && curspell != 1526 && curspell != 1534 && curspell != 1535 && curspell != 1543 && curspell != 1721 && curspell != 2507 && curspell != 2880 && curspell != 4090 && curspell != 1446 && curspell != 1528 && curspell != 1539 && curspell != 1541 && curspell != 116 && curspell != 133 && curspell != 1524 && curspell != 1548 && curspell != 2181 && curspell != 2326 && curspell != 2508 && curspell != 6989 && curspell != 1521 && curspell != 1527 && curspell != 1537 && curspell != 1540 && curspell != 6903 && curspell != 1525 && curspell != 1544 && curspell != 1774 && curspell != 2182 && curspell != 2509 && curspell != 3135 && curspell != 1522 && curspell != 1545 && curspell != 2462 && curspell != 6977 && curspell != 1447 && curspell != 1523 && curspell != 1530 && curspell != 1546 && curspell != 2109 && curspell != 2122 && curspell != 2180 && curspell != 2510 && curspell != 2893 && curspell != 3136) {
+			else if (this->GetClass() == CLERIC && curspell != 14 && curspell != 200 && curspell != 201 && curspell != 203 && curspell != 205 && curspell != 207 && curspell != 208 && curspell != 209 && curspell != 216 && curspell != 211 && curspell != 212 && curspell != 17 && curspell != 213 && curspell != 218 && curspell != 36 && curspell != 501 && curspell != 560 && curspell != 227 && curspell != 229 && curspell != 2501 && curspell != 223 && curspell != 230 && curspell != 224 && curspell != 4056 && curspell != 50 && curspell != 221 && curspell != 231 && curspell != 12 && curspell != 35 && curspell != 226 && curspell != 235 && curspell != 2168 && curspell != 232 && curspell != 234 && curspell != 225 && curspell != 233 && curspell != 48 && curspell != 16 && curspell != 47 && curspell != 123 && curspell != 228 && curspell != 248 && curspell != 2169 && curspell != 2502 && curspell != 413 && curspell != 15 && curspell != 37 && curspell != 4088 && curspell != 126 && curspell != 128 && curspell != 2170 && curspell != 95 && curspell != 117 && curspell != 4057 && curspell != 2503 && curspell != 414 && curspell != 59 && curspell != 131 && curspell != 391 && curspell != 663 && curspell != 52 && curspell != 96 && curspell != 130 && curspell != 2175 && curspell != 329 && curspell != 135 && curspell != 62 && curspell != 9 && curspell != 124 && curspell != 2171 && curspell != 480 && curspell != 53 && curspell != 60 && curspell != 662 && curspell != 134 && curspell != 405 && curspell != 127 && curspell != 45 && curspell != 63 && curspell != 115 && curspell != 1443 && curspell != 388 && curspell != 2946 && curspell != 49 && curspell != 61 && curspell != 2504 && curspell != 415 && curspell != 4089 && curspell != 675 && curspell != 2172 && curspell != 118 && curspell != 64 && curspell != 1444 && curspell != 406 && curspell != 672 && curspell != 136 && curspell != 125 && curspell != 132 && curspell != 392 && curspell != 664 && curspell != 1411 && curspell != 97 && curspell != 416 && curspell != 6902 && curspell != 1518 && curspell != 1532 && curspell != 1726 && curspell != 3693 && curspell != 1520 && curspell != 1536 && curspell != 1542 && curspell != 2506 && curspell != 1519 && curspell != 1526 && curspell != 1543 && curspell != 1721 && curspell != 2507 && curspell != 2880 && curspell != 4090 && curspell != 1446 && curspell != 1528 && curspell != 1541 && curspell != 116 && curspell != 133 && curspell != 1524 && curspell != 2181 && curspell != 2508 && curspell != 6989 && curspell != 1521 && curspell != 1527 && curspell != 6903 && curspell != 1525 && curspell != 1544 && curspell != 2182 && curspell != 2509 && curspell != 3135 && curspell != 1522 && curspell != 1545 && curspell != 2462 && curspell != 6977 && curspell != 1523 && curspell != 1530 && curspell != 2180 && curspell != 3136) {
 				continue;
 			}
-			else if (this->GetClass() == DRUID && curspell != 200 && curspell != 237 && curspell != 238 && curspell != 239 && curspell != 240 && curspell != 241 && curspell != 242 && curspell != 2591 && curspell != 93 && curspell != 248 && curspell != 249 && curspell != 253 && curspell != 92 && curspell != 213 && curspell != 247 && curspell != 252 && curspell != 203 && curspell != 250 && curspell != 36 && curspell != 254 && curspell != 258 && curspell != 86 && curspell != 515 && curspell != 255 && curspell != 4056 && curspell != 91 && curspell != 17 && curspell != 257 && curspell != 211 && curspell != 264 && curspell != 278 && curspell != 234 && curspell != 50 && curspell != 262 && curspell != 35 && curspell != 245 && curspell != 663 && curspell != 80 && curspell != 261 && curspell != 2021 && curspell != 513 && curspell != 514 && curspell != 530 && curspell != 419 && curspell != 520 && curspell != 532 && curspell != 3583 && curspell != 516 && curspell != 531 && curspell != 533 && curspell != 139 && curspell != 2183 && curspell != 34 && curspell != 48 && curspell != 12 && curspell != 3794 && curspell != 425 && curspell != 535 && curspell != 220 && curspell != 405 && curspell != 537 && curspell != 76 && curspell != 143 && curspell != 27 && curspell != 534 && curspell != 536 && curspell != 115 && curspell != 260 && curspell != 4057 && curspell != 1326 && curspell != 99 && curspell != 538 && curspell != 550 && curspell != 552 && curspell != 553 && curspell != 78 && curspell != 2020 && curspell != 424 && curspell != 512 && curspell != 607 && curspell != 517 && curspell != 551 && curspell != 217 && curspell != 3792 && curspell != 753 && curspell != 95 && curspell != 96 && curspell != 15 && curspell != 3601 && curspell != 1439 && curspell != 4054 && curspell != 426 && curspell != 554 && curspell != 1433 && curspell != 406 && curspell != 418 && curspell != 557 && curspell != 1434 && curspell != 259 && curspell != 555 && curspell != 556 && curspell != 608 && curspell != 141 && curspell != 1517 && curspell != 2029 && curspell != 664 && curspell != 169 && curspell != 4055 && curspell != 428 && curspell != 2030 && curspell != 3580 && curspell != 490 && curspell != 558 && curspell != 1437 && curspell != 1737 && curspell != 28 && curspell != 518 && curspell != 1438 && curspell != 2946 && curspell != 57 && curspell != 609 && curspell != 1736 && curspell != 2031 && curspell != 1398 && curspell != 427 && curspell != 665 && curspell != 1285 && curspell != 140 && curspell != 610 && curspell != 1436 && curspell != 1440 && curspell != 116 && curspell != 142 && curspell != 1740 && curspell != 49 && curspell != 3834 && curspell != 62 && curspell != 63 && curspell != 3579 && curspell != 77 && curspell != 420 && curspell != 611 && curspell != 29 && curspell != 519 && curspell != 1435 && curspell != 1542 && curspell != 433 && curspell != 671 && curspell != 4104 && curspell != 2881 && curspell != 2894 && curspell != 5571 && curspell != 1550 && curspell != 9 && curspell != 1553 && curspell != 1566 && curspell != 1600 && curspell != 2516 && curspell != 3693 && curspell != 4058 && curspell != 1554 && curspell != 1555 && curspell != 1601 && curspell != 1562 && curspell != 1602 && curspell != 1603 && curspell != 2517 && curspell != 2880 && curspell != 1290 && curspell != 1475 && curspell != 1526 && curspell != 1529 && curspell != 1556 && curspell != 1557 && curspell != 1605 && curspell != 4105 && curspell != 1558 && curspell != 1604 && curspell != 1719 && curspell != 1725 && curspell != 2518 && curspell != 1567 && curspell != 1767 && curspell != 6998 && curspell != 1606 && curspell != 2179 && curspell != 1564 && curspell != 1607 && curspell != 4589 && curspell != 1291 && curspell != 1531 && curspell != 1563 && curspell != 1565 && curspell != 1608 && curspell != 2125 && curspell != 2126 && curspell != 2877 && curspell != 2887) {
+			else if (this->GetClass() == DRUID && curspell != 200 && curspell != 237 && curspell != 238 && curspell != 239 && curspell != 240 && curspell != 241 && curspell != 242 && curspell != 2591 && curspell != 93 && curspell != 248 && curspell != 249 && curspell != 253 && curspell != 92 && curspell != 213 && curspell != 247 && curspell != 252 && curspell != 203 && curspell != 250 && curspell != 36 && curspell != 254 && curspell != 86 && curspell != 515 && curspell != 255 && curspell != 4056 && curspell != 91 && curspell != 17 && curspell != 257 && curspell != 211 && curspell != 264 && curspell != 278 && curspell != 234 && curspell != 50 && curspell != 262 && curspell != 35 && curspell != 245 && curspell != 663 && curspell != 80 && curspell != 261 && curspell != 2021 && curspell != 513 && curspell != 514 && curspell != 530 && curspell != 419 && curspell != 520 && curspell != 532 && curspell != 3583 && curspell != 516 && curspell != 531 && curspell != 533 && curspell != 139 && curspell != 2183 && curspell != 34 && curspell != 48 && curspell != 12 && curspell != 3794 && curspell != 425 && curspell != 535 && curspell != 220 && curspell != 405 && curspell != 537 && curspell != 76 && curspell != 143 && curspell != 27 && curspell != 534 && curspell != 536 && curspell != 115 && curspell != 260 && curspell != 4057 && curspell != 1326 && curspell != 99 && curspell != 538 && curspell != 550 && curspell != 552 && curspell != 553 && curspell != 78 && curspell != 2020 && curspell != 424 && curspell != 512 && curspell != 607 && curspell != 517 && curspell != 551 && curspell != 217 && curspell != 3792 && curspell != 753 && curspell != 95 && curspell != 96 && curspell != 15 && curspell != 3601 && curspell != 1439 && curspell != 426 && curspell != 554 && curspell != 1433 && curspell != 406 && curspell != 418 && curspell != 557 && curspell != 1434 && curspell != 259 && curspell != 555 && curspell != 556 && curspell != 608 && curspell != 141 && curspell != 1517 && curspell != 2029 && curspell != 664 && curspell != 169 && curspell != 4055 && curspell != 428 && curspell != 2030 && curspell != 3580 && curspell != 490 && curspell != 558 && curspell != 1437 && curspell != 1737 && curspell != 28 && curspell != 518 && curspell != 1438 && curspell != 2946 && curspell != 57 && curspell != 609 && curspell != 1736 && curspell != 2031 && curspell != 1398 && curspell != 427 && curspell != 665 && curspell != 1285 && curspell != 140 && curspell != 610 && curspell != 1436 && curspell != 1440 && curspell != 116 && curspell != 142 && curspell != 1740 && curspell != 49 && curspell != 3834 && curspell != 62 && curspell != 63 && curspell != 3579 && curspell != 77 && curspell != 420 && curspell != 611 && curspell != 29 && curspell != 519 && curspell != 1435 && curspell != 1542 && curspell != 433 && curspell != 671 && curspell != 4104 && curspell != 2881 && curspell != 2894 && curspell != 5571 && curspell != 1550 && curspell != 9 && curspell != 1553 && curspell != 1566 && curspell != 1600 && curspell != 2516 && curspell != 3693 && curspell != 4058 && curspell != 1554 && curspell != 1555 && curspell != 1601 && curspell != 1562 && curspell != 1602 && curspell != 1603 && curspell != 2517 && curspell != 2880 && curspell != 1290 && curspell != 1475 && curspell != 1526 && curspell != 1529 && curspell != 1556 && curspell != 1557 && curspell != 1605 && curspell != 4105 && curspell != 1558 && curspell != 1604 && curspell != 1719 && curspell != 1725 && curspell != 2518 && curspell != 1567 && curspell != 1767 && curspell != 6998 && curspell != 1606 && curspell != 2179 && curspell != 1564 && curspell != 1607 && curspell != 4589 && curspell != 1291 && curspell != 1531 && curspell != 1563 && curspell != 1565 && curspell != 1608 && curspell != 2125 && curspell != 2126 && curspell != 2877 && curspell != 2887) {
 				continue;
 			}
 			else if (this->GetClass() == ENCHANTER && curspell != 208 && curspell != 285 && curspell != 286 && curspell != 288 && curspell != 289 && curspell != 331 && curspell != 40 && curspell != 41 && curspell != 292 && curspell != 676 && curspell != 681 && curspell != 229 && curspell != 290 && curspell != 293 && curspell != 291 && curspell != 294 && curspell != 36 && curspell != 42 && curspell != 297 && curspell != 299 && curspell != 230 && curspell != 246 && curspell != 501 && curspell != 80 && curspell != 295 && curspell != 296 && curspell != 48 && curspell != 667 && curspell != 298 && curspell != 500 && curspell != 302 && curspell != 303 && curspell != 645 && curspell != 682 && curspell != 276 && curspell != 301 && curspell != 650 && curspell != 2561 && curspell != 300 && curspell != 390 && curspell != 521 && curspell != 35 && curspell != 86 && curspell != 187 && curspell != 481 && curspell != 235 && curspell != 683 && curspell != 697 && curspell != 261 && curspell != 39 && curspell != 281 && curspell != 304 && curspell != 306 && curspell != 307 && curspell != 309 && curspell != 228 && curspell != 2562 && curspell != 651 && curspell != 684 && curspell != 47 && curspell != 489 && curspell != 677 && curspell != 179 && curspell != 21 && curspell != 3583 && curspell != 173 && curspell != 177 && curspell != 84 && curspell != 170 && curspell != 350 && curspell != 24 && curspell != 482 && curspell != 685 && curspell != 182 && curspell != 185 && curspell != 65 && curspell != 131 && curspell != 162 && curspell != 191 && curspell != 174 && curspell != 2563 && curspell != 408 && curspell != 450 && curspell != 46 && curspell != 652 && curspell != 10 && curspell != 49 && curspell != 619 && curspell != 4073 && curspell != 686 && curspell != 188 && curspell != 3585 && curspell != 74 && curspell != 646 && curspell != 66 && curspell != 687 && curspell != 407 && curspell != 71 && curspell != 483 && curspell != 1408 && curspell != 180 && curspell != 127 && curspell != 175 && curspell != 45 && curspell != 192 && curspell != 2564 && curspell != 73 && curspell != 183 && curspell != 64 && curspell != 653 && curspell != 688 && curspell != 1407 && curspell != 648 && curspell != 132 && curspell != 171 && curspell != 1474 && curspell != 163 && curspell != 484 && curspell != 67 && curspell != 186 && curspell != 33 && curspell != 678 && curspell != 689 && curspell != 1694 && curspell != 181 && curspell != 25 && curspell != 31003 && curspell != 1285 && curspell != 178 && curspell != 4099 && curspell != 673 && curspell != 3696 && curspell != 4074 && curspell != 133 && curspell != 194 && curspell != 184 && curspell != 193 && curspell != 647 && curspell != 172 && curspell != 176 && curspell != 190 && curspell != 195 && curspell != 654 && curspell != 690 && curspell != 72 && curspell != 1406 && curspell != 1686 && curspell != 1687 && curspell != 1541 && curspell != 2881 && curspell != 2894 && curspell != 1689 && curspell != 1690 && curspell != 1693 && curspell != 1696 && curspell != 2566 && curspell != 3697 && curspell != 4077 && curspell != 1592 && curspell != 1697 && curspell != 1705 && curspell != 1708 && curspell != 1610 && curspell != 1691 && curspell != 1698 && curspell != 2567 && curspell != 1409 && curspell != 1699 && curspell != 1714 && curspell != 1715 && curspell != 1723 && curspell != 4075 && curspell != 1527 && curspell != 1695 && curspell != 1700 && curspell != 1701 && curspell != 1729 && curspell != 2568 && curspell != 1688 && curspell != 1702 && curspell != 1711 && curspell != 1712 && curspell != 6983 && curspell != 1633 && curspell != 1709 && curspell != 1713 && curspell != 2016 && curspell != 2569 && curspell != 4100 && curspell != 1692 && curspell != 1703 && curspell != 1410 && curspell != 1704 && curspell != 1707 && curspell != 1710 && curspell != 2120 && curspell != 2121 && curspell != 2570 && curspell != 2895) {
@@ -812,7 +838,7 @@ void Client::UpdateSkillsAndSpells() {
 			else if (this->GetClass() == PALADIN && curspell != 202 && curspell != 5011 && curspell != 201 && curspell != 221 && curspell != 203 && curspell != 200 && curspell != 2581 && curspell != 209 && curspell != 210 && curspell != 208 && curspell != 213 && curspell != 17 && curspell != 2582 && curspell != 218 && curspell != 234 && curspell != 235 && curspell != 215 && curspell != 230 && curspell != 4056 && curspell != 227 && curspell != 2168 && curspell != 501 && curspell != 2583 && curspell != 12 && curspell != 216 && curspell != 228 && curspell != 2169 && curspell != 233 && curspell != 2170 && curspell != 48 && curspell != 4057 && curspell != 95 && curspell != 15 && curspell != 1453 && curspell != 226 && curspell != 43 && curspell != 3577 && curspell != 391 && curspell != 123 && curspell != 47 && curspell != 2585 && curspell != 3683 && curspell != 2946 && curspell != 693 && curspell != 117 && curspell != 2586 && curspell != 207 && curspell != 2171 && curspell != 45 && curspell != 1454 && curspell != 63 && curspell != 4585 && curspell != 124 && curspell != 3684 && curspell != 504 && curspell != 3975 && curspell != 131 && curspell != 2587 && curspell != 4587 && curspell != 662 && curspell != 1455 && curspell != 1743 && curspell != 2172 && curspell != 4500 && curspell != 64 && curspell != 2588 && curspell != 44 && curspell != 7004 && curspell != 96 && curspell != 9 && curspell != 2589 && curspell != 49 && curspell != 1283 && curspell != 392 && curspell != 4590 && curspell != 1534 && curspell != 2590 && curspell != 2880 && curspell != 4518) {
 				continue;
 			}
-			else if (this->GetClass() == RANGER && curspell != 5011 && curspell != 51 && curspell != 239 && curspell != 240 && curspell != 2591 && curspell != 242 && curspell != 26 && curspell != 200 && curspell != 224 && curspell != 237 && curspell != 2592 && curspell != 269 && curspell != 203 && curspell != 515 && curspell != 247 && curspell != 92 && curspell != 249 && curspell != 252 && curspell != 241 && curspell != 248 && curspell != 254 && curspell != 500 && curspell != 225 && curspell != 91 && curspell != 86 && curspell != 17 && curspell != 263 && curspell != 213 && curspell != 250 && curspell != 256 && curspell != 264 && curspell != 268 && curspell != 655 && curspell != 278 && curspell != 2593 && curspell != 3565 && curspell != 48 && curspell != 516 && curspell != 513 && curspell != 80 && curspell != 115 && curspell != 517 && curspell != 261 && curspell != 1461 && curspell != 2594 && curspell != 419 && curspell != 12 && curspell != 421 && curspell != 3564 && curspell != 3601 && curspell != 3687 && curspell != 4054 && curspell != 518 && curspell != 129 && curspell != 78 && curspell != 76 && curspell != 60 && curspell != 34 && curspell != 2595 && curspell != 425 && curspell != 4055 && curspell != 691 && curspell != 1462 && curspell != 1741 && curspell != 40809 && curspell != 1397 && curspell != 4585 && curspell != 512 && curspell != 5571 && curspell != 2596 && curspell != 3688 && curspell != 57 && curspell != 430 && curspell != 259 && curspell != 2597 && curspell != 422 && curspell != 4587 && curspell != 1296 && curspell != 145 && curspell != 1463 && curspell != 4111 && curspell != 4506 && curspell != 61 && curspell != 2598 && curspell != 426 && curspell != 539 && curspell != 15 && curspell != 2599 && curspell != 4059 && curspell != 432 && curspell != 49 && curspell != 1740 && curspell != 423 && curspell != 1464 && curspell != 2600 && curspell != 4519 && curspell != 490 && curspell != 519) {
+			else if (this->GetClass() == RANGER && curspell != 5011 && curspell != 51 && curspell != 239 && curspell != 240 && curspell != 2591 && curspell != 242 && curspell != 26 && curspell != 200 && curspell != 224 && curspell != 237 && curspell != 2592 && curspell != 269 && curspell != 203 && curspell != 515 && curspell != 247 && curspell != 92 && curspell != 249 && curspell != 252 && curspell != 241 && curspell != 248 && curspell != 254 && curspell != 500 && curspell != 225 && curspell != 91 && curspell != 86 && curspell != 17 && curspell != 263 && curspell != 213 && curspell != 250 && curspell != 256 && curspell != 264 && curspell != 268 && curspell != 655 && curspell != 278 && curspell != 2593 && curspell != 3565 && curspell != 48 && curspell != 516 && curspell != 513 && curspell != 80 && curspell != 115 && curspell != 517 && curspell != 261 && curspell != 1461 && curspell != 2594 && curspell != 419 && curspell != 12 && curspell != 421 && curspell != 3564 && curspell != 3601 && curspell != 3687 && curspell != 518 && curspell != 129 && curspell != 78 && curspell != 76 && curspell != 60 && curspell != 34 && curspell != 2595 && curspell != 425 && curspell != 4055 && curspell != 691 && curspell != 1462 && curspell != 1741 && curspell != 40809 && curspell != 1397 && curspell != 4585 && curspell != 512 && curspell != 5571 && curspell != 2596 && curspell != 3688 && curspell != 57 && curspell != 430 && curspell != 259 && curspell != 2597 && curspell != 422 && curspell != 4587 && curspell != 1296 && curspell != 145 && curspell != 1463 && curspell != 4111 && curspell != 4506 && curspell != 61 && curspell != 2598 && curspell != 426 && curspell != 539 && curspell != 15 && curspell != 2599 && curspell != 4059 && curspell != 432 && curspell != 49 && curspell != 1740 && curspell != 423 && curspell != 1464 && curspell != 2600 && curspell != 4519 && curspell != 490 && curspell != 519) {
 				continue;
 			}
 			else if (this->GetClass() == ROGUE && curspell != 5225 && curspell != 4721 && curspell != 4659 && curspell != 4585 && curspell != 4587 && curspell != 4685 && curspell != 4673 && curspell != 4505 && curspell != 4515 && curspell != 4517 && curspell != 4677 && curspell != 4676) {
@@ -821,7 +847,7 @@ void Client::UpdateSkillsAndSpells() {
 			else if (this->GetClass() == SHADOWKNIGHT && curspell != 5012 && curspell != 221 && curspell != 342 && curspell != 235 && curspell != 340 && curspell != 343 && curspell != 2571 && curspell != 347 && curspell != 225 && curspell != 344 && curspell != 2213 && curspell != 229 && curspell != 354 && curspell != 2572 && curspell != 346 && curspell != 352 && curspell != 218 && curspell != 213 && curspell != 3583 && curspell != 209 && curspell != 355 && curspell != 357 && curspell != 359 && curspell != 2573 && curspell != 226 && curspell != 363 && curspell != 360 && curspell != 1289 && curspell != 522 && curspell != 236 && curspell != 4062 && curspell != 1221 && curspell != 3561 && curspell != 1457 && curspell != 3 && curspell != 61 && curspell != 367 && curspell != 48 && curspell != 2574 && curspell != 370 && curspell != 1225 && curspell != 233 && curspell != 90 && curspell != 3686 && curspell != 1222 && curspell != 127 && curspell != 452 && curspell != 414 && curspell != 478 && curspell != 1226 && curspell != 4102 && curspell != 3560 && curspell != 117 && curspell != 1458 && curspell != 199 && curspell != 4585 && curspell != 1285 && curspell != 2575 && curspell != 2576 && curspell != 448 && curspell != 1223 && curspell != 451 && curspell != 2577 && curspell != 3562 && curspell != 364 && curspell != 4063 && curspell != 4103 && curspell != 4587 && curspell != 59 && curspell != 1227 && curspell != 1376 && curspell != 1459 && curspell != 1742 && curspell != 4520 && curspell != 662 && curspell != 2578 && curspell != 393 && curspell != 6995 && curspell != 7005 && curspell != 1773 && curspell != 454 && curspell != 6986 && curspell != 2579 && curspell != 2892 && curspell != 49 && curspell != 1224 && curspell != 394 && curspell != 453 && curspell != 4590 && curspell != 1228 && curspell != 1508 && curspell != 2580 && curspell != 4504 && curspell != 661) {
 				continue;
 			}
-			else if (this->GetClass() == SHAMAN && curspell != 200 && curspell != 201 && curspell != 213 && curspell != 225 && curspell != 93 && curspell != 203 && curspell != 211 && curspell != 272 && curspell != 271 && curspell != 275 && curspell != 75 && curspell != 224 && curspell != 270 && curspell != 36 && curspell != 276 && curspell != 50 && curspell != 212 && curspell != 238 && curspell != 79 && curspell != 226 && curspell != 277 && curspell != 17 && curspell != 278 && curspell != 4056 && curspell != 255 && curspell != 261 && curspell != 284 && curspell != 227 && curspell != 280 && curspell != 230 && curspell != 281 && curspell != 86 && curspell != 505 && curspell != 282 && curspell != 35 && curspell != 345 && curspell != 365 && curspell != 2522 && curspell != 308 && curspell != 3583 && curspell != 526 && curspell != 580 && curspell != 110 && curspell != 148 && curspell != 12 && curspell != 228 && curspell != 48 && curspell != 511 && curspell != 640 && curspell != 220 && curspell != 424 && curspell != 437 && curspell != 96 && curspell != 144 && curspell != 4262 && curspell != 508 && curspell != 4057 && curspell != 434 && curspell != 61 && curspell != 245 && curspell != 2495 && curspell != 15 && curspell != 162 && curspell != 4054 && curspell != 326 && curspell != 63 && curspell != 31 && curspell != 111 && curspell != 260 && curspell != 131 && curspell != 509 && curspell != 1427 && curspell != 4055 && curspell != 4092 && curspell != 62 && curspell != 2524 && curspell != 384 && curspell != 438 && curspell != 155 && curspell != 435 && curspell != 2946 && curspell != 507 && curspell != 527 && curspell != 134 && curspell != 145 && curspell != 1285 && curspell != 163 && curspell != 1429 && curspell != 170 && curspell != 4093 && curspell != 64 && curspell != 3694 && curspell != 49 && curspell != 510 && curspell != 337 && curspell != 156 && curspell != 3573 && curspell != 112 && curspell != 98 && curspell != 32 && curspell != 436 && curspell != 1430 && curspell != 1570 && curspell != 6906 && curspell != 132 && curspell != 1588 && curspell != 2881 && curspell != 2894 && curspell != 9 && curspell != 1554 && curspell != 1568 && curspell != 1573 && curspell != 1819 && curspell != 2526 && curspell != 3842 && curspell != 1571 && curspell != 1592 && curspell != 1586 && curspell != 2527 && curspell != 2880 && curspell != 3574 && curspell != 4094 && curspell != 1290 && curspell != 1431 && curspell != 1526 && curspell != 1587 && curspell != 8930 && curspell != 133 && curspell != 1575 && curspell != 1590 && curspell != 171 && curspell != 2528 && curspell != 1577 && curspell != 6907 && curspell != 1582 && curspell != 1589 && curspell != 2435 && curspell != 2529 && curspell != 2886 && curspell != 1591 && curspell != 1597 && curspell != 4589 && curspell != 1576 && curspell != 1578 && curspell != 2112 && curspell != 2113 && curspell != 42 && curspell != 506 && curspell != 39 && curspell != 507 && curspell != 1430 && curspell != 1588 && curspell != 2527 && curspell != 171 && curspell != 1589) {
+			else if (this->GetClass() == SHAMAN && curspell != 200 && curspell != 201 && curspell != 213 && curspell != 225 && curspell != 93 && curspell != 203 && curspell != 211 && curspell != 272 && curspell != 271 && curspell != 275 && curspell != 75 && curspell != 224 && curspell != 270 && curspell != 36 && curspell != 276 && curspell != 50 && curspell != 212 && curspell != 238 && curspell != 79 && curspell != 226 && curspell != 277 && curspell != 17 && curspell != 278 && curspell != 4056 && curspell != 255 && curspell != 261 && curspell != 284 && curspell != 227 && curspell != 280 && curspell != 230 && curspell != 281 && curspell != 86 && curspell != 505 && curspell != 282 && curspell != 35 && curspell != 345 && curspell != 365 && curspell != 2522 && curspell != 308 && curspell != 3583 && curspell != 526 && curspell != 580 && curspell != 110 && curspell != 148 && curspell != 12 && curspell != 228 && curspell != 48 && curspell != 511 && curspell != 640 && curspell != 220 && curspell != 424 && curspell != 437 && curspell != 96 && curspell != 144 && curspell != 4262 && curspell != 508 && curspell != 4057 && curspell != 434 && curspell != 61 && curspell != 245 && curspell != 2495 && curspell != 15 && curspell != 162 && curspell != 326 && curspell != 63 && curspell != 31 && curspell != 111 && curspell != 260 && curspell != 131 && curspell != 509 && curspell != 1427 && curspell != 4055 && curspell != 4092 && curspell != 62 && curspell != 2524 && curspell != 384 && curspell != 438 && curspell != 155 && curspell != 435 && curspell != 2946 && curspell != 507 && curspell != 527 && curspell != 134 && curspell != 145 && curspell != 1285 && curspell != 163 && curspell != 1429 && curspell != 170 && curspell != 4093 && curspell != 64 && curspell != 3694 && curspell != 49 && curspell != 510 && curspell != 337 && curspell != 156 && curspell != 3573 && curspell != 112 && curspell != 98 && curspell != 32 && curspell != 436 && curspell != 1430 && curspell != 1570 && curspell != 6906 && curspell != 132 && curspell != 1588 && curspell != 2881 && curspell != 2894 && curspell != 9 && curspell != 1554 && curspell != 1568 && curspell != 1573 && curspell != 1819 && curspell != 2526 && curspell != 3842 && curspell != 1571 && curspell != 1592 && curspell != 1586 && curspell != 2527 && curspell != 2880 && curspell != 3574 && curspell != 4094 && curspell != 1290 && curspell != 1431 && curspell != 1526 && curspell != 1587 && curspell != 8930 && curspell != 133 && curspell != 1575 && curspell != 1590 && curspell != 171 && curspell != 2528 && curspell != 1577 && curspell != 6907 && curspell != 1582 && curspell != 1589 && curspell != 2435 && curspell != 2529 && curspell != 2886 && curspell != 1591 && curspell != 1597 && curspell != 4589 && curspell != 1576 && curspell != 1578 && curspell != 2112 && curspell != 2113 && curspell != 42 && curspell != 506 && curspell != 39 && curspell != 507 && curspell != 1430 && curspell != 1588 && curspell != 2527 && curspell != 171 && curspell != 1589) {
 				continue;
 			}
 			else if (this->GetClass() == WARRIOR && curspell != 5225 && curspell && curspell != 4721 && curspell != 4608 && curspell != 4585 && curspell != 4587 && curspell != 4503 && curspell != 4681 && curspell != 4672 && curspell != 4514 && curspell != 4674 && curspell != 4682 && curspell != 4501 && curspell != 4675 && curspell != 4670 && curspell != 4498) {
@@ -1179,6 +1205,15 @@ void Client::UpdateSkillsAndSpells() {
 // Add: You can set the values you want now, client will be always sync :) - Merkur
 uint32 Client::GetEXPForLevel(uint16 check_level)
 {
+#ifdef LUA_EQEMU
+	uint32 lua_ret = 0;
+	bool ignoreDefault = false;
+	lua_ret = LuaParser::Instance()->GetEXPForLevel(this, check_level, ignoreDefault);
+
+	if (ignoreDefault) {
+		return lua_ret;
+	}
+#endif
 
 	uint16 check_levelm1 = check_level-1;
 	float mod;
@@ -1258,10 +1293,33 @@ uint32 Client::GetEXPForLevel(uint16 check_level)
 	return finalxp;
 }
 
-void Client::AddLevelBasedExp(uint8 exp_percentage, uint8 max_level) { 
-	if (exp_percentage > 100) { exp_percentage = 100; } 
-	if (!max_level || GetLevel() < max_level) { max_level = GetLevel(); } 
-	uint32 newexp = GetEXP() + ((GetEXPForLevel(max_level + 1) - GetEXPForLevel(max_level)) * exp_percentage / 100); 
+void Client::AddLevelBasedExp(uint8 exp_percentage, uint8 max_level) 
+{ 
+	uint32	award;
+	uint32	xp_for_level;
+
+	if (exp_percentage > 100) 
+	{ 
+		exp_percentage = 100; 
+	} 
+
+	if (!max_level || GetLevel() < max_level)
+	{ 
+		max_level = GetLevel(); 
+	} 
+
+	xp_for_level = GetEXPForLevel(max_level + 1) - GetEXPForLevel(max_level);
+	award = xp_for_level * exp_percentage / 100; 
+
+	if(RuleB(Zone, LevelBasedEXPMods))
+	{
+		if(zone->level_exp_mod[GetLevel()].ExpMod)
+		{
+			award *= zone->level_exp_mod[GetLevel()].ExpMod;
+		}
+	}
+
+	uint32 newexp = GetEXP() + award;
 	SetEXP(newexp, GetAAXP());
 }
 
@@ -1297,7 +1355,7 @@ void Group::SplitExp(uint32 exp, Mob* other) {
 		groupexp += (uint32)((float)exp * groupmod * (RuleR(Character, GroupExpMultiplier)));
 
 	int conlevel = Mob::GetLevelCon(maxlevel, other->GetLevel());
-	if(conlevel == CON_GREEN)
+	if(conlevel == CON_GRAY)
 		return;	//no exp for greenies...
 
 	if (membercount == 0)
@@ -1344,7 +1402,7 @@ void Raid::SplitExp(uint32 exp, Mob* other) {
 	groupexp = (uint32)((float)groupexp * (1.0f-(RuleR(Character, RaidExpMultiplier))));
 
 	int conlevel = Mob::GetLevelCon(maxlevel, other->GetLevel());
-	if(conlevel == CON_GREEN)
+	if(conlevel == CON_GRAY)
 		return;	//no exp for greenies...
 
 	if (membercount == 0)
@@ -1424,4 +1482,18 @@ uint32 Client::GetCharMaxLevelFromQGlobal() {
 	}
 
 	return false;
+}
+
+uint32 Client::GetRequiredAAExperience() {
+#ifdef LUA_EQEMU
+	uint32 lua_ret = 0;
+	bool ignoreDefault = false;
+	lua_ret = LuaParser::Instance()->GetRequiredAAExperience(this, ignoreDefault);
+
+	if (ignoreDefault) {
+		return lua_ret;
+	}
+#endif
+
+	return RuleI(AA, ExpPerPoint);
 }
