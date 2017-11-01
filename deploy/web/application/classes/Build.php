@@ -501,37 +501,37 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Intensity of the Resolute";
 			$newSkill->desc = 'Grants the Intensity of the Resolute AA, which casts Courage-line buffs scaled to your level.<br>Rank 1: +Spell Haste<br>Rank 2: +AC<br>Rank 3: +HP<br>Rank 4: +HPv2<br>Rank 5: +Yaulp';
-			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";
+			$newSkill->image = "/images/builds/icons/rb-clr-intensifiedresolution.png";
 			$skills[22] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Celestial Regeneration";
 			$newSkill->desc = 'Grants the Celestial Regeneration AA, restoring <em data-base="36">36</em> hitpoints and <em data-base="2">2</em> mana for 8 ticks<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-celestialbreeze.png";	
 			$skills[24] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Arbitration";
 			$newSkill->desc = 'Grants the Divine Arbitration AA, balancing the damage each member of your group has taken, with a cooldown reduction of <em data-base="30">30</em> seconds<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-divinearbitration.png";	
 			$skills[26] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Resurrection";
 			$newSkill->desc = 'Grants the Divine Resurrection AA, reviving a fallen player. Lowers cooldown by <em data-base="12">12</em> hours<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-divineressurection.png";	
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Promise";
 			$newSkill->desc = 'All heals done by the cleric now have a <em data-base="2">2</em> chance to have the mana cost reduced by <em data-base="10">10</em>% mana <span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-promise.png";	
 			$skills[31] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Harmonic Balance";
 			$newSkill->desc = 'Grants the Lesson of the Devoted AA, <em data-base="2">2</em> chance to have the mana cost reduced by <em data-base="10">10</em>% mana <span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-clr-instilllife.png";	
+			$newSkill->image = "/images/builds/icons/rb-clr-harmonicbalance.png";	
 			$skills[34] = $newSkill;
 			
 			$newSkill = new stdClass();
