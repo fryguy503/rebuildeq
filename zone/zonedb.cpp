@@ -1017,8 +1017,9 @@ bool ZoneDatabase::LoadAccountCustom(uint32 account_id, ExtendedProfile_Struct* 
 		}
 	}
 	int next_daily_claim = time(nullptr) + 72000;
-	std::string query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", c->AccountID(), next_daily_claim);
-	auto results = database.QueryDatabase(query);
+	query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", account_id, next_daily_claim);
+	
+	results = database.QueryDatabase(query);
 
 }
 
