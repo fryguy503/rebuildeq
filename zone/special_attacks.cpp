@@ -206,7 +206,7 @@ void Mob::DoSpecialAttackDamage(Mob *who, EQEmu::skills::SkillType skill, int32 
 		if (rank > 0 &&
 			who->GetHPRatio() <= (rank * 10) &&
 			who->GetLevel() <= GetLevel() && who->GetLevel() <= 60) {
-			my_hit.damage_done += (GetLevel() * 12 * rank);
+			my_hit.damage_done += (GetLevel() * 2 * rank);
 			entity_list.MessageClose(this, true, 300, MT_Emote, "%s hits %s with a Bash of DEATH for %i damage", GetCleanName(), who->GetCleanName(), my_hit.damage_done);
 		}
 	}

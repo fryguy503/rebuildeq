@@ -10532,67 +10532,67 @@ void Client::EmoteEncounter() {
 
 	switch (m_epp.encounter_type) {
 	case EN_ZOMBIE:
-		Message(8, "A zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter", "below").c_str());
+		Message(8, "A zombie moans %s the ground somewhere nearby.", CreateSayLink("#encounter trigger", "below").c_str());
 		break;
 	case EN_FUNGUS:
 	case EN_DOPPLEGANGER:
-		Message(8, "An unsettling %s washes over you.", CreateSayLink("#encounter", "feeling").c_str());
+		Message(8, "An unsettling %s washes over you.", CreateSayLink("#encounter trigger", "feeling").c_str());
 		PlayMP3("ans_idl.wav");
 		break;
 	case EN_ARCHER:
-		Message(8, "You hear a bow being %s nearby.", CreateSayLink("#encounter", "shot").c_str());
+		Message(8, "You hear a bow being %s nearby.", CreateSayLink("#encounter trigger", "shot").c_str());
 		PlayMP3("bowdraw.wav");
 		break;
 	case EN_RYGORR:
 	case EN_ORC:
-		Message(8, "Orcs begin to %s louder and louder...", CreateSayLink("#encounter", "chant").c_str());
+		Message(8, "Orcs begin to %s louder and louder...", CreateSayLink("#encounter trigger", "chant").c_str());
 		break;
 	case EN_BANDIT:
-		Message(8, "You hear a twig snap %s.", CreateSayLink("#encounter", "nearby").c_str());
+		Message(8, "You hear a twig snap %s.", CreateSayLink("#encounter trigger", "nearby").c_str());
 		break;	
 	case EN_WISP:
-		Message(8, "A willowisp %s in front of you.", CreateSayLink("#encounter", "vanishes").c_str());
+		Message(8, "A willowisp %s in front of you.", CreateSayLink("#encounter trigger", "vanishes").c_str());
 		break;
 	case EN_SPECTRE:
 	case EN_AIRELEMENTAL:		
-		Message(8, "The %s intensifies near you.", CreateSayLink("#encounter", "wind").c_str());
+		Message(8, "The %s intensifies near you.", CreateSayLink("#encounter trigger", "wind").c_str());
 		break;
 	case EN_SANDGIANT:
 	case EN_ANCIENTCYCLOPS:
 	case EN_HILLGIANT:
 	case EN_KAELGIANT:
-		Message(8, "The %s of a giant can be heard.", CreateSayLink("#encounter", "stomps").c_str());
+		Message(8, "The %s of a giant can be heard.", CreateSayLink("#encounter trigger", "stomps").c_str());
 		break;	
 	case EN_FROGLOK:
-		Message(8, "The %s of a froglok breaks the silence.", CreateSayLink("#encounter", "croak").c_str());
+		Message(8, "The %s of a froglok breaks the silence.", CreateSayLink("#encounter trigger", "croak").c_str());
 		break;
 	case EN_KODIAK:
 	case EN_TROLLGUARD:
-		Message(8, "%s nearby makes you aware you are not alone.", CreateSayLink("#encounter", "rustling").c_str());
+		Message(8, "%s nearby makes you aware you are not alone.", CreateSayLink("#encounter trigger", "rustling").c_str());
 		break;
 	case EN_GYPSY:
-		Message(8, "The sound of a %s captures your attention.", CreateSayLink("#encounter", "lute").c_str());
+		Message(8, "The sound of a %s captures your attention.", CreateSayLink("#encounter trigger", "lute").c_str());
 		break;
 	case EN_ALLIGATOR:
 	case EN_FREEPORT:
 	case EN_DERVISH:
-		Message(8, "An %s feeling settles over you.", CreateSayLink("#encounter", "uneasy").c_str());
+		Message(8, "An %s feeling settles over you.", CreateSayLink("#encounter trigger", "uneasy").c_str());
 		break;
 	case EN_MADMAN:
-		Message(8, "A person %s nearby breaks your concentration.", CreateSayLink("#encounter", "talking to himself").c_str());
+		Message(8, "A person %s nearby breaks your concentration.", CreateSayLink("#encounter trigger", "talking to himself").c_str());
 		break;
 	case EN_WYVERN:
 	case EN_GRIFFIN:
-		Message(8, "The %s of wings nearby intensifies your heart beat.", CreateSayLink("#encounter", "flapping").c_str());
+		Message(8, "The %s of wings nearby intensifies your heart beat.", CreateSayLink("#encounter trigger", "flapping").c_str());
 		break;		
 	case EN_COLDAIN:
-		Message(8, "The sound of small %s in the snow catches your attention.", CreateSayLink("#encounter", "foot steps").c_str());
+		Message(8, "The sound of small %s in the snow catches your attention.", CreateSayLink("#encounter trigger", "foot steps").c_str());
 		break;
 	
-		Message(8, "The sound of small %s in the snow catches your attention.", CreateSayLink("#encounter", "foot steps").c_str());
+		Message(8, "The sound of small %s in the snow catches your attention.", CreateSayLink("#encounter trigger", "foot steps").c_str());
 		break;
 	default:
-		Message(8, "An unknown creature %s nearby.", CreateSayLink("#encounter", "lurks").c_str());
+		Message(8, "An unknown creature %s nearby.", CreateSayLink("#encounter trigger", "lurks").c_str());
 		break;
 	}
 

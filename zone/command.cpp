@@ -3930,7 +3930,7 @@ void command_bind(Client *c, const Seperator *sep)
 void command_builds(Client *c, const Seperator *sep)
 {
 	if (c->IsTaskActivityActive(307, 7)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 7, 1);
-	uint8 freeLevel = 10;
+	uint8 freeLevel = 60;
 	if (!c->IsBuildAvailable()) {
 		c->Message(0, "This class does not yet have builds available. It will be coming soon!");
 		return;
@@ -3981,7 +3981,7 @@ void command_builds(Client *c, const Seperator *sep)
 
 		windowText.append(c->GetBuildReport());
 		c->SendPopupToClient(windowTitle, windowText.c_str());
-		std::string resetCost = "free until level 10";
+		std::string resetCost = StringFormat("free until level %i", freeLevel);
 		if (c->GetLevel() >= freeLevel) {
 			resetCost = StringFormat("%i platinum at level %i", (cost / 1000), c->GetLevel());
 		}
@@ -4265,7 +4265,8 @@ void command_encounter(Client *c, const Seperator *sep) {
 	uint32 next_daily_claim = 0;
 
 	if (c->GetEPP().encounter_type > 0 &&
-		c->GetEPP().encounter_timeout > time(nullptr)
+		c->GetEPP().encounter_timeout > time(nullptr) && 
+		sep->arg[1] && strcasecmp(sep->arg[1], "trigger") == 0
 		//c->InEncounterArea()
 		) {
 		c->SpawnEncounter(false, c->GetEPP().encounter_type);
