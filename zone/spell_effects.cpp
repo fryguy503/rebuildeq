@@ -618,7 +618,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
               						else caster->QuickBuff(this, 274, duration);                                            //scale skin              		
               					}
 
-								if (zone->CanCastOutdoor()) caster->QuickBuff(this, 278, duration);                                                 //spirit of wolf
+								caster->QuickBuff(this, 278, duration);                                                 //spirit of wolf
 
               					if (rank > 0 && str == 0) { //STR
               						if (level >= 57 && caster_level >= 57) caster->QuickBuff(this, 1593, duration);         //maniacal strength 57
@@ -675,7 +675,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									else if (level >= 17 && caster_level >= 17) caster->QuickBuff(this, 273, duration); //shield of barbs 17
 									else caster->QuickBuff(this, 256, duration); //shield of thistles 
 								}
-								if (zone->CanCastOutdoor()) caster->QuickBuff(this, 278, duration); //Spirit of wolf duration is based on natural stats
+								caster->QuickBuff(this, 278, duration); //Spirit of wolf duration is based on natural stats
 
 								if (rank > 3) { //HP
 									if (level >= 60 && caster_level >= 60) caster->QuickBuff(this, 1442, duration); //prot glades 60

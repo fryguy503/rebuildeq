@@ -74,7 +74,7 @@ void LoginServer::ProcessUsertoWorldReq(uint16_t opcode, EQ::Net::Packet &p) {
 
 				if(Config->Locked == true)
 				{
-					if((status == 0 || status < 100) && (status != -2 || status != -1))
+					if((status == 0 || status < 20) && (status != -2 || status != -1)) //was 100
 						utwrs->response = 0;
 					if(status >= 100)
 						utwrs->response = 1;

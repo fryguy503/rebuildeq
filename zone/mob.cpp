@@ -6248,7 +6248,7 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true, bool isPet = f
 	npctype->WIS = 150;
 	npctype->CHA = 150;
 
-	npctype->attack_delay = 30;
+	npctype->attack_delay = 3000;
 
 	npctype->prim_melee_type = 28;
 	npctype->sec_melee_type = 28;

@@ -4716,8 +4716,8 @@ void command_buff(Client *c, const Seperator *sep) {
 		//no longer gives clarity
 		if (level > 40) target->QuickBuff(target, 1693, duration);
 		else target->QuickBuff(target, 174, duration);*/
-		if (!zone->CanCastOutdoor()) target->QuickBuff(target, 278, duration);
-		
+		//if (!zone->CanCastOutdoor()) 
+		target->QuickBuff(target, 278, duration);
 
 		if (c->HasPet()) {
 			target = c->GetPet();
