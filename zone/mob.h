@@ -89,6 +89,8 @@ struct DPS_Struct {
 		int mana_target_loss_net,
 		int tier,
 		int class_id,
+		std::string class_name,
+		int item_score,
 		int level,
 		int aggro_count) :
 	engage_start(engage_start),
@@ -114,6 +116,8 @@ struct DPS_Struct {
 		mana_target_loss_net(mana_target_loss_net),
 		tier(tier),
 		class_id(class_id),
+		class_name(class_name),
+		item_score(item_score),
 		level(level),
 		aggro_count(aggro_count) {};
 	uint32 engage_start;
@@ -139,6 +143,8 @@ struct DPS_Struct {
 	int mana_target_loss_net;
 	int tier;
 	int class_id;
+	std::string class_name;
+	int item_score;
 	int level;
 	int aggro_count;
 };

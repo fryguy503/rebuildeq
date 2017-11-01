@@ -1194,7 +1194,7 @@ class Build {
 			case "rogue":
 			$newSkill = new stdClass();
 			$newSkill->title = "Appraisal";
-			$newSkill->desc = 'The rogue gains a 400 mod proc that deals (level * 3 * <em data-base="0.2">0.2</em>) magic damage.';
+			$newSkill->desc = 'The rogue gains a 400 mod proc that deals (level * 3 * <em data-base="0.2">0.2</em>) magic damage as well as a fleeting fury buff.';
 			$newSkill->image = "/images/builds/icons/rb-rog-appraisal.png";
 			$skills[0] = $newSkill;
 
@@ -1242,7 +1242,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Sleight Distraction";
-			$newSkill->desc = 'When the rogue successfully pick pockets an enemy (even if they do not obtain an item), the enemy becomes mesmerized for 0 to <em data-base="1">1</em> ticks. The next time the enemy attacks the rogue it has a very high chance of missing. <span class="perLevel"> per rank</span>';
+			$newSkill->desc = 'When the rogue successfully pick pockets an enemy (even if they do not obtain an item) while in a group, the enemy becomes mesmerized for 0 to <em data-base="1">1</em> ticks. The next time the enemy attacks the rogue it has a very high chance of missing. <span class="perLevel"> per rank</span>';
 			$newSkill->image = "/images/builds/icons/rb-rog-sleightdistraction.png";
 			$skills[18] = $newSkill;
 

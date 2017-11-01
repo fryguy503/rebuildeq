@@ -6177,8 +6177,7 @@ void command_dps(Client *c, const Seperator *sep)
 		if (d.ent_id == target->GetID()) {
 			my_hp_self_loss_net = d.hp_self_loss_net;
 			my_hp_target_loss_net = d.hp_target_loss_net;
-			int my_engage_duration = target->EngageEnd() - d.engage_start;
-			if (my_engage_duration > engage_duration) engage_duration = my_engage_duration;
+			if (engage_duration > time(nullptr) - d.engage_start) engage_duration = time(nullptr) - d.engage_start;
 		}
 	}
 

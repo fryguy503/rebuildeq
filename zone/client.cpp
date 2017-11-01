@@ -4120,10 +4120,28 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 	safe_delete(outapp);
 	if (type != PickPocketFailed) {
 		int rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTION);
-		if (rank > 0) {
-			Message(MT_FocusEffect, "Your Sleight Distraction %u distracts %s.", rank, from->GetCleanName());
-			SpellFinished(292, from);
-			EvadeOnce(this);
+
+		if (rank > 0 && IsGrouped()) {
+			bool isGroupedInZone;
+			Mob* target = nullptr;
+			auto group = this->GetGroup(); //iterate group
+			//verify group member is in same zone
+			for (int i = 0; i < MAX_GROUP_MEMBERS; i++) {
+				target = group->members[i];
+				if (target == nullptr) continue; //target grouped
+				if (!target->IsClient()) continue; //Is a client
+				if (target->GetID() == this->GetID()) continue; //not me
+				if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+				Client *c = target->CastToClient();
+				if (c->IsDead()) continue; //not dead
+				isGroupedInZone = true;
+				break;
+			}
+			if (isGroupedInZone) {
+				Message(MT_FocusEffect, "Your Sleight Distraction %u distracts %s.", rank, from->GetCleanName());
+				SpellFinished(292, from);
+				EvadeOnce(this);
+			}
 		}
 		
 		rank = GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);

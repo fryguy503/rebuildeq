@@ -629,8 +629,11 @@ void Mob::RogueBackstab(Mob* other, bool min_damage, int ReuseTime)
 	int base_damage = GetBaseSkillDamage(EQEmu::skills::SkillBackstab, other);
 	int rank = GetBuildRank(ROGUE, RB_ROG_VITALORGANS);
 	if (rank > 0) {
-		BuildEcho(StringFormat("Vital Organs %i added %i bonus damage to backstab.", rank, (base_damage * 0.1f * rank)));
-		base_damage += (base_damage * 0.1f * rank);
+		int vitalDmg = int(base_damage * 0.1f * rank);
+		if (vitalDmg > 0) {
+			BuildEcho(StringFormat("Vital Organs %i added %i damage to backstab.", rank, vitalDmg));
+			base_damage += vitalDmg;
+		}
 	}
 	hate = base_damage;
 	

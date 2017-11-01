@@ -1802,7 +1802,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 						other->InterruptSpell(); //This may be too powerful, may need nerf
 					}
 					//cast spell
-					ExecWeaponProc(weapon, spellid, other);
+					if (spellid > 0) ExecWeaponProc(weapon, spellid, other);
 				}				
 			}
 
@@ -2652,7 +2652,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 	int my_hp_self_loss_net;
 	int my_hp_target_loss_net;
 	
-
+	SetEngageEnd(time(nullptr));
 	
 	if (DPS().size() > 0) { //don't need to dps report an empty dps mob
 		//Generate a unique id for fight.
@@ -2660,8 +2660,8 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 		//First, verify a client participated in some capacity to the fight
 		bool isClientParticipating = false;
 		for (auto&& d : DPS()) {
-			if (engage_duration < EngageEnd() - d.engage_start) engage_duration = EngageEnd() - d.engage_start;
 			if (d.acct_id == 0) continue;
+			if (engage_duration < EngageEnd() - d.engage_start) engage_duration = EngageEnd() - d.engage_start;
 			isClientParticipating = true;
 			break;
 		}
@@ -2674,11 +2674,13 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 				}
 				if (d.ent_id == GetID()) is_dying = 1;
 
-				std::string query = StringFormat("INSERT INTO dps_log (fight_id,  time, acct_id, name, hp_self_gain_total, hp_self_gain_net, hp_self_loss_total, hp_self_loss_net, hp_target_gain_total, hp_target_gain_net, hp_target_loss_total, hp_target_loss_net, mana_self_gain_total, mana_self_gain_net, mana_self_loss_total, mana_self_loss_net, mana_target_gain_total, mana_target_gain_net, mana_target_loss_total, mana_target_loss_net, class, level, tier, aggro_count, is_dying, type_id) VALUES(\"%s\", %i, %i, \"%s\", %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i);",					
+				std::string query = StringFormat("INSERT INTO dps_log (fight_id,  time, acct_id, name, class_name, item_score, hp_self_gain_total, hp_self_gain_net, hp_self_loss_total, hp_self_loss_net, hp_target_gain_total, hp_target_gain_net, hp_target_loss_total, hp_target_loss_net, mana_self_gain_total, mana_self_gain_net, mana_self_loss_total, mana_self_loss_net, mana_target_gain_total, mana_target_gain_net, mana_target_loss_total, mana_target_loss_net, class, level, tier, aggro_count, is_dying, type_id) VALUES(\"%s\", %i, %i, \"%s\", \"%s\", %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i);",					
 					fight_id.c_str(), //fight_id
 					engage_duration, //uint32 engage_start,
 					d.acct_id, //acct_id,
 					d.character_name.c_str(), //std::string character_name,
+					d.class_name.c_str(),
+					d.item_score,
 					d.hp_self_gain_total, //int hp_self_gain_total,
 					d.hp_self_gain_net, //hp_self_gain_net
 					d.hp_self_loss_total, //hp_self_loss_total

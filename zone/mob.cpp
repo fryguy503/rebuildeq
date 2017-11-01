@@ -7043,6 +7043,9 @@ void Mob::AddManaEvent(Mob *other, int total, int net, bool is_dealer) {
 	int type_id = 0;
 	int acct_id = 0;
 	int class_id = (int)other->GetClass();
+	std::string class_list[] = { "WAR", "CLR", "PAL", "RNG", "SHD", "DRU", "MNK", "BRD", "ROG", "SHM", "NEC", "WIZ", "MAG", "ENC", "BST", "BER" };
+	std::string class_name = class_list[other->GetClass()];
+	int item_score = 0;
 	int tier = other->GetTier();
 	std::string character_name = other->GetCleanName();
 	int aggro_count = other->hate_list.GetAggroCount();
@@ -7056,6 +7059,7 @@ void Mob::AddManaEvent(Mob *other, int total, int net, bool is_dealer) {
 	if (other->IsClient()) {
 		acct_id = other->CastToClient()->AccountID();
 		type_id = other->CastToClient()->CharacterID();
+		item_score = other->CastToClient()->GetCharacterItemScore();
 	}
 	else if (other->IsNPC()) {
 		type_id = other->CastToNPC()->GetNPCTypeID();
@@ -7113,6 +7117,8 @@ void Mob::AddManaEvent(Mob *other, int total, int net, bool is_dealer) {
 		((is_dealer && net < 0) ? -net : 0), //mana_target_loss_net,
 		tier,
 		class_id,
+		class_name,
+		item_score,
 		level,
 		aggro_count));
 }
@@ -7130,6 +7136,11 @@ void Mob::AddHPEvent(Mob *other, int total, int net, bool is_dealer) {
 	int acct_id = 0;
 	int class_id = (int)other->GetClass();
 	int tier = other->GetTier();
+	std::string class_list[] = { "WAR", "CLR", "PAL", "RNG", "SHD", "DRU", "MNK", "BRD", "ROG", "SHM", "NEC", "WIZ", "MAG", "ENC", "BST", "BER" };
+	std::string class_name = "UNK";
+	if (other->GetClass() > 0 && other->GetClass() < 17) class_name = class_list[other->GetClass() - 1];
+		
+	int item_score = 0;
 	std::string character_name = other->GetCleanName();
 	int aggro_count = other->hate_list.GetAggroCount();
 
@@ -7198,6 +7209,8 @@ void Mob::AddHPEvent(Mob *other, int total, int net, bool is_dealer) {
 		0, //mana_target_loss_net,
 		tier,
 		class_id,
+		class_name,
+		item_score,
 		level,
 		aggro_count));
 }
