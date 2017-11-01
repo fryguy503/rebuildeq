@@ -491,8 +491,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
 							if (rank > 0) {
-								if (zone->random.Roll((int)(rank))) { //chance
-									if (GetLevel() > 57) { //Ignite Blood										
+								int duration = zone->random.Int(0, rank);
+								if (duration > 0) {
+									if (GetLevel() > 57) { //Ignite Blood)
 										SpellFinished(6, this, EQEmu::CastingSlot::Ability, 0, -1, spells[6].ResistDiff, true, level_override);
 									}
 									else if (GetLevel() > 36) { //boil blood
@@ -1538,9 +1539,14 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					{
 						CastToClient()->AI_Start();
 					}
-					if (caster->IsClient() && caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_NIGHTMARE) > 0 && zone->random.Roll((int)caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_NIGHTMARE) * 4)) {
-						entity_list.MessageClose(this, true, 300, MT_Emote, "%s freezes in fear as nightmares of %s overwhelms them.", GetCleanName(), caster->GetCleanName());			
-						Stun((int)(2 * caster->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_NIGHTMARE)));
+					rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_NIGHTMARE);
+					if (rank > 0) {
+						int stunDuration = zone->random.Int(0, rank);
+						if (stunDuration > 0) {
+							entity_list.MessageClose(this, true, 300, MT_Emote, "%s freezes in fear as nightmares of %s overwhelms them.", GetCleanName(), caster->GetCleanName());
+							BuildEcho(StringFormat("Nightmare %i stun %s for %i seconds.", rank, GetCleanName(), stunDuration));
+							Stun(1000 * stunDuration);
+						}
 					}
 					CalculateNewFearpoint();
 					if(currently_fleeing)
@@ -2448,19 +2454,23 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 						//Shin: Embrace Death Perk
 						rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH);
-						if (rank > 0) {
-							uint32 healAmount = GetMaxHP()* (0.01f * rank);
-							Message(MT_FocusEffect, "Embrace Death %i has healed you for %i.", rank, healAmount);
-							if (healAmount < 0 || healAmount > 50000) {
-								healAmount = 1;
-							}
-							HealDamage(healAmount);
+						if (rank > 0) {							
+							int healAmount = GetMaxHP() - GetHP();
+							if (healAmount > 0) {
+								healAmount = healAmount * 0.01f * rank;
+								if (healAmount < 0 || healAmount > 50000) {
+									healAmount = 1;
+								}
+								BuildEcho(StringFormat("Embrace Death %i has healed you for %i.", rank, healAmount));								
+								HealDamage(healAmount);
+							}														
 						}
 						rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACESHADOW);
 						if (rank > 0) {
-							if (zone->random.Roll(rank * 20)) {
-								SpellFinished(522, this, EQEmu::CastingSlot::Item, 0, -1, spells[522].ResistDiff); //invis
-								SpellFinished(1420, this, EQEmu::CastingSlot::Item, 0, -1, spells[1420].ResistDiff); //ivu
+							int invisDuration = zone->random.Int(0, rank);
+							if (invisDuration > 0) {
+								QuickBuff(this, 522, invisDuration);
+								QuickBuff(this, 1420, invisDuration);
 								BuildEcho(StringFormat("Embrace Shadow %i has given you invisibility", rank));
 							}
 						}

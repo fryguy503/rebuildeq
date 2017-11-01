@@ -545,13 +545,7 @@ bool Client::Process() {
 			RefreshBuild();
 			DoEncounterCheck();
 			CalcMonkTranquility();
-			uint8 rank;
-			rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH);
-			if (rank > 0) {
-				if (GetPrimarySkillValue() == EQEmu::item::ItemType2HSlash || GetPrimarySkillValue() == EQEmu::item::ItemType2HBlunt) {
-					m_epp.passive_timeout = time(nullptr) + 18;
-				}
-			}
+			int rank;
 			rank = GetBuildRank(ROGUE, RB_ROG_GANGSTERSPARADISE);
 			if (rank > 0 && hidden && !improved_hidden && GetAggroCount() < 1 && zone->random.Roll(1 * rank)) {
 				improved_hidden = true;

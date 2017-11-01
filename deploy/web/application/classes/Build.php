@@ -1554,37 +1554,37 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Festering Spear";
-			$newSkill->desc = 'Improve spear type spells by (level * <em data-base="1">1</em>) bonus damage, <em data-base="10">10</em>% damage, and <em data-base="1">1</em>% critical blast chance. At max rank, it has a 1% chance to cause the bonus to deal quadruple the amount. <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Improve spear type spells by (level * <em data-base="1">1</em>) bonus damage, <em data-base="10">10</em>% damage, and <em data-base="1">1</em>% critical blast chance. At max rank, it has an additional 1% chance to cause the bonus to deal quadruple the amount. <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-festeringspear.png";
 			$skills[18] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Festering Wound";
-			$newSkill->desc = 'Improves DoT damage by <em data-base="+4">+4</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Improves DoT damage by <em data-base="4">4</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-festeringwound.png";	
 			$skills[20] = $newSkill;
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Rotten Core";
-			$newSkill->desc = 'Each time a creature is successfully killed, the knight gains a rotten core counter. For a limited time, attacks deal an additional <em data-base="3">3</em>% damage per counter, with a cap of <em data-base="1">1</em> counters<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-shd-rottencore.png";	
+			$newSkill->desc = 'Each time a creature is successfully killed, the knight gains a rotten core counter. For 60 seconds, each counter adds <em data-base="3">3</em>% damage<span class="perLevel"> per rank</span> to attacks, with a cap of <em data-base="1">1</em> counters. Getting a kill resets the counter.';
+			$newSkill->image = "/images/builds/icons/rb-shd-rottencore.png";
 			$skills[22] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Pain";
-			$newSkill->desc = 'All direct damage spells have a <em data-base="1">1</em>%<span class="perLevel"> per rank</span> chance to cause bonus damage over time effects.';
+			$newSkill->desc = 'All direct damage spells cause a DoT effect for 0 to <em data-base="1">1</em> ticks<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-lingeringpain.png";
 			$skills[24] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Blood Oath";
-			$newSkill->desc = 'While using a 2 handed weapon, increases damage by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>. When the skill is rank 5, unlocks the 2 Hand Bash AA.';
+			$newSkill->desc = 'While using a 2 handed weapon, increases damage by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-bloodoath.png";	
-			$skills[26] = $newSkill;					
+			$skills[26] = $newSkill;
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Gift of Urash";
-			$newSkill->desc = 'Increases all skill damage by <em data-base="+5">+5</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases all skill damage by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-giftofurash.png";	
 			$skills[28] = $newSkill;
 		
@@ -1596,13 +1596,13 @@ class Build {
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Bash of Death";
-			$newSkill->desc = 'When you bash a target that is equal to your level or lower and the enemy is at <em data-base="10">10</em>% or less total health there is a <em data-base="7">7</em>% chance to cast harm touch<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-shd-bashofdeath.png";	
+			$newSkill->desc = 'When you bash a target that is equal to your level or lower and the enemy is at <em data-base="10">10</em>% or less total health you deal an additional (level * <em data-base="12">12</em>) <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-shd-bashofdeath.png";
 			$skills[34] = $newSkill;
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Embrace Death";
-			$newSkill->desc = 'Grants you the Death Peace AA, giving the ability to feign death as well as heal you for <em data-base="0.1">0.1</em>% maximum health on use<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants you the Death Peace AA, giving the ability to feign death as well as heal you for <em data-base="1">1</em>% of missing health<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-embracedeath.png";	
 			$skills[36] = $newSkill;
 			
@@ -1614,13 +1614,13 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Empathetic Soul";
-			$newSkill->desc = 'Improves Dark Empathy by granting an additional <em data-base="+40">+40</em> hitpoints healed and <em data-base="+0.5">+0.5</em>% max mana <span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-shd-empatheticsoul.png";	
+			$newSkill->desc = 'Improves Dark Empathy by granting an additional <em data-base="40">40</em> hitpoints healed and <em data-base="0.5">0.5</em>% max mana <span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-shd-empatheticsoul.png";
 			$skills[40] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Embrace Shadow";
-			$newSkill->desc = 'Each time you feign death, grants a <em data-base="20">20</em>% chance<span class="perLevel"> per rank</span> to instantly be invisible to both living and undead creatures.';
+			$newSkill->desc = 'Each time you feign death, you are instantly be invisible to both living and undead creatures for <em data-base="1">1</em> tick<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-embraceshadow.png";	
 			$skills[42] = $newSkill;
 			
@@ -1628,13 +1628,13 @@ class Build {
 			$newSkill->title = "Siphon of Death";
 			$newSkill->desc = 'Vampiric Embrace, Scream of Death and Shroud of Death now also grant a mana tap for <em data-base="5">5</em>% of damage dealt<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-siphonofdeath.png";
-			$skills[44] = $newSkill;					
-		
+			$skills[44] = $newSkill;
+
 			$newSkill = new stdClass();
 			$newSkill->title = "Nightmare";
-			$newSkill->desc = 'Fear now causes target to freeze in panic for <em data-base="2">2</em>seconds<span class="perLevel"> per rank</span> before fleeing.';
+			$newSkill->desc = 'Fear now causes target to be stunned in panic for 0 to <em data-base="1">1</em> seconds<span class="perLevel"> per rank</span> before fleeing.';
 			$newSkill->image = "/images/builds/icons/rb-shd-nightmare.png";
-			$skills[46] = $newSkill;					
+			$skills[46] = $newSkill;
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Mental Resistance";

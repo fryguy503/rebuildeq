@@ -78,7 +78,7 @@ struct ExtendedProfile_Struct {
 	bool				use_self_dps; //Show self dps on a mob's death?
 	int					focus_enemy_timeout; //SK only skill, timeout for sworn enemy
 	uint16				focus_enemy_id; //SK only skill, target of sworn enemy
-	int					passive_timeout; //Used for blood oath and thunderfoot
+	int					passive_timeout; //Used for thunderfoot
 	int					ooc_last_expiration; //When OOC Regen triggers, this timestamp is snapshotted. If zero, it's assumed to reset to now
 };
 
