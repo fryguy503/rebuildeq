@@ -50,6 +50,8 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iLSID, const char* iLoginN
 	pLFGToLevel = 0;
 	pLFGMatchFilter = false;
 	memset(pLFGComments, 0, 64);
+
+	RefreshIdentity();
 }
 
 ClientListEntry::ClientListEntry(uint32 in_id, uint32 iAccID, const char* iAccName, MD5& iMD5Pass, int16 iAdmin)
@@ -71,6 +73,8 @@ ClientListEntry::ClientListEntry(uint32 in_id, uint32 iAccID, const char* iAccNa
 	pLFGToLevel = 0;
 	pLFGMatchFilter = false;
 	memset(pLFGComments, 0, 64);
+
+	RefreshIdentity();
 }
 
 ClientListEntry::ClientListEntry(uint32 in_id, ZoneServer* iZS, ServerClientList_Struct* scl, int8 iOnline)
