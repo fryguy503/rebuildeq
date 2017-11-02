@@ -7044,7 +7044,8 @@ void Mob::AddManaEvent(Mob *other, int total, int net, bool is_dealer) {
 	int acct_id = 0;
 	int class_id = (int)other->GetClass();
 	std::string class_list[] = { "WAR", "CLR", "PAL", "RNG", "SHD", "DRU", "MNK", "BRD", "ROG", "SHM", "NEC", "WIZ", "MAG", "ENC", "BST", "BER" };
-	std::string class_name = class_list[other->GetClass()];
+	std::string class_name = "UNK";
+	if (other->GetClass() > 0 && other->GetClass() < 17) class_name = class_list[other->GetClass() - 1];
 	int item_score = 0;
 	int tier = other->GetTier();
 	std::string character_name = other->GetCleanName();
