@@ -8,6 +8,7 @@ tags = ["megamerge"]
 title = "Megamerge Post Patch"
 
 +++
+* Fixed a hp/mana regen bug causing it to totally not work
 * Fixed a bug with /w all not showing identities.
 * Fixed a crash when players join the server for the first time.
 * Fixed a bug where locked status was causing players to be unable to join
@@ -17,6 +18,5 @@ title = "Megamerge Post Patch"
 * Bash of Death was stronger than expected, it may be too nerfed now, will be addressed more later
 * Fixed a bug with rogue pickpocket 
 * DiscordEQ is known to be down. We're working on a fix
-* Mana regen and out of combat regen, and meditate are all known to be bugged. We're working on a fix.
 * Fixed a bug with tasks.
 <!--more-->
