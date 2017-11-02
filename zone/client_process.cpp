@@ -1833,26 +1833,29 @@ void Client::OPGMSummon(const EQApplicationPacket *app)
 }
 
 void Client::DoHPRegen() {
-	entity_list.LogHPEvent(this, this, CalcHPRegen() + RestRegenHP);
-	SetHP(GetHP() + CalcHPRegen() + RestRegenHP);
+	if (GetHPRatio() == 100) return;
+	int finalHPRegen = CalcHPRegen();
+	finalHPRegen += RestRegenHP;
 	if (GetBuildRank(DRUID, RB_DRU_REGENERATION) > 0) {
-		if ((GetLevel() * 0.2f) < 2) {
-			entity_list.LogHPEvent(this, this, 2);
-			SetHP(GetHP() + 2);
-		}
-		else {
-			entity_list.LogHPEvent(this, this, (GetLevel() * 0.2f));
-			SetHP(GetHP() + (GetLevel() * 0.2f));
-		}
+		int druidRegen = 0;
+		if ((GetLevel() * 0.2f) < 2) druidRegen = 2;		
+		else druidRegen = GetLevel() * 0.2f;
+		BuildEcho(StringFormat("Regeneration gave %i hitpoints.", druidRegen));
+		finalHPRegen += druidRegen;
 	}
+
+	entity_list.LogHPEvent(this, this, finalHPRegen);
+	SetHP(GetHP() + finalHPRegen);	
 	SendHPUpdate();
 }
 
 void Client::DoManaRegen() {
-	if (GetMana() >= max_mana && spellbonuses.ManaRegen >= 0)
-		return;
-	entity_list.LogManaEvent(this, this, CalcManaRegen() + RestRegenMana);
-	SetMana(GetMana() + CalcManaRegen() + RestRegenMana);
+	if (GetManaRatio() == 100) return;
+	int finalManaRegen = CalcManaRegen();
+	finalManaRegen += RestRegenMana;
+	//if (GetMana() >= max_mana && spellbonuses.ManaRegen >= 0) return;
+	entity_list.LogManaEvent(this, this, finalManaRegen);
+	SetMana(GetMana() + finalManaRegen);
 	SendManaUpdate();
 }
 
@@ -2013,7 +2016,7 @@ void Client::CalcRestState() {
 	}
 	if (group_size < 1) group_size = 1;
 	
-	rest_regen_percent = group_size;
+	rest_regen_percent = group_size * 2; //double mana regen per players
 	if (GetLevel() >= 40) rest_regen_percent /= 2; //cut ooc regen in half once 40.
 
 	RestRegenHP = (GetMaxHP() * rest_regen_percent / 100);

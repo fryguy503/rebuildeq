@@ -361,8 +361,9 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 	//Live AA - Elemental Durability
 	int16 MaxHP = aabonuses.PetMaxHP + itembonuses.PetMaxHP + spellbonuses.PetMaxHP;
 
+	
 	if(spell_id == 1936) {
-
+		//manifest elements, /mage epic pet
 		npc_type->level = CastToClient()->GetLevel();
 		npc_type = this->AdjustNPC(npc_type, true, true);
 	
@@ -380,7 +381,8 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->AC *= 0.80f; // 80% of normal ac
 		npc_type->max_dmg *= 0.60f; // 60% of max dmg
 	}
-	
+
+	//mage pet
 	if(spell_id == 58 || spell_id == 315 || spell_id == 316 || spell_id == 317) {
 
 		npc_type->level = CastToClient()->GetLevel();

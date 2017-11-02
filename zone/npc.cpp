@@ -640,28 +640,32 @@ bool NPC::Process()
 
 		bestregen = std::max(dbregen,OOCRegen);
 
-		if ((GetHP() < GetMaxHP()) && !IsPet()) {
-			if (!IsEngaged())
-				SetHP(GetHP() + bestregen + sitting_bonus);
-			else
-				SetHP(GetHP() + dbregen);
-		}
-		else if (GetHP() < GetMaxHP() && GetOwnerID() != 0) {
-			if (!IsEngaged()) {
-				if (oocregen > 0) {
-					petbonus = std::max(OOCRegen,dbregen);
-				}
-				else {
-					petbonus = dbregen + (GetLevel() / 5);
-				}
-
-				SetHP(GetHP() + sitting_bonus + petbonus);
+		if (GetHP() < GetMaxHP()) {
+			if (!IsPet()) {
+				if (!IsEngaged())
+					SetHP(GetHP() + bestregen + sitting_bonus);
+				else
+					SetHP(GetHP() + dbregen);
 			}
-			else
-				SetHP(GetHP() + dbregen);
+			else if (GetHP() < GetMaxHP() && GetOwnerID() != 0) {
+				if (!IsEngaged()) {
+					if (oocregen > 0) {
+						petbonus = std::max(OOCRegen, dbregen);
+					}
+					else {
+						petbonus = dbregen + (GetLevel() / 5);
+					}
+
+					SetHP(GetHP() + sitting_bonus + petbonus);
+				}
+				else
+					SetHP(GetHP() + dbregen);
+			}
+			else {
+				SetHP(GetHP() + dbregen + sitting_bonus);
+			}
 		}
-		else
-			SetHP(GetHP() + dbregen + sitting_bonus);
+		
 
 		entity_list.LogManaEvent(this, this, mana_regen + sitting_bonus);
 		if (GetMana() < GetMaxMana()) {
