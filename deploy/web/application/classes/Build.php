@@ -372,7 +372,7 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Blade Dancer";
 			$newSkill->desc = 'When a bard is attacked while in a group, increases chance to dodge by <em data-base="2">2</em>%<span class="perLevel"> per rank</span> per player in group.';
-			$newSkill->image = "/images/builds/icons/rb-brd-bladedancer.png";
+			$newSkill->image = "/images/builds/icons/rb-brd-cacophony.png";
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();
