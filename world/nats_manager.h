@@ -1,13 +1,15 @@
 #ifndef NATS_MANAGER_H
 #define NATS_MANAGER_H
 
+#include "nats.h"
+#include <map>
+#include <list>
+
 #include "../common/global_define.h"
 #include "../common/types.h"
 #include "../common/timer.h"
 #include "../common/proto/channelmessage.pb.h"
-#include "nats.h"
-#include <map>
-#include <list>
+#include "../common/servertalk.h"
 
 class NatsManager
 {
@@ -16,7 +18,10 @@ public:
 	~NatsManager();
 
 	void Process();
-	void BroadcastMessage(eqproto::ChannelMessage* message);
+	void OnChannelMessage(ServerChannelMessage_Struct * msg);
+	void OnEmoteMessage(ServerEmoteMessage_Struct * msg);
+	void ChannelMessageEvent(eqproto::ChannelMessage* message);
+	void SendChannelMessage(eqproto::ChannelMessage* message);
 	void Save();
 	void Load();
 protected:
@@ -25,7 +30,7 @@ protected:
 	natsStatistics *stats = NULL;
 	natsOptions *opts = NULL;
 	natsSubscription *testSub = NULL;
-	natsSubscription *broadcastMessageSub = NULL;
+	natsSubscription *channelMessageSub = NULL;
 	//int testSubMax = 100;
 };
 

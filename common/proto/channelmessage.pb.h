@@ -178,17 +178,79 @@ class ChannelMessage : public ::google::protobuf::Message /* @@protoc_insertion_
   ::std::string* release_message();
   void set_allocated_message(::std::string* message);
 
-  // int32 channel = 1;
-  void clear_channel();
-  static const int kChannelFieldNumber = 1;
-  ::google::protobuf::int32 channel() const;
-  void set_channel(::google::protobuf::int32 value);
+  // string deliverto = 7;
+  void clear_deliverto();
+  static const int kDelivertoFieldNumber = 7;
+  const ::std::string& deliverto() const;
+  void set_deliverto(const ::std::string& value);
+  #if LANG_CXX11
+  void set_deliverto(::std::string&& value);
+  #endif
+  void set_deliverto(const char* value);
+  void set_deliverto(const char* value, size_t size);
+  ::std::string* mutable_deliverto();
+  ::std::string* release_deliverto();
+  void set_allocated_deliverto(::std::string* deliverto);
+
+  // int32 chan_num = 1;
+  void clear_chan_num();
+  static const int kChanNumFieldNumber = 1;
+  ::google::protobuf::int32 chan_num() const;
+  void set_chan_num(::google::protobuf::int32 value);
 
   // int32 language = 2;
   void clear_language();
   static const int kLanguageFieldNumber = 2;
   ::google::protobuf::int32 language() const;
   void set_language(::google::protobuf::int32 value);
+
+  // int32 guilddbid = 6;
+  void clear_guilddbid();
+  static const int kGuilddbidFieldNumber = 6;
+  ::google::protobuf::int32 guilddbid() const;
+  void set_guilddbid(::google::protobuf::int32 value);
+
+  // int32 type = 8;
+  void clear_type();
+  static const int kTypeFieldNumber = 8;
+  ::google::protobuf::int32 type() const;
+  void set_type(::google::protobuf::int32 value);
+
+  // int32 minstatus = 9;
+  void clear_minstatus();
+  static const int kMinstatusFieldNumber = 9;
+  ::google::protobuf::int32 minstatus() const;
+  void set_minstatus(::google::protobuf::int32 value);
+
+  // int32 fromadmin = 10;
+  void clear_fromadmin();
+  static const int kFromadminFieldNumber = 10;
+  ::google::protobuf::int32 fromadmin() const;
+  void set_fromadmin(::google::protobuf::int32 value);
+
+  // bool noreply = 11;
+  void clear_noreply();
+  static const int kNoreplyFieldNumber = 11;
+  bool noreply() const;
+  void set_noreply(bool value);
+
+  // bool is_emote = 12;
+  void clear_is_emote();
+  static const int kIsEmoteFieldNumber = 12;
+  bool is_emote() const;
+  void set_is_emote(bool value);
+
+  // int32 queued = 13;
+  void clear_queued();
+  static const int kQueuedFieldNumber = 13;
+  ::google::protobuf::int32 queued() const;
+  void set_queued(::google::protobuf::int32 value);
+
+  // int32 zone_id = 14;
+  void clear_zone_id();
+  static const int kZoneIdFieldNumber = 14;
+  ::google::protobuf::int32 zone_id() const;
+  void set_zone_id(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:eqproto.ChannelMessage)
  private:
@@ -197,8 +259,17 @@ class ChannelMessage : public ::google::protobuf::Message /* @@protoc_insertion_
   ::google::protobuf::internal::ArenaStringPtr from_;
   ::google::protobuf::internal::ArenaStringPtr to_;
   ::google::protobuf::internal::ArenaStringPtr message_;
-  ::google::protobuf::int32 channel_;
+  ::google::protobuf::internal::ArenaStringPtr deliverto_;
+  ::google::protobuf::int32 chan_num_;
   ::google::protobuf::int32 language_;
+  ::google::protobuf::int32 guilddbid_;
+  ::google::protobuf::int32 type_;
+  ::google::protobuf::int32 minstatus_;
+  ::google::protobuf::int32 fromadmin_;
+  bool noreply_;
+  bool is_emote_;
+  ::google::protobuf::int32 queued_;
+  ::google::protobuf::int32 zone_id_;
   mutable int _cached_size_;
   friend struct protobuf_channelmessage_2eproto::TableStruct;
 };
@@ -214,18 +285,18 @@ class ChannelMessage : public ::google::protobuf::Message /* @@protoc_insertion_
 #endif  // __GNUC__
 // ChannelMessage
 
-// int32 channel = 1;
-inline void ChannelMessage::clear_channel() {
-  channel_ = 0;
+// int32 chan_num = 1;
+inline void ChannelMessage::clear_chan_num() {
+  chan_num_ = 0;
 }
-inline ::google::protobuf::int32 ChannelMessage::channel() const {
-  // @@protoc_insertion_point(field_get:eqproto.ChannelMessage.channel)
-  return channel_;
+inline ::google::protobuf::int32 ChannelMessage::chan_num() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChannelMessage.chan_num)
+  return chan_num_;
 }
-inline void ChannelMessage::set_channel(::google::protobuf::int32 value) {
+inline void ChannelMessage::set_chan_num(::google::protobuf::int32 value) {
   
-  channel_ = value;
-  // @@protoc_insertion_point(field_set:eqproto.ChannelMessage.channel)
+  chan_num_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.ChannelMessage.chan_num)
 }
 
 // int32 language = 2;
@@ -399,6 +470,171 @@ inline void ChannelMessage::set_allocated_message(::std::string* message) {
   }
   message_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), message);
   // @@protoc_insertion_point(field_set_allocated:eqproto.ChannelMessage.message)
+}
+
+// int32 guilddbid = 6;
+inline void ChannelMessage::clear_guilddbid() {
+  guilddbid_ = 0;
+}
+inline ::google::protobuf::int32 ChannelMessage::guilddbid() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChannelMessage.guilddbid)
+  return guilddbid_;
+}
+inline void ChannelMessage::set_guilddbid(::google::protobuf::int32 value) {
+  
+  guilddbid_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.ChannelMessage.guilddbid)
+}
+
+// string deliverto = 7;
+inline void ChannelMessage::clear_deliverto() {
+  deliverto_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& ChannelMessage::deliverto() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChannelMessage.deliverto)
+  return deliverto_.GetNoArena();
+}
+inline void ChannelMessage::set_deliverto(const ::std::string& value) {
+  
+  deliverto_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:eqproto.ChannelMessage.deliverto)
+}
+#if LANG_CXX11
+inline void ChannelMessage::set_deliverto(::std::string&& value) {
+  
+  deliverto_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:eqproto.ChannelMessage.deliverto)
+}
+#endif
+inline void ChannelMessage::set_deliverto(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  deliverto_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:eqproto.ChannelMessage.deliverto)
+}
+inline void ChannelMessage::set_deliverto(const char* value, size_t size) {
+  
+  deliverto_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:eqproto.ChannelMessage.deliverto)
+}
+inline ::std::string* ChannelMessage::mutable_deliverto() {
+  
+  // @@protoc_insertion_point(field_mutable:eqproto.ChannelMessage.deliverto)
+  return deliverto_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* ChannelMessage::release_deliverto() {
+  // @@protoc_insertion_point(field_release:eqproto.ChannelMessage.deliverto)
+  
+  return deliverto_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void ChannelMessage::set_allocated_deliverto(::std::string* deliverto) {
+  if (deliverto != NULL) {
+    
+  } else {
+    
+  }
+  deliverto_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), deliverto);
+  // @@protoc_insertion_point(field_set_allocated:eqproto.ChannelMessage.deliverto)
+}
+
+// int32 type = 8;
+inline void ChannelMessage::clear_type() {
+  type_ = 0;
+}
+inline ::google::protobuf::int32 ChannelMessage::type() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChannelMessage.type)
+  return type_;
+}
+inline void ChannelMessage::set_type(::google::protobuf::int32 value) {
+  
+  type_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.ChannelMessage.type)
+}
+
+// int32 minstatus = 9;
+inline void ChannelMessage::clear_minstatus() {
+  minstatus_ = 0;
+}
+inline ::google::protobuf::int32 ChannelMessage::minstatus() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChannelMessage.minstatus)
+  return minstatus_;
+}
+inline void ChannelMessage::set_minstatus(::google::protobuf::int32 value) {
+  
+  minstatus_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.ChannelMessage.minstatus)
+}
+
+// int32 fromadmin = 10;
+inline void ChannelMessage::clear_fromadmin() {
+  fromadmin_ = 0;
+}
+inline ::google::protobuf::int32 ChannelMessage::fromadmin() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChannelMessage.fromadmin)
+  return fromadmin_;
+}
+inline void ChannelMessage::set_fromadmin(::google::protobuf::int32 value) {
+  
+  fromadmin_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.ChannelMessage.fromadmin)
+}
+
+// bool noreply = 11;
+inline void ChannelMessage::clear_noreply() {
+  noreply_ = false;
+}
+inline bool ChannelMessage::noreply() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChannelMessage.noreply)
+  return noreply_;
+}
+inline void ChannelMessage::set_noreply(bool value) {
+  
+  noreply_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.ChannelMessage.noreply)
+}
+
+// bool is_emote = 12;
+inline void ChannelMessage::clear_is_emote() {
+  is_emote_ = false;
+}
+inline bool ChannelMessage::is_emote() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChannelMessage.is_emote)
+  return is_emote_;
+}
+inline void ChannelMessage::set_is_emote(bool value) {
+  
+  is_emote_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.ChannelMessage.is_emote)
+}
+
+// int32 queued = 13;
+inline void ChannelMessage::clear_queued() {
+  queued_ = 0;
+}
+inline ::google::protobuf::int32 ChannelMessage::queued() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChannelMessage.queued)
+  return queued_;
+}
+inline void ChannelMessage::set_queued(::google::protobuf::int32 value) {
+  
+  queued_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.ChannelMessage.queued)
+}
+
+// int32 zone_id = 14;
+inline void ChannelMessage::clear_zone_id() {
+  zone_id_ = 0;
+}
+inline ::google::protobuf::int32 ChannelMessage::zone_id() const {
+  // @@protoc_insertion_point(field_get:eqproto.ChannelMessage.zone_id)
+  return zone_id_;
+}
+inline void ChannelMessage::set_zone_id(::google::protobuf::int32 value) {
+  
+  zone_id_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.ChannelMessage.zone_id)
 }
 
 #ifdef __GNUC__

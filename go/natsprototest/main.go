@@ -21,11 +21,14 @@ func main() {
 	}
 	defer nc.Close()
 
+	//testSyncSubscriber()
+	//testAsyncSubscriber()
 	testBroadcastMessage()
+	time.Sleep(1000 * time.Second)
 }
 
 func testPublish() {
-	if err = nc.Publish("test", []byte("Hello World")); err != nil {
+	if err = nc.Publish("ChannelMessage", []byte("Hello World")); err != nil {
 		log.Println("Failed to publish:", err.Error())
 		return
 	}
@@ -33,15 +36,19 @@ func testPublish() {
 }
 
 func testAsyncSubscriber() {
-	nc.Subscribe("test", func(m *nats.Msg) {
-		log.Printf("Received a message: %s\n", string(m.Data))
+	nc.Subscribe("ChannelMessage", func(m *nats.Msg) {
+		//log.Printf("Received a message: %s\n", string(m.Data))
+		message := &eqproto.ChannelMessage{}
+		proto.Unmarshal(m.Data, message)
+		log.Println(message)
 	})
+	log.Println("Waiting on messages...")
 
 	time.Sleep(500 * time.Second)
 }
 
 func testSyncSubscriber() {
-	sub, err := nc.SubscribeSync("foo")
+	sub, err := nc.SubscribeSync("ChannelMessage")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,7 +62,7 @@ func testSyncSubscriber() {
 
 func testChannelSubscriber() {
 	ch := make(chan *nats.Msg, 64)
-	sub, err := nc.ChanSubscribe("test", ch)
+	sub, err := nc.ChanSubscribe("ChannelMessage", ch)
 	if err != nil {
 		log.Println("Error subscribing", err.Error())
 		return
@@ -76,13 +83,13 @@ func testBroadcastMessage() {
 	message := &eqproto.ChannelMessage{
 		From:    "Someone",
 		Message: "Test",
-		Channel: 6, //5 is ooc, 6 is bc
+		ChanNum: 6, //5 is ooc, 6 is bc
 	}
 	d, err := proto.Marshal(message)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err = nc.Publish("BroadcastMessage", d); err != nil {
+	if err = nc.Publish("ChannelMessage", d); err != nil {
 		log.Println("Failed to publish:", err.Error())
 		return
 	}
