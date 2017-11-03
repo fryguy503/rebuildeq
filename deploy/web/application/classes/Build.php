@@ -321,7 +321,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Katta's Concord";
-			$newSkill->desc = 'Katta\'s Song of Sword (lvl 39) now also deals (level * <em data-base="0.4">0.4</em>) damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Katta\'s Song of Sword (lvl 39) now also gives a 300 proc chance to those with the buff that deals (level * <em data-base="0.4">0.4</em>) damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-kattasconcord.png";
 			$skills[10] = $newSkill;
 
