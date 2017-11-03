@@ -30,13 +30,14 @@
 #include "quest_parser_collection.h"
 #include "lua_parser.h"
 #include "string_ids.h"
+#include "worldserver.h"
 
 #ifdef BOTS
 #include "bot.h"
 #endif
 
 extern QueryServ* QServ;
-
+extern WorldServer worldserver;
 
 static uint32 MaxBankedGroupLeadershipPoints(int Level)
 {
@@ -650,7 +651,9 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 			if (level_count == 1)
 				Message_StringID(MT_Experience, GAIN_LEVEL, ConvertArray(check_level, val1));
 			else
-				Message(15, "Welcome to level %i!", check_level);
+				Message(15, "Welcome to level %i!", check_level);				
+
+			if (!isrezzexp) worldserver.SendEmoteMessage(0, 0,  MT_Broadcasts, StringFormat("%s [%s] is now level %i!", GetCleanName(), Identity(), check_level).c_str());
 
 			if (check_level == RuleI(Character, DeathItemLossLevel))
 				Message(15, "Your items will no longer stay with you when you respawn on death. You will now need to return to your corpse for your items.");

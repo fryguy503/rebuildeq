@@ -87,6 +87,9 @@ func checkForNATSMessages(nc *nats.Conn, disco *discord.Discord) (err error) {
 		}
 		channelMessage.From = alphanumeric(channelMessage.From) //purify name to be alphanumeric
 
+		if strings.Contains(channelMessage.Message, "summoning you to") { //GM messages are relaying to discord!
+			return
+		}
 		//message = message[strings.Index(message, "says ooc, '")+11 : len(message)-padOffset]
 		if channelMessage.ChanNum == 269 && strings.Contains(channelMessage.Message, "opened a box to find") {
 			channelMessage.From = ":gift:"

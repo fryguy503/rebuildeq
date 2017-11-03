@@ -2383,7 +2383,7 @@ void QuestManager::ze(int type, const char *str) {
 }
 
 void QuestManager::we(int type, const char *str) {
-	worldserver.SendEmoteMessage(0, 0, type, str);
+	worldserver.SendEmoteMessage(0, 0, type, str);	
 }
 
 int QuestManager::getlevel(uint8 type)
