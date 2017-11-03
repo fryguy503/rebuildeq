@@ -766,7 +766,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								if (rank > 0) {
 									int healCount = 0;
 									int healTotal = dmg;
-									int amount = int(dmg * 2 * rank);
+									int amount = int(dmg * 0.02f * rank);
 									if (IsGrouped()) {
 										auto group = GetGroup(); //iterate group
 										for (int i = 0; i < 6; ++i) {
