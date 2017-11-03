@@ -1854,6 +1854,9 @@ void Client::DoManaRegen() {
 	int finalManaRegen = CalcManaRegen();
 	finalManaRegen += RestRegenMana;
 	//if (GetMana() >= max_mana && spellbonuses.ManaRegen >= 0) return;
+	if (GetMana() < max_mana && (IsSitting() || CanMedOnHorse()) && HasSkill(EQEmu::skills::SkillMeditate))
+		CheckIncreaseSkill(EQEmu::skills::SkillMeditate, nullptr, -5);
+
 	entity_list.LogManaEvent(this, this, finalManaRegen);
 	SetMana(GetMana() + finalManaRegen);
 	SendManaUpdate();
