@@ -32,7 +32,6 @@
       </thead>
       <tbody>
         <tr><td>Lavastorm</td><td>10</td><td>Antonica</td><td>Uncommon</td></tr>
-        <tr><td>Timorous Deep</td><td>15</td><td>Kunark</td><td>Uncommon</td></tr>
         <tr><td>Iceclad</td><td>25</td><td>Velious</td><td>Uncommon</td></tr>        
         <tr><td>Emerald Jungle</td><td>25</td><td>Kunark</td><td>Uncommon</td></tr>
         <tr><td>Great Divide</td><td>30</td><td>Velious</td><td>Uncommon</td></tr>
