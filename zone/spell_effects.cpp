@@ -3961,6 +3961,14 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					Client * casterClient = caster->CastToClient();					
 					uint8 level = GetLevel();
 					uint8 caster_level = casterClient->GetLevel();
+
+					rank = casterClient->GetBuildRank(BARD, RB_BRD_CASSINDRASSECRET);
+					if (spell_id == 745 && rank > 0 && effect == SE_INT) {
+						int manaAmount = rank * 2;
+						if (this == caster) BuildEcho(StringFormat("Cassindra's Secret %i gave %i mana.", rank, manaAmount));
+						entity_list.LogManaEvent(caster, this, manaAmount);
+						SetMana(GetMana() + manaAmount);
+					}
 					
 					rank = casterClient->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
 					if (spell_id == 202 && rank > 0) {

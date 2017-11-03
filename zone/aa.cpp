@@ -1214,10 +1214,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	}
 
 	if (rank_id == aaBoastfulBellow && GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW) < 1 ||
-		rank_id == aaCacophony && GetBuildRank(BARD, RB_BRD_CACOPHONY) < 1 ||
 		rank_id == aaDanceofBlades && GetBuildRank(BARD, RB_BRD_DANCEOFBLADES) < 1 ||
 		rank_id == aaShieldofNotes && GetBuildRank(BARD, RB_BRD_SHIELDOFNOTES) < 1 ||
-		rank_id == aaSongofStone && GetBuildRank(BARD, RB_BRD_SONGOFSTONE) < 1 ||
 
 		rank_id == aaDivineAvatar && GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) < 1 ||
 		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION) < 1 ||

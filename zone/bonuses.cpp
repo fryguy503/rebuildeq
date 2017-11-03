@@ -1670,7 +1670,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 					if (spell_id == 7 || spell_id == 1448 || spell_id == 714 || spell_id == 748 || spell_id == 1759 || spell_id == 2609 || spell_id == 1169) {
 						rank = caster->GetBuildRank(BARD, RB_BRD_HEALINGTREBLE);
 						if (rank > 0) {
-							effect_value += (rank * 0.1 * effect_value);
+							if (this == caster) BuildEcho(StringFormat("Healing Treble %i has increased heal from %i to %i.", rank, effect_value, effect_value + (rank * 0.1f * effect_value)));
+							effect_value += (rank * 0.1f * effect_value);
 						}
 					}
 					if (spell_id == 144 || spell_id == 137 || spell_id == 145 || spell_id == 138 || spell_id == 423 || spell_id == 2515 || spell_id == 1568 || spell_id == 1559 || spell_id == 1569 || spell_id == 1564 || spell_id == 2520 || spell_id == 8190) {
@@ -1806,7 +1807,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 1287 || spell_id == 723 || spell_id == 1448 || spell_id == 1759 || spell_id == 2609 || spell_id == 1196)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASCHORUS);
 					if (rank > 0) {
-							effect_value += (rank * 0.1 * effect_value);
+						if (this == caster) BuildEcho(StringFormat("Cassindra's Chorus increased ManaRegen from %i to %i.", rank, effect_value, effect_value + (rank * 0.1f * effect_value)));
+						effect_value += (rank * 0.1f * effect_value);
 					}
 				}
 				new_bonus->ManaRegen += effect_value;
@@ -1818,7 +1820,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 1287 || spell_id == 723 || spell_id == 1448 || spell_id == 1759 || spell_id == 2609 || spell_id == 1196)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASCHORUS);
 					if (rank > 0) {
-						effect_value += (rank * 0.1 * effect_value);
+						if (this == caster) BuildEcho(StringFormat("Cassindra's Chorus increased ManaRegen from %i to %i.", rank, effect_value, effect_value + (rank * 0.1f * effect_value)));
+						effect_value += (rank * 0.1f * effect_value);
 					}
 				}
 				new_bonus->ManaRegen += effect_value;
@@ -1911,6 +1914,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
+						if (this == caster) caster->BuildEcho(StringFormat("Elemental Harmony %i has boosted fire resist from %i to %i)", rank, effect_value, effect_value + (rank * 10)));
 						effect_value += (rank * 10);
 					}
 				}
@@ -1923,6 +1927,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
+						if (this == caster) caster->BuildEcho(StringFormat("Elemental Harmony %i has boosted cold resist from %i to %i)", rank, effect_value, effect_value + (rank * 10)));
 						effect_value += (rank * 10);
 					}
 				}
@@ -1935,6 +1940,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
+						if (this == caster) caster->BuildEcho(StringFormat("Elemental Harmony %i has boosted poison resist from %i to %i)", rank, effect_value, effect_value + (rank * 10)));
 						effect_value += (rank * 10);
 					}
 				}
@@ -1947,6 +1953,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
+						if (this == caster) caster->BuildEcho(StringFormat("Elemental Harmony %i has boosted disease resist from %i to %i)", rank, effect_value, effect_value + (rank * 10)));
 						effect_value += (rank * 10);
 					}
 				}
@@ -1959,6 +1966,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
 					if (rank > 0) {
+						if (this == caster) caster->BuildEcho(StringFormat("Elemental Harmony %i has boosted magic resist from %i to %i)", rank, effect_value, effect_value + (rank * 10)));
 						effect_value += (rank * 10);
 					}
 				}
@@ -1970,7 +1978,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 			{
 				if (caster != nullptr && (spell_id == 710 || spell_id == 711 || spell_id == 709 || spell_id == 712 || spell_id == 713 || spell_id == 716 || spell_id == 714 || spell_id == 2607 || spell_id == 2608)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_ELEMENTALHARMONY);
-					if (rank > 0) {
+					if (rank > 0) {						 
+						 if (this == caster) caster->BuildEcho(StringFormat("Elemental Harmony %i has boosted Resist All from %i to %i)", rank, effect_value, effect_value + (rank * 10)));
 						effect_value += (rank * 10);
 					}
 				}
@@ -2062,7 +2071,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 712 || spell_id == 715 || spell_id == 713 || spell_id == 716 || spell_id == 1760)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_PSALMOFNORRATH);
 					if (rank > 0) {
-						effect_value += (effect_value * 0.2 * rank);
+						if (this == caster) BuildEcho(StringFormat("Psalm of Norrath %i increased damage shield from %i to %i.", rank, effect_value, effect_value + (effect_value * 0.2f * rank)));
+						effect_value += (effect_value * 0.2f * rank);
 					}
 				}
 				new_bonus->DamageShield += effect_value;
@@ -3114,7 +3124,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 1450 || spell_id == 1752 || spell_id == 1763 || spell_id == 748)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_SHIELDOFSONGS);
 					if (rank > 0) {
-						effect_value += (rank * 0.2 * effect_value);
+						if (this == caster) BuildEcho(StringFormat("Shield of Songs %i increased rune from %i to %i", rank, effect_value, effect_value + (rank * 0.2f * effect_value)));
+						effect_value += (rank * 0.2f * effect_value);
 					}
 				}
 				if (new_bonus->MeleeRune[0] && (new_bonus->MeleeRune[1] > buffslot)){
@@ -3133,7 +3144,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 1450 || spell_id == 1752 || spell_id == 1763 || spell_id == 748)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_SHIELDOFSONGS);
 					if (rank > 0) {
-						effect_value += (rank * 0.2 * effect_value);
+						if (this == caster) BuildEcho(StringFormat("Shield of Songs %i increased magic absorb from %i to %i", rank, effect_value, effect_value + (rank * 0.2f * effect_value)));
+						effect_value += (rank * 0.2f * effect_value);
 					}
 				}
 				if (new_bonus->AbsorbMagicAtt[0] && (new_bonus->AbsorbMagicAtt[1] > buffslot)){

@@ -1229,6 +1229,8 @@ public:
 
 	void DoKnockback(Mob * caster, int away);
 
+	int GetGroupSize(int range);
+
 	// Bots HealRotation methods
 #ifdef BOTS
 	bool IsHealRotationTarget() { return (m_target_of_heal_rotation.use_count() && m_target_of_heal_rotation.get()); }

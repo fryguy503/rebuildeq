@@ -9623,21 +9623,11 @@ void Client::RefreshBuild() {
 				if (GetClass() == BARD && i == RB_BRD_BOASTFULBELLOW && GetAA(aaBoastfulBellow) < 1) {
 					TrainAARank(aaBoastfulBellow);
 					Message(15, "You have unlocked the AA \"Boastful Bellow\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == BARD && i == RB_BRD_SONGOFSTONE && GetAA(aaSongofStone) < 1) {
-					TrainAARank(aaSongofStone);
-					Message(15, "You have unlocked the AA \"Song of Stone\"! Find the hotkey in your Alternate Advancement Window.");
-				}
+				}				
 
 				if (GetClass() == BARD && i == RB_BRD_FADINGMEMORIES && GetAA(aaFadingMemories) < 1) {
 					TrainAARank(aaFadingMemories);
 					Message(15, "You have unlocked the AA \"Fading Memories\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
-				if (GetClass() == BARD && i == RB_BRD_CACOPHONY && GetAA(aaCacophony) < 1) {
-					TrainAARank(aaCacophony);
-					Message(15, "You have unlocked the AA \"Cacophony\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
 				if (GetClass() == CLERIC && i == RB_CLR_DIVINEAVATAR && GetAA(aaDivineAvatar) < 1) {
@@ -11210,14 +11200,14 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_BRD_CASSINDRASCHORUS) return "Cassindra's Chorus";
 		else if (id == RB_BRD_SHIELDOFSONGS) return "Shield of Songs";
 		else if (id == RB_BRD_KATTASCONCORD) return "Katta's Concord";
-		else if (id == RB_BRD_RIZLONASPURPOSE) return "Rizlona's Purpose";
+		else if (id == RB_BRD_CASSINDRASSECRET) return "Cassindra's Secret";
 		else if (id == RB_BRD_BARDSWISH) return "Bard's Wish";
 		else if (id == RB_BRD_JONTHONSWHISTLE) return "Jonthon's Whistle";
 		else if (id == RB_BRD_OFFHANDATTACK) return "Offhand Attack";
 		else if (id == RB_BRD_INNATESONGBLADE) return "Innate Songblade";
 		else if (id == RB_BRD_WARSONGOFZEK) return "Warsong of Zek";
 		else if (id == RB_BRD_DANCEOFBLADES) return "Dance of Blades";
-		else if (id == RB_BRD_CACOPHONY) return "Cacophony";
+		else if (id == RB_BRD_BLADEDANCER) return "Blade Dancer";
 		else if (id == RB_BRD_HARMONICAFFINITY) return "Harmonic Affinity";
 		else if (id == RB_BRD_KINSONG) return "Kinsong";
 		else if (id == RB_BRD_CHANTCYCLE) return "Chant Cycle";
@@ -11225,7 +11215,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_BRD_SELOSCRESCENDO) return "Selo's Crescendo";
 		else if (id == RB_BRD_SHIELDOFNOTES) return "Shield of Notes";
 		else if (id == RB_BRD_SHOUT) return "Shout";
-		else if (id == RB_BRD_SONGOFSTONE) return "Song of Stone";
+		else if (id == RB_BRD_SIRENSSONG) return "Song of Stone";
 		else if (id == RB_BRD_LINGERINGTWILIGHT) return "Lingering Twilight";
 		else if (id == RB_BRD_FADINGMEMORIES) return "Fading Memories";
 		break;

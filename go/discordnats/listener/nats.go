@@ -146,6 +146,4 @@ func sendNATSMessage(from string, message string) {
 		log.Printf("[NATS] Error publishing: %s", err.Error())
 		return
 	}
-	log.Println("Success?")
-
 }

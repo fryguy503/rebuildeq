@@ -291,43 +291,43 @@ class Build {
 			case "bard":
 			$newSkill = new stdClass();
 			$newSkill->title = "Elemental Harmony";
-			$newSkill->desc = 'Resistant songs now grant an additional <em data-base="10">10</em> resistance to each resistance type<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Resistant songs (lvl 9) now grant an additional <em data-base="10">10</em> resistance to each resistance type<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-elementalharmony.png";	
 			$skills[0] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Healing Treble";
-			$newSkill->desc = 'Healing effects on songs are <em data-base="10">10</em>% more effective<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Healing effects on songs (lvl 6) are <em data-base="10">10</em>% more effective<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-healingtreble.png";	
 			$skills[2] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Psalm of Norrath";
-			$newSkill->desc = 'Damage shield effects on songs are <em data-base="20">20</em>% more effective<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Damage shield effects on songs (lvl 25) are <em data-base="20">20</em>% more effective<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-psalmofnorrath.png";	
 			$skills[4] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Cassindra's Chorus";
-			$newSkill->desc = 'Mana effects on songs are <em data-base="10">10</em>% more effective<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Mana effects on songs (lvl 20) are <em data-base="10">10</em>% more effective<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-cassindraschorus.png";	
 			$skills[6] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Shield of Songs";
-			$newSkill->desc = 'Rune effects on songs are <em data-base="20">20</em>% more effective<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Rune effects on songs (lvl 49) are <em data-base="20">20</em>% more effective<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-shieldofsongs.png";	
 			$skills[8] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Katta's Concord";
-			$newSkill->desc = 'Changes Katta to Song of the Storm once rank 5, dealing a <em data-base="15">15</em> damage proc<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-brd-kattasconcord.png";	
+			$newSkill->desc = 'Katta\'s Song of Sword (lvl 39) now also deals (level * <em data-base="0.4">0.4</em>) damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-brd-kattasconcord.png";
 			$skills[10] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Rizlona's Purpose";
-			$newSkill->desc = 'Enhances Rizlona\'s songs with <em data-base="1">1</em>% additional spell damage<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Cassindra's Secret";
+			$newSkill->desc = 'Enhances Cassindra\'s Elegy (lvl 44) to also give <em data-base="2">2</em> mana<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-rizlonaspurpose.png";	
 			$skills[13] = $newSkill;
 
@@ -341,13 +341,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jonthon's Whistle";
-			$newSkill->desc = 'Jonthon\'s Self Haste Songs have improved haste, as well the bard has a passive 300 mod proc that deals (level * 2 * <em data-base="0.2">0.2</em>) magic damage.';
+			$newSkill->desc = 'Jonthon\'s Self Haste Songs (lvl 7) have improved haste, as well the bard has a passive 300 mod proc that deals (level * 2 * <em data-base="0.2">0.2</em>) magic damage.';
 			$newSkill->image = "/images/builds/icons/rb-brd-jonathonswhistle.png";
 			$skills[18] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Offhand Attack";
-			$newSkill->desc = 'All offhand attacks have <em data-base="5">5</em>% additional chance to hit<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'All offhand attacks (lvl 17) have <em data-base="5">5</em>% additional chance to hit<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-offhandattack.png";	
 			$skills[20] = $newSkill;
 
@@ -359,7 +359,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Warsong of Zek";
-			$newSkill->desc = 'Grants an innate ability to lower AC of target by <em data-base="1">1</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases bard\'s melee damage by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-warsongofzek.png";	
 			$skills[24] = $newSkill;
 
@@ -370,9 +370,9 @@ class Build {
 			$skills[26] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Cacophony";
-			$newSkill->desc = 'Grants the Cacophony AA, applying a damage over time on the target dealing <em data-base="10">10</em> damage per tick for 60 seconds<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-brd-cacophony.png";	
+			$newSkill->title = "Blade Dancer";
+			$newSkill->desc = 'When a bard is attacked while in a group, increases chance to dodge by <em data-base="2">2</em>%<span class="perLevel"> per rank</span> per player in group.';
+			$newSkill->image = "/images/builds/icons/rb-brd-bladedancer.png";
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();
@@ -418,14 +418,14 @@ class Build {
 			$skills[44] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Song of Stone";
-			$newSkill->desc = 'Grants the Song of Stone AA, allowing you to charm targets up to either your level, or level <em data-base="12">12</em>, whichever is less.';
+			$newSkill->title = "Siren's Song";
+			$newSkill->desc = 'Charm songs (lvl 27) now cost <em data-base="10">10</em>% less mana<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-songofstone.png";	
 			$skills[46] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Twilight";
-			$newSkill->desc = 'Mesmerizing songs last <em data-base="20">20</em>% longer<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Mesmerizing songs last <em data-base="0.6">0.6</em> ticks longer<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-lingeringtwilight.png";	
 			$skills[49] = $newSkill;
 

@@ -7348,6 +7348,7 @@ int Mob::GetTier() {
 
 //This is a formula that gives rogues bonus damage to normal melee attacks.
 int Mob::GetMeleeDamageAdjustments(int dmg) {
+	int rank;
 	if (!IsClient()) return 0;
 	if (GetClass() == ROGUE) {
 		if (GetLevel() >= 50) return (dmg * 1.0f);
@@ -7358,6 +7359,15 @@ int Mob::GetMeleeDamageAdjustments(int dmg) {
 	}
 	else if (GetClass() == SHADOWKNIGHT || GetClass() == PALADIN) {
 		return -(dmg * 0.25f);
+	}
+	else if (GetClass() == BARD) {
+		rank = GetBuildRank(BARD, RB_BRD_WARSONGOFZEK);
+		if (rank > 0) {
+			int dmgBonus = dmg * 0.1f * rank;
+			if (dmgBonus < 1) dmgBonus = 1;
+			BuildEcho(StringFormat("Warsong of Zek %i increased damage by %i", rank, dmgBonus));
+			return dmg + dmgBonus;
+		}
 	}
 	return 0;
 }
@@ -7450,4 +7460,28 @@ void Mob::DoKnockback(Mob *caster, int away)
 		else
 			this->GMMove(cur_x, cur_y, new_ground, GetHeading());
 	}
+}
+
+int Mob::GetGroupSize(int range) {
+	int size = 1;
+	if (!IsClient()) return size;
+	
+	if (!range) range = 200;
+
+	float distance;
+	float range2 = range*range;
+	auto group = GetGroup();
+	if (!group) return size;
+
+	Mob *target;
+	unsigned int gi = 0;
+	for (; gi < MAX_GROUP_MEMBERS; gi++)
+	{
+		if (!group->members[gi]) continue;
+		target = group->members[gi];		
+		distance = DistanceSquared(GetPosition(), GetPosition());
+		if (distance > range2) continue;
+		size++;		
+	}
+	return size;
 }

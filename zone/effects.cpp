@@ -298,28 +298,27 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 
 		value -= extra_dmg;
 	}
-
-	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND) > 0) {
-		extra_dmg = int32((float)value * 0.04 * (float)CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND));
-		if (extra_dmg < CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND)) {
-			extra_dmg = int32(CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND) * 2);
-		}
+	rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND);
+	if (rank > 0) {		
+		extra_dmg = value * 0.04f * rank;
+		if (extra_dmg < rank) extra_dmg = rank * 2;
+		BuildEcho(StringFormat("Festering Wound %i increased damage by %i", rank, extra_dmg));
 		value += extra_dmg;
 	}
 
-	if (IsClient() && CastToClient()->GetBuildRank(SHAMAN, RB_SHM_POISON) > 0) {
-		extra_dmg = int32((float)value * 0.05f * (float)CastToClient()->GetBuildRank(SHAMAN, RB_SHM_POISON));
-		if (extra_dmg < CastToClient()->GetBuildRank(SHAMAN, RB_SHM_POISON)) {
-			extra_dmg = int32(CastToClient()->GetBuildRank(SHAMAN, RB_SHM_POISON) * 2);
-		}
+	rank = GetBuildRank(SHAMAN, RB_SHM_POISON);
+	if (rank > 0) {
+		extra_dmg = value * 0.05f * rank;
+		if (extra_dmg < rank) extra_dmg = rank * 2;
+		BuildEcho(StringFormat("Poison %i increased damage by %i", rank, extra_dmg));
 		value += extra_dmg;
 	}
 
-	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_CHANTCYCLE) > 0) {
-		extra_dmg = int32((float)value * 0.1f * (float)CastToClient()->GetBuildRank(BARD, RB_BRD_CHANTCYCLE));
-		if (extra_dmg < CastToClient()->GetBuildRank(BARD, RB_BRD_CHANTCYCLE)) {
-			extra_dmg = int32(CastToClient()->GetBuildRank(BARD, RB_BRD_CHANTCYCLE) * 2);
-		}
+	rank = GetBuildRank(BARD, RB_BRD_CHANTCYCLE);
+	if (rank > 0) {
+		extra_dmg = value * 0.1f * rank;
+		if (extra_dmg < rank) extra_dmg = rank * 2;
+		BuildEcho(StringFormat("Chant Cycle %i increased damage by %i", rank, extra_dmg));
 		value += extra_dmg;
 	}
 
@@ -873,10 +872,11 @@ void EntityList::AESpell(Mob *caster, Mob *center, uint16 spell_id, bool affect_
 	Mob *curmob = nullptr;
 
 	float dist = caster->GetAOERange(spell_id);
+	int rank = caster->GetBuildRank(BARD, RB_BRD_SHOUT);
 	if (caster && (spell_id == 703 || spell_id == 730 || spell_id == 4806 || spell_id == 1758 ||
-		spell_id == 1756 || spell_id == 1764 || spell_id == 746 || spell_id == 736) &&
-		caster->IsClient() && caster->CastToClient()->GetBuildRank(BARD, RB_BRD_SHOUT)) {
-		dist += (dist * 0.2 * caster->CastToClient()->GetBuildRank(BARD, RB_BRD_SHOUT));
+		spell_id == 1756 || spell_id == 1764 || spell_id == 746 || spell_id == 736) && rank > 0) {
+		caster->BuildEcho(StringFormat("Shout %i increased range from %i to %i", rank, dist, dist * 0.2f * rank));
+		dist += (dist * 0.2f * rank);
 	}
 	float dist2 = dist * dist;
 	float min_range2 = spells[spell_id].min_range * spells[spell_id].min_range;

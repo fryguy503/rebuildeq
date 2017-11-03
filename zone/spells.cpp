@@ -2160,10 +2160,6 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 		resist_adjust -= (resist_adjust * 0.05f * CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR));
 	}
 
-
-	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_KATTASCONCORD) == 5 && spell_id == 2604) {
-		spell_id = 6734;
-	}
 	if(!IsValidSpell(spell_id))
 		return false;
 	
@@ -2566,6 +2562,15 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 			mana_used = GetMana();
 		Log(Logs::Detail, Logs::Spells, "Spell %d: consuming %d mana", spell_id, mana_used);
 		if (!DoHPToManaCovert(mana_used)) {
+			int rank = GetBuildRank(BARD, RB_BRD_SIRENSSONG);
+			if (rank > 0 &&
+				(spell_id == 725 ||
+				 spell_id == 750)) {
+				BuildEcho(StringFormat("Siren's Song %i reduced mana cost by %i.", rank, mana_used * 0.1f * rank));
+				mana_used -= mana_used * 0.1f * rank;
+				if (mana_used < 1) mana_used = 1;
+
+			}
 			entity_list.LogManaEvent(this, this, -mana_used);
 			SetMana(GetMana() - mana_used);
 			TryTriggerOnValueAmount(false, true);
@@ -3457,8 +3462,8 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				const uint32 rank = caster_client->GetBuildRank(BARD, RB_BRD_LINGERINGTWILIGHT);
 
 				if (rank > 0 && isAffected) {
-					const int bonus = duration * 0.2f * rank;
-					caster->Message(MT_FocusEffect, "Lingering Twilight %u improved mesmerize duration by %i seconds.", bonus * 6);
+					const int bonus = duration * 0.6f * rank;
+					BuildEcho(StringFormat("Lingering Twilight %u improved mesmerize duration by %i seconds.", bonus * 6));
 					duration += bonus;
 				}
 			}
