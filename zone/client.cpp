@@ -4144,55 +4144,7 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 			}
 		}
 		
-		rank = GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);
-		if (rank > 0) {
-			int mana_bonus = rank * 20;
-			Mob* target = nullptr;
-			if (this->IsGrouped() && IsClient()) {
-				Message(MT_FocusEffect, "Untapped Potential %u gives the group %i mana.", rank, mana_bonus);
-				auto group = this->GetGroup(); //iterate group
-				for (int i = 0; i < MAX_GROUP_MEMBERS; i++) {
-					target = group->members[i];
-					if (target == nullptr) continue; //target grouped
-					if (!target->IsClient()) continue; //Is a client
-					if (target->GetID() == this->GetID()) continue; //not me
-					if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
-					Client *c = target->CastToClient();
-					if (c->IsDead()) continue; //not dead
-
-					float dist2 = DistanceSquared(m_Position, target->GetPosition());
-					float range2 = 100 * 100;
-					if (dist2 > range2) continue;
-					c->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
-					entity_list.LogManaEvent(this, c, mana_bonus);
-					c->SetMana(c->GetMana() + mana_bonus);
-				}
-			}
-			else if (this->IsRaidGrouped()) { //Raid healing
-				Message(MT_FocusEffect, "Untapped Potential %u gives the raid group %i mana.", rank, mana_bonus);
-				auto raid = this->GetRaid();
-
-				uint32 gid = raid->GetGroup(this->CastToClient());
-				if (gid < 12) {
-					for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-						target = raid->members[i].member;
-						if (target == nullptr) continue; //target grouped
-						if (!target->IsClient()) continue; //Is a client
-						if (target->GetID() == this->GetID()) continue; //not me
-						if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
-						Client *c = target->CastToClient();
-						if (c->IsDead()) continue; //not dead
-
-						float dist2 = DistanceSquared(m_Position, target->GetPosition());
-						float range2 = 100 * 100;
-						if (dist2 > range2) continue;
-						c->Message(MT_Spells, "%s has gifted you %i mana.", GetCleanName(), mana_bonus);
-						entity_list.LogManaEvent(this, c, mana_bonus);
-						c->SetMana(c->GetMana() + mana_bonus);
-					}
-				}
-			}
-		}
+		DoUntappedPotential();
 	}
 }
 
@@ -11618,8 +11570,9 @@ void Client::DoMendingAura(int amount) {
 void Client::DoDivineSurge() {
 	uint32 rank = GetBuildRank(MONK, RB_MNK_DIVINESURGE);
 	if (rank < 1) return;
-	int healCount = 0;
-	int amount = 5 * rank;
+	int manaCount = 0;
+	int manaTotal = 0;
+	int amount = 0;
 	Mob *target = nullptr;
 
 	if (this->IsGrouped()) {							
@@ -11632,10 +11585,14 @@ void Client::DoDivineSurge() {
 			if (target->CastToClient()->IsDead()) continue; //not dead
 			
 			float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
-			float range2 = (rank * 10) * (rank * 10);
+			float range2 = (rank * 5) * (rank * 5);
 			if (dist2 > range2) continue;
 
-			healCount++;
+			amount = floor(target->GetMaxMana() * 0.01f * rank);
+			if (amount < 1) continue;
+			manaTotal += amount;
+			manaCount++;			
+
 			if (this->GetID() == target->GetID()) target->Message(MT_Spells, "You recover %i endurance.", amount);
 			else target->Message(MT_Spells, "%s has given you %i mana and endurance.", GetCleanName(), amount);
 			
@@ -11658,9 +11615,15 @@ void Client::DoDivineSurge() {
 				if (target->CastToClient()->IsDead()) continue; //not dead
 				
 				float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
-				float range2 = (rank * 10) * (rank * 10);
+				float range2 = (rank * 5) * (rank * 5);
 				if (dist2 > range2) continue;
-				healCount++;
+
+
+				amount = floor(target->GetMaxMana() * 0.01f * rank);
+				if (amount < 1) continue;
+				manaTotal += amount;
+				manaCount++;
+
 				if (this->GetID() == target->GetID()) target->Message(MT_Spells, "You recover %i endurance.", amount);
 				else target->Message(MT_Spells, "%s has given you %i mana and endurance.", GetCleanName(), amount);
 
@@ -11673,9 +11636,152 @@ void Client::DoDivineSurge() {
 		}
 	}
 
-	if (healCount > 1) {
-		healCount--; //exclude self
-		BuildEcho(StringFormat("Mending Aura %u spreads your mend to %i allies within %i meters.", rank, healCount, int(rank * 10)));
+	if (manaCount > 1) {
+		manaCount--; //exclude self
+		BuildEcho(StringFormat("Divine Surge %u gave %i allies %i mana within %i meters.", rank, manaCount, manaTotal, floor(rank * 5)));
+	}
+}
+
+
+void Client::DoUntappedPotential() {
+	uint32 rank = GetBuildRank(ROGUE, RB_ROG_JARRINGSTAB);
+	if (rank < 1) return;
+	int manaCount = 0;
+	int manaTotal = 0;
+	int amount = 0;
+	Mob *target = nullptr;
+
+	if (this->IsGrouped()) {
+		auto group = this->GetGroup(); //iterate group
+		for (int i = 0; i < 6; ++i) {
+			target = group->members[i];
+			if (target == nullptr) continue; //target grouped
+			if (!target->IsClient()) continue; //Is a client
+			if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+			if (target->CastToClient()->IsDead()) continue; //not dead
+
+			float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
+			float range2 = (rank * 5) * (rank * 5);
+			if (dist2 > range2) continue;
+
+			amount = floor(target->GetMaxMana() * 0.02f * rank);
+			if (amount < 1) continue;
+			manaTotal += amount;
+			manaCount++;
+
+			if (this->GetID() == target->GetID()) continue;
+			else target->Message(MT_Spells, "%s has given you %i mana.", GetCleanName(), amount);
+
+			entity_list.LogManaEvent(this, target, amount);
+			target->SetMana((target->GetMana() + amount));
+			target->CastToClient()->SendManaUpdate();
+		}
+	}
+	else if (this->IsRaidGrouped()) { //Raid healing
+		auto raid = this->GetRaid();
+		uint32 gid = raid->GetGroup(this->CastToClient());
+		if (gid < 12) {
+			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+				target = raid->members[i].member;
+				if (target == nullptr) continue; //target grouped
+				if (!target->IsClient()) continue; //Is a client
+				if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+				if (target->CastToClient()->IsDead()) continue; //not dead
+
+				float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
+				float range2 = (rank * 5) * (rank * 5);
+				if (dist2 > range2) continue;
+
+				amount = floor(target->GetMaxMana() * 0.02f * rank);
+				if (amount < 1) continue;
+				manaTotal += amount;
+				manaCount++;
+
+				if (this->GetID() == target->GetID()) continue;
+				else target->Message(MT_Spells, "%s has given you %i mana.", GetCleanName(), amount);
+
+				entity_list.LogManaEvent(this, target, amount);
+				target->SetMana((target->GetMana() + amount));
+				target->CastToClient()->SendManaUpdate();
+			}
+		}
+	}
+
+	if (manaCount > 1) {
+		manaCount--; //exclude self
+		BuildEcho(StringFormat("Jarring Stab %u gave %i allies %i mana within %i meters.", rank, manaCount, manaTotal, floor(rank * 5)));
+	}
+}
+
+void Client::DoZevfeersFeast() {
+	uint32 rank = GetBuildRank(ROGUE, RB_SHD_ZEVFEERSFEAST);
+	if (rank < 1) return;
+	int manaCount = 0;
+	int manaTotal = 0;
+	int amount = 0;
+	Mob *target = nullptr;
+
+	if (this->IsGrouped()) {
+		auto group = this->GetGroup(); //iterate group
+		for (int i = 0; i < 6; ++i) {
+			target = group->members[i];
+			if (target == nullptr) continue; //target grouped
+			if (!target->IsClient()) continue; //Is a client
+			if (target == this) continue; //not me
+			if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+			if (target->CastToClient()->IsDead()) continue; //not dead
+
+			float dist2 = DistanceSquared(m_Position, group->members[i]->GetPosition());
+			float range2 = (rank * 5) * (rank * 5);
+			if (dist2 > range2) continue;
+
+			amount = floor(target->GetMaxMana() * 0.005f * rank);
+			if (amount < 1) continue;
+			manaTotal += amount;
+			manaCount++;
+
+			if (this->GetID() == target->GetID()) continue;
+			else target->Message(MT_Spells, "%s has given you %i mana.", GetCleanName(), amount);
+
+			entity_list.LogManaEvent(this, target, amount);
+			target->SetMana((target->GetMana() + amount));
+			target->CastToClient()->SendManaUpdate();
+		}
+	}
+	else if (this->IsRaidGrouped()) { //Raid healing
+		auto raid = this->GetRaid();
+		uint32 gid = raid->GetGroup(this->CastToClient());
+		if (gid < 12) {
+			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
+				target = raid->members[i].member;
+				if (target == nullptr) continue; //target grouped
+				if (!target->IsClient()) continue; //Is a client
+				if (target == this) continue; //not me
+				if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
+				if (target->CastToClient()->IsDead()) continue; //not dead
+
+				float dist2 = DistanceSquared(m_Position, raid->members[i].member->GetPosition());
+				float range2 = (rank * 5) * (rank * 5);
+				if (dist2 > range2) continue;
+
+				amount = floor(target->GetMaxMana() * 0.005f * rank);
+				if (amount < 1) continue;
+				manaTotal += amount;
+				manaCount++;
+
+				if (this->GetID() == target->GetID()) continue;
+				else target->Message(MT_Spells, "%s has given you %i mana.", GetCleanName(), amount);
+
+				entity_list.LogManaEvent(this, target, amount);
+				target->SetMana((target->GetMana() + amount));
+				target->CastToClient()->SendManaUpdate();
+			}
+		}
+	}
+
+	if (manaCount > 1) {
+		manaCount--; //exclude self
+		BuildEcho(StringFormat("Zevfeer's Feast %u gave %i allies %i mana within %i meters.", rank, manaCount, manaTotal, floor(rank * 5)));
 	}
 }
 
@@ -11714,62 +11820,4 @@ bool Client::HasNegativeEffects() {
 		}
 	}
 	return false;
-}
-
-void Client::DoZevfeersFeast(int amount) {
-	int rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST);
-	if (rank < 1) return;
-	int manaCount = 0;
-	int manaTotal = 0;
-	amount = floor(amount * 0.01f * rank);
-	Mob * target = nullptr;
-
-	if (IsGrouped()) {
-		auto group = GetGroup(); //iterate group
-		for (int i = 0; i < 6; ++i) {
-			target = group->members[i];
-			if (target == nullptr) continue; //target grouped
-			if (!target->IsClient()) continue; //Is a client
-			if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
-			if (target->CastToClient()->IsDead()) continue; //not dead
-			if (this == target) continue; //not person who lifetapped
-
-			float dist2 = DistanceSquared(m_Position, target->GetPosition());
-			float range2 = (rank * 10) * (rank * 10);
-			if (dist2 > range2) continue;
-
-			manaCount++;
-			target->Message(MT_Spells, "%s's Zevfeer's Feast has given you %i mana.", GetCleanName(), rank, amount);
-			entity_list.LogManaEvent(this, target, amount);
-			target->SetMana(target->GetMana() + amount);
-			manaTotal += amount;
-		}
-	}
-	else if (this->IsRaidGrouped()) { //Raid healing
-		auto raid = this->GetRaid();
-		uint32 gid = raid->GetGroup(this->CastToClient());
-		if (gid < 12) {
-			for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-				target = raid->members[i].member;
-				if (target == nullptr) continue; //target grouped
-				if (!target->IsClient()) continue; //Is a client
-				if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
-				if (target->CastToClient()->IsDead()) continue; //not dead
-				if (this == target) continue; //not person who lifetapped
-
-				float dist2 = DistanceSquared(m_Position, target->GetPosition());
-				float range2 = (rank * 10) * (rank * 10);
-				if (dist2 > range2) continue;
-
-				manaCount++;
-				target->Message(MT_Spells, "%s's Zevfeer's Feast has given you %i mana.", GetCleanName(), rank, amount);
-				entity_list.LogManaEvent(this, target, amount);
-				target->SetMana(target->GetMana() + amount);
-				manaTotal += amount;
-			}
-		}
-	}
-	if (manaCount > 0) {
-		BuildEcho(StringFormat("Zevfeer's Feast %i gave %i mana to %i allies.", rank, manaCount, manaTotal));
-	}
 }

@@ -963,7 +963,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Surge";
-			$newSkill->desc = 'When you land Tiger Claw, Eagle Strike, Tail Whip or other special attacks, your group recovers <em data-base="5">5</em> mana and endurance<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you land Tiger Claw, Eagle Strike, Tail Whip or other special attacks, your group recovers <em data-base="1">1</em>% of a target\'s max mana and endurance when within <em data-base="5">5</em>m<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-divinesurge.png";
 			$skills[26] = $newSkill;
 
@@ -1254,7 +1254,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Untapped Potential";
-			$newSkill->desc = 'Pick pocket now gives the group <em data-base="20">20</em> mana on success<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you successfully pickpocket, your group recovers <em data-base="1">1</em>% of a target\'s max mana when within <em data-base="5">5</em>m<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-untappedpotential.png";
 			$skills[22] = $newSkill;
 
@@ -1530,7 +1530,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Zevfeer's Feast";
-			$newSkill->desc = 'When you use the Leech Touch AA, group members within <em data-base="10">10</em>m gain <em data-base="1">1</em>% of the damage dealt as mana<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you use the Leech Touch AA, your group recover <em data-base="0.5">0.5</em>% of a target\'s max mana when within <em data-base="5">5</em>m<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-zevfeersfeast.png";	
 			$skills[8] = $newSkill;
 			

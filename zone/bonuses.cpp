@@ -1613,7 +1613,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 		rank = CastToClient()->GetBuildRank(MONK, RB_MNK_BLOCK);
 		if (rank > 0) {
-			BuildEcho(StringFormat("Block %i increased block chance from %i to %i.", rank, new_bonus->IncreaseBlockChance, (2 * rank)));
+			//BuildEcho(StringFormat("Block %i increased block chance from %i to %i.", rank, new_bonus->IncreaseBlockChance, (2 * rank)));
 			new_bonus->IncreaseBlockChance += (2 * rank);
 		}
 	}
@@ -2092,7 +2092,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 						//doing a weird flip since it's a negative number
 						int dmgBonus = -effect_value;
 						dmgBonus = dmgBonus * 0.2f * rank;
-						if (this == caster) BuildEcho(StringFormat("Psalm of Norrath %i increased damage shield from %i to %i.", rank, effect_value, -effect_value + dmgBonus));
+						if (this == caster) BuildEcho(StringFormat("Psalm of Norrath %i increased damage shield from %i to -%i.", rank, effect_value, -effect_value + dmgBonus));
 						effect_value -= dmgBonus;
 					}
 				}
