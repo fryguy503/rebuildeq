@@ -5328,7 +5328,7 @@ void Client::Handle_OP_CrystalCreate(const EQApplicationPacket *app)
 	VERIFY_PACKET_LENGTH(OP_CrystalCreate, app, CrystalReclaim_Struct);
 	CrystalReclaim_Struct *cr = (CrystalReclaim_Struct*)app->pBuffer;
 
-	const uint32 requestQty = cr->amount;
+	uint32 requestQty = cr->amount;
 	const bool isRadiant = cr->type == 4;
 	const bool isEbon = cr->type == 5;
 
@@ -5340,7 +5340,12 @@ void Client::Handle_OP_CrystalCreate(const EQApplicationPacket *app)
 	if (requestQty < 1) {
 		return;
 	}
-
+	//cap request count to 250
+	if (requestQty > 250) {
+		Message(13, "A maximum of 250 crystals can be claimed at a time.");
+		return;
+	}
+	
 	// Check: Valid client state to make request.
 	// In this situation the client is either desynced or attempting an exploit.
 	const uint32 currentQty = isRadiant ? GetRadiantCrystals() : GetEbonCrystals();
@@ -12810,7 +12815,7 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 		SinglePrice = (item->Price * (RuleR(Merchant, SellCostMod)) * item->SellRate);
 
 	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
-		uint32 haggle = (int)(SinglePrice * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
+		uint32 haggle = floor(SinglePrice * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
 		Message(MT_FocusEffect, "Haggle Rank %u reduced buy price by %u copper.", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
 		SinglePrice -= haggle;
 	}
@@ -13052,7 +13057,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 	}
 
 	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
-		uint32 haggle = (int)(price * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
+		uint32 haggle = floor(price * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
 		Message(MT_FocusEffect, "Haggle Rank %u improved sell price by %u copper", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
 		price -= haggle;
 	}

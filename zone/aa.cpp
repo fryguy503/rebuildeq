@@ -756,6 +756,7 @@ void Client::InspectBuffs(Client* Inspector, int Rank)
 	// not sure when, but the way it's coded now, it wouldn't work with mobs.
 	if (!Inspector || Rank == 0)
 		return;
+	if (!IsTaskCompleted(FEAT_HEALTHOFTARGETSTARGET)) return;
 
 	auto outapp = new EQApplicationPacket(OP_InspectBuffs, sizeof(InspectBuffs_Struct));
 	InspectBuffs_Struct *ib = (InspectBuffs_Struct *)outapp->pBuffer;
@@ -1215,7 +1216,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 
 	if (rank_id == aaBoastfulBellow && GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW) < 1 ||
 		rank_id == aaDanceofBlades && GetBuildRank(BARD, RB_BRD_DANCEOFBLADES) < 1 ||
-		rank_id == aaShieldofNotes && GetBuildRank(BARD, RB_BRD_SHIELDOFNOTES) < 1 ||
 
 		rank_id == aaDivineAvatar && GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) < 1 ||
 		rank_id == aaCelestialRegeneration && GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION) < 1 ||

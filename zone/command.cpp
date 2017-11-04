@@ -4745,6 +4745,8 @@ void command_buff(Client *c, const Seperator *sep) {
 			else if (level < 50) target->QuickBuff(target, 356, duration); //shield of thorns 47
 			else if (level < 55) target->QuickBuff(target, 1727, duration); //legacy of spike 49
 			else target->QuickBuff(target, 1560, duration); //shield of blades 58
+
+			target->QuickBuff(target, 278, duration);
 		}
 		if (c->IsClient() && c->CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 		{

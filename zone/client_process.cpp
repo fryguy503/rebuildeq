@@ -1838,8 +1838,8 @@ void Client::DoHPRegen() {
 	finalHPRegen += RestRegenHP;
 	if (GetBuildRank(DRUID, RB_DRU_REGENERATION) > 0) {
 		int druidRegen = 0;
-		if ((GetLevel() * 0.2f) < 2) druidRegen = 2;		
-		else druidRegen = GetLevel() * 0.2f;
+		if (floor(GetLevel() * 0.2f) < 2) druidRegen = 2;
+		else druidRegen = floor(GetLevel() * 0.2f);
 		BuildEcho(StringFormat("Regeneration gave %i hitpoints.", druidRegen));
 		finalHPRegen += druidRegen;
 	}

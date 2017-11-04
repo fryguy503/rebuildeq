@@ -300,24 +300,24 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 	}
 	rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND);
 	if (rank > 0) {		
-		extra_dmg = value * 0.04f * rank;
-		if (extra_dmg < rank) extra_dmg = rank * 2;
+		extra_dmg = floor(value * 0.04f * rank);
+		if (extra_dmg < rank) extra_dmg = floor(rank * 2);
 		BuildEcho(StringFormat("Festering Wound %i increased damage by %i", rank, extra_dmg));
 		value += extra_dmg;
 	}
 
 	rank = GetBuildRank(SHAMAN, RB_SHM_POISON);
 	if (rank > 0) {
-		extra_dmg = value * 0.05f * rank;
-		if (extra_dmg < rank) extra_dmg = rank * 2;
+		extra_dmg = floor(value * 0.05f * rank);
+		if (extra_dmg < rank) extra_dmg = floor(rank * 2);
 		BuildEcho(StringFormat("Poison %i increased damage by %i", rank, extra_dmg));
 		value += extra_dmg;
 	}
 
 	rank = GetBuildRank(BARD, RB_BRD_CHANTCYCLE);
 	if (rank > 0) {
-		extra_dmg = value * 0.1f * rank;
-		if (extra_dmg < rank) extra_dmg = rank * 2;
+		extra_dmg = floor(value * 0.1f * rank);
+		if (extra_dmg < rank) extra_dmg = floor(rank * 2);
 		BuildEcho(StringFormat("Chant Cycle %i increased damage by %i", rank, extra_dmg));
 		value += extra_dmg;
 	}
@@ -397,20 +397,20 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 
 		int rank = target->GetBuildRank(PALADIN, RB_PAL_WARDOFTUNARE);
 		if (rank > 0 && this != target) {
-			target->BuildEcho(StringFormat("Ward of Tunare %i gave a bonus %i healing.", rank, value * 0.06f * rank));
-			value += (value * 0.06f * rank);
+			target->BuildEcho(StringFormat("Ward of Tunare %i gave a bonus %i healing.", rank, floor(value * 0.06f * rank)));
+			value += floor(value * 0.06f * rank);
 		}
 
 		rank = target->GetBuildRank(PALADIN, RB_SHD_BANSHEESMIRROR);
 		if (rank > 0 && this != target) {
-			target->BuildEcho(StringFormat("Banshee's Mirror %i gave a bonus %i healing.", rank, value * 0.06f * rank));
-			value += (value * 0.06f * rank);
+			target->BuildEcho(StringFormat("Banshee's Mirror %i gave a bonus %i healing.", rank, floor(value * 0.06f * rank)));
+			value += floor(value * 0.06f * rank);
 		}
 
 
 		rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_INSTILLLIFE);
 		if (IsClient() && rank > 0 && zone->random.Roll(int(2 * rank))) {
-			int healAmount = (int)(target->GetMaxHP() * 0.02f * rank);
+			int healAmount = floor(target->GetMaxHP() * 0.02f * rank);
 			CastToClient()->Message(MT_Spells, "Instill Life %u gave a bonus %i healing.", rank, healAmount);
 			value += healAmount;
 		}
@@ -418,14 +418,14 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 
 		rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_REINFORCETORPOR);
 		if (rank > 0 && (spell_id == 19127 || spell_id == 1576)) {
-			int healAmount = (int)(value * 0.1f * rank);
+			int healAmount = floor(value * 0.1f * rank);
 			BuildEcho(StringFormat("Reinforce Torpor %i gave a bonus %i healing.", rank, healAmount));			
 			value += healAmount;
 		}
 
 		rank = GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
 		if (rank > 0 && target != nullptr && target != this) {
-			int healAmount = (int)(value * 0.05f * rank);
+			int healAmount = floor(value * 0.05f * rank);
 			BuildEcho(StringFormat("Spiritual Healing %u healed you for %i hitpoints.", rank, healAmount));
 			entity_list.LogHPEvent(this, this, healAmount);
 			HealDamage(healAmount, this);
@@ -434,14 +434,14 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
 		if (IsClient() && rank > 0) {			
-			int healAmount = (int)(value * 0.05f * rank);
+			int healAmount = floor(value * 0.05f * rank);
 			CastToClient()->Message(MT_Spells, "Convergence of Spirits %u gave a bonus %i healing.", rank, healAmount);
 			value += healAmount;
 		}
 
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
 		if (IsClient() && rank > 0) {			
-			int healAmount = (int)(value * 0.05f * rank);
+			int healAmount = floor(value * 0.05f * rank);
 			CastToClient()->Message(MT_Spells, "Nature's Boon %u gave a bonus %i healing.", rank, healAmount);
 			value += healAmount;
 		}
@@ -875,8 +875,8 @@ void EntityList::AESpell(Mob *caster, Mob *center, uint16 spell_id, bool affect_
 	int rank = caster->GetBuildRank(BARD, RB_BRD_SHOUT);
 	if (caster && (spell_id == 703 || spell_id == 730 || spell_id == 4806 || spell_id == 1758 ||
 		spell_id == 1756 || spell_id == 1764 || spell_id == 746 || spell_id == 736) && rank > 0) {
-		caster->BuildEcho(StringFormat("Shout %i increased range from %i to %i", rank, dist, dist * 0.2f * rank));
-		dist += (dist * 0.2f * rank);
+		caster->BuildEcho(StringFormat("Shout %i increased range from %i to %i", rank, dist, floor(dist * 0.2f * rank)));
+		dist += floor(dist * 0.2f * rank);
 	}
 	float dist2 = dist * dist;
 	float min_range2 = spells[spell_id].min_range * spells[spell_id].min_range;

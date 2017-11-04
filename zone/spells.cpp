@@ -312,7 +312,7 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		
 		rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_PROMISE);
 		if (rank > 0 && mana_cost > 0) {
-			int reduced = mana_cost * (0.1 * rank);			
+			int reduced = floor(mana_cost * 0.1f * rank);
 			BuildEcho(StringFormat("Promise reduced mana cost by %i", rank));
 			mana_cost -= rank;
 			if (mana_cost < 1) mana_cost = 0;			
@@ -458,7 +458,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 
 	if ((spell_id == 1455 || spell_id == 2589 || spell_id == 3577) &&
 		IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_WAVEOFMARR) > 0) {
-		mana_cost -= (int)(mana_cost * 0.1 * CastToClient()->GetBuildRank(PALADIN, RB_PAL_WAVEOFMARR));
+		mana_cost -= floor(mana_cost * 0.1f * CastToClient()->GetBuildRank(PALADIN, RB_PAL_WAVEOFMARR));
 	}
 
 
@@ -510,8 +510,8 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
                 spell_id == 2031 || //Ring of Cobalt Scar
                 spell_id == 3794 //Ring of Stonebrunt
         )) {
-                int mana_cost_reduc = 0.1f * rank * mana_cost;
-                int cast_time_reduc = 0.05f * rank * cast_time;
+                int mana_cost_reduc = floor(0.1f * rank * mana_cost);
+                int cast_time_reduc = floor(0.05f * rank * cast_time);
                 Log(Logs::Detail, Logs::Spells, "Ring Affinity (Rank %d) Reduced Mana by %d and Casting Time by %d", rank, mana_cost_reduc, cast_time_reduc);
                 mana_cost -= mana_cost_reduc;
                 cast_time -= cast_time_reduc;
@@ -522,7 +522,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TELEPORTBIND);
 		if (rank > 0 && spell_id == 5953) {
 			// 85% Mana at Rank 1, minus 15% per rank: 85,70,55,40,25
-			mana_cost = GetMaxMana() * (1 - rank * 0.15f);
+			mana_cost = floor(GetMaxMana() * floor(1 - rank * 0.15f));
 
 			Log(Logs::Detail, Logs::Spells, "Teleport Bind (Rank %d) Mana Cost %d and Casting Time %d", rank, mana_cost, cast_time);
 
@@ -548,11 +548,11 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 	// Only apply to evocation spells and direct damage conjuration spell swith a cast time >= 3 seconds
 	if(rank > 0 && (spell.skill == 24 || (spell.skill == 14 && spell.spell_category == 1)) && cast_time >= 3000) { 
 		int cast_time_bonus = 0;
-		if(rank == 1) cast_time_bonus = cast_time * 0.02f;
-		if(rank == 2) cast_time_bonus = cast_time * 0.05f;
-		if(rank == 3) cast_time_bonus = cast_time * 0.10f;
-		if(rank == 4) cast_time_bonus = cast_time * 0.15f;
-		if(rank == 5) cast_time_bonus = cast_time * 0.20f;
+		if(rank == 1) cast_time_bonus = floor(cast_time * 0.02f);
+		if(rank == 2) cast_time_bonus = floor(cast_time * 0.05f);
+		if(rank == 3) cast_time_bonus = floor(cast_time * 0.10f);
+		if(rank == 4) cast_time_bonus = floor(cast_time * 0.15f);
+		if(rank == 5) cast_time_bonus = floor(cast_time * 0.20f);
 		Log(Logs::Detail, Logs::Spells, "Quick Damage (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
         	cast_time -= cast_time_bonus;
 	}
@@ -561,11 +561,11 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 	rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_QUICKSUMMONING);
 	if(rank > 0 && IsSummonPetSpell(spell_id)) { // All Pet Summoning Spells
 		int cast_time_bonus = 0;
-		if(rank == 1) cast_time_bonus = cast_time * 0.10f;
-		if(rank == 2) cast_time_bonus = cast_time * 0.20f;
-		if(rank == 3) cast_time_bonus = cast_time * 0.30f;
-		if(rank == 4) cast_time_bonus = cast_time * 0.40f;
-		if(rank == 5) cast_time_bonus = cast_time * 0.50f;
+		if(rank == 1) cast_time_bonus = floor(cast_time * 0.10f);
+		if(rank == 2) cast_time_bonus = floor(cast_time * 0.20f);
+		if(rank == 3) cast_time_bonus = floor(cast_time * 0.30f);
+		if(rank == 4) cast_time_bonus = floor(cast_time * 0.40f);
+		if(rank == 5) cast_time_bonus = floor(cast_time * 0.50f);
 		Log(Logs::Detail, Logs::Spells, "Quick Summoning (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
 		cast_time -= cast_time_bonus;
 	}
@@ -678,12 +678,12 @@ bool Mob::DoCastingChecks()
 	uint16 spell_id = casting_spell_id;
 	Mob *spell_target = entity_list.GetMob(casting_spell_targetid);
 
-	if (RuleB(Spells, BuffLevelRestrictions)) {
+	if (RuleB(Spells, BuffLevelRestrictions) && !IsBardSong(spell_id)) {
 		// casting_spell_targetid is guaranteed to be what we went, check for ST_Self for now should work though
 		if (spell_target && spells[spell_id].targettype != ST_Self && !spell_target->CheckSpellLevelRestriction(spell_id)) {
 			Log(Logs::Detail, Logs::Spells, "Spell %d failed: recipient did not meet the level restrictions", spell_id);
-			if (!IsBardSong(spell_id))
-				Message_StringID(MT_SpellFailure, SPELL_TOO_POWERFUL);
+			//if (!IsBardSong(spell_id))
+			Message_StringID(MT_SpellFailure, SPELL_TOO_POWERFUL);
 			return false;
 		}
 	}
@@ -2153,11 +2153,11 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 
 	//Shin: resist adjust penetration for Unholy Focus
 	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS) > 0) {
-		resist_adjust -= (resist_adjust * 0.1f * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS));
+		resist_adjust -= floor(resist_adjust * 0.1f * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS));
 	}
 
 	if (IsClient() && CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR) > 0) {
-		resist_adjust -= (resist_adjust * 0.05f * CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR));
+		resist_adjust -= floor(resist_adjust * 0.05f * CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR));
 	}
 
 	if(!IsValidSpell(spell_id))
@@ -2566,8 +2566,8 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 			if (rank > 0 &&
 				(spell_id == 725 ||
 				 spell_id == 750)) {
-				BuildEcho(StringFormat("Siren's Song %i reduced mana cost by %i.", rank, mana_used * 0.1f * rank));
-				mana_used -= mana_used * 0.1f * rank;
+				BuildEcho(StringFormat("Siren's Song %i reduced mana cost by %i.", rank, floor(mana_used * 0.1f * rank)));
+				mana_used -= floor(mana_used * 0.1f * rank);
 				if (mana_used < 1) mana_used = 1;
 
 			}
@@ -2581,7 +2581,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 	if (spell_id == 5244 && IsClient()) {
 		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_ESCAPE);
 		if (rank > 0) {
-			end_cost = (CastToClient()->GetMaxEndurance() * 0.5f) - (CastToClient()->GetMaxEndurance() * 0.1f * rank);
+			end_cost = floor(CastToClient()->GetMaxEndurance() * 0.5f) - floor(CastToClient()->GetMaxEndurance() * 0.1f * rank);
 		}
 	}
 
@@ -3475,7 +3475,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				const uint32 rank = caster_client->GetBuildRank(BARD, RB_BRD_KINSONG);
 
 				if (rank > 0 && isAffected) {
-					duration = 10 * 0.2f * rank;
+					duration = floor(10 * 0.2f * rank);
 				}
 			}
 		}
@@ -3502,7 +3502,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				const uint32 rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT);
 
 				if (rank > 0 && isAffected) {
-					duration = 10 * 0.2f * rank;
+					duration = floor(10 * 0.2f * rank);
 				}
 			}
 
@@ -3527,7 +3527,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				const uint32 rank = caster->CastToClient()->GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER);
 
 				if (rank > 0 && isAffected) {
-					duration = 6 * 0.2f * rank;
+					duration = floor(6 * 0.2f * rank);
 				}
 			}
 		}
@@ -3543,7 +3543,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				const uint32 rank = caster_client->GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION);
 
 				if (rank > 0 && isAffected) {
-					duration = 10 * 0.2f * rank;
+					duration = floor(10 * 0.2f * rank);
 				}
 			}
 		}
@@ -3558,7 +3558,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				const uint32 rank = caster_client->GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT);
 
 				if (rank > 0 && isAffected) {
-					duration = 10 * 0.2f * rank;
+					duration = floor(10 * 0.2f * rank);
 				}
 			}
 		}
@@ -3573,7 +3573,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				const uint32 rank = caster_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE);
 
 				if (rank > 0 && isAffected) {
-					duration = 10 * 0.2f * rank;
+					duration = floor(10 * 0.2f * rank);
 				}
 			}
 		}
@@ -3588,7 +3588,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				const uint32 rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_SPIRITOFSPEED);
 
 				if (rank > 0 && isAffected) {
-					const int bonus = duration * 0.2f * rank;
+					const int bonus = floor(duration * 0.2f * rank);
 					caster_client->Message(MT_FocusEffect, "Spirit of Speed increased duration by %i seconds.", bonus * 6);
 					duration += bonus;
 				}
@@ -3607,7 +3607,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				const uint32 rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDHASTE);
 
 				if (rank > 0 && isAffected) {
-					const int bonus = duration * 0.3f * rank;
+					const int bonus = floor(duration * 0.3f * rank);
 					caster_client->Message(MT_FocusEffect, "Extended Haste increased duration by %i seconds.", bonus * 6);
 					duration += bonus;
 				}
@@ -3656,7 +3656,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				const uint32 rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR);
 
 				if (rank > 0 && isAffected) {
-					const int bonus = duration * 0.05f * rank;
+					const int bonus = floor(duration * 0.05f * rank);
 					caster_client->Message(MT_FocusEffect, "Extended Turgur increased duration by %i seconds.", bonus * 6);
 					duration += bonus;
 				}
@@ -4412,11 +4412,11 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob *spelltar, bool reflect, bool use_r
 	}
 
 	// make sure spelltar is high enough level for the buff
-	if(RuleB(Spells, BuffLevelRestrictions) && !spelltar->CheckSpellLevelRestriction(spell_id))
+	if(RuleB(Spells, BuffLevelRestrictions) && !spelltar->CheckSpellLevelRestriction(spell_id) && !IsBardSong(spell_id))
 	{
 		Log(Logs::Detail, Logs::Spells, "Spell %d failed: recipient did not meet the level restrictions", spell_id);
-		if(!IsBardSong(spell_id))
-			Message_StringID(MT_SpellFailure, SPELL_TOO_POWERFUL);
+		//if(!IsBardSong(spell_id))
+		Message_StringID(MT_SpellFailure, SPELL_TOO_POWERFUL);
 		safe_delete(action_packet);
 		return false;
 	}

@@ -1572,7 +1572,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			hit_chance_bonus += opts->hit_chance;
 		}
 		if (Hand == EQEmu::inventory::slotSecondary && IsClient() && GetBuildRank(BARD, RB_BRD_OFFHANDATTACK) > 0) {
-			int hcb = (hit_chance_bonus * 0.05f * GetBuildRank(BARD, RB_BRD_OFFHANDATTACK));
+			int hcb = floor(hit_chance_bonus * 0.05f * GetBuildRank(BARD, RB_BRD_OFFHANDATTACK));
 			BuildEcho(StringFormat("Offhand Attack %u chance to hit increased from %i to %i.", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb));
 			if (hcb < 1) {
 				hcb = 1;
@@ -1583,8 +1583,8 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		if (IsClient()) {
 			int rank = GetBuildRank(BARD, RB_BRD_INNATESONGBLADE);
 			if (rank > 0) {
-				int isb = (hit_chance_bonus * 0.02f * rank);
-				int isd = (my_hit.damage_done * 0.02f * rank);
+				int isb = floor(hit_chance_bonus * 0.02f * rank);
+				int isd = floor(my_hit.damage_done * 0.02f * rank);
 				if (isd > 0 && isb > 0) {
 					BuildEcho(StringFormat("Innate Songblade %u chance to hit increased from  %i to %i and %i to damage.", rank, hit_chance_bonus, isb, isd));
 					hit_chance_bonus += isb;
@@ -1656,7 +1656,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 				SetMana(GetMana() + rank);
 
 				chance = 300;
-				proc_damage = GetLevel() * 1.5f * (0.2f * rank);
+				proc_damage = floor(GetLevel() * 1.5f * 0.2f * rank);
 				if (proc_damage < 10) {
 					proc_damage = 10;
 				}
@@ -1667,7 +1667,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			rank = GetBuildRank(SHAMAN, RB_SHM_FURY);
 			if (rank > 0) {
 				chance = 400;
-				proc_damage = GetLevel() * 1.5f * (0.2f * rank);
+				proc_damage = floor(GetLevel() * 1.5f * 0.2f * rank);
 								
 				if (proc_damage < 10) {
 					proc_damage = 10;
@@ -1687,7 +1687,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 						GetTarget()->GetBodyType() == BT_Vampire
 					)) chance += (20 * GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION));
 
-				proc_damage = GetLevel() * 0.75f * (0.2f * rank);
+				proc_damage = floor(GetLevel() * 0.75f * 0.2f * rank);
 				
 				if (proc_damage < 10) {
 					proc_damage = 10;
@@ -1771,9 +1771,10 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 					rank = c->GetBuildRank(BARD, RB_BRD_KATTASCONCORD);
 					if (rank < 1) continue;					
 					chance = 300;
-					if (c == this) BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", c->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), chance, chance * 0.1f * c->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY)));
-					chance += (chance * 0.1f * c->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY)); //Chance boost from harmonic affinity
-					proc_damage = GetLevel() * 0.4f * rank;
+					int chanceBonus = chance * 0.1f * c->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY);
+					if (c == this && chanceBonus > 0) BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", c->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), chance, chance + chanceBonus));
+					chance += floor(chance * 0.1f * chanceBonus); //Chance boost from harmonic affinity
+					proc_damage = floor(GetLevel() * 0.4f * rank);
 					if (proc_damage < 1) proc_damage = 1;
 					if (BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill)) {
 						c->BuildEcho(StringFormat("Katta's Concord %i caused %s to proc %i damage.", rank, GetCleanName(), proc_damage));
@@ -1785,8 +1786,13 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
 			if (rank > 0) {
 				chance = 400;
-				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) chance += (chance * 0.1 * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
-				proc_damage = GetLevel() * 3.0f * (0.2f * rank);
+				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) {
+					int bonusChance = floor(chance * 0.1f * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
+					BuildEcho(StringFormat("Thieves Affinity increased chance from %i to %i.", chance, chance + bonusChance));
+					chance += bonusChance;
+				}
+
+				proc_damage = floor(GetLevel() * 3.0f * (0.2f * rank));
 				if (proc_damage < 20) {
 					proc_damage = 20;
 				}
@@ -1797,7 +1803,11 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			rank = GetBuildRank(ROGUE, RB_ROG_MUGGINGSHOT);
 			if (rank > 0) {
 				chance = rank * 100;
-				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) chance += (chance * 0.1 * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
+				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) {
+					int bonusChance = floor(chance * 0.1f * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
+					BuildEcho(StringFormat("Thieves Affinity increased chance from %i to %i.", chance, chance + bonusChance));
+					chance += bonusChance;
+				}
 				bool is_interrupt = false;
 				if (Hand == EQEmu::inventory::slotSecondary) { //Get offhand
 					switch (my_hit.skill) {
@@ -1838,10 +1848,11 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			rank = GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE);
 			if (rank > 0) {
 				chance = 300;
-				BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), chance, chance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY))); 
-				chance += (chance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY)); //Chance boost from harmonic affinity on jonthon whistle
+				int bonusChance = floor(chance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
+				if (bonusChance > 0) BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), chance, bonusChance)); 
+				chance += bonusChance; //Chance boost from harmonic affinity on jonthon whistle
 				
-				proc_damage = (GetLevel() * 2.0f * (0.2f * rank));
+				proc_damage = floor(GetLevel() * 2.0f * (0.2f * rank));
 				
 				if (proc_damage < 20) {
 					proc_damage = 20;
@@ -1854,7 +1865,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			if (rank > 0) {
 				chance = 300;
 
-				proc_damage = (GetLevel() * 1.25f * (0.2f * rank));
+				proc_damage = floor(GetLevel() * 1.25f * (0.2f * rank));
 
 				if (proc_damage < 20) {
 					proc_damage = 20;
@@ -1868,7 +1879,7 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		rank = other->GetBuildRank(DRUID, RB_DRU_TREEFORM);
 		if (rank > 0 && IsNPC() && !IsPet()) {
 			int mana_amount = 0;
-			mana_amount = int(my_hit.damage_done * rank * 0.02f);
+			mana_amount = floor(my_hit.damage_done * rank * 0.02f);
 			if (mana_amount > 0) {
 				BuildEcho(StringFormat("Treeform %u gave you %i mana.", rank, mana_amount));
 				entity_list.LogManaEvent(this, this, mana_amount);
@@ -1940,7 +1951,7 @@ void Client::Damage(Mob* other, int32 damage, uint16 spell_id, EQEmu::skills::Sk
 		damage = -5;
 	
 	if(GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) > 0 && GetPet() && GetPet()->HasSpellEffect(SE_PetShield)) {
-		float shared = GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) * 0.10f;
+		float shared = floor(GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) * 0.10f);
 		int client_damage = (int) (damage * (1.0f-shared));
 		int pet_damage = (int) (damage * shared);
 		
@@ -3312,7 +3323,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 
 	if(hate > 0 && other->IsPet() && other->GetOwner()->IsClient() && other->GetOwner()->CastToClient()->GetClass() == MAGICIAN) {
 		Log(Logs::Detail, Logs::Aggro, "Mage pet hate nerfed from %d to %d", hate, (int)(hate * 0.25f));
-		hate = (int) (hate * 0.25f); // Nerf mage pet hate to 25% effectiveness
+		hate = floor(hate * 0.25f); // Nerf mage pet hate to 25% effectiveness
 	}
 
 	hate_list.AddEntToHateList(other, hate, damage, bFrenzy, !iBuffTic);
@@ -3428,7 +3439,7 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 		
 		rank = this->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES);
 		if (rank > 0 && spellid == 37903) {
-			DS *= (0.20f * rank);
+			DS *= floor(0.20f * rank);
 		}
 		
 		rank = this->CastToClient()->GetBuildRank(DRUID, RB_DRU_REGENERATION);
@@ -4093,15 +4104,15 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				Client * attacker_client = attacker->CastToClient();
 				rank = attacker_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH);
 				if (rank > 0 && (skill_used == EQEmu::skills::Skill2HBlunt || skill_used == EQEmu::skills::Skill2HPiercing || skill_used ==  EQEmu::skills::Skill2HSlashing)) {
-					bonus_damage = damage * 0.05f * rank;
-					attacker_client->BuildEcho(StringFormat("Blood Oath %u added %i bonus damage.", rank, bonus_damage));
+					bonus_damage = floor(damage * 0.05f * rank);
+					if (bonus_damage > 0) attacker_client->BuildEcho(StringFormat("Blood Oath %u added %i bonus damage.", rank, bonus_damage));
 					damage += bonus_damage;
 				}
 
 				rank = attacker_client->GetBuildRank(PALADIN, RB_PAL_KNIGHTSADVANTAGE);
 				if (rank > 0 && (skill_used == EQEmu::skills::Skill2HBlunt || skill_used == EQEmu::skills::Skill2HPiercing || skill_used == EQEmu::skills::Skill2HSlashing)) {
-					bonus_damage = damage * 0.05f * rank;
-					attacker_client->BuildEcho(StringFormat("Knight's Advantage %u added %i bonus damage.", rank, bonus_damage));
+					bonus_damage = floor(damage * 0.05f * rank);
+					if (bonus_damage > 0) attacker_client->BuildEcho(StringFormat("Knight's Advantage %u added %i bonus damage.", rank, bonus_damage));
 					damage += bonus_damage;
 				}
 
@@ -4110,7 +4121,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 
 					uint8 counters = attacker_client->GetCoreCounter();
 					if (counters > 0) {
-						bonus_damage = damage * 0.05f * counters;
+						bonus_damage = floor(damage * 0.05f * counters);
 						if (bonus_damage < 1) bonus_damage = 1;
 						if (bonus_damage > 100) {
 							attacker_client->BuildEcho(StringFormat("Killing Spree %u added %i bonus damage with %u counters.", rank, bonus_damage, counters));
@@ -4123,7 +4134,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				if (rank > 0) {
 					uint8 counters = attacker_client->GetCoreCounter();
 					if (counters > 0) {
-						bonus_damage = damage * 0.03f * counters;
+						bonus_damage = floor(damage * 0.03f * counters);
 						if (bonus_damage < 1) bonus_damage = 1;
 						attacker_client->BuildEcho(StringFormat("Rotten Core %u added %i bonus damage with %u counters.", rank, bonus_damage, counters));
 						damage += bonus_damage;
@@ -4153,8 +4164,9 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					}
 
 					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
-					attacker->BuildEcho(StringFormat("Leech Touch %u added %i bonus damage.", rank, int32((float)damage * 0.04 * (float)rank)));
-					damage += int32((float)damage * 0.04f * (float)rank);
+					int bonusDamage = floor(damage * 0.04f * rank);
+					if (bonusDamage > 0) attacker->BuildEcho(StringFormat("Leech Touch %u added %i bonus damage.", rank, bonusDamage));
+					damage += bonusDamage;
 				}
 
 				int healed = damage;
@@ -4163,7 +4175,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA);
 					int aggroCap = attacker->CastToClient()->GetAggroCount();
 					if (aggroCap > rank) aggroCap = rank;
-					int healBonus = int32((float)healed * 0.1f * (float)(attacker->CastToClient()->GetAggroCount()) * (float)attacker->CastToClient()->GetAggroCount());
+					int healBonus = floor(healed * 0.1f * floor(attacker->CastToClient()->GetAggroCount()) * attacker->CastToClient()->GetAggroCount());
 					if (healBonus < 1) healBonus = aggroCap * rank;
 					attacker->CastToClient()->Message(MT_NonMelee, "Hungering Aura %u with %i enemies added %i bonus healing.", rank, attacker->CastToClient()->GetAggroCount(), healBonus);
 					healed += healBonus;
@@ -4181,7 +4193,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 			rank = GetBuildRank(PALADIN, RB_PAL_ARMOROFFAITH);
 			if (attacker && attacker->GetBodyType() == BT_Undead &&
 				rank > 0) {
-				int damageReduction = (int)(float)(damage * (float)0.025f * (float)rank);		
+				int damageReduction = floor(damage * 0.025f * rank);
 				if (damageReduction > 0) {
 					BuildEcho(StringFormat("Armor of Faith %u reduced damage from %s by %i.", rank, attacker->GetCleanName(), damageReduction));
 					damage -= damageReduction;
@@ -4231,7 +4243,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 							continue;
 						}						
 
-						int damage_reduction = (int)((float)damage * (float)0.025 * (float)rank);
+						int damage_reduction = floor(damage * 0.025f * rank);
 						if (damage_reduction < 1) {
 							continue;
 						}
@@ -4241,7 +4253,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 						Message(MT_Spells, "%s's Holy Servant %u has taken %i damage for you.", target->GetCleanName(), rank, damage_reduction);
 
 						int damage_reduction2 = damage_reduction;
-						damage_reduction2 -= (int)((float)damage_reduction * 0.02f * (float)rank);
+						damage_reduction2 -= floor(damage_reduction * 0.02f * rank);
 						caster_group->members[z]->CastToClient()->Message(MT_Spells, "Holy Servant %u has drawn %i damage from %s and has dealt %i to you.", rank, damage_reduction, damage_reduction2, attacker->GetCleanName());
 
 						//deal dmg to paladin
@@ -4273,13 +4285,13 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 								continue;
 							}
 							rank = target_raid->members[x].member->CastToClient()->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT);
-							int damage_reduction = (int)((float)damage * (float)0.05f * (float)rank);
+							int damage_reduction = floor(damage * 0.05f * rank);
 							if (damage_reduction < 1) {
 								continue;
 							}
 							damage -= damage_reduction;
 							//reduce dmg_reduction by the amount of skill
-							damage_reduction -= (int)((float)damage_reduction * 0.02f * (float)rank);
+							damage_reduction -= floor(damage_reduction * 0.02f * rank);
 							//deal dmg to paladin
 							target_raid->members[x].member->CommonDamage(attacker, damage_reduction, spell_id, skill_used, avoidable, buffslot, iBuffTic, special);
 							break; //Don't let more paladins reduce this damage
@@ -4664,7 +4676,7 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 		if (rank > 0 && 
 			spell_id != 3261 && //not hand of piety
 			caster != this) { //not caster
-			int manaAmount = (int)((float)acthealed * (float)0.005f * (float)rank);
+			int manaAmount = floor(acthealed * 0.005f * rank);
 			if (manaAmount > 0) {
 				entity_list.LogManaEvent(this, this, manaAmount);
 				SetMana(GetMana() + manaAmount);
@@ -4677,13 +4689,16 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 		if (rank > 0 &&
 			caster != this //cannot use on self
 			) {
-			int32 zDamage = rank * 0.01f * amount;
+			int32 zDamage = floor(rank * 0.01f * amount);
 			int zCount = caster->hate_list.DamageNearby(caster, zDamage, 50, this, rank);
 			caster->BuildEcho(StringFormat("Zealot's Fervor %i hit %i enemies for %i points of non-melee damage.", rank, zCount, zDamage));
 		}
 
 		rank = GetBuildRank(MONK, RB_MNK_INNERCHAKRA);
-		if (rank > 0) acthealed += (rank * 0.04 * acthealed);
+		if (rank > 0 && CastToClient()->feigned) {
+			acthealed += floor(rank * 0.04f * acthealed);
+			BuildEcho(StringFormat("Inner Chakra %i healed for an additional %i hitpoints", rank, acthealed));
+		}
 	}
 
 	if (acthealed > 100) {
@@ -4879,13 +4894,14 @@ void Mob::TryWeaponProc(const EQEmu::ItemInstance *inst, const EQEmu::ItemData *
 		ProcChance /= 2;
 
 	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY) > 0) { //Proc chance increases with this skill
-		BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), ProcChance, ProcChance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY)));
-		ProcChance += (ProcChance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
+		BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), ProcChance, floor(ProcChance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY))));
+		ProcChance += floor(ProcChance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
 	}
 
 	if (IsClient() &&
 		CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) {
-		ProcChance += (ProcChance * 0.1f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
+		BuildEcho(StringFormat("Thieve's Affinity %i increased chance to proc from %i to %i", GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY), ProcChance, floor(ProcChance * 0.1f * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY))));
+		ProcChance += floor(ProcChance * 0.1f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
 	}
 
 	// Try innate proc on weapon

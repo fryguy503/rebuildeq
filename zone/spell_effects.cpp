@@ -244,7 +244,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 						rank = casterClient->GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN);
 						if (rank > 0 && spell_id == 8193 && IsClient()) { //This only works on player characters.
-							int32 mana_amount = casterClient->GetMaxMana() * (0.03f * rank);
+							int32 mana_amount = floor(casterClient->GetMaxMana() * (0.03f * rank));
 							if (mana_amount < 1) mana_amount = 1;
 							if (casterClient != this) casterClient->Message(MT_FocusEffect, "Nature's Guardian %u gifted %i mana to %s.", rank, mana_amount, GetCleanName());
 							Message(MT_FocusEffect, "%s's Nature's Guardian %u gifted %i mana.", casterClient->GetCleanName(), rank, mana_amount);
@@ -380,10 +380,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE);
 							if (spell_id == 2749 &&	rank > 0) {
-								int damageAmount = casterClient->GetHP() * 0.05f * rank;
+								int damageAmount = floor(casterClient->GetHP() * 0.05f * rank);
 								if (damageAmount < 1) damageAmount = 1;
 								dmg = -damageAmount;
-								int manaAmount = damageAmount * 0.1f * rank;
+								int manaAmount = floor(damageAmount * 0.1f * rank);
 								entity_list.LogManaEvent(this, this, manaAmount);
 								casterClient->SetMana(caster->GetMana() + manaAmount);
 							}
@@ -460,7 +460,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							if (rank > 0 &&
 								(spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562)) { //spear spells
 								int bonus_damage = (-rank * casterClient->GetLevel());
-								bonus_damage += int32((float)dmg * 0.1f * (float)rank);
+								bonus_damage += floor(dmg * 0.1f * rank);
 								if (bonus_damage > 0) bonus_damage = -1;
 								bool is_quad = false;
 								if (rank > 4 && zone->random.Roll(1)) {
@@ -476,7 +476,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							if (rank > 0 &&
 								(spell_id == 113 || spell_id == 114 || spell_id == 330 || spell_id == 324
 								 || spell_id == 410  || spell_id == 1663)) { //blade spells
-								int bonus_damage = (rank * 0.04 * -dmg);
+								int bonus_damage = floor(rank * 0.04f * -dmg);
 								casterClient->BuildEcho(StringFormat("Shock of Swords %u added %i bonus damage.", rank, bonus_damage));
 								dmg -= bonus_damage;
 							}
@@ -484,7 +484,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							// Ancient Wrath
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
 							if (rank > 0 && caster != this) { // Ancient Wrath does not affect spells cast on self.
-								int bonus = dmg * 0.1f * rank * -1;
+								int bonus = floor(dmg * 0.1f * rank * -1);
 								casterClient->BuildEcho(StringFormat("Ancient Wrath %u added %i bonus damage.", rank, bonus));
 								dmg -= bonus;
 							}
@@ -509,7 +509,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH);
 							if ((spell_id == 2718 || spell_id == 1471 || spell_id == 821) &&
 								rank > 0) {
-								int mana_amount = -dmg * 0.05f * rank;
+								int mana_amount = floor(-dmg * 0.05f * rank);
 								if (mana_amount < rank) mana_amount = rank;
 								caster->BuildEcho(StringFormat("Siphon of Death %u siphoned %i mana.", rank, mana_amount));
 								entity_list.LogManaEvent(caster, caster, mana_amount);
@@ -742,7 +742,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								if (casterClient->GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY) > 0) {
 									rank = casterClient->GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY);
 									
-									dmg = (int)((float)CastToClient()->GetMaxHP() * (float)0.02 * (float)rank); //Change heal to max HP heal
+									dmg = floor(CastToClient()->GetMaxHP() * 0.02f * rank); //Change heal to max HP heal
 								} else {
 									break;
 								}
@@ -766,7 +766,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								if (rank > 0) {
 									int healCount = 0;
 									int healTotal = dmg;
-									int amount = int(dmg * 0.02f * rank);
+									int amount = floor(dmg * 0.02f * rank);
 									if (IsGrouped()) {
 										auto group = GetGroup(); //iterate group
 										for (int i = 0; i < 6; ++i) {
@@ -2457,7 +2457,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (rank > 0) {							
 							int healAmount = GetMaxHP() - GetHP();
 							if (healAmount > 0) {
-								healAmount = healAmount * 0.01f * rank;
+								healAmount = floor(healAmount * 0.01f * rank);
 								if (healAmount < 0 || healAmount > 50000) {
 									healAmount = 1;
 								}
@@ -2778,7 +2778,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								CastOnCure(buffs[j].spellid);
 								if (caster->IsClient() && spell_id == 2742 && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) > 0) {
 									uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL);
-									uint32 healAmount = GetMaxHP()* (0.01 * rank);
+									uint32 healAmount = floor(GetMaxHP()* (0.01f * rank));
 									if (healAmount < 0 || healAmount > 50000) {
 										healAmount = 1;
 									}
@@ -2822,7 +2822,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								CastOnCure(buffs[j].spellid);
 								if (caster->IsClient() && spell_id == 2742 && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) > 0) {
 									uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL);
-									uint32 healAmount = GetMaxHP()* (0.01 * rank);
+									uint32 healAmount = floor(GetMaxHP()* (0.01f * rank));
 									if (healAmount < 0 || healAmount > 50000) {
 										healAmount = 1;
 									}
@@ -2868,7 +2868,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								CastOnCure(buffs[j].spellid);
 								if (caster->IsClient() && spell_id == 2742 && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) > 0) {
 									uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL);
-									uint32 healAmount = GetMaxHP()* (0.01 * rank);
+									uint32 healAmount = floor(GetMaxHP()* (0.01f * rank));
 									if (healAmount < 0 || healAmount > 50000) {
 										healAmount = 1;
 									}
@@ -2913,7 +2913,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								CastOnCure(buffs[j].spellid);
 								if (caster->IsClient() && spell_id == 2742 && caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL) > 0) {
 									uint32 rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL);
-									uint32 healAmount = GetMaxHP()* (0.01 * rank);
+									uint32 healAmount = floor(GetMaxHP()* (0.01f * rank));
 									if (healAmount < 0 || healAmount > 50000) {
 										healAmount = 1;
 									}
@@ -4552,7 +4552,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							multiplier = 0.5f;
 						}
 						if (multiplier > 0) {
-							int bonus_damage = effect_value * multiplier * 0.1f * rank;
+							int bonus_damage = floor(effect_value * multiplier * 0.1f * rank);
 							if (bonus_damage > 0) bonus_damage = -1;
 							caster_client->Message(MT_DoTDamage, "Focused Swarm %u caused %i bonus damage to %s.", rank, -bonus_damage, GetCleanName());
 							effect_value += bonus_damage;
@@ -4560,7 +4560,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 					}
 					rank = caster_client->GetBuildRank(DRUID, RB_DRU_INTENSITY);
 					if (rank > 0) {
-						int bonus_damage = effect_value * 0.1f * rank;
+						int bonus_damage = floor(effect_value * 0.1f * rank);
 						if (bonus_damage > 0) bonus_damage = -1;
 						caster_client->BuildEcho(StringFormat("Intensity %u caused %i bonus damage to %s.", rank, -bonus_damage, GetCleanName()));
 						effect_value += bonus_damage;
@@ -4596,15 +4596,15 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 				}
 
 
-				rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
-				if (rank > 0 && buff.spellid != 6241) {
-					effect_value += effect_value * 0.15f * rank;
-				}
+				//rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
+				//if (rank > 0 && buff.spellid != 6241) {
+//					effect_value += floor(effect_value * 0.15f * rank);
+	//			}
 
 				rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
 				if (rank > 0 && buff.spellid == 8190) {
 
-					int32 heal_amount = GetMaxHP() * 0.005f * rank; //figure out potential heal amount
+					int32 heal_amount = floor(GetMaxHP() * 0.005f * rank); //figure out potential heal amount
 					if (heal_amount < 1) heal_amount = 1;
 					int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
 					int32 amount_healed = 0; //this was real amount healed
@@ -4623,7 +4623,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 						rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
 						if (rank > 0) {
-							int32 mana_amount = amount_healed * (0.02f * rank);
+							int32 mana_amount = floor(amount_healed * (0.02f * rank));
 							if (mana_amount < 1) mana_amount = 1;
 							if (caster != this) {
 								caster->Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
@@ -4642,7 +4642,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 				rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
 				if (rank > 0 && buff.spellid == 4796) {
 
-					int32 heal_amount = (GetLevel() * 2) * 0.2f * rank; //figure out potential heal amount
+					int32 heal_amount = floor(GetLevel() * 2 * 0.2f * rank); //figure out potential heal amount
 					if (heal_amount < 1) heal_amount = 1;
 					int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
 					int32 amount_healed = 0; //this was real amount healed
@@ -4661,7 +4661,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 						rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
 						if (rank > 0) {
-							int32 mana_amount = amount_healed * (0.01f * rank);
+							int32 mana_amount = floor(amount_healed * (0.01f * rank));
 							if (mana_amount < 1) mana_amount = 1;
 							if (caster != this) {
 								caster->Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
@@ -5337,7 +5337,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 
 		rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
 		if (buffs[slot].spellid == 8190 && rank > 0) {			
-			int32 heal_amount = GetMaxHP() * 0.005f * rank; //figure out potential heal amount
+			int32 heal_amount = floor(GetMaxHP() * 0.005f * rank); //figure out potential heal amount
 			if (heal_amount < 1) heal_amount = 1;
 			int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
 			int32 amount_healed = 0; //this was real amount healed
@@ -5357,7 +5357,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 				rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
 				if (rank > 0) {
 
-					int32 mana_amount = amount_healed * (0.01f * rank);
+					int32 mana_amount = floor(amount_healed * (0.01f * rank));
 					if (mana_amount < 1) mana_amount = 1;
 					Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 					entity_list.LogManaEvent(this, this, mana_amount);
@@ -5374,7 +5374,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 
 	if (p && p->IsClient() && buffs[slot].spellid == 4796 && p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON) > 0) {		
 		uint32 rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBOON);
-		int32 heal_amount = p->GetMaxMana() * 0.2f * rank; //figure out potential heal amount
+		int32 heal_amount = floor(p->GetMaxMana() * 0.2f * rank); //figure out potential heal amount
 		if (heal_amount < 1) heal_amount = 1;
 		int32 amount_to_heal = (GetMaxHP() - GetHP()); //this is how much could be healed
 		int32 amount_healed = 0; //this was real amount healed
@@ -5404,7 +5404,7 @@ void Mob::BuffFadeBySlot(int slot, bool iRecalcBonuses)
 			rank = p->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);
 			if (rank > 0) {
 
-				int32 mana_amount = amount_healed * (0.01f * rank);
+				int32 mana_amount = floor(amount_healed * 0.01f * rank);
 				if (mana_amount < 1) mana_amount = 1;
 				Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
 				entity_list.LogManaEvent(this, this, mana_amount);
@@ -6314,7 +6314,7 @@ int16 Mob::CalcFocusEffect(focusType type, uint16 focus_id, uint16 spell_id, boo
 					if (value > 0) {
 						if (focus_spell.base[i] > value) {
 							if(spell_id == 5913 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) > 0) {
-								value = focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f;
+								value = floor(focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f);
 							} else {
 								value = focus_spell.base[i];
 							}
@@ -6322,7 +6322,7 @@ int16 Mob::CalcFocusEffect(focusType type, uint16 focus_id, uint16 spell_id, boo
 					} else {
 						if (focus_spell.base[i] < value) {
 							if(spell_id == 5913 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) > 0) {
-								value = focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f;
+								value = floor(focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f);
 							} else {
 								value = focus_spell.base[i];
 							}
@@ -6330,7 +6330,7 @@ int16 Mob::CalcFocusEffect(focusType type, uint16 focus_id, uint16 spell_id, boo
 					}
 				} else {
 					if(spell_id == 5913 && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) > 0) {
-						value = focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f;
+						value = floor(focus_spell.base[i] * CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) * 0.20f);
 					} else {
 						value = focus_spell.base[i];
 					}
@@ -6845,7 +6845,7 @@ int16 Client::GetFocusEffect(focusType type, uint16 spell_id)
 		}
 		
 		if(type == focusSpellHaste && CastToClient()->IsClient() && CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE) > 0) {
-			realTotal2 *= (1 + (0.20f * CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE)));
+			realTotal2 *= floor(1 + (0.20f * CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE)));
 		}
 	}
 

@@ -406,8 +406,8 @@ class Build {
 			$skills[40] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Shield of Notes";
-			$newSkill->desc = 'Grants the Shield of Notes AA, allowing you to absorb <em data-base="10">10</em>% of your max hp in spell or melee damage<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Soothing Melody";
+			$newSkill->desc = 'When the bard uses a song with a healing effect on themselves, reduces hate of their target by (heal amount * <em data-base="2">2</em>)<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-shieldofnotes.png";	
 			$skills[42] = $newSkill;
 
@@ -957,7 +957,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Mending Aura";
-			$newSkill->desc = 'When you use Mend, you now heal the rest of the group within <em data-base="10">10</em> meters for <em data-base="5">5</em>% the mend heal amount<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you use Mend, you now heal the rest of the group within <em data-base="5">5</em> meters for <em data-base="20">20</em>% the mend heal amount<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-mendingaura.png";
 			$skills[24] = $newSkill;
 

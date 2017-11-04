@@ -9615,11 +9615,6 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Dance of Blades\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == BARD && i == RB_BRD_SHIELDOFNOTES && GetAA(aaShieldofNotes) < 1) {
-					TrainAARank(aaShieldofNotes);
-					Message(15, "You have unlocked the AA \"Shield of Notes\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-
 				if (GetClass() == BARD && i == RB_BRD_BOASTFULBELLOW && GetAA(aaBoastfulBellow) < 1) {
 					TrainAARank(aaBoastfulBellow);
 					Message(15, "You have unlocked the AA \"Boastful Bellow\"! Find the hotkey in your Alternate Advancement Window.");
@@ -11213,7 +11208,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_BRD_CHANTCYCLE) return "Chant Cycle";
 		else if (id == RB_BRD_BOASTFULBELLOW) return "Boastful Bellow";
 		else if (id == RB_BRD_SELOSCRESCENDO) return "Selo's Crescendo";
-		else if (id == RB_BRD_SHIELDOFNOTES) return "Shield of Notes";
+		else if (id == RB_BRD_SOOTHINGMELODY) return "Soothing Melody";
 		else if (id == RB_BRD_SHOUT) return "Shout";
 		else if (id == RB_BRD_SIRENSSONG) return "Song of Stone";
 		else if (id == RB_BRD_LINGERINGTWILIGHT) return "Lingering Twilight";
@@ -11553,7 +11548,7 @@ void Client::DoDivineStunEffect() {
 
 	if (healTarget == nullptr) return;
 
-	int healAmount = GetMaxHP() * 0.04 * rank;
+	int healAmount = floor(GetMaxHP() * 0.04f * rank);
 	Message(MT_Spells, "Divine Bash healed %s for %i.", healTarget->GetCleanName(), healAmount);
 	healTarget->Message(MT_Spells, "%s has healed you for %i with their Divine Bash.", healTarget->GetCleanName(), healAmount);
 	GetActSpellHealing(200, healAmount, this); //emulate minor healing for actspellhealing
@@ -11566,7 +11561,7 @@ void Client::DoMendingAura(int amount) {
 	if (rank < 1) return;
 	int healCount = 0;
 	Mob *target = nullptr;
-	amount = amount * 0.05f * rank;
+	amount = amount * 0.2f * rank;
 	if (this->IsGrouped()) {
 		//Give heal to group (and RAID)									
 		auto group = this->GetGroup(); //iterate group
@@ -11580,7 +11575,7 @@ void Client::DoMendingAura(int amount) {
 			if (c->IsDead()) continue; //not dead
 
 			float dist2 = DistanceSquared(m_Position, target->GetPosition());
-			float range2 = 50 * 50;
+			float range2 = 5 * 5 * rank;
 			if (dist2 > range2) continue;
 
 			healCount++;
@@ -11604,7 +11599,7 @@ void Client::DoMendingAura(int amount) {
 				if (c->IsDead()) continue; //not dead
 
 				float dist2 = DistanceSquared(m_Position, target->GetPosition());
-				float range2 = 50 * 50;
+				float range2 = 5 * 5 * rank;
 				if (dist2 > range2) continue;
 
 				healCount++;
@@ -11615,7 +11610,7 @@ void Client::DoMendingAura(int amount) {
 	}
 
 	if (healCount > 0) {
-		BuildEcho(StringFormat("Mending Aura %u spreads your mend to %i allies within %i meters.", rank, healCount, int(rank*10)));
+		BuildEcho(StringFormat("Mending Aura %u spreads your mend to %i allies within %i meters for %i hitpoints.", rank, healCount, int(rank*5), amount));
 	}
 }
 
@@ -11701,7 +11696,7 @@ void Client::CalcMonkTranquility() {
 		if (g != nullptr && g->GroupCount() > 1) groupcount = g->GroupCount();
 	}
 
-	heal_amount = int(heal_amount * 0.003f * rank * groupcount);
+	heal_amount = floor(heal_amount * 0.003f * rank * groupcount);
 	if (heal_amount < 1) return;
 	BuildEcho(StringFormat("Tranquility %i healed you for %i hitpoints.", rank, heal_amount));
 	entity_list.LogHPEvent(this, this, heal_amount);
@@ -11726,7 +11721,7 @@ void Client::DoZevfeersFeast(int amount) {
 	if (rank < 1) return;
 	int manaCount = 0;
 	int manaTotal = 0;
-	amount = amount * 0.01f * rank;
+	amount = floor(amount * 0.01f * rank);
 	Mob * target = nullptr;
 
 	if (IsGrouped()) {

@@ -444,13 +444,13 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		}
 		npc_type = this->AdjustNPC(npc_type, true, true);
 		//Now that we generated base HP, let's nerf it on a new formula
-		npc_type->max_hp = (npc_type->max_hp * 0.2 * rank); //50 % of normal hp
+		npc_type->max_hp = floor(npc_type->max_hp * 0.2f * rank); //50 % of normal hp
 		if (npc_type->max_hp < 50) {
 			npc_type->max_hp = 50;
 		}
-		npc_type->AC = (npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
-		npc_type->size = rank * (GetLevel() / 50); //1.04 to 7.4
-		npc_type->max_dmg = npc_type->max_dmg * 0.1 * rank; //50% dmg at max
+		npc_type->AC = floor(npc_type->AC * 0.1f * rank); //this formula likely needs tweaks
+		npc_type->size = floor(rank * (GetLevel() / 50)); //1.04 to 7.4
+		npc_type->max_dmg = floor(npc_type->max_dmg * 0.1f * rank); //50% dmg at max
 
 		//Turn it into a pet
 		switch (GetBaseRace())
@@ -508,10 +508,10 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->level = target->GetLevel();
 		npc_type = this->AdjustNPC(npc_type, true, true);
 
-		npc_type->AC = (npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
-		npc_type->size = rank * (GetLevel() / 50); //1.04 to 7.4
-		npc_type->max_dmg = npc_type->max_dmg * 0.2 * rank; //since adjustnpc nerfs it so much                
-        npc_type->max_hp = (npc_type->max_hp * 0.1 * rank); //50 % of normal hp
+		npc_type->AC = floor(npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
+		npc_type->size = floor(rank * (GetLevel() / 50)); //1.04 to 7.4
+		npc_type->max_dmg = floor(npc_type->max_dmg * 0.2 * rank); //since adjustnpc nerfs it so much                
+        npc_type->max_hp = floor(npc_type->max_hp * 0.1 * rank); //50 % of normal hp
 		if (npc_type->max_hp < 50) {
 			npc_type->max_hp = 50;
 		}
@@ -532,13 +532,13 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type = this->AdjustNPC(npc_type, true, true);
 
 		//Now that we generated base HP, let's nerf it on a new formula
-		npc_type->max_hp = (npc_type->max_hp * 0.1 * rank); //50 % of normal hp
+		npc_type->max_hp = floor(npc_type->max_hp * 0.1f * rank); //50 % of normal hp
 		if (npc_type->max_hp < 50) {
 			npc_type->max_hp = 50;
 		}
-		npc_type->AC = (npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
-		npc_type->size = rank * (GetLevel() / 25); //1.04 to 7.4
-		npc_type->max_dmg = npc_type->max_dmg * 0.1 * rank; //50% dmg at max
+		npc_type->AC = floor(npc_type->AC * 0.1f * rank); //this formula likely needs tweaks
+		npc_type->size = floor(rank * (GetLevel() / 25)); //1.04 to 7.4
+		npc_type->max_dmg = floor(npc_type->max_dmg * 0.1f * rank); //50% dmg at max
 
 		if (CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT) >= 5) {
 			npc_type->race = GetRace();
@@ -595,14 +595,14 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type = this->AdjustNPC(npc_type, true, true);
 
 		//Now that we generated base HP, let's nerf it on a new formula
-		npc_type->max_hp = (npc_type->max_hp * 0.15 * rank); //75 % of normal hp
+		npc_type->max_hp = floor(npc_type->max_hp * 0.15f * rank); //75 % of normal hp
 		if (npc_type->max_hp < 50) {
 			npc_type->max_hp = 50;
 		}
-		npc_type->AC = (npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
+		npc_type->AC = floor(npc_type->AC * 0.1f * rank); //this formula likely needs tweaks
 		//npc_type->size = rank * (GetLevel() / 25); //1.04 to 7.4
 		npc_type->size = GetSize();
-		npc_type->max_dmg = npc_type->max_dmg * 0.05 * rank; //25% dmg at max
+		npc_type->max_dmg = floor(npc_type->max_dmg * 0.05f * rank); //25% dmg at max
 		//npc_type->texture = 3; // GetEquipmentMaterial(MaterialChest);
 		
 		npc_type->armtexture = GetEquipmentMaterial(EQEmu::textures::armorArms);
@@ -633,8 +633,8 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 
 	if(this->IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONSDURABILITY) > 0) {
 		uint32 rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONSDURABILITY);
-		npc_type->max_hp *= (1 + rank * 0.02);
-		npc_type->cur_hp *= (1 + rank * 0.02);
+		npc_type->max_hp *= floor(1 + rank * 0.02f);
+		npc_type->cur_hp *= floor(1 + rank * 0.02f);
 	}
 
 	if (MaxHP){
