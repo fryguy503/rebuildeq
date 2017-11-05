@@ -1843,7 +1843,7 @@ void Client::DoHPRegen() {
 		BuildEcho(StringFormat("Regeneration gave %i hitpoints.", druidRegen));
 		finalHPRegen += druidRegen;
 	}
-
+	finalHPRegen = AdjustTierPenalty(this, finalHPRegen);
 	entity_list.LogHPEvent(this, this, finalHPRegen);
 	SetHP(GetHP() + finalHPRegen);	
 	SendHPUpdate();

@@ -427,6 +427,7 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 		if (rank > 0 && target != nullptr && target != this) {
 			int healAmount = floor(value * 0.05f * rank);
 			BuildEcho(StringFormat("Spiritual Healing %u healed you for %i hitpoints.", rank, healAmount));
+			healAmount = AdjustTierPenalty(this, healAmount);
 			entity_list.LogHPEvent(this, this, healAmount);
 			HealDamage(healAmount, this);
 		}

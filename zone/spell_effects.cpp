@@ -301,7 +301,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST);
 							if (rank > 0 && (spell_id == 341 || spell_id == 502 || spell_id == 445 || spell_id == 446 || spell_id == 525 || spell_id == 447)) {
-								casterClient->DoZevfeersFeast(dmg);
+								casterClient->DoZevfeersFeast();
 							}
 
 
@@ -7189,6 +7189,7 @@ bool Mob::TryDeathSave() {
 						}
 						if ((GetMaxHP() - GetHP()) < HealAmt)
 							HealAmt = GetMaxHP() - GetHP();
+						HealAmt = AdjustTierPenalty(this, HealAmt);
 						entity_list.LogHPEvent(buff_client, this, HealAmt);
 						SetHP((GetHP() + HealAmt));
 						Message(263, "The gods have healed you for %i points of damage.", HealAmt);
@@ -7228,7 +7229,7 @@ bool Mob::TryDeathSave() {
 
 				if ((GetMaxHP() - GetHP()) < HealAmt)
 					HealAmt = GetMaxHP() - GetHP();
-
+				HealAmt = AdjustTierPenalty(this, HealAmt);
 				entity_list.LogHPEvent(this, this, HealAmt);
 				SetHP((GetHP()+HealAmt));
 				Message(263, "The gods have healed you for %i points of damage.", HealAmt);
@@ -7262,6 +7263,7 @@ bool Mob::TryDeathSave() {
 
 					if ((GetMaxHP() - GetHP()) < HealAmt)
 						HealAmt = GetMaxHP() - GetHP();
+					HealAmt = AdjustTierPenalty(this, HealAmt);
 					entity_list.LogHPEvent(this, this, HealAmt);
 					SetHP((GetHP()+HealAmt));
 					Message(263, "The gods have healed you for %i points of damage.", HealAmt);

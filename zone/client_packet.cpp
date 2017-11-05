@@ -9668,6 +9668,7 @@ void Client::Handle_OP_Mend(const EQApplicationPacket *app)
 			BuildEcho(StringFormat("Improved Mend %i healed you for an additional %i hitpoints.", rank, bonusMend));
 			mendhp += bonusMend;
 		}
+		mendhp = AdjustTierPenalty(this, mendhp);
 		entity_list.LogHPEvent(this, this, mendhp);
 		SetHP(GetHP() + mendhp);
 		SendHPUpdate();

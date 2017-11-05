@@ -4351,10 +4351,11 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 			attacker->SendAppearancePacket(AT_Sneak, 0);
 		}
 
+
 		//final damage has been determined.
+		damage = AdjustTierPenalty(attacker, damage);
 		entity_list.LogHPEvent(attacker, this, -damage);
 		SetHP(GetHP() - damage);
-
 
 		if (HasDied()) {
 			bool IsSaved = false;
@@ -4745,6 +4746,7 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 			Message(MT_NonMelee, "You have been healed for %d points of damage.", acthealed);
 		}
 	}
+	amount = AdjustTierPenalty(caster, amount);
 	entity_list.LogHPEvent(caster, this, amount);	
 	if (curhp < maxhp) {
 		if ((curhp + amount) > maxhp)

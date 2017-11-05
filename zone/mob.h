@@ -1226,10 +1226,10 @@ public:
 	void CheckChannelChakra(int dmg);
 	int GetManaTapBonus(int dmg);
 	int GetAggroCount();
-
 	void DoKnockback(Mob * caster, int away);
-
 	int GetGroupSize(int range);
+	int AdjustTierPenalty(Mob * attacker, int value);
+	int GetAggroTier();
 
 	// Bots HealRotation methods
 #ifdef BOTS

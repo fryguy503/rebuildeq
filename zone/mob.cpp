@@ -7351,19 +7351,19 @@ int Mob::GetMeleeDamageAdjustments(int dmg) {
 	int rank;
 	if (!IsClient()) return 0;
 	if (GetClass() == ROGUE) {
-		if (GetLevel() >= 50) return (dmg * 1.0f);
-		if (GetLevel() >= 40) return (dmg * 0.75f);
-		if (GetLevel() >= 30) return (dmg * 0.50f);
-		if (GetLevel() >= 20) return (dmg * 0.25f);
-		if (GetLevel() >= 10) return (dmg * 0.10f);
+		if (GetLevel() >= 50) return floor(dmg * 1.0f);
+		if (GetLevel() >= 40) return floor(dmg * 0.75f);
+		if (GetLevel() >= 30) return floor(dmg * 0.50f);
+		if (GetLevel() >= 20) return floor(dmg * 0.25f);
+		if (GetLevel() >= 10) return floor(dmg * 0.10f);
 	}
 	else if (GetClass() == SHADOWKNIGHT || GetClass() == PALADIN) {
-		return -(dmg * 0.25f);
+		return -floor(dmg * 0.25f);
 	}
 	else if (GetClass() == BARD) {
 		rank = GetBuildRank(BARD, RB_BRD_WARSONGOFZEK);
 		if (rank > 0) {
-			int dmgBonus = dmg * 0.1f * rank;
+			int dmgBonus = floor(dmg * 0.1f * rank);
 			if (dmgBonus < 1) dmgBonus = 1;
 			BuildEcho(StringFormat("Warsong of Zek %i increased damage by %i", rank, dmgBonus));
 			return dmg + dmgBonus;
@@ -7484,4 +7484,95 @@ int Mob::GetGroupSize(int range) {
 		size++;		
 	}
 	return size;
+}
+
+//Penalize players (caster) when healing or interacting with a mob of higher tiers (this), even if it's not the target
+int Mob::AdjustTierPenalty(Mob* caster, int value) {
+	//For now, this overrides the Adjustment system
+	return value;
+
+
+	if (!caster) return value; //should never happen, failsafe
+	if (value == 0) return value; //if it's already zero, no need to modify
+	//HighTier is the highest level NPC interacting with this adjustment
+	int highTier = 0;
+	//LowTier is the lowest level client interacting with this adjustment
+	int lowTier = 0;
+	//temporary tier placeholder
+	int tmpTier = 0;
+
+	//Figure out highest tier NPC in interaction
+	if (IsNPC()) highTier = GetTier(); //grab my tier, default behavior.
+	if (IsClient()) { //I'm a client, let's see if I have any high tier mobs on me.
+		tmpTier = GetAggroTier();
+		if (tmpTier > highTier) highTier = tmpTier;
+	}
+	if (IsPet() && GetOwner()->IsClient()) { //I'm a pet, let's see if my owner has any high tier mobs on them
+		tmpTier = GetOwner()->GetAggroTier(); 
+		if (tmpTier > highTier) highTier = tmpTier;
+	}
+	if (caster->IsNPC()) {
+		tmpTier = caster->GetTier();
+		if (tmpTier > highTier) highTier = tmpTier;
+	}
+	if (caster->IsClient()) {
+		tmpTier = caster->GetAggroTier();
+		if (tmpTier > highTier) highTier = tmpTier;
+	}
+
+	//Figure out the lowest tier client in interaction
+	if (IsClient()) lowTier = GetTier();
+	if (caster->IsClient()) {
+		tmpTier = caster->GetTier();
+		if (tmpTier < lowTier) lowTier = tmpTier;
+	}
+	if (IsPet() && GetOwner()->IsClient()) {
+		tmpTier = GetOwner()->GetTier();
+		if (tmpTier < lowTier) lowTier = tmpTier;
+	}
+
+	//Get tier difference
+	int tierDifference = highTier - lowTier;
+	if (tierDifference < 1) return value; //no effect if same tier
+
+	//flip negative values to keep floor good
+	bool isNegative = false;
+	if (value < 0) {
+		isNegative = true;
+		value = -value;
+	}
+
+	if (IsNPC()) { //if we're doing something to an npc, penalize it
+		if (GetTier() >= 8) value -= floor(value * 0.5f * tierDifference);
+		if (GetTier() >= 5) value -= floor(value * 0.3f * tierDifference);
+		else value -= floor(value * 0.2f * tierDifference);
+	}
+	if (IsClient() && caster->IsNPC()) { //if we're a NPC doing something to a client, boost it
+		if (GetTier() >= 8) value += floor(value * 0.5f * tierDifference);
+		if (GetTier() >= 5) value += floor(value * 0.3f * tierDifference);
+		else value += floor(value * 0.2f * tierDifference);
+	}
+	if (value < 1) value = 1; //sanity check
+	if (isNegative) value = -value; //flip negative back before return
+	return value;
+}
+
+//Get the highest tier of aggro'd mobs, used for Adjusting Tier Penalty
+int Mob::GetAggroTier() {
+	int highestTier = 0;
+	auto iterator = hate_list.GetHateList().begin();
+	while (iterator != hate_list.GetHateList().end())
+	{
+		struct_HateList *h = (*iterator);
+		if (!h || 
+			h->entity_on_hatelist == nullptr ||
+			!h->entity_on_hatelist->IsNPC()) {
+			++iterator;
+			continue;
+		}
+		if (h->entity_on_hatelist->GetTier() > highestTier) highestTier = h->entity_on_hatelist->GetTier();
+		iterator++;
+		continue;
+	}
+	return highestTier;
 }

@@ -591,6 +591,7 @@ void Raid::HealGroup(uint32 heal_amt, Mob* caster, uint32 gid, float range)
 	}
 
 	heal_amt /= numMem;
+	
 	for(gi = 0; gi < MAX_RAID_MEMBERS; gi++)
 	{
 		if(members[gi].member){
@@ -598,8 +599,10 @@ void Raid::HealGroup(uint32 heal_amt, Mob* caster, uint32 gid, float range)
 			{
 				distance = DistanceSquared(caster->GetPosition(), members[gi].member->GetPosition());
 				if(distance <= range2){
-					entity_list.LogHPEvent(caster, members[gi].member, heal_amt);
-					members[gi].member->SetHP(members[gi].member->GetHP() + heal_amt);
+					int finalHeal = heal_amt;
+					finalHeal = members[gi].member->AdjustTierPenalty(caster, finalHeal);
+					entity_list.LogHPEvent(caster, members[gi].member, finalHeal);
+					members[gi].member->SetHP(members[gi].member->GetHP() + finalHeal);
 					members[gi].member->SendHPUpdate();
 				}
 			}
