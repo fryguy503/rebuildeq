@@ -1985,7 +1985,6 @@ bool Client::Death(Mob* killerMob, int32 damage, uint16 spell, EQEmu::skills::Sk
 	if (!spell)
 		spell = SPELL_UNKNOWN;
 
-	engage_end = time(nullptr);
 	char buffer[48] = { 0 };
 	snprintf(buffer, 47, "%d %d %d %d", killerMob ? killerMob->GetID() : 0, damage, spell, static_cast<int>(attack_skill));
 	if (parse->EventPlayer(EVENT_DEATH, this, buffer, 0) != 0) {
@@ -2689,13 +2688,11 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 	float cur_dps;
 	float cur_hps_taken;
 	float cur_hps_dealt;
-	int engage_duration = 1;
+	int cur_engage_duration = 1;
 	
 	int my_hp_self_loss_net;
 	int my_hp_target_loss_net;
-	
-	SetEngageEnd(time(nullptr));
-	
+		
 	if (DPS().size() > 0) { //don't need to dps report an empty dps mob
 		//Generate a unique id for fight.
 		std::string fight_id = zone->CreateSessionHash();
@@ -2703,10 +2700,11 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 		bool isClientParticipating = false;
 		for (auto&& d : DPS()) {
 			if (d.acct_id == 0) continue;
-			if (engage_duration < EngageEnd() - d.engage_start) engage_duration = EngageEnd() - d.engage_start;
+			if (engage_duration < time(nullptr) - d.engage_start) cur_engage_duration = time(nullptr) - d.engage_start;
 			isClientParticipating = true;
 			break;
 		}
+		if (cur_engage_duration < 1) cur_engage_duration = 1;
 		if (isClientParticipating) {
 			for (auto&& d : DPS()) {
 				int is_dying = 0;
@@ -3013,10 +3011,10 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 			: RuleI(NPC, MinorNPCCorpseDecayTimeMS));
 		entity_list.LimitRemoveNPC(this);
 		entity_list.AddCorpse(corpse, GetID());
-
-		corpse->CastToMob()->SetEngageEnd(time(nullptr));
-		corpse->CastToMob()->dps = dps; //copy dps from mob
 		
+		corpse->CastToMob()->dps = dps; //copy dps from mob
+		corpse->CastToMob()->engage_duration = cur_engage_duration; //transfer over fight duration
+
 		entity_list.UnMarkNPC(GetID());
 		entity_list.RemoveNPC(GetID());
 

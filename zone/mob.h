@@ -259,9 +259,7 @@ public:
 	int expose_weakness;
 
 	void EngageReset();
-	uint32 EngageEnd();
 	void EngageFlushOnNextEngage();
-	void SetEngageEnd(uint32 time);
 	std::vector<DPS_Struct> dps;
 
 	//Attack
@@ -1233,6 +1231,8 @@ public:
 
 	void DailyGain(int account_id, int character_id, const char * identity, int levels_gained, int experience_gained, int money_earned);
 
+	int engage_duration;
+
 	// Bots HealRotation methods
 #ifdef BOTS
 	bool IsHealRotationTarget() { return (m_target_of_heal_rotation.use_count() && m_target_of_heal_rotation.get()); }
@@ -1628,7 +1628,6 @@ protected:
 	Timer aa_timers[aaTimerMax];
 
 	bool IsHorse;
-	uint32 engage_end;
 	bool engage_flush_on_next_engage;
 	AuraMgr aura_mgr;
 	AuraMgr trap_mgr;

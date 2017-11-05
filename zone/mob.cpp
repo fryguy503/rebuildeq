@@ -7025,11 +7025,7 @@ const char* Mob::RaceName()
 }
 
 //Retrieve the vector of DPS
-std::vector<DPS_Struct> Mob::DPS() {
-	if (!IsCorpse() && //for non corpses,
-		!engage_flush_on_next_engage) { //if we're still in battle
-		SetEngageEnd(time(nullptr)); //set it's ending to now for updating DPS. This will be called again when it dies, or #dps is called again.
-	}
+std::vector<DPS_Struct> Mob::DPS() {	
 	return dps;
 }
 
@@ -7218,21 +7214,12 @@ void Mob::AddHPEvent(Mob *other, int total, int net, bool is_dealer) {
 }
 
 
-uint32 Mob::EngageEnd() {
-	return engage_end;
-}
-
 //Resets the engage, this is triggered when a mob hits full health.
 void Mob::EngageReset() {
 	Log(Logs::General, Logs::Combat, "Resetting DPS for %s", GetCleanName());
-	engage_end = 0;	
+	engage_duration = 0;	
 	engage_flush_on_next_engage = false;
 	dps.clear();
-}
-
-//sets an engagement end, called on corpse generation
-void Mob::SetEngageEnd(uint32 time) {
-	engage_end = time;
 }
 
 void Mob::EngageFlushOnNextEngage() {

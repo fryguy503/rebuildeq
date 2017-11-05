@@ -6165,6 +6165,10 @@ void command_dps(Client *c, const Seperator *sep)
 		return;
 	}
 
+	if (!target->IsCorpse() && target->GetHPRatio() > 95.0f) {
+		c->Message(0, "#dps is disabled until your target is 95% or less health.");
+		return;
+	}
 	/*if (!target->IsCorpse()) {
 		c->Message(0, "Invalid Target type (Not corpse), bypassing for now");
 	}*/
@@ -6176,25 +6180,31 @@ void command_dps(Client *c, const Seperator *sep)
 	}
 	int my_hp_self_loss_net = 0;
 	int my_hp_target_loss_net = 0;
-	int engage_duration = 1;
+	int cur_engage_duration = 0;
+	
+	if (target->IsCorpse()) { //target is dead, use the corpse's engage_duration
+		cur_engage_duration = target->engage_duration;
+	}
 
 	for (auto&& d : target->DPS()) {
 		if (d.ent_id == target->GetID()) {
 			my_hp_self_loss_net = d.hp_self_loss_net;
 			my_hp_target_loss_net = d.hp_target_loss_net;
-			if (engage_duration > time(nullptr) - d.engage_start) engage_duration = time(nullptr) - d.engage_start;
 		}
+		//we have to tally duration since fight is ongoing
+		if (!target->IsCorpse() && cur_engage_duration < time(nullptr) - d.engage_start) cur_engage_duration = time(nullptr) - d.engage_start;		
 	}
+	if (cur_engage_duration < 1) cur_engage_duration = 1;
 
-	float my_dps_loss = (float)((float)my_hp_self_loss_net / engage_duration);
-	float my_dps_target_loss = (float)((float)my_hp_target_loss_net / engage_duration);
-	c->Message(MT_CritMelee, "------ %s DPS over %i seconds ----------", target->GetCleanName(), engage_duration);
+	float my_dps_loss = (float)((float)my_hp_self_loss_net / cur_engage_duration);
+	float my_dps_target_loss = (float)((float)my_hp_target_loss_net / cur_engage_duration);
+	c->Message(MT_CritMelee, "------ %s DPS over %i seconds ----------", target->GetCleanName(), cur_engage_duration);
 	c->Message(MT_CritMelee, "- dealt %i damage (%.1f DPS)", my_hp_self_loss_net, my_dps_loss);
 	c->Message(MT_CritMelee, "- took %i damage (%.1f DPS)", my_hp_target_loss_net, my_dps_target_loss);
 	c->Message(MT_CritMelee, "------ Participants ----------");
 	for (auto&& d : target->DPS()) {
 
-		float cur_dps = (float)((float)d.hp_target_loss_net / engage_duration);
+		float cur_dps = (float)((float)d.hp_target_loss_net / cur_engage_duration);
 		//float cur_hps_taken = (float)((float)d.hp_self_gain_net / engage_duration);
 		//float cur_hps_dealt = (float)((float)d.hp_target_gain_net / engage_duration);
 		c->Message(MT_CritMelee, "- %s: %i damage (%.1f DPS)", d.character_name.c_str(), d.hp_target_loss_net, cur_dps);
