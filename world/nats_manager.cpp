@@ -2,7 +2,7 @@
 #include "nats.h"
 #include "zonelist.h"
 #include "../common/eqemu_logsys.h"
-#include "../common/proto/channelmessage.pb.h"
+#include "../common/proto/message.pb.h"
 #include "../common/servertalk.h"
 extern ZSList zoneserver_list;
 
@@ -137,16 +137,8 @@ void NatsManager::Save()
 
 void NatsManager::Load()
 {	
-	int64_t         last = 0;
-	int64_t			start = 0;
 
-	int total = 2;
-	char * subj = "test";
-	char * txt = "Hello, World";
-
-	Log(Logs::General, Logs::World_Server, "Sending %i messages to subject '%s'", total, subj);
 	
-
 	s = natsConnection_Connect(&conn, opts);
 	if (s != NATS_OK) {
 		Log(Logs::General, Logs::World_Server, "Nats status isn't OK, hmm.");
@@ -154,42 +146,11 @@ void NatsManager::Load()
 		return;
 	}
 
-	//Subscribe to test
-	s = natsConnection_SubscribeSync(&testSub, conn, "test");
 	s = natsConnection_SubscribeSync(&channelMessageSub, conn, "ChannelMessageWorld");
 
 	// For maximum performance, set no limit on the number of pending messages.
-	if (s == NATS_OK)
-		s = natsSubscription_SetPendingLimits(testSub, -1, -1);
+	if (s == NATS_OK) s = natsSubscription_SetPendingLimits(testSub, -1, -1);
 
-	//if (s == NATS_OK)
-	//	s = natsSubscription_AutoUnsubscribe(testSub, (int)testSubMax);
-
-
-	if (s == NATS_OK)
-		s = natsStatistics_Create(&stats);
-
-	if (s == NATS_OK)
-		start = nats_Now();
-
-	int count = 0;
-	for (count = 0; (s == NATS_OK) && (count < total); count++)
-	{
-		s = natsConnection_PublishString(conn, subj, txt);
-	}
-
-	if (s == NATS_OK)
-		s = natsConnection_FlushTimeout(conn, 1000);
-
-	if (s == NATS_OK)
-	{
-		//printStats(STATS_OUT, conn, NULL, stats);
-		Log(Logs::General, Logs::World_Server, "Sent %i %i %i", total, start);
-	}
-	else
-	{
-		Log(Logs::General, Logs::World_Server, "NATS error: %d - %s", s, natsStatus_GetText(s));
-		nats_PrintLastErrorStack(stderr);
-	}
+	Log(Logs::General, Logs::World_Server, "NATS Connected.");
 	return;
 }

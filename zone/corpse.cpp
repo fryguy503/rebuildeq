@@ -965,6 +965,7 @@ void Corpse::MakeLootRequestPackets(Client* client, const EQApplicationPacket* a
 				d->silver		= this->GetSilver();
 				d->gold			= this->GetGold();
 				d->platinum		= this->GetPlatinum();
+				DailyGain(client->AccountID(), client->CharacterID(), client->Identity(), 0, 0, GetCopper() + (GetSilver() * 10) + (GetGold() * 100) + (GetPlatinum() + 1000));
 				client->AddMoneyToPP(GetCopper(), GetSilver(), GetGold(), GetPlatinum(), false);
 			}
 

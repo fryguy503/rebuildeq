@@ -8946,8 +8946,10 @@ void Client::QuestReward(Mob* target, uint32 copper, uint32 silver, uint32 gold,
 	qr->item_id = itemid;
 	qr->exp_reward = exp;
 
-	if (copper > 0 || silver > 0 || gold > 0 || platinum > 0)
+	if (copper > 0 || silver > 0 || gold > 0 || platinum > 0) {
 		AddMoneyToPP(copper, silver, gold, platinum, false);
+		DailyGain(AccountID(), CharacterID(), Identity(), 0, 0, copper + (silver * 10) + (gold* 100) + (platinum* 1000));
+	}
 
 	if (itemid > 0)
 		SummonItem(itemid, 0, 0, 0, 0, 0, 0, false, EQEmu::inventory::slotPowerSource);

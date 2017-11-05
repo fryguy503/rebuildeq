@@ -483,6 +483,7 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 
 		
 		}
+		DailyGain(AccountID(), CharacterID(), Identity(), 0, i, 0);
 	}
 	else if((set_exp + set_aaxp) < (m_pp.exp+m_pp.expAA)){ //only loss message if you lose exp, no message if you gained/lost nothing.
 		i = m_pp.exp - set_exp;
@@ -653,7 +654,10 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 			else
 				Message(15, "Welcome to level %i!", check_level);				
 
-			if (!isrezzexp) worldserver.SendEmoteMessage(0, 0,  MT_Broadcasts, StringFormat("%s [%s] is now level %i!", GetCleanName(), Identity(), check_level).c_str());
+			if (!isrezzexp) {
+				worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s [%s] is now level %i!", GetCleanName(), Identity(), check_level).c_str());
+				DailyGain(AccountID(), CharacterID(), Identity(), 1, 0, 0);
+			}
 
 			if (check_level == RuleI(Character, DeathItemLossLevel))
 				Message(15, "Your items will no longer stay with you when you respawn on death. You will now need to return to your corpse for your items.");

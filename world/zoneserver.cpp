@@ -45,7 +45,7 @@ extern volatile bool RunLoops;
 extern AdventureManager adventure_manager;
 extern UCSConnection UCSLink;
 extern QueryServConnection QSLink;
-extern NatsManager nats_manager;
+extern NatsManager nats;
 void CatchSignal(int sig_num);
 
 ZoneServer::ZoneServer(std::shared_ptr<EQ::Net::ServertalkServerConnection> connection, EQ::Net::ConsoleServer *console)
@@ -415,7 +415,7 @@ void ZoneServer::HandleMessage(uint16 opcode, const EQ::Net::Packet &p) {
 			UCSLink.SendMessage(scm->from, scm->message);
 			break;
 		}
-		nats_manager.OnChannelMessage(scm);
+		nats.OnChannelMessage(scm);
 		if (scm->chan_num == 7 || scm->chan_num == 14) {
 			if (scm->deliverto[0] == '*') {
 
@@ -508,7 +508,7 @@ void ZoneServer::HandleMessage(uint16 opcode, const EQ::Net::Packet &p) {
 	}
 	case ServerOP_EmoteMessage: {
 		ServerEmoteMessage_Struct* sem = (ServerEmoteMessage_Struct*)pack->pBuffer;
-		nats_manager.OnEmoteMessage(sem);
+		nats.OnEmoteMessage(sem);
 		zoneserver_list.SendEmoteMessageRaw(sem->to, sem->guilddbid, sem->minstatus, sem->type, sem->message);
 		break;
 	}

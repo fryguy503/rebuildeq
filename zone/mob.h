@@ -1231,6 +1231,8 @@ public:
 	int AdjustTierPenalty(Mob * attacker, int value);
 	int GetAggroTier();
 
+	void DailyGain(int account_id, int character_id, const char * identity, int levels_gained, int experience_gained, int money_earned);
+
 	// Bots HealRotation methods
 #ifdef BOTS
 	bool IsHealRotationTarget() { return (m_target_of_heal_rotation.use_count() && m_target_of_heal_rotation.get()); }

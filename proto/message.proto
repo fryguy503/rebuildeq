@@ -19,3 +19,14 @@ message ChannelMessage {
   //You can specify a zone id if you want a message exclusively to one zone
   int32 zone_id = 14;
 }
+
+
+//Daily Gain is a special system for tracking players progression in a daily snapshot.
+message DailyGain  {
+  int32 account_id = 1;
+  int32 character_id  = 2;
+  int32 levels_gained = 3;
+  int32 experience_gained = 4;
+  int32 money_earned = 5;  
+  string identity = 6;
+}

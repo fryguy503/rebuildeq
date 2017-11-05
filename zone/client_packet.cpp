@@ -3843,11 +3843,13 @@ void Client::Handle_OP_Begging(const EQApplicationPacket *app)
 		{
 			brs->Result = 4;	// Copper
 			AddMoneyToPP(brs->Amount, false);
+			DailyGain(AccountID(), CharacterID(), Identity(), 0, 0, brs->Amount);
 		}
 		else
 		{
 			brs->Result = 3;	// Silver
 			AddMoneyToPP(brs->Amount * 10, false);
+			DailyGain(AccountID(), CharacterID(), Identity(), 0, 0, brs->Amount * 10);
 		}
 
 		rank = GetBuildRank(ROGUE, RB_ROG_CONFUSE);
@@ -13063,6 +13065,7 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 		price -= haggle;
 	}
 
+	DailyGain(AccountID(), CharacterID(), Identity(), 0, 0, price);
 	AddMoneyToPP(price, false);
 
 	if (inst->IsStackable() || inst->IsCharged())

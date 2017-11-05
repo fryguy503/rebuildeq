@@ -1104,6 +1104,7 @@ void QuestManager::givecash(int copper, int silver, int gold, int platinum) {
 	QuestManagerCurrentQuestVars();
 	if (initiator && initiator->IsClient() && ((copper + silver + gold + platinum) > 0))
 	{
+		initiator->DailyGain(initiator->AccountID(), initiator->CharacterID(),initiator->Identity(), 0, 0, copper + (silver * 10) + (gold * 100) + (platinum * 1000));
 		initiator->AddMoneyToPP(copper, silver, gold, platinum, true);
 
 		std::string tmp;

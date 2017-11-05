@@ -1,14 +1,12 @@
-#ifndef NATS_MANAGER_H
-#define NATS_MANAGER_H
+#ifndef NATS_H
+#define NATS_H
 
 #include "nats.h"
-#include <map>
-#include <list>
 
 #include "../common/global_define.h"
 #include "../common/types.h"
 #include "../common/timer.h"
-#include "../common/proto/channelmessage.pb.h"
+#include "../common/proto/message.pb.h"
 #include "../common/servertalk.h"
 
 class NatsManager

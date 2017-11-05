@@ -98,7 +98,7 @@ SET(common_sources
 	patches/titanium_limits.cpp
 	patches/uf.cpp
 	patches/uf_limits.cpp
-	proto/channelmessage.pb.cc	
+	proto/message.pb.cc	
 	StackWalker/StackWalker.cpp
 	tinyxml/tinystr.cpp
 	tinyxml/tinyxml.cpp
@@ -255,7 +255,7 @@ SET(common_headers
 	patches/uf_limits.h
 	patches/uf_ops.h
 	patches/uf_structs.h
-	proto/channelmessage.pb.h
+	proto/message.pb.h
 	StackWalker/StackWalker.h
 	tinyxml/tinystr.h
 	tinyxml/tinyxml.h

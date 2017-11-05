@@ -1820,7 +1820,8 @@ XS(XS_Client_AddMoneyToPP)
 			Perl_croak(aTHX_ "THIS is not of type Client");
 		if(THIS == nullptr)
 			Perl_croak(aTHX_ "THIS is nullptr, avoiding crash.");
-
+		
+		THIS->DailyGain(THIS->AccountID(), THIS->CharacterID(),THIS->Identity(), 0, 0, copper + (silver * 10) + (gold * 100) + (platinum * 1000));
 		THIS->AddMoneyToPP(copper, silver, gold, platinum, updateclient);
 	}
 	XSRETURN_EMPTY;

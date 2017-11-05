@@ -397,6 +397,7 @@ bool Lua_Client::TakeMoneyFromPP(uint64 copper, bool update_client) {
 
 void Lua_Client::AddMoneyToPP(uint32 copper, uint32 silver, uint32 gold, uint32 platinum, bool update_client) {
 	Lua_Safe_Call_Void();
+	self->DailyGain(AccountID(), CharacterID(), self->CastToClient()->Identity(), 0, 0, copper + (silver * 10) + (gold * 100) + (platinum * 1000));
 	self->AddMoneyToPP(copper, silver, gold, platinum, update_client);
 }
 

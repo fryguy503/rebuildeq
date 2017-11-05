@@ -1968,6 +1968,7 @@ void ClientTaskState::RewardTask(Client *c, TaskInformation *Task) {
 		int Plat, Gold, Silver, Copper;
 
 		Copper = Task->CashReward;
+		c->DailyGain(c->AccountID(), c->CharacterID(), c->Identity(), 0, 0, Copper);
 		c->AddMoneyToPP(Copper, true);
 
 		Plat = Copper / 1000;

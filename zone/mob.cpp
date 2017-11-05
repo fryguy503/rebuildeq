@@ -19,7 +19,7 @@
 #include "../common/spdat.h"
 #include "../common/string_util.h"
 #include "../common/misc_functions.h"
-
+#include "nats_manager.h"
 #include "quest_parser_collection.h"
 #include "string_ids.h"
 #include "worldserver.h"
@@ -37,6 +37,7 @@ extern EntityList entity_list;
 
 extern Zone* zone;
 extern WorldServer worldserver;
+extern NatsManager nats;
 
 Mob::Mob(const char* in_name,
 		const char* in_lastname,
@@ -7575,4 +7576,9 @@ int Mob::GetAggroTier() {
 		continue;
 	}
 	return highestTier;
+}
+
+void Mob::DailyGain(int account_id, int character_id, const char* identity, int levels_gained, int experience_gained, int money_earned)
+{
+	nats.DailyGain(account_id, character_id, identity, levels_gained, experience_gained, money_earned);
 }

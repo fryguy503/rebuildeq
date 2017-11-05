@@ -811,6 +811,7 @@ void Raid::SplitMoney(uint32 copper, uint32 silver, uint32 gold, uint32 platinum
 	for (i = 0; i < MAX_RAID_MEMBERS; i++) {
 		if (members[i].member != nullptr) { // If Group Member is Client
 		//I could not get MoneyOnCorpse to work, so we use this
+		members[i].member->DailyGain(members[i].member->AccountID(), members[i].member->CharacterID(), members[i].member->Identity(), 0, 0, cpsplit + (spsplit * 10) + (gpsplit * 100) + (ppsplit * 1000));
 		members[i].member->AddMoneyToPP(cpsplit, spsplit, gpsplit, ppsplit, true);
 
 		members[i].member->Message(2, msg.c_str());

@@ -200,6 +200,7 @@ void Group::SplitMoney(uint32 copper, uint32 silver, uint32 gold, uint32 platinu
 			//I could not get MoneyOnCorpse to work, so we use this
 			c->AddMoneyToPP(cpsplit, spsplit, gpsplit, ppsplit, true);
 			c->Message(2, msg.c_str());
+			c->DailyGain(c->AccountID(), c->CharacterID(), c->Identity(), 0, 0, cpsplit + (spsplit * 10) + (gpsplit * 100) + (ppsplit * 1000));
 		}
 	}
 }

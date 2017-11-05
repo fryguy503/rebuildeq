@@ -1565,6 +1565,7 @@ void NPC::PickPocket(Client* thief)
 		else if (GetLevel() > 10) maxAmount = rank;
 		amount = zone->random.Int(amount, maxAmount);
 		thief->Message(MT_Skills, "You have found a hidden stash (%i).", rank, amount);
+		DailyGain(thief->AccountID(), thief->CharacterID(), thief->Identity(),0,0,amount);
 		thief->AddMoneyToPP(0, 0, 0, amount, false);
 		thief->SendPickPocketResponse(this, amount, PickPocketPlatinum);
 		return;
@@ -1655,7 +1656,7 @@ void NPC::PickPocket(Client* thief)
 				thief->SendPickPocketResponse(this, 0, PickPocketFailed);
 				return;
 			}
-
+			DailyGain(thief->AccountID(), thief->CharacterID(), thief->Identity(), 0, 0, money[PickPocketCopper]+ (money[PickPocketSilver] * 10) + (money[PickPocketGold] * 100) + (money[PickPocketPlatinum] * 1000));
 			thief->AddMoneyToPP(money[PickPocketCopper], money[PickPocketSilver], money[PickPocketGold], money[PickPocketPlatinum], false);
 			thief->SendPickPocketResponse(this, coin_amount, coin_type);
 			return;
