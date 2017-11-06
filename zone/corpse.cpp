@@ -1190,7 +1190,31 @@ void Corpse::LootItem(Client *client, const EQApplicationPacket *app)
 		}
 		// do we want this to have a fail option too?
 		parse->EventItem(EVENT_LOOT, client, inst, this, buf, 0);
+		//Fragment of <Zone> code
+		if (inst->GetItem()->ID < 100019 && inst->GetItem()->ID > 100007) {
+			if (client->IsTaskActivityActive(307, 16) && inst->GetItem()->ID == 100010) client->UpdateTaskActivity(FEAT_GETTINGSTARTED, 16, 1);
+			if (!client->KeyRingCheck(inst->GetItem()->ID)) {
+				client->KeyRingAdd(inst->GetItem()->ID);
+				client->Message(MT_Experience, "You have unlocked the ability to #teleport to %s!", zone->GetLongName());
+			}
+			else {
+				client->Message(13, "As you reach for the fragment, it dissapears in your hands as you already have an affinity to it.");
+			}
 
+			/* Remove it from Corpse */
+			if (item_data) {
+				/* Delete needs to be before RemoveItem because its deletes the pointer for item_data/bag_item_data */
+				database.DeleteItemOffCharacterCorpse(this->corpse_db_id, item_data->equip_slot, item_data->item_id);
+				/* Delete Item Instance */
+				RemoveItem(item_data->lootslot);
+			}
+
+			//just clear it so player knows it's deleted
+			SendEndLootErrorPacket(client);
+			being_looted_by = 0;
+			delete inst;
+			return;
+		}
 		// safe to ACK now
 		client->QueuePacket(app);
 

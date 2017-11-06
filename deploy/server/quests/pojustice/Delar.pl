@@ -179,7 +179,7 @@ sub EVENT_SAY {
 		return;
 	}
 	if ($text=~/heirloom/i) {
-		quest::say("Pick a category: [ ". quest::saylink("ToV") . " ], [ " . quest::saylink("Kael") . " ]"); #, [ " . quest::saylink("Radiant Crystals") . " ].");
+		quest::say("Pick a category: [ ". quest::saylink("tov") . " ], [ " . quest::saylink("kael") . " ]. (Note this only works with unadorned and corroded items, completed items cannot be traded)."); #, [ " . quest::saylink("Radiant Crystals") . " ].");
 		if (!quest::istaskcompleted(314)) {
 			quest::say("Are you [ ". quest::saylink("interested") . " ] in learning how to deposit items to your heirloom?");
 		}
