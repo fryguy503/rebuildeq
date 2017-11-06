@@ -6,9 +6,6 @@ images = ["post/images/tier1.png"]
 tags = ["tier"]
 title = "Tier 1 Added"
 +++
-* Added #toggle buildecho to allow you to get more verbose build echoing.
-* Paladin's Slayer formula was too powerful, adjusted how it worked.
-* Shadowknight's Hungering Aura formula is adjusted to be potentially more useful.
 * #DPS was cleaned up and improved
 * Added a new dailygain system, this is an under the hood change that may turn into new features later.
 * Mayong Mistmoore can be found in Mistmoore.
