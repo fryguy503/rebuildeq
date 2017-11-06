@@ -9509,9 +9509,17 @@ void command_setgraveyard(Client *c, const Seperator *sep)
 
 void command_setidentity(Client *c, const Seperator *sep)
 {
-	if (!c->GetTarget() || c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) {
-		c->Message(0, "Need to target a player to use this command.");
-		return;
+	Client *target = nullptr;
+
+	if (c->GetGM()) {
+		if (!c->GetTarget() || c->GetTarget() == nullptr || !c->GetTarget()->IsClient()) {
+			c->Message(0, "Need to target a player to use this command.");
+			return;
+		}
+		target = c->GetTarget()->CastToClient();
+	}
+	else {
+		target = c;
 	}
 
 	if (!sep->arg[1][0]) {
@@ -9526,7 +9534,8 @@ void command_setidentity(Client *c, const Seperator *sep)
 		return;
 	}
 	
-	c->Message(0, "Successfully changed identity, the player will need to relog for this to take effect.");
+	target->Message(0, "Your identity has been changed. You must fully log out (not just character select) to have it take effect.");
+	if (target != c) c->Message(0, "You have set %s's identity", target->GetCleanName());
 	return;
 }
 
