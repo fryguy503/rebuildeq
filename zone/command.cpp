@@ -9521,7 +9521,7 @@ void command_setidentity(Client *c, const Seperator *sep)
 
 	auto name = sep->arg[1];
 
-	if (!database.SetIdentity(c->AccountID(), name)) {
+	if (!database.SetIdentity(c->GetTarget()->CastToClient()->AccountID(), name)) {
 		c->Message(0, "Setting identity failed.");
 		return;
 	}
