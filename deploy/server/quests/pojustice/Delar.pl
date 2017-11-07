@@ -3,22 +3,7 @@ sub EVENT_SAY {
 	my $rcTotal = 0;
 	my $prefix = "";
 	my $classid = $client->GetClass();
-	if (quest::istaskactive(314)) {
-		if (quest::istaskactivityactive(314, 8)) {
-			quest::updatetaskactivity(314, 8);
-			quest::say("Oh, you're finally back! Want to hear the most ironic thing..? I had the key here, in my pocket, all this time! Thank you for your effort, however. Now simply talk to me about [ " . quest::saylink("heirlooms") . " ] and I'll help you out.");
-			return;
-		}
-
-		quest::say("Hmm.. still haven't found my key, yet? Keep looking.. you are bound to find it!");
-		return;		       
-    }
-
-	if ($text=~/help/i) {
-		quest::say("You will help me? Very well, then.. Let us start with a simple task list, of sorts... let us repeat the places I have been as of late, and see if the key is there.");
-		quest::assigntask(314);
-		return;
-	}
+	
 	if ($text=~/tov/i) {
 		$prefix = "tov";
 		$tmp_id = 0;		
@@ -173,7 +158,22 @@ sub EVENT_SAY {
 	#	quest::say("You claimed 250 radiant crystals. You have $rcTotal remaining. [ ".quest::saylink("claim radiant crystals")." ]");
 	#	return;
 	#}
+	if (quest::istaskactive(314)) {
+		if (quest::istaskactivityactive(314, 8)) {
+			quest::updatetaskactivity(314, 8);
+			quest::say("Oh, you're finally back! Want to hear the most ironic thing..? I had the key here, in my pocket, all this time! Thank you for your effort, however. Now simply talk to me about [ " . quest::saylink("heirlooms") . " ] and I'll help you out.");
+			return;
+		}
 
+		quest::say("Hmm.. still haven't found my key, yet? Keep looking.. you are bound to find it!");
+		return;		       
+    }
+
+	if ($text=~/help/i) {
+		quest::say("You will help me? Very well, then.. Let us start with a simple task list, of sorts... let us repeat the places I have been as of late, and see if the key is there.");
+		quest::assigntask(314);
+		return;
+	}
 	if ($text =~/interested/i) {
 		quest::say("Well, you see.. unfortunately, I have lost the deposit box key to my chest, the chest with heirlooms.. alas.. I would ask for your [ ". quest::saylink("help") ." ], but I do not know you could be of use.");
 		return;

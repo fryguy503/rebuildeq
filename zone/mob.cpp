@@ -7475,7 +7475,7 @@ int Mob::GetGroupSize(int range) {
 //Penalize players (caster) when healing or interacting with a mob of higher tiers (this), even if it's not the target
 int Mob::AdjustTierPenalty(Mob* caster, int value) {
 	//For now, this overrides the Adjustment system
-	return value;
+	//return value;
 
 
 	if (!caster) return value; //should never happen, failsafe

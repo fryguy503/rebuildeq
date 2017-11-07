@@ -4700,12 +4700,12 @@ void command_buff(Client *c, const Seperator *sep) {
 		else if (level < 55) target->QuickBuff(target, 423, duration); //skin like nature 46
 		else target->QuickBuff(target, 2515, duration); //prot of nature 49
 
-		if (level < 10) target->QuickBuff(target, 256, duration); //shield of thistles 7
-		else if (level < 20) target->QuickBuff(target, 273, duration); //shield of barbs 17
-		else if (level < 30) target->QuickBuff(target, 129, duration); //shield of brambles 27
-		else if (level < 40) target->QuickBuff(target, 432, duration); //shield of spikes 37
-		else if (level < 50) target->QuickBuff(target, 356, duration); //shield of thorns 47
-		else if (level < 55) target->QuickBuff(target, 1727, duration); //legacy of spike 49
+		if (level < 17) target->QuickBuff(target, 256, duration); //shield of thistles 7
+		else if (level < 27) target->QuickBuff(target, 273, duration); //shield of barbs 17
+		else if (level < 37) target->QuickBuff(target, 129, duration); //shield of brambles 27
+		else if (level < 47) target->QuickBuff(target, 432, duration); //shield of spikes 37
+		else if (level < 49) target->QuickBuff(target, 356, duration); //shield of thorns 47
+		else if (level < 58) target->QuickBuff(target, 1727, duration); //legacy of spike 49
 		else target->QuickBuff(target, 1560, duration); //shield of blades 58
 
 		/*if (level < 2) target->QuickBuff(target, 268, duration); //str of earth 1
