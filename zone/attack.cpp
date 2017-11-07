@@ -2748,7 +2748,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 			}
 		}
 	}
-
+	engage_duration = cur_engage_duration;
 	//Give DPS report to people with value toggled.
 	auto iterator = hate_list.GetHateList().begin();	
 	while (iterator != hate_list.GetHateList().end())
@@ -2777,10 +2777,10 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 			continue;
 		}
 
-		float my_dps_loss = (float)((float)my_hp_self_loss_net / engage_duration);
-		float my_dps_target_loss = (float)((float)my_hp_target_loss_net / engage_duration);
+		float my_dps_loss = (float)((float)my_hp_self_loss_net / cur_engage_duration);
+		float my_dps_target_loss = (float)((float)my_hp_target_loss_net / cur_engage_duration);
 		
-		c->Message(MT_CritMelee, "------ %s DPS Report %d seconds ----------", GetCleanName(), engage_duration);
+		c->Message(MT_CritMelee, "------ %s DPS Report %d seconds ----------", GetCleanName(), cur_engage_duration);
 		c->Message(MT_CritMelee, "- dealt %i damage (%.1f DPS)", my_hp_self_loss_net, my_dps_loss);
 		c->Message(MT_CritMelee, "- took %i damage (%.1f DPS)", my_hp_target_loss_net, my_dps_target_loss);
 		c->Message(MT_CritMelee, "------ Participants ----------");
@@ -2789,9 +2789,9 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 				continue;
 			}
 
-			cur_dps = (float)((float)d.hp_target_loss_net / engage_duration);
-			cur_hps_taken = (float)((float)d.hp_self_gain_net / engage_duration);
-			cur_hps_dealt = (float)((float)d.hp_target_gain_net / engage_duration);
+			cur_dps = (float)((float)d.hp_target_loss_net / cur_engage_duration);
+			cur_hps_taken = (float)((float)d.hp_self_gain_net / cur_engage_duration);
+			cur_hps_dealt = (float)((float)d.hp_target_gain_net / cur_engage_duration);
 
 			if (!c->GetEPP().use_full_dps && c->GetID() != d.ent_id) continue; //Don't show DPS if self only is flagged
 			c->Message(MT_CritMelee, "- %s: %i damage (%.1f DPS)", d.character_name.c_str(), d.hp_target_loss_net, cur_dps);
@@ -4433,7 +4433,6 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					if (zone->random.Int(0, 100) >= stun_resist) {
 						// did stun
 						// nothing else to check!
-						if (IsNPC() && attacker->IsClient()) attacker->CastToClient()->DoDivineBashEffect();
 						Stun(2000); // straight 2 seconds every time						
 					}
 					else {

@@ -1596,7 +1596,7 @@ class Build {
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Bash of Death";
-			$newSkill->desc = 'When you bash a target that is equal to your level or lower and the enemy is at <em data-base="10">10</em>% or less total health you deal an additional (level * <em data-base="2">2</em>) <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you bash a target that is equal to your level or lower and the enemy is at <em data-base="10">10</em>% or less total health you deal an additional (level * <em data-base="1">1</em>) <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-bashofdeath.png";
 			$skills[34] = $newSkill;
 		

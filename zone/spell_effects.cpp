@@ -3981,48 +3981,34 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (rank < 5) duration /= 2;
 						//4065 blessing of austerity
 						//3578
+						int lowestLevel = caster_level;
+						if (level < caster_level) lowestLevel = level;
 
-						if (level > 59 && caster_level > 59) {
-							if (rank > 3) caster->QuickBuff(this, 1456, duration); //divine str
-							if (rank > 2) caster->QuickBuff(this, 20, duration); //shield of words
-							if (rank > 1) caster->QuickBuff(this, 314, duration); //resolution
+						if (rank >= 1) { //rank 1= AC
+							if (lowestLevel >= 60) caster->QuickBuff(this, 20, duration); //shield of words 60
+							else if (lowestLevel >= 48) caster->QuickBuff(this, 19, duration); //armor of faith 48
+							else if (lowestLevel >= 39) caster->QuickBuff(this, 18, duration); //guard 39
+							else if (lowestLevel >= 30) caster->QuickBuff(this, 368, duration); //spirit armor 30
+							else caster->QuickBuff(this, 11, duration); //holy armor 15 (clr1)
 						}
-						else if (level > 57 && caster_level > 57) {
-							if (rank > 3) caster->QuickBuff(this, 1288, duration); //Divine Glory
-							if (rank > 2) caster->QuickBuff(this, 488, duration); //Naltron									
-							if (rank > 1) caster->QuickBuff(this, 312, duration); //Valor
-							caster->QuickBuff(this, 19, duration); //Armor of Faith
+						if (rank >= 2) { //rank 2 = hp v1
+							if (lowestLevel >= 60) caster->QuickBuff(this, 314, duration); //resolution 60
+							else if (lowestLevel >= 47) caster->QuickBuff(this, 312, duration); //valor 47
+							else if (lowestLevel >= 37) caster->QuickBuff(this, 89, duration); //daring 37
+							else if (lowestLevel >= 20) caster->QuickBuff(this, 219, duration); //center 20
+							//else caster->QuickBuff(this, 202, duration); //courage 8 (clr 1)
 						}
-						else if (level > 54 && caster_level > 54) {
-							if (rank > 1) caster->QuickBuff(this, 4064, duration); //Austerity
-							if (rank > 3) caster->QuickBuff(this, 1288, duration); //Divine Glory
+						if (rank >= 3) { //rank 3 = hp symbol
+							if (lowestLevel >= 58) caster->QuickBuff(this, 488, duration); //symbol of naltron 58
+							else if (lowestLevel >= 46) caster->QuickBuff(this, 487, duration); //symbol of pizarn 46
+							else if (lowestLevel >= 33) caster->QuickBuff(this, 486, duration); //symbol of ryltan 33
+							else caster->QuickBuff(this, 485, duration); //symbol of transal 24 (clr 1)							
 						}
-						else if (level > 48 && caster_level > 48) {
-							caster->QuickBuff(this, 19, duration); //Armor of Faith
-							if (rank > 1) caster->QuickBuff(this, 312, duration); //Valor
-							if (rank > 3) caster->QuickBuff(this, 3578, duration); //Divine Vigor
-							caster->QuickBuff(this, 487, duration); //Symbol of pinzarn
-						}
-						else if (level > 45 && caster_level > 45) {
-							caster->QuickBuff(this, 19, duration); //Armor of Faith
-							if (rank > 1) caster->QuickBuff(this, 312, duration); //Valor
-							if (rank > 3) caster->QuickBuff(this, 2584, duration); //Divine Vigor
-							if (rank > 2) caster->QuickBuff(this, 487, duration); //Symbol of pinzarn
-						}
-						else if (level > 32 && caster_level > 32) {
-							if (rank > 3) caster->QuickBuff(this, 2584, duration); //Divine Vigor
-							if (rank > 1) caster->QuickBuff(this, 89, duration); //Daring
-							caster->QuickBuff(this, 18, duration); //Guard
-							if (rank > 2) caster->QuickBuff(this, 486, duration); //Symbol of Ryltan
-						}
-						else if (level > 19 && caster_level > 19) {
-							if (rank > 1) caster->QuickBuff(this, 219, duration); //Center
-							if (rank > 2) caster->QuickBuff(this, 485, duration); //Transal
-							caster->QuickBuff(this, 368, duration); //Spirit Armor
-						}
-						else {
-							//if (rank > 1) caster->QuickBuff(this, 202, duration); //Courage is casted by this spell
-							caster->QuickBuff(this, 11, duration); //Holy Armor
+						if (rank >= 4) { //rank 4 = brell line
+							if (lowestLevel >= 60) caster->QuickBuff(this, 2590, duration); //brell's mountainous barrier
+							else if (lowestLevel >= 53) caster->QuickBuff(this, 1288, duration); //divine glory 53
+							else if (lowestLevel >= 49) caster->QuickBuff(this, 3578, duration); //brell's steadfast aegis 49
+							else caster->QuickBuff(this, 2584, duration); //divine vigor 35
 						}
 					}
 
