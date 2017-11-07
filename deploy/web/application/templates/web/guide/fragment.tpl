@@ -31,16 +31,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr><td>Lavastorm</td><td>10</td><td>Antonica</td><td>Uncommon</td></tr>
-        <tr><td>Iceclad</td><td>25</td><td>Velious</td><td>Uncommon</td></tr>        
-        <tr><td>Emerald Jungle</td><td>25</td><td>Kunark</td><td>Uncommon</td></tr>
-        <tr><td>Great Divide</td><td>30</td><td>Velious</td><td>Uncommon</td></tr>
-        <tr><td>Wakening Lands</td><td>35</td><td>Kunark</td><td>Uncommon</td></tr>
-        <tr><td>Cobalt Scar</td><td>35</td><td>Velious</td><td>Uncommon</td></tr>        
-        <tr><td>Dreadlands</td><td>35</td><td>Kunark</td><td>Uncommon</td></tr>
-        <tr><td>Skyfire Mountains</td><td>45</td><td>Kunark</td><td>Uncommon</td></tr>
-        <tr><td>Sebilis</td><td>45</td><td>Kunark</td><td>Rare</td></tr>        
-        <tr><td>Chardok</td><td>50</td><td>Kunark</td><td>Rare</td></tr>
+        <tr><td>Lavastorm</td><td>10</td><td>Antonica</td><td>Rare</td></tr>
+        <tr><td>Iceclad</td><td>25</td><td>Velious</td><td>Rare</td></tr>        
+        <tr><td>Emerald Jungle</td><td>25</td><td>Kunark</td><td>Rare</td></tr>
+        <tr><td>Great Divide</td><td>30</td><td>Velious</td><td>Rare</td></tr>
+        <tr><td>Wakening Lands</td><td>35</td><td>Kunark</td><td>Rare</td></tr>
+        <tr><td>Cobalt Scar</td><td>35</td><td>Velious</td><td>Rare</td></tr>        
+        <tr><td>Dreadlands</td><td>35</td><td>Kunark</td><td>Rare</td></tr>
+        <tr><td>Skyfire Mountains</td><td>45</td><td>Kunark</td><td>Rare</td></tr>
+        <tr><td>Sebilis</td><td>45</td><td>Kunark</td><td>Very Rare</td></tr>        
+        <tr><td>Chardok</td><td>50</td><td>Kunark</td><td>Very Rare</td></tr>
         </tr>
       </tbody>
       </table>
