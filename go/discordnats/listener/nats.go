@@ -87,7 +87,7 @@ func checkForNATSMessages(nc *nats.Conn, disco *discord.Discord) (err error) {
 	if !isCronSet {
 		isCronSet = true
 		c := cron.New()
-		c.AddFunc("0 12 * * *", DoDailyReport)
+		c.AddFunc("@midnight", DoDailyReport)
 		c.Start()
 	}
 
