@@ -1351,7 +1351,7 @@ public:
 	bool DoEvadeOnce();
 	int GetCharacterItemScore();
 
-	void DoDivineStunEffect();
+	void DoDivineBashEffect();
 
 	void DoMendingAura(int amount);
 

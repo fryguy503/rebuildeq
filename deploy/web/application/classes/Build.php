@@ -494,13 +494,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Bash";
-			$newSkill->desc = 'When the cleric uses bash, there is a <em data-base="1">1</em>% chance to proc a heal for <em data-base="4">4</em>% of the cleric\'s max hp per rank to a group member with lowest health<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When the cleric uses bash, they heal for <em data-base="4">4</em>% of the cleric\'s max hp per rank to a group member with lowest health<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-divinebash.png";	
 			$skills[20] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Intensity of the Resolute";
-			$newSkill->desc = 'Grants the Intensity of the Resolute AA, which casts Courage-line buffs scaled to your level.<br>Rank 1: +Spell Haste<br>Rank 2: +AC<br>Rank 3: +HP<br>Rank 4: +HPv2<br>Rank 5: +Yaulp';
+			$newSkill->desc = 'Courage now grants Cleric buffs<br>Rank 1: +Spell Haste<br>Rank 2: +AC<br>Rank 3: +HP<br>Rank 4: +Symbol<br>Rank 5: +Yaulp';
 			$newSkill->image = "/images/builds/icons/rb-clr-intensifiedresolution.png";
 			$skills[22] = $newSkill;
 
@@ -518,7 +518,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Resurrection";
-			$newSkill->desc = 'Grants the Divine Resurrection AA, reviving a fallen player. Lowers cooldown by <em data-base="12">12</em> hours<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Divine Resurrection AA, reviving a fallen player. With a base of 24 hours, lowers cooldown by <em data-base="4">4</em> hours<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-divineressurection.png";	
 			$skills[28] = $newSkill;
 

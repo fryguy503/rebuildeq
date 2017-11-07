@@ -4222,19 +4222,19 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					for (int z = 0; z < MAX_GROUP_MEMBERS; z++) {
 						target = caster_group->members[z];
 
-						if (target == nullptr ||
-							!target->IsClient() ||
-							target == this ||
-							target->GetZoneID() != GetZoneID() ||
-							target->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT) < 1 ||
-							target->animation == ANIM_SIT
+						if (target == nullptr) continue;
+						if (!target->IsClient()) continue;
+						if (target == this) continue;
+						if (target->GetZoneID() != GetZoneID()) continue;
+						if (target->animation == ANIM_SIT) continue;
+
+
+						rank = target->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT);
+						if (rank < 1) continue;
 							//caster_group->members[z]->IsMezzed() ||
 							//caster_group->members[z]->IsAIControlled() || //don't block while charmed
 							//!caster_group->members[z]->IsCasting() || //don't block while casting
-							) {
-							continue;
-						}
-						rank = target->GetBuildRank(PALADIN, RB_PAL_HOLYSERVANT);
+						
 						//Check distance from paladin
 						float distance = DistanceSquared(GetPosition(), target->GetPosition());
 						if (distance > (rank * 2 * rank * 2)) {
@@ -4252,11 +4252,11 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 
 						int damage_reduction2 = damage_reduction;
 						damage_reduction2 -= floor(damage_reduction * 0.02f * rank);
-						caster_group->members[z]->CastToClient()->Message(MT_Spells, "Holy Servant %u has drawn %i damage from %s and has dealt %i to you.", rank, damage_reduction, damage_reduction2, attacker->GetCleanName());
+						//target->Message(MT_Spells, "Holy Servant %u has drawn %i damage from %s and has dealt %i to you.", rank, damage_reduction, damage_reduction2, attacker->GetCleanName());
 
 						//deal dmg to paladin
-						caster_group->members[z]->CommonDamage(attacker, damage_reduction2, spell_id, skill_used, avoidable, buffslot, iBuffTic, special);
-						//break; //Don't let more paladins reduce this damage
+						target->CommonDamage(attacker, damage_reduction2, spell_id, skill_used, avoidable, buffslot, iBuffTic, special);
+						break; //Don't let more paladins reduce this damage
 					}
 				}
 			}
@@ -4433,10 +4433,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					if (zone->random.Int(0, 100) >= stun_resist) {
 						// did stun
 						// nothing else to check!
-							rank = attacker->CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEBASH);
-							if (rank > 0) {
-								attacker->CastToClient()->DoDivineStunEffect();
-							}
+						if (IsNPC() && attacker->IsClient()) attacker->CastToClient()->DoDivineBashEffect();
 						Stun(2000); // straight 2 seconds every time						
 					}
 					else {
@@ -4690,7 +4687,7 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 			) {
 			int32 zDamage = floor(rank * 0.01f * amount);
 			int zCount = caster->hate_list.DamageNearby(caster, zDamage, 50, this, rank);
-			caster->BuildEcho(StringFormat("Zealot's Fervor %i hit %i enemies for %i points of non-melee damage.", rank, zCount, zDamage));
+			if (zCount > 0) caster->BuildEcho(StringFormat("Zealot's Fervor %i hit %i enemies for %i points of non-melee damage.", rank, zCount, zDamage));
 		}
 
 		rank = GetBuildRank(MONK, RB_MNK_INNERCHAKRA);

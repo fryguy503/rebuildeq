@@ -9620,11 +9620,6 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == CLERIC && i == RB_CLR_INTENSITYOFTHERESOLUTE && GetAA(aaIntensityoftheResolute) < 1) {
-					TrainAARank(aaIntensityoftheResolute);
-					Message(15, "You have unlocked the AA \"Intensity of the Resolute\"! Find the hotkey in your Alternate Advancement Window.");
-				}
-				
 				if (GetClass() == DRUID && i == RB_DRU_ENTRAP  && GetAA(aaEntrap) < 1) {
 					TrainAARank(aaEntrap);
 					Message(15, "You have unlocked the AA \"Entrap\"! Find the hotkey in your Alternate Advancement Window.");
@@ -9897,22 +9892,6 @@ void Client::RefreshBuild() {
 			SendAlternateAdvancementTable();
 			if (IsTaskActivityActive(307, 8)) UpdateTaskActivity(FEAT_GETTINGSTARTED, 8, 1);
 		}
-		
-		
-		/*if (GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING)> 0) {
-			const Item_Struct* item = database.GetItem(100500);
-			if (item && !CheckLoreConflict(item)) { //if the item exists and it isn't lore conflicting
-				ItemInst *CursorItemInst = GetInv().GetItem(MainCursor);
-				if (CursorItemInst) {
-					Message(13, "Your cursor must be empty before obtaining brell's blessing.");
-				}
-				else {
-					SummonItem(100500);
-					Message(15, "You have obtained the item \"Brell's Blessing\"! If you delete it, run #builds again to resummon it.");
-				}
-			}
-		}
-		*/
 	}
 }
 
@@ -11449,14 +11428,13 @@ int Client::GetCharacterItemScore() {
 }
 
 //Attempt to do the divine stun effect
-void Client::DoDivineStunEffect() {
+void Client::DoDivineBashEffect() {
 	uint32 rank = GetBuildRank(CLERIC, RB_CLR_DIVINEBASH);
-	if (rank < 1) return;
-	if (!zone->random.Roll(int(rank * 1))) return;	
+	if (rank < 1) return;	
 
 	Mob* healTarget = nullptr;
 	Mob* target = nullptr;
-	//caster->Message(MT_Spells, "Rodcet's Gift %u spreads your healing power.", rank);
+
 	if (IsGrouped()) {						
 		auto group = GetGroup(); //iterate group
 		for (int i = 0; i < 6; ++i) {

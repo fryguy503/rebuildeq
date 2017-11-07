@@ -892,10 +892,6 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 		rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 		if(rb_rank)
 			aai->spell_refresh = 1800 - (rb_rank-1) * 300;
-	}
-	else if (rank->id == aaIntensityoftheResolute) {
-		if (GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE))
-			aai->spell_refresh = 16;
 	} else if (rank->id == aaAncestralAid) {
 		if(GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID))
 			aai->spell_refresh = 16;
@@ -1372,7 +1368,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	} else if (rank_id == aaDivineResurrection) {
 		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION);
 		if (rb_rank > 0) {
-			cooldown = cooldown - (rb_rank * 43200); //12 hours per rank
+			cooldown = 86400 - ((5 - rb_rank) * 14400); //12 hours per rank
 			BuildEcho(StringFormat("Divine Resurrection %u reduced cooldown by %i", rb_rank, (rb_rank * 43200)));
 		}
 	} else if (rank_id == aaAppraisal) {
@@ -1423,7 +1419,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			}
 		}		
 	} else if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesBoon || rank_id == aaAncestralAid) {
-		if(GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) || GetBuildRank(DRUID, RB_DRU_NATURESBOON) || GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) || GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE)) {
+		if(GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) || GetBuildRank(DRUID, RB_DRU_NATURESBOON) || GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID)) {
 			cooldown = 16;
 			if (GetLevel() < 10)  manacost = 20;
 			else if (GetLevel() < 31) manacost = GetLevel() * 2.6f;
