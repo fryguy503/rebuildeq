@@ -10209,10 +10209,11 @@ bool Client::InEncounterArea() {
 		zoneid == 75 || //paineel
 		zoneid == 77 || //arena
 		zoneid == 82 || //cabwest
-		zoneid == 106 //|| //cabeast
+		zoneid == 106 || //cabeast
 		//zoneid == 115 || //thurgadina
 		//zoneid == 124 //veeshan
 		//zoneid == 129 //thurgadinb
+		zoneid == 201 //pojustice
 		) {
 		return false;
 	}

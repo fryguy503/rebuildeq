@@ -1219,9 +1219,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaDivineResurrection && GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION) < 1 ||
 		rank_id == aaDivineRetribution && GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION) < 1 ||
 		rank_id == aaTurnUndead2 && GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD) < 1 ||
-		rank_id == aaIntensityoftheResolute && GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE) < 1 ||
 		rank_id == aaExquisiteBenediction && GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION) < 1 ||
-
+		
 		rank_id == aaTeleportBind && GetBuildRank(DRUID, RB_DRU_TELEPORTBIND) < 1 ||
 		rank_id == aaEntrap && GetBuildRank(DRUID, RB_DRU_ENTRAP) < 1 ||
 		rank_id == aaExodus && GetBuildRank(DRUID, RB_DRU_EXODUS) < 1 ||
