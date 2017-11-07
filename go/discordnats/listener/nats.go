@@ -87,7 +87,7 @@ func checkForNATSMessages(nc *nats.Conn, disco *discord.Discord) (err error) {
 	if !isCronSet {
 		isCronSet = true
 		c := cron.New()
-		c.AddFunc("0 0 0 * *", DoDailyReport)
+		c.AddFunc("0 12 * * *", DoDailyReport)
 		c.Start()
 	}
 
@@ -222,19 +222,19 @@ func DoDailyReport() {
 		return
 	}
 	if topExp >= 0 {
-		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Experince Gains: %s with %0.2f bottles worth of experience!", dailyReport.DailyGains[topExp].Identity, dailyReport.DailyGains[topExp].Exp/23976503)); err != nil {
+		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Experince Gains: %s with %0.2f bottles worth of experience!", dailyReport.DailyGains[topExp].Identity, float(dailyReport.DailyGains[topExp].Exp/23976503))); err != nil {
 			log.Printf("[NATS] Error sending message: %s", err.Error())
 			return
 		}
 	}
 	if topLvl >= 0 {
-		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Level Gains: %s with %i levels gained!", dailyReport.DailyGains[topLvl].Identity, dailyReport.DailyGains[topLvl].Lvl)); err != nil {
+		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Level Gains: %s with %i levels gained!", dailyReport.DailyGains[topLvl].Identity, int(dailyReport.DailyGains[topLvl].Lvl))); err != nil {
 			log.Printf("[NATS] Error sending message: %s", err.Error())
 			return
 		}
 	}
 	if topExp >= 0 {
-		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Money Gains: %s with %0.2f platinum bottles worth of experience!", dailyReport.DailyGains[topMoney].Identity, dailyReport.DailyGains[topMoney].Money/1000)); err != nil {
+		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Money Gains: %s with %0.2f platinum earned!", dailyReport.DailyGains[topMoney].Identity, float(dailyReport.DailyGains[topMoney].Money/1000))); err != nil {
 			log.Printf("[NATS] Error sending message: %s", err.Error())
 			return
 		}
