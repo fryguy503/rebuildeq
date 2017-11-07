@@ -7344,7 +7344,8 @@ int Mob::GetMeleeDamageAdjustments(int dmg) {
 		if (GetLevel() >= 10) return floor(dmg * 0.10f);
 	}
 	else if (GetClass() == SHADOWKNIGHT || GetClass() == PALADIN) {
-		return -floor(dmg * 0.25f);
+		//return -floor(dmg * 0.25f);
+		return 0;
 	}
 	else if (GetClass() == BARD) {
 		rank = GetBuildRank(BARD, RB_BRD_WARSONGOFZEK);
