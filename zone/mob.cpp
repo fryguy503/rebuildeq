@@ -6106,6 +6106,12 @@ void Mob::CommonBreakInvisible()
 	CancelSneakHide();
 }
 
+NPCType* Mob::AdjustNPCToBoss(NPCType *npctype, bool keepSpells = true, int groupSize = 1) {
+	//first do normal pass
+	npctype = AdjustNPC(npctype, keepSpells, false);
+	return npctype;
+}
+
 //Adjusts an NPC's stats based on properties provided
 NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true, bool isPet = false) {
 
@@ -6128,7 +6134,6 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true, bool isPet = f
 		else
 			multiplier = 30;
 		break;
-
 	case DRUID:
 	case CLERIC:
 	case SHAMAN:

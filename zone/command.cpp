@@ -382,6 +382,7 @@ int command_init(void)
 		command_add("shutdown", "- Shut this zone process down", 150, command_shutdown) ||
 		command_add("size", "[size] - Change size of you or your target", 50, command_size) ||
 		command_add("spawn", "[name] [race] [level] [material] [hp] [gender] [class] [priweapon] [secweapon] [merchantid] - Spawn an NPC", 10, command_spawn) ||
+		command_add("spawnanpc", "[npcid] [isboss] - spawns an adjusted npc to target's level, or ifboss, to group's level", 200, command_spawnanpc) ||
 		command_add("spawnfix", "- Find targeted NPC in database based on its X/Y/heading and update the database to make it spawn at your current location/heading.", 170, command_spawnfix) ||
 		command_add("spawnstatus", "- Show respawn timer status", 100, command_spawnstatus) ||
 		command_add("spelleffect", "Play a sound", 150, command_spelleffect) ||
@@ -9621,6 +9622,99 @@ void command_refreshgroup(Client *c, const Seperator *sep)
 
 	database.RefreshGroupFromDB(c);
 	//g->SendUpdate(7, c);
+}
+
+
+void command_spawnanpc(Client *c, const Seperator *sep)
+{
+	Mob *target = c->GetTarget();
+	if (!target || !target->IsClient()) {
+		c->Message(0, "Client Target required!");
+		return;
+	}
+	int npcId = 0;
+	bool isBoss = false;
+	
+	if (!sep->IsNumber(1)) {
+		c->Message(0, "usage: #spawnpc [npcid] [name] (isboss)");
+		return;
+	}
+	npcId = atoi(sep->arg[1]);
+	if (npcId < 1) {
+		c->Message(0, "Invalid npcid: %i", npcId);
+		return;
+	}
+	if (!sep->IsNumber(2)) {
+		c->Message(0, "Invalid value, either 0 or 1 for isBoss flag");
+		return;
+	}
+
+	const NPCType* npctype = 0;
+	npctype = database.LoadNPCTypesData(npcId);
+	if (!npctype) {
+		c->Message(0, "NPCType not found in DB!");
+		return;
+	}
+
+	//we copy the npc_type data because we need to edit it a bit
+	if (isBoss) {
+		int groupSize = 1;
+		int avgLevel = 1;
+		int range = 200;
+
+		float distance;
+		float range2 = range*range;
+		auto group = target->GetGroup();
+		if (!group) {
+			c->Message(0, "Target is not in group, cannot spawn boss.");
+			return;
+		}
+
+		Mob *gTarget;
+		unsigned int gi = 0;
+		for (; gi < MAX_GROUP_MEMBERS; gi++)
+		{
+			if (!group->members[gi]) continue;
+			gTarget = group->members[gi];
+			distance = DistanceSquared(gTarget->GetPosition(), target->GetPosition());
+			if (distance > range2) continue;
+			groupSize++;
+			avgLevel += gTarget->GetLevel();
+		}
+		if (groupSize < 1) groupSize = 1;
+		avgLevel /= groupSize;
+
+		NPCType *enpc = new NPCType;
+		memcpy(enpc, npctype, sizeof(NPCType));
+		enpc->level = avgLevel;
+		enpc = c->AdjustNPCToBoss(enpc, false, groupSize);
+
+		enpc->npc_faction_id = 79; // KoS non-assist
+
+		NPC* npc = new NPC(enpc, nullptr, target->GetPosition(), FlyMode3);
+		npc->AddLootTable();
+		entity_list.AddNPC(npc, true, true);
+		npc->SendPositionUpdate();
+		c->Message(0, "Spawned adjusted boss npc");
+		return;
+	}
+	else {
+		NPCType *enpc = new NPCType;
+		memcpy(enpc, npctype, sizeof(NPCType));
+		enpc->level = target->GetLevel();
+		enpc = c->AdjustNPC(enpc, false, false);
+
+		enpc->npc_faction_id = 79; // KoS non-assist
+
+		NPC* npc = new NPC(enpc, nullptr, target->GetPosition(), FlyMode3);
+		npc->AddLootTable();
+		entity_list.AddNPC(npc, true, true);
+		npc->SendPositionUpdate();
+		c->Message(0, "Spawned adjusted npc");
+	}
+
+
+
 }
 
 void command_advnpcspawn(Client *c, const Seperator *sep)

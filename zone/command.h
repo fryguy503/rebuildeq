@@ -295,6 +295,7 @@ void command_size(Client *c, const Seperator *sep);
 void command_spawn(Client *c, const Seperator *sep);
 void command_spawnfix(Client *c, const Seperator *sep);
 void command_spawnstatus(Client *c, const Seperator *sep);
+void command_spawnanpc(Client *c, const Seperator *sep);
 void command_spelleffect(Client *c, const Seperator *sep);
 void command_spellinfo(Client *c, const Seperator *sep);
 void command_spoff(Client *c, const Seperator *sep);

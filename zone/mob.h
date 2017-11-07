@@ -252,7 +252,7 @@ public:
 	//Somewhat sorted: needs documenting!
 	void AddHPEvent(Mob *other, int total, int net, bool is_dealer);
 	void AddManaEvent(Mob *other, int total, int net, bool is_dealer);
-
+	NPCType * AdjustNPCToBoss(NPCType * npctype, bool keepSpells, int groupSize);
 
 	std::vector<DPS_Struct> DPS();
 	//Monk effect to cause a mob to show weakness.
@@ -311,7 +311,7 @@ public:
 	void CommonOutgoingHitSuccess(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *opts = nullptr);
 	void BreakInvisibleSpells();
 	virtual void CancelSneakHide();
-	void CommonBreakInvisible();
+	void CommonBreakInvisible();	
 	void CommonBreakInvisibleFromCombat();
 	bool HasDied();
 	virtual bool CheckDualWield();
