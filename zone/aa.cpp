@@ -1231,7 +1231,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaSpiritoftheWood && GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) < 1 ||
 		rank_id == aaNaturesBoon && GetBuildRank(DRUID, RB_DRU_NATURESBOON) < 1 ||
 		rank_id == aaNaturesGuardian && GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN) < 1 ||
-
 		rank_id == aaSharedHealth && GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) < 1 ||
 		rank_id == aaDimensionalShield && GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD) < 1 ||
 		rank_id == aaHostintheShell && GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) < 1 ||
@@ -1239,8 +1238,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaImprovedReclaimEnergy && GetBuildRank(MAGICIAN, RB_MAG_IMPROVEDRECLAIMENERGY) < 1 ||
 		rank_id == aaTurnSummoned2 && GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED) < 1 ||
 		rank_id == aaHeartofVapor && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR) < 1 ||
-		rank_id == aaSmallModulationShard && GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD) < 1 ||
-		rank_id == aaFrenziedBurnout && GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT) < 1 ||
+		rank_id == aaSmallModulationShard && GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD) < 1 ||		
 		rank_id == aaHeartofIce && GetBuildRank(MAGICIAN, RB_MAG_HEARTOFICE) < 1 ||
 		rank_id == aaSuspendedMinion && GetBuildRank(MAGICIAN, RB_MAG_SUSPENDEDMINION) < 1 ||
 		rank_id == aaCalloftheHero && GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO) < 1 ||
@@ -1278,7 +1276,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			GetBuildRank(BARD, RB_BRD_KINSONG) < 1 &&
 			GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE) < 1 &&			
 			GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) < 1 &&
-			GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) < 1 &&
 			GetBuildRank(DRUID, RB_MNK_GRACEOFTHEORDER) < 1 &&
 			GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) < 1 &&
 			GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1 &&
@@ -1516,7 +1513,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		if (GetBuildRank(BARD, RB_BRD_KINSONG)) spellid = 6239;		
 		else if (GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE)) spellid = 6233;
 		else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) spellid = 6233;
-		else if (GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION)) spellid = 6276;
 		else if (GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER)) spellid = 6238;
 		else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION)) spellid = 6234;
 		else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT)) spellid = 6240;

@@ -222,7 +222,7 @@ func DoDailyReport() {
 		return
 	}
 	if topExp >= 0 {
-		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Experince Gains: %s with %0.2f bottles worth of experience!", dailyReport.DailyGains[topExp].Identity, float(dailyReport.DailyGains[topExp].Exp/23976503))); err != nil {
+		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Experince Gains: %s with %0.2f bottles worth of experience!", dailyReport.DailyGains[topExp].Identity, float32(dailyReport.DailyGains[topExp].Exp/23976503))); err != nil {
 			log.Printf("[NATS] Error sending message: %s", err.Error())
 			return
 		}
@@ -234,7 +234,7 @@ func DoDailyReport() {
 		}
 	}
 	if topExp >= 0 {
-		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Money Gains: %s with %0.2f platinum earned!", dailyReport.DailyGains[topMoney].Identity, float(dailyReport.DailyGains[topMoney].Money/1000))); err != nil {
+		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Money Gains: %s with %0.2f platinum earned!", dailyReport.DailyGains[topMoney].Identity, float32(dailyReport.DailyGains[topMoney].Money/1000))); err != nil {
 			log.Printf("[NATS] Error sending message: %s", err.Error())
 			return
 		}

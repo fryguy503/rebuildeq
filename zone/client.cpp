@@ -9709,11 +9709,7 @@ void Client::RefreshBuild() {
 					TrainAARank(aaSmallModulationShard);
 					Message(15, "You have unlocked the AA \"Small Modulation Shard\"! Find the hotkey in your Alternate Advancement Window.");
 				}
-
-				if (GetClass() == MAGICIAN && i == RB_MAG_FRENZIEDBURNOUT && GetAA(aaFrenziedBurnout) < 1) {
-					TrainAARank(aaFrenziedBurnout);
-					Message(15, "You have unlocked the AA \"Frenzied Burnout\"! Find the hotkey in your Alternate Advancement Window.");
-				}
+				
 
 				if (GetClass() == MAGICIAN && i == RB_MAG_HEARTOFICE && GetAA(aaHeartofIce) < 1) {
 					TrainAARank(aaHeartofIce);
@@ -9755,10 +9751,6 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Servant of Ro\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == MAGICIAN && i == RB_MAG_PRIMALFUSION && GetAA(aaLessonoftheDevoted) < 1) {
-					TrainAARank(aaLessonoftheDevoted);
-					Message(15, "You have unlocked the AA \"Primal Fusion\"! Find the hotkey in your Alternate Advancement Window.");
-				}
 
 				if (GetClass() == MONK && i == RB_MNK_GRACEOFTHEORDER && GetAA(aaLessonoftheDevoted) < 1) {
 					TrainAARank(aaLessonoftheDevoted);
@@ -11206,7 +11198,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MAG_QUICKSUMMONING) return "Quick Summoning";
 		else if (id == RB_MAG_IMPROVEDRECLAIMENERGY) return "Improved Reclaim Energy";
 		else if (id == RB_MAG_MODULATIONSHARD) return "Modulation Shard";
-		else if (id == RB_MAG_COMPANIONSDURABILITY) return "Companions Durability";
+		else if (id == RB_MAG_COMPANIONSINTENSITY) return "Companion's Intensity";
 		else if (id == RB_MAG_SUSPENDEDMINION) return "Suspended Minion";
 		else if (id == RB_MAG_MENDCOMPANION) return "Mend Companion";
 		else if (id == RB_MAG_COMPANIONOFNECESSITY) return "Companion of Necessity";

@@ -631,11 +631,6 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		}
 	}
 
-	if(this->IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONSDURABILITY) > 0) {
-		uint32 rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONSDURABILITY);
-		npc_type->max_hp *= floor(1 + rank * 0.02f);
-		npc_type->cur_hp *= floor(1 + rank * 0.02f);
-	}
 
 	if (MaxHP){
 		npc_type->max_hp += (npc_type->max_hp*MaxHP)/100;

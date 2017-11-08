@@ -181,7 +181,7 @@ class Build {
 			case "magician":
 			$build->fullName = "Magician";
 			$build->monogram = 13;
-			$build->desc = "Magicians are conjurers of creatures from other planes or offensive specialists.<br> Their 3 styles focus on either stronger pets, area of effect damage, or empowering their utility skills";
+			$build->desc = "Magicians are wielders of magic, conjuring items and creatures from other realms. Note that in rebuild, pets are heavily reduced in effectiveness compared to live EQ.";
 			$build->styles[0] = "Conjurer";
 			$build->styles[1] = "Elementalist";
 			$build->styles[2] = "Geomancer";
@@ -494,7 +494,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Bash";
-			$newSkill->desc = 'When the cleric uses bash, they heal for <em data-base="4">4</em>% of the cleric\'s max hp per rank to a group member with lowest health<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When the cleric uses bash, they heal for <em data-base="4">4</em>% of the cleric\'s max hp per rank to a group member with lowest health<span class="perLevel"> per rank</span>. This does not heal the cleric.';
 			$newSkill->image = "/images/builds/icons/rb-clr-divinebash.png";	
 			$skills[20] = $newSkill;
 
@@ -749,25 +749,25 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Quick Summoning";
-			$newSkill->desc = 'Reduces the cast time of pet summoning spells by <em data-base="10">10</em>% per rank.';
+			$newSkill->desc = 'Reduces the cast time of pet summoning spells by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-quicksummoning.png";
 			$skills[2] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Improved Reclaim Energy";
-			$newSkill->desc = 'Increases the amount of mana returned by Reclaim Energy by <em data-base="5">5</em>% per rank.';
+			$newSkill->desc = 'Increases the amount of mana returned by Reclaim Energy by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-improvedreclaimenergy.png";
 			$skills[4] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Modulation Shard";
-			$newSkill->desc = 'Summons a modulation rod with <em data-base="1">1</em> charge per rank.';
+			$newSkill->desc = 'Summons a modulation rod with <em data-base="1">1</em> charge<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-modulationshard.png";
 			$skills[6] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Companion's Durability";
-			$newSkill->desc = 'Increases your pet\'s HP by <em data-base="2">2</em>% per rank.';
+			$newSkill->title = "Companion's Intensity";
+			$newSkill->desc = 'Increases your pet\'s damage melee damage by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-companionsdurability.png";
 			$skills[8] = $newSkill;
 
@@ -791,31 +791,31 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Shared Health";
-			$newSkill->desc = 'Grants the Shared Health AA, causing <em data-base="10">10</em>% of your incoming damage per rank to be sent to your pet instead.';
+			$newSkill->desc = 'Grants the Shared Health AA, causing <em data-base="10">10</em>% of your incoming damage<span class="perLevel"> per rank</span> to be sent to your pet instead.';
 			$newSkill->image = "/images/builds/icons/rb-mag-sharedhealth.png";
 			$skills[18] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Host in the Shell";
-			$newSkill->desc = 'Grants the Host in the Shell AA, creating a rune effect on your pet with <em data-base="20">20</em>% of the rune\'s maximum value per rank.';
+			$newSkill->desc = 'Grants the Host in the Shell AA, creating a rune effect on your pet with <em data-base="20">20</em>% of the rune\'s maximum value<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-hostintheshell.png";
 			$skills[20] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Turn Summoned";
-			$newSkill->desc = 'Grants the Turn Summoned AA, inflicing a DoT for <em data-base="500">500</em> damage per rank per tick for 4 ticks with a <em data-base="1">1</em>% chance per rank to cause 32000 damage.';
+			$newSkill->desc = 'Grants the Turn Summoned AA, inflicing a DoT for <em data-base="500">500</em> damage per rank per tick for 4 ticks with a <em data-base="1">1</em>% chance<span class="perLevel"> per rank</span> to cause 32000 damage.';
 			$newSkill->image = "/images/builds/icons/rb-mag-turnsummoned.png";
 			$skills[22] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Frenzied Burnout";
-			$newSkill->desc = 'Grants the Frenzied Burnout AA, accelearting your pet\'s frenzy. This spell\'s effect includes overhaste. Each rank grants <em data-base="20">20</em>% of the spell\'s maximum effectiveness.';
+			$newSkill->desc = 'Reduces the mana cost of direct damage spells by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-frenziedburnout.png";
 			$skills[24] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Elemental Alacrity";
-			$newSkill->desc = 'Grants your pet the ability to flurry with at <em data-base="4">4</em>% chance per rank.';
+			$newSkill->desc = 'Improves element-based direct damage spells by <em data-base="4">4</em>% damage per rank.';
 			$newSkill->image = "/images/builds/icons/rb-mag-elementalalacrity.png";
 			$skills[26] = $newSkill;
 
@@ -875,13 +875,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Heart of Flames";
-			$newSkill->desc = 'Grants Heart of Flames AA that provides a massive damage shield. The effectiveness of the spell is scaled at 20% per rank.';
+			$newSkill->desc = 'Grants Heart of Flames AA that provides a massive damage shield. The effectiveness of the spell is scaled at <em data-base="20">20</em>% <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-heartofflames.png";
 			$skills[49] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Primal Fusion";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, casting Primal Fusion on your pet, increasing its HP and granting an additional direct damage and stun proc. The effectiveness of the spell\'s effects are scaled at 20% per rank ';
+			$newSkill->desc = 'When you attack with a direct damage spell, your pet will also cast the spell dealing <em data-base="5">5</em> of it\'s damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-primalfusion.png";
 			$skills[52] = $newSkill;
 			break;
@@ -890,7 +890,7 @@ class Build {
 			case "monk":
 			$newSkill = new stdClass();
 			$newSkill->title = "Intensified Training";
-			$newSkill->desc = 'The monk gains a 300 mod proc that deals (level * 1.25 * <em data-base="0.2">0.2</em>) magic damage.';
+			$newSkill->desc = 'The monk gains a 300 mod proc that deals (level * 1.25 * <em data-base="0.2">0.2</em>) magic damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-intensifiedtraining.png";
 			$skills[0] = $newSkill;
 

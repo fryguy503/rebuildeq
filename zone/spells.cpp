@@ -322,6 +322,17 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 			mana_cost -= rank;
 			if (mana_cost < 1) mana_cost = 0;			
 		}
+
+		rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT);
+		if (rank > 0 && mana_cost > 0 && (
+			spell_id == 113 || spell_id == 114 || spell_id == 330 || spell_id == 324
+			|| spell_id == 410 || spell_id == 1663 || spell_id == 313 || spell_id == 93 || spell_id == 94 || spell_id == 322 || spell_id == 328 || spell_id == 334 || spell_id == 83 || spell_id == 68 || spell_id == 189 || spell_id == 120 || spell_id == 69 || spell_id == 121 || spell_id == 122 || spell_id == 70 || spell_id == 1659 || spell_id == 1660 || spell_id == 1661 || spell_id == 1662 || spell_id == 1664 || spell_id == 2118 || spell_id == 2540 || spell_id == 4078
+			)) {
+			int reduced = floor(mana_cost * 0.1f * rank);
+			BuildEcho(StringFormat("Frenzied Burnout reduced mana cost by %i", rank));
+			mana_cost -= rank;
+			if (mana_cost < 1) mana_cost = 0;
+		}
 	}
 	//To prevent NPC ghosting when spells are cast from scripts
 	if (IsNPC() && IsMoving() && cast_time > 0)
@@ -2635,6 +2646,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 			Log(Logs::Detail, Logs::Spells, "Spell %d: Setting long reuse timer to %d s (orig %d)", spell_id, recast, spells[spell_id].recast_time);
 			CastToClient()->GetPTimers().Start(pTimerSpellStart + spell_id, recast);
 		}
+
 	}
 
 	if(IsClient() && (slot == CastingSlot::Item || slot == CastingSlot::PotionBelt))

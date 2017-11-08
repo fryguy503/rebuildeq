@@ -4097,8 +4097,18 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 	if(damage > 0) {
 		//if there is some damage being done and theres an attacker involved
 		if (attacker) {
+			int bonus_damage;
+			if (attacker->IsNPC() && attacker->IsPet() && attacker->GetOwner()->IsClient()) {
+				rank = attacker->GetOwner()->GetBuildRank(MAGICIAN, RB_MAG_COMPANIONSINTENSITY);
+				if (rank > 0) {
+					bonus_damage = floor(damage * 0.1f * rank);
+					if (bonus_damage > 0) attacker->GetOwner()->BuildEcho(StringFormat("Companion's Intensity %i added %i bonus damage.", rank, bonus_damage));
+					damage += bonus_damage;
+				}
+			}
+
 			if (attacker->IsClient()) {
-				int bonus_damage;
+				
 				Client * attacker_client = attacker->CastToClient();
 				rank = attacker_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH);
 				if (rank > 0 && (skill_used == EQEmu::skills::Skill2HBlunt || skill_used == EQEmu::skills::Skill2HPiercing || skill_used ==  EQEmu::skills::Skill2HSlashing)) {
@@ -6397,17 +6407,7 @@ void Mob::DoMainHandAttackRounds(Mob *target, ExtraAttackOptions *opts)
 		// The mobs that could triple lost the ability to when the triple attack skill was added in
 		Attack(target, EQEmu::inventory::slotPrimary, false, false, false, opts);
 		if (CanThisClassDoubleAttack() && CheckDoubleAttack()) {
-			Attack(target, EQEmu::inventory::slotPrimary, false, false, false, opts);
-			if ((IsPet() || IsTempPet()) && IsPetOwnerClient()) {
-				int chance = spellbonuses.PC_Pet_Flurry + itembonuses.PC_Pet_Flurry + aabonuses.PC_Pet_Flurry;
-				
-				if(GetOwner()->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_ELEMENTALALACRITY) > 0) {
-					chance += (4 * GetOwner()->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_ELEMENTALALACRITY));
-				}
-				
-				if (chance && zone->random.Roll(chance))
-					Flurry(nullptr);
-			}
+			Attack(target, EQEmu::inventory::slotPrimary, false, false, false, opts);			
 		}
 		return;
 	}

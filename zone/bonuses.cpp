@@ -1657,12 +1657,6 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 			i = EFFECT_COUNT; //End the loop
 		}
 		
-		if(spell_id == 2754 && IsPet() && IsNPC() && GetOwner()->IsClient()) {
-			Client * client = CastToNPC()->GetOwner()->CastToClient();
-			uint32 rank = client->GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT);
-			effect_value *= (rank / 5.0f);
-		}
-
 		switch (effectid)
 		{
 			case SE_CurrentHP: //regens
@@ -1810,11 +1804,6 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_TotalHP:
 			{
-				if (spell_id == 6276 && IsClient() && CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) // Primal Spirit Buff
-				{
-					// Change the amount of HP healed to scale with the rank
-					effect_value *= (CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) / 5.0f);
-				}
 			
 				new_bonus->HP += effect_value;
 				break;

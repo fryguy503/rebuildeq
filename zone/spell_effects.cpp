@@ -327,6 +327,20 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg -= bashBonus;
 							}
 
+							rank = casterClient->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION);
+							if (rank > 0 && (
+								spell_id == 113 || spell_id == 114 || spell_id == 330 || spell_id == 324
+								|| spell_id == 410 || spell_id == 1663 || spell_id == 313 || spell_id == 93 || spell_id == 94 || spell_id == 322 || spell_id == 328 || spell_id == 334 || spell_id == 83 || spell_id == 68 || spell_id == 189 || spell_id == 120 || spell_id == 69 || spell_id == 121 || spell_id == 122 || spell_id == 70 || spell_id == 1659 || spell_id == 1660 || spell_id == 1661 || spell_id == 1662 || spell_id == 1664 || spell_id == 2118 || spell_id == 2540 || spell_id == 4078
+								) && HasPet()) {
+								int bonusDamage = floor(dmg * 0.05f * rank);
+								if (bonusDamage > 0) {
+									
+									BuildEcho(StringFormat("Primal Fusion %i caused your pet to echo your spell for %i damage.", rank, bonusDamage));
+									GetPet()->Damage(GetPet(), bonusDamage, spell_id, spell.skill, false, buffslot, false);
+								}
+								 
+							}
+
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_LINGERINGPAIN);
 							if (rank > 0 && spells[spell_id].classes[DRUID] > (GetLevel() - 15) &&
 								(spell_id == 239 || spell_id == 93 || spell_id == 92 || spell_id == 252 || spell_id == 91 || spell_id == 419 || spell_id == 52 || spell_id == 405 || spell_id == 27 || spell_id == 115 || spell_id == 217 || spell_id == 1439 || spell_id == 406 || spell_id == 418 || spell_id == 664 || spell_id == 57 || spell_id == 1436 || spell_id == 29 || spell_id == 420 || spell_id == 433 || spell_id == 671 || spell_id == 1603 || spell_id == 1529 || spell_id == 1605 || spell_id == 2518 || spell_id == 1606 || spell_id == 1607 || spell_id == 2126 || spell_id == 2877 || spell_id == 1740)
@@ -489,6 +503,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg -= bonus;
 							}
 
+							// Elemental Alacrity
+							rank = casterClient->GetBuildRank(MAGICIAN, RB_MAG_ELEMENTALALACRITY);
+							if (rank > 0 && caster != this && (
+								spell_id == 313 || spell_id == 93 || spell_id == 94 || spell_id ==322 || spell_id ==328 || spell_id ==334 || spell_id ==83 || spell_id ==68 || spell_id ==189 || spell_id ==120 || spell_id ==69 || spell_id ==121 || spell_id ==122 || spell_id ==70 || spell_id ==1659 || spell_id ==1660 || spell_id ==1661 || spell_id ==1662 || spell_id ==1664 || spell_id ==2118 || spell_id ==2540 || spell_id ==4078
+								)) { //
+								int bonus = floor(dmg * 0.1f * rank * -1);
+								casterClient->BuildEcho(StringFormat("Elemental Alacrity %u added %i bonus damage.", rank, bonus));
+								dmg -= bonus;
+							}
+
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
 							if (rank > 0) {
 								int duration = zone->random.Int(0, rank);
@@ -516,10 +540,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}	
 
-							rank = casterClient->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION);
-							if (spell_id == 6317 && rank > 0) {
-								dmg *= (rank / 5.0f);
-							}
 						}
 
 						dmg = caster->GetActSpellDamage(spell_id, dmg, this);
@@ -805,11 +825,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					caster->SetHP(dmg / 4); // 2003 patch notes say ~ 1/4 HP. Should this be 1/4 your current HP or do 3/4 max HP dmg? Can it kill you?
 					dmg = -dmg;
 				}
-				if (spell_id == 6276 && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) // Primal Spirit Buff
-				{
-					// Change the amount of HP healed to scale with the rank
-					effect_value *= (caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) / 5.0f);
-				}				
 
 				if (caster->IsClient()) {
 
@@ -1359,11 +1374,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							) {
 							int rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 							effect_value = 2000 * rank;
-						}
-						
-						if(spell_id == 6318 && caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_PRIMALFUSION) > 0) {
-							effect *= (caster->CastToClient()->GetBuildRank(DRUID, RB_MAG_PRIMALFUSION)/5.0f);
-						}
+						}						
 
 						Stun(effect_value);
 					} else {
