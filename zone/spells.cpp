@@ -307,12 +307,14 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 	if (IsClient()) {
 		uint32 rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
 		if (item_slot == 0 && spell_id == 202 && rank > 0) {
-			mana_cost = ((GetLevel() / 60) * 200);
+			mana_cost = floor((GetLevel() / 60) * 200);
+			if (mana_cost < 10) mana_cost = 10;
 		}
 
 		rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE);
 		if (item_slot == 0 && spell_id == 202 && rank > 0) {
-			mana_cost = ((GetLevel() / 60) * 200);
+			mana_cost = floor((GetLevel() / 60) * 200);
+			if (mana_cost < 10) mana_cost = 10;
 		}
 		
 		rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_PROMISE);
