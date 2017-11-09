@@ -300,6 +300,7 @@ void command_spelleffect(Client *c, const Seperator *sep);
 void command_spellinfo(Client *c, const Seperator *sep);
 void command_spoff(Client *c, const Seperator *sep);
 void command_spon(Client *c, const Seperator *sep);
+void command_stats(Client *c, const Seperator *sep);
 void command_stun(Client *c, const Seperator *sep);
 void command_summon(Client *c, const Seperator *sep);
 void command_summonburiedplayercorpse(Client *c, const Seperator *sep);

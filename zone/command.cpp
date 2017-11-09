@@ -389,6 +389,7 @@ int command_init(void)
 		command_add("spellinfo", "[spellid] - Get detailed info about a spell", 50, command_spellinfo) ||
 		command_add("spoff", "- Sends OP_ManaChange", 80, command_spoff) ||
 		command_add("spon", "- Sends OP_MemorizeSpell", 80, command_spon) ||
+		command_add("stats", "- Get stats about target", 250, command_stats) ||
 		command_add("stun", "[duration] - Stuns you or your target for duration", 100, command_stun) ||
 		command_add("summon", "[charname] - Summons your player/npc/corpse target, or charname if specified", 80, command_summon) ||
 		command_add("summonburiedplayercorpse", "- Summons the target's oldest buried corpse, if any exist.",  100, command_summonburiedplayercorpse) ||
@@ -1505,7 +1506,7 @@ void command_npcstats(Client *c, const Seperator *sep)
 		if (c->GetTarget()->CastToNPC()->GetSpecialAbility(UNSLOWABLE)) specials += "!SLOW ";
 		if (c->GetTarget()->CastToNPC()->GetSpecialAbility(FLEE_PERCENT)) specials += "FLEE ";
 
-		dps = c->GetTarget()->CastToNPC()->GetMaxDamage() * num_hits*(100/c->GetTarget()->CastToNPC()->GetAttackDelay()) / 20.0f;
+		dps = c->GetTarget()->CastToNPC()->GetMaxDamage() * num_hits*(c->GetTarget()->CastToNPC()->GetAttackDelay() / 1000);
 
 		c->Message(0, "NPC Stats:");
 		c->Message(0, "Name: %s   NpcID: %u",  c->GetTarget()->GetName(), c->GetTarget()->GetNPCTypeID());
@@ -1777,6 +1778,55 @@ void command_zcolor(Client *c, const Seperator *sep)
 void command_spon(Client *c, const Seperator *sep)
 {
 	c->MemorizeSpell(0, SPELLBAR_UNLOCK, memSpellSpellbar);
+}
+
+void command_stats(Client *c, const Seperator *sep)
+{
+	if (!c->GetTarget()) {
+		c->Message(0, "Need a target.");
+		return;
+	}
+	Mob *target = c->GetTarget();
+	if (target->IsCorpse()) {
+		c->Message(0, "Doesn't support dead stuff yet.");
+		return;
+	}
+
+	std::string specials = "";
+	int num_hits = 1;
+	if (c->GetTarget()->GetLevel() > 10) {
+		num_hits = 2;
+	}
+	
+	if (target->GetSpecialAbility(SPECATK_TRIPLE)) {
+		specials += "TRIP ";
+		num_hits = 3;
+	}
+
+	if (target->GetSpecialAbility(SPECATK_QUAD)) {
+		num_hits = 4;
+		specials += "QUAD ";
+	}
+
+	if (target->GetSpecialAbility(SPECATK_FLURRY)) specials += "FLUR ";
+
+	if (target->GetSpecialAbility(UNSLOWABLE)) specials += "!SLOW ";
+	if (target->GetSpecialAbility(FLEE_PERCENT)) specials += "FLEE ";
+	int max_dmg = target->CastToNPC()->GetMaxDamage();
+	int delay = target->CastToNPC()->GetAttackDelay();
+	float dps = floor(max_dmg * num_hits*(delay / 1000)/40);
+
+	c->Message(0, "NPC Stats:");
+	c->Message(0, "Name: %s   NpcID: %u", c->GetTarget()->GetName(), c->GetTarget()->GetNPCTypeID());
+	c->Message(0, "Race: %i  Level: %i  Class: %i  Material: %i", c->GetTarget()->GetRace(), c->GetTarget()->GetLevel(), c->GetTarget()->GetClass(), c->GetTarget()->GetTexture());
+	c->Message(0, "HP: %i, AC: %i", target->GetMaxHP(), target->GetAC());
+	c->Message(0, "STR: %i, DEX: %i", target->GetSTR(), target->GetAGI());
+	c->Message(0, "Min: %i, Max: %i, Delay: %i", target->CastToNPC()->GetMinDamage(), target->CastToNPC()->GetMaxDamage(), target->CastToNPC()->GetAttackDelay());
+	c->Message(0, "DPS: %f", dps);		
+	c->Message(0, "Specials: %s", specials.c_str());
+	c->Message(0, "Spawn Group: %i  Grid: %i", c->GetTarget()->CastToNPC()->GetSp2(), c->GetTarget()->CastToNPC()->GetGrid());
+	c->GetTarget()->CastToNPC()->QueryLoot(c);
+
 }
 
 void command_spoff(Client *c, const Seperator *sep)
