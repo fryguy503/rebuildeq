@@ -12,4 +12,5 @@ We use 64bit version of binaries.
 * Cmake: Hit Configure, be sure to set to Visual Studio 14 2015 Win64. Use native compilers (default option)
 * Cmake: While configures, you may get red background.. hit configure twice some times it'll go away, or let me know the error. USually lib boost dir not found
 * Cmake: Hit generate.
+* Extract the \rebuildeq\dependencies\protobuf\lib_x64\libprotobufd.zip into the directory. It's too big for github uncompressed, is why it's zipped.
 * Go to your rebuildeq/build directory, and double click the EQEmu.sln file (or right click, open with -> visual studio 2015).
