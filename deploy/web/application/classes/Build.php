@@ -724,7 +724,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Deep Roots";
-			$newSkill->desc = 'When a root wears off, there is a <em data-base="3"></em>% chance the target will be snared if it is not already.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When a root wears off, there is a <em data-base="3"></em>% chance the target will be snared if it is not already<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-deeproots.png";	
 			$skills[49] = $newSkill;
 
@@ -737,6 +737,11 @@ class Build {
 			
 			//==================ENCHANTER======================
 			case "enchanter":
+			$newSkill = new stdClass();
+			$newSkill->title = "Nightmare";
+			$newSkill->desc = 'Damage over time spells do an additional <em data-base="10"></em>% damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[0] = $newSkill;
 			break;
 
 			//==================MAGICIAN======================

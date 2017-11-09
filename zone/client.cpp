@@ -11193,6 +11193,9 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_DRU_DEEPROOTS) return "Deep Roots";
 		else if (id == RB_DRU_NATURESBLIGHT) return "Natures Blight";
 		break;	
+	case ENCHANTER:
+		if (id == RB_ENC_NIGHTMARE) return "Nightmare";
+		break;
 	case MAGICIAN:
 		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";
 		else if (id == RB_MAG_QUICKSUMMONING) return "Quick Summoning";

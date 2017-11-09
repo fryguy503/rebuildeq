@@ -4518,15 +4518,22 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 				if (caster->IsClient()) {
 					Client* caster_client = caster->CastToClient();
+					int bonus_damage = 0;
 					
 					uint16 rank = caster_client->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED);
 					if (rank > 0 && buff.spellid == 8133) {
-						effect_value *= (rank * 5);
+						bonus_damage = -effect_value;
+						bonus_damage *= floor(rank * 5);
+						BuildEcho(StringFormat("Turn Summoned %i caused %i bonus damage.", rank, bonus_damage));
+						effect_value -= bonus_damage;						
 					}
 
 					rank = caster_client->GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD);
 					if (rank > 0 && buff.spellid == 8048) {
-						effect_value *= (rank * 5);
+						bonus_damage = -effect_value;
+						bonus_damage *= floor(rank * 5);
+						caster_client->Message(MT_DoTDamage, "Focused Swarm %u caused %i bonus damage to %s.", rank, bonus_damage, GetCleanName());
+						effect_value -= bonus_damage;
 					}
 
 					
@@ -4553,18 +4560,29 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							multiplier = 0.5f;
 						}
 						if (multiplier > 0) {
-							int bonus_damage = floor(effect_value * multiplier * 0.1f * rank);
-							if (bonus_damage > 0) bonus_damage = -1;
+							bonus_damage = -effect_value;
+							bonus_damage = floor(bonus_damage * multiplier * 0.1f * rank);
+							if (bonus_damage > 0) bonus_damage = 1;
 							caster_client->Message(MT_DoTDamage, "Focused Swarm %u caused %i bonus damage to %s.", rank, -bonus_damage, GetCleanName());
-							effect_value += bonus_damage;
+							effect_value -= bonus_damage;
 						}
 					}
 					rank = caster_client->GetBuildRank(DRUID, RB_DRU_INTENSITY);
 					if (rank > 0) {
-						int bonus_damage = floor(effect_value * 0.1f * rank);
-						if (bonus_damage > 0) bonus_damage = -1;
-						caster_client->BuildEcho(StringFormat("Intensity %u caused %i bonus damage to %s.", rank, -bonus_damage, GetCleanName()));
-						effect_value += bonus_damage;
+						bonus_damage = -effect_value;
+						bonus_damage = floor(bonus_damage * 0.1f * rank);
+						if (bonus_damage < 1) bonus_damage = 1;
+						caster_client->BuildEcho(StringFormat("Intensity %u caused %i bonus damage to %s.", rank, bonus_damage, GetCleanName()));
+						effect_value -= bonus_damage;
+					}
+					rank = caster_client->GetBuildRank(ENCHANTER, RB_ENC_NIGHTMARE);
+					if (rank > 0) {
+						//flip damage
+						bonus_damage = -effect_value;
+						bonus_damage = floor(bonus_damage * 0.1f * rank);
+						if (bonus_damage <  1) bonus_damage = 1;
+						caster_client->BuildEcho(StringFormat("Nightmare %u caused %i bonus damage to %s.", rank, bonus_damage, GetCleanName()));
+						effect_value -= bonus_damage;
 					}
 				}
 				effect_value = caster->GetActDoTDamage(buff.spellid, effect_value, this);
