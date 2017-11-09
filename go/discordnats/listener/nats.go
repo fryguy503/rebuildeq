@@ -228,7 +228,7 @@ func DoDailyReport() {
 		}
 	}
 	if topLvl >= 0 {
-		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Level Gains: %s with %i levels gained!", dailyReport.DailyGains[topLvl].Identity, int(dailyReport.DailyGains[topLvl].Lvl))); err != nil {
+		if _, err = disco.SendMessage(channelID, fmt.Sprintf("Top Level Gains: %s with %d levels gained!", dailyReport.DailyGains[topLvl].Identity, int(dailyReport.DailyGains[topLvl].Lvl))); err != nil {
 			log.Printf("[NATS] Error sending message: %s", err.Error())
 			return
 		}
