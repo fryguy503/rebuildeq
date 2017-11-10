@@ -9680,6 +9680,12 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Soothing Words\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == ENCHANTER && i == RB_ENC_COLORSHOCK && GetAA(aaColorShock) < 1) {
+					TrainAARank(aaColorShock);
+					Message(15, "You have unlocked the AA \"Color Shock\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+
 				if (GetClass() == ENCHANTER && i == RB_ENC_MINDOVERMATTER && GetAA(aaMindOverMatter) < 1) {
 					TrainAARank(aaMindOverMatter);
 					Message(15, "You have unlocked the AA \"Mind over Matter\"! Find the hotkey in your Alternate Advancement Window.");
@@ -9720,7 +9726,6 @@ void Client::RefreshBuild() {
 					TrainAARank(aaSmallModulationShard);
 					Message(15, "You have unlocked the AA \"Small Modulation Shard\"! Find the hotkey in your Alternate Advancement Window.");
 				}
-				
 
 				if (GetClass() == MAGICIAN && i == RB_MAG_HEARTOFICE && GetAA(aaHeartofIce) < 1) {
 					TrainAARank(aaHeartofIce);
@@ -11216,6 +11221,9 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ENC_ENTHRALL) return "Enthrall";
 		else if (id == RB_ENC_BACKFIRE) return "Backfire";
 		else if (id == RB_ENC_ENERGYBURN) return "Energy Burn";
+
+		else if (id == RB_ENC_ENTROPY) return "Entropy";
+		else if (id == RB_ENC_COLORSHOCK) return "Color Shock";
 		break;
 	case MAGICIAN:
 		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";

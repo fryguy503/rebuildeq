@@ -977,7 +977,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					effect_value < 0) {
 					int damage_amount = floor(-effect_value * 0.4f);
 					if (damage_amount > 0) {
-						caster->BuildEcho(StringFormat("Energy Burn %i dealt %i damage to %s.", rank, damage_amount, GetCleanName());
+						caster->BuildEcho(StringFormat("Energy Burn %i dealt %i damage to %s.", rank, damage_amount, GetCleanName()));
 						
 					}
 				}

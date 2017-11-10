@@ -810,6 +810,23 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
 			$skills[22] = $newSkill;
 
+
+
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Entropy";
+			$newSkill->desc = 'When a skill that decreases strength lands, you deal (STR * <em data-base="0.2">0.2</em>) damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[36] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Color Shock";
+			$newSkill->desc = 'Grants the Color Shock AA, causing a chance to stun when attacked. Chance increases by <em data-base="1">1</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[38] = $newSkill;
+
+			
 			break;
 
 			//==================MAGICIAN======================

@@ -2237,6 +2237,18 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 		}
 	}
 
+	int rank = GetBuildRank(ENCHANTER, RB_ENC_ENTROPY);
+	if (rank > 0 && spell_target && spell_target->IsNPC()) {
+		int effect = GetSpellEffectIndex(spell_id, SE_STR);
+		if (effect < 0) {
+			effect = floor(effect * 0.2f * rank);
+			if (effect < 1) effect = 1;
+			BuildEcho(StringFormat("Entropy %i dealt %i damage.", rank, effect));
+			spell_target->Damage(this, effect, spell_id, EQEmu::skills::SkillAlteration, true);
+		}
+	}
+
+
 	if (IsClient() && CastToClient()->GetGM()){
 		if (zone->IsSpellBlocked(spell_id, glm::vec3(GetPosition()))){
 			Log(Logs::Detail, Logs::Spells, "GM Cast Blocked Spell: %s (ID %i)", GetSpellName(spell_id), spell_id);
