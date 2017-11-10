@@ -2264,7 +2264,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 		}
 	}
 
-	int rank = GetBuildRank(ENCHANTER, RB_ENC_ENTROPY);
+	rank = GetBuildRank(ENCHANTER, RB_ENC_ENTROPY);
 	if (rank > 0 && spell_target && spell_target->IsNPC()) {
 		int effect = GetSpellEffectIndex(spell_id, SE_STR);
 		if (effect < 0) {

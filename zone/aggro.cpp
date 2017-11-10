@@ -22,6 +22,7 @@
 #include "../common/rulesys.h"
 #include "../common/spdat.h"
 
+#include "string_ids.h"
 #include "client.h"
 #include "corpse.h"
 #include "entity.h"
@@ -1179,7 +1180,14 @@ int32 Mob::CheckAggroAmount(uint16 spell_id, Mob *target, bool isproc)
 	if (dispel && spells[spell_id].HateAdded > 0 && !on_hatelist)
 		AggroAmount -= 100;
 
-	return AggroAmount + spells[spell_id].bonushate + nonModifiedAggro;
+	int finalAggro = AggroAmount + spells[spell_id].bonushate + nonModifiedAggro;
+	int rank = GetBuildRank(ENCHANTER, RB_ENC_SUBTLECASTING);
+	if (rank > 0 && target && target->IsNPC()) {
+		int modAggro = floor(finalAggro * 0.02f * rank);
+		BuildEcho(StringFormat("Sublte Casting %i reduced hate from %i to %i", rank, finalAggro, finalAggro - modAggro));
+		finalAggro -= modAggro;
+	}
+	return finalAggro;
 }
 
 //healing and buffing aggro

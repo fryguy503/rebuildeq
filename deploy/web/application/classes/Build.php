@@ -843,6 +843,12 @@ class Build {
 			$newSkill->desc = 'Lowers aggression when casting a spell by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
 			$skills[44] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Subtle Casting";
+			$newSkill->desc = 'Lowers aggression when casting a spell by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[44] = $newSkill;
 			break;
 
 			//==================MAGICIAN======================
