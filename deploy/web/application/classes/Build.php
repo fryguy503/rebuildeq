@@ -817,7 +817,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Focus";
-			$newSkill->desc = 'When you use a detrimental spell, you deal <em data-base="10">10</em> bonus damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you use a detrimental spell, your mana cost is reduced by <em data-base="10">10</em> bonus damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
 			$skills[28] = $newSkill;
 
