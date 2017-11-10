@@ -11409,8 +11409,7 @@ bool Client::IsStanding() {
 }
 
 bool Client::IsBuildAvailable() {
-	if (GetClass() == ENCHANTER ||
-		GetClass() == NECROMANCER ||
+	if (GetClass() == NECROMANCER ||
 		GetClass() == RANGER ||
 		GetClass() == WARRIOR ||
 		GetClass() == WIZARD) {		
