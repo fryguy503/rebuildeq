@@ -7693,6 +7693,7 @@ bool Mob::CheckBackfire() {
 		CalcBonuses();
 		return true;
 	}
+	return false;
 }
 
 void Mob::BadMoonProc(Mob *defender, DamageHitInfo &hit) {
