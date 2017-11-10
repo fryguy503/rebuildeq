@@ -323,6 +323,12 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 			mana_cost = floor((GetLevel() / 60) * 200);
 			if (mana_cost < 10) mana_cost = 10;
 		}
+		rank = GetBuildRank(ENCHANTER, RB_ENC_FLOWINGTHOUGHT);
+		if (item_slot == 0 && spell_id == 697 && rank > 0) {
+			mana_cost = floor((GetLevel() / 60) * 200);
+			if (mana_cost < 10) mana_cost = 10;
+		}
+
 
 		rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE);
 		if (item_slot == 0 && spell_id == 202 && rank > 0) {
@@ -2190,13 +2196,34 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 	Mob *ae_center = nullptr;
 
 	//Shin: resist adjust penetration for Unholy Focus
-	if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS) > 0) {
-		resist_adjust -= floor(resist_adjust * 0.1f * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS));
+	int rank = 0;
+	if (IsClient()) {
+		rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS);
+		int effect_value = 0;
+		int resist_mod = 0;
+		if (rank > 0 && IsDetrimentalSpell(spell_id)) {
+			resist_mod = floor(resist_adjust * 0.02f * rank);
+			BuildEcho(StringFormat("Unholy Focus %i reduced resists from %i to %i", rank, resist_adjust, resist_adjust - resist_mod));
+			resist_adjust -= resist_mod;
+		}
+		rank = GetBuildRank(ENCHANTER, RB_ENC_MANASPEAR);
+		effect_value = CalcSpellEffectValue(spell_id, SE_CurrentMana);
+		if (rank > 0 && 
+			effect_value < 0) {
+			resist_mod = floor(resist_adjust * 0.02f * rank);
+			BuildEcho(StringFormat("Mana Spear %i reduced resists from %i to %i", rank, resist_adjust, resist_adjust - resist_mod));
+			resist_adjust -= resist_mod;
+		}
+		rank = GetBuildRank(ENCHANTER, RB_SHM_EXTENDEDTURGUR);
+		effect_value = CalcSpellEffectValue(spell_id, SE_AttackSpeed);
+		if (rank > 0 && 
+			effect_value < 0) {
+			resist_mod = floor(resist_adjust * 0.05f * rank);
+			BuildEcho(StringFormat("Extended Turgur %i reduced resists from %i to %i", rank, resist_adjust, resist_adjust - resist_mod));
+			resist_adjust -= resist_mod;
+		}
 	}
 
-	if (IsClient() && CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR) > 0) {
-		resist_adjust -= floor(resist_adjust * 0.05f * CastToClient()->GetBuildRank(SHAMAN, RB_SHM_EXTENDEDTURGUR));
-	}
 
 	if(!IsValidSpell(spell_id))
 		return false;

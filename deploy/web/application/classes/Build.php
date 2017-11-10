@@ -826,7 +826,23 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
 			$skills[38] = $newSkill;
 
-			
+			$newSkill = new stdClass();
+			$newSkill->title = "Mana Spear";
+			$newSkill->desc = 'When you use a spell that takes mana from an enemy, increases chance to land by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[40] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Flowing Thought";
+			$newSkill->desc = 'Breeze now grants the enchanter many of their buffs.<br>Rank 1: Breeze (to mana users)<br><br>Rank 2: Visage Line (+to tanks, -to rest)<br>Rank 3: Haste(to non-casters)<br>Rank 4: Gift (to mana users)<br>Rank 5: Doubles duration of buffs';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[42] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Subtle Casting";
+			$newSkill->desc = 'Lowers aggression when casting a spell by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[44] = $newSkill;
 			break;
 
 			//==================MAGICIAN======================
@@ -1602,7 +1618,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Gouging Skin";
-			$newSkill->desc = 'When attacked, causes a <em data-base="4">4</em> point damage shield and <em data-base="20">20</em> hate<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When attacked, causes a <em data-base="4">4</em> point damage shield and <em data-base="30">30</em> hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-gougingskin.png";	
 			$skills[2] = $newSkill;
 			
@@ -1680,7 +1696,7 @@ class Build {
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Unholy Focus";
-			$newSkill->desc = 'Improves all direct damage spells to penetrate <em data-base="10">10</em>% spell resists<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Improves all detrimental spells to penetrate <em data-base="2">2</em>% spell resists<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-unholyfocus.png";	
 			$skills[31] = $newSkill;
 		

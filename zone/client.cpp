@@ -11224,6 +11224,9 @@ std::string Client::GetBuildName(uint32 id) {
 
 		else if (id == RB_ENC_ENTROPY) return "Entropy";
 		else if (id == RB_ENC_COLORSHOCK) return "Color Shock";
+		else if (id == RB_ENC_MANASPEAR) return "Mana Spear";
+		else if (id == RB_ENC_FLOWINGTHOUGHT) return "Flowing Thought";
+		else if (id == RB_ENC_SUBTLECASTING) return "Subtle Casting";
 		break;
 	case MAGICIAN:
 		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";

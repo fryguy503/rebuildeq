@@ -3431,7 +3431,7 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 		if (rank > 0) {
 			DS += ((spell_ds) ? 1 : -1) * 4 * rank;
 			if (attacker->IsNPC()) {
-				attacker->AddToHateList(this, uint32(10 * rank));
+				attacker->AddToHateList(this, uint32(30 * rank));
 			}
 		}
 		

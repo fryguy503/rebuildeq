@@ -827,7 +827,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				}
 
 				if (caster->IsClient()) {
-
+					
 					rank = caster->CastToClient()->GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE);
 					if (spell_id == 202 && rank > 0) {
 						int duration = caster_level * 10;
@@ -4003,6 +4003,56 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						entity_list.LogManaEvent(caster, this, manaAmount);
 						SetMana(GetMana() + manaAmount);
 					}
+
+
+					rank = casterClient->GetBuildRank(ENCHANTER, RB_ENC_FLOWINGTHOUGHT);
+					if (spell_id == 697 && rank > 0) {
+						int duration = caster_level * 10;
+						if (rank < 5) duration /= 2;
+						int lowestLevel = caster_level;
+						if (level < caster_level) lowestLevel = level;
+
+						if (rank >= 1) { //rank 1= Breeze
+							if (lowestLevel >= 60) caster->QuickBuff(this, 2570, duration); //koadic's endless intellect 60
+							else if (lowestLevel >= 56) caster->QuickBuff(this, 1695, duration); //gift of pure thought 56
+							else if (lowestLevel >= 52) caster->QuickBuff(this, 1693, duration); //clarity ii 52
+							else if (lowestLevel >= 42) caster->QuickBuff(this, 1694, duration); //boon of the clear mind 42
+							else if (lowestLevel >= 26) caster->QuickBuff(this, 174, duration); //clarity 26
+							//else caster->QuickBuff(this, 697, duration); //breeze 14 (war1)
+						}
+						if (rank >= 2) { //visage lines, + to tanks, - to rest							
+							if (GetClass() == WARRIOR || GetClass() == SHADOWKNIGHT || GetClass() == PALADIN) {
+								if (lowestLevel >= 56) caster->QuickBuff(this, 2568, duration); //horrifying visage 56
+								else caster->QuickBuff(this, 2563, duration); //haunting visage 26 (war1)
+							}
+							else {
+								if (lowestLevel >= 58) caster->QuickBuff(this, 2569, duration); //glamourous visage 58
+								else if (lowestLevel >= 54) caster->QuickBuff(this, 2597, duration); //beguiling visage 54
+								else caster->QuickBuff(this, 2564, duration); //calming visage 36 (war1)
+							}
+						}
+						if (rank >= 3 && GetMaxMana() > 0) { //gift line (only to those with mana)
+							if (lowestLevel >= 60) caster->QuickBuff(this, 1410, duration); //gift of brilliance 60
+							else if (lowestLevel >= 55) caster->QuickBuff(this, 1409, duration); //gift of insight 55
+							else caster->QuickBuff(this, 1408, duration); //gift of magic (war1)
+						}
+						if (rank >= 4 && 
+							GetClass() != ENCHANTER && 
+							GetClass() != MAGICIAN && 
+							GetClass() != WIZARD) { //Haste
+							//speed of the brood removed 2895
+							if (lowestLevel >= 60) caster->QuickBuff(this, 1710, duration); //visions of grandeur 60
+							//wonderous rapidity 70%, removed for aug 1709 
+							else if (lowestLevel >= 56) caster->QuickBuff(this, 1729, duration); //augment 56
+							else if (lowestLevel >= 53) caster->QuickBuff(this, 1708, duration); //aanya's quickening  53
+							else if (lowestLevel >= 47) caster->QuickBuff(this, 172, duration); //swift like the wind 47
+							else if (lowestLevel >= 39) caster->QuickBuff(this, 171, duration); //celerity 39
+							else if (lowestLevel >= 28) caster->QuickBuff(this, 10, duration); //augmentation 28
+							else if (lowestLevel >= 21) caster->QuickBuff(this, 170, duration); //alacrity 21
+							else caster->QuickBuff(this, 39, duration); //quickness 15 (war1)
+						}
+					}
+
 					
 					rank = casterClient->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
 					if (spell_id == 202 && rank > 0) {
