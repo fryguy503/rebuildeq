@@ -7254,8 +7254,8 @@ int Mob::GetTier() {
 		if (npc_type_id == 71012) return 1; //The_Spiroc_Lord
 		if (npc_type_id == 71065) return 1; //Eye_of_Veeshan
 		if (npc_type_id == 2000036) return 1; //The_Avatar_of_Sky
-		if (npc_type_id == 32040) return 2; //Lord_Nagafen
-		if (npc_type_id == 73057) return 2; //Lady_Vox
+		if (npc_type_id == 999249) return 2; //Lord_Nagafen
+		if (npc_type_id == 999250) return 2; //Lady_Vox
 		if (npc_type_id == 117073) return 2; //Kelorek`Dar
 		if (npc_type_id == 119112) return 2; //Wuoshi
 		if (npc_type_id == 94009) return 2; //Severilous
