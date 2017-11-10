@@ -4107,48 +4107,6 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				}
 			}
 
-			if (attacker->IsClient()) {
-				
-				Client * attacker_client = attacker->CastToClient();
-				rank = attacker_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH);
-				if (rank > 0 && (skill_used == EQEmu::skills::Skill2HBlunt || skill_used == EQEmu::skills::Skill2HPiercing || skill_used ==  EQEmu::skills::Skill2HSlashing)) {
-					bonus_damage = floor(damage * 0.05f * rank);
-					if (bonus_damage > 0) attacker_client->BuildEcho(StringFormat("Blood Oath %u added %i bonus damage.", rank, bonus_damage));
-					damage += bonus_damage;
-				}
-
-				rank = attacker_client->GetBuildRank(PALADIN, RB_PAL_KNIGHTSADVANTAGE);
-				if (rank > 0 && (skill_used == EQEmu::skills::Skill2HBlunt || skill_used == EQEmu::skills::Skill2HPiercing || skill_used == EQEmu::skills::Skill2HSlashing)) {
-					bonus_damage = floor(damage * 0.05f * rank);
-					if (bonus_damage > 0) attacker_client->BuildEcho(StringFormat("Knight's Advantage %u added %i bonus damage.", rank, bonus_damage));
-					damage += bonus_damage;
-				}
-
-				rank = attacker_client->CastToClient()->GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
-				if (rank > 0) {
-
-					uint8 counters = attacker_client->GetCoreCounter();
-					if (counters > 0) {
-						bonus_damage = floor(damage * 0.05f * counters);
-						if (bonus_damage < 1) bonus_damage = 1;
-						if (bonus_damage > 100) {
-							attacker_client->BuildEcho(StringFormat("Killing Spree %u added %i bonus damage with %u counters.", rank, bonus_damage, counters));
-						}						
-						damage += bonus_damage;
-					}
-				}
-
-				rank = attacker_client->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
-				if (rank > 0) {
-					uint8 counters = attacker_client->GetCoreCounter();
-					if (counters > 0) {
-						bonus_damage = floor(damage * 0.03f * counters);
-						if (bonus_damage < 1) bonus_damage = 1;
-						attacker_client->BuildEcho(StringFormat("Rotten Core %u added %i bonus damage with %u counters.", rank, bonus_damage, counters));
-						damage += bonus_damage;
-					}
-				}
-			}
 
 			// if spell is lifetap add hp to the caster
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell(spell_id)) {
@@ -6047,6 +6005,11 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 	int rank;
 
 	hit.damage_done += hit.min_damage;
+	
+
+	hit.damage_done += defender->DoCripplingPresenceAndEmpathy(this, hit);
+
+
 	if (IsClient()) {
 		int extra = 0;
 		switch (hit.skill) {
@@ -6060,6 +6023,73 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 		}
 		hit.damage_done += extra;
 
+		Client * attacker_client = CastToClient();
+		int bonus_damage = 0;
+
+		if (hit.skill == EQEmu::skills::SkillBackstab) {
+			rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_JARRINGSTAB);
+			if (rank > 0 && defender) {
+				int hate_count = defender->hate_list.LoseHatredNearby(this, (rank * 20), 200, defender, 6);
+				BuildEcho(StringFormat("Jarring Stab %i reduced hate by %i .", rank, rank * 20, hate_count));
+			}
+		}
+
+		if (hit.skill == EQEmu::skills::SkillBash && IsClient()) {
+			rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH);
+			if (rank > 0 &&
+				defender->GetHPRatio() <= (rank * 10) &&
+				defender->GetLevel() <= GetLevel() && defender->GetLevel() <= 60) {
+				hit.damage_done += (GetLevel() * rank);
+				entity_list.MessageClose(this, true, 300, MT_Emote, "%s hits %s with a Bash of DEATH for %i damage", GetCleanName(), defender->GetCleanName(), hit.damage_done);
+			}
+			if (defender->IsNPC()) CastToClient()->DoDivineBashEffect();
+		}
+
+		rank = GetBuildRank(ROGUE, RB_ROG_SINISTERSTRIKES);
+		if (rank > 0 && hit.hand == EQEmu::inventory::slotSecondary) {
+			bonus_damage = floor(hit.damage_done * 0.1f * rank);
+			BuildEcho(StringFormat("Sinister Strikes %i caused your offhand to deal %i additional damage.", rank, bonus_damage));
+			hit.damage_done += bonus_damage;
+		}
+
+		rank = attacker_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_BLOODOATH);		
+		if (rank > 0 && (hit.skill == EQEmu::skills::Skill2HBlunt || hit.skill == EQEmu::skills::Skill2HPiercing || hit.skill == EQEmu::skills::Skill2HSlashing)) {
+			bonus_damage = floor(hit.damage_done * 0.05f * rank);
+			if (bonus_damage > 0) attacker_client->BuildEcho(StringFormat("Blood Oath %u added %i bonus damage.", rank, bonus_damage));
+			hit.damage_done += bonus_damage;
+		}
+
+		rank = attacker_client->GetBuildRank(PALADIN, RB_PAL_KNIGHTSADVANTAGE);
+		if (rank > 0 && (hit.skill == EQEmu::skills::Skill2HBlunt || hit.skill == EQEmu::skills::Skill2HPiercing || hit.skill == EQEmu::skills::Skill2HSlashing)) {
+			bonus_damage = floor(hit.damage_done * 0.05f * rank);
+			if (bonus_damage > 0) attacker_client->BuildEcho(StringFormat("Knight's Advantage %u added %i bonus damage.", rank, bonus_damage));
+			hit.damage_done += bonus_damage;
+		}
+
+		rank = attacker_client->CastToClient()->GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
+		if (rank > 0) {
+
+			uint8 counters = attacker_client->GetCoreCounter();
+			if (counters > 0) {
+				bonus_damage = floor(hit.damage_done * 0.05f * counters);
+				if (bonus_damage < 1) bonus_damage = 1;
+				if (bonus_damage > 100) {
+					attacker_client->BuildEcho(StringFormat("Killing Spree %u added %i bonus damage with %u counters.", rank, bonus_damage, counters));
+				}
+				hit.damage_done += bonus_damage;
+			}
+		}
+
+		rank = attacker_client->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_ROTTENCORE);
+		if (rank > 0) {
+			uint8 counters = attacker_client->GetCoreCounter();
+			if (counters > 0) {
+				bonus_damage = floor(hit.damage_done * 0.03f * counters);
+				if (bonus_damage < 1) bonus_damage = 1;
+				attacker_client->BuildEcho(StringFormat("Rotten Core %u added %i bonus damage with %u counters.", rank, bonus_damage, counters));
+				hit.damage_done += bonus_damage;
+			}
+		}
 
 
 		if (hit.skill == EQEmu::skills::SkillTigerClaw ||

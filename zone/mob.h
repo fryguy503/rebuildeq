@@ -1231,6 +1231,8 @@ public:
 
 	void DailyGain(int account_id, int character_id, const char * identity, int levels_gained, int experience_gained, int money_earned);
 
+	int DoCripplingPresenceAndEmpathy(Mob *attacker, DamageHitInfo &hit);
+	bool CheckBackfire();
 	int engage_duration;
 
 	// Bots HealRotation methods

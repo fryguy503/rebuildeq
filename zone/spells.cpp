@@ -305,6 +305,19 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 
 
 	if (IsClient()) {
+
+		//runes cost extra mana.
+		if (spell_id == 481 || //rune 1
+			spell_id == 482 || //rune 2
+			spell_id == 483 || //rune 3
+			spell_id == 484 || //rune 4
+			spell_id == 1689 || //rune 5
+			spell_id == 3199 //rune 6
+			) {
+			mana_cost = floor(GetMaxMana() / 5);
+		}
+
+
 		uint32 rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
 		if (item_slot == 0 && spell_id == 202 && rank > 0) {
 			mana_cost = floor((GetLevel() / 60) * 200);
@@ -1486,6 +1499,13 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, CastingSlot slo
 			InterruptSpell();
 			return;
 		}
+	}
+
+
+	//Check if backfire triggered during spell cast
+	if (CheckBackfire()) {
+		InterruptSpell();
+		return;
 	}
 
 	// we're done casting, now try to apply the spell
@@ -2980,10 +3000,38 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 		target = caster;
 	
 	int rank;
-	if(caster->IsClient() && spell_id == 37903) { // heart of flame
-		int rank = caster->CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES);
+	rank = caster->GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES);
+	if(rank > 0 && spell_id == 37903) { // heart of flame		
 		return rank; // one tick per rank: 6 - 30 seconds
 	}
+	rank = caster->GetBuildRank(ENCHANTER, RB_ENC_DROWN);
+	if (caster->GetClass() == ENCHANTER && (
+		spell_id == 286 || //shallow breath
+		spell_id == 294 || //suffocating sphere
+		spell_id == 521 || //choke
+		spell_id == 450 || //suffocate
+		spell_id == 195 || //gasping embrace
+		spell_id == 1703 //asphyxiate
+		)) {
+		if (rank < 1) return 1;
+		return rank;
+	}
+
+	rank = caster->GetBuildRank(ENCHANTER, RB_ENC_ENTHRALL);
+	if (caster->GetClass() == ENCHANTER && (
+		spell_id == 292 || //Mesmerize
+		spell_id == 187 || //Enthrall
+		spell_id == 307 || //Mesmerization
+		spell_id == 188 || //Entrance
+		spell_id == 190 || //Dazzle
+		spell_id == 1690 || //Fascination
+		spell_id == 1691 || // Glamour of Kintaz
+		spell_id == 1692 // Rapture
+		)) {
+		if (rank < 1) return 1;
+		return rank;
+	}
+	
 
 	formula = spells[spell_id].buffdurationformula;
 	duration = spells[spell_id].buffduration;

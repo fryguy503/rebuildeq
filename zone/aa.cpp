@@ -1231,6 +1231,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaSpiritoftheWood && GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) < 1 ||
 		rank_id == aaNaturesBoon && GetBuildRank(DRUID, RB_DRU_NATURESBOON) < 1 ||
 		rank_id == aaNaturesGuardian && GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN) < 1 ||
+
+		rank_id == aaSoothingWords && GetBuildRank(ENCHANTER, RB_ENC_SOOTHINGWORDS) < 1 ||
+		rank_id == aaMindOverMatter && GetBuildRank(ENCHANTER, RB_ENC_MINDOVERMATTER) < 1 ||
+
 		rank_id == aaSharedHealth && GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) < 1 ||
 		rank_id == aaDimensionalShield && GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD) < 1 ||
 		rank_id == aaHostintheShell && GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL) < 1 ||
@@ -1328,12 +1332,21 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			if (rb_rank >= 5) rb_rank = 8;
 			manacost /= (0.4f * rb_rank);
 		}
-	} else if (rank_id == aaCalloftheWild) {
+	}
+	else if (rank_id == aaCalloftheWild) {
 		rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
-		if(rb_rank) {
+		if (rb_rank) {
 			spellid = 958;
-			cooldown = 1800 - (rb_rank-1) * 300;
+			cooldown = 1800 - (rb_rank - 1) * 300;
 		}
+	} 
+	else if (rank_id == aaSoothingWords) {
+			rb_rank = GetBuildRank(ENCHANTER, RB_ENC_SOOTHINGWORDS);
+			if (rb_rank) {
+				//spellid = 958;
+				cooldown = 1800 - (rb_rank - 1) * 300;
+			}
+
 	} else if(rank_id == aaSecondaryRecall) {
 		rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
 		if(rb_rank) {

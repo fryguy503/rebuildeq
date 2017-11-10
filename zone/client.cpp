@@ -9675,6 +9675,17 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}				
 
+				if (GetClass() == ENCHANTER && i == RB_ENC_SOOTHINGWORDS && GetAA(aaSoothingWords) < 1) {
+					TrainAARank(aaSoothingWords);
+					Message(15, "You have unlocked the AA \"Soothing Words\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == ENCHANTER && i == RB_ENC_MINDOVERMATTER && GetAA(aaMindOverMatter) < 1) {
+					TrainAARank(aaMindOverMatter);
+					Message(15, "You have unlocked the AA \"Mind over Matter\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+
 				if (GetClass() == MAGICIAN && i == RB_MAG_SHAREDHEALTH && GetAA(aaSharedHealth) < 1) {
 					TrainAARank(aaSharedHealth);
 					Message(15, "You have unlocked the AA \"Shared Health\"! Find the hotkey in your Alternate Advancement Window.");
@@ -11195,6 +11206,16 @@ std::string Client::GetBuildName(uint32 id) {
 		break;	
 	case ENCHANTER:
 		if (id == RB_ENC_NIGHTMARE) return "Nightmare";
+		else if (id == RB_ENC_CRIPPLINGPRESENCE) return "Crippling Presence";
+		else if (id == RB_ENC_SOOTHINGWORDS) return "Soothing Words";
+		else if (id == RB_ENC_MINDOVERMATTER) return "Mind over Matter";
+		else if (id == RB_ENC_BENEFICIALDISPELL) return "Beneficial Dispell";
+		else if (id == RB_ENC_PERSUASION) return "Persuasion";
+		else if (id == RB_ENC_CHOKE) return "Choke";
+		else if (id == RB_ENC_DROWN) return "Drown";
+		else if (id == RB_ENC_ENTHRALL) return "Enthrall";
+		else if (id == RB_ENC_BACKFIRE) return "Backfire";
+		else if (id == RB_ENC_ENERGYBURN) return "Energy Burn";
 		break;
 	case MAGICIAN:
 		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";

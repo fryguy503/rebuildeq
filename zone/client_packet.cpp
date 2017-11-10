@@ -12816,10 +12816,18 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 		SinglePrice = (item->Price * (RuleR(Merchant, SellCostMod)) * item->SellRate * Client::CalcPriceMod(tmp, false));
 	else
 		SinglePrice = (item->Price * (RuleR(Merchant, SellCostMod)) * item->SellRate);
+	int rank = GetBuildRank(ROGUE, RB_ROG_HAGGLE);
+	int haggle = 0;
+	if (rank > 0) {
+		haggle = floor(SinglePrice * 0.02f * rank);
+		Message(MT_FocusEffect, "Haggle %i reduced buy price by %i copper.", rank, haggle);
+		SinglePrice -= haggle;
+	}
 
-	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
-		uint32 haggle = floor(SinglePrice * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
-		Message(MT_FocusEffect, "Haggle Rank %u reduced buy price by %u copper.", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
+	rank = GetBuildRank(ENCHANTER, RB_ENC_PERSUASION);
+	if (rank > 0) {
+		haggle = floor(SinglePrice * 0.03f * rank);
+		Message(MT_FocusEffect, "Persuasion %i reduced buy price by %i copper.", rank, haggle);
 		SinglePrice -= haggle;
 	}
 
@@ -13058,11 +13066,20 @@ void Client::Handle_OP_ShopPlayerSell(const EQApplicationPacket *app)
 			}
 		}
 	}
+	int rank = GetBuildRank(ROGUE, RB_ROG_HAGGLE);
+	int haggle = 0;
+	if (rank > 0) {
+		haggle = floor(price * 0.02f * rank);
+		Message(MT_FocusEffect, "Haggle %i improved sell price by %i copper", rank, haggle);
+		price += haggle;
+	}
 
-	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
-		uint32 haggle = floor(price * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));
-		Message(MT_FocusEffect, "Haggle Rank %u improved sell price by %u copper", GetBuildRank(ROGUE, RB_ROG_HAGGLE), haggle);
-		price -= haggle;
+	rank = GetBuildRank(ENCHANTER, RB_ENC_PERSUASION);
+	haggle = 0;
+	if (rank > 0) {
+		haggle = floor(price * 0.02f * rank);
+		Message(MT_FocusEffect, "Persuasion %i improved sell price by %i copper", rank, haggle);
+		price += haggle;
 	}
 
 	DailyGain(AccountID(), CharacterID(), Identity(), 0, 0, price);
@@ -13267,9 +13284,10 @@ void Client::Handle_OP_ShopRequest(const EQApplicationPacket *app)
 
 	//This likely isn't going to work, 
 	//needs testing to verify if the packet for appraising price on click is same as actual buy price
-	if (GetBuildRank(ROGUE, RB_ROG_HAGGLE) > 0) {
-		mco->rate += (float)(mco->rate * 0.02f * GetBuildRank(ROGUE, RB_ROG_HAGGLE));		
-	}
+	int rank = GetBuildRank(ROGUE, RB_ROG_HAGGLE);
+	if (rank > 0) mco->rate += floor(mco->rate * 0.02f * rank);
+	rank = GetBuildRank(ENCHANTER, RB_ENC_PERSUASION);
+	if (rank > 0) mco->rate += floor(mco->rate * 0.03f * rank);
 
 
 	outapp->priority = 6;

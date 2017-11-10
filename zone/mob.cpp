@@ -6436,7 +6436,10 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true, bool isPet = f
 	npctype->max_dmg = (npctype->max_dmg * clfact) / 220;
 
 	//Encounter Triggers
-
+	if (isPet) { //lower max hp of pets.
+		npctype->max_hp /= 2;
+		npctype->cur_hp /= 2;
+	}
 	
 	return npctype;
 }
@@ -7572,4 +7575,122 @@ int Mob::GetAggroTier() {
 void Mob::DailyGain(int account_id, int character_id, const char* identity, int levels_gained, int experience_gained, int money_earned)
 {
 	nats.DailyGain(account_id, character_id, identity, levels_gained, experience_gained, money_earned);
+}
+
+//This triggers the crippling presence mechanic on each attack. It's a bit weird.
+//Attacker is the NPC that initiated attack.
+//this is the receiver of the attack. 
+int Mob::DoCripplingPresenceAndEmpathy(Mob *attacker, DamageHitInfo &hit) {
+	if (!attacker) return 0;
+	int rank;
+	bool isCripplingPresence = false;
+	bool isChoke = false;
+	bool isTash = false;
+	int bonus_damage = 0;
+
+	int buff_count = GetMaxTotalSlots();
+	for (int j = 0; j < buff_count; j++) {
+		int spell_id = buffs[j].spellid;
+		if (spell_id == SPELL_UNKNOWN) continue;
+		if (!IsDetrimentalSpell(buffs[j].spellid)) continue;
+		if (buffs[j].casterid < 1) continue;
+		Client *c = entity_list.GetClientByID(buffs[j].casterid);
+		if (!c) continue;
+
+		if (attacker->IsNPC()) { //these are NPC targetted effects
+			rank = c->GetBuildRank(ENCHANTER, RB_ENC_CRIPPLINGPRESENCE);
+			if (!isCripplingPresence &&
+				rank > 0 &&
+				(spell_id == 41 || //weaken
+					spell_id == 291 || //enfeeblement
+					spell_id == 645 || //ebbing strength
+					spell_id == 281 || //disempower
+					spell_id == 179 || //feckless might
+					spell_id == 162 || //listless power
+					spell_id == 180 || //insipid weakness
+					spell_id == 163 || //incapacitate
+					spell_id == 181 || //weakness
+					spell_id == 1592 //cripple
+					)) {
+				bonus_damage = floor(hit.damage_done * 0.02f * rank);
+				c->BuildEcho(StringFormat("Crippling Presence %i reduced damage of %s by %i.", rank, attacker->GetCleanName(), bonus_damage));
+				isCripplingPresence = true;
+			}
+
+			rank = c->GetBuildRank(ENCHANTER, RB_ENC_CHOKE);
+			if (!isChoke &&
+				(spell_id == 286 || //shallow breath
+					spell_id == 294 || //suffocating sphere
+					spell_id == 521 || //choke
+					spell_id == 450 || //suffocate
+					spell_id == 195 || //gasping embrace
+					spell_id == 1703 //asphyxiate
+					)) {
+				int choke_damage = floor(level * rank / 4);
+				c->BuildEcho(StringFormat("Choke %i caused %i damage.", rank, choke_damage));
+				attacker->Damage(c, choke_damage, spell_id, EQEmu::skills::SkillAbjuration, false);
+				isChoke = true;
+			}
+
+			if (isChoke && isCripplingPresence) break;
+		}
+
+		if (attacker->IsClient() && IsNPC()) { //these are player targetted effects
+			if (!attacker->IsGrouped()) return bonus_damage; //tash doesn't work when not grouped.
+			if (!c->IsGrouped()) continue; //ench that debuffed isn't grouped, continue			
+			if (attacker->GetGroup()->GetID() != c->GetGroup()->GetID()) continue; //not in same group
+		
+			rank = c->GetBuildRank(ENCHANTER, RB_ENC_TASH);
+			if (rank > 0 && 
+				!isTash && (
+				spell_id == 676 || //tashina
+				spell_id == 677 || //tashani
+				spell_id == 678 ||//tashania
+				spell_id == 1699 ||//wind of tashani
+				spell_id == 1702 ||//tashanian
+				spell_id == 1704 //wind of tashanian
+				)) {
+
+				
+				int chance = 300;
+				int proc_damage = floor(GetLevel() * 0.2f * rank);
+				if (proc_damage < 5) proc_damage = 5;
+				attacker->CastToClient()->BuildProcCalc(chance, hit.hand, this, proc_damage, hit.skill);
+				isTash = true;
+			}
+
+			if (isTash) break;
+		}
+	}
+	return bonus_damage;
+}
+
+//Check to see if the mob is triggering a backfire effect or not.
+bool Mob::CheckBackfire() {
+	if (!IsNPC()) return false; //this only affects NPCs.
+	int rank;
+	int bonus_damage = 0;
+
+	int buff_count = GetMaxTotalSlots();
+	for (int j = 0; j < buff_count; j++) {
+		int spell_id = buffs[j].spellid;
+		if (spell_id == SPELL_UNKNOWN) continue;
+		if (!IsDetrimentalSpell(buffs[j].spellid)) continue;
+		if (buffs[j].casterid < 1) continue;
+		Client *c = entity_list.GetClientByID(buffs[j].casterid);
+		if (!c) continue;
+		if (spell_id != 1407 &&  //wandering mind
+			spell_id != 3697 && //scryer's bypass
+			spell_id != 1700 //torment of argli
+			) continue;
+		rank = c->GetBuildRank(ENCHANTER, RB_ENC_BACKFIRE);
+		if (rank < 1) continue;
+		bonus_damage = floor(rank * 25 * 0.2f * GetLevel());
+		c->BuildEcho(StringFormat("Backfire %i dealt %i damage to %s.", rank, bonus_damage, GetCleanName()));
+		Damage(c, bonus_damage, spell_id, EQEmu::skills::SkillEvocation, false);
+		//remove debuff
+		BuffFadeBySlot(j, false);		
+		CalcBonuses();
+		return true;
+	}
 }

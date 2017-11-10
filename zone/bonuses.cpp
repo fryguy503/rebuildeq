@@ -1564,12 +1564,9 @@ void Mob::CalcSpellBonuses(StatBonuses* newbon)
 
 	int buff_count = GetMaxTotalSlots();
 	for(i = 0; i < buff_count; i++) {
-		if(buffs[i].spellid != SPELL_UNKNOWN){
-			ApplySpellsBonuses(buffs[i].spellid, buffs[i].casterlevel, newbon, buffs[i].casterid, 0, buffs[i].ticsremaining, i, buffs[i].instrument_mod);
-
-			if (buffs[i].numhits > 0)
-				Numhits(true);
-		}
+		if (buffs[i].spellid == SPELL_UNKNOWN) continue;
+		ApplySpellsBonuses(buffs[i].spellid, buffs[i].casterlevel, newbon, buffs[i].casterid, 0, buffs[i].ticsremaining, i, buffs[i].instrument_mod);
+		if (buffs[i].numhits > 0) Numhits(true);		
 	}
 
 	//Applies any perma NPC spell bonuses from npc_spells_effects table.
@@ -1831,6 +1828,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 						effect_value += floor(rank * 0.1f * effect_value);
 					}
 				}
+				
 				new_bonus->ManaRegen += effect_value;
 				break;
 			}

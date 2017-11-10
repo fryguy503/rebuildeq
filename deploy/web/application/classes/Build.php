@@ -742,6 +742,74 @@ class Build {
 			$newSkill->desc = 'Damage over time spells do an additional <em data-base="10"></em>% damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
 			$skills[0] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Crippling Presence";
+			$newSkill->desc = 'When an enemy is affected by a disempowering spell, they deal <em data-base="2"></em>% less damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[2] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Soothing Words";
+			$newSkill->desc = 'Grants the Soothing Words AA, reducing your target\'s hatred for their current target by 5000 points if that creature\'s target is a member of your group or raid. Each rank reduces cooldown by <em data-base="30"></em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[4] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Mind over Matter";
+			$newSkill->desc = 'Grants the Mind over Matter AA, absorbing damage in mana before hitpoints. Each rank improves reduction by <em data-base="2"></em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[6] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Beneficial Dispell";
+			$newSkill->desc = 'When using a spell with a cancel magic effect, increases chance by <em data-base="20"></em>%<span class="perLevel"> per rank</span> that a beneficial buff will not be affected.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[8] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Persuasion";
+			$newSkill->desc = 'Increases buy and sell price to merchants by <em data-base="3"></em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[10] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Choke";
+			$newSkill->desc = 'While an enemy is under the effect of a shallow-breath line debuff, the enemy takes (level *<em data-base="1"></em>/4) damage <span class="perLevel"> per rank</span> when they land an attack.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[13] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Drown";
+			$newSkill->desc = 'Increases duration of shallow-breath line by <em data-base="1"></em> tick<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[16] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Enthrall";
+			$newSkill->desc = 'Each rank increases mesmerize duration by <em data-base="1"></em> tick<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[18] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Tash";
+			$newSkill->desc = 'While an enemy is tashed, other group members are granted a 300 mod (enemy level * <em data-base="0.2"></em>) damage proc while attacking<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[20] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Backfire";
+			$newSkill->desc = 'Wandering Mind, Scryer\'s Bypass, and Torment of Argli now have the backfire effect. If an enemy successfully channels a spell, they are interrupted, this spell effect is removed, and the enemy takes (enemy level * 25 * <em data-base="0.2">0.2</em>) damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[22] = $newSkill;
+
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Energy Burn";
+			$newSkill->desc = 'When you use a spell that takes mana from an enemy, you now deal (mana taken * <em data-base="0.4">0.4</em>) damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[22] = $newSkill;
+
 			break;
 
 			//==================MAGICIAN======================
@@ -1217,7 +1285,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Sinister Strikes";
-			$newSkill->desc = 'Increases offhand damage bonus by <em data-base="20">20</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases offhand damage bonus by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-sinisterstrikes.png";	
 			$skills[6] = $newSkill;
 

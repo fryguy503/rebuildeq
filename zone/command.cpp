@@ -6217,7 +6217,7 @@ void command_dps(Client *c, const Seperator *sep)
 	}
 
 	if (!target->IsCorpse() && target->GetHPRatio() > 95.0f) {
-		c->Message(0, "#dps is disabled until your target is 95% or less health.");
+		c->Message(0, "#dps is disabled until your target is 95 percent or less health.");
 		return;
 	}
 	/*if (!target->IsCorpse()) {

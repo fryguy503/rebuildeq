@@ -213,26 +213,6 @@ void Mob::DoSpecialAttackDamage(Mob *who, EQEmu::skills::SkillType skill, int32 
 		TrySkillProc(who, skill, ReuseTime * 1000);
 
 	if (my_hit.damage_done > 0 && HasSkillProcSuccess()) {
-
-		int rank;
-		if (skill == EQEmu::skills::SkillBackstab && IsClient()) {
-			rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_JARRINGSTAB);
-			if (rank > 0 && who) { //s/b 2
-				int hate_count = who->hate_list.LoseHatredNearby(this, (rank * 20), 200, who, 6);
-				BuildEcho(StringFormat("Jarring Stab %i reduced hate by %i to %i nearby enemies.", rank, rank * 20, hate_count));
-			}
-		}
-
-		if (skill == EQEmu::skills::SkillBash && IsClient()) {
-			rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH);
-			if (rank > 0 &&
-				who->GetHPRatio() <= (rank * 10) &&
-				who->GetLevel() <= GetLevel() && who->GetLevel() <= 60) {
-				my_hit.damage_done += (GetLevel() * rank);
-				entity_list.MessageClose(this, true, 300, MT_Emote, "%s hits %s with a Bash of DEATH for %i damage", GetCleanName(), who->GetCleanName(), my_hit.damage_done);
-			}
-			if (who->IsNPC()) CastToClient()->DoDivineBashEffect();
-		}
 		TrySkillProc(who, skill, ReuseTime * 1000, true);
 
 	}

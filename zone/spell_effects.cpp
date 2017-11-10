@@ -970,6 +970,18 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				// Bards don't get mana from effects, good or bad.
 				if(GetClass() == BARD)
 					break;
+
+				rank = caster->GetBuildRank(ENCHANTER, RB_ENC_ENERGYBURN);
+				if (IsNPC() && 
+					rank > 0 && 
+					effect_value < 0) {
+					int damage_amount = floor(-effect_value * 0.4f);
+					if (damage_amount > 0) {
+						caster->BuildEcho(StringFormat("Energy Burn %i dealt %i damage to %s.", rank, damage_amount, GetCleanName());
+						
+					}
+				}
+
 				if(IsManaTapSpell(spell_id)) {
 					if(GetCasterClass() != 'N') {
 #ifdef SPELL_EFFECT_SPAM
@@ -1741,13 +1753,20 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				}
 
 				int buff_count = GetMaxTotalSlots();
+				bool isBeneficialDispell = false;
 				for(int slot = 0; slot < buff_count; slot++) {
 					if(	buffs[slot].spellid != SPELL_UNKNOWN &&
 						spells[buffs[slot].spellid].dispel_flag == 0 &&
 						!IsDiscipline(buffs[slot].spellid))
 					{
 						if (caster && TryDispel(caster->GetLevel(),buffs[slot].casterlevel, effect_value)){
+							rank = caster->GetBuildRank(ENCHANTER, RB_ENC_BENEFICIALDISPELL);
+							if (rank > 0 && (isBeneficialDispell == true || rank == 5 || zone->random.Roll(rank * 20))) {
+								if (IsDetrimentalSpell(buffs[slot].spellid)) continue;
+								isBeneficialDispell = true;
+							}
 							BuffFadeBySlot(slot);
+							if (isBeneficialDispell) break; //break out if the beneficialdispell flag has been enabled, removing only one effect.
 							slot = buff_count;
 						}
 					}
