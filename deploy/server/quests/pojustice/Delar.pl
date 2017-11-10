@@ -170,9 +170,13 @@ sub EVENT_SAY {
     }
 
 	if ($text=~/help/i) {
-		quest::say("You will help me? Very well, then.. Let us start with a simple task list, of sorts... let us repeat the places I have been as of late, and see if the key is there.");
-		quest::assigntask(314);
-		return;
+		if (quest::istaskcompleted(314)) {
+			quest::say("You already completed this task.");
+		} else {
+			quest::say("You will help me? Very well, then.. Let us start with a simple task list, of sorts... let us repeat the places I have been as of late, and see if the key is there.");
+			quest::assigntask(314);
+			return;
+		}
 	}
 	if ($text =~/interested/i) {
 		quest::say("Well, you see.. unfortunately, I have lost the deposit box key to my chest, the chest with heirlooms.. alas.. I would ask for your [ ". quest::saylink("help") ." ], but I do not know you could be of use.");
@@ -202,8 +206,12 @@ sub EVENT_SAY {
 			quest::say("First, help me with my [ " . quest::saylink("heirloom") . " ] challenge, then we can about experience.");
 			return;
 		}
-		quest::say("You do not seem very experienced to me.. perhaps in due time, this will change. Perhaps... let's do a test, shall we?");
-		quest::assigntask(501);
+		if (quest::istaskcompleted(314)) {
+			quest::say("You already completed this task.");
+		} else {
+			quest::say("You do not seem very experienced to me.. perhaps in due time, this will change. Perhaps... let's do a test, shall we?");
+			quest::assigntask(501);
+		}
 		return;
 	}
 
@@ -233,13 +241,14 @@ sub EVENT_SAY {
 
 
 sub EVENT_ITEM {
-	if (!quest::istaskcompleted(314)) {
-		if(plugin::check_handin(\%itemcount, 10000001 => 1)) { #eat potions
-			return;
-		}
-		
+	if (!quest::istaskcompleted(314)) {				
 		quest::say("You cannot deposit into the [ ".quest::saylink("heirloom") ." ] chests until you finish my quest.");
 		return;
+	}
+	if (!quest::istaskcompleted(501)) {
+		if(plugin::check_handin(\%itemcount, 10000001 => 1)) { #eat potions
+			return;
+		}		
 	}
 
 	$acct_id = $client->AccountID();
