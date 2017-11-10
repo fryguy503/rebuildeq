@@ -10391,6 +10391,32 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 			SetPet(nullptr);
 		}
 
+		int rank = GetBuildRank(ENCHANTER, RB_ENC_RECLAIM);
+		if (rank > 0) {
+			int manaReclaim = 0;
+			int npcid = mypet->GetNPCTypeID();
+			if (npcid == 500) manaReclaim = 12;
+			if (npcid == 501) manaReclaim = 24;
+			if (npcid == 502) manaReclaim = 45;
+			if (npcid == 503) manaReclaim = 65;
+			if (npcid == 504) manaReclaim = 85;
+			if (npcid == 505) manaReclaim = 105;
+			if (npcid == 506) manaReclaim = 130;
+			if (npcid == 507) manaReclaim = 150;
+			if (npcid == 508) manaReclaim = 175;
+			if (npcid == 509) manaReclaim = 200;
+			if (npcid == 510) manaReclaim = 250;
+			if (npcid == 511) manaReclaim = 300;
+			if (npcid == 512) manaReclaim = 350;
+			if (manaReclaim > 0) {
+				manaReclaim = floor(manaReclaim * 0.2f * rank);
+				manaReclaim = floor(manaReclaim * mypet->GetHPRatio() / 100);
+				BuildEcho(StringFormat("Reclaim %i gave you %i mana.", rank, manaReclaim));
+				entity_list.LogManaEvent(this, this, manaReclaim);
+				SetMana(GetMana() + manaReclaim);
+			}
+		}
+
 		mypet->SayTo_StringID(this, MT_PetResponse, PET_GETLOST_STRING);
 		mypet->CastToNPC()->Depop();
 

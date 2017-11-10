@@ -469,12 +469,22 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg += bonusDamage;
 							}
 
-							//Shin: Festering Spear
+
+							rank = casterClient->GetBuildRank(ENCHANTER, RB_ENC_FEEDBACK);
+							if (rank > 0 &&
+								IsDetrimentalSpell(spell_id) &&
+								CalcSpellEffectValue(spell_id, SE_CurrentHP) < 0) {
+								int bonus_damage = floor(-dmg * 0.1f * rank);
+								if (bonus_damage < 1) bonus_damage = 1;
+								casterClient->BuildEcho(StringFormat("Feedback %i added %i bonus damage", rank, bonus_damage));
+								dmg -= bonus_damage;
+							}
+
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
 							if (rank > 0 &&
 								(spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562)) { //spear spells
-								int bonus_damage = (-rank * casterClient->GetLevel());
-								bonus_damage += floor(dmg * 0.1f * rank);
+								int bonus_damage = (rank * casterClient->GetLevel());
+								bonus_damage += floor(-dmg * 0.1f * rank);
 								if (bonus_damage > 0) bonus_damage = -1;
 								bool is_quad = false;
 								if (rank > 4 && zone->random.Roll(1)) {
@@ -482,7 +492,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									is_quad = true;
 								}
 								casterClient->BuildEcho(StringFormat("Festering Spear %u added %i %s bonus damage.", rank, -bonus_damage, (is_quad) ? "QUAD" : ""));
-								dmg += bonus_damage;
+								dmg -= bonus_damage;
 							}
 
 							// Shock of Swords
@@ -976,11 +986,24 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					rank > 0 && 
 					effect_value < 0) {
 					int damage_amount = floor(-effect_value * 0.4f);
+					if (GetMana() < damage_amount) damage_amount = GetMana();
 					if (damage_amount > 0) {
 						caster->BuildEcho(StringFormat("Energy Burn %i dealt %i damage to %s.", rank, damage_amount, GetCleanName()));
-						
+						Damage(caster, damage_amount, spell_id, EQEmu::skills::SkillAbjuration, true);
 					}
 				}
+
+				rank = caster->GetBuildRank(ENCHANTER, RB_ENC_LIFEFLOW);
+				if (IsNPC() &&
+					rank > 0 &&
+					effect_value < 0) {
+					int damage_amount = floor(-effect_value * 0.4f);
+					if (GetMana() < damage_amount) damage_amount = GetMana();
+					if (damage_amount > 0) {
+						caster->BuildEcho(StringFormat("Lifeflow %i healed you for %i hitpoints.", rank, damage_amount));
+						caster->HealDamage(damage_amount);
+					}
+			}
 
 				if(IsManaTapSpell(spell_id)) {
 					if(GetCasterClass() != 'N') {
@@ -1410,12 +1433,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					break;
 
 				 // RB_DRU_DIRECHARM Override
-				if(spell_id == 2760 && caster->IsClient()) {
+				if((spell_id == 2760 || spell_id == 2759) && caster->IsClient()) {
 					int rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
 					if(rank > 0) {
 						// Need to manually set target so that we can access it in the MakePet method
 						caster->SetTarget(this);
 						caster->CastToClient()->MakePet(spell_id, "RB_DRU_DIRECHARM");
+					} else if (caster->GetBuildRank(ENCHANTER, RB_ENC_DIRECHARM) > 0) {
+						// Need to manually set target so that we can access it in the MakePet method
+						caster->SetTarget(this);
+						caster->CastToClient()->MakePet(spell_id, "RB_ENC_DIRECHARM");
 					} else {
 						Message(0, "You must train Dire Charm for this effect to work.");
 					}

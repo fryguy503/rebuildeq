@@ -1233,6 +1233,8 @@ public:
 
 	int DoCripplingPresenceAndEmpathy(Mob *attacker, DamageHitInfo &hit);
 	bool CheckBackfire();
+	void BadMoonProc(Mob * defender, DamageHitInfo & hit);
+	int DoTranquilityRegen();
 	int engage_duration;
 
 	// Bots HealRotation methods

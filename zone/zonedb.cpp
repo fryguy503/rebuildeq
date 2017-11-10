@@ -1012,15 +1012,16 @@ bool ZoneDatabase::LoadAccountCustom(uint32 account_id, ExtendedProfile_Struct* 
 			m_epp->encounter_timeout = atoi(row[1]);
 			return true;
 		}
-		else { //No record in DB yet for account_custom, let's fix that.
-			
-		}
 	}
-	int next_daily_claim = time(nullptr) + 72000;
+	else {
+		//failed!
+	}
+	//No record in DB yet for account_custom, let's fix that.
+	int next_daily_claim = time(nullptr) + 540; //when they're first made, let's give them a few minutes before it triggers
 	query = StringFormat("INSERT INTO account_custom (account_id, next_daily_claim) VALUES (%u, %i)", account_id, next_daily_claim);
 	
 	results = database.QueryDatabase(query);
-
+	return true;
 }
 
 

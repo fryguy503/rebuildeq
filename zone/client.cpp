@@ -9685,12 +9685,15 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Color Shock\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-
 				if (GetClass() == ENCHANTER && i == RB_ENC_MINDOVERMATTER && GetAA(aaMindOverMatter) < 1) {
 					TrainAARank(aaMindOverMatter);
 					Message(15, "You have unlocked the AA \"Mind over Matter\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == ENCHANTER && i == RB_ENC_DIRECHARM && GetAA(aaDireCharm) < 1) {
+					TrainAARank(aaDireCharm);
+					Message(15, "You have unlocked the AA \"Dire Charm\"! Find the hotkey in your Alternate Advancement Window.");
+				}
 
 				if (GetClass() == MAGICIAN && i == RB_MAG_SHAREDHEALTH && GetAA(aaSharedHealth) < 1) {
 					TrainAARank(aaSharedHealth);
@@ -11185,7 +11188,7 @@ std::string Client::GetBuildName(uint32 id) {
 		break;
 	case DRUID:
 		if (id == RB_DRU_ENTRAP) return "Entrap";
-		else if (id == RB_DRU_TREEFORM) return "Tree Form";
+		else if (id == RB_DRU_ONEWITHNATURE) return "One With Nature";
 		else if (id == RB_DRU_TELEPORTBIND) return "Teleport Bind";
 		else if (id == RB_DRU_EXODUS) return "Exodus";
 		else if (id == RB_DRU_CALLOFTHEWILD) return "Call of the Wild";
@@ -11221,12 +11224,17 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ENC_ENTHRALL) return "Enthrall";
 		else if (id == RB_ENC_BACKFIRE) return "Backfire";
 		else if (id == RB_ENC_ENERGYBURN) return "Energy Burn";
-
+		else if (id == RB_ENC_FEEDBACK) return "Feedback";
+		else if (id == RB_ENC_FOCUS) return "Focus";
+		else if (id == RB_ENC_LIFEFLOW) return "Life Flow";
+		else if (id == RB_ENC_DIRECHARM) return "Dire Charm";
 		else if (id == RB_ENC_ENTROPY) return "Entropy";
 		else if (id == RB_ENC_COLORSHOCK) return "Color Shock";
 		else if (id == RB_ENC_MANASPEAR) return "Mana Spear";
 		else if (id == RB_ENC_FLOWINGTHOUGHT) return "Flowing Thought";
 		else if (id == RB_ENC_SUBTLECASTING) return "Subtle Casting";
+		else if (id == RB_ENC_TRANQUILITY) return "Tranquility";
+		else if (id == RB_ENC_RECLAIM) return "Reclaim";
 		break;
 	case MAGICIAN:
 		if (id == RB_MAG_SUMMONINGFOCUS) return "Summoning Focus";

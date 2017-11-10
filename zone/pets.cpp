@@ -281,9 +281,15 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			return;
 		}
 
+		rank = CastToClient()->GetBuildRank(ENCHANTER, RB_ENC_DIRECHARM);
+		if (spell_id == 2759 && rank < 1) {
+			Message(13, "You cannot use this ability until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
+			return;
+		}
+
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
 		if (spell_id == 2760 && rank < 1) {
-			Message(13, "You cannot summon this pet until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
+			Message(13, "You cannot use this ability until you unlock it via %s.", CastToClient()->CreateSayLink("#builds", "#builds").c_str());
 			return;
 		}
 	}
@@ -500,9 +506,8 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		}
 	}
 
-	if (spell_id == 2760 && this->IsClient() && CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM)  > 0) {
-			
-		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_DIRECHARM);
+	rank = GetBuildRank(ENCHANTER, RB_ENC_DIRECHARM);
+	if (spell_id == 2759 && this->IsClient() && rank   > 0) {		
 		Mob *target = GetTarget();
 
 		npc_type->level = target->GetLevel();
@@ -511,15 +516,36 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->AC = floor(npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
 		npc_type->size = floor(rank * (GetLevel() / 50)); //1.04 to 7.4
 		npc_type->max_dmg = floor(npc_type->max_dmg * 0.2 * rank); //since adjustnpc nerfs it so much                
-        npc_type->max_hp = floor(npc_type->max_hp * 0.1 * rank); //50 % of normal hp
+		npc_type->max_hp = floor(npc_type->max_hp * 0.1 * rank); //50 % of normal hp
 		if (npc_type->max_hp < 50) {
 			npc_type->max_hp = 50;
 		}
 
 		//Turn it into the target
 		npc_type->race = target->GetRace();
-        npc_type->gender = target->GetGender();
-        npc_type->size = target->GetSize();
+		npc_type->gender = target->GetGender();
+		npc_type->size = target->GetSize();
+	}
+	
+	rank = GetBuildRank(DRUID, RB_DRU_DIRECHARM);
+	if (spell_id == 2760 && this->IsClient() && rank > 0) {
+		Mob *target = GetTarget();
+
+		npc_type->level = target->GetLevel();
+		npc_type = this->AdjustNPC(npc_type, true, true);
+
+		npc_type->AC = floor(npc_type->AC * 0.1 * rank); //this formula likely needs tweaks
+		npc_type->size = floor(rank * (GetLevel() / 50)); //1.04 to 7.4
+		npc_type->max_dmg = floor(npc_type->max_dmg * 0.2 * rank); //since adjustnpc nerfs it so much                
+		npc_type->max_hp = floor(npc_type->max_hp * 0.1 * rank); //50 % of normal hp
+		if (npc_type->max_hp < 50) {
+			npc_type->max_hp = 50;
+		}
+
+		//Turn it into the target
+		npc_type->race = target->GetRace();
+		npc_type->gender = target->GetGender();
+		npc_type->size = target->GetSize();
 	}
 	
 	//Shin: Pet buff system

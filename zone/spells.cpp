@@ -343,6 +343,14 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 			mana_cost -= rank;
 			if (mana_cost < 1) mana_cost = 0;			
 		}
+		rank = GetBuildRank(ENCHANTER, RB_ENC_FOCUS);
+		if (rank > 0 && IsDetrimentalSpell(spell_id) && GetSpellEffectIndex(spell_id, SE_CurrentHP) > -1 && mana_cost > 0) {
+			int reduced = floor(mana_cost * 0.1f * rank);
+			if (reduced < 1) reduced = 1;
+			BuildEcho(StringFormat("Focus %i reduced mana cost by %i.", rank, reduced));
+			mana_cost -= reduced;
+			if (mana_cost < 1) mana_cost = 0;
+		}
 
 		rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT);
 		if (rank > 0 && mana_cost > 0 && (
@@ -350,8 +358,8 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 			|| spell_id == 410 || spell_id == 1663 || spell_id == 313 || spell_id == 93 || spell_id == 94 || spell_id == 322 || spell_id == 328 || spell_id == 334 || spell_id == 83 || spell_id == 68 || spell_id == 189 || spell_id == 120 || spell_id == 69 || spell_id == 121 || spell_id == 122 || spell_id == 70 || spell_id == 1659 || spell_id == 1660 || spell_id == 1661 || spell_id == 1662 || spell_id == 1664 || spell_id == 2118 || spell_id == 2540 || spell_id == 4078
 			)) {
 			int reduced = floor(mana_cost * 0.1f * rank);
-			BuildEcho(StringFormat("Frenzied Burnout reduced mana cost by %i", rank));
-			mana_cost -= rank;
+			BuildEcho(StringFormat("Frenzied Burnout %i reduced mana cost by %i", rank, reduced));
+			mana_cost -= reduced;
 			if (mana_cost < 1) mana_cost = 0;
 		}
 	}
@@ -4988,12 +4996,27 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster)
 				   (rank == 5 && GetLevel() > caster->CastToClient()->GetLevel() - 5)
 				) {
 					Log(Logs::Detail, Logs::Spells, "Our level (%d) is higher than the limit of this Charm spell (%d)", GetLevel(), spells[spell_id].max[effect_index]);
-                                	caster->Message_StringID(MT_Shout, CANNOT_CHARM_YET);
-                                	caster->CastToClient()->ResetAlternateAdvancementTimer(aaDireCharm);
-                                	return true;
+                    caster->Message_StringID(MT_Shout, CANNOT_CHARM_YET);
+                    caster->CastToClient()->ResetAlternateAdvancementTimer(aaDireCharm);
+					caster->CastToClient()->ResetAlternateAdvancementTimer(aaDireCharm2);
+                    return true;
 				}
 
-			} else if(GetLevel() > spells[spell_id].max[effect_index] && spells[spell_id].max[effect_index] != 0) {
+			} else if (spell_id == 2759 && caster->IsClient()) {
+				int rank = caster->CastToClient()->GetBuildRank(ENCHANTER, RB_ENC_DIRECHARM);
+				if ((rank == 1 && GetLevel() > caster->CastToClient()->GetLevel() - 10) ||
+					(rank == 2 && GetLevel() > caster->CastToClient()->GetLevel() - 8) ||
+					(rank == 3 && GetLevel() > caster->CastToClient()->GetLevel() - 7) ||
+					(rank == 4 && GetLevel() > caster->CastToClient()->GetLevel() - 6) ||
+					(rank == 5 && GetLevel() > caster->CastToClient()->GetLevel() - 5)
+					) {
+					Log(Logs::Detail, Logs::Spells, "Our level (%d) is higher than the limit of this Charm spell (%d)", GetLevel(), spells[spell_id].max[effect_index]);
+					caster->Message_StringID(MT_Shout, CANNOT_CHARM_YET);
+					caster->CastToClient()->ResetAlternateAdvancementTimer(aaDireCharm);
+					return true;
+				}
+			}
+			else if(GetLevel() > spells[spell_id].max[effect_index] && spells[spell_id].max[effect_index] != 0) {
 				Log(Logs::Detail, Logs::Spells, "Our level (%d) is higher than the limit of this Charm spell (%d)", GetLevel(), spells[spell_id].max[effect_index]);
 				caster->Message_StringID(MT_Shout, CANNOT_CHARM_YET);
 				return true;

@@ -1235,6 +1235,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaSoothingWords && GetBuildRank(ENCHANTER, RB_ENC_SOOTHINGWORDS) < 1 ||
 		rank_id == aaMindOverMatter && GetBuildRank(ENCHANTER, RB_ENC_MINDOVERMATTER) < 1 ||
 		rank_id == aaColorShock && GetBuildRank(ENCHANTER, RB_ENC_COLORSHOCK) < 1 ||
+		rank_id == aaDireCharm && GetBuildRank(ENCHANTER, RB_ENC_DIRECHARM) < 1 ||
 
 		rank_id == aaSharedHealth && GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH) < 1 ||
 		rank_id == aaDimensionalShield && GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD) < 1 ||

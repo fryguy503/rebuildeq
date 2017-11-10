@@ -597,8 +597,8 @@ class Build {
 			$skills[0] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Tree Form";
-			$newSkill->desc = 'Treeform grants a passive where each time you are hit, <em data-base="2">2</em>% of the damage is converted into mana<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "One With Nature";
+			$newSkill->desc = 'Grants a passive where each time you are hit, <em data-base="2">2</em>% of the damage is converted into mana<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-treeform.png";
 			$skills[2] = $newSkill;
 
@@ -803,15 +803,35 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
 			$skills[22] = $newSkill;
 
-
 			$newSkill = new stdClass();
 			$newSkill->title = "Energy Burn";
 			$newSkill->desc = 'When you use a spell that takes mana from an enemy, you now deal (mana taken * <em data-base="0.4">0.4</em>) damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
-			$skills[22] = $newSkill;
+			$skills[24] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Feedback";
+			$newSkill->desc = 'When you use a detrimental spell, you deal <em data-base="10">10</em> bonus damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[26] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Focus";
+			$newSkill->desc = 'When you use a detrimental spell, you deal <em data-base="10">10</em> bonus damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[28] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Lifeflow";
+			$newSkill->desc = 'When you use a spell that takes mana from an enemy, you heal for (mana taken * <em data-base="0.4">0.4</em>) hitpoints<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[31] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Dire Charm";
+			$newSkill->desc = 'Permanently charm an enemy from -10 to -5 of your level, based on rank. They get a pet-like adjusted stats, this is an experiment for future pet AI improvements.';
+			$newSkill->image = "/images/builds/icons/rb-dru-direcharm.png";
+			$skills[34] = $newSkill;
 
 
 			$newSkill = new stdClass();
@@ -845,10 +865,22 @@ class Build {
 			$skills[44] = $newSkill;
 
 			$newSkill = new stdClass();
-			$newSkill->title = "Subtle Casting";
-			$newSkill->desc = 'Lowers aggression when casting a spell by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->title = "Bad Moon";
+			$newSkill->desc = 'While grouped with an enchanter, all allies gain an innate 100 proc that deals a (level * <em data-base="0.2">0.2</em>) lifetap<span class="perLevel"> per rank</span>';
 			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
-			$skills[44] = $newSkill;
+			$skills[46] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Tranquility";
+			$newSkill->desc = 'While grouped with an enchanter, all allies gain an additional (level * <em data-base="0.1">0.1</em>) mana regen per tick<span class="perLevel"> per rank</span>';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[49] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Reclaim";
+			$newSkill->desc = 'When you tell your pet to leave, you will gain (mana * <em data-base="0.2">0.2</em>) of back of it\'s mana cost with ratio of current to max hitpoints<span class="perLevel"> per rank</span>';
+			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$skills[52] = $newSkill;			
 			break;
 
 			//==================MAGICIAN======================

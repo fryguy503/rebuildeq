@@ -565,14 +565,22 @@ bool Mob::AvoidDamage(Mob *other, DamageHitInfo &hit)
 			chance -= chance * counter;
 		}
 		int rank = 0;
-		if (GetBuildRank(CLERIC, RB_BRD_BLADEDANCER) > 0) {
-			BuildEcho(StringFormat("Blade Dancer %i increased dodge from %t to %i", rank, chance, chance + (chance * 0.02f * GetGroupSize(200))));
-			chance += chance * 0.02f * GetGroupSize(200);
+		int bonus = 0;
+		rank = GetBuildRank(BARD, RB_BRD_BLADEDANCER);
+		if (rank > 0) {
+			bonus = floor(chance * 0.02f * GetGroupSize(200));
+			if (bonus > 0) {
+				BuildEcho(StringFormat("Blade Dancer %i increased dodge from %t to %i", rank, chance, chance + bonus));
+				chance += chance * 0.02f * GetGroupSize(200);
+			}
 		}
 		rank = GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR);
 		if(rank > 0) {
-			BuildEcho(StringFormat("Divine Avatar %i increased chance to dodge from %i to %i", rank, chance, (10 * rank)));
-			chance += (10 * rank);
+			bonus = floor(chance * 0.1f * rank);
+			if (bonus > 0) {
+				BuildEcho(StringFormat("Divine Avatar %i increased chance to dodge from %i to %i", rank, chance, chance + bonus));
+				chance += floor(chance * 0.1f * rank);
+			}
 		}
 		
 		if (zone->random.Roll(chance)) {
@@ -1638,265 +1646,6 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		!other->GetSpecialAbility(NO_HARM_FROM_CLIENT) && //not immune to dmg
 		!IsNoCast() //not silenced
 		) {
-
-		uint16 spellid = 0;
-		int proc_damage = 1;
-		float chance = 0;
-		uint32 rank;
-		
-		if (!IsFromSpell && 
-			my_hit.skill != EQEmu::skills::SkillBash &&
-			my_hit.skill != EQEmu::skills::SkillBackstab &&
-			my_hit.skill != EQEmu::skills::SkillKick) {
-						
-			rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
-			if (rank > 0) {
-				BuildEcho(StringFormat("Spiritual Awakening %u gave %u mana", rank, rank));
-				entity_list.LogManaEvent(this, this, rank);
-				SetMana(GetMana() + rank);
-
-				chance = 300;
-				proc_damage = floor(GetLevel() * 1.5f * 0.2f * rank);
-				if (proc_damage < 10) {
-					proc_damage = 10;
-				}
-				
-				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
-			}
-			
-			rank = GetBuildRank(SHAMAN, RB_SHM_FURY);
-			if (rank > 0) {
-				chance = 400;
-				proc_damage = floor(GetLevel() * 1.5f * 0.2f * rank);
-								
-				if (proc_damage < 10) {
-					proc_damage = 10;
-				}
-				
-				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
-			}
-			
-			rank = GetBuildRank(CLERIC, RB_CLR_BELIEVE);
-			if (rank > 0) {
-				chance = 300;
-				if (GetTarget() != nullptr && 
-					GetTarget()->IsNPC() && 
-					(
-						GetTarget()->GetBodyType() == BT_Undead || 
-						GetTarget()->GetBodyType() == BT_SummonedUndead || 
-						GetTarget()->GetBodyType() == BT_Vampire
-					)) chance += (20 * GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION));
-
-				proc_damage = floor(GetLevel() * 0.75f * 0.2f * rank);
-				
-				if (proc_damage < 10) {
-					proc_damage = 10;
-				}
-				
-				if (BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill)) {
-					CastToClient()->Message(MT_Spells, "Believe %u healed you for %i points of damage.", rank, proc_damage);
-					HealDamage(proc_damage);
-				}
-			}
-			
-			rank = GetBuildRank(CLERIC, RB_CLR_DIVINEHAMMER);
-			if (rank > 0) {
-				chance = 60 * rank;
-				if (GetTarget() != nullptr &&
-					GetTarget()->IsNPC() &&
-					(
-						GetTarget()->GetBodyType() == BT_Undead ||
-						GetTarget()->GetBodyType() == BT_SummonedUndead ||
-						GetTarget()->GetBodyType() == BT_Vampire
-						)) chance += (20 * GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION));
-
-				chance = GetProcChances(chance, Hand);
-				spellid = 2173;
-				
-				if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance))
-					ExecWeaponProc(weapon, spellid, other);
-			}
-			
-			rank = GetBuildRank(CLERIC, RB_CLR_AUGMENTEDRETRIBUTION);
-			if (rank > 0) {
-				
-				if(zone->random.Roll((int) rank)) {
-					int levelRange = 0;
-					if(GetLevel() == 60) levelRange = 6;
-					else if(GetLevel() >= 54) levelRange = 5;
-					else if(GetLevel() >= 44) levelRange = 4;
-					else if(GetLevel() >= 29) levelRange = 3;
-					else if(GetLevel() >= 14) levelRange = 2;
-					else if(GetLevel() >= 5) levelRange = 1;
-										
-					int option = zone->random.Int(0, levelRange);
-					
-					switch(option) {
-						case 0:
-							spellid = 14; // Strike
-							break;
-						case 1:
-							spellid = 560; // Furor
-							break;
-						case 2:
-							spellid = 16; // Smite
-							break;
-						case 3:
-							spellid = 329; // Wrath
-							break;
-						case 4:
-							spellid = 672; // Retribution
-							break;
-						case 5:
-							spellid = 1543; // Reckoning
-							break;
-						case 6:
-							spellid = 2508; // Judgement
-							break;
-					}
-				
-					ExecWeaponProc(weapon, spellid, other);
-				}
-			}
-			
-
-			uint32 buff_count = GetMaxTotalSlots();
-			for (uint16 buffIt = 0; buffIt < buff_count; buffIt++)
-			{
-				if (buffs[buffIt].spellid == 2834 && buffs[buffIt].client)
-				{
-					//figure out who gave buff
-					Client * c = entity_list.GetClientByID(buffs[buffIt].casterid);
-					if (c == nullptr) continue;
-					rank = c->GetBuildRank(BARD, RB_BRD_KATTASCONCORD);
-					if (rank < 1) continue;					
-					chance = 300;
-					int chanceBonus = chance * 0.1f * c->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY);
-					if (c == this && chanceBonus > 0) BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", c->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), chance, chance + chanceBonus));
-					chance += floor(chance * 0.1f * chanceBonus); //Chance boost from harmonic affinity
-					proc_damage = floor(GetLevel() * 0.4f * rank);
-					if (proc_damage < 1) proc_damage = 1;
-					if (BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill)) {
-						c->BuildEcho(StringFormat("Katta's Concord %i caused %s to proc %i damage.", rank, GetCleanName(), proc_damage));
-					}
-					break;
-				}
-			}
-
-			rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
-			if (rank > 0) {
-				chance = 400;
-				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) {
-					int bonusChance = floor(chance * 0.1f * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
-					BuildEcho(StringFormat("Thieves Affinity increased chance from %i to %i.", chance, chance + bonusChance));
-					chance += bonusChance;
-				}
-
-				proc_damage = floor(GetLevel() * 3.0f * (0.2f * rank));
-				if (proc_damage < 20) {
-					proc_damage = 20;
-				}
-				
-				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
-			}
-
-			rank = GetBuildRank(ROGUE, RB_ROG_MUGGINGSHOT);
-			if (rank > 0) {
-				chance = rank * 100;
-				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) {
-					int bonusChance = floor(chance * 0.1f * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
-					BuildEcho(StringFormat("Thieves Affinity increased chance from %i to %i.", chance, chance + bonusChance));
-					chance += bonusChance;
-				}
-				bool is_interrupt = false;
-				if (Hand == EQEmu::inventory::slotSecondary) { //Get offhand
-					switch (my_hit.skill) {
-					case EQEmu::skills::Skill1HBlunt:
-						spellid = 1741; //jolt
-						proc_damage = 0;
-						is_interrupt = true;
-						break;
-					case EQEmu::skills::Skill1HSlashing:
-						proc_damage = 5 * rank;
-						break;
-					case EQEmu::skills::Skill1HPiercing:
-						spellid = 943; //Mana Drain
-						proc_damage = 2 * rank;
-					default:
-						break;
-					}
-				}
-
-				chance = GetProcChances(chance, Hand);
-				//cut it in half since it's offhand
-				chance /= 2;
-
-				if (!(other->IsClient() && other->CastToClient()->dead) && zone->random.Roll(chance)) {
-					//Deal damage
-					if (proc_damage > 0) other->Damage(this, proc_damage, 615, my_hit.skill, true, -1, false, m_specialattacks);
-					//interrupt					
-					if (is_interrupt &&
-						other->IsCasting()
-						) {
-						other->InterruptSpell(); //This may be too powerful, may need nerf
-					}
-					//cast spell
-					if (spellid > 0) ExecWeaponProc(weapon, spellid, other);
-				}				
-			}
-
-			rank = GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE);
-			if (rank > 0) {
-				chance = 300;
-				int bonusChance = floor(chance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
-				if (bonusChance > 0) BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), chance, bonusChance)); 
-				chance += bonusChance; //Chance boost from harmonic affinity on jonthon whistle
-				
-				proc_damage = floor(GetLevel() * 2.0f * (0.2f * rank));
-				
-				if (proc_damage < 20) {
-					proc_damage = 20;
-				}
-				
-				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
-			}
-
-			rank = GetBuildRank(MONK, RB_MNK_INTENSIFIEDTRAINING);
-			if (rank > 0) {
-				chance = 300;
-
-				proc_damage = floor(GetLevel() * 1.25f * (0.2f * rank));
-
-				if (proc_damage < 20) {
-					proc_damage = 20;
-				}
-
-				BuildProcCalc(chance, Hand, other, proc_damage, my_hit.skill);
-			}
-		}
-
-
-		rank = other->GetBuildRank(DRUID, RB_DRU_TREEFORM);
-		if (rank > 0 && IsNPC() && !IsPet()) {
-			int mana_amount = 0;
-			mana_amount = floor(my_hit.damage_done * rank * 0.02f);
-			if (mana_amount > 0) {
-				BuildEcho(StringFormat("Treeform %u gave you %i mana.", rank, mana_amount));
-				entity_list.LogManaEvent(this, this, mana_amount);
-				SetMana((GetMana() + mana_amount));
-				CastToClient()->SendManaUpdate();
-			}
-		}
-
-		if (Hand == EQEmu::inventory::slotPrimary) {
-			int mana_amount = GetManaTapBonus(my_hit.damage_done);
-			if (mana_amount > 0) {
-				entity_list.LogManaEvent(this, this, mana_amount);
-				SetMana((GetMana() + mana_amount));
-				CastToClient()->SendManaUpdate();
-			}
-		}
-
 		return true;
 	}
 	else {
@@ -6088,6 +5837,276 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 				if (bonus_damage < 1) bonus_damage = 1;
 				attacker_client->BuildEcho(StringFormat("Rotten Core %u added %i bonus damage with %u counters.", rank, bonus_damage, counters));
 				hit.damage_done += bonus_damage;
+			}
+		}
+
+
+		uint16 spellid = 0;
+		int proc_damage = 1;
+		float chance = 0;
+		uint32 rank;
+
+		if (hit.skill != EQEmu::skills::SkillBash &&
+			hit.skill != EQEmu::skills::SkillBackstab &&
+			hit.skill != EQEmu::skills::SkillKick) {
+
+			rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
+			if (rank > 0) {
+				BuildEcho(StringFormat("Spiritual Awakening %u gave %u mana", rank, rank));
+				entity_list.LogManaEvent(this, this, rank);
+				SetMana(GetMana() + rank);
+
+				chance = 300;
+				proc_damage = floor(GetLevel() * 1.5f * 0.2f * rank);
+				if (proc_damage < 10) {
+					proc_damage = 10;
+				}
+
+				if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
+					BuildEcho(StringFormat("Spiritual Awakening hit for %i damage.", rank, proc_damage));
+				}
+			}
+
+			rank = GetBuildRank(SHAMAN, RB_SHM_FURY);
+			if (rank > 0) {
+				chance = 400;
+				proc_damage = floor(GetLevel() * 1.5f * 0.2f * rank);
+
+				if (proc_damage < 10) {
+					proc_damage = 10;
+				}
+
+				if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
+					BuildEcho(StringFormat("Fury %i hit for %i damage.", rank, proc_damage));
+				}
+			}
+
+			rank = GetBuildRank(CLERIC, RB_CLR_BELIEVE);
+			if (rank > 0) {
+				chance = 300;
+				if (GetTarget() != nullptr &&
+					GetTarget()->IsNPC() &&
+					(
+						GetTarget()->GetBodyType() == BT_Undead ||
+						GetTarget()->GetBodyType() == BT_SummonedUndead ||
+						GetTarget()->GetBodyType() == BT_Vampire
+						)) chance += (20 * GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION));
+
+				proc_damage = floor(GetLevel() * 0.75f * 0.2f * rank);
+
+				if (proc_damage < 10) {
+					proc_damage = 10;
+				}
+
+				if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
+					CastToClient()->Message(MT_Spells, "Believe %u healed you for %i points of damage.", rank, proc_damage);
+					HealDamage(proc_damage);
+				}
+			}
+
+			rank = GetBuildRank(CLERIC, RB_CLR_DIVINEHAMMER);
+			if (rank > 0) {
+				chance = 60 * rank;
+				if (GetTarget() != nullptr &&
+					GetTarget()->IsNPC() &&
+					(
+						GetTarget()->GetBodyType() == BT_Undead ||
+						GetTarget()->GetBodyType() == BT_SummonedUndead ||
+						GetTarget()->GetBodyType() == BT_Vampire
+						)) chance += (20 * GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION));
+
+				chance = CastToClient()->GetProcChances(chance, hit.hand);
+				spellid = 2173;
+
+				if (defender->IsNPC() && zone->random.Roll(chance)) {
+					BuildEcho(StringFormat("Divine Hammer %i procced.", rank));
+					SpellOnTarget(spellid, defender);
+				}
+			}
+
+			rank = GetBuildRank(CLERIC, RB_CLR_AUGMENTEDRETRIBUTION);
+			if (rank > 0) {
+
+				if (zone->random.Roll((int)rank)) {
+					int levelRange = 0;
+					if (GetLevel() == 60) levelRange = 6;
+					else if (GetLevel() >= 54) levelRange = 5;
+					else if (GetLevel() >= 44) levelRange = 4;
+					else if (GetLevel() >= 29) levelRange = 3;
+					else if (GetLevel() >= 14) levelRange = 2;
+					else if (GetLevel() >= 5) levelRange = 1;
+
+					int option = zone->random.Int(0, levelRange);
+
+					switch (option) {
+					case 0:
+						spellid = 14; // Strike
+						break;
+					case 1:
+						spellid = 560; // Furor
+						break;
+					case 2:
+						spellid = 16; // Smite
+						break;
+					case 3:
+						spellid = 329; // Wrath
+						break;
+					case 4:
+						spellid = 672; // Retribution
+						break;
+					case 5:
+						spellid = 1543; // Reckoning
+						break;
+					case 6:
+						spellid = 2508; // Judgement
+						break;
+					}
+					
+					SpellOnTarget(spellid, defender);
+					BuildEcho(StringFormat("Augmented Retribution %i casted on %s", rank, defender->GetCleanName()));
+				}
+			}
+
+
+			uint32 buff_count = GetMaxTotalSlots();
+			for (uint16 buffIt = 0; buffIt < buff_count; buffIt++)
+			{
+				if (buffs[buffIt].spellid == 2834 && buffs[buffIt].client)
+				{
+					//figure out who gave buff
+					Client * c = entity_list.GetClientByID(buffs[buffIt].casterid);
+					if (c == nullptr) continue;
+					rank = c->GetBuildRank(BARD, RB_BRD_KATTASCONCORD);
+					if (rank < 1) continue;
+					chance = 300;
+					int chanceBonus = chance * 0.1f * c->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY);
+					if (c == this && chanceBonus > 0) BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", c->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), chance, chance + chanceBonus));
+					chance += floor(chance * 0.1f * chanceBonus); //Chance boost from harmonic affinity
+					proc_damage = floor(GetLevel() * 0.4f * rank);
+					if (proc_damage < 1) proc_damage = 1;
+					if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
+						c->BuildEcho(StringFormat("Katta's Concord %i caused %s to proc %i damage.", rank, GetCleanName(), proc_damage));
+					}
+					break;
+				}
+			}
+
+			rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
+			if (rank > 0) {
+				chance = 400;
+				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) {
+					int bonusChance = floor(chance * 0.1f * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
+					BuildEcho(StringFormat("Thieves Affinity increased chance from %i to %i.", chance, chance + bonusChance));
+					chance += bonusChance;
+				}
+
+				proc_damage = floor(GetLevel() * 3.0f * (0.2f * rank));
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+
+				CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill);
+			}
+
+			rank = GetBuildRank(ROGUE, RB_ROG_MUGGINGSHOT);
+			if (rank > 0) {
+				chance = rank * 100;
+				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) {
+					int bonusChance = floor(chance * 0.1f * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
+					BuildEcho(StringFormat("Thieves Affinity increased chance from %i to %i.", chance, chance + bonusChance));
+					chance += bonusChance;
+				}
+				bool is_interrupt = false;
+				if (hit.hand == EQEmu::inventory::slotSecondary) { //Get offhand
+					switch (hit.skill) {
+					case EQEmu::skills::Skill1HBlunt:
+						spellid = 1741; //jolt
+						proc_damage = 0;
+						is_interrupt = true;
+						break;
+					case EQEmu::skills::Skill1HSlashing:
+						proc_damage = 5 * rank;
+						break;
+					case EQEmu::skills::Skill1HPiercing:
+						spellid = 943; //Mana Drain
+						proc_damage = 2 * rank;
+					default:
+						proc_damage = 5 * rank;
+						break;
+					}
+				}
+
+				chance = GetProcChances(chance, hit.hand);
+				//cut it in half since it's offhand
+				chance /= 2;
+
+				if (!(defender->IsClient() && defender->CastToClient()->dead) && zone->random.Roll(chance)) {
+					BuildEcho(StringFormat("Mugging Shot %i affected %s.", rank, defender->GetCleanName()));
+					//Deal damage
+					if (proc_damage > 0) defender->Damage(this, proc_damage, 615, hit.skill, true, -1, false, m_specialattacks);
+					//interrupt					
+					if (is_interrupt &&
+						defender->IsCasting()
+						) {
+						defender->InterruptSpell(); //This may be too powerful, may need nerf
+					}
+					//cast spell
+					if (spellid > 0) {
+						SpellFinished(spellid, defender);
+					}
+				}
+			}
+
+			rank = GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE);
+			if (rank > 0) {
+				chance = 300;
+				int bonusChance = floor(chance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
+				if (bonusChance > 0) BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), chance, bonusChance));
+				chance += bonusChance; //Chance boost from harmonic affinity on jonthon whistle
+
+				proc_damage = floor(GetLevel() * 2.0f * (0.2f * rank));
+
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+
+				CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill);
+			}
+
+			rank = GetBuildRank(MONK, RB_MNK_INTENSIFIEDTRAINING);
+			if (rank > 0) {
+				chance = 300;
+
+				proc_damage = floor(GetLevel() * 1.25f * (0.2f * rank));
+
+				if (proc_damage < 20) {
+					proc_damage = 20;
+				}
+
+				CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill);
+			}
+		}
+
+
+		rank = defender->GetBuildRank(DRUID, RB_DRU_ONEWITHNATURE);
+		if (rank > 0 && IsNPC() && !IsPet()) {
+			int mana_amount = 0;
+			mana_amount = floor(hit.damage_done * rank * 0.02f);
+			if (mana_amount > 0) {
+				BuildEcho(StringFormat("One With Nature %u gave you %i mana.", rank, mana_amount));
+				entity_list.LogManaEvent(this, this, mana_amount);
+				SetMana((GetMana() + mana_amount));
+				CastToClient()->SendManaUpdate();
+			}
+		}
+
+		if (hit.hand == EQEmu::inventory::slotPrimary) {
+			int mana_amount = GetManaTapBonus(hit.damage_done);
+			if (mana_amount > 0) {
+				entity_list.LogManaEvent(this, this, mana_amount);
+				BuildEcho(StringFormat("Your innate mana tap gave %i mana.", mana_amount));
+				SetMana((GetMana() + mana_amount));
+				CastToClient()->SendManaUpdate();
 			}
 		}
 

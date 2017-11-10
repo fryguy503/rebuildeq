@@ -7383,8 +7383,8 @@ void Mob::CheckChannelChakra(int dmg) {
 int Mob::GetManaTapBonus(int dmg) {
 	if (!IsClient()) return 0;
 	if (GetClass() != SHAMAN && GetClass() != CLERIC && GetClass() != DRUID) return 0;
-	int manaBonus = int(dmg * 0.1f);
-	if (manaBonus > 0) BuildEcho(StringFormat("Mana Tap gave you %i mana.", manaBonus));	
+	int manaBonus = floor(dmg * 0.1f);
+	if (manaBonus < 1) manaBonus = 1;
 	return manaBonus;
 }
 
@@ -7693,4 +7693,69 @@ bool Mob::CheckBackfire() {
 		CalcBonuses();
 		return true;
 	}
+}
+
+void Mob::BadMoonProc(Mob *defender, DamageHitInfo &hit) {
+	if (!IsClient()) return; //this only affects clients.
+	if (!defender || defender->IsNPC()) return; //only npc targets
+	if (!IsGrouped()) return; //bad moon doesn't work if not grouped
+
+	int rank;
+	int bonus_damage = 0;
+
+	int buff_count = GetMaxTotalSlots();
+	for (int j = 0; j < buff_count; j++) {
+		int spell_id = buffs[j].spellid;
+		if (spell_id == SPELL_UNKNOWN) continue;
+		if (!IsDetrimentalSpell(buffs[j].spellid)) continue;
+		if (buffs[j].casterid < 1) continue;
+		Client *c = entity_list.GetClientByID(buffs[j].casterid);
+		if (!c) continue;		
+		if (!c->IsGrouped()) continue;
+		if (GetGroup()->GetID() != c->GetGroup()->GetID()) continue; //not in same group
+
+
+		rank = c->GetBuildRank(ENCHANTER, RB_ENC_BADMOON);
+		if (rank > 0) {
+			int chance = 100;
+			int proc_damage = floor(GetLevel() * 0.2f * rank);
+			if (proc_damage < 5) proc_damage = 5;
+			
+			if (CastToClient()->BuildProcCalc(chance, hit.hand, this, proc_damage, hit.skill)) {
+				BuildEcho(StringFormat("Bad Moon %i caused you to lifetap for %i damage.", rank, proc_damage));
+				c->BuildEcho(StringFormat("Bad Moon %i caused %s to lifetap for %i damage.", rank, GetCleanName(), proc_damage));
+				HealDamage(proc_damage);
+			}
+		}
+	}
+}
+
+int Mob::DoTranquilityRegen() {
+	int manaRegen = 0;
+	if (!IsClient()) return manaRegen;
+	int range = 200;
+
+	float distance;
+	float range2 = range*range;
+	auto group = GetGroup();
+	if (!group) return manaRegen;
+	int rank = 0;
+
+	Mob *target;
+	unsigned int gi = 0;
+	for (; gi < MAX_GROUP_MEMBERS; gi++)
+	{
+		if (!group->members[gi]) continue;
+		target = group->members[gi];
+		if (!target) continue;
+		if (target == this) continue;
+		if (target->GetZoneID() != GetZoneID()) continue;
+		if (!target->IsClient()) continue;
+		distance = DistanceSquared(GetPosition(), GetPosition());
+		if (distance > range2) continue;
+		rank = target->GetBuildRank(ENCHANTER, RB_ENC_TRANQUILITY);
+		if (rank < 1) continue;
+		manaRegen += GetLevel() * 0.1f * rank;
+	}
+	return manaRegen;
 }

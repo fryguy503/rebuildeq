@@ -1856,6 +1856,7 @@ void Client::DoManaRegen() {
 	if (GetMana() < max_mana && (IsSitting() || CanMedOnHorse()) && HasSkill(EQEmu::skills::SkillMeditate))
 		CheckIncreaseSkill(EQEmu::skills::SkillMeditate, nullptr, -5);
 
+	finalManaRegen = DoTranquilityRegen();
 	entity_list.LogManaEvent(this, this, finalManaRegen);
 	SetMana(GetMana() + finalManaRegen);
 	SendManaUpdate();
