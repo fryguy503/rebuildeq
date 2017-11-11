@@ -237,441 +237,917 @@ sub velious_faction {
  
 }
 
-sub velious_armor_list {
-	my @armor_list;
+sub velious_slot_by_item {
+
+	$itemid = shift;
+	$zoneid = shift;
+	$classid = shift;
+	quest::say("by_item: $itemid, $zoneid, $classid");
+
 	###KAEL###
- 
-	$tmp_zone = 113;
-	$tmp_class = 3;
-	#kael barlek stonefist paladin plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24905, reward => 25370}; #cap		
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24900, reward => 25371}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24902, reward => 25372}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24904, reward => 25373}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24906, reward => 25374}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24901, reward => 25375}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24903, reward => 25376}; #boots
+	if ($zoneid == 113) { #kael
+		if ($classid == 3) { #paladin
+			if ($itemid == 24905) { return 2; } #cap
+			if ($itemid == 24900) { return 17; } #bp
+			if ($itemid == 24902) { return 7; } #sleeves
+			if ($itemid == 24904) { return 9; } #wrist
+			if ($itemid == 24906) { return 12; } #gloves
+			if ($itemid == 24901) { return 18; } #legs
+			if ($itemid == 24903) { return 19; } #boots
+			return 0;
+		}
+		if ($classid == 8) { #bard
+			if ($itemid == 24905) { return 2; } #cap		
+			if ($itemid == 24900) { return 17; } #bp
+			if ($itemid == 24902) { return 7; } #sleeves
+			if ($itemid == 24904) { return 9; } #wrist
+			if ($itemid == 24906) { return 12; } #gloves
+			if ($itemid == 24901) { return 18; } #legs
+			if ($itemid == 24903) { return 19; } #boots
+			return 0;
+		}
+		if ($classid == 7) { #monk
+			if ($itemid == 24919) { return 2; } #cap		
+			if ($itemid == 24914) { return 17; } #bp
+			if ($itemid == 24916) { return 7; } #sleeves
+			if ($itemid == 24918) { return 9; } #wrist
+			if ($itemid == 24920) { return 12; } #gloves
+			if ($itemid == 24915) { return 18; } #legs
+			if ($itemid == 24917) { return 19; } #boots
+			return 0;
+		}
+		if ($classid == 4) { #ranger
+			if ($itemid == 24912) { return 2; } #cap
+			if ($itemid == 24907) { return 17; } #bp
+			if ($itemid == 24909) { return 7; } #sleeves
+			if ($itemid == 24911) { return 9; } #wrist
+			if ($itemid == 24913) { return 12; } #gloves
+			if ($itemid == 24908) { return 18; } #legs
+			if ($itemid == 24910) { return 19; } #boots
+			return 0;
+		}
+		if ($classid == 6) { #druid
+			if ($itemid == 24919) { return 2; } #cap		
+			if ($itemid == 24914) { return 17; } #bp
+			if ($itemid == 24916) { return 7; } #sleeves
+			if ($itemid == 24918) { return 9; } #wrist
+			if ($itemid == 24920) { return 12; } #gloves
+			if ($itemid == 24915) { return 18; } #legs
+			if ($itemid == 24917) { return 19; } #boots
+		}
+		if ($classid == 9) { #rogue
+			if ($itemid == 24912) { return 2; } #cap
+			if ($itemid == 24907) { return 17; } #bp
+			if ($itemid == 24909) { return 7; } #sleeves
+			if ($itemid == 24911) { return 9; } #wrist
+			if ($itemid == 24913) { return 12; } #gloves
+			if ($itemid == 24908) { return 18; } #legs
+			if ($itemid == 24910) { return 19; } #boots			
+		}
+		if ($classid == 1) { #warrior
+			if ($itemid == 24905) { return 2; } #cap		
+			if ($itemid == 24900) { return 17; } #bp
+			if ($itemid == 24902) { return 7; } #sleeves
+			if ($itemid == 24904) { return 9; } #wrist
+			if ($itemid == 24906) { return 12; } #gloves
+			if ($itemid == 24901) { return 18; } #legs
+			if ($itemid == 24903) { return 19; } #boots		
+		}
+		if ($classid == 14) { #enchanter
+			if ($itemid == 24926) { return 2; } #cap		
+			if ($itemid == 24921) { return 17; } #bp
+			if ($itemid == 24923) { return 7; } #sleeves
+			if ($itemid == 24925) { return 9; } #wrist
+			if ($itemid == 24927) { return 12; } #gloves
+			if ($itemid == 24922) { return 18; } #legs
+			if ($itemid == 24924) { return 19; } #boots
+		}
+		if ($classid == 13) { #kael mjeldor felstorm magician silk
+			if ($itemid == 24926) { return 2; } #cap		
+			if ($itemid == 24921) { return 17; } #bp
+			if ($itemid == 24923) { return 7; } #sleeves
+			if ($itemid == 24925) { return 9; } #wrist
+			if ($itemid == 24927) { return 12; } #gloves
+			if ($itemid == 24922) { return 18; } #legs
+			if ($itemid == 24924) { return 19; } #boots
+		}
 
-	$tmp_class = 8;
-	#kael bygloirn omorden bard plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24905, reward => 25384}; #cap		
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24900, reward => 25385}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24902, reward => 25386}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24904, reward => 25387}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24906, reward => 25388}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24901, reward => 25389}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24903, reward => 25390}; #boots
-	
-	$tmp_class = 7;
-	#kael dagron stonecutter monk leather
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24919, reward => 25440}; #cap		
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24914, reward => 25441}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24916, reward => 25442}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24918, reward => 25443}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24920, reward => 25444}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24915, reward => 25445}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24917, reward => 25446}; #boots
-	
-	$tmp_class = 4;
-	#kael gragek mjlorkigar ranger chain
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24912, reward => 25363}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24907, reward => 25364}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24909, reward => 253635}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24911, reward => 25366}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24913, reward => 25367}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24908, reward => 25368}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24910, reward => 25369}; #boots
-	
-	$tmp_class = 6;
-	#kael jaglorm ygorr druid leather
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24919, reward => 25398}; #cap		
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24914, reward => 25399}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24916, reward => 25400}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24918, reward => 25401}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24920, reward => 25402}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24915, reward => 25403}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24917, reward => 25404}; #boots
-	
-	$tmp_class = 9;
-	#kael kelenek bluadfeth rogue chain
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24912, reward => 25377}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24907, reward => 25378}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24909, reward => 25379}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24911, reward => 25380}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24913, reward => 25381}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24908, reward => 25382}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24910, reward => 25383}; #boots
-	
-	$tmp_class = 1;
-	#kael kragek thunderforge warrior plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24905, reward => 25433}; #cap		
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24900, reward => 25434}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24902, reward => 25435}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24904, reward => 25436}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24906, reward => 25437}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24901, reward => 25438}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24903, reward => 25439}; #boots
-	
-	$tmp_class = 13;
-	#kael mjeldor felstorm magician silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24926, reward => 25419}; #cap		
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24921, reward => 25420}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24923, reward => 25421}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24925, reward => 25422}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24927, reward => 25423}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24922, reward => 25424}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24924, reward => 25425}; #boots
+		if ($classid == 11) { #kael bjarorm mjlorn necro silk
+			if ($itemid == 24926) { return 2; } #cap		
+			if ($itemid == 24921) { return 17; } #bp
+			if ($itemid == 24923) { return 7; } #sleeves
+			if ($itemid == 24925) { return 9; } #wrist
+			if ($itemid == 24927) { return 12; } #gloves
+			if ($itemid == 24922) { return 18; } #legs
+			if ($itemid == 24924) { return 19; } #boots
+		}
+		#kael nerik wolfsoul beastlord leather
+		#kael regbor vallgerthon berserker chain
+		if ($classid == 12) { #kael ulkar jollkarek wizard silk
+			if ($itemid == 24926) { return 2; } #cap		
+			if ($itemid == 24921) { return 17; } #bp
+			if ($itemid == 24923) { return 7; } #sleeves
+			if ($itemid == 24925) { return 9; } #wrist
+			if ($itemid == 24927) { return 12; } #gloves
+			if ($itemid == 24922) { return 18; } #legs
+			if ($itemid == 24924) { return 19; } #boots
+		}
+		if ($classid == 5) { #kael veldern blackhammer shadowknight plate
+			if ($itemid == 24905) { return 2; } #cap		
+			if ($itemid == 24900) { return 17; } #bp
+			if ($itemid == 24902) { return 7; } #sleeves
+			if ($itemid == 24904) { return 9; } #wrist
+			if ($itemid == 24906) { return 12; } #gloves
+			if ($itemid == 24901) { return 18; } #legs
+			if ($itemid == 24903) { return 19; } #boots
+		}
+		if ($classid == 2) { #kael vylleam vyaeltor cleric plate
+			if ($itemid == 24905) { return 2; } #cap		
+			if ($itemid == 24900) { return 17; } #bp
+			if ($itemid == 24902) { return 7; } #sleeves
+			if ($itemid == 24904) { return 9; } #wrist
+			if ($itemid == 24906) { return 12; } #gloves
+			if ($itemid == 24901) { return 18; } #legs
+			if ($itemid == 24903) { return 19; } #boots
+		}
+		if ($classid == 10) { #kael yeeldan spiritcaller shaman chain
+			if ($itemid == 24912) { return 2; } #cap
+			if ($itemid == 24907) { return 17; } #bp
+			if ($itemid == 24909) { return 7; } #sleeves
+			if ($itemid == 24911) { return 9; } #wrist
+			if ($itemid == 24913) { return 12; } #gloves
+			if ($itemid == 24908) { return 18; } #legs
+			if ($itemid == 24910) { return 19; } #boots
+		
+		}
+		return 0;
+	}
 
-	$tmp_class = 11;
-	#kael bjarorm mjlorn necro silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24926, reward => 25412}; #cap		
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24921, reward => 25413}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24923, reward => 25414}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24925, reward => 25415}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24927, reward => 25416}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24922, reward => 25417}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24924, reward => 25418}; #boots
-	
-	#kael nerik wolfsoul beastlord leather
-	#kael regbor vallgerthon berserker chain
-	$tmp_class = 14;
-	#kael stoem lekbar enchanter silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24926, reward => 25426}; #cap		
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24921, reward => 25427}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24923, reward => 25428}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24925, reward => 25429}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24927, reward => 25430}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24922, reward => 25431}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24924, reward => 25432}; #boots
-	
-	$tmp_class = 12;
-	#kael ulkar jollkarek wizard silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24926, reward => 25405}; #cap		
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24921, reward => 25406}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24923, reward => 25407}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24925, reward => 25408}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24927, reward => 25409}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24922, reward => 25410}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24924, reward => 25411}; #boots
-	
-	$tmp_class = 5;
-	#kael veldern blackhammer shadowknight plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24905, reward => 25349}; #cap		
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24900, reward => 25350}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24902, reward => 25351}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24904, reward => 25352}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24906, reward => 25353}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24901, reward => 25354}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24903, reward => 25355}; #boots
-	
-	$tmp_class = 2;
-	#kael vylleam vyaeltor cleric plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24905, reward => 25391}; #cap		
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24900, reward => 25392}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24902, reward => 25393}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24904, reward => 25394}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24906, reward => 25395}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24901, reward => 25396}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24903, reward => 25397}; #boots
-	
-	$tmp_class = 10;
-	#kael yeeldan spiritcaller shaman chain
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24912, reward => 25356}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24907, reward => 25357}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24909, reward => 25358}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24911, reward => 25359}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24913, reward => 25360}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24908, reward => 25361}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24910, reward => 25362}; #boots
-	
 	###SKYSHRINE###
-	$tmp_zone = 114;
-	$tmp_class = 11;
-	#skyshrine abudan fe-dhar necro silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24982, reward => 31161}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24977, reward => 31162}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24979, reward => 31163}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24981, reward => 31164}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24983, reward => 31165}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24978, reward => 31166}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24980, reward => 31167}; #boots
-	
-	$tmp_class = 3;
-	#skyshrine adwetram fe-dhar paladin plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24961, reward => 31119}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24956, reward => 31120}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24958, reward => 31121}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24960, reward => 31122}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24962, reward => 31123}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24957, reward => 31124}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24959, reward => 31125}; #boots
-	
-	$tmp_class = 10;
-	#skyshrine asteinnon fe-dhar shaman chain
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24968, reward => 31105}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24963, reward => 31106}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24965, reward => 31107}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24967, reward => 31108}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24969, reward => 31109}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24964, reward => 31110}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24966, reward => 31111}; #boots
-	
-	$tmp_class = 9;
-	#skyshrine crendeatha fe-dhar rogue chain
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24968, reward => 31126}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24963, reward => 31127}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24965, reward => 31128}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24967, reward => 31129}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24969, reward => 31130}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24964, reward => 31131}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24966, reward => 31132}; #boots
-	
-	$tmp_class = 12;
-	#skyshrine elaend fe-dhar wizard silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24982, reward => 31154}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24977, reward => 31155}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24979, reward => 31156}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24981, reward => 31157}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24983, reward => 31158}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24978, reward => 31159}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24980, reward => 31160}; #boots
-	
-	$tmp_class = 2;
-	#skyshrine fardonad fe-dhar cleric plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24961, reward => 31140}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24956, reward => 31141}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24958, reward => 31142}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24960, reward => 31143}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24962, reward => 31144}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24957, reward => 31145}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24959, reward => 31146}; #boots
-	
-	$tmp_class = 1;
-	#skyshrine jendavudd fe-dhar warrior plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24961, reward => 31182}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24956, reward => 31183}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24958, reward => 31184}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24960, reward => 31185}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24962, reward => 31186}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24957, reward => 31187}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24959, reward => 31188}; #boots
-	
-	$tmp_class = 7;
-	#skyshrine komawin fe-dhar monk leather
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24975, reward => 31189}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24970, reward => 31190}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24972, reward => 31191}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24974, reward => 31192}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24976, reward => 31193}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24971, reward => 31194}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24973, reward => 31195}; #boots
-	
-	#skyshrine larquin fe-dhar beastlord leather
-	
-	$tmp_class = 14;
-	#skyshrine lothieder fe-dhar enchanter silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24982, reward => 31175}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24977, reward => 31176}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24979, reward => 31177}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24981, reward => 31178}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24983, reward => 31179}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24978, reward => 31180}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24980, reward => 31181}; #boots
-	
-	$tmp_class = 4;
-	#skyshrine nalelin fe-dhar ranger chain
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24968, reward => 31112}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24963, reward => 31113}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24965, reward => 31114}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24967, reward => 31115}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24969, reward => 31116}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24964, reward => 31117}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24966, reward => 31118}; #boots
-	
-	$tmp_class = 13;
-	#skyshrine ocoenydd fe-dhar magician silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24982, reward => 31168}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24977, reward => 31169}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24979, reward => 31170}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24981, reward => 31171}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24983, reward => 31172}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24978, reward => 31173}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24980, reward => 31174}; #boots
-	
-	$tmp_class = 5;
-	#skyshrine onerind fe-dhar shadowknight plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24961, reward => 31098}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24956, reward => 31099}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24958, reward => 31100}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24960, reward => 31101}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24962, reward => 31102}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24957, reward => 31103}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24959, reward => 31104}; #boots
-	
-	$tmp_class = 6;
-	#skyshrine qynydd fe-dhar druid leather
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24975, reward => 31147}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24970, reward => 31148}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24972, reward => 31149}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24974, reward => 31150}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24976, reward => 31151}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24971, reward => 31152}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24973, reward => 31153}; #boots
-	
-	#skyshrine roagar fe-dhar berserker chain
-	$tmp_class = 8;
-	#skyshrine umykith fe-dhar bard plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24961, reward => 31133}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24956, reward => 31134}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24958, reward => 31135}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24960, reward => 31136}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24962, reward => 31137}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24957, reward => 31138}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24959, reward => 31139}; #boots
-	
+	if ($zoneid == 114) {
+		if ($classid == 11) { #skyshrine abudan fe-dhar necro silk
+			if ($itemid == 24982) { return 2; } #cap
+			if ($itemid == 24977) { return 17; } #bp
+			if ($itemid == 24979) { return 7; } #sleeves
+			if ($itemid == 24981) { return 9; } #wrist
+			if ($itemid == 24983) { return 12; } #gloves
+			if ($itemid == 24978) { return 18; } #legs
+			if ($itemid == 24980) { return 19; } #boots
+		
+		}
+		if ($classid == 3) { #skyshrine adwetram fe-dhar paladin plate
+			if ($itemid == 24961) { return 2; } #cap
+			if ($itemid == 24956) { return 17; } #bp
+			if ($itemid == 24958) { return 7; } #sleeves
+			if ($itemid == 24960) { return 9; } #wrist
+			if ($itemid == 24962) { return 12; } #gloves
+			if ($itemid == 24957) { return 18; } #legs
+			if ($itemid == 24959) { return 19; } #boots
+		
+		}
+		if ($classid == 10) { #skyshrine asteinnon fe-dhar shaman chain
+			if ($itemid == 24968) { return 2; } #cap
+			if ($itemid == 24963) { return 17; } #bp
+			if ($itemid == 24965) { return 7; } #sleeves
+			if ($itemid == 24967) { return 9; } #wrist
+			if ($itemid == 24969) { return 12; } #gloves
+			if ($itemid == 24964) { return 18; } #legs
+			if ($itemid == 24966) { return 19; } #boots
+		
+		}
+		if ($classid == 9) { #skyshrine crendeatha fe-dhar rogue chain
+			if ($itemid == 24968) { return 2; } #cap
+			if ($itemid == 24963) { return 17; } #bp
+			if ($itemid == 24965) { return 7; } #sleeves
+			if ($itemid == 24967) { return 9; } #wrist
+			if ($itemid == 24969) { return 12; } #gloves
+			if ($itemid == 24964) { return 18; } #legs
+			if ($itemid == 24966) { return 19; } #boots
+		
+		}
+		if ($classid == 12) { #skyshrine elaend fe-dhar wizard silk
+			if ($itemid == 24982) { return 2; } #cap
+			if ($itemid == 24977) { return 17; } #bp
+			if ($itemid == 24979) { return 7; } #sleeves
+			if ($itemid == 24981) { return 9; } #wrist
+			if ($itemid == 24983) { return 12; } #gloves
+			if ($itemid == 24978) { return 18; } #legs
+			if ($itemid == 24980) { return 19; } #boots
+		
+		}
+		if ($classid == 2) { #skyshrine fardonad fe-dhar cleric plate
+			if ($itemid == 24961) { return 2; } #cap
+			if ($itemid == 24956) { return 17; } #bp
+			if ($itemid == 24958) { return 7; } #sleeves
+			if ($itemid == 24960) { return 9; } #wrist
+			if ($itemid == 24962) { return 12; } #gloves
+			if ($itemid == 24957) { return 18; } #legs
+			if ($itemid == 24959) { return 19; } #boots
+		
+		}
+		if ($classid == 1) { #skyshrine jendavudd fe-dhar warrior plate
+			if ($itemid == 24961) { return 2; } #cap
+			if ($itemid == 24956) { return 17; } #bp
+			if ($itemid == 24958) { return 7; } #sleeves
+			if ($itemid == 24960) { return 9; } #wrist
+			if ($itemid == 24962) { return 12; } #gloves
+			if ($itemid == 24957) { return 18; } #legs
+			if ($itemid == 24959) { return 19; } #boots
+		
+		}
+		if ($classid == 7) { #skyshrine komawin fe-dhar monk leather
+			if ($itemid == 24975) { return 2; } #cap
+			if ($itemid == 24970) { return 17; } #bp
+			if ($itemid == 24972) { return 7; } #sleeves
+			if ($itemid == 24974) { return 9; } #wrist
+			if ($itemid == 24976) { return 12; } #gloves
+			if ($itemid == 24971) { return 18; } #legs
+			if ($itemid == 24973) { return 19; } #boots
+		
+		#skyshrine larquin fe-dhar beastlord leather
+		
+		}
+		if ($classid == 14) { #skyshrine lothieder fe-dhar enchanter silk
+			if ($itemid == 24982) { return 2; } #cap
+			if ($itemid == 24977) { return 17; } #bp
+			if ($itemid == 24979) { return 7; } #sleeves
+			if ($itemid == 24981) { return 9; } #wrist
+			if ($itemid == 24983) { return 12; } #gloves
+			if ($itemid == 24978) { return 18; } #legs
+			if ($itemid == 24980) { return 19; } #boots
+		
+		}
+		if ($classid == 4) { #skyshrine nalelin fe-dhar ranger chain
+			if ($itemid == 24968) { return 2; } #cap
+			if ($itemid == 24963) { return 17; } #bp
+			if ($itemid == 24965) { return 7; } #sleeves
+			if ($itemid == 24967) { return 9; } #wrist
+			if ($itemid == 24969) { return 12; } #gloves
+			if ($itemid == 24964) { return 18; } #legs
+			if ($itemid == 24966) { return 19; } #boots
+		
+		}
+		if ($classid == 13) { #skyshrine ocoenydd fe-dhar magician silk
+			if ($itemid == 24982) { return 2; } #cap
+			if ($itemid == 24977) { return 17; } #bp
+			if ($itemid == 24979) { return 7; } #sleeves
+			if ($itemid == 24981) { return 9; } #wrist
+			if ($itemid == 24983) { return 12; } #gloves
+			if ($itemid == 24978) { return 18; } #legs
+			if ($itemid == 24980) { return 19; } #boots
+		
+		}
+		if ($classid == 5) { #skyshrine onerind fe-dhar shadowknight plate
+			if ($itemid == 24961) { return 2; } #cap
+			if ($itemid == 24956) { return 17; } #bp
+			if ($itemid == 24958) { return 7; } #sleeves
+			if ($itemid == 24960) { return 9; } #wrist
+			if ($itemid == 24962) { return 12; } #gloves
+			if ($itemid == 24957) { return 18; } #legs
+			if ($itemid == 24959) { return 19; } #boots
+		
+		}
+		if ($classid == 6) { #skyshrine qynydd fe-dhar druid leather
+			if ($itemid == 24975) { return 2; } #cap
+			if ($itemid == 24970) { return 17; } #bp
+			if ($itemid == 24972) { return 7; } #sleeves
+			if ($itemid == 24974) { return 9; } #wrist
+			if ($itemid == 24976) { return 12; } #gloves
+			if ($itemid == 24971) { return 18; } #legs
+			if ($itemid == 24973) { return 19; } #boots		
+		}
+
+		#skyshrine roagar fe-dhar berserker chain
+		if ($classid == 8) { #skyshrine umykith fe-dhar bard plate
+			if ($itemid == 24961) { return 2; } #cap
+			if ($itemid == 24956) { return 17; } #bp
+			if ($itemid == 24958) { return 7; } #sleeves
+			if ($itemid == 24960) { return 9; } #wrist
+			if ($itemid == 24962) { return 12; } #gloves
+			if ($itemid == 24957) { return 18; } #legs
+			if ($itemid == 24959) { return 19; } #boots
+		}
+		return 0;
+	}
 	###THURGADIN###
-	$tmp_zone = 115;
-	$tmp_class = 4;
-	#thurgadin argash ranger chain
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24940, reward => 31014}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24935, reward => 31015}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24937, reward => 31016}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24939, reward => 31017}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31018}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24936, reward => 31019}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31020}; #boots
-	
-	$tmp_class = 3;
-	#thurgadin battlepriest daragor paladin plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31021}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31022}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31023}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31024}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31025}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31026}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31027}; #boots
-	
-	$tmp_class = 1;
-	#thurgadin captain njall warrior plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31085}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31086}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31087}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31088}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31089}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31090}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31091}; #boots
-	
-	$tmp_class = 6;
-	#thurgadin cobi frostbeard druid leather
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24942, reward => 31050}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24944, reward => 31051}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24943, reward => 31052}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24948, reward => 31053}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24947, reward => 31054}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24946, reward => 31055}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24945, reward => 31056}; #boots
-	
-	$tmp_class = 5;
-	#thurgadin dalgrim underbelly shadowknight plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31000}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31001}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31002}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31003}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31004}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31005}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31006}; #boots
-	
-	$tmp_class = 9;
-	#thurgadin foreman felspar rogue chain
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24940, reward => 31028}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24935, reward => 31029}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24937, reward => 31030}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24939, reward => 31031}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31032}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24936, reward => 31033}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31034}; #boots
-	
-	#thurgadin glatigi berserker chain
-	$tmp_class = 13;
-	#thurgadin kyla frostbeard magician silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24954, reward => 31070}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24949, reward => 31071}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24951, reward => 31072}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24953, reward => 31073}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24955, reward => 31074}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24950, reward => 31075}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24952, reward => 31076}; #boots
-	
-	$tmp_class = 8;
-	#thurgadin leifur bard plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31035}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31036}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31037}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31038}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31039}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31040}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31041}; #boots
-	
-	$tmp_class = 14;
-	#thurgadin lorekeeper brita enchanter silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24954, reward => 31077}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24949, reward => 31078}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24951, reward => 31079}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24953, reward => 31080}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24955, reward => 31081}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24950, reward => 31082}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24952, reward => 31083}; #boots
-	
-	$tmp_class = 7;
-	#thurgadin lorekeeper einar monk leather
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24942, reward => 31092}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24944, reward => 31093}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24943, reward => 31094}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24948, reward => 31095}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24947, reward => 31096}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24946, reward => 31097}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24945, reward => 31098}; #boots
-	
-	$tmp_class = 11;
-	#thurgadin lorekeeper zorik necromancer silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24954, reward => 31063}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24949, reward => 31064}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24951, reward => 31065}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24953, reward => 31066}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24955, reward => 31067}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24950, reward => 31068}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24952, reward => 31069}; #boots
+	if ($zoneid == 115) {
+		if ($classid == 4) { #thurgadin argash ranger chain
+			if ($itemid == 24940) { return 2; } #cap
+			if ($itemid == 24935) { return 17; } #bp
+			if ($itemid == 24937) { return 7; } #sleeves
+			if ($itemid == 24939) { return 9; } #wrist
+			if ($itemid == 24941) { return 12; } #gloves
+			if ($itemid == 24936) { return 18; } #legs
+			if ($itemid == 24938) { return 19; } #boots
+		
+		}
+		if ($classid == 3) { #thurgadin battlepriest daragor paladin plate
+			if ($itemid == 24933) { return 2; } #cap
+			if ($itemid == 24928) { return 17; } #bp
+			if ($itemid == 24930) { return 7; } #sleeves
+			if ($itemid == 24932) { return 9; } #wrist
+			if ($itemid == 24934) { return 12; } #gloves
+			if ($itemid == 24929) { return 18; } #legs
+			if ($itemid == 24931) { return 19; } #boots
+		
+		}
+		if ($classid == 1) { #thurgadin captain njall warrior plate
+			if ($itemid == 24933) { return 2; } #cap
+			if ($itemid == 24928) { return 17; } #bp
+			if ($itemid == 24930) { return 7; } #sleeves
+			if ($itemid == 24932) { return 9; } #wrist
+			if ($itemid == 24934) { return 12; } #gloves
+			if ($itemid == 24929) { return 18; } #legs
+			if ($itemid == 24931) { return 19; } #boots
+		
+		}
+		if ($classid == 6) { #thurgadin cobi frostbeard druid leather
+			if ($itemid == 24942) { return 2; } #cap
+			if ($itemid == 24944) { return 17; } #bp
+			if ($itemid == 24943) { return 7; } #sleeves
+			if ($itemid == 24948) { return 9; } #wrist
+			if ($itemid == 24947) { return 12; } #gloves
+			if ($itemid == 24946) { return 18; } #legs
+			if ($itemid == 24945) { return 19; } #boots
+		
+		}
+		if ($classid == 5) { #thurgadin dalgrim underbelly shadowknight plate
+			if ($itemid == 24933) { return 2; } #cap
+			if ($itemid == 24928) { return 17; } #bp
+			if ($itemid == 24930) { return 7; } #sleeves
+			if ($itemid == 24932) { return 9; } #wrist
+			if ($itemid == 24934) { return 12; } #gloves
+			if ($itemid == 24929) { return 18; } #legs
+			if ($itemid == 24931) { return 19; } #boots
+		
+		}
+		if ($classid == 9) { #thurgadin foreman felspar rogue chain
+			if ($itemid == 24940) { return 2; } #cap
+			if ($itemid == 24935) { return 17; } #bp
+			if ($itemid == 24937) { return 7; } #sleeves
+			if ($itemid == 24939) { return 9; } #wrist
+			if ($itemid == 24941) { return 12; } #gloves
+			if ($itemid == 24936) { return 18; } #legs
+			if ($itemid == 24938) { return 19; } #boots
+		
+		#thurgadin glatigi berserker chain
+		}
+		if ($classid == 13) { #thurgadin kyla frostbeard magician silk
+			if ($itemid == 24954) { return 2; } #cap
+			if ($itemid == 24949) { return 17; } #bp
+			if ($itemid == 24951) { return 7; } #sleeves
+			if ($itemid == 24953) { return 9; } #wrist
+			if ($itemid == 24955) { return 12; } #gloves
+			if ($itemid == 24950) { return 18; } #legs
+			if ($itemid == 24952) { return 19; } #boots
+		
+		}
+		if ($classid == 8) { #thurgadin leifur bard plate
+			if ($itemid == 24933) { return 2; } #cap
+			if ($itemid == 24928) { return 17; } #bp
+			if ($itemid == 24930) { return 7; } #sleeves
+			if ($itemid == 24932) { return 9; } #wrist
+			if ($itemid == 24934) { return 12; } #gloves
+			if ($itemid == 24929) { return 18; } #legs
+			if ($itemid == 24931) { return 19; } #boots
+		
+		}
+		if ($classid == 14) { #thurgadin lorekeeper brita enchanter silk
+			if ($itemid == 24954) { return 2; } #cap
+			if ($itemid == 24949) { return 17; } #bp
+			if ($itemid == 24951) { return 7; } #sleeves
+			if ($itemid == 24953) { return 9; } #wrist
+			if ($itemid == 24955) { return 12; } #gloves
+			if ($itemid == 24950) { return 18; } #legs
+			if ($itemid == 24952) { return 19; } #boots
+		
+		}
+		if ($classid == 7) { #thurgadin lorekeeper einar monk leather
+			if ($itemid == 24942) { return 2; } #cap
+			if ($itemid == 24944) { return 17; } #bp
+			if ($itemid == 24943) { return 7; } #sleeves
+			if ($itemid == 24948) { return 9; } #wrist
+			if ($itemid == 24947) { return 12; } #gloves
+			if ($itemid == 24946) { return 18; } #legs
+			if ($itemid == 24945) { return 19; } #boots
+		
+		}
+		if ($classid == 11) { #thurgadin lorekeeper zorik necromancer silk
+			if ($itemid == 24954) { return 2; } #cap
+			if ($itemid == 24949) { return 17; } #bp
+			if ($itemid == 24951) { return 7; } #sleeves
+			if ($itemid == 24953) { return 9; } #wrist
+			if ($itemid == 24955) { return 12; } #gloves
+			if ($itemid == 24950) { return 18; } #legs
+			if ($itemid == 24952) { return 19; } #boots
 
-	$tmp_class = 12;
-	#thurgadin mauren frostbeard wizard silk
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24954, reward => 31056}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24949, reward => 31057}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24951, reward => 31058}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24953, reward => 31059}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24955, reward => 31060}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24950, reward => 31061}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24952, reward => 31062}; #boots
-	
-	$tmp_class = 2;
-	#thurgadin loremaster dorinan cleric plate
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24933, reward => 31042}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24928, reward => 31043}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24930, reward => 31044}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24932, reward => 31045}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24934, reward => 31046}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24929, reward => 31047}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24931, reward => 31048}; #boots
-	
-	#thurgadin pearce icefang beastlord leather
+		}
+		if ($classid == 12) { #thurgadin mauren frostbeard wizard silk
+			if ($itemid == 24954) { return 2; } #cap
+			if ($itemid == 24949) { return 17; } #bp
+			if ($itemid == 24951) { return 7; } #sleeves
+			if ($itemid == 24953) { return 9; } #wrist
+			if ($itemid == 24955) { return 12; } #gloves
+			if ($itemid == 24950) { return 18; } #legs
+			if ($itemid == 24952) { return 19; } #boots
+		
+		}
+		if ($classid == 2) { #thurgadin loremaster dorinan cleric plate
+			if ($itemid == 24933) { return 2; } #cap
+			if ($itemid == 24928) { return 17; } #bp
+			if ($itemid == 24930) { return 7; } #sleeves
+			if ($itemid == 24932) { return 9; } #wrist
+			if ($itemid == 24934) { return 12; } #gloves
+			if ($itemid == 24929) { return 18; } #legs
+			if ($itemid == 24931) { return 19; } #boots
+		
+		#thurgadin pearce icefang beastlord leather
 
-	$tmp_class = 10;
-	#thurgadin terman underbelly shaman chain
-	$armor_list[$tmp_zone][$tmp_class][0] = {slot => 2, item => 24940, reward => 31007}; #cap
-	$armor_list[$tmp_zone][$tmp_class][1] = {slot => 17, item => 24935, reward => 31008}; #bp
-	$armor_list[$tmp_zone][$tmp_class][2] = {slot => 7, item => 24937, reward => 31009}; #sleeves
-	$armor_list[$tmp_zone][$tmp_class][3] = {slot => 9, item => 24939, reward => 31010}; #wrist
-	$armor_list[$tmp_zone][$tmp_class][4] = {slot => 12, item => 24941, reward => 31011}; #gloves
-	$armor_list[$tmp_zone][$tmp_class][5] = {slot => 18, item => 24936, reward => 31012}; #legs
-	$armor_list[$tmp_zone][$tmp_class][6] = {slot => 19, item => 24938, reward => 31013}; #boots
-	return @armor_list;
+		}
+		if ($classid == 10) { #thurgadin terman underbelly shaman chain
+			if ($itemid == 24940) { return 2; } #cap
+			if ($itemid == 24935) { return 17; } #bp
+			if ($itemid == 24937) { return 7; } #sleeves
+			if ($itemid == 24939) { return 9; } #wrist
+			if ($itemid == 24941) { return 12; } #gloves
+			if ($itemid == 24936) { return 18; } #legs
+			if ($itemid == 24938) { return 19; } #boots
+		}
+		return 0;
+	}
+	return 0;
 }
+
+# Gets the minimum value item id of gem to turn in for said armor
+sub velious_gem_by_armor {
+	$itemid = shift;
+	$zoneid = shift;
+	$classid = shift;
+	if ($zoneid == 114) { #skyshrine
+		if ($classid == 3 || $classid == 8 || $classid == 1 || $classid == 5 || $classid == 2) { # SS Plate
+			if ($itemid == 24961 || $itemid == 24956 || $itemid == 24958 || $itemid == 24960 || $itemid == 24962 || $itemid == 24957 || $itemid == 24959) {
+				return 101401; #mingem
+			}
+			return 0;
+		}
+		if ($classid == 4 || $classid == 9 || $classid == 10) { # SS Chain		
+			if ($itemid == 24968 || $itemid == 24963 || $itemid == 24965 || $itemid == 24967 || $itemid == 24969 || $itemid == 24964 || $itemid == 24966) {
+				return 101411; #mingem
+			}
+			return 0;
+		}
+		if ($classid == 6 || $classid == 7 || $classid == 10) { # SS Leather
+	 		if ($itemid == 24975 || $itemid == 24970 || $itemid == 24972 || $itemid == 24974 || $itemid == 24976 || $itemid == 24971 || $itemid == 24973) {
+	 			return 101421; #mingem
+	 		}
+	 		return 0;
+		}
+		#silk
+		if ($itemid == 24982 || $itemid == 24977 || $itemid == 24979 || $itemid == 24981 ||  $itemid == 24983 ||  $itemid == 24978 ||  $itemid == 24980) {
+			return 101431; #mingem
+		}
+		return 0;
+	}
+	return 0;
+}
+
+sub velious_reward_by_item {
+	$itemid = shift;
+	$zoneid = shift;
+	$classid = shift;
+	quest::say("by_item: $itemid, $zoneid, $classid");
+
+	###KAEL###
+	if ($zoneid == 113) { #kael
+		if ($classid == 3) { #paladin
+			if ($itemid == 24905) { return 25370; } #cap
+			if ($itemid == 24900) { return 25371; } #bp
+			if ($itemid == 24902) { return 25372; } #sleeves
+			if ($itemid == 24904) { return 25373; } #wrist
+			if ($itemid == 24906) { return 25374; } #gloves
+			if ($itemid == 24901) { return 25375; } #legs
+			if ($itemid == 24903) { return 25376; } #boots
+			return 0;
+		}
+		if ($classid == 8) { #bard
+			if ($itemid == 24905) { return 25384; } #cap		
+			if ($itemid == 24900) { return 25385; } #bp
+			if ($itemid == 24902) { return 25386; } #sleeves
+			if ($itemid == 24904) { return 25387; } #wrist
+			if ($itemid == 24906) { return 25388; } #gloves
+			if ($itemid == 24901) { return 25389; } #legs
+			if ($itemid == 24903) { return 25390; } #boots
+			return 0;
+		}
+		if ($classid == 7) { #monk
+			if ($itemid == 24919) { return 25440; } #cap		
+			if ($itemid == 24914) { return 25441; } #bp
+			if ($itemid == 24916) { return 25442; } #sleeves
+			if ($itemid == 24918) { return 25443; } #wrist
+			if ($itemid == 24920) { return 25444; } #gloves
+			if ($itemid == 24915) { return 25445; } #legs
+			if ($itemid == 24917) { return 25446; } #boots
+			return 0;
+		}
+		if ($classid == 4) { #ranger
+			if ($itemid == 24912) { return 25363; } #cap
+			if ($itemid == 24907) { return 25364; } #bp
+			if ($itemid == 24909) { return 253635; } #sleeves
+			if ($itemid == 24911) { return 25366; } #wrist
+			if ($itemid == 24913) { return 25367; } #gloves
+			if ($itemid == 24908) { return 25368; } #legs
+			if ($itemid == 24910) { return 25369; } #boots
+			return 0;
+		}
+		if ($classid == 6) { #druid
+			if ($itemid == 24919) { return 25398; } #cap		
+			if ($itemid == 24914) { return 25399; } #bp
+			if ($itemid == 24916) { return 25400; } #sleeves
+			if ($itemid == 24918) { return 25401; } #wrist
+			if ($itemid == 24920) { return 25402; } #gloves
+			if ($itemid == 24915) { return 25403; } #legs
+			if ($itemid == 24917) { return 25404; } #boots
+		}
+		if ($classid == 9) { #rogue
+			if ($itemid == 24912) { return 25377; } #cap
+			if ($itemid == 24907) { return 25378; } #bp
+			if ($itemid == 24909) { return 25379; } #sleeves
+			if ($itemid == 24911) { return 25380; } #wrist
+			if ($itemid == 24913) { return 25381; } #gloves
+			if ($itemid == 24908) { return 25382; } #legs
+			if ($itemid == 24910) { return 25383; } #boots			
+		}
+		if ($classid == 1) { #warrior
+			if ($itemid == 24905) { return 25433; } #cap		
+			if ($itemid == 24900) { return 25434; } #bp
+			if ($itemid == 24902) { return 25435; } #sleeves
+			if ($itemid == 24904) { return 25436; } #wrist
+			if ($itemid == 24906) { return 25437; } #gloves
+			if ($itemid == 24901) { return 25438; } #legs
+			if ($itemid == 24903) { return 25439; } #boots		
+		}
+		if ($classid == 14) { #enchanter
+			if ($itemid == 24926) { return 25426; } #cap		
+			if ($itemid == 24921) { return 25427; } #bp
+			if ($itemid == 24923) { return 25428; } #sleeves
+			if ($itemid == 24925) { return 25429; } #wrist
+			if ($itemid == 24927) { return 25430; } #gloves
+			if ($itemid == 24922) { return 25431; } #legs
+			if ($itemid == 24924) { return 25432; } #boots
+		}
+		if ($classid == 13) { #kael mjeldor felstorm magician silk
+			if ($itemid == 24926) { return 25419; } #cap		
+			if ($itemid == 24921) { return 25420; } #bp
+			if ($itemid == 24923) { return 25421; } #sleeves
+			if ($itemid == 24925) { return 25422; } #wrist
+			if ($itemid == 24927) { return 25423; } #gloves
+			if ($itemid == 24922) { return 25424; } #legs
+			if ($itemid == 24924) { return 25425; } #boots
+		}
+
+		if ($classid == 11) { #kael bjarorm mjlorn necro silk
+			if ($itemid == 24926) { return 25412; } #cap		
+			if ($itemid == 24921) { return 25413; } #bp
+			if ($itemid == 24923) { return 25414; } #sleeves
+			if ($itemid == 24925) { return 25415; } #wrist
+			if ($itemid == 24927) { return 25416; } #gloves
+			if ($itemid == 24922) { return 25417; } #legs
+			if ($itemid == 24924) { return 25418; } #boots
+		}
+		#kael nerik wolfsoul beastlord leather
+		#kael regbor vallgerthon berserker chain
+		if ($classid == 12) { #kael ulkar jollkarek wizard silk
+			if ($itemid == 24926) { return 25405; } #cap		
+			if ($itemid == 24921) { return 25406; } #bp
+			if ($itemid == 24923) { return 25407; } #sleeves
+			if ($itemid == 24925) { return 25408; } #wrist
+			if ($itemid == 24927) { return 25409; } #gloves
+			if ($itemid == 24922) { return 25410; } #legs
+			if ($itemid == 24924) { return 25411; } #boots
+		}
+		if ($classid == 5) { #kael veldern blackhammer shadowknight plate
+			if ($itemid == 24905) { return 25349; } #cap		
+			if ($itemid == 24900) { return 25350; } #bp
+			if ($itemid == 24902) { return 25351; } #sleeves
+			if ($itemid == 24904) { return 25352; } #wrist
+			if ($itemid == 24906) { return 25353; } #gloves
+			if ($itemid == 24901) { return 25354; } #legs
+			if ($itemid == 24903) { return 25355; } #boots
+		}
+		if ($classid == 2) { #kael vylleam vyaeltor cleric plate
+			if ($itemid == 24905) { return 25391; } #cap		
+			if ($itemid == 24900) { return 25392; } #bp
+			if ($itemid == 24902) { return 25393; } #sleeves
+			if ($itemid == 24904) { return 25394; } #wrist
+			if ($itemid == 24906) { return 25395; } #gloves
+			if ($itemid == 24901) { return 25396; } #legs
+			if ($itemid == 24903) { return 25397; } #boots
+		}
+		if ($classid == 10) { #kael yeeldan spiritcaller shaman chain
+			if ($itemid == 24912) { return 25356; } #cap
+			if ($itemid == 24907) { return 25357; } #bp
+			if ($itemid == 24909) { return 25358; } #sleeves
+			if ($itemid == 24911) { return 25359; } #wrist
+			if ($itemid == 24913) { return 25360; } #gloves
+			if ($itemid == 24908) { return 25361; } #legs
+			if ($itemid == 24910) { return 25362; } #boots
+		
+		}
+		return 0;
+	}
+
+	###SKYSHRINE###
+	if ($zoneid == 114) {
+		if ($classid == 11) { #skyshrine abudan fe-dhar necro silk
+			if ($itemid == 24982) { return 31161; } #cap
+			if ($itemid == 24977) { return 31162; } #bp
+			if ($itemid == 24979) { return 31163; } #sleeves
+			if ($itemid == 24981) { return 31164; } #wrist
+			if ($itemid == 24983) { return 31165; } #gloves
+			if ($itemid == 24978) { return 31166; } #legs
+			if ($itemid == 24980) { return 31167; } #boots
+		
+		}
+		if ($classid == 3) { #skyshrine adwetram fe-dhar paladin plate
+			if ($itemid == 24961) { return 31119; } #cap
+			if ($itemid == 24956) { return 31120; } #bp
+			if ($itemid == 24958) { return 31121; } #sleeves
+			if ($itemid == 24960) { return 31122; } #wrist
+			if ($itemid == 24962) { return 31123; } #gloves
+			if ($itemid == 24957) { return 31124; } #legs
+			if ($itemid == 24959) { return 31125; } #boots
+		
+		}
+		if ($classid == 10) { #skyshrine asteinnon fe-dhar shaman chain
+			if ($itemid == 24968) { return 31105; } #cap
+			if ($itemid == 24963) { return 31106; } #bp
+			if ($itemid == 24965) { return 31107; } #sleeves
+			if ($itemid == 24967) { return 31108; } #wrist
+			if ($itemid == 24969) { return 31109; } #gloves
+			if ($itemid == 24964) { return 31110; } #legs
+			if ($itemid == 24966) { return 31111; } #boots
+		
+		}
+		if ($classid == 9) { #skyshrine crendeatha fe-dhar rogue chain
+			if ($itemid == 24968) { return 31126; } #cap
+			if ($itemid == 24963) { return 31127; } #bp
+			if ($itemid == 24965) { return 31128; } #sleeves
+			if ($itemid == 24967) { return 31129; } #wrist
+			if ($itemid == 24969) { return 31130; } #gloves
+			if ($itemid == 24964) { return 31131; } #legs
+			if ($itemid == 24966) { return 31132; } #boots
+		
+		}
+		if ($classid == 12) { #skyshrine elaend fe-dhar wizard silk
+			if ($itemid == 24982) { return 31154; } #cap
+			if ($itemid == 24977) { return 31155; } #bp
+			if ($itemid == 24979) { return 31156; } #sleeves
+			if ($itemid == 24981) { return 31157; } #wrist
+			if ($itemid == 24983) { return 31158; } #gloves
+			if ($itemid == 24978) { return 31159; } #legs
+			if ($itemid == 24980) { return 31160; } #boots
+		
+		}
+		if ($classid == 2) { #skyshrine fardonad fe-dhar cleric plate
+			if ($itemid == 24961) { return 31140; } #cap
+			if ($itemid == 24956) { return 31141; } #bp
+			if ($itemid == 24958) { return 31142; } #sleeves
+			if ($itemid == 24960) { return 31143; } #wrist
+			if ($itemid == 24962) { return 31144; } #gloves
+			if ($itemid == 24957) { return 31145; } #legs
+			if ($itemid == 24959) { return 31146; } #boots
+		
+		}
+		if ($classid == 1) { #skyshrine jendavudd fe-dhar warrior plate
+			if ($itemid == 24961) { return 31182; } #cap
+			if ($itemid == 24956) { return 31183; } #bp
+			if ($itemid == 24958) { return 31184; } #sleeves
+			if ($itemid == 24960) { return 31185; } #wrist
+			if ($itemid == 24962) { return 31186; } #gloves
+			if ($itemid == 24957) { return 31187; } #legs
+			if ($itemid == 24959) { return 31188; } #boots
+		
+		}
+		if ($classid == 7) { #skyshrine komawin fe-dhar monk leather
+			if ($itemid == 24975) { return 31189; } #cap
+			if ($itemid == 24970) { return 31190; } #bp
+			if ($itemid == 24972) { return 31191; } #sleeves
+			if ($itemid == 24974) { return 31192; } #wrist
+			if ($itemid == 24976) { return 31193; } #gloves
+			if ($itemid == 24971) { return 31194; } #legs
+			if ($itemid == 24973) { return 31195; } #boots
+		
+		#skyshrine larquin fe-dhar beastlord leather
+		
+		}
+		if ($classid == 14) { #skyshrine lothieder fe-dhar enchanter silk
+			if ($itemid == 24982) { return 31175; } #cap
+			if ($itemid == 24977) { return 31176; } #bp
+			if ($itemid == 24979) { return 31177; } #sleeves
+			if ($itemid == 24981) { return 31178; } #wrist
+			if ($itemid == 24983) { return 31179; } #gloves
+			if ($itemid == 24978) { return 31180; } #legs
+			if ($itemid == 24980) { return 31181; } #boots
+		
+		}
+		if ($classid == 4) { #skyshrine nalelin fe-dhar ranger chain
+			if ($itemid == 24968) { return 31112; } #cap
+			if ($itemid == 24963) { return 31113; } #bp
+			if ($itemid == 24965) { return 31114; } #sleeves
+			if ($itemid == 24967) { return 31115; } #wrist
+			if ($itemid == 24969) { return 31116; } #gloves
+			if ($itemid == 24964) { return 31117; } #legs
+			if ($itemid == 24966) { return 31118; } #boots
+		
+		}
+		if ($classid == 13) { #skyshrine ocoenydd fe-dhar magician silk
+			if ($itemid == 24982) { return 31168; } #cap
+			if ($itemid == 24977) { return 31169; } #bp
+			if ($itemid == 24979) { return 31170; } #sleeves
+			if ($itemid == 24981) { return 31171; } #wrist
+			if ($itemid == 24983) { return 31172; } #gloves
+			if ($itemid == 24978) { return 31173; } #legs
+			if ($itemid == 24980) { return 31174; } #boots
+		
+		}
+		if ($classid == 5) { #skyshrine onerind fe-dhar shadowknight plate
+			if ($itemid == 24961) { return 31098; } #cap
+			if ($itemid == 24956) { return 31099; } #bp
+			if ($itemid == 24958) { return 31100; } #sleeves
+			if ($itemid == 24960) { return 31101; } #wrist
+			if ($itemid == 24962) { return 31102; } #gloves
+			if ($itemid == 24957) { return 31103; } #legs
+			if ($itemid == 24959) { return 31104; } #boots
+		
+		}
+		if ($classid == 6) { #skyshrine qynydd fe-dhar druid leather
+			if ($itemid == 24975) { return 31147; } #cap
+			if ($itemid == 24970) { return 31148; } #bp
+			if ($itemid == 24972) { return 31149; } #sleeves
+			if ($itemid == 24974) { return 31150; } #wrist
+			if ($itemid == 24976) { return 31151; } #gloves
+			if ($itemid == 24971) { return 31152; } #legs
+			if ($itemid == 24973) { return 31153; } #boots		
+		}
+
+		#skyshrine roagar fe-dhar berserker chain
+		if ($classid == 8) { #skyshrine umykith fe-dhar bard plate
+			if ($itemid == 24961) { return 31133; } #cap
+			if ($itemid == 24956) { return 31134; } #bp
+			if ($itemid == 24958) { return 31135; } #sleeves
+			if ($itemid == 24960) { return 31136; } #wrist
+			if ($itemid == 24962) { return 31137; } #gloves
+			if ($itemid == 24957) { return 31138; } #legs
+			if ($itemid == 24959) { return 31139; } #boots
+		}
+		return 0;
+	}
+	###THURGADIN###
+	if ($zoneid == 115) {
+		if ($classid == 4) { #thurgadin argash ranger chain
+			if ($itemid == 24940) { return 31014; } #cap
+			if ($itemid == 24935) { return 31015; } #bp
+			if ($itemid == 24937) { return 31016; } #sleeves
+			if ($itemid == 24939) { return 31017; } #wrist
+			if ($itemid == 24941) { return 31018; } #gloves
+			if ($itemid == 24936) { return 31019; } #legs
+			if ($itemid == 24938) { return 31020; } #boots
+		
+		}
+		if ($classid == 3) { #thurgadin battlepriest daragor paladin plate
+			if ($itemid == 24933) { return 31021; } #cap
+			if ($itemid == 24928) { return 31022; } #bp
+			if ($itemid == 24930) { return 31023; } #sleeves
+			if ($itemid == 24932) { return 31024; } #wrist
+			if ($itemid == 24934) { return 31025; } #gloves
+			if ($itemid == 24929) { return 31026; } #legs
+			if ($itemid == 24931) { return 31027; } #boots
+		
+		}
+		if ($classid == 1) { #thurgadin captain njall warrior plate
+			if ($itemid == 24933) { return 31085; } #cap
+			if ($itemid == 24928) { return 31086; } #bp
+			if ($itemid == 24930) { return 31087; } #sleeves
+			if ($itemid == 24932) { return 31088; } #wrist
+			if ($itemid == 24934) { return 31089; } #gloves
+			if ($itemid == 24929) { return 31090; } #legs
+			if ($itemid == 24931) { return 31091; } #boots
+		
+		}
+		if ($classid == 6) { #thurgadin cobi frostbeard druid leather
+			if ($itemid == 24942) { return 31050; } #cap
+			if ($itemid == 24944) { return 31051; } #bp
+			if ($itemid == 24943) { return 31052; } #sleeves
+			if ($itemid == 24948) { return 31053; } #wrist
+			if ($itemid == 24947) { return 31054; } #gloves
+			if ($itemid == 24946) { return 31055; } #legs
+			if ($itemid == 24945) { return 31056; } #boots
+		
+		}
+		if ($classid == 5) { #thurgadin dalgrim underbelly shadowknight plate
+			if ($itemid == 24933) { return 31000; } #cap
+			if ($itemid == 24928) { return 31001; } #bp
+			if ($itemid == 24930) { return 31002; } #sleeves
+			if ($itemid == 24932) { return 31003; } #wrist
+			if ($itemid == 24934) { return 31004; } #gloves
+			if ($itemid == 24929) { return 31005; } #legs
+			if ($itemid == 24931) { return 31006; } #boots
+		
+		}
+		if ($classid == 9) { #thurgadin foreman felspar rogue chain
+			if ($itemid == 24940) { return 31028; } #cap
+			if ($itemid == 24935) { return 31029; } #bp
+			if ($itemid == 24937) { return 31030; } #sleeves
+			if ($itemid == 24939) { return 31031; } #wrist
+			if ($itemid == 24941) { return 31032; } #gloves
+			if ($itemid == 24936) { return 31033; } #legs
+			if ($itemid == 24938) { return 31034; } #boots
+		
+		#thurgadin glatigi berserker chain
+		}
+		if ($classid == 13) { #thurgadin kyla frostbeard magician silk
+			if ($itemid == 24954) { return 31070; } #cap
+			if ($itemid == 24949) { return 31071; } #bp
+			if ($itemid == 24951) { return 31072; } #sleeves
+			if ($itemid == 24953) { return 31073; } #wrist
+			if ($itemid == 24955) { return 31074; } #gloves
+			if ($itemid == 24950) { return 31075; } #legs
+			if ($itemid == 24952) { return 31076; } #boots
+		
+		}
+		if ($classid == 8) { #thurgadin leifur bard plate
+			if ($itemid == 24933) { return 31035; } #cap
+			if ($itemid == 24928) { return 31036; } #bp
+			if ($itemid == 24930) { return 31037; } #sleeves
+			if ($itemid == 24932) { return 31038; } #wrist
+			if ($itemid == 24934) { return 31039; } #gloves
+			if ($itemid == 24929) { return 31040; } #legs
+			if ($itemid == 24931) { return 31041; } #boots
+		
+		}
+		if ($classid == 14) { #thurgadin lorekeeper brita enchanter silk
+			if ($itemid == 24954) { return 31077; } #cap
+			if ($itemid == 24949) { return 31078; } #bp
+			if ($itemid == 24951) { return 31079; } #sleeves
+			if ($itemid == 24953) { return 31080; } #wrist
+			if ($itemid == 24955) { return 31081; } #gloves
+			if ($itemid == 24950) { return 31082; } #legs
+			if ($itemid == 24952) { return 31083; } #boots
+		
+		}
+		if ($classid == 7) { #thurgadin lorekeeper einar monk leather
+			if ($itemid == 24942) { return 31092; } #cap
+			if ($itemid == 24944) { return 31093; } #bp
+			if ($itemid == 24943) { return 31094; } #sleeves
+			if ($itemid == 24948) { return 31095; } #wrist
+			if ($itemid == 24947) { return 31096; } #gloves
+			if ($itemid == 24946) { return 31097; } #legs
+			if ($itemid == 24945) { return 31098; } #boots
+		
+		}
+		if ($classid == 11) { #thurgadin lorekeeper zorik necromancer silk
+			if ($itemid == 24954) { return 31063; } #cap
+			if ($itemid == 24949) { return 31064; } #bp
+			if ($itemid == 24951) { return 31065; } #sleeves
+			if ($itemid == 24953) { return 31066; } #wrist
+			if ($itemid == 24955) { return 31067; } #gloves
+			if ($itemid == 24950) { return 31068; } #legs
+			if ($itemid == 24952) { return 31069; } #boots
+
+		}
+		if ($classid == 12) { #thurgadin mauren frostbeard wizard silk
+			if ($itemid == 24954) { return 31056; } #cap
+			if ($itemid == 24949) { return 31057; } #bp
+			if ($itemid == 24951) { return 31058; } #sleeves
+			if ($itemid == 24953) { return 31059; } #wrist
+			if ($itemid == 24955) { return 31060; } #gloves
+			if ($itemid == 24950) { return 31061; } #legs
+			if ($itemid == 24952) { return 31062; } #boots
+		
+		}
+		if ($classid == 2) { #thurgadin loremaster dorinan cleric plate
+			if ($itemid == 24933) { return 31042; } #cap
+			if ($itemid == 24928) { return 31043; } #bp
+			if ($itemid == 24930) { return 31044; } #sleeves
+			if ($itemid == 24932) { return 31045; } #wrist
+			if ($itemid == 24934) { return 31046; } #gloves
+			if ($itemid == 24929) { return 31047; } #legs
+			if ($itemid == 24931) { return 31048; } #boots
+		
+		#thurgadin pearce icefang beastlord leather
+
+		}
+		if ($classid == 10) { #thurgadin terman underbelly shaman chain
+			if ($itemid == 24940) { return 31007; } #cap
+			if ($itemid == 24935) { return 31008; } #bp
+			if ($itemid == 24937) { return 31009; } #sleeves
+			if ($itemid == 24939) { return 31010; } #wrist
+			if ($itemid == 24941) { return 31011; } #gloves
+			if ($itemid == 24936) { return 31012; } #legs
+			if ($itemid == 24938) { return 31013; } #boots
+		}
+		return 0;
+	}
+	return 0;
+}
+
