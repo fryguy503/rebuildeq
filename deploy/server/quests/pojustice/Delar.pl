@@ -4,6 +4,20 @@ sub EVENT_SAY {
 	my $prefix = "";
 	my $classid = $client->GetClass();
 	
+	if ($text=~/about/i) {
+		quest::say("Heirlooms are a way to transfer NO TRADE items between characters on your account. The NO TRADE items it supports are unadorned and corroded armor pieces from Temple of Veeshan.");
+		quest::say("It is free to take from me heirlooms you have previously given to me in the past. However, to  [ ".quest::saylink("deposit")." ] them, you must complete the heirloom quest. This also must be completed to do tier progression.");
+		quest::say("You can also learn more, for example [ ".quest::saylink("what are tiers")." ], if you like.");
+		return;
+	}
+
+	if ($text=~/what are tiers/i) {
+		quest::say("Tiers are a way higher level mobs are adjusted to cause difficulty without heavily padding stats. You are penalized when attacking tiered monsters when not of equal tier.");
+		quest::say("You can identify tiered monsters by considering them, they will have a level of [T#], # being a number of 1+");
+		return;
+	}
+
+
 	if ($text=~/tov/i) {
 		$prefix = "tov";
 		$tmp_id = 0;		
@@ -129,16 +143,17 @@ sub EVENT_SAY {
 		return;
 	}
 
-	if ($text=~/radiant/i || $text=~/rc/i) {
-		$rcTotal = 0;
-		$tmp_id = 40903;
-		if (defined $qglobals{"$acct_id-$prefix-$tmp_id"} && $qglobals{"$acct_id-$prefix-$tmp_id"} > 0) {
-			$rcTotal = $qglobals{"$acct_id-$prefix-$tmp_id"}*250;
-		}
-		$prefix = "rc";
-		quest::say("You currently have $rcTotal radiant crystals available. [ ".quest::saylink("claim radiant crystals")." ]");		
-		return;
-	}
+
+	#if ($text=~/radiant/i || $text=~/rc/i) {
+	#	$rcTotal = 0;
+	#	$tmp_id = 40903;
+	#	if (defined $qglobals{"$acct_id-$prefix-$tmp_id"} && $qglobals{"$acct_id-$prefix-$tmp_id"} > 0) {
+	#		$rcTotal = $qglobals{"$acct_id-$prefix-$tmp_id"}*250;
+	#	}
+	#	$prefix = "rc";
+	#	quest::say("You currently have $rcTotal radiant crystals available. [ ".quest::saylink("claim radiant crystals")." ]");		
+	#	return;
+	#}
 
 	#if ($text=~/claim radiant/i || $text=~/rc/i) {
 	#	$prefix = "rc";
@@ -158,84 +173,86 @@ sub EVENT_SAY {
 	#	quest::say("You claimed 250 radiant crystals. You have $rcTotal remaining. [ ".quest::saylink("claim radiant crystals")." ]");
 	#	return;
 	#}
-	if (quest::istaskactive(314)) {
-		if (quest::istaskactivityactive(314, 8)) {
-			quest::updatetaskactivity(314, 8);
-			quest::say("Oh, you're finally back! Want to hear the most ironic thing..? I had the key here, in my pocket, all this time! Thank you for your effort, however. Now simply talk to me about [ " . quest::saylink("heirlooms") . " ] and I'll help you out.");
+	if ($text=~/unlock tier/i) {
+		if (!quest::istaskcompleted(314)) { # completed before.
+			quest::say("You must first learn how to [ ".quest::saylink("deposit")." ] into heirlooms before you can unlock tiers.");
 			return;
 		}
-
-		quest::say("Hmm.. still haven't found my key, yet? Keep looking.. you are bound to find it!");
-		return;		       
+		if ($ulevel < 60) { #not enough levels
+			quest::say("You must reach level 60 before you can unlock tiers.");
+			return;
+		}
+		if (!quest::istaskcompleted(501)) { #tier 1 task
+			if (quest::istaskactive(501)) { #ongoing
+				quest::say("You appear to be working on your tier 1 task. You can do it!");
+				return;
+			}
+			if (!quest::istaskactive(501)) { #not done yet
+				quest::say("Very well. Here is the path to unlock Tier 1.");
+				quest::assigntask(501);
+				return;
+			}
+		}
+		if (!quest::istaskcompleted(502)) { #tier 2 task
+			if (quest::istaskactive(502)) { #ongoing
+				quest::say("You appear to be working on your tier 2 task. You can do it!");
+				return;
+			}
+			if (!quest::istaskactive(502)) { #not done yet
+				quest::say("Tier 2 is not yet implemented. Come back at a later time!");
+				#quest::assigntask(501);
+				return;
+			}
+		}
+		quest::say("You have unlocked all tiers available at this time. Good job!");
+		return;
     }
 
-	if ($text=~/help/i) {
-		if (quest::istaskcompleted(314)) {
-			quest::say("You already completed this task.");
-		} else {
-			quest::say("You will help me? Very well, then.. Let us start with a simple task list, of sorts... let us repeat the places I have been as of late, and see if the key is there.");
+	if ($text=~/deposit/i) { #heirloom key task
+		if (!quest::istaskcompleted(314) && !quest::istaskactive(314)) { #haven't started yet
+			quest::say("To deposit into heirlooms, you must help me find my key. My best guess of where it is, is look at various locations and monsters I have interacted with as of late.");
 			quest::assigntask(314);
 			return;
 		}
-	}
-	if ($text =~/interested/i) {
-		quest::say("Well, you see.. unfortunately, I have lost the deposit box key to my chest, the chest with heirlooms.. alas.. I would ask for your [ ". quest::saylink("help") ." ], but I do not know you could be of use.");
-		return;
-	}
+		if (quest::istaskcompleted(314)) { # completed before.
+			if ($ulevel < 60) {
+				quest::say("You already have the ability to deposit items. Once you reach level 60, come back to me and we can talk about [ ".quest::saylink("what are tiers")." ], and how to unlock them.");
+				return;
+			}
+			quest::say("You already have the ability to deposit items. Perhaps you want to learn how to [ ".quest::saylink("unlock tiers")." ] ?");
+			return;
+		}
+		if (quest::istaskactive(314)) { #task is ongoing
+			if (quest::istaskactivityactive(314, 8)) { #finished up to last step
+				quest::updatetaskactivity(314, 8);
+				quest::say("Oh, you're finally back! Want to hear the most ironic thing..? I had the key here, in my pocket, all this time! Thank you for your effort, however.");
+				if ($ulevel < 60) {
+					quest::say("Once you reach level 60, come back to me and we can talk about [ ".quest::saylink("what are tiers")." ], and how to unlock them.");
+					return;
+				}
+				quest::say("I see you are level 60. How about we continue on to how to [ ".quest::saylink("unlock tiers")." ] ?");
+				return;
+			}
+			quest::say("Keep looking for that key, and we can start depositing items again!");
+			return;		   
+		}
+    }
+
 	if ($text=~/heirloom/i) {
 		quest::say("Pick a category: [ ". quest::saylink("tov") . " ], [ " . quest::saylink("kael") . " ]. (Note this only works with unadorned and corroded items, completed items cannot be traded)."); #, [ " . quest::saylink("Radiant Crystals") . " ].");
 		if (!quest::istaskcompleted(314)) {
-			quest::say("Are you [ ". quest::saylink("interested") . " ] in learning how to deposit items to your heirloom?");
+			quest::say("Are you interested in learning how to [ ". quest::saylink("deposit") . " ]  items to your heirloom?");
 		}
 		return;
 	}
 
 	if ($ulevel < 60) {
-		quest::say("Oh yes, greetings. I am a keeper of [ ". quest::saylink("heirlooms")." ], passed down from generation to generation. I hold a fine collection of various trinkets, armor, and other gadgets that I adore so much.");
+		quest::say("Oh yes, greetings. I am a keeper of [ ". quest::saylink("heirlooms")." ]. Want to learn [ ". quest::saylink("about")." ] them, as well as what tiers are?");
 		return;
-	}
-
-
-    if (quest::istaskactive(501)) {
-    	quest::say("I don't think you have proven yourself just yet... unless, you want to talk about [ " . quest::saylink("heirlooms") . " ].");
-    	return;
-    }
-
-	if ($text=~/experience/i) {
-		if (!quest::istaskcompleted(314)) {
-			quest::say("First, help me with my [ " . quest::saylink("heirloom") . " ] challenge, then we can about experience.");
-			return;
-		}
-		if (quest::istaskcompleted(501)) {
-			quest::say("You already completed this task.");
-		} else {
-			quest::say("You do not seem very experienced to me.. perhaps in due time, this will change. Perhaps... let's do a test, shall we?");
-			quest::assigntask(501);
-		}
+	} else {
+		quest::say("Oh yes, greetings. I am a keeper of [ ". quest::saylink("heirlooms")." ]. Want to learn [ ". quest::saylink("about")." ] them? Since you are level 60, you can possibly [ ". quest::saylink("unlock tiers")." ], too.");
 		return;
-	}
-
-	if ($text=~/limits/i) {
-		quest::say("Let us test your limits, then. Do this task I have written down, and return to me when you feel yourself of enough [ ". quest::saylink("experience") . " ] to continue forth.");
-		return;
-	}
-
-
-	if ($text=~/beyond consideration/i) {
-		quest::say("You know of what I speak of, then? Perhaps, just perhaps you may be worthy to pass beyond your [ ". quest::saylink("limits") . " ] and defeat them one day..");
-		return;
-	}
-
-	if ($text=~/secret/i) {
-		quest::say("A secret indeed.. the secret to defeating the greatest of foes. You may have stumbled upon creatures who seem [ " . quest::saylink("beyond consideration") . " ] to attack, great powers, they take you down with ease.");
-		return;
-	}
-
-	if ($text=~/learn/i) {
-		quest::say("Well well, now, you see.. there is a world beyond 60. You may not know. Between [ " . quest::saylink("#feats") . " ], [ ". quest::saylink("#experience") . " ], and [ ". quest::saylink("secrets") . " ].. there is plenty to keep you busy.");		
-		return;
-	}
-	quest::say("I see you have reached adulthood.. Care to [ ". quest::saylink("learn") . " ] listen of a story of the past? Or would you rather talk of [ " . quest::saylink("heirlooms") . " ] ?");
+	}	
 	return;
 }
 
