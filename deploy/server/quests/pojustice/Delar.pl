@@ -206,7 +206,7 @@ sub EVENT_SAY {
 			quest::say("First, help me with my [ " . quest::saylink("heirloom") . " ] challenge, then we can about experience.");
 			return;
 		}
-		if (quest::istaskcompleted(314)) {
+		if (quest::istaskcompleted(501)) {
 			quest::say("You already completed this task.");
 		} else {
 			quest::say("You do not seem very experienced to me.. perhaps in due time, this will change. Perhaps... let's do a test, shall we?");
