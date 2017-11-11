@@ -172,7 +172,7 @@ class Build {
 			case "enchanter":
 			$build->fullName = "Enchanter";
 			$build->monogram = 14;
-			$build->desc = "Enchanters have had a heavy modification on Rebuild EQ.<br> Due to illusions no longer being easily accessible, illusions are now more offensive. Their builds focus on either debuffs, domination, or inspiration.";
+			$build->desc = "Enchanters are a utility class who focus on magic based spells. They dominate spell casters and manipulate mana.";
 			$build->styles[0] = "Illusionist";
 			$build->styles[1] = "Entrancer";
 			$build->styles[2] = "Beguiler";
