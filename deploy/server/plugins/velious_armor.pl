@@ -242,7 +242,7 @@ sub velious_slot_by_item {
 	$itemid = shift;
 	$zoneid = shift;
 	$classid = shift;
-	quest::say("by_item: $itemid, $zoneid, $classid");
+	#quest::say("by_item: $itemid, $zoneid, $classid");
 
 	###KAEL###
 	if ($zoneid == 113) { #kael
@@ -715,7 +715,7 @@ sub velious_reward_by_item {
 	$itemid = shift;
 	$zoneid = shift;
 	$classid = shift;
-	quest::say("by_item: $itemid, $zoneid, $classid");
+	#quest::say("by_item: $itemid, $zoneid, $classid");
 
 	###KAEL###
 	if ($zoneid == 113) { #kael
