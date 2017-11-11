@@ -144,8 +144,9 @@ class Build {
 			case "bard":
 			$build->fullName = "Bard";
 			$build->monogram = 8;
-			$build->desc = "Bards sing songs to aid allies in battle.<br> Their 3 styles focus on group, melee, or solo.
-			Bards sing songs to aid allies in battle.<br><font color='#41974D'>Virtuoso</font> specializes in group support<br> <font color='#2A87C7'>Swordsinger</font> focus on improving melee<br> <font color='#A93640'>Maestro</font> focus on improving songs for solo survivability.";
+			$build->desc = "Bards are enhanced with their songs being more powerful, focused on utility.<br>
+			Cassindra's Secret is a second form of mana song.<br>
+			Many new combat enhancements assist bards in their usefulness.";
 			$build->styles[0] = "Virtuoso";
 			$build->styles[1] = "Swordsinger";
 			$build->styles[2] = "Maestro";
@@ -154,7 +155,10 @@ class Build {
 			case "cleric":
 			$build->fullName = "Cleric";
 			$build->monogram = 2;
-			$build->desc = "Clerics are a healer class using Godly blessings.<br>They are rebuilt to no longer be definitive healers<br> compared to Shaman and Druid.";
+			$build->desc = "Clerics have adapted to be more combat ready, focused on healing.<br>
+			Clerics focus on many procs.<br>
+			Clerics no longer have complete heal.<br>
+			Healer classes have an innate mana tap when they melee.";
 			$build->styles[0] = "Templar";
 			$build->styles[1] = "Bishop";
 			$build->styles[2] = "Archon";
@@ -163,7 +167,9 @@ class Build {
 			case "druid":
 			$build->fullName = "Druid";
 			$build->monogram = 6;
-			$build->desc = "Druids are a mix of healer and damage dealer.<br> Their 3 styles focus on either Crowd Control, Heals, or Offense.";
+			$build->desc = "Druids have been enhanced in their heal role, focused on healing.<br>
+			DoTs can be built to do significant damage.<br>
+			Healer classes have an innate mana tap when they melee.";
 			$build->styles[0] = "Preserver";
 			$build->styles[1] = "Warden";
 			$build->styles[2] = "Hierophant";
@@ -172,7 +178,10 @@ class Build {
 			case "enchanter":
 			$build->fullName = "Enchanter";
 			$build->monogram = 14;
-			$build->desc = "Enchanters are a utility class who focus on magic based spells. They dominate spell casters and manipulate mana.";
+			$build->desc = "Enchanters have mastered magic, focused on utility.<br>
+			They are very effective at shutting down caster enemies with backfire.<br>
+			Mesmerize only lasts 1 tick until you train Enthrall.<br>
+			Shallow-breath line spells only last 1 tick until you train Drown.";
 			$build->styles[0] = "Illusionist";
 			$build->styles[1] = "Entrancer";
 			$build->styles[2] = "Beguiler";
@@ -181,17 +190,18 @@ class Build {
 			case "magician":
 			$build->fullName = "Magician";
 			$build->monogram = 13;
-			$build->desc = "Magicians are wielders of magic, conjuring items and creatures from other realms. Note that in rebuild, pets are heavily reduced in effectiveness compared to live EQ.";
+			$build->desc = "Magicians specialize in conjuration of items, focused on utility.<br>
+			Their pets are significantly weaker than live EQ, and do not hold aggro well.";
 			$build->styles[0] = "Conjurer";
 			$build->styles[1] = "Elementalist";
 			$build->styles[2] = "Geomancer";
 			break;
-
 			//==================MONK======================
 			case "monk":
 			$build->fullName = "Monk";
 			$build->monogram = 7;
-			$build->desc = "Monks are disciplined fighters.<br> We have lowered the damage of monks compared to rogues, <br>and given them a swiss-army knife approach with more utility.";
+			$build->desc = "Monks are disciplined fighters who help allies and pull enemies, focused on utility.<br>
+			Monks do not compare to the damage of Rogues.";
 			$build->styles[0] = "Master";
 			$build->styles[1] = "Transcendant";
 			$build->styles[2] = "Ashenhand";
@@ -201,7 +211,8 @@ class Build {
 			case "necromancer":
 			$build->fullName = "Necromancer";
 			$build->monogram = 11;
-			$build->desc = "Necromancers are master of the dead.<br> They have the best DoTs of any class with one focus. The other 2 focus on debuffs, and tanking.";
+			$build->desc = "Necromancers have mastered the black arts manipulating both the living and dead, focused on utility.<br>
+			Their pets are significantly weaker than live EQ, and do not hold aggro well.";
 			$build->styles[0] = "Heretic";
 			$build->styles[1] = "Lich";
 			$build->styles[2] = "Warlock";
@@ -211,7 +222,9 @@ class Build {
 			case "paladin":
 			$build->monogram = 3;
 			$build->fullName = "Paladin";
-			$build->desc = "Paladins are the holy knights.<br> Their 3 styles focus on better healing and support, tanking, or damage dealing.";
+			$build->desc = "Paladins are a mix of warrior and cleric, focused on tank.<br>
+			With the Protector line, they can nearly be a viable healer choice.<br>
+			Tanks are able to unlock the Charm of Defense, giving Defensive Discipline.";
 			$build->styles[0] = "Protector";
 			$build->styles[1] = "Knight";
 			$build->styles[2] = "Crusader";
@@ -221,7 +234,8 @@ class Build {
 			case "ranger":
 			$build->fullName = "Ranger";
 			$build->monogram = 4;
-			$build->desc = "Rangers are friends with beasts.<br> Their 3 styles focus on either better archery, enabling and strengthening a beast companion, or supporting others.";
+			$build->desc = "Rangers are a mix of warrior and druid, focused on utility.<br>
+			Within a group, they are viable archers to deal ranged damage.";
 			$build->styles[0] = "Archer";
 			$build->styles[1] = "Hunter";
 			$build->styles[2] = "Plainswalker";
@@ -231,7 +245,8 @@ class Build {
 			case "rogue":
 			$build->fullName = "Rogue";
 			$build->monogram = 9;
-			$build->desc = "Rogues are thieves who specialize in damage.<br> We have designed rogues to be top melee damage dealers.";
+			$build->desc = "Rogues are assassins who specialize in deception, focused on damage.<br>
+			Rogues are the best damage dealers in the melee classification.";
 			$build->styles[0] = "Assassin";
 			$build->styles[1] = "Deceiver";
 			$build->styles[2] = "Bandit";
@@ -241,7 +256,8 @@ class Build {
 			case "shaman":
 			$build->fullName = "Shaman";
 			$build->monogram = 10;
-			$build->desc = "Shamans are one with spirits. <br><font color='#41974D'>Prophet</font> specializes in healing<br> <font color='#2A87C7'>Oracle</font> focus on debuffs/DoTs/pet<br> <font color='#A93640'>Elder</font> excel at melee/procs";
+			$build->desc = "Shamans weild spiritual powers to bring aid to allies, focused on healing.<br>
+			Healer classes have an innate mana tap when they melee.";
 			$build->styles[0] = "Prophet";
 			$build->styles[1] = "Oracle";
 			$build->styles[2] = "Elder";
@@ -251,7 +267,9 @@ class Build {
 			case "warrior":
 			$build->fullName = "Warrior";
 			$build->monogram = 1;
-			$build->desc = "Warriors are hearty duelists.<br> Gladiators will hone their blade mastery to allow them to deal damage unheard of before, Brawlers live off the thrill of battle, and Champions seek glory with their ability to survive.";
+			$build->desc = "Warriors are masters of weapons, focused on tank.<br>
+			Warriors are no longer the definitive best tank, competing with the Knights with defensive disciplines.<br>
+			Tanks are able to unlock the Charm of Defense, giving Defensive Discipline";
 			$build->styles[0] = "Gladiator";
 			$build->styles[1] = "Brawler";
 			$build->styles[2] = "Champion";
@@ -261,7 +279,8 @@ class Build {
 			case "wizard":
 			$build->fullName = "Wizard";
 			$build->monogram = 12;
-			$build->desc = "Wizards are masters of the elements.<br> Evokers deal high elemental damage. Channelers focus on utility, while Sage is focused on support.";
+			$build->desc = "Wizards are masters of the elements, focused on damage.<br>
+			Wizards deal the highest damage of all magical users.";
 			$build->styles[0] = "Evoker";
 			$build->styles[1] = "Channeler";
 			$build->styles[2] = "Sage";
@@ -273,8 +292,8 @@ class Build {
 			$class = "shadowknight";
 			$build->fullName = "Shadow Knight";
 			$build->monogram = 5;
-			
-			$build->desc = "Shadow Knights are fighters with necromancer powers.<br><font color='#41974D'>Bloodreaver</font> specializes in tanking and lifetaps.<br> <font color='#2A87C7'>Defiler</font> focus on dealing damage.<br> <font color='#A93640'>Revenant</font> excel at pulling.<br><br>Shadow Knights do not get Lifetaps or Pets via normal spells, instead it is via build trees.";
+			$build->desc = "Shadow Knights are a mix between warrior and necromancer, focused on tank.<br>
+			Tanks are able to unlock the Charm of Defense, giving Defensive Discipline.";
 			$build->styles[0] = "Bloodreaver";
 			$build->styles[1] = "Defiler";
 			$build->styles[2] = "Revenant";
@@ -872,7 +891,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Tranquility";
-			$newSkill->desc = 'While grouped with an enchanter, all allies gain an additional (level * <em data-base="0.1">0.1</em>) mana regen per tick<span class="perLevel"> per rank</span>';
+			$newSkill->desc = 'All allies except you in your group gain an additional (level * <em data-base="0.1">0.1</em>) mana regen per tick<span class="perLevel"> per rank</span>';
 			$newSkill->image = "/images/builds/icons/rb-enc-tranquility.png";
 			$skills[49] = $newSkill;
 

@@ -45,8 +45,8 @@
 	        	{/if}
 	        	{if empty($character)}
 	        	<p>
-		          <label class="control-label">{$classDescription}</label><br>
-		         Required Level To Obtain: <span class="charLevel">0</span>
+		         {$classDescription}<br>
+		         Points Spent: <span class="charLevel">0</span>
 		        </p>					
 		        {/if}
 			</div>
