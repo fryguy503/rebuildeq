@@ -7,7 +7,7 @@ class Controller_Web_Donate extends Template_Web_Core {
 
 		parent::before();
 		$this->template->site->title = "Donate to Rebuild EQ";
-		$this->template->site->description = "There is no donation system up currently, however we have a philosophy that donations only should reward in aesthetic ways.";
+		$this->template->site->description = "Rebuild EQ uses Patreon to help cover server costs. Donate today!";
 	}
 
 	public function action_index() {

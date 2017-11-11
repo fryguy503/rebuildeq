@@ -740,146 +740,146 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Nightmare";
 			$newSkill->desc = 'Damage over time spells do an additional <em data-base="10"></em>% damage<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-nightmare.png";
 			$skills[0] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Crippling Presence";
 			$newSkill->desc = 'When an enemy is affected by a disempowering spell, they deal <em data-base="2"></em>% less damage<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-cripplingpresence.png";
 			$skills[2] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Soothing Words";
 			$newSkill->desc = 'Grants the Soothing Words AA, reducing your target\'s hatred for their current target by 5000 points if that creature\'s target is a member of your group or raid. Each rank reduces cooldown by <em data-base="30"></em> seconds<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-soothingwords.png";
 			$skills[4] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Mind over Matter";
 			$newSkill->desc = 'Grants the Mind over Matter AA, absorbing damage in mana before hitpoints. Each rank improves reduction by <em data-base="2"></em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-mindovermatter.png";
 			$skills[6] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Beneficial Dispell";
 			$newSkill->desc = 'When using a spell with a cancel magic effect, increases chance by <em data-base="20"></em>%<span class="perLevel"> per rank</span> that a beneficial buff will not be affected.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-beneficialdispell.png";
 			$skills[8] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Persuasion";
 			$newSkill->desc = 'Increases buy and sell price to merchants by <em data-base="3"></em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-persuasion.png";
 			$skills[10] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Choke";
 			$newSkill->desc = 'While an enemy is under the effect of a shallow-breath line debuff, the enemy takes (level *<em data-base="1"></em>/4) damage <span class="perLevel"> per rank</span> when they land an attack.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-choke.png";
 			$skills[13] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Drown";
 			$newSkill->desc = 'Increases duration of shallow-breath line by <em data-base="1"></em> tick<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-drown.png";
 			$skills[16] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Enthrall";
 			$newSkill->desc = 'Each rank increases mesmerize duration by <em data-base="1"></em> tick<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-enthrall.png";
 			$skills[18] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Tash";
 			$newSkill->desc = 'While an enemy is tashed, other group members are granted a 300 mod (enemy level * <em data-base="0.2"></em>) damage proc while attacking<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-tash.png";
 			$skills[20] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Backfire";
 			$newSkill->desc = 'Wandering Mind, Scryer\'s Bypass, and Torment of Argli now have the backfire effect. If an enemy successfully channels a spell, they are interrupted, this spell effect is removed, and the enemy takes (enemy level * 25 * <em data-base="0.2">0.2</em>) damage<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-backfire.png";
 			$skills[22] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Energy Burn";
 			$newSkill->desc = 'When you use a spell that takes mana from an enemy, you now deal (mana taken * <em data-base="0.4">0.4</em>) damage<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-energyburn.png";
 			$skills[24] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Feedback";
 			$newSkill->desc = 'When you use a detrimental spell, you deal <em data-base="10">10</em> bonus damage<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-feedback.png";
 			$skills[26] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Focus";
 			$newSkill->desc = 'When you use a detrimental spell, your mana cost is reduced by <em data-base="10">10</em> bonus damage<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-focus.png";
 			$skills[28] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lifeflow";
 			$newSkill->desc = 'When you use a spell that takes mana from an enemy, you heal for (mana taken * <em data-base="0.4">0.4</em>) hitpoints<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-lifeflow.png";
 			$skills[31] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Dire Charm";
 			$newSkill->desc = 'Permanently charm an enemy from -10 to -5 of your level, based on rank. They get a pet-like adjusted stats, this is an experiment for future pet AI improvements.';
-			$newSkill->image = "/images/builds/icons/rb-dru-direcharm.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-direcharm.png";
 			$skills[34] = $newSkill;
 
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Entropy";
 			$newSkill->desc = 'When a skill that decreases strength lands, you deal (STR * <em data-base="0.2">0.2</em>) damage<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-entropy.png";
 			$skills[36] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Color Shock";
 			$newSkill->desc = 'Grants the Color Shock AA, causing a chance to stun when attacked. Chance increases by <em data-base="1">1</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-colorshock.png";
 			$skills[38] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Mana Spear";
 			$newSkill->desc = 'When you use a spell that takes mana from an enemy, increases chance to land by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-manaspear.png";
 			$skills[40] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Flowing Thought";
 			$newSkill->desc = 'Breeze now grants the enchanter many of their buffs.<br>Rank 1: Breeze (to mana users)<br><br>Rank 2: Visage Line (+to tanks, -to rest)<br>Rank 3: Haste(to non-casters)<br>Rank 4: Gift (to mana users)<br>Rank 5: Doubles duration of buffs';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-flowingthought.png";
 			$skills[42] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Subtle Casting";
 			$newSkill->desc = 'Lowers aggression when casting a spell by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-subtlecasting.png";
 			$skills[44] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Bad Moon";
 			$newSkill->desc = 'While grouped with an enchanter, all allies gain an innate 100 proc that deals a (level * <em data-base="0.2">0.2</em>) lifetap<span class="perLevel"> per rank</span>';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-badmoon.png";
 			$skills[46] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Tranquility";
 			$newSkill->desc = 'While grouped with an enchanter, all allies gain an additional (level * <em data-base="0.1">0.1</em>) mana regen per tick<span class="perLevel"> per rank</span>';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-tranquility.png";
 			$skills[49] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Reclaim";
 			$newSkill->desc = 'When you tell your pet to leave, you will gain (mana * <em data-base="0.2">0.2</em>) of back of it\'s mana cost with ratio of current to max hitpoints<span class="perLevel"> per rank</span>';
-			$newSkill->image = "/images/builds/icons/rb-mag-summoningfocus.png";
+			$newSkill->image = "/images/builds/icons/rb-enc-reclaim.png";
 			$skills[52] = $newSkill;			
 			break;
 
