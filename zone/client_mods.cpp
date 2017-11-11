@@ -26,6 +26,7 @@
 
 #include "client.h"
 #include "mob.h"
+#include "string_ids.h"
 
 #ifdef BOTS
 	#include "bot.h"
@@ -289,15 +290,22 @@ int32 Client::CalcHPRegen(bool bCombat)
 	base = base * 100.0f * AreaHPRegen * 0.01f + 0.5f;
 	// another check for IsClient && !(base + item_regen) && Cur_HP <= 0 do --base; do later
 
-	if (!bCombat && CanFastRegen() && (IsSitting() || CanMedOnHorse())) {
-		auto fast_mod = RuleI(Character, RestRegenHP); // TODO: this is actually zone based
-		auto max_hp = GetMaxHP();
-		int fast_regen = 6 * (max_hp / fast_mod);
-		if (base < fast_regen) // weird, but what the client is doing
-			base = fast_regen;
-	}
 
 	int regen = base + item_regen + spellbonuses.HPRegen; // TODO: client does this in buff tick
+
+	if (!bCombat && CanFastRegen() && (IsSitting() || CanMedOnHorse())) {
+		regen += RestRegenHP;
+	}
+
+	if (GetBuildRank(DRUID, RB_DRU_REGENERATION) > 0) {
+		int druidRegen = 0;
+		if (floor(GetLevel() * 0.2f) < 2) druidRegen = 2;
+		else druidRegen = floor(GetLevel() * 0.2f);
+		BuildEcho(StringFormat("Regeneration gave %i hitpoints.", druidRegen));
+		regen += druidRegen;
+	}
+	regen = AdjustTierPenalty(this, regen);
+
 	return (regen * RuleI(Character, HPRegenMultiplier) / 100);
 }
 
@@ -1296,13 +1304,15 @@ int32 Client::CalcManaRegen(bool bCombat)
 	regen = regen * 100.0f * AreaManaRegen * 0.01f + 0.5f;
 
 	if (!bCombat && CanFastRegen() && (IsSitting() || CanMedOnHorse())) {
-		auto fast_mod = RuleI(Character, RestRegenMana); // TODO: this is actually zone based
+		/*auto fast_mod = RuleI(Character, RestRegenMana); // TODO: this is actually zone based
 		auto max_mana = GetMaxMana();
 		int fast_regen = 6 * (max_mana / fast_mod);
 		if (regen < fast_regen) // weird, but what the client is doing
-			regen = fast_regen;
+			regen = fast_regen;*/
+		regen += RestRegenMana;
 	}
 
+	regen += DoTranquilityRegen();
 	regen += spellbonuses.ManaRegen; // TODO: live does this in buff tick
 	return (regen * RuleI(Character, ManaRegenMultiplier) / 100);
 }

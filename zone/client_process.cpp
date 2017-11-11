@@ -1834,32 +1834,24 @@ void Client::OPGMSummon(const EQApplicationPacket *app)
 void Client::DoHPRegen() {
 	if (GetHPRatio() == 100) return;
 	int finalHPRegen = CalcHPRegen();
-	finalHPRegen += RestRegenHP;
-	if (GetBuildRank(DRUID, RB_DRU_REGENERATION) > 0) {
-		int druidRegen = 0;
-		if (floor(GetLevel() * 0.2f) < 2) druidRegen = 2;
-		else druidRegen = floor(GetLevel() * 0.2f);
-		BuildEcho(StringFormat("Regeneration gave %i hitpoints.", druidRegen));
-		finalHPRegen += druidRegen;
-	}
-	finalHPRegen = AdjustTierPenalty(this, finalHPRegen);
+	//BuildEcho(StringFormat("HP Regen: %i", finalHPRegen));
 	entity_list.LogHPEvent(this, this, finalHPRegen);
-	SetHP(GetHP() + finalHPRegen);	
+	SetHP(GetHP() + finalHPRegen);		
 	SendHPUpdate();
 }
 
 void Client::DoManaRegen() {
 	if (GetManaRatio() == 100) return;
 	int finalManaRegen = CalcManaRegen();
-	finalManaRegen += RestRegenMana;
 	//if (GetMana() >= max_mana && spellbonuses.ManaRegen >= 0) return;
 	if (GetMana() < max_mana && (IsSitting() || CanMedOnHorse()) && HasSkill(EQEmu::skills::SkillMeditate))
 		CheckIncreaseSkill(EQEmu::skills::SkillMeditate, nullptr, -5);
 
-	finalManaRegen = DoTranquilityRegen();
 	entity_list.LogManaEvent(this, this, finalManaRegen);
+	//BuildEcho(StringFormat("Mana Regen: %i", finalManaRegen));
 	SetMana(GetMana() + finalManaRegen);
 	SendManaUpdate();
+	
 }
 
 void Client::DoStaminaHungerUpdate()
@@ -1948,6 +1940,10 @@ void Client::DoEnduranceUpkeep() {
 
 void Client::CalcRestState() {
 
+	ooc_regen = false;
+	RestRegenHP = 0;
+	RestRegenEndurance = 0;
+	RestRegenMana = 0;
 	// This method calculates rest state HP and mana regeneration.
 	// The client must have been out of combat for RuleI(Character, RestRegenTimeToActivate) seconds,
 	// must be sitting down, and must not have any detrimental spells affecting them.
@@ -1955,10 +1951,6 @@ void Client::CalcRestState() {
 	if(!RuleB(Character, RestRegenEnabled))
 		return;
 
-	ooc_regen = false;
-	RestRegenHP = 0;
-	RestRegenEndurance = 0;
-	RestRegenMana = 0;
 	if(AggroCount || !(IsSitting() || CanMedOnHorse()))
 		return;
 
@@ -2033,6 +2025,7 @@ void Client::CalcRestState() {
 	if (RestRegenEndurance < 0) RestRegenEndurance = 0;
 	if (RestRegenEndurance > 1000) RestRegenEndurance = 1000;
 	Log(Logs::Detail, Logs::LogCategory::OOC, "OOC Regen: %f, HP: %i, MP: %i, EP: %i", rest_regen_percent, RestRegenHP, RestRegenMana, RestRegenEndurance);
+	ooc_regen = true;
 }
 
 void Client::DoTracking()
