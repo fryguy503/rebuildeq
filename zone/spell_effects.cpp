@@ -638,9 +638,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
               					}
               				}
 
-
-
-
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD);
 							if (spell_id == 3277 && rank > 0) {								
 								int duration = caster_level * 10;
@@ -726,9 +723,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									break;
 								}
 							}
-
-
-							if ((spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9 || spell_id == 3261)) { //Paladin Direct Heals
+							
+							//Paladin Direct Heals
+							if ((spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9 || spell_id == 3261)) { 
 								//Divine Stun Hate bonus
 								rank = casterClient->GetBuildRank(PALADIN, RB_PAL_DIVINESTUN);
 								if (rank > 0 && casterClient->IsSwornEnemyActive()) {
@@ -742,7 +739,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 								//Rodcet's Gift
 								rank = caster->GetBuildRank(PALADIN, RB_PAL_RODCETSGIFT);
-								if (rank > 0 && (spell_id == 5011 || spell_id == 200 || spell_id == 17 || spell_id == 12 || spell_id == 15 || spell_id == 3684 || spell_id == 9 || spell_id == 3261)) {
+								if (rank > 0) {
 									int healCount = 0;
 									int healTotal = dmg;
 									int amount = floor(dmg * 0.02f * rank);
@@ -750,22 +747,22 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 									if (IsGrouped()) {
 										auto group = GetGroup(); //iterate group
 										for (int i = 0; i < 6; ++i) {
-											target = group->members[i];
-											if (!target) continue; //target grouped
-											if (!target->IsClient()) continue; //Is a client
-											if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
-											if (target->CastToClient()->IsDead()) continue; //not dead
-											if (this == target) continue; //not person who received spell effect
-											if (target == caster) continue;
-											float dist2 = DistanceSquared(m_Position, target->GetPosition());
+											Mob *healTarget = group->members[i];
+											if (!healTarget) continue; //target grouped
+											if (!healTarget->IsClient()) continue; //Is a client
+											if (this->GetZoneID() != healTarget->GetZoneID()) continue; //same zone
+											if (healTarget->CastToClient()->IsDead()) continue; //not dead
+											if (this == healTarget) continue; //not person who received spell effect
+											if (healTarget == caster) continue;
+											float dist2 = DistanceSquared(m_Position, healTarget->GetPosition());
 											float range2 = (rank * 10) * (rank * 10);
 											if (dist2 > range2) continue;
 
 											healCount++;
 											amount = GetActSpellHealing(spell_id, amount, this);
-											if (this->GetID() == target->GetID()) target->Message(MT_Spells, "Rodcet's Gift %i healed you for %i hitpoints.", rank, amount);
-											else target->Message(MT_Spells, "%s's Rodcet Gift %i healed you for %i hitpoints.", caster->GetCleanName(), rank, amount);											
-											target->HealDamage(amount, caster);
+											if (this->GetID() == healTarget->GetID()) healTarget->Message(MT_Spells, "Rodcet's Gift %i healed you for %i hitpoints.", rank, amount);
+											else healTarget->Message(MT_Spells, "%s's Rodcet Gift %i healed you for %i hitpoints.", caster->GetCleanName(), rank, amount);
+											healTarget->HealDamage(amount, caster);
 											healTotal += amount;
 										}
 									}
@@ -774,22 +771,22 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 										uint32 gid = raid->GetGroup(this->CastToClient());
 										if (gid < 12) {
 											for (int i = 0; i < MAX_RAID_MEMBERS; ++i) {
-												target = raid->members[i].member;
-												if (target == nullptr) continue; //target grouped
-												if (!target->IsClient()) continue; //Is a client
-												if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
-												if (target->CastToClient()->IsDead()) continue; //not dead
-												if (this == target) continue; //not person who received spell effect
+												Mob *healTarget = raid->members[i].member;
+												if (healTarget == nullptr) continue; //target grouped
+												if (!healTarget->IsClient()) continue; //Is a client
+												if (this->GetZoneID() != healTarget->GetZoneID()) continue; //same zone
+												if (healTarget->CastToClient()->IsDead()) continue; //not dead
+												if (this == healTarget) continue; //not person who received spell effect
 
-												float dist2 = DistanceSquared(m_Position, target->GetPosition());
+												float dist2 = DistanceSquared(m_Position, healTarget->GetPosition());
 												float range2 = (rank * 10) * (rank * 10);
 												if (dist2 > range2) continue;
 
 												healCount++;
 												amount = GetActSpellHealing(spell_id, amount, this);
-												if (this->GetID() == target->GetID()) target->Message(MT_Spells, "Rodcet's Gift %i healed you for %i hitpoints.", rank, amount);
-												else target->Message(MT_Spells, "%s's Rodcet Gift %i healed you for %i hitpoints.", caster->GetCleanName(), rank, amount);
-												target->HealDamage(amount, caster);
+												if (this->GetID() == healTarget->GetID()) healTarget->Message(MT_Spells, "Rodcet's Gift %i healed you for %i hitpoints.", rank, amount);
+												else healTarget->Message(MT_Spells, "%s's Rodcet Gift %i healed you for %i hitpoints.", caster->GetCleanName(), rank, amount);
+												healTarget->HealDamage(amount, caster);
 												healTotal += amount;
 											}											
 										}
