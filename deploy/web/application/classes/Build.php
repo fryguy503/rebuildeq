@@ -1519,7 +1519,7 @@ class Build {
 			//4
 			$newSkill = new stdClass();
 			$newSkill->title = "Ancestral Aid";
-			$newSkill->desc = 'Grants the Ancestral Aid AA, which casts focus line buff scaled to your level.<br>Rank 1: +STR<br>Rank 2: +DEX<br>Rank 3: +AGI<br>Rank 4: +STA<br>Rank 5: +HP';
+			$newSkill->desc = 'Grants the Ancestral Aid AA, which casts focus line buff scaled to your level.<br>Rank 1: STR<br>Rank 2: DEX and AGI<br>Rank 3: STA<br>Rank 4: HP<br>Rank 5: Haste';
 			$newSkill->image = "/images/builds/icons/rb-shm-ancestralaid.png";
 			$skills[4] = $newSkill;
 			//5

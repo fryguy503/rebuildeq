@@ -575,28 +575,37 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
               					int duration = caster_level * 10;
                					int str = 0;
 								int dex = 0;
+								int lowestLevel = caster_level;
+								if (level < caster_level) lowestLevel = level;
 
-              					if (rank > 4) { //HP/AC/SoW
-              						if (level >= 60 && caster_level >= 60) { caster->QuickBuff(this, 2530, duration);       //kura's focusing 60
+								if (rank >= 5) {
+									if (lowestLevel >= 50) caster->QuickBuff(this, 171, duration); // celerity 56
+									else if (lowestLevel >= 50) caster->QuickBuff(this, 1430, duration); // spirit quickening 50
+									else if (lowestLevel >= 42) caster->QuickBuff(this, 170, duration); // alacrity 42
+									else caster->QuickBuff(this, 39, duration); // quickness 26
+								}
+
+              					if (rank >= 4) { //HP/AC
+              						if (lowestLevel >= 60) { caster->QuickBuff(this, 2530, duration);       //kura's focusing 60
 															str = 1; dex = 1; }       
-              						else if (level >= 55 && caster_level >= 55) caster->QuickBuff(this, 1585, duration);    //talisman of kragg 55
-              						else if (level >= 46 && caster_level >= 46) { caster->QuickBuff(this, 2525, duration);  //harnessing of spirit 46
+              						else if (lowestLevel >= 55) caster->QuickBuff(this, 1585, duration);    //talisman of kragg 55
+              						else if (lowestLevel >= 46) { caster->QuickBuff(this, 2525, duration);  //harnessing of spirit 46
 																str = 1; dex = 1; }  
-              						else if (level >= 40 && caster_level >= 40) caster->QuickBuff(this, 168, duration);     //talisman of altuna 40
-              						else if (level >= 32 && caster_level >= 32) caster->QuickBuff(this, 167, duration);     //talisman of tnarg 32
+              						else if (lowestLevel >= 40) caster->QuickBuff(this, 168, duration);     //talisman of altuna 40
+              						else if (lowestLevel >= 32) caster->QuickBuff(this, 167, duration);     //talisman of tnarg 32
               						//else caster->QuickBuff(this, 267, duration);                                            //inner fire -- cannot cast this because it is the same spell we're casting
 
-              						if (level >= 54 && caster_level >= 54) caster->QuickBuff(this, 1584, duration);         //shroud of the spirits 54
-              						else if (level >= 42 && caster_level >= 42) caster->QuickBuff(this, 389, duration);     //guardian 42
-              						else if (level >= 31 && caster_level >= 31) caster->QuickBuff(this, 431, duration);     //shifting shield 20
-              						else if (level >= 20 && caster_level >= 20) caster->QuickBuff(this, 649, duration);     //protect 20
-              						else if (level >= 11 && caster_level >= 11) caster->QuickBuff(this, 283, duration);     //turtle skin 11
+              						if (lowestLevel >= 54) caster->QuickBuff(this, 1584, duration);         //shroud of the spirits 54
+              						else if (lowestLevel >= 42) caster->QuickBuff(this, 389, duration);     //guardian 42
+              						else if (lowestLevel >= 31) caster->QuickBuff(this, 431, duration);     //shifting shield 20
+              						else if (lowestLevel >= 20) caster->QuickBuff(this, 649, duration);     //protect 20
+              						else if (lowestLevel >= 11) caster->QuickBuff(this, 283, duration);     //turtle skin 11
               						else caster->QuickBuff(this, 274, duration);                                            //scale skin              		
               					}
 
 								caster->QuickBuff(this, 278, duration);                                                 //spirit of wolf
 
-              					if (rank > 0 && str == 0) { //STR
+              					if (rank >= 1 && str == 0) { //STR
               						if (level >= 57 && caster_level >= 57) caster->QuickBuff(this, 1593, duration);         //maniacal strength 57
               						else if (level >= 46 && caster_level >= 46) caster->QuickBuff(this, 159, duration);     //strength 46
               						else if (level >= 39 && caster_level >= 39) caster->QuickBuff(this, 153, duration);     //furious strength 39
@@ -605,7 +614,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
               						else caster->QuickBuff(this, 40, duration);                                             //strengthen
               					}
 
-              					if (rank > 1 && dex == 0) { //DEX
+              					if (rank >= 2 && dex == 0) { //DEX
               						if (level >= 58 && caster_level >= 58) caster->QuickBuff(this, 1583, duration);         //mortal deftness 58
               						else if (level >= 48 && caster_level >= 48) caster->QuickBuff(this, 157, duration);     //dexterity 48
               						else if (level >= 39 && caster_level >= 39) caster->QuickBuff(this, 152, duration);     //deftness 39
@@ -614,7 +623,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
               						else caster->QuickBuff(this, 266, duration);                                            //dexterous aura
               					}
 
-              					if (rank > 2) { //AGI
+              					if (rank >= 2 && dex == 0) { //AGI
               						if (level >= 57 && caster_level >= 57) caster->QuickBuff(this, 1579, duration);          //talisman of the cat 57
               						else if (level >= 53 && caster_level >= 53) caster->QuickBuff(this, 1594, duration);     //deleriously nimble 53
               						else if (level >= 41 && caster_level >= 41) caster->QuickBuff(this, 154, duration);      //agility 41
@@ -623,7 +632,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
               						else caster->QuickBuff(this, 269, duration);                                             //feet like cat
               					}
 
-              					if (rank > 3) { //STA
+              					if (rank >= 3) { //STA
               						if (level >= 54 && caster_level >= 54) caster->QuickBuff(this, 1595, duration);    //riotous health 54
               						else if (level >= 43 && caster_level >= 43) caster->QuickBuff(this, 158, duration);     //stamina 43
               						else if (level >= 30 && caster_level >= 30) caster->QuickBuff(this, 161, duration);     //health 30
