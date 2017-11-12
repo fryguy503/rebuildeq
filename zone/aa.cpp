@@ -1312,6 +1312,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	int cooldown = 0;
 	uint8 rb_rank = 0;
 	
+
 	if(rank_id == aaHeartofFlames) {
 		if(GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES))
 			spellid = 37903;
@@ -1540,6 +1541,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		}
 	}
 
+	manacost = ModifyManaUsage(manacost, spellid, GetTarget());
 	if(!IsValidSpell(spellid)) {
 		return;
 	}

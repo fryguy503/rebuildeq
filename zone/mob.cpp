@@ -7760,3 +7760,215 @@ int Mob::DoTranquilityRegen() {
 	}
 	return manaRegen;
 }
+
+//Modifies mana usage for players
+int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
+	if (!IsClient()) return mana_cost;
+	int rank = 0;
+
+
+	rank = GetBuildRank(DRUID, RB_DRU_ENTRAP);
+	if (rank > 0 && (
+		spell_id == 3614 ||
+		spell_id == 12610 ||
+		spell_id == 23551 ||
+		spell_id == 30682 ||
+		spell_id == 30682
+		)) {
+			
+		if (GetLevel() < 15) mana_cost = 8;
+		else if (GetLevel() < 29) mana_cost = 13;
+		else if (GetLevel() < 51) mana_cost = 86;
+		else if (GetLevel() < 55) mana_cost = 115;
+		else if (GetLevel() < 60) mana_cost = 152;
+		else mana_cost = 248;
+
+		if (rank >= 5) rank = 8;
+		mana_cost /= floor(0.4f * rank);
+	}
+
+	rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
+	if (rank > 0) {
+		if (spell_id == 341) mana_cost = 8;
+		if (spell_id == 502) mana_cost = 13;
+		if (spell_id == 445) mana_cost = 86;
+		if (spell_id == 446) mana_cost = 115;
+		if (spell_id == 525) mana_cost = 152;
+		if (spell_id == 447) mana_cost = 248;
+	}
+
+	if ((GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD) > 0 && spell_id == 3277) ||
+		(GetBuildRank(DRUID, RB_DRU_NATURESBOON) > 0 && spell_id == 4796) || 
+		(GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID) > 0 && spell_id == 5933)) {
+		if (GetLevel() < 10)  mana_cost = 20;
+		else if (GetLevel() < 31) mana_cost = GetLevel() * 2.6f;
+		else if (GetLevel() < 41) mana_cost = GetLevel() * 4.6f;
+		else if (GetLevel() < 51) mana_cost = GetLevel() * 5.6f;
+		else  mana_cost = GetLevel() * 7.5f;
+	}
+
+	rank = GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
+	if (rank > 0 && spell_id == 8910) {
+		mana_cost = floor(GetMaxMana() * 0.02f); //2% of mana for cos
+		if (mana_cost < 10) mana_cost = 10;
+	}
+
+	rank = GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY);
+	if (rank > 0 && spell_id == 3261) {
+		mana_cost = floor(GetMaxMana() / 30);
+		if (mana_cost < 10) mana_cost = 10;
+	}
+
+	rank = GetBuildRank(BARD, RB_BRD_FADINGMEMORIES);
+	if (rank > 0 && spell_id == 5243) {
+		mana_cost = (GetMaxMana() * 0.5f) - ((GetMaxMana() * 0.3f) * 0.2f * GetBuildRank(BARD, RB_BRD_FADINGMEMORIES));
+	}
+
+	
+	rank = GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL);
+	if (rank > 0 && spell_id == 164) {
+		if (GetLevel() < 14) mana_cost = 20;
+		else if (GetLevel() < 22) mana_cost = 40;
+		else if (GetLevel() < 30) mana_cost = 80;
+		else if (GetLevel() < 38) mana_cost = 160;
+		else if (GetLevel() < 46) mana_cost = 200;
+		else if (GetLevel() < 52) mana_cost = 290;
+		else if (GetLevel() < 58) mana_cost = 390;
+		else mana_cost = 450;
+	}
+
+	rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT);
+	if (rank > 0) {
+		if (spell_id == 491) mana_cost = 40;
+		if (spell_id == 351) mana_cost = 80;
+		if (spell_id == 362) mana_cost = 120;
+		if (spell_id == 492) mana_cost = 160;
+		if (spell_id == 440) mana_cost = 200;
+		if (spell_id == 441) mana_cost = 290;
+		if (spell_id == 442) mana_cost = 390;
+		if (spell_id == 495) mana_cost = 450;
+	}
+
+
+
+	// Druid Ring Affinity - Ring spells cast 5% faster and cost 10% less mana per rank.
+	rank = GetBuildRank(DRUID, RB_DRU_RINGAFFINITY);
+	if (rank > 0 && (
+		spell_id == 530 || //Ring of Karana
+		spell_id == 531 || //Ring of Commons
+		spell_id == 532 || //Ring of Butcher
+		spell_id == 533 || //Ring of Toxxulia
+		spell_id == 534 || //Ring of Lavastorm
+		spell_id == 535 || //Ring of Ro
+		spell_id == 536 || //Ring of Feerrott
+		spell_id == 537 || //Ring of Steamfont
+		spell_id == 538 || //Ring of Misty
+		spell_id == 1326 || //Ring of the Combines
+		spell_id == 1433 || //Ring of Iceclad
+		spell_id == 2021 || //Ring of Surefall Glade
+		spell_id == 2029 || //Ring of Great Divide
+		spell_id == 2030 || //Ring of Wakening Lands
+		spell_id == 2031 || //Ring of Cobalt Scar
+		spell_id == 3794 //Ring of Stonebrunt
+		)) {
+		int mana_cost_reduc = floor(0.1f * rank * mana_cost);
+		BuildEcho(StringFormat("Ring Affinity %i reduced mana cost by %i.", rank, mana_cost_reduc));
+		mana_cost -= mana_cost_reduc;
+	}
+
+
+	// Druid Teleport Bind
+	rank = GetBuildRank(DRUID, RB_DRU_TELEPORTBIND);
+	if (rank > 0 && spell_id == 5953) {
+		// 85% Mana at Rank 1, minus 15% per rank: 85,70,55,40,25
+		int redux = floor(GetMaxMana() * floor(1 - rank * 0.15f));
+		
+		BuildEcho(StringFormat("Teleport Bind %i reduced mana cost by %i.", rank, redux));
+		mana_cost -= redux;
+	}
+	
+
+	//runes cost extra mana.
+	if (spell_id == 481) {
+		mana_cost = floor(GetMaxMana() / 10); //rune 1
+		if (mana_cost < 10) mana_cost = 10;
+	}
+	if (spell_id == 482) {
+		mana_cost = floor(GetMaxMana() / 8); //rune 2
+		if (mana_cost < 10) mana_cost = 10;
+	}
+	if (spell_id == 483) {
+		mana_cost = floor(GetMaxMana() / 6); //rune 3
+		if (mana_cost < 10) mana_cost = 10;
+	}
+	if (spell_id == 484) {
+		mana_cost = floor(GetMaxMana() / 5); //rune 4
+		if (mana_cost < 10) mana_cost = 10;
+	}
+	if (spell_id == 1689) {
+		mana_cost = floor(GetMaxMana() / 4); //rune 5
+		if (mana_cost < 10) mana_cost = 10;
+	}
+	if (spell_id == 3199) {
+		mana_cost = floor(GetMaxMana() / 3); //rune 6
+		if (mana_cost < 10) mana_cost = 10;
+	}
+
+	rank = GetBuildRank(BARD, RB_BRD_SIRENSSONG);
+	if (rank > 0 &&
+		(spell_id == 725 ||
+			spell_id == 750)) {
+		BuildEcho(StringFormat("Siren's Song %i reduced mana cost by %i.", rank, floor(mana_cost * 0.1f * rank)));
+		mana_cost -= floor(mana_cost * 0.1f * rank);
+		if (mana_cost < 1) mana_cost = 1;
+	}
+
+	rank = GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
+	if (spell_id == 202 && rank > 0) {
+		mana_cost = floor(GetMaxMana() / 10);
+		if (mana_cost < 10) mana_cost = 10;
+	}
+
+	rank = GetBuildRank(ENCHANTER, RB_ENC_FLOWINGTHOUGHT);
+	if (spell_id == 697 && rank > 0) {
+		mana_cost = floor(GetMaxMana() / 10);
+		if (mana_cost < 10) mana_cost = 10;
+	}
+
+
+	rank = GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE);
+	if (spell_id == 202 && rank > 0) {
+		mana_cost = floor((GetLevel() / 60) * 200);
+		if (mana_cost < 10) mana_cost = 10;
+	}
+
+	rank = GetBuildRank(CLERIC, RB_CLR_PROMISE);
+	if (rank > 0 && mana_cost > 0) {
+		int reduced = floor(mana_cost * 0.1f * rank);
+		BuildEcho(StringFormat("Promise reduced mana cost by %i", rank));
+		mana_cost -= rank;
+		if (mana_cost < 1) mana_cost = 0;
+	}
+
+	rank = GetBuildRank(ENCHANTER, RB_ENC_FOCUS);
+	if (rank > 0 && IsDetrimentalSpell(spell_id) && GetSpellEffectIndex(spell_id, SE_CurrentHP) > -1 && mana_cost > 0) {
+		int reduced = floor(mana_cost * 0.1f * rank);
+		if (reduced < 1) reduced = 1;
+		BuildEcho(StringFormat("Focus %i reduced mana cost by %i.", rank, reduced));
+		mana_cost -= reduced;
+		if (mana_cost < 1) mana_cost = 0;
+	}
+
+	rank = GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT);
+	if (rank > 0 && mana_cost > 0 && (
+		spell_id == 113 || spell_id == 114 || spell_id == 330 || spell_id == 324
+		|| spell_id == 410 || spell_id == 1663 || spell_id == 313 || spell_id == 93 || spell_id == 94 || spell_id == 322 || spell_id == 328 || spell_id == 334 || spell_id == 83 || spell_id == 68 || spell_id == 189 || spell_id == 120 || spell_id == 69 || spell_id == 121 || spell_id == 122 || spell_id == 70 || spell_id == 1659 || spell_id == 1660 || spell_id == 1661 || spell_id == 1662 || spell_id == 1664 || spell_id == 2118 || spell_id == 2540 || spell_id == 4078
+		)) {
+		int reduced = floor(mana_cost * 0.1f * rank);
+		BuildEcho(StringFormat("Frenzied Burnout %i reduced mana cost by %i", rank, reduced));
+		mana_cost -= reduced;
+		if (mana_cost < 1) mana_cost = 0;
+	}
+
+	return mana_cost;
+}

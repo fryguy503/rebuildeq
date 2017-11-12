@@ -156,8 +156,7 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 	uint32 aa_id)
 {
 	Log(Logs::Detail, Logs::Spells, "CastSpell called for spell %s (%d) on entity %d, slot %d, time %d, mana %d, from item slot %d",
-		(IsValidSpell(spell_id))?spells[spell_id].name:"UNKNOWN SPELL", spell_id, target_id, static_cast<int>(slot), cast_time, mana_cost, (item_slot==0xFFFFFFFF)?999:item_slot);
-
+		(IsValidSpell(spell_id))?spells[spell_id].name:"UNKNOWN SPELL", spell_id, target_id, static_cast<int>(slot), cast_time, mana_cost, (item_slot==0xFFFFFFFF)?999:item_slot);	
 	if(casting_spell_id == spell_id)
 		ZeroCastingVars();
 
@@ -302,70 +301,29 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		sprintf(temp, "%d", spell_id);
 		parse->EventNPC(EVENT_CAST_BEGIN, CastToNPC(), nullptr, temp, 0);
 	}
-
-
-	if (IsClient()) {
-
-		//runes cost extra mana.
-		if (spell_id == 481 || //rune 1
-			spell_id == 482 || //rune 2
-			spell_id == 483 || //rune 3
-			spell_id == 484 || //rune 4
-			spell_id == 1689 || //rune 5
-			spell_id == 3199 //rune 6
-			) {
-			mana_cost = floor(GetMaxMana() / 5);
-		}
-
-
-		uint32 rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
-		if (item_slot == 0 && spell_id == 202 && rank > 0) {
-			mana_cost = floor((GetLevel() / 60) * 200);
-			if (mana_cost < 10) mana_cost = 10;
-		}
-		rank = GetBuildRank(ENCHANTER, RB_ENC_FLOWINGTHOUGHT);
-		if (item_slot == 0 && spell_id == 697 && rank > 0) {
-			mana_cost = floor((GetLevel() / 60) * 200);
-			if (mana_cost < 10) mana_cost = 10;
-		}
-
-
-		rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE);
-		if (item_slot == 0 && spell_id == 202 && rank > 0) {
-			mana_cost = floor((GetLevel() / 60) * 200);
-			if (mana_cost < 10) mana_cost = 10;
-		}
-		
-		rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_PROMISE);
-		if (rank > 0 && mana_cost > 0) {
-			int reduced = floor(mana_cost * 0.1f * rank);
-			BuildEcho(StringFormat("Promise reduced mana cost by %i", rank));
-			mana_cost -= rank;
-			if (mana_cost < 1) mana_cost = 0;			
-		}
-		rank = GetBuildRank(ENCHANTER, RB_ENC_FOCUS);
-		if (rank > 0 && IsDetrimentalSpell(spell_id) && GetSpellEffectIndex(spell_id, SE_CurrentHP) > -1 && mana_cost > 0) {
-			int reduced = floor(mana_cost * 0.1f * rank);
-			if (reduced < 1) reduced = 1;
-			BuildEcho(StringFormat("Focus %i reduced mana cost by %i.", rank, reduced));
-			mana_cost -= reduced;
-			if (mana_cost < 1) mana_cost = 0;
-		}
-
-		rank = CastToClient()->GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT);
-		if (rank > 0 && mana_cost > 0 && (
-			spell_id == 113 || spell_id == 114 || spell_id == 330 || spell_id == 324
-			|| spell_id == 410 || spell_id == 1663 || spell_id == 313 || spell_id == 93 || spell_id == 94 || spell_id == 322 || spell_id == 328 || spell_id == 334 || spell_id == 83 || spell_id == 68 || spell_id == 189 || spell_id == 120 || spell_id == 69 || spell_id == 121 || spell_id == 122 || spell_id == 70 || spell_id == 1659 || spell_id == 1660 || spell_id == 1661 || spell_id == 1662 || spell_id == 1664 || spell_id == 2118 || spell_id == 2540 || spell_id == 4078
-			)) {
-			int reduced = floor(mana_cost * 0.1f * rank);
-			BuildEcho(StringFormat("Frenzied Burnout %i reduced mana cost by %i", rank, reduced));
-			mana_cost -= reduced;
-			if (mana_cost < 1) mana_cost = 0;
-		}
-	}
+	
+	mana_cost = ModifyManaUsage(mana_cost, spell_id, GetTarget());
+	
 	//To prevent NPC ghosting when spells are cast from scripts
 	if (IsNPC() && IsMoving() && cast_time > 0)
 		SendPosition();
+
+	if (IsClient() && GetClass() == ENCHANTER &&
+		(spell_id == 285 || 
+			spell_id == 1723 ||
+			spell_id == 690 ||
+			spell_id == 689 ||
+			spell_id == 688 ||
+			spell_id == 687 ||
+			spell_id == 686 ||
+			spell_id == 685 ||
+			spell_id == 684 ||
+			spell_id == 683 ||
+			spell_id == 682 ||
+			spell_id == 295 ||
+			spell_id == 681)) {
+		cast_time = 1500;
+	}
 
 	if(resist_adjust)
 	{
@@ -490,16 +448,16 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		}
 		return(false);
 	}
-
 	// ok now we know the target
 	casting_spell_targetid = target_id;
 
 	// We don't get actual mana cost here, that's done when we consume the mana
 	if (mana_cost == -1)
 		mana_cost = spell.mana;
-
+	
 	// mana is checked for clients on the frontend. we need to recheck it for NPCs though
 	// If you're at full mana, let it cast even if you dont have enough mana
+	mana_cost = ModifyManaUsage(mana_cost, spell_id, GetTarget());
 
 	if ((spell_id == 1455 || spell_id == 2589 || spell_id == 3577) &&
 		IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_WAVEOFMARR) > 0) {
@@ -536,48 +494,31 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 	int rank = 0;
 
 	// Druid Ring Affinity - Ring spells cast 5% faster and cost 10% less mana per rank.
-        rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_RINGAFFINITY);
-        if (rank > 0 && (
-                spell_id == 530 || //Ring of Karana
-                spell_id == 531 || //Ring of Commons
-                spell_id == 532 || //Ring of Butcher
-                spell_id == 533 || //Ring of Toxxulia
-                spell_id == 534 || //Ring of Lavastorm
-                spell_id == 535 || //Ring of Ro
-                spell_id == 536 || //Ring of Feerrott
-                spell_id == 537 || //Ring of Steamfont
-                spell_id == 538 || //Ring of Misty
-                spell_id == 1326 || //Ring of the Combines
-                spell_id == 1433 || //Ring of Iceclad
-                spell_id == 2021 || //Ring of Surefall Glade
-                spell_id == 2029 || //Ring of Great Divide
-                spell_id == 2030 || //Ring of Wakening Lands
-                spell_id == 2031 || //Ring of Cobalt Scar
-                spell_id == 3794 //Ring of Stonebrunt
-        )) {
-                int mana_cost_reduc = floor(0.1f * rank * mana_cost);
-                int cast_time_reduc = floor(0.05f * rank * cast_time);
-                Log(Logs::Detail, Logs::Spells, "Ring Affinity (Rank %d) Reduced Mana by %d and Casting Time by %d", rank, mana_cost_reduc, cast_time_reduc);
-                mana_cost -= mana_cost_reduc;
-                cast_time -= cast_time_reduc;
-        }
-
-
-		// Druid Teleport Bind
-		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_TELEPORTBIND);
-		if (rank > 0 && spell_id == 5953) {
-			// 85% Mana at Rank 1, minus 15% per rank: 85,70,55,40,25
-			mana_cost = floor(GetMaxMana() * floor(1 - rank * 0.15f));
-
-			Log(Logs::Detail, Logs::Spells, "Teleport Bind (Rank %d) Mana Cost %d and Casting Time %d", rank, mana_cost, cast_time);
-
-			if (mana_cost > GetMana()) {
-				Log(Logs::Detail, Logs::Spells, "Spell Error not enough mana spell=%d mymana=%d cost=%d\n", GetName(), spell_id, GetMana(), mana_cost);
-				Message_StringID(13, INSUFFICIENT_MANA);
-				InterruptSpell();
-				return false;
-			}
-		}
+    rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_RINGAFFINITY);
+    if (rank > 0 && (
+            spell_id == 530 || //Ring of Karana
+            spell_id == 531 || //Ring of Commons
+            spell_id == 532 || //Ring of Butcher
+            spell_id == 533 || //Ring of Toxxulia
+            spell_id == 534 || //Ring of Lavastorm
+            spell_id == 535 || //Ring of Ro
+            spell_id == 536 || //Ring of Feerrott
+            spell_id == 537 || //Ring of Steamfont
+            spell_id == 538 || //Ring of Misty
+            spell_id == 1326 || //Ring of the Combines
+            spell_id == 1433 || //Ring of Iceclad
+            spell_id == 2021 || //Ring of Surefall Glade
+            spell_id == 2029 || //Ring of Great Divide
+            spell_id == 2030 || //Ring of Wakening Lands
+            spell_id == 2031 || //Ring of Cobalt Scar
+            spell_id == 3794 //Ring of Stonebrunt
+    )) {
+            int mana_cost_reduc = floor(0.1f * rank * mana_cost);
+            int cast_time_reduc = floor(0.05f * rank * cast_time);
+            Log(Logs::Detail, Logs::Spells, "Ring Affinity (Rank %d) Reduced Mana by %d and Casting Time by %d", rank, mana_cost_reduc, cast_time_reduc);
+                
+            cast_time -= cast_time_reduc;
+    }
 
 	// Druid Exodus
 	rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_EXODUS);
@@ -2459,8 +2400,8 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 					if (!TrySpellProjectile(spell_target, spell_id))
 						return false;
 				}
-
-				else if(!SpellOnTarget(spell_id, spell_target, false, true, resist_adjust, false, level_override)) {
+				//RB_ENC_FLOWINGTHOUGHT and RB_PAL_BRELLSBLESSING and RB_CLR_INTENSITYOFTHERESOLUTE are free if spell_ids removed
+				else if(!SpellOnTarget(spell_id, spell_target, false, true, resist_adjust, false, level_override) && spell_id != 202 && spell_id != 697) {
 					if(IsBuffSpell(spell_id) && IsBeneficialSpell(spell_id)) {
 						// Prevent mana usage/timers being set for beneficial buffs
 						if(casting_spell_aa_id)
@@ -2635,9 +2576,11 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 	}
 
 	bool mgb = HasMGB() && spells[spell_id].can_mgb;
+
+	mana_used = ModifyManaUsage(mana_used, spell_id, spell_target);
 	// if this was a spell slot or an ability use up the mana for it
 	if(slot != CastingSlot::Item && slot != CastingSlot::PotionBelt && mana_used > 0)
-	{
+	{		
 		mana_used = GetActSpellCost(spell_id, mana_used);
 		if (mgb) {
 			mana_used *= 2;
@@ -2647,15 +2590,6 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 			mana_used = GetMana();
 		Log(Logs::Detail, Logs::Spells, "Spell %d: consuming %d mana", spell_id, mana_used);
 		if (!DoHPToManaCovert(mana_used)) {
-			int rank = GetBuildRank(BARD, RB_BRD_SIRENSSONG);
-			if (rank > 0 &&
-				(spell_id == 725 ||
-				 spell_id == 750)) {
-				BuildEcho(StringFormat("Siren's Song %i reduced mana cost by %i.", rank, floor(mana_used * 0.1f * rank)));
-				mana_used -= floor(mana_used * 0.1f * rank);
-				if (mana_used < 1) mana_used = 1;
-
-			}
 			entity_list.LogManaEvent(this, this, -mana_used);
 			SetMana(GetMana() - mana_used);
 			TryTriggerOnValueAmount(false, true);
@@ -2774,6 +2708,8 @@ bool Mob::ApplyNextBardPulse(uint16 spell_id, Mob *spell_target, CastingSlot slo
 
 	//use mana, if this spell has a mana cost
 	int mana_used = spells[spell_id].mana;
+
+	mana_used = ModifyManaUsage(mana_used, spell_id, spell_target);
 	if(mana_used > 0) {
 		if(mana_used > GetMana()) {
 			//ran out of mana... this calls StopSong() for us

@@ -1235,6 +1235,7 @@ public:
 	bool CheckBackfire();
 	void BadMoonProc(Mob * defender, DamageHitInfo & hit);
 	int DoTranquilityRegen();
+	int ModifyManaUsage(int mana_used, uint16 spell_id, Mob * spell_target);
 	int engage_duration;
 
 	// Bots HealRotation methods

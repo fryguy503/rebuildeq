@@ -4182,7 +4182,21 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 			InterruptSpell();
 			return;
 		}
-
+		if (spell_to_cast == 285 && GetClass() == ENCHANTER) {
+			int ulevel = GetLevel();
+			if (ulevel >= 55) spell_to_cast = 1723;
+			else if (ulevel >= 48) spell_to_cast = 690;
+			else if (ulevel >= 41) spell_to_cast = 689;
+			else if (ulevel >= 37) spell_to_cast = 688;
+			else if (ulevel >= 31) spell_to_cast = 687;
+			else if (ulevel >= 29) spell_to_cast = 686;
+			else if (ulevel >= 22) spell_to_cast = 685;
+			else if (ulevel >= 17) spell_to_cast = 684;
+			else if (ulevel >= 14) spell_to_cast = 683;
+			else if (ulevel >= 9) spell_to_cast = 682;
+			else if (ulevel >= 7) spell_to_cast = 295;
+			else if (ulevel >= 2) spell_to_cast = 681;
+		}
 		CastSpell(spell_to_cast, castspell->target_id, slot);
 	}
 	/* Spell Slot or Potion Belt Slot */
