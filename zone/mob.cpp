@@ -7827,6 +7827,7 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
 	
 	rank = GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL);
 	if (rank > 0 && spell_id == 164) {
+		if (GetLevel() < 3) mana_cost = 5;
 		if (GetLevel() < 14) mana_cost = 20;
 		else if (GetLevel() < 22) mana_cost = 40;
 		else if (GetLevel() < 30) mana_cost = 80;

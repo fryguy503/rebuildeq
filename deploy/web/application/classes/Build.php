@@ -1126,7 +1126,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Surge";
-			$newSkill->desc = 'When you land Tiger Claw, Eagle Strike, Tail Whip or other special attacks, your group recovers <em data-base="1">1</em>% of a target\'s max mana and endurance when within <em data-base="5">5</em>m<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you land Tiger Claw, Eagle Strike, Tail Whip or other special attacks, your group recovers <em data-base="0.75">0.75</em>% of a target\'s max mana and endurance when within <em data-base="5">5</em>m<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-divinesurge.png";
 			$skills[26] = $newSkill;
 

@@ -11604,7 +11604,7 @@ void Client::DoDivineSurge() {
 			float range2 = (rank * 5) * (rank * 5);
 			if (dist2 > range2) continue;
 
-			amount = floor(target->GetMaxMana() * 0.01f * rank);
+			amount = floor(target->GetMaxMana() * 0.075f * rank);
 			if (amount < 1) continue;
 			manaTotal += amount;
 			manaCount++;			
@@ -11635,7 +11635,7 @@ void Client::DoDivineSurge() {
 				if (dist2 > range2) continue;
 
 
-				amount = floor(target->GetMaxMana() * 0.01f * rank);
+				amount = floor(target->GetMaxMana() * 0.075f * rank);
 				if (amount < 1) continue;
 				manaTotal += amount;
 				manaCount++;
@@ -11680,7 +11680,7 @@ void Client::DoUntappedPotential() {
 			float range2 = (rank * 5) * (rank * 5);
 			if (dist2 > range2) continue;
 
-			amount = floor(target->GetMaxMana() * 0.02f * rank);
+			amount = floor(target->GetMaxMana() * 0.01f * rank);
 			if (amount < 1) continue;
 			manaTotal += amount;
 			manaCount++;
@@ -11708,7 +11708,7 @@ void Client::DoUntappedPotential() {
 				float range2 = (rank * 5) * (rank * 5);
 				if (dist2 > range2) continue;
 
-				amount = floor(target->GetMaxMana() * 0.02f * rank);
+				amount = floor(target->GetMaxMana() * 0.01f * rank);
 				if (amount < 1) continue;
 				manaTotal += amount;
 				manaCount++;
