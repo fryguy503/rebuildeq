@@ -7639,7 +7639,8 @@ int Mob::DoCripplingPresenceAndEmpathy(Mob *attacker, DamageHitInfo &hit) {
 			if (!attacker->IsGrouped()) return bonus_damage; //tash doesn't work when not grouped.
 			if (!c->IsGrouped()) continue; //ench that debuffed isn't grouped, continue			
 			if (attacker->GetGroup()->GetID() != c->GetGroup()->GetID()) continue; //not in same group
-		
+			if (c == attacker) continue; //enchanters don't get tash bonus
+
 			rank = c->GetBuildRank(ENCHANTER, RB_ENC_TASH);
 			if (rank > 0 && 
 				!isTash && (
