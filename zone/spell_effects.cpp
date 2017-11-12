@@ -4618,7 +4618,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							bonus_damage = -effect_value;
 							bonus_damage = floor(bonus_damage * multiplier * 0.1f * rank);
 							if (bonus_damage > 0) bonus_damage = 1;
-							caster_client->Message(MT_DoTDamage, "Focused Swarm %u caused %i bonus damage to %s.", rank, -bonus_damage, GetCleanName());
+							caster_client->Message(MT_DoTDamage, "Focused Swarm %u caused %i bonus damage to %s.", rank, bonus_damage, GetCleanName());
 							effect_value -= bonus_damage;
 						}
 					}
