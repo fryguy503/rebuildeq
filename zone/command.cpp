@@ -3987,7 +3987,7 @@ void command_builds(Client *c, const Seperator *sep)
 		return;
 	}
 	c->RefreshBuild();
-	
+	if (c->GetLevel() == 60) c->UpdateSkillsAndSpells(); //This is so any re-learned spells at 60 can be retrained
 	
 
 	auto calculateCost = [](Client* pClient) -> uint64 {
