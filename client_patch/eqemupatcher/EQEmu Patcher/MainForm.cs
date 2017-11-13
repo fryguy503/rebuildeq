@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -471,36 +471,44 @@ namespace EQEmu_Patcher
             }
             int totalBytes = 0;
             List<FileEntry> filesToDownload = new List<FileEntry>();
-            foreach (var entry in filelist.downloads)
+            if (filelist == null)
             {
-                Application.DoEvents();
-                var path = entry.name.Replace("/", "\\");
-                //See if file exists.
-                if (!File.Exists(path))
+                LogEvent("Failed to get file list.");
+            }
+            if (filelist.downloads.Count > 0)
+            {
+                foreach (FileEntry entry in filelist.downloads)
                 {
-                    //Console.WriteLine("Downloading: "+ entry.name);
-                    filesToDownload.Add(entry);
-                    if (entry.size < 1) totalBytes += 1;
-                    else totalBytes += entry.size;
-                }
-                else
-                {
-                    var md5 = UtilityLibrary.GetMD5(path);
-
-                    if (md5.ToUpper() != entry.md5.ToUpper())
+                    Application.DoEvents();
+                    var path = entry.name.Replace("/", "\\");
+                    //See if file exists.
+                    if (!File.Exists(path))
                     {
-                        Console.WriteLine(entry.name + ": " + md5 + " vs " + entry.md5);
+                        //Console.WriteLine("Downloading: "+ entry.name);
                         filesToDownload.Add(entry);
                         if (entry.size < 1) totalBytes += 1;
                         else totalBytes += entry.size;
                     }
-                }
-                Application.DoEvents();
-                if (!isPatching) { 
-                    LogEvent("Patching cancelled.");
-                    return;
-                }
+                    else
+                    {
+                        var md5 = UtilityLibrary.GetMD5(path);
 
+                        if (md5.ToUpper() != entry.md5.ToUpper())
+                        {
+                            Console.WriteLine(entry.name + ": " + md5 + " vs " + entry.md5);
+                            filesToDownload.Add(entry);
+                            if (entry.size < 1) totalBytes += 1;
+                            else totalBytes += entry.size;
+                        }
+                    }
+                    Application.DoEvents();
+                    if (!isPatching)
+                    {
+                        LogEvent("Patching cancelled.");
+                        return;
+                    }
+
+                }
             }
 
             if (filelist.deletes.Count > 0)

@@ -67,7 +67,7 @@ func main() {
 
 	generateIgnores("ignore.txt")
 
-	err = filepath.Walk(".", visit)
+	err = filepath.Walk("rof/", visit)
 	if err != nil {
 		log.Fatal("Error filepath", err.Error())
 	}
