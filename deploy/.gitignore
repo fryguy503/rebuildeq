@@ -1,0 +1,2 @@
+#patch/ directory is generated using ../client_patch/clientpatch.bat
+patch/*
