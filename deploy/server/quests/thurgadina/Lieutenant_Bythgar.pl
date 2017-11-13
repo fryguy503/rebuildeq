@@ -35,5 +35,8 @@ sub EVENT_ITEM {
       return;
     }
   }
+
+  quest::givecash($copper, $silver, $gold, $platinum);
+    plugin::return_items(\%itemcount);  
   return;
 } 
