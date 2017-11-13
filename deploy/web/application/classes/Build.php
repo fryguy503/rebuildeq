@@ -201,7 +201,8 @@ class Build {
 			$build->fullName = "Monk";
 			$build->monogram = 7;
 			$build->desc = "Monks are disciplined fighters who help allies and pull enemies, focused on utility.<br>
-			Monks do not compare to the damage of Rogues.";
+			Monks do not compare to the damage of Rogues.<br>
+			Monks do not need to worry about weight, their AC bonus always applies.";
 			$build->styles[0] = "Master";
 			$build->styles[1] = "Transcendant";
 			$build->styles[2] = "Ashenhand";
@@ -836,7 +837,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Focus";
-			$newSkill->desc = 'When you use a detrimental spell, your mana cost is reduced by <em data-base="10">10</em> bonus damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you use a spell, your mana cost is reduced by <em data-base="7">7</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-enc-focus.png";
 			$skills[28] = $newSkill;
 

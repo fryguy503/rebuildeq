@@ -7953,8 +7953,8 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
 	}
 
 	rank = GetBuildRank(ENCHANTER, RB_ENC_FOCUS);
-	if (rank > 0 && IsDetrimentalSpell(spell_id) && GetSpellEffectIndex(spell_id, SE_CurrentHP) > -1 && mana_cost > 0) {
-		int reduced = floor(mana_cost * 0.1f * rank);
+	if (rank > 0 && /*IsDetrimentalSpell(spell_id) && GetSpellEffectIndex(spell_id, SE_CurrentHP) > -1 &&*/ mana_cost > 0) {
+		int reduced = floor(mana_cost * 0.07f * rank);
 		if (reduced < 1) reduced = 1;
 		BuildEcho(StringFormat("Focus %i reduced mana cost by %i.", rank, reduced));
 		mana_cost -= reduced;

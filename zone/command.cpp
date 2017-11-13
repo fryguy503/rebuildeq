@@ -4942,6 +4942,12 @@ void command_rez(Client *c, const Seperator *sep) {
 	if (c->GetLevel() >= 50) {
 		cost += (c->GetLevel() / 1.5f) * 1000;
 	}
+	if (c->GetLevel() < 40) {
+		cost /= 2; //divide by 1/2 when lower than 40
+	}
+	if (c->GetLevel() < 20) {
+		cost /= 4; //divide by 1/4 when lower than 20
+	}
 	if (cost < 1000) {
 		cost = 1000;
 	}
