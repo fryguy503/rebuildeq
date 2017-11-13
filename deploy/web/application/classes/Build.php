@@ -1682,7 +1682,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Hungering Aura";
-			$newSkill->desc = 'Improves lifetaps by <em data-base="10">10</em>% healing for each enemy attacking you with a maximum of <em data-base="1">1</em> enemies<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Improves lifetaps casted by Leech Touch or Innate Procs by <em data-base="10">10</em>% healing for each enemy attacking you with a maximum of <em data-base="1">1</em> enemies<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-hungeringaura.png";	
 			$skills[4] = $newSkill;
 			

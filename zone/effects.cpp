@@ -301,7 +301,18 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 		value -= extra_dmg;
 	}
 	rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND);
-	if (rank > 0) {		
+	if (rank > 0 && (
+		spell_id == 1508 || //asystole
+		spell_id == 367 || //heart flutter
+		spell_id == 340 || //disease cloud
+		spell_id == 344 || //clinging darkness
+		spell_id == 355 || //engulfing darkness
+		spell_id == 452 || //dooming darkness
+		spell_id == 453 || //cascading darkness
+		spell_id == 3686 || //blood of pain
+		spell_id == 360 || //heat blood
+		spell_id == 451  //boil blood
+		)) {		
 		extra_dmg = floor(value * 0.04f * rank);
 		if (extra_dmg < rank) extra_dmg = floor(rank * 2);
 		BuildEcho(StringFormat("Festering Wound %i increased damage by %i", rank, extra_dmg));
@@ -459,7 +470,19 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 		if (spells[spell_id].override_crit_chance > 0 && chance > spells[spell_id].override_crit_chance)
 			chance = spells[spell_id].override_crit_chance;
 
-		if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) > 0) {
+		if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) > 0 && 
+			(
+				spell_id == 341 || //lifetap
+				spell_id == 502 || //lifespike
+				spell_id == 445 || //life draw
+				spell_id == 446 || //siphon life
+				spell_id == 525 || //drain spirit
+				spell_id == 447 || //drain soul
+				spell_id == 852 || //soul consumption
+				spell_id == 1471 || //shroud of death effect
+				spell_id == 2718 || //scream of death effect
+				spell_id == 476 //vampiric embrace
+				)) {
 			chance += 1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
 		}
 

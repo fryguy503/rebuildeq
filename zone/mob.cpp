@@ -7891,29 +7891,31 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
 	
 
 	//runes cost extra mana.
-	if (spell_id == 481) {
-		mana_cost = floor(GetMaxMana() / 10); //rune 1
-		if (mana_cost < 10) mana_cost = 10;
-	}
-	if (spell_id == 482) {
-		mana_cost = floor(GetMaxMana() / 8); //rune 2
-		if (mana_cost < 10) mana_cost = 10;
-	}
-	if (spell_id == 483) {
-		mana_cost = floor(GetMaxMana() / 6); //rune 3
-		if (mana_cost < 10) mana_cost = 10;
-	}
-	if (spell_id == 484) {
-		mana_cost = floor(GetMaxMana() / 5); //rune 4
-		if (mana_cost < 10) mana_cost = 10;
-	}
-	if (spell_id == 1689) {
-		mana_cost = floor(GetMaxMana() / 4); //rune 5
-		if (mana_cost < 10) mana_cost = 10;
-	}
-	if (spell_id == 3199) {
-		mana_cost = floor(GetMaxMana() / 3); //rune 6
-		if (mana_cost < 10) mana_cost = 10;
+	if ((spell_target != nullptr && spell_target != this) || GetClass() != ENCHANTER) { //enchanters self cast runes ok, can't cast on others without penalty.
+		if (spell_id == 481) {
+			mana_cost = floor(GetMaxMana() / 10); //rune 1
+			if (mana_cost < 10) mana_cost = 10;
+		}
+		if (spell_id == 482) {
+			mana_cost = floor(GetMaxMana() / 8); //rune 2
+			if (mana_cost < 10) mana_cost = 10;
+		}
+		if (spell_id == 483) {
+			mana_cost = floor(GetMaxMana() / 6); //rune 3
+			if (mana_cost < 10) mana_cost = 10;
+		}
+		if (spell_id == 484) {
+			mana_cost = floor(GetMaxMana() / 5); //rune 4
+			if (mana_cost < 10) mana_cost = 10;
+		}
+		if (spell_id == 1689) {
+			mana_cost = floor(GetMaxMana() / 4); //rune 5
+			if (mana_cost < 10) mana_cost = 10;
+		}
+		if (spell_id == 3199) {
+			mana_cost = floor(GetMaxMana() / 3); //rune 6
+			if (mana_cost < 10) mana_cost = 10;
+		}
 	}
 
 	rank = GetBuildRank(BARD, RB_BRD_SIRENSSONG);

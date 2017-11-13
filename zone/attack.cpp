@@ -3860,7 +3860,21 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 			// if spell is lifetap add hp to the caster
 			if (spell_id != SPELL_UNKNOWN && IsLifetapSpell(spell_id)) {
 				//Shin: If a lifetap and SK and have points into Soul Link
-				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) > 0) {
+				if (attacker && 
+					attacker->IsClient() && 
+					attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) > 0 &&
+					(
+						spell_id == 341 || //lifetap
+						spell_id == 502 || //lifespike
+						spell_id == 445 || //life draw
+						spell_id == 446 || //siphon life
+						spell_id == 525 || //drain spirit
+						spell_id == 447 || //drain soul
+						spell_id == 852 || //soul consumption
+						spell_id == 1471 || //shroud of death effect
+						spell_id == 2718 || //scream of death effect
+						spell_id == 476 //vampiric embrace
+						)) {
 					//Ratio base damage based on new curve.
 					int scale_damage = 0;
 					int attacker_level = attacker->GetLevel();
@@ -3886,7 +3900,23 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 
 				int healed = damage;
 				//Shin: Hungering Aura check
-				if (attacker && attacker->IsClient() && attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA) > 0 && attacker->CastToClient()->GetAggroCount() > 0) {
+				if (attacker && 
+					attacker->IsClient() && 
+					attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA) > 0 && 
+					attacker->CastToClient()->GetAggroCount() > 0 && 
+					(
+						spell_id == 341 || //lifetap
+						spell_id == 502 || //lifespike
+						spell_id == 445 || //life draw
+						spell_id == 446 || //siphon life
+						spell_id == 525 || //drain spirit
+						spell_id == 447 || //drain soul
+						spell_id == 852 || //soul consumption
+						spell_id == 1471 || //shroud of death effect
+						spell_id == 2718 || //scream of death effect
+						spell_id == 476 //vampiric embrace
+					)
+					) {
 					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA);
 					int aggroCap = attacker->CastToClient()->GetAggroCount();
 					if (aggroCap > rank) aggroCap = rank;
