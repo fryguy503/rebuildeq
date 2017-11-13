@@ -20,7 +20,6 @@ import (
 type Config struct {
 	Client         string `yaml:"client,omitempty"`
 	DownloadPrefix string `yaml:"downloadprefix,omitempty"`
-	ClientPath     string `yaml:"clientPath,omitempty"`
 }
 
 type FileList struct {
@@ -68,12 +67,7 @@ func main() {
 
 	generateIgnores("ignore.txt")
 
-	startDir := "."
-	if len(config.ClientPath) > 0 {
-		startDir = config.ClientPath
-	}
-
-	err = filepath.Walk(startDir, visit)
+	err = filepath.Walk(".", visit)
 	if err != nil {
 		log.Fatal("Error filepath", err.Error())
 	}

@@ -5,7 +5,7 @@ go run filelistbuilder.go
 rd /s /q %~dp0..\deploy\patch\rof\
 xcopy rof\* %~dp0..\deploy\patch\rof\ /e /s /h /d
 echo Copying filelist_rof.yml
-copy filelist_rof.yml ..\deploy\patch\ /d
+copy filelist_rof.yml ..\deploy\patch\rof\ /d
 echo Copying patch.zip
 copy patch.zip ..\deploy\patch\ /d
 echo Copying eqemupatcher.exe

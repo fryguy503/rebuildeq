@@ -1,7 +1,6 @@
 #client possible options: tit, sof, und, rof
 client: rof
 
-clientPath: ./rof/
  #Prefix for downloading patch files
 downloadprefix: http://rebuildeq.com/patch/rof/
 
