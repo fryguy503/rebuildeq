@@ -7976,3 +7976,24 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
 
 	return mana_cost;
 }
+
+
+Client* Mob::GetTapFocus() {
+	if (!IsClient()) return nullptr;
+	if (GetClass() != SHADOWKNIGHT && GetClass() != NECROMANCER) return nullptr;
+	return CastToClient()->tapFocus;
+}
+
+void Mob::ClearTapFocus() {
+	if (!IsClient()) return;
+	if (!CastToClient()->tapFocus) return;
+	BuildEcho(StringFormat("You have lost your focus on %s.", CastToClient()->tapFocus->GetCleanName()));
+	CastToClient()->tapFocus = nullptr;
+}
+
+void Mob::SetTapFocus(Client * focus) {
+	if (focus == nullptr) {
+		return;
+	}
+
+}

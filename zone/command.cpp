@@ -213,6 +213,7 @@ int command_init(void)
 		command_add("flagedit", "- Edit zone flags on your target", 100, command_flagedit) ||
 		command_add("flags", "- displays the flags of you or your target", 50, command_flags) ||
 		command_add("flymode", "[0/1/2] - Set your or your player target's flymode to off/on/levitate", 50, command_flymode) ||
+		command_add("focus", "focus - marks a grouped ally as the focus for beneficial effects (SHD/NEC only).", 0, command_focus) ||
 		command_add("fov", "- Check wether you're behind or in your target's field of view", 80, command_fov) ||
 		command_add("freeze", "- Freeze your target", 80, command_freeze) ||
 		command_add("gassign", "[id] - Assign targetted NPC to predefined wandering grid id", 100, command_gassign) ||
@@ -1472,6 +1473,31 @@ void command_fov(Client *c, const Seperator *sep)
 			c->Message(0, "You are NOT behind mob %s, it is looking to %d",  c->GetTarget()->GetName(), c->GetTarget()->GetHeading());
 	else
 		c->Message(0, "I Need a target!");
+}
+
+void command_focus(Client *c, const Seperator *sep) {
+	if (c->GetClass() != SHADOWKNIGHT && c->GetClass() != NECROMANCER) {
+		c->Message(0, "You must be a Shadow Knight or Necromancer to use this command.");
+		return;
+	}
+	Client *focus = c->GetTarget()->CastToClient();
+	if (!c->GetTarget()) {
+		focus = c->GetTapFocus();
+		if (focus) {
+			c->Message(0, "Your current tap focus is: %s", focus->GetCleanName());
+			return;
+		}
+		c->Message(0, "You must target a grouped ally to set them as your focus.");
+		return;
+	}
+	
+	if (!focus || !focus->IsGrouped()) {
+		c->Message(0, "You must target a grouped ally to set them as your focus.");
+		return;
+	}
+	c->SetTapFocus(focus);
+	c->Message(0, "Your taps will now affect %s.", focus->GetCleanName());
+
 }
 
 void command_npcstats(Client *c, const Seperator *sep)
