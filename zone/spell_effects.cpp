@@ -487,7 +487,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								bonus_damage += floor(-dmg * 0.1f * rank);
 								if (bonus_damage > 0) bonus_damage = -1;
 								bool is_quad = false;
-								if (rank > 4 && zone->random.Roll(1)) {
+								if (rank > 0 && zone->random.Roll(1)) {
 									bonus_damage *= 4;
 									is_quad = true;
 								}
