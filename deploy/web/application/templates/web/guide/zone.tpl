@@ -34,6 +34,7 @@
         <tr><td>Accursed Temple of Cazic Thule</td></tr>
         <tr><td>Befallen</td></tr>
         <tr><td>Chardok: Halls of Betrayal (chardokb)</td></tr>
+        <tr><td>Jaggedpine Forest</td></tr>
         <tr><td>Plane of Mischief</td></tr>
         <tr><td>Splitpaw</td></tr>
         <tr><td>Temple of Droga</td></tr>
