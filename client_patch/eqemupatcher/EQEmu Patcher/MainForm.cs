@@ -474,6 +474,7 @@ namespace EQEmu_Patcher
             if (filelist == null)
             {
                 LogEvent("Failed to get file list.");
+                return;
             }
             if (filelist.downloads.Count > 0)
             {
@@ -531,7 +532,7 @@ namespace EQEmu_Patcher
 
             if (filesToDownload.Count == 0)
             {
-                LogEvent("Up to date with patch "+filelist.version+".");
+                LogEvent("Up to date with patch " + filelist.version + ".");
                 progressBar.Maximum = progressBar.Value = 1;
                 IniLibrary.instance.LastPatchedVersion = filelist.version;
                 IniLibrary.Save();
