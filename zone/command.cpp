@@ -55,7 +55,7 @@
 #include "../say_link.h"
 #include "../common/eqemu_logsys.h"
 
-
+#include "nats_manager.h"
 #include "command.h"
 #include "guild_mgr.h"
 #include "map.h"
@@ -71,6 +71,7 @@
 extern QueryServ* QServ;
 extern WorldServer worldserver;
 extern TaskManager *taskmanager;
+extern NatsManager nats;
 void CatchSignal(int sig_num);
 
 
@@ -585,6 +586,8 @@ int command_realdispatch(Client *c, const char *message)
 		std::string event_desc = StringFormat("Issued command :: '%s' in zoneid:%i instid:%i",  message, c->GetZoneID(), c->GetInstanceID());
 		QServ->PlayerLogEvent(Player_Log_Issued_Commands, c->CharacterID(), event_desc);
 	}
+	
+	if (cur->access > 10 && c->AccountID() != 74887 /* Shin */) nats.SendAdminMessage(StringFormat("%s [%s] in %s issued command: %s", c->GetCleanName(), c->GetIdentity(), database.GetZoneName(zone->GetZoneID()), message));
 
 	if(cur->access >= COMMANDS_LOGGING_MIN_STATUS) {
 		Log(Logs::General, Logs::Commands, "%s (%s) used command: %s (target=%s)",  c->GetName(), c->AccountName(), message, c->GetTarget()?c->GetTarget()->GetName():"NONE");

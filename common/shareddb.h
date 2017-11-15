@@ -92,7 +92,7 @@ class SharedDatabase : public Database
 		uint32	GetItemRecastTimestamp(uint32 char_id, uint32 recast_type);
 		void	ClearOldRecastTimestamps(uint32 char_id);
 		bool	SetStartingItems(PlayerProfile_Struct* pp, EQEmu::InventoryProfile* inv, uint32 si_race, uint32 si_class, uint32 si_deity, uint32 si_current_zone, char* si_name, int admin);
-		bool 	SetIdentity(uint32 account_id, char *identity);
+		bool 	SetIdentity(uint32 account_id, const char *identity);
 		bool 	IsIdentityEmpty(uint32 account_id);
 		char * 	GetIdentity(uint32 account_id);
 

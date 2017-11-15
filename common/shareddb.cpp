@@ -373,7 +373,7 @@ bool SharedDatabase::SetSharedPlatinum(uint32 account_id, int32 amount_to_add) {
 	return true;
 }
 
-bool SharedDatabase::SetIdentity(uint32 account_id, char *identity) {
+bool SharedDatabase::SetIdentity(uint32 account_id, const char *identity) {
 	auto query = StringFormat("UPDATE account SET identity = '%s' WHERE id = %d", identity, account_id);
 	auto results = QueryDatabase(query);
 	if (!results.Success()) {

@@ -34,6 +34,9 @@ namespace eqproto {
 class ChannelMessage;
 class ChannelMessageDefaultTypeInternal;
 extern ChannelMessageDefaultTypeInternal _ChannelMessage_default_instance_;
+class CommandMessage;
+class CommandMessageDefaultTypeInternal;
+extern CommandMessageDefaultTypeInternal _CommandMessage_default_instance_;
 class DailyGain;
 class DailyGainDefaultTypeInternal;
 extern DailyGainDefaultTypeInternal _DailyGain_default_instance_;
@@ -278,6 +281,164 @@ class ChannelMessage : public ::google::protobuf::Message /* @@protoc_insertion_
 };
 // -------------------------------------------------------------------
 
+class CommandMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:eqproto.CommandMessage) */ {
+ public:
+  CommandMessage();
+  virtual ~CommandMessage();
+
+  CommandMessage(const CommandMessage& from);
+
+  inline CommandMessage& operator=(const CommandMessage& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  CommandMessage(CommandMessage&& from) noexcept
+    : CommandMessage() {
+    *this = ::std::move(from);
+  }
+
+  inline CommandMessage& operator=(CommandMessage&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CommandMessage& default_instance();
+
+  static inline const CommandMessage* internal_default_instance() {
+    return reinterpret_cast<const CommandMessage*>(
+               &_CommandMessage_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    1;
+
+  void Swap(CommandMessage* other);
+  friend void swap(CommandMessage& a, CommandMessage& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline CommandMessage* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  CommandMessage* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const CommandMessage& from);
+  void MergeFrom(const CommandMessage& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(CommandMessage* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated string params = 3;
+  int params_size() const;
+  void clear_params();
+  static const int kParamsFieldNumber = 3;
+  const ::std::string& params(int index) const;
+  ::std::string* mutable_params(int index);
+  void set_params(int index, const ::std::string& value);
+  #if LANG_CXX11
+  void set_params(int index, ::std::string&& value);
+  #endif
+  void set_params(int index, const char* value);
+  void set_params(int index, const char* value, size_t size);
+  ::std::string* add_params();
+  void add_params(const ::std::string& value);
+  #if LANG_CXX11
+  void add_params(::std::string&& value);
+  #endif
+  void add_params(const char* value);
+  void add_params(const char* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField< ::std::string>& params() const;
+  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_params();
+
+  // string author = 1;
+  void clear_author();
+  static const int kAuthorFieldNumber = 1;
+  const ::std::string& author() const;
+  void set_author(const ::std::string& value);
+  #if LANG_CXX11
+  void set_author(::std::string&& value);
+  #endif
+  void set_author(const char* value);
+  void set_author(const char* value, size_t size);
+  ::std::string* mutable_author();
+  ::std::string* release_author();
+  void set_allocated_author(::std::string* author);
+
+  // string command = 2;
+  void clear_command();
+  static const int kCommandFieldNumber = 2;
+  const ::std::string& command() const;
+  void set_command(const ::std::string& value);
+  #if LANG_CXX11
+  void set_command(::std::string&& value);
+  #endif
+  void set_command(const char* value);
+  void set_command(const char* value, size_t size);
+  ::std::string* mutable_command();
+  ::std::string* release_command();
+  void set_allocated_command(::std::string* command);
+
+  // string result = 4;
+  void clear_result();
+  static const int kResultFieldNumber = 4;
+  const ::std::string& result() const;
+  void set_result(const ::std::string& value);
+  #if LANG_CXX11
+  void set_result(::std::string&& value);
+  #endif
+  void set_result(const char* value);
+  void set_result(const char* value, size_t size);
+  ::std::string* mutable_result();
+  ::std::string* release_result();
+  void set_allocated_result(::std::string* result);
+
+  // @@protoc_insertion_point(class_scope:eqproto.CommandMessage)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> params_;
+  ::google::protobuf::internal::ArenaStringPtr author_;
+  ::google::protobuf::internal::ArenaStringPtr command_;
+  ::google::protobuf::internal::ArenaStringPtr result_;
+  mutable int _cached_size_;
+  friend struct protobuf_message_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
 class DailyGain : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:eqproto.DailyGain) */ {
  public:
   DailyGain();
@@ -312,7 +473,7 @@ class DailyGain : public ::google::protobuf::Message /* @@protoc_insertion_point
                &_DailyGain_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    1;
+    2;
 
   void Swap(DailyGain* other);
   friend void swap(DailyGain& a, DailyGain& b) {
@@ -782,6 +943,238 @@ inline void ChannelMessage::set_zone_id(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
+// CommandMessage
+
+// string author = 1;
+inline void CommandMessage::clear_author() {
+  author_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& CommandMessage::author() const {
+  // @@protoc_insertion_point(field_get:eqproto.CommandMessage.author)
+  return author_.GetNoArena();
+}
+inline void CommandMessage::set_author(const ::std::string& value) {
+  
+  author_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:eqproto.CommandMessage.author)
+}
+#if LANG_CXX11
+inline void CommandMessage::set_author(::std::string&& value) {
+  
+  author_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:eqproto.CommandMessage.author)
+}
+#endif
+inline void CommandMessage::set_author(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  author_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:eqproto.CommandMessage.author)
+}
+inline void CommandMessage::set_author(const char* value, size_t size) {
+  
+  author_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:eqproto.CommandMessage.author)
+}
+inline ::std::string* CommandMessage::mutable_author() {
+  
+  // @@protoc_insertion_point(field_mutable:eqproto.CommandMessage.author)
+  return author_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* CommandMessage::release_author() {
+  // @@protoc_insertion_point(field_release:eqproto.CommandMessage.author)
+  
+  return author_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CommandMessage::set_allocated_author(::std::string* author) {
+  if (author != NULL) {
+    
+  } else {
+    
+  }
+  author_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), author);
+  // @@protoc_insertion_point(field_set_allocated:eqproto.CommandMessage.author)
+}
+
+// string command = 2;
+inline void CommandMessage::clear_command() {
+  command_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& CommandMessage::command() const {
+  // @@protoc_insertion_point(field_get:eqproto.CommandMessage.command)
+  return command_.GetNoArena();
+}
+inline void CommandMessage::set_command(const ::std::string& value) {
+  
+  command_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:eqproto.CommandMessage.command)
+}
+#if LANG_CXX11
+inline void CommandMessage::set_command(::std::string&& value) {
+  
+  command_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:eqproto.CommandMessage.command)
+}
+#endif
+inline void CommandMessage::set_command(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  command_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:eqproto.CommandMessage.command)
+}
+inline void CommandMessage::set_command(const char* value, size_t size) {
+  
+  command_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:eqproto.CommandMessage.command)
+}
+inline ::std::string* CommandMessage::mutable_command() {
+  
+  // @@protoc_insertion_point(field_mutable:eqproto.CommandMessage.command)
+  return command_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* CommandMessage::release_command() {
+  // @@protoc_insertion_point(field_release:eqproto.CommandMessage.command)
+  
+  return command_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CommandMessage::set_allocated_command(::std::string* command) {
+  if (command != NULL) {
+    
+  } else {
+    
+  }
+  command_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), command);
+  // @@protoc_insertion_point(field_set_allocated:eqproto.CommandMessage.command)
+}
+
+// repeated string params = 3;
+inline int CommandMessage::params_size() const {
+  return params_.size();
+}
+inline void CommandMessage::clear_params() {
+  params_.Clear();
+}
+inline const ::std::string& CommandMessage::params(int index) const {
+  // @@protoc_insertion_point(field_get:eqproto.CommandMessage.params)
+  return params_.Get(index);
+}
+inline ::std::string* CommandMessage::mutable_params(int index) {
+  // @@protoc_insertion_point(field_mutable:eqproto.CommandMessage.params)
+  return params_.Mutable(index);
+}
+inline void CommandMessage::set_params(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:eqproto.CommandMessage.params)
+  params_.Mutable(index)->assign(value);
+}
+#if LANG_CXX11
+inline void CommandMessage::set_params(int index, ::std::string&& value) {
+  // @@protoc_insertion_point(field_set:eqproto.CommandMessage.params)
+  params_.Mutable(index)->assign(std::move(value));
+}
+#endif
+inline void CommandMessage::set_params(int index, const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  params_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:eqproto.CommandMessage.params)
+}
+inline void CommandMessage::set_params(int index, const char* value, size_t size) {
+  params_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:eqproto.CommandMessage.params)
+}
+inline ::std::string* CommandMessage::add_params() {
+  // @@protoc_insertion_point(field_add_mutable:eqproto.CommandMessage.params)
+  return params_.Add();
+}
+inline void CommandMessage::add_params(const ::std::string& value) {
+  params_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:eqproto.CommandMessage.params)
+}
+#if LANG_CXX11
+inline void CommandMessage::add_params(::std::string&& value) {
+  params_.Add(std::move(value));
+  // @@protoc_insertion_point(field_add:eqproto.CommandMessage.params)
+}
+#endif
+inline void CommandMessage::add_params(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  params_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:eqproto.CommandMessage.params)
+}
+inline void CommandMessage::add_params(const char* value, size_t size) {
+  params_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:eqproto.CommandMessage.params)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+CommandMessage::params() const {
+  // @@protoc_insertion_point(field_list:eqproto.CommandMessage.params)
+  return params_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+CommandMessage::mutable_params() {
+  // @@protoc_insertion_point(field_mutable_list:eqproto.CommandMessage.params)
+  return &params_;
+}
+
+// string result = 4;
+inline void CommandMessage::clear_result() {
+  result_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& CommandMessage::result() const {
+  // @@protoc_insertion_point(field_get:eqproto.CommandMessage.result)
+  return result_.GetNoArena();
+}
+inline void CommandMessage::set_result(const ::std::string& value) {
+  
+  result_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:eqproto.CommandMessage.result)
+}
+#if LANG_CXX11
+inline void CommandMessage::set_result(::std::string&& value) {
+  
+  result_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:eqproto.CommandMessage.result)
+}
+#endif
+inline void CommandMessage::set_result(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  result_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:eqproto.CommandMessage.result)
+}
+inline void CommandMessage::set_result(const char* value, size_t size) {
+  
+  result_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:eqproto.CommandMessage.result)
+}
+inline ::std::string* CommandMessage::mutable_result() {
+  
+  // @@protoc_insertion_point(field_mutable:eqproto.CommandMessage.result)
+  return result_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* CommandMessage::release_result() {
+  // @@protoc_insertion_point(field_release:eqproto.CommandMessage.result)
+  
+  return result_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CommandMessage::set_allocated_result(::std::string* result) {
+  if (result != NULL) {
+    
+  } else {
+    
+  }
+  result_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), result);
+  // @@protoc_insertion_point(field_set_allocated:eqproto.CommandMessage.result)
+}
+
+// -------------------------------------------------------------------
+
 // DailyGain
 
 // int32 account_id = 1;
@@ -911,6 +1304,8 @@ inline void DailyGain::set_allocated_identity(::std::string* identity) {
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 

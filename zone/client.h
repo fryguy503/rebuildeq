@@ -1360,6 +1360,7 @@ public:
 	void DoZevfeersFeast();
 	void CalcMonkTranquility();
 	bool HasNegativeEffects();
+	char * GetIdentity();
 	void CheckRegionTypeChanges();
 
 	int32 CalcATK();

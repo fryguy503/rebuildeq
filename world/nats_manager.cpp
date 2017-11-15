@@ -1,10 +1,20 @@
 #include "nats_manager.h"
 #include "nats.h"
 #include "zonelist.h"
+#include "world_config.h"
+#include "login_server_list.h"
+#include "clientlist.h"
+#include "worlddb.h"
+
+#include "../common/seperator.h"
 #include "../common/eqemu_logsys.h"
 #include "../common/proto/message.pb.h"
 #include "../common/servertalk.h"
+#include "../common/string_util.h"
+
 extern ZSList zoneserver_list;
+extern LoginServerList loginserverlist;
+extern ClientList client_list;
 
 NatsManager::NatsManager()
 {
@@ -49,6 +59,23 @@ void NatsManager::Process()
 		}
 		ChannelMessageEvent(&message);
 	}
+
+	s = NATS_OK;
+	for (int count = 0; (s == NATS_OK) && count < 5; count++)
+	{
+		s = natsSubscription_NextMsg(&msg, commandMessageSub, 1);
+		if (s != NATS_OK) break;
+		Log(Logs::General, Logs::World_Server, "Got Command Message '%s'", natsMsg_GetData(msg));
+		eqproto::CommandMessage message;
+		
+			
+		if (!message.ParseFromString(natsMsg_GetData(msg))) {
+			Log(Logs::General, Logs::World_Server, "Failed to marshal");
+			natsMsg_Destroy(msg);
+			continue;
+		}		
+		CommandMessageEvent(&message, natsMsg_GetReply(msg));
+	}
 }
 
 void NatsManager::OnChannelMessage(ServerChannelMessage_Struct* msg) {
@@ -90,12 +117,33 @@ void NatsManager::OnEmoteMessage(ServerEmoteMessage_Struct* msg) {
 	return;
 }
 
+void NatsManager::SendAdminMessage(std::string adminMessage) {
+	if (!conn) {
+		Log(Logs::General, Logs::World_Server, "Send channel message failed, no connection to NATS");
+		return;
+	}
+
+	eqproto::ChannelMessage message;
+	message.set_message(adminMessage.c_str());
+	std::string pubMessage;
+	if (!message.SerializeToString(&pubMessage)) {
+		Log(Logs::General, Logs::World_Server, "Failed to serialize message to string");
+		return;
+	}
+	s = natsConnection_PublishString(conn, "AdminMessage", pubMessage.c_str());
+	if (s != NATS_OK) {
+		Log(Logs::General, Logs::World_Server, "Failed to SendAdminMessage");
+	}
+	Log(Logs::General, Logs::World_Server, "AdminMessage: %s", adminMessage.c_str());
+}
+
 //Send (publish) message to NATS
 void NatsManager::SendChannelMessage(eqproto::ChannelMessage* message) {
 	if (!conn) {
 		Log(Logs::General, Logs::World_Server, "Send channel message failed, no connection to NATS");
 		return;
 	}
+
 	std::string pubMessage;
 	if (!message->SerializeToString(&pubMessage)) {
 		Log(Logs::General, Logs::World_Server, "Failed to serialize message to string");
@@ -105,6 +153,63 @@ void NatsManager::SendChannelMessage(eqproto::ChannelMessage* message) {
 	if (s != NATS_OK) {
 		Log(Logs::General, Logs::World_Server, "Failed to send ChannelMessageEvent");
 	}
+}
+
+void NatsManager::CommandMessageEvent(eqproto::CommandMessage* message, const char* reply) {
+	if (!conn) {
+		Log(Logs::General, Logs::World_Server, "Command Message failed, no connection to NATS");
+		return;
+	}
+	std::string pubMessage;
+	//Log(Logs::General, Logs::World_Server, "Command: %s", message->command().c_str());
+	// message->params()
+	
+	
+	if (message->command().compare("who") == 0) {		
+		message->set_result(client_list.GetWhoAll());
+	}
+
+	if (message->command().compare("unlock") == 0) {
+		WorldConfig::UnlockWorld();
+		if (loginserverlist.Connected()) loginserverlist.SendStatus();
+		message->set_result("Server is now unlocked.");
+	}
+
+	if (message->command().compare("lock") == 0) {		
+		WorldConfig::LockWorld();
+		if (loginserverlist.Connected()) loginserverlist.SendStatus();
+		message->set_result("Server is now locked.");
+	}
+
+	if (message->command().compare("setidentity") == 0) {
+		if (message->params_size() < 2) {
+			message->set_result("Usage: !setidentity <accountid> <name>.");
+		}
+		else {
+			uint32 accountid = atoi(message->params(0).c_str());
+			if (!database.SetIdentity(accountid, message->params(1).c_str())) {
+				message->set_result("Failed to set identity, database step failed.");
+			}
+			else {
+				message->set_result(StringFormat("Set identity of %i to %s.", accountid, message->params(1).c_str()));
+			}			
+		}
+	}
+
+	if (message->result().length() <= 1) {
+		message->set_result("Failed to parse command.");		
+	}
+
+	if (!message->SerializeToString(&pubMessage)) {
+		Log(Logs::General, Logs::World_Server, "Failed to serialize command message to string");
+		return;
+	}
+
+	s = natsConnection_PublishString(conn, reply, pubMessage.c_str());
+	if (s != NATS_OK) {
+		Log(Logs::General, Logs::World_Server, "Failed to send CommandMessageEvent");
+		return;
+	}	
 }
 
 //Send a message to all zone servers.
@@ -137,8 +242,6 @@ void NatsManager::Save()
 
 void NatsManager::Load()
 {	
-
-	
 	s = natsConnection_Connect(&conn, opts);
 	if (s != NATS_OK) {
 		Log(Logs::General, Logs::World_Server, "Nats status isn't OK, hmm.");
@@ -147,6 +250,7 @@ void NatsManager::Load()
 	}
 
 	s = natsConnection_SubscribeSync(&channelMessageSub, conn, "ChannelMessageWorld");
+	s = natsConnection_SubscribeSync(&commandMessageSub, conn, "CommandMessageWorld");
 
 	// For maximum performance, set no limit on the number of pending messages.
 	if (s == NATS_OK) s = natsSubscription_SetPendingLimits(testSub, -1, -1);

@@ -403,7 +403,7 @@ int main(int argc, char** argv) {
 	server_opts.credentials = Config->SharedKey;
 	server_connection->Listen(server_opts);
 	Log(Logs::General, Logs::World_Server, "Server (TCP) listener started.");
-
+	nats.SendAdminMessage("World server booted up.");
 	server_connection->OnConnectionIdentified("Zone", [&console](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
 		LogF(Logs::General, Logs::World_Server, "New Zone Server connection from {2} at {0}:{1}",
 			connection->Handle()->RemoteIP(), connection->Handle()->RemotePort(), connection->GetUUID());

@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #include "worldserver.h"
 #include "zone.h"
 #include "lua_parser.h"
+#include "nats_manager.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -52,6 +53,7 @@ extern WorldServer worldserver;
 
 extern EntityList entity_list;
 extern Zone* zone;
+extern NatsManager nats;
 
 EQEmu::skills::SkillType Mob::AttackAnimation(int Hand, const EQEmu::ItemInstance* weapon, EQEmu::skills::SkillType skillinuse)
 {
@@ -2433,7 +2435,6 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 	}
 
 	//Create a dps log entry. 
-	//Basically.
 	float cur_dps;
 	float cur_hps_taken;
 	float cur_hps_dealt;
@@ -2441,7 +2442,8 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 	
 	int my_hp_self_loss_net;
 	int my_hp_target_loss_net;
-		
+	std::string adminMessage = "";
+
 	if (DPS().size() > 0) { //don't need to dps report an empty dps mob
 		//Generate a unique id for fight.
 		std::string fight_id = zone->CreateSessionHash();
@@ -2528,7 +2530,12 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 
 		float my_dps_loss = (float)((float)my_hp_self_loss_net / cur_engage_duration);
 		float my_dps_target_loss = (float)((float)my_hp_target_loss_net / cur_engage_duration);
-		
+
+		adminMessage.append(StringFormat("%s [T%i] DPS Report %d seconds, killed in %s\n", GetCleanName(), GetTier(), cur_engage_duration, database.GetZoneName(zone->GetZoneID())));
+		adminMessage.append(StringFormat("- dealt %i damage (%.1f DPS)\n", my_hp_self_loss_net, my_dps_loss));
+		adminMessage.append(StringFormat("- took %i damage (%.1f DPS)\n", my_hp_target_loss_net, my_dps_target_loss));
+		adminMessage.append(StringFormat("------ Participants ----------\n"));
+
 		c->Message(MT_CritMelee, "------ %s DPS Report %d seconds ----------", GetCleanName(), cur_engage_duration);
 		c->Message(MT_CritMelee, "- dealt %i damage (%.1f DPS)", my_hp_self_loss_net, my_dps_loss);
 		c->Message(MT_CritMelee, "- took %i damage (%.1f DPS)", my_hp_target_loss_net, my_dps_target_loss);
@@ -2544,10 +2551,11 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 
 			if (!c->GetEPP().use_full_dps && c->GetID() != d.ent_id) continue; //Don't show DPS if self only is flagged
 			c->Message(MT_CritMelee, "- %s: %i damage (%.1f DPS)", d.character_name.c_str(), d.hp_target_loss_net, cur_dps);
+			adminMessage.append(StringFormat("- %s: %i damage (%.1f DPS)", d.character_name.c_str(), d.hp_target_loss_net, cur_dps));
 		}
 		++iterator;
 	}
-
+	if (GetTier() > 0 && IsNPC()) nats.SendAdminMessage(adminMessage);
 	if (killer_mob && GetClass() != LDON_TREASURE)
 		hate_list.AddEntToHateList(killer_mob, damage);
 

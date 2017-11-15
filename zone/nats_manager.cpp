@@ -55,6 +55,27 @@ void NatsManager::ZoneSubscribe(const char* zonename) {
 	if (s == NATS_OK) s = natsSubscription_SetPendingLimits(zoneSub, -1, -1);	*/
 }
 
+
+void NatsManager::SendAdminMessage(std::string adminMessage) {
+	if (!conn) {
+		Log(Logs::General, Logs::World_Server, "Send channel message failed, no connection to NATS");
+		return;
+	}
+
+	eqproto::ChannelMessage message;
+	message.set_message(adminMessage.c_str());
+	std::string pubMessage;
+	if (!message.SerializeToString(&pubMessage)) {
+		Log(Logs::General, Logs::World_Server, "Failed to serialize message to string");
+		return;
+	}
+	s = natsConnection_PublishString(conn, "AdminMessage", pubMessage.c_str());
+	if (s != NATS_OK) {
+		Log(Logs::General, Logs::World_Server, "Failed to SendAdminMessage");
+	}
+	Log(Logs::General, Logs::World_Server, "AdminMessage: %s", adminMessage.c_str());
+}
+
 void NatsManager::Load()
 {
 	s = natsConnection_Connect(&conn, opts);

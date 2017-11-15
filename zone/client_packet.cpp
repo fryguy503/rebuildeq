@@ -59,6 +59,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 #include "water_map.h"
 #include "worldserver.h"
 #include "zone.h"
+#include "nats_manager.h"
 
 #ifdef BOTS
 #include "bot.h"
@@ -70,6 +71,7 @@ extern volatile bool is_zone_loaded;
 extern WorldServer worldserver;
 extern PetitionList petition_list;
 extern EntityList entity_list;
+extern NatsManager nats;
 typedef void (Client::*ClientPacketProc)(const EQApplicationPacket *app);
 
 //Use a map for connecting opcodes since it dosent get used a lot and is sparse
@@ -6164,6 +6166,7 @@ void Client::Handle_OP_GMBecomeNPC(const EQApplicationPacket *app)
 	if (this->Admin() < minStatusToUseGMCommands) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/becomenpc");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /becomenpc attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 	if (app->size != sizeof(BecomeNPC_Struct)) {
@@ -6195,6 +6198,7 @@ void Client::Handle_OP_GMDelCorpse(const EQApplicationPacket *app)
 	if (this->Admin() < commandEditPlayerCorpses) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/delcorpse");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /delcorpse attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 	GMDelCorpse_Struct* dc = (GMDelCorpse_Struct *)app->pBuffer;
@@ -6216,6 +6220,7 @@ void Client::Handle_OP_GMEmoteZone(const EQApplicationPacket *app)
 	if (this->Admin() < minStatusToUseGMCommands) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/emote");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /emote attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 	if (app->size != sizeof(GMEmoteZone_Struct)) {
@@ -6249,6 +6254,7 @@ void Client::Handle_OP_GMFind(const EQApplicationPacket *app)
 	if (this->Admin() < minStatusToUseGMCommands) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/find");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /find attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 	if (app->size != sizeof(GMSummon_Struct)) {
@@ -6287,6 +6293,7 @@ void Client::Handle_OP_GMGoto(const EQApplicationPacket *app)
 	if (this->Admin() < minStatusToUseGMCommands) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/goto");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /goto attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 	GMSummon_Struct* gmg = (GMSummon_Struct*)app->pBuffer;
@@ -6314,6 +6321,7 @@ void Client::Handle_OP_GMHideMe(const EQApplicationPacket *app)
 	if (this->Admin() < minStatusToUseGMCommands) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/hideme");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /hideme attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 	if (app->size != sizeof(SpawnAppearance_Struct)) {
@@ -6334,6 +6342,7 @@ void Client::Handle_OP_GMKick(const EQApplicationPacket *app)
 	if (this->Admin() < minStatusToKick) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/kick");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /kick attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 	GMKick_Struct* gmk = (GMKick_Struct *)app->pBuffer;
@@ -6364,6 +6373,7 @@ void Client::Handle_OP_GMKill(const EQApplicationPacket *app)
 	if (this->Admin() < minStatusToUseGMCommands) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/kill");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /kill attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 	if (app->size != sizeof(GMKill_Struct)) {
@@ -6416,6 +6426,7 @@ void Client::Handle_OP_GMLastName(const EQApplicationPacket *app)
 			if (this->Admin() < minStatusToUseGMCommands) {
 				Message(13, "Your account has been reported for hacking.");
 				database.SetHackerFlag(client->account_name, client->name, "/lastname");
+				nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /lastname attempt.", GetCleanName(), GetIdentity()));
 				return;
 			}
 			else
@@ -6441,6 +6452,7 @@ void Client::Handle_OP_GMNameChange(const EQApplicationPacket *app)
 	if (this->Admin() < minStatusToUseGMCommands) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/name");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /name attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 	Client* client = entity_list.GetClientByName(gmn->oldname);
@@ -6585,6 +6597,7 @@ void Client::Handle_OP_GMToggle(const EQApplicationPacket *app)
 	if (this->Admin() < minStatusToUseGMCommands) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/toggle");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /toggle attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 	GMToggle_Struct *ts = (GMToggle_Struct *)app->pBuffer;
@@ -6636,6 +6649,7 @@ void Client::Handle_OP_GMZoneRequest(const EQApplicationPacket *app)
 	if (this->Admin() < minStatusToBeGM) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/zone");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /zone attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 
@@ -6684,6 +6698,7 @@ void Client::Handle_OP_GMZoneRequest2(const EQApplicationPacket *app)
 	if (this->Admin() < minStatusToBeGM) {
 		Message(13, "Your account has been reported for hacking.");
 		database.SetHackerFlag(this->account_name, this->name, "/zone");
+		nats.SendAdminMessage(StringFormat("Hacker %s [%s]: /zone attempt.", GetCleanName(), GetIdentity()));
 		return;
 	}
 	if (app->size < sizeof(uint32)) {

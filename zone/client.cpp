@@ -11839,3 +11839,9 @@ bool Client::HasNegativeEffects() {
 	}
 	return false;
 }
+
+
+char * Client::GetIdentity() {
+	return identity;
+}
+

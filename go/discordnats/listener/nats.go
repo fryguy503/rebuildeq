@@ -95,6 +95,7 @@ func checkForNATSMessages(nc *nats.Conn, disco *discord.Discord) (err error) {
 
 	nc.Subscribe("DailyGain", OnDailyGain)
 	nc.Subscribe("ChannelMessage", OnChannelMessage)
+	nc.Subscribe("AdminMessage", OnAdminMessage)
 
 	for {
 		if nc.Status() != nats.CONNECTED {
@@ -104,6 +105,56 @@ func checkForNATSMessages(nc *nats.Conn, disco *discord.Discord) (err error) {
 		time.Sleep(6000 * time.Second)
 	}
 	return
+}
+
+func SendCommand(author string, command string, parameters []string) (err error) {
+	if nc == nil {
+		err = fmt.Errorf("nats is not connected.")
+		return
+	}
+
+	commandMessage := &eqproto.CommandMessage{
+		Author:  author,
+		Command: command,
+		Params:  parameters,
+	}
+	log.Println(commandMessage)
+	var cmd []byte
+	if cmd, err = proto.Marshal(commandMessage); err != nil {
+		err = fmt.Errorf("Failed to marshal command: %s", err.Error())
+		return
+	}
+
+	var msg *nats.Msg
+	if msg, err = nc.Request("CommandMessageWorld", cmd, 2*time.Second); err != nil {
+		return
+	}
+
+	//now process reply
+	if err = proto.Unmarshal(msg.Data, commandMessage); err != nil {
+		err = fmt.Errorf("Failed to unmarshal response: %s", err.Error())
+		return
+	}
+
+	if _, err = disco.SendMessage(config.Discord.CommandChannelID, fmt.Sprintf("**%s** %s: %s", commandMessage.Author, commandMessage.Command, commandMessage.Result)); err != nil {
+		log.Printf("[NATS] Error sending message (%s: %s) %s", commandMessage.Author, commandMessage.Result, err.Error())
+		err = nil
+		return
+	}
+	return
+}
+
+func OnAdminMessage(nm *nats.Msg) {
+	var err error
+	channelMessage := &eqproto.ChannelMessage{}
+	proto.Unmarshal(nm.Data, channelMessage)
+
+	if _, err = disco.SendMessage(config.Discord.CommandChannelID, fmt.Sprintf("**Admin:** %s", channelMessage.Message)); err != nil {
+		log.Printf("[NATS] Error sending admin message (%s) %s", channelMessage.Message, err.Error())
+		return
+	}
+
+	log.Printf("[NATS] AdminMessage: %s\n", channelMessage.Message)
 }
 
 func OnChannelMessage(nm *nats.Msg) {
