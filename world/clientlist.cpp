@@ -1032,10 +1032,10 @@ std::string ClientList::GetWhoAll() {
 
 		
 		if (cle->Anon() == 2) reply.append("[RolePlay");			
-		if (cle->Anon() == 1) reply.append("[ANON");
+		else if (cle->Anon() == 1) reply.append("[ANON");
 		else reply.append("[");
 
-		reply.append(StringFormat(" %i %s ] %s", cle->level(), GetClassIDName(cle->class_(), cle->level()), cle->name()));
+		reply.append(StringFormat(" %i %s ] %s [%s]", cle->level(), GetClassIDName(cle->class_(), cle->level()), cle->name(), cle->GetIdentity()));
 		reply.append(StringFormat(" %s zone: %s", GetRaceIDName(cle->race()), database.GetZoneName(cle->zone())));
 
 		if (guild_mgr.GuildExists(cle->GuildID())) reply.append(StringFormat(" <%s>", guild_mgr.GetGuildName(cle->GuildID())));

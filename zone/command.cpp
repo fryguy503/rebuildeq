@@ -4461,6 +4461,19 @@ void command_encounter(Client *c, const Seperator *sep) {
 		return;
 	}
 	
+
+	if (c->Admin() >= 200 && sep->arg[1] && strcasecmp(sep->arg[1], "reward") == 0) {
+		if (c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
+			std::string query = StringFormat("UPDATE account_custom SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1 WHERE account_id = %u", c->GetTarget()->CastToClient()->AccountID());
+			auto results = database.QueryDatabase(query);
+			c->GetTarget()->Message(MT_Experience, "You earned an encounter reward! [ %s ]", c->CreateSayLink("#encounter claim", "claim").c_str());
+			c->Message(MT_Experience, "You gave %s an encounter reward.", c->GetTarget()->GetCleanName());
+			return;
+		}
+		c->Message(0, "Invalid target");
+		return;
+	}
+
 	if (c->GetEPP().next_encounter_time > time(nullptr)) {
 		c->Message(0, "You are not eligible for encounters.");
 	}
@@ -4479,16 +4492,6 @@ void command_encounter(Client *c, const Seperator *sep) {
 		return;
 	}
 
-	if (c->Admin() >= 200 && sep->arg[1] && strcasecmp(sep->arg[1], "reward") == 0) {
-		if (c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
-			std::string query = StringFormat("UPDATE account_custom SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1 WHERE account_id = %u and unclaimed_encounter_rewards = %u", c->AccountID(), unclaimed_rewards);
-			auto results = database.QueryDatabase(query);
-			c->GetTarget()->Message(MT_Experience, "You earned an encounter reward! [ %s ]", c->CreateSayLink("#encounter claim", "claim").c_str());
-			return;
-		}
-		c->Message(0, "Invalid target");
-		return;
-	}
 
 	//If a GM types #encounter targetting a player, gives a report
 	if (c->Admin() > 200 && c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
@@ -9761,15 +9764,15 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		return;
 	}
 
+	NPCType *enpc = new NPCType;
+	memcpy(enpc, npctype, sizeof(NPCType));
+
 	Item_Reward drop = Item_Reward(0, 0);
 	//we copy the npc_type data because we need to edit it a bit
 	if (isBoss) {
-		int groupSize = 1;
+		int groupSize = 0;
 		int avgLevel = 3;
-		int range = 200;
 
-		float distance;
-		float range2 = range*range;
 		auto group = target->GetGroup();
 		
 
@@ -9782,14 +9785,13 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		unsigned int gi = 0;
 
 
-		if (group) {
+		if (target->HasGroup()) {
 			for (; gi < MAX_GROUP_MEMBERS; gi++)
 			{
 				if (!group->members[gi]) continue;
 				gTarget = group->members[gi];
 				if (gTarget->GetZoneID() != target->GetZoneID()) continue; //don't count group members not in zone
-				distance = DistanceSquared(gTarget->GetPosition(), target->GetPosition());
-				if (distance > range2) continue;
+				
 				playerTotalHP += gTarget->GetMaxHP();
 				groupSize++;
 				if (gTarget->GetClass() == CLERIC || gTarget->GetClass() == DRUID || gTarget->GetClass() == SHAMAN) hasHealer = true;
@@ -9813,8 +9815,6 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		playerAC /= groupSize; //get average AC
 		//playerAC /= 2; //divide by 2... I think..
 
-		NPCType *enpc = new NPCType;
-		memcpy(enpc, npctype, sizeof(NPCType));
 		enpc->level = avgLevel;
 		enpc = c->AdjustNPC(enpc, false, false);
 		strcpy(enpc->special_abilities, "1,1^21,1");
@@ -9830,18 +9830,18 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		enpc->npc_faction_id = 79; // KoS non-assist
 
 		enpc->cur_hp = enpc->max_hp;
-		NPC* npc = new NPC(enpc, nullptr, target->GetPosition(), FlyMode3);
+		NPC* npc = new NPC(enpc, nullptr, c->GetPosition(), FlyMode3);
 
 		if (hasLoot) npc->AddLootTable();
 
-		if (group) {
+		if (target->HasGroup()) {
+			gi = 0;
 			for (; gi < MAX_GROUP_MEMBERS; gi++)
 			{
 				if (!group->members[gi]) continue;
 				gTarget = group->members[gi];
 				if (gTarget->GetZoneID() != target->GetZoneID()) continue; //don't count group members not in zone
-				distance = DistanceSquared(gTarget->GetPosition(), target->GetPosition());
-				if (distance > range2) continue;
+			
 				drop = gTarget->GetBoxReward(0, zone->random.Int(0, 1));
 				npc->AddItem(drop.item_id, 1, false);
 			}
@@ -9856,14 +9856,12 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		return;
 	}
 	else {
-		NPCType *enpc = new NPCType;
-		memcpy(enpc, npctype, sizeof(NPCType));
 		enpc->level = target->GetLevel();
 		enpc = c->AdjustNPC(enpc, false, false);
 
 		strcpy(enpc->special_abilities,  "1^21");
 		enpc->npc_faction_id = 79; // KoS non-assist		
-		NPC* npc = new NPC(enpc, nullptr, target->GetPosition(), FlyMode3);
+		NPC* npc = new NPC(enpc, nullptr, c->GetPosition(), FlyMode3);
 		if (hasLoot) npc->AddLootTable();
 		if (hasLoot && zone->random.Roll(5)) { //5% chance of artifact loot
 			drop = target->GetBoxReward(0, zone->random.Int(0, 1));
