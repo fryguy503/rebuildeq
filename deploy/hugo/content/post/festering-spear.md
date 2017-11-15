@@ -1,5 +1,5 @@
 +++
-banner = "post/images/buff-duration.png"
+banner = "post/images/festering-spear.png"
 date = "2017-11-15T01:19:18-07:00"
 description = "Festering Spear Improvements"
 images = ["post/images/festering-spear.png"]
