@@ -4378,26 +4378,6 @@ void command_encounter(Client *c, const Seperator *sep) {
 		return;
 	}
 
-	//If a GM types #encounter targetting a player, gives a report
-	if (c->Admin() > 200 && c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
-		std::string query = StringFormat("SELECT unclaimed_encounter_rewards, unclaimed_encounter_rewards_total FROM account_custom WHERE account_id = %u LIMIT 1", c->GetTarget()->CastToClient()->AccountID());
-		auto results = database.QueryDatabase(query);
-		if (results.Success()) {
-			if (results.RowCount() == 1) {
-				auto row = results.begin();
-				unclaimed_rewards = atoi(row[0]);
-				uint32 unclaimed_rewards_total = atoi(row[1]);
-				c->Message(0, "[GM] %s [%s] (%u) has %u unclaimed rewards and %u total rewards ever, and next encounter is in %u seconds", c->GetTarget()->CastToClient()->GetCleanName(), c->GetTarget()->CastToClient()->Identity(), c->GetTarget()->CastToClient()->AccountID(), unclaimed_rewards, unclaimed_rewards_total, (time(nullptr) > c->GetEPP().next_encounter_time) ? 0 : c->GetEPP().next_encounter_time - time(nullptr));
-			} else {
-				c->Message(0, "Target failed to get a record result");
-			}
-		} else {
-			c->Message(0, "Target failed to get unclaimed_encounter_rewards");
-		}		
-		return;
-	} 
-	
-
 
 	//Get the unclaimed_encounter_rewards
 	std::string query = StringFormat("SELECT unclaimed_encounter_rewards, next_daily_claim FROM account_custom WHERE account_id = %u LIMIT 1", c->AccountID());
@@ -4496,6 +4476,39 @@ void command_encounter(Client *c, const Seperator *sep) {
 
 	if (unclaimed_rewards == 0) {
 		c->Message(0, "You have no unclaimed encounter rewards. Watch for them across Norrath and team up with allies to achieve prizes.");
+		return;
+	}
+
+	if (c->Admin() >= 200 && sep->arg[1] && strcasecmp(sep->arg[1], "reward") == 0) {
+		if (c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
+			std::string query = StringFormat("UPDATE account_custom SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1 WHERE account_id = %u and unclaimed_encounter_rewards = %u", c->AccountID(), unclaimed_rewards);
+			auto results = database.QueryDatabase(query);
+			c->GetTarget()->Message(MT_Experience, "You earned an encounter reward! [ %s ]", c->CreateSayLink("#encounter claim", "claim").c_str());
+			return;
+		}
+		c->Message(0, "Invalid target");
+		return;
+	}
+
+
+	//If a GM types #encounter targetting a player, gives a report
+	if (c->Admin() > 200 && c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
+		std::string query = StringFormat("SELECT unclaimed_encounter_rewards, unclaimed_encounter_rewards_total FROM account_custom WHERE account_id = %u LIMIT 1", c->GetTarget()->CastToClient()->AccountID());
+		auto results = database.QueryDatabase(query);
+		if (results.Success()) {
+			if (results.RowCount() == 1) {
+				auto row = results.begin();
+				unclaimed_rewards = atoi(row[0]);
+				uint32 unclaimed_rewards_total = atoi(row[1]);
+				c->Message(0, "[GM] %s [%s] (%u) has %u unclaimed rewards and %u total rewards ever, and next encounter is in %u seconds", c->GetTarget()->CastToClient()->GetCleanName(), c->GetTarget()->CastToClient()->Identity(), c->GetTarget()->CastToClient()->AccountID(), unclaimed_rewards, unclaimed_rewards_total, (time(nullptr) > c->GetEPP().next_encounter_time) ? 0 : c->GetEPP().next_encounter_time - time(nullptr));
+			}
+			else {
+				c->Message(0, "Target failed to get a record result");
+			}
+		}
+		else {
+			c->Message(0, "Target failed to get unclaimed_encounter_rewards");
+		}
 		return;
 	}
 	
