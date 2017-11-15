@@ -451,6 +451,7 @@ void NPC::AddLootTable() {
 	}
 }
 
+
 void NPC::AddLootTable(uint32 ldid) {
 	if (npctype_id != 0) { // check if it's a GM spawn
 		if (GetLevel() >= 55 && zone->random.Int(1, 200) == 1) {

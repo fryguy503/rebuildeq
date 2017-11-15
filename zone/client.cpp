@@ -55,6 +55,7 @@ extern volatile bool RunLoops;
 #include "guild_mgr.h"
 #include "quest_parser_collection.h"
 #include "queryserv.h"
+#include "nats_manager.h"
 
 extern QueryServ* QServ;
 extern EntityList entity_list;
@@ -63,6 +64,8 @@ extern volatile bool is_zone_loaded;
 extern WorldServer worldserver;
 extern uint32 numclients;
 extern PetitionList petition_list;
+extern NatsManager nats;
+
 bool commandlogged;
 char entirecommand[255];
 
@@ -10606,509 +10609,38 @@ uint32 Client::GetEncounterNPCID() {
 }
 
 //Gives a Box Reward randomly. MinimumRarity by default is 0
-int Client::GiveBoxReward(int minimumRarity) {
+int Client::GiveBoxReward(int minimumRarity, int boxType) {
 	if (IsTaskActivityActive(307, 5)) UpdateTaskActivity(FEAT_GETTINGSTARTED, 5, 1);
-	if (Admin() >= 200) Message(0, "[GM] GiveBoxReward");	
-	//Rarity table
-	std::map <int, int> rarityTable;
-	//Pool size for randomizer
-	int pool = 0;
-	if (minimumRarity <= 0) {
-		pool += 700;
-		rarityTable[pool] = 0;
-	}
-	if (minimumRarity <= 1) {
-		pool += 250;
-		rarityTable[pool] = 1;
-	}
-	if (minimumRarity <= 2) {
-		pool += 50;
-		rarityTable[pool] = 2;
-	}
-	if (minimumRarity <= 3) {
-		pool += 2;
-		rarityTable[pool] = 3;
-	}
-	//Rolled dice
-	int dice = zone->random.Int(1, pool);
 	
-	//Chosen Rarity Type
-	int rarityType = 0;
-	int lastPool = 0;
-	for (auto entry = rarityTable.begin(); entry != rarityTable.end(); ++entry) {
-		if (dice > entry->first) {
-			lastPool = entry->first;
-			continue;
-		}
-		if (Admin() >= 200) Message(0, "[GM] Rarity Roll dice: %i is in pool: %i, total pool: %i (%.1f%%) Resulted in rarityType %i", dice, entry->first, pool, (float)((float)(entry->first - lastPool) / (float)pool * 100), rarityType);
-		rarityType = entry->second;
-		break;
+	Item_Reward reward = GetBoxReward(minimumRarity, boxType);
+
+	const EQEmu::ItemData * item = database.GetItem(reward.item_id);
+	if (!SummonItem(reward.item_id)) {
+		nats.SendAdminMessage(StringFormat("Failed to give reward to %s [%s] itemid: %i rarity: %i", GetCleanName(), GetIdentity(), reward.item_id, reward.rarity));
+		return 0;
 	}
 
-	//http://wiki.project1999.com/Players:Kunark_Gear 
-	std::map<int, int> itemTable;
-	pool = 0;
-	if (rarityType == 0) { 
-		//===Common===
-		if (IsValidItem(100002)) { pool += 80; itemTable[pool] = 100002; } //	Old Blue Box for lulz	1.99%
-		if (IsValidItem(100003)) { pool += 150; itemTable[pool] = 100003; } //	Old Red Box	3.72%
-		if (IsValidItem(100600)) { pool += 200; itemTable[pool] = 100600; } //	Crown of King Tranix	4.96%
-		if (IsValidItem(100601)) { pool += 150; itemTable[pool] = 100601; } //	Djarn's Amethyst Ring	3.72%
-		if (IsValidItem(100602)) { pool += 80; itemTable[pool] = 100602; } //	Hardened Clay Bracelet	1.99%
-		if (IsValidItem(100603)) { pool += 100; itemTable[pool] = 100603; } //	Blackened Iron Coif	2.48%
-		if (IsValidItem(100604)) { pool += 150; itemTable[pool] = 100604; } //	Bloodstone Eyepatch	3.72%
-		if (IsValidItem(100605)) { pool += 100; itemTable[pool] = 100605; } //	Bone Mask Of The Jarsath	2.48%
-		if (IsValidItem(100606)) { pool += 80; itemTable[pool] = 100606; } //	Bracer Of Scavenging	1.99%
-		if (IsValidItem(100607)) { pool += 100; itemTable[pool] = 100607; } //	Bracer Of The Hidden	2.48%
-		if (IsValidItem(100608)) { pool += 80; itemTable[pool] = 100608; } //	Dragon Hero Bracer	1.99%
-		if (IsValidItem(100609)) { pool += 150; itemTable[pool] = 100609; } //	Dwarven Work Boots	3.72%
-		if (IsValidItem(100610)) { pool += 50; itemTable[pool] = 100610; } //	Earring Of Grachnist	1.24%
-		if (IsValidItem(100611)) { pool += 60; itemTable[pool] = 100611; } //	Foreman's Tunic	1.49%
-		if (IsValidItem(100612)) { pool += 110; itemTable[pool] = 100612; } //	Gorilla Hide Mask	2.73%
-		if (IsValidItem(100613)) { pool += 150; itemTable[pool] = 100613; } //	Kunzar Cloak	3.72%
-		if (IsValidItem(100614)) { pool += 150; itemTable[pool] = 100614; } //	Lizardscale Belt	3.72%
-		if (IsValidItem(100615)) { pool += 180; itemTable[pool] = 100615; } //	Lizardscale Cloak	4.47%
-		if (IsValidItem(100616)) { pool += 150; itemTable[pool] = 100616; } //	Polished Bone Bracelet	3.72%
-		if (IsValidItem(100617)) { pool += 100; itemTable[pool] = 100617; } //	Runed Lava Pendant	2.48%
-		if (IsValidItem(100618)) { pool += 30; itemTable[pool] = 100618; } //	Sarnak Emblazened Tabard	0.74%
-		if (IsValidItem(100619)) { pool += 50; itemTable[pool] = 100619; } //	Serpentine Bracer	1.24%
-		if (IsValidItem(100620)) { pool += 80; itemTable[pool] = 100620; } //	Spectral Shroud	1.99%
-		if (IsValidItem(100621)) { pool += 60; itemTable[pool] = 100621; } //	Thick Banded Belt	1.49%
-		if (IsValidItem(100622)) { pool += 60; itemTable[pool] = 100622; } //	Worm-Eaten Gloves	1.49%
-		if (IsValidItem(100623)) { pool += 30; itemTable[pool] = 100623; } //	Helm of Ro	0.74%
-		if (IsValidItem(100624)) { pool += 30; itemTable[pool] = 100624; } //	Breastplate of Ro	0.74%
-		if (IsValidItem(100625)) { pool += 30; itemTable[pool] = 100625; } //	Vambraces of Ro	0.74%
-		if (IsValidItem(100626)) { pool += 30; itemTable[pool] = 100626; } //	Bracer of Ro	0.74%
-		if (IsValidItem(100627)) { pool += 30; itemTable[pool] = 100627; } //	Gauntlets of Ro	0.74%
-		if (IsValidItem(100628)) { pool += 30; itemTable[pool] = 100628; } //	Greaves of Ro	0.74%
-		if (IsValidItem(100629)) { pool += 30; itemTable[pool] = 100629; } //	Boots of Ro	0.74%
-		if (IsValidItem(100630)) { pool += 30; itemTable[pool] = 100630; } //	Ivy Etched Helm	0.74%
-		if (IsValidItem(100631)) { pool += 30; itemTable[pool] = 100631; } //	Ivy Etched Mask	0.74%
-		if (IsValidItem(100632)) { pool += 30; itemTable[pool] = 100632; } //	Ivy Etched Gorget	0.74%
-		if (IsValidItem(100633)) { pool += 30; itemTable[pool] = 100633; } //	Ivy Etched Tunic	0.74%
-		if (IsValidItem(100634)) { pool += 30; itemTable[pool] = 100634; } //	Ivy Etched Shoulders	0.74%
-		if (IsValidItem(100635)) { pool += 30; itemTable[pool] = 100635; } //	Ivy Etched Cloak	0.74%
-		if (IsValidItem(100636)) { pool += 30; itemTable[pool] = 100636; } //	Ivy Etched Belt	0.74%
-		if (IsValidItem(100637)) { pool += 30; itemTable[pool] = 100637; } //	Ivy Etched Sleeves	0.74%
-		if (IsValidItem(100638)) { pool += 30; itemTable[pool] = 100638; } //	Ivy Etched Bracer	0.74%
-		if (IsValidItem(100639)) { pool += 30; itemTable[pool] = 100639; } //	Ivy Etched Gauntlets	0.74%
-		if (IsValidItem(100640)) { pool += 30; itemTable[pool] = 100640; } //	Ivy Etched Leggings	0.74%
-		if (IsValidItem(100641)) { pool += 30; itemTable[pool] = 100641; } //	Ivy Etched Boots	0.74%
-		if (IsValidItem(100642)) { pool += 30; itemTable[pool] = 100642; } //	Lambent Helm	0.74%
-		if (IsValidItem(100643)) { pool += 30; itemTable[pool] = 100643; } //	Lambent Breastplate	0.74%
-		if (IsValidItem(100644)) { pool += 30; itemTable[pool] = 100644; } //	Lambent Vambraces	0.74%
-		if (IsValidItem(100645)) { pool += 30; itemTable[pool] = 100645; } //	Lambent Bracers	0.74%
-		if (IsValidItem(100646)) { pool += 30; itemTable[pool] = 100646; } //	Lambent Gauntlets	0.74%
-		if (IsValidItem(100647)) { pool += 30; itemTable[pool] = 100647; } //	Lambent Greaves	0.74%
-		if (IsValidItem(100648)) { pool += 30; itemTable[pool] = 100648; } //	Lambent Boots	0.74%
-		if (IsValidItem(100649)) { pool += 30; itemTable[pool] = 100649; } //	Crafted Helm	0.74%
-		if (IsValidItem(100650)) { pool += 30; itemTable[pool] = 100650; } //	Crafted Breastplate	0.74%
-		if (IsValidItem(100651)) { pool += 30; itemTable[pool] = 100651; } //	Crafted Pauldron	0.74%
-		if (IsValidItem(100652)) { pool += 30; itemTable[pool] = 100652; } //	Crafted Vambraces	0.74%
-		if (IsValidItem(100653)) { pool += 30; itemTable[pool] = 100653; } //	Crafted Bracers	0.74%
-		if (IsValidItem(100654)) { pool += 30; itemTable[pool] = 100654; } //	Crafted Gauntlets	0.74%
-		if (IsValidItem(100655)) { pool += 30; itemTable[pool] = 100655; } //	Crafted Greaves	0.74%
-		if (IsValidItem(100656)) { pool += 30; itemTable[pool] = 100656; } //	Crafted Plate Boots	0.74%
-		if (IsValidItem(100657)) { pool += 30; itemTable[pool] = 100657; } //	Small Crafted Helm	0.74%
-		if (IsValidItem(100658)) { pool += 30; itemTable[pool] = 100658; } //	Small Crafted Breastplate	0.74%
-		if (IsValidItem(100659)) { pool += 30; itemTable[pool] = 100659; } //	Small Crafted Pauldron	0.74%
-		if (IsValidItem(100660)) { pool += 30; itemTable[pool] = 100660; } //	Small Crafted Vambraces	0.74%
-		if (IsValidItem(100661)) { pool += 30; itemTable[pool] = 100661; } //	Small Crafted Bracers	0.74%
-		if (IsValidItem(100662)) { pool += 30; itemTable[pool] = 100662; } //	Small Crafted Gauntlets	0.74%
-		if (IsValidItem(100663)) { pool += 30; itemTable[pool] = 100663; } //	Small Crafted Greaves	0.74%
-		if (IsValidItem(100664)) { pool += 30; itemTable[pool] = 100664; } //	Small Crafted Plate Boots	0.74%
-		if (IsValidItem(100665)) { pool += 30; itemTable[pool] = 100665; } //	Wind Etched Helm of Ro	0.74%
-		if (IsValidItem(100666)) { pool += 30; itemTable[pool] = 100666; } //	Wind Etched Bracers of Ro	0.74%
-		if (IsValidItem(100667)) { pool += 30; itemTable[pool] = 100667; } //	Wind Etched Gauntlets of Ro	0.74%
-		if (IsValidItem(100668)) { pool += 30; itemTable[pool] = 100668; } //	Wind Etched Boots of Ro	0.74%
+	EQEmu::SayLinkEngine linker;
+	linker.SetLinkType(EQEmu::saylink::SayLinkItemData);
+	linker.SetItemData(item);
+	std::string item_link;
+	item_link = linker.GenerateLink();
+
+	if (reward.rarity == 3) { //Legendary Drop!
+		worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item_link.c_str()).c_str());
 	}
-
-	else if (rarityType == 1) { 
-		//===Uncommon===
-		if (IsValidItem(100003)) { pool += 80; itemTable[pool] = 100003; } //	; //	Old Violet Box	2.38%
-		if (IsValidItem(100800)) { pool += 50; itemTable[pool] = 100800; } //	; //	Earring of Essence	1.49%
-		if (IsValidItem(100801)) { pool += 100; itemTable[pool] = 100801; } //	; //	Fingerbone Hoop	2.98%
-		if (IsValidItem(100802)) { pool += 80; itemTable[pool] = 100802; } //	; //	Adamantite Band 75 hp	2.38%
-		if (IsValidItem(100803)) { pool += 100; itemTable[pool] = 100803; } //	; //	Sarnak Bracer of Honor	2.98%
-		if (IsValidItem(100804)) { pool += 50; itemTable[pool] = 100804; } //	; //	Bone Amulet OF Blade Turning	1.49%
-		if (IsValidItem(100805)) { pool += 80; itemTable[pool] = 100805; } //	; //	Brigandine Tunic	2.38%
-		if (IsValidItem(100806)) { pool += 50; itemTable[pool] = 100806; } //	; //	Crested Spaulders	1.49%
-		if (IsValidItem(100807)) { pool += 60; itemTable[pool] = 100807; } //	; //	Crown Of King Tranix	1.79%
-		if (IsValidItem(100808)) { pool += 40; itemTable[pool] = 100808; } //	; //	Fingerbone Hoop	1.49%
-		if (IsValidItem(100809)) { pool += 40; itemTable[pool] = 100809; } //	; //	Etched Ivory Charm	2.38%
-		if (IsValidItem(100810)) { pool += 60; itemTable[pool] = 100810; } //	; //	Forest Loop	1.19%
-		if (IsValidItem(100811)) { pool += 60; itemTable[pool] = 100811; } //	; //	Gatorscale Leggings	1.19%
-		if (IsValidItem(100812)) { pool += 30; itemTable[pool] = 100812; } //	; //	Gauntlets of Fiery Might	1.79%
-		if (IsValidItem(100813)) { pool += 20; itemTable[pool] = 100813; } //	; //	Goblin Gazughi Ring	1.79%
-		if (IsValidItem(100814)) { pool += 30; itemTable[pool] = 100814; } //	; //	Green Silken Drape	1.19%
-		if (IsValidItem(100815)) { pool += 40; itemTable[pool] = 100815; } //	; //	PRayer Shawl	0.89%
-		if (IsValidItem(100816)) { pool += 60; itemTable[pool] = 100816; } //	; //	Advisor Robe	0.60%
-		if (IsValidItem(100817)) { pool += 70; itemTable[pool] = 100817; } //	; //	Gatorscale Sleeves	0.89%
-		if (IsValidItem(100818)) { pool += 60; itemTable[pool] = 100818; } //	; //	Gypsy Medallion	1.19%
-		if (IsValidItem(100819)) { pool += 60; itemTable[pool] = 100819; } //	; //	Iksar Hide Mask	1.79%
-		if (IsValidItem(100820)) { pool += 40; itemTable[pool] = 100820; } //	; //	Large Soiled Bag	2.08%
-		if (IsValidItem(100821)) { pool += 30; itemTable[pool] = 100821; } //	; //	Lost Staff Of The Scorned	1.79%
-		if (IsValidItem(100822)) { pool += 40; itemTable[pool] = 100822; } //	; //	Mask Of Obtenebration	1.79%
-		if (IsValidItem(100823)) { pool += 20; itemTable[pool] = 100823; } //	; //	Moonstone Ring	1.19%
-		if (IsValidItem(100824)) { pool += 60; itemTable[pool] = 100824; } //	; //	Mountain Death Belt	0.89%
-		if (IsValidItem(100825)) { pool += 40; itemTable[pool] = 100825; } //	; //	Nightshade Wreath	1.19%
-		if (IsValidItem(100826)) { pool += 30; itemTable[pool] = 100826; } //	; //	Petrified Erudite Heart Amulet	0.60%
-		if (IsValidItem(100827)) { pool += 20; itemTable[pool] = 100827; } //	; //	Platinum Tiara	1.79%
-		if (IsValidItem(100828)) { pool += 40; itemTable[pool] = 100828; } //	; //	Robe Of the Oracle	1.19%
-		if (IsValidItem(100829)) { pool += 50; itemTable[pool] = 100829; } //	; //	Rod Of Insidious Glamour	0.89%
-		if (IsValidItem(100830)) { pool += 60; itemTable[pool] = 100830; } //	; //	Rubicite Bracers	0.60%
-		if (IsValidItem(100831)) { pool += 30; itemTable[pool] = 100831; } //	; //	Rubicite Cloak	1.19%
-		if (IsValidItem(100832)) { pool += 50; itemTable[pool] = 100832; } //	; //	Rubicite Gauntlets	1.49%
-		if (IsValidItem(100833)) { pool += 40; itemTable[pool] = 100833; } //	; //	Rubicite Helm	1.79%
-		if (IsValidItem(100834)) { pool += 60; itemTable[pool] = 100834; } //	; //	Spirit Tome	0.89%
-		if (IsValidItem(100835)) { pool += 30; itemTable[pool] = 100835; } //		Cobalt Helm	1.49%
-		if (IsValidItem(100836)) { pool += 30; itemTable[pool] = 100836; } //		Cobalt Vambraces	0.89%
-		if (IsValidItem(100837)) { pool += 30; itemTable[pool] = 100837; } //		Cobalt Bracer	0.89%
-		if (IsValidItem(100838)) { pool += 30; itemTable[pool] = 100838; } //		Cobalt Gauntlets	0.89%
-		if (IsValidItem(100839)) { pool += 30; itemTable[pool] = 100839; } //		Cobalt Boots	0.89%
-		if (IsValidItem(100840)) { pool += 30; itemTable[pool] = 100840; } //		Blood Ember Helm	0.89%
-		if (IsValidItem(100841)) { pool += 30; itemTable[pool] = 100841; } //		Blood Ember Vambraces	0.89%
-		if (IsValidItem(100842)) { pool += 30; itemTable[pool] = 100842; } //		Blood Ember Bracer	0.89%
-		if (IsValidItem(100843)) { pool += 30; itemTable[pool] = 100843; } //		Blood Ember Gauntlets	0.89%
-		if (IsValidItem(100844)) { pool += 30; itemTable[pool] = 100844; } //		Blood Ember Boots	0.89%
-		if (IsValidItem(100845)) { pool += 30; itemTable[pool] = 100845; } //		Jaundiced Bone Helm	0.89%
-		if (IsValidItem(100846)) { pool += 30; itemTable[pool] = 100846; } //		Jaundiced Bone Vambraces	0.89%
-		if (IsValidItem(100847)) { pool += 30; itemTable[pool] = 100847; } //		Jaundiced Bone Bracer	0.89%
-		if (IsValidItem(100848)) { pool += 30; itemTable[pool] = 100848; } //		Jaundiced Bone Gauntlets	0.89%
-		if (IsValidItem(100849)) { pool += 30; itemTable[pool] = 100849; } //		Jaundiced Bone Boots	0.89%
-		if (IsValidItem(100850)) { pool += 30; itemTable[pool] = 100850; } //		Tolan's Darkwood Helm	0.89%
-		if (IsValidItem(100851)) { pool += 30; itemTable[pool] = 100851; } //		Tolan's Darkwood Vambraces	0.89%
-		if (IsValidItem(100852)) { pool += 30; itemTable[pool] = 100852; } //		Tolan's Darkwood Bracer	0.89%
-		if (IsValidItem(100853)) { pool += 30; itemTable[pool] = 100853; } //		Tolan's Darkwood Gauntlets	0.89%
-		if (IsValidItem(100854)) { pool += 30; itemTable[pool] = 100854; } //		Tolan's Darkwood Boots	0.89%
-		if (IsValidItem(100855)) { pool += 30; itemTable[pool] = 100855; } //		Deepwater Helm	0.89%
-		if (IsValidItem(100856)) { pool += 30; itemTable[pool] = 100856; } //		Deepwater Vambraces	0.89%
-		if (IsValidItem(100857)) { pool += 30; itemTable[pool] = 100857; } //		Deepwater Bracer	0.89%
-		if (IsValidItem(100858)) { pool += 30; itemTable[pool] = 100858; } //		Deepwater Gauntlets	0.89%
-		if (IsValidItem(100859)) { pool += 30; itemTable[pool] = 100859; } //		Deepwater Boots	0.89%
-		if (IsValidItem(100860)) { pool += 30; itemTable[pool] = 100860; } //		Mrylokar's Helm	0.89%
-		if (IsValidItem(100861)) { pool += 30; itemTable[pool] = 100861; } //		Mrylokar's Vambraces	0.89%
-		if (IsValidItem(100862)) { pool += 30; itemTable[pool] = 100862; } //		Mrylokar's Bracer	0.89%
-		if (IsValidItem(100863)) { pool += 30; itemTable[pool] = 100863; } //		Mrylokar's Gauntlets	0.89%
-		if (IsValidItem(100864)) { pool += 30; itemTable[pool] = 100864; } //		Mrylokar's Boots	0.89%
-		if (IsValidItem(100865)) { pool += 30; itemTable[pool] = 100865; } //		Singing Steel Helm	0.89%
-		if (IsValidItem(100866)) { pool += 30; itemTable[pool] = 100866; } //		Singing Steel Vambraces	0.89%
-		if (IsValidItem(100867)) { pool += 30; itemTable[pool] = 100867; } //		Singing Steel Bracer	0.89%
-		if (IsValidItem(100868)) { pool += 30; itemTable[pool] = 100868; } //		Singing Steel Gauntlets	0.89%
-		if (IsValidItem(100869)) { pool += 30; itemTable[pool] = 100869; } //		Singing Steel Boots	0.89%
-		if (IsValidItem(100870)) { pool += 30; itemTable[pool] = 100870; } //		Donal's Helm of Mourning	0.89%
-		if (IsValidItem(100871)) { pool += 30; itemTable[pool] = 100871; } //		Donal's Vambraces of Mourning	0.89%
-		if (IsValidItem(100872)) { pool += 30; itemTable[pool] = 100872; } //		Donal's Bracer of Mourning	0.89%
-		if (IsValidItem(100873)) { pool += 30; itemTable[pool] = 100873; } //		Donal's Gauntlets of Mourning	0.89%
-		if (IsValidItem(100874)) { pool += 30; itemTable[pool] = 100874; } //		Donal's Boots of Mourning	0.89%
-		if (IsValidItem(100875)) { pool += 30; itemTable[pool] = 100875; } //		Elder Spiritist's Helm	0.89%
-		if (IsValidItem(100876)) { pool += 30; itemTable[pool] = 100876; } //		Elder Spiritist's Vambraces	0.89%
-		if (IsValidItem(100877)) { pool += 30; itemTable[pool] = 100877; } //		Elder Spiritist's Bracer	0.89%
-		if (IsValidItem(100878)) { pool += 30; itemTable[pool] = 100878; } //		Elder Spiritist's Gauntlets	0.89%
-		if (IsValidItem(100879)) { pool += 30; itemTable[pool] = 100879; } //		Elder Spiritist's Boots	0.89%
-		if (IsValidItem(100880)) { pool += 30; itemTable[pool] = 100880; } //		Totemic Boots	0.89%
-		if (IsValidItem(100881)) { pool += 30; itemTable[pool] = 100881; } //		Totemic Gauntlets	0.89%
-		if (IsValidItem(100882)) { pool += 30; itemTable[pool] = 100882; } //		Totemic Vambraces	0.89%
-		if (IsValidItem(100883)) { pool += 30; itemTable[pool] = 100883; } //		Totemic Bracers	0.89%
-		if (IsValidItem(100884)) { pool += 30; itemTable[pool] = 100884; } //		Totemic Helm	0.89%
-		if (IsValidItem(100885)) { pool += 30; itemTable[pool] = 100885; } //		Totemic Cloak	0.89%
-	} 
-	else if (rarityType == 2) { 
-		//===Rare===
-		if (IsValidItem(101000)) { pool += 80; itemTable[pool] = 101000; } //	Necklace of Super	5.10%
-		if (IsValidItem(101001)) { pool += 20; itemTable[pool] = 101001; } //	Circlet Of Shadow	1.27%
-		if (IsValidItem(101002)) { pool += 60; itemTable[pool] = 101002; } //	Bag of the Tink	3.82%
-		if (IsValidItem(101003)) { pool += 80; itemTable[pool] = 101003; } //	Hierophant's Cloak	5.10%
-		if (IsValidItem(101004)) { pool += 70; itemTable[pool] = 101004; } //	Runebranded Girdle	4.46%
-		if (IsValidItem(101005)) { pool += 20; itemTable[pool] = 101005; } //	Amulet of Necropotence - lower drop rate off draco as well	1.27%
-		if (IsValidItem(101006)) { pool += 20; itemTable[pool] = 101006; } //	Cloak Of Flames	1.27%
-		if (IsValidItem(101007)) { pool += 30; itemTable[pool] = 101007; } //	Cone Of The Mystics	1.91%
-		if (IsValidItem(101008)) { pool += 10; itemTable[pool] = 101008; } //	Crimson Robe of Adeline	0.64%
-		if (IsValidItem(101009)) { pool += 50; itemTable[pool] = 101009; } //	Elliptical Veil	3.18%
-		if (IsValidItem(101010)) { pool += 60; itemTable[pool] = 101010; } //	Fishbone Earring	3.82%
-		if (IsValidItem(101011)) { pool += 40; itemTable[pool] = 101011; } //	Froglok Bonecaster's Robe	2.55%
-		if (IsValidItem(101012)) { pool += 60; itemTable[pool] = 101012; } //	Runed Bolster Belt	3.82%
-		if (IsValidItem(101013)) { pool += 60; itemTable[pool] = 101013; } //	Golden Efreeti Boots	3.82%
-		if (IsValidItem(101014)) { pool += 40; itemTable[pool] = 101014; } //	Incarnadine Breastplate	2.55%
-		if (IsValidItem(101015)) { pool += 30; itemTable[pool] = 101015; } //	Journeyman's Boots	1.91%
-		if (IsValidItem(101016)) { pool += 60; itemTable[pool] = 101016; } //	Light Burlap Sack	3.82%
-		if (IsValidItem(101017)) { pool += 40; itemTable[pool] = 101017; } //	Robe of the Ishva	2.55%
-		if (IsValidItem(101018)) { pool += 60; itemTable[pool] = 101018; } //	Shrunken Goblin Skull Earring	3.82%
-		if (IsValidItem(101019)) { pool += 40; itemTable[pool] = 101019; } //	Rubicite Leggings	2.55%
-		if (IsValidItem(101020)) { pool += 40; itemTable[pool] = 101020; } //	Rubicite Breastplate	2.55%
-		if (IsValidItem(101021)) { pool += 30; itemTable[pool] = 101021; } //	Cobalt Greaves	1.91%
-		if (IsValidItem(101022)) { pool += 30; itemTable[pool] = 101022; } //	Cobalt Breastplate	1.91%
-		if (IsValidItem(101023)) { pool += 30; itemTable[pool] = 101023; } //	Blood Ember Breastplate	1.91%
-		if (IsValidItem(101024)) { pool += 30; itemTable[pool] = 101024; } //	Blood Ember Greaves	1.91%
-		if (IsValidItem(101025)) { pool += 30; itemTable[pool] = 101025; } //	Jaundiced Bone Breastplate	1.91%
-		if (IsValidItem(101026)) { pool += 30; itemTable[pool] = 101026; } //	Jaundiced Bone Greaves	1.91%
-		if (IsValidItem(101027)) { pool += 30; itemTable[pool] = 101027; } //	Tolan's Darkwood Breastplate	1.91%
-		if (IsValidItem(101028)) { pool += 30; itemTable[pool] = 101028; } //	Tolan's Darkwood Greaves	1.91%
-		if (IsValidItem(101029)) { pool += 30; itemTable[pool] = 101029; } //	Deepwater Breastplate	1.91%
-		if (IsValidItem(101030)) { pool += 30; itemTable[pool] = 101030; } //	Deepwater Greaves	1.91%
-		if (IsValidItem(101031)) { pool += 30; itemTable[pool] = 101031; } //	Mrylokar's Breastplate	1.91%
-		if (IsValidItem(101032)) { pool += 30; itemTable[pool] = 101032; } //	Mrylokar's Greaves	1.91%
-		if (IsValidItem(101033)) { pool += 30; itemTable[pool] = 101033; } //	Singing Steel Breastplate	1.91%
-		if (IsValidItem(101034)) { pool += 30; itemTable[pool] = 101034; } //	Singing Steel Greaves	1.91%
-		if (IsValidItem(101035)) { pool += 30; itemTable[pool] = 101035; } //	Donal's Chestplate of Mourning	1.91%
-		if (IsValidItem(101036)) { pool += 30; itemTable[pool] = 101036; } //	Donal's Leggings of Mourning	1.91%
-		if (IsValidItem(101037)) { pool += 30; itemTable[pool] = 101037; } //	Elder Spiritist's Breastplate	1.91%
-		if (IsValidItem(101038)) { pool += 30; itemTable[pool] = 101038; } //	Elder Spiritist's Greaves	1.91%
-		if (IsValidItem(101039)) { pool += 30; itemTable[pool] = 101039; } //	Totemic Breastplate	1.91%
-		if (IsValidItem(101040)) { pool += 30; itemTable[pool] = 101040; } //	Totemic Greaves	1.91%
-		
-	}	
-	else if (rarityType == 3) {
-		//===Legendary===
-		if (IsValidItem(4946)) { pool += 2735; itemTable[pool] = 2735; } //	Fungus Covered Scale Tunic	40.00%
-		if (IsValidItem(4944)) { pool += 2463; itemTable[pool] = 2463; } //	Pegasus Feather Cloak	60.00%
+	else if (reward.rarity == 2) { //Rare Drop!
+		worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a rare %s inside it!", GetCleanName(), item_link.c_str()).c_str());
 	}
-
-
-	//Rolled dice
-	dice = zone->random.Int(0, pool);
-	lastPool = 0;
-	for (auto entry = itemTable.begin(); entry != itemTable.end(); ++entry) {
-		if (dice > entry->first) {
-			lastPool = entry->first;
-			continue;
-		}
-		if (Admin() >= 200) Message(0, "[GM] Loot Roll dice: %i is in pool: %i, total pool: %i (%.1f%%)", dice, entry->first, pool, (float)((float)(entry->first - lastPool) / (float)pool * 100));
-		//Item Reward
-		int itemid = entry->second;
-		const EQEmu::ItemData * item = database.GetItem(itemid);
-		if (!SummonItem(itemid)) {
-			//Log!!
-		}
-
-		EQEmu::SayLinkEngine linker;
-		linker.SetLinkType(EQEmu::saylink::SayLinkItemData);
-		linker.SetItemData(item);
-		std::string item_link;
-		item_link = linker.GenerateLink();
-
-		if (rarityType == 3) { //Legendary Drop!
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item_link.c_str()).c_str());
-		}
-		else if (rarityType == 2) { //Rare Drop!
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a rare %s inside it!", GetCleanName(), item_link.c_str()).c_str());
-		}
-		else if (rarityType == 1) { //Uncommon Drop
-			Message(MT_Experience, "Opening the box revealed an uncommon %s!", item_link.c_str());
-		} else if (rarityType == 0) { //Common Drop
-			Message(MT_Experience, "Opening the box revealed a common %s!", item_link.c_str());
-		}
-		return itemid;
+	else if (reward.rarity == 1) { //Uncommon Drop
+		Message(MT_Experience, "Opening the box revealed an uncommon %s!", item_link.c_str());
 	}
-
-	//Failed to win anything, just give a box back
-	if (Admin() >= 200) Message(0, "[GM] Failed to win any loot, so falling back to giving a blue box back");
-	if (!SummonItem(100002)) {
-		//Log!!
+	else if (reward.rarity == 0) { //Common Drop
+		Message(MT_Experience, "Opening the box revealed a common %s!", item_link.c_str());
 	}
-	Message(MT_Experience, "Opening the box revealed an Old Armor Box!");
-
-	
-	return 0;
+	return reward.item_id;
 }
 
-//Gives a Weapon Box Reward randomly. MinimumRarity by default is 0
-int Client::GiveWeaponBoxReward(int minimumRarity) {
-	if (IsTaskActivityActive(307, 5)) UpdateTaskActivity(FEAT_GETTINGSTARTED, 5, 1);
-	if (Admin() >= 200) Message(0, "[GM] GiveWeaponBoxReward");
-	//Rarity table
-	std::map <int, int> rarityTable;
-	//Pool size for randomizer
-	int pool = 0;
-	if (minimumRarity <= 0) {
-		pool += 550;
-		rarityTable[pool] = 0;
-	}
-	if (minimumRarity <= 1) {
-		pool += 150;
-		rarityTable[pool] = 1;
-	}
-	if (minimumRarity <= 2) {
-		pool += 40;
-		rarityTable[pool] = 2;
-	}
-	if (minimumRarity <= 3) {
-		pool += 2;
-		rarityTable[pool] = 3;
-	}
-	//Rolled dice
-	int dice = zone->random.Int(0, pool);
-	int lastPool = 0;
-	//Chosen Rarity Type
-	int rarityType = 0;
-	for (auto entry = rarityTable.begin(); entry != rarityTable.end(); ++entry) {
-		if (dice > entry->first) {
-			continue;
-		}
-		if (Admin() >= 200) Message(0, "[GM] Rarity Roll dice: %i is in pool: %i, total pool: %i (%.1f%%) Resulted in rarityType %i", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100), rarityType);
-		rarityType = entry->second;
-		break;
-	}
-	
-
-	//http://wiki.project1999.com/Players:Kunark_Gear 
-	std::map<int, int> itemTable;
-	pool = 0;
-	
-	if (rarityType == 0) {
-		//===Common===
-		if (IsValidItem(100200)) { pool += 100; itemTable[pool] = 100200; } //	Bark Sheild	5.68%
-		if (IsValidItem(100201)) { pool += 80; itemTable[pool] = 100201; } //	Runed Bone Fork	4.55%
-		if (IsValidItem(100202)) { pool += 100; itemTable[pool] = 100202; } //	Blade Of Passage 5	5.68%
-		if (IsValidItem(100203)) { pool += 100; itemTable[pool] = 100203; } //	Bronze Spider Totem	5.68%
-		if (IsValidItem(100204)) { pool += 80; itemTable[pool] = 100204; } //	Lamentation Blade 2.1	4.55%
-		if (IsValidItem(100205)) { pool += 80; itemTable[pool] = 100205; } //	Smoldering Brand	4.55%
-		if (IsValidItem(100206)) { pool += 60; itemTable[pool] = 100206; } //	Shield Of Spectral Essence	3.41%
-		if (IsValidItem(100207)) { pool += 80; itemTable[pool] = 100207; } //	Dagger Of Dropping	4.55%
-		if (IsValidItem(100208)) { pool += 50; itemTable[pool] = 100208; } //	Crystalline Short Sword 2	2.84%
-		if (IsValidItem(100209)) { pool += 20; itemTable[pool] = 100209; } //	Screaming Mace	1.14%
-		if (IsValidItem(100210)) { pool += 30; itemTable[pool] = 100210; } //	Dragoon Dirk	1.70%
-		if (IsValidItem(100211)) { pool += 100; itemTable[pool] = 100211; } //	Woe 5.8	5.68%
-		if (IsValidItem(100212)) { pool += 150; itemTable[pool] = 100212; } //	Fine Steel Wakizashi 5.7	8.52%
-		if (IsValidItem(100213)) { pool += 150; itemTable[pool] = 100213; } //	Farmer's Rake 5.7500	8.52%
-		if (IsValidItem(100214)) { pool += 150; itemTable[pool] = 100214; } //	Sarnak's Warrior Blade 5.6667	8.52%
-		if (IsValidItem(100215)) { pool += 100; itemTable[pool] = 100215; } //	Claymore 3.8	5.68%
-		if (IsValidItem(100216)) { pool += 100; itemTable[pool] = 100216; } //	Harpoon 3.8	5.68%
-		if (IsValidItem(100217)) { pool += 100; itemTable[pool] = 100217; } //	Broken Bottle 3.8	5.68%
-		if (IsValidItem(100218)) { pool += 100; itemTable[pool] = 100218; } //	Poorly Balanced Battle Axe 3.8	5.68%
-		if (IsValidItem(100220)) { pool += 30; itemTable[pool] = 100220; } //	Gleaming Short Sword 2.9	1.70%
-	}
-	else if (rarityType == 1) {
-		//===Uncommon===
-		if (IsValidItem(100300)) { pool += 80; itemTable[pool] = 100300; } //	Argent Defender 1.4	6.72%
-		if (IsValidItem(100301)) { pool += 50; itemTable[pool] = 100301; } //	Blackened Alloy Bastard Sword 1.6	4.20%
-		if (IsValidItem(100302)) { pool += 60; itemTable[pool] = 100302; } //	Fighting Baton 2.5	5.04%
-		if (IsValidItem(100303)) { pool += 40; itemTable[pool] = 100303; } //	Jade Chokidai Prod 2.7	3.36%
-		if (IsValidItem(100304)) { pool += 30; itemTable[pool] = 100304; } //	Jagged Blade Of Mourning 1.9	2.52%
-		if (IsValidItem(100305)) { pool += 60; itemTable[pool] = 100305; } //	Sacrificial Dagger 4.2	5.04%
-		if (IsValidItem(100306)) { pool += 20; itemTable[pool] = 100306; } //	Stiletto of the Bloodclaw	1.68%
-		if (IsValidItem(100307)) { pool += 40; itemTable[pool] = 100307; } //	Strathbone Shell Shield	3.36%
-		if (IsValidItem(100308)) { pool += 30; itemTable[pool] = 100308; } //	Sionachi's Partisan	2.52%
-		if (IsValidItem(100309)) { pool += 60; itemTable[pool] = 100309; } //	Insignia Protector	5.04%
-		if (IsValidItem(100310)) { pool += 80; itemTable[pool] = 100310; } //	Guardian's Mace	6.72%
-		if (IsValidItem(100311)) { pool += 90; itemTable[pool] = 100311; } //	Barbarian Hunting Spear 3.3	7.56%
-		if (IsValidItem(100312)) { pool += 60; itemTable[pool] = 100312; } //	Nightshade Scented Staff 3.3	5.04%
-		if (IsValidItem(100313)) { pool += 60; itemTable[pool] = 100313; } //	Shield Of the Stalwart Seas	5.04%
-		if (IsValidItem(100314)) { pool += 40; itemTable[pool] = 100314; } //	Shield Of The Slain Unicorn	3.36%
-		if (IsValidItem(100315)) { pool += 60; itemTable[pool] = 100315; } //	Staff Of The Dreaded Gaze	5.04%
-		if (IsValidItem(100316)) { pool += 40; itemTable[pool] = 100316; } //	Wurmslayer	3.36%
-		if (IsValidItem(100317)) { pool += 40; itemTable[pool] = 100317; } //	Tombcarver	3.36%
-		if (IsValidItem(100318)) { pool += 60; itemTable[pool] = 100318; } //	Totem Of The Warrior Spirit	5.04%
-		if (IsValidItem(100319)) { pool += 40; itemTable[pool] = 100319; } //	Two Handed Practice Sword	3.36%
-		if (IsValidItem(100320)) { pool += 40; itemTable[pool] = 100320; } //	Gold Plated Koshigatana	3.36%
-		if (IsValidItem(100321)) { pool += 50; itemTable[pool] = 100321; } //	Stein Of Moggok	4.20%
-		if (IsValidItem(100322)) { pool += 60; itemTable[pool] = 100322; } //	Rokyls Channelling Crystal	5.04%
-	}
-	else if (rarityType == 2) {
-		//===Rare===
-		if (IsValidItem(100400)) { pool += 20; itemTable[pool] = 100400; } //	Blade Of The Black Dragon Eye 1.7	1.75%
-		if (IsValidItem(100401)) { pool += 80; itemTable[pool] = 100401; } //	Charred Guardian Shield	3.51%
-		if (IsValidItem(100402)) { pool += 60; itemTable[pool] = 100402; } //	Gleaming Short Sword	5.26%
-		if (IsValidItem(100403)) { pool += 10; itemTable[pool] = 100403; } //	Blood Fire	0.88%
-		if (IsValidItem(100404)) { pool += 30; itemTable[pool] = 100404; } //	Howling Harpoon 2.6	2.63%
-		if (IsValidItem(100405)) { pool += 20; itemTable[pool] = 100405; } //	Breath of Harmony 1.8	1.75%
-		if (IsValidItem(100406)) { pool += 40; itemTable[pool] = 100406; } //	Selo's Drum of the March	3.51%
-		if (IsValidItem(100407)) { pool += 50; itemTable[pool] = 100407; } //	Edge of the Nightwalker 1.7	4.39%
-		if (IsValidItem(100408)) { pool += 40; itemTable[pool] = 100408; } //	Sebilite Croaking Dirk 1.8	3.51%
-		if (IsValidItem(100409)) { pool += 60; itemTable[pool] = 100409; } //	Shield Of Prexus	5.26%
-		if (IsValidItem(100410)) { pool += 10; itemTable[pool] = 100410; } //	Katana of Flowing Water 1.7	0.88%
-		if (IsValidItem(100411)) { pool += 20; itemTable[pool] = 100411; } //	Earthshaker 1.8	1.75%
-		if (IsValidItem(100412)) { pool += 60; itemTable[pool] = 100412; } //	Icy Blade 3.5	5.26%
-		if (IsValidItem(100413)) { pool += 40; itemTable[pool] = 100413; } //	Idol Of The Thorned	3.51%
-		if (IsValidItem(100414)) { pool += 60; itemTable[pool] = 100414; } //	McVaxius` Horn Of War	5.26%
-		if (IsValidItem(100415)) { pool += 60; itemTable[pool] = 100415; } //	Mithril Two-Handed Sword 1.9	5.26%
-		if (IsValidItem(100416)) { pool += 40; itemTable[pool] = 100416; } //	Noctivagant Blade 1.4	3.51%
-		if (IsValidItem(100417)) { pool += 60; itemTable[pool] = 100417; } //	Sarnak Battle Shield	5.26%
-		if (IsValidItem(100418)) { pool += 40; itemTable[pool] = 100418; } //	Shield Of Rainbow Hues	3.51%
-		if (IsValidItem(100419)) { pool += 60; itemTable[pool] = 100419; } //	Shield Of The Red Dragon	5.26%
-		if (IsValidItem(100420)) { pool += 30; itemTable[pool] = 100420; } //	Luminescent Staff 2.5	2.63%
-		if (IsValidItem(100421)) { pool += 30; itemTable[pool] = 100421; } //	Lycanthropic Staff 3.3	2.63%
-		if (IsValidItem(100422)) { pool += 60; itemTable[pool] = 100422; } //	Staff Of Writhing	5.26%
-		if (IsValidItem(100423)) { pool += 50; itemTable[pool] = 100423; } //	Stave Of Shielding	4.39%
-		if (IsValidItem(100424)) { pool += 30; itemTable[pool] = 100424; } //	Sword Of The Morning	2.63%
-		if (IsValidItem(100425)) { pool += 80; itemTable[pool] = 100425; } //	Tome Of Miragul	7.02%
-	}
-	else if (rarityType == 3) {
-		//===Legendary===
-		if (IsValidItem(5500)) { pool += 60; itemTable[pool] = 5500; } //	Short Sword Of The ykesha	37.50%
-		if (IsValidItem(12863)) { pool += 60; itemTable[pool] = 12863; } //	Worker Sledgemallet	37.50%
-		if (IsValidItem(6639)) { pool += 40; itemTable[pool] = 6639; } //	Tranquil Staff	25.00%
-	}
-
-	//Rolled dice
-	dice = zone->random.Int(0, pool);
-
-	for (auto entry = itemTable.begin(); entry != itemTable.end(); ++entry) {
-		//if (Admin() >= 200) Message(0, "[GM] %i vs %i", dice, entry->first);
-		if (dice > entry->first) {
-			continue;
-		}
-		if (Admin() >= 200) Message(0, "[GM] Loot Roll dice: %i is in pool: %i, total pool: %i (%.1f%%)", dice, entry->first, pool, (float)((float)entry->first / (float)pool * 100));
-		//Item Reward
-		int itemid = entry->second;
-		const EQEmu::ItemData* item = database.GetItem(itemid);
-		if (!SummonItem(itemid)) {
-			if (Admin() >= 200) Message(0, "[GM] Failed to summon %i", itemid);
-
-			return 0;
-			//Log!!
-		}
-
-		EQEmu::SayLinkEngine linker;
-		linker.SetLinkType(EQEmu::saylink::SayLinkItemData);
-		linker.SetItemData(item);
-		std::string item_link;
-		item_link = linker.GenerateLink();
-
-		if (rarityType == 3) { //Legendary Drop!
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a LEGENDARY %s inside it!", GetCleanName(), item_link.c_str()).c_str());
-		}
-		else if (rarityType == 2) { //Rare Drop!
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s opened a box to find a rare %s inside it!", GetCleanName(), item_link.c_str()).c_str());
-		}
-		else if (rarityType == 1) { //Uncommon Drop
-			Message(MT_Experience, "Opening the box revealed an uncommon %s!", item_link.c_str());
-		}
-		else if (rarityType == 0) { //Common Drop
-			Message(MT_Experience, "Opening the box revealed a common %s!", item_link.c_str());
-		}
-		return itemid;
-	}
-
-	//Failed to win anything, just give a box back
-	if (Admin() >= 200) Message(0, "[GM] Failed to win any loot, so falling back to giving a weapon box back");
-	if (!SummonItem(100005)) {
-		//Log!!
-	}
-	Message(MT_Experience, "Opening the box revealed another Old Weapon Box!");
-
-	return 0;
-}
-
-bool Client::IsValidItem(int itemid) {
-	const EQEmu::ItemData* item = database.GetItem(itemid);
-	if (!item) {
-		if (Admin() >= 200) Message(0, "Invalid item id %i", itemid);
-		return false;
-	}
-	if (!item->IsEquipable(GetRace(), GetClass())) {
-		//Message(0, "%s (%i) not equippable", item->Name, itemid);
-		return false;
-	}
-	if (CheckLoreConflict(item)) {
-		//Message(0, "%s (%i) lore conflict", item->Name, itemid);
-		return false;
-	}
-	if (item->ReqLevel > GetLevel()) {
-		return false;
-	}
-	return true;
-}
 
 void Client::ResetBuild() {	
 	strn0cpy(m_epp.build, "00000000000000000000000000000000000000000000000000000", sizeof(m_epp.build)); //copy to session
@@ -11845,3 +11377,22 @@ char * Client::GetIdentity() {
 	return identity;
 }
 
+bool Client::IsValidItem(int itemid) {
+	const EQEmu::ItemData* item = database.GetItem(itemid);
+	if (!item) {
+		return false;
+	}
+	if (!item->IsEquipable(GetRace(), GetClass())) {
+		//Message(0, "%s (%i) not equippable", item->Name, itemid);
+		return false;
+	}
+
+	if (IsClient() && CastToClient()->CheckLoreConflict(item)) {
+		//Message(0, "%s (%i) lore conflict", item->Name, itemid);
+		return false;
+	}
+	if (item->ReqLevel > GetLevel()) {
+		return false;
+	}
+	return true;
+}

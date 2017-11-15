@@ -8943,16 +8943,16 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 
 						DeleteItemInInventory(slot_id, 1, true, true);
 						if (item->ID == 100002) {
-							GiveBoxReward();
+							GiveBoxReward(0, 0);
 						}
 						else if (item->ID == 100003) {
-							GiveBoxReward(1);
+							GiveBoxReward(1, 0);
 						}
 						else if (item->ID == 100004) {
-							GiveBoxReward(2);
+							GiveBoxReward(2, 0);
 						}
 						else if (item->ID == 100005) {
-							GiveWeaponBoxReward();
+							GiveBoxReward(0, 1);
 						}
 						return;
 					}

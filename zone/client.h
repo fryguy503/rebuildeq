@@ -1341,9 +1341,8 @@ public:
 	bool IsEncounterInZone();
 	void SpawnEncounter(bool skipChecks = false, uint32 type = 187001);
 	uint32 GetEncounterNPCID();
-	int GiveBoxReward(int minimumRarity = 0);
-	int GiveWeaponBoxReward(int minimumRarity = 0);
 	bool IsValidItem(int itemid);
+	int GiveBoxReward(int minimumRarity, int boxType);
 	void ResetBuild();
 	FACTION_VALUE FactionLevelRaw(int32 faction_id);
 	void EvadeOnce(Mob * mob);

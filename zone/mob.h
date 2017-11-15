@@ -64,6 +64,16 @@ enum class eSpecialAttacks : int {
 };
 
 
+struct Item_Reward {
+	explicit Item_Reward(
+		int item_id,
+		int rarity) :
+		item_id(item_id),
+		rarity(rarity) {};	
+	int item_id;
+	int rarity;
+};
+
 struct DPS_Struct {
 	explicit DPS_Struct(
 		uint32 engage_start,
@@ -252,7 +262,6 @@ public:
 	//Somewhat sorted: needs documenting!
 	void AddHPEvent(Mob *other, int total, int net, bool is_dealer);
 	void AddManaEvent(Mob *other, int total, int net, bool is_dealer);
-	NPCType * AdjustNPCToBoss(NPCType * npctype, bool keepSpells, int groupSize);
 
 	std::vector<DPS_Struct> DPS();
 	//Monk effect to cause a mob to show weakness.
@@ -1239,6 +1248,8 @@ public:
 	Client * GetTapFocus();
 	void ClearTapFocus();
 	void SetTapFocus(Client * focus);
+	Item_Reward GetBoxReward(int minimumRarity, int boxType);
+	bool IsValidItem(int itemid);
 	int engage_duration;
 
 	// Bots HealRotation methods

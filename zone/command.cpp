@@ -4490,7 +4490,6 @@ void command_encounter(Client *c, const Seperator *sep) {
 		return;
 	}
 
-
 	//If a GM types #encounter targetting a player, gives a report
 	if (c->Admin() > 200 && c->GetTarget() != nullptr && c->GetTarget()->IsClient()) {
 		std::string query = StringFormat("SELECT unclaimed_encounter_rewards, unclaimed_encounter_rewards_total FROM account_custom WHERE account_id = %u LIMIT 1", c->GetTarget()->CastToClient()->AccountID());
@@ -9732,9 +9731,10 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 	}
 	int npcId = 0;
 	bool isBoss = false;
+	bool hasLoot = false;
 	
 	if (!sep->IsNumber(1)) {
-		c->Message(0, "usage: #spawnpc [npcid] [name] (isboss)");
+		c->Message(0, "Usage: #spawnpc <npcid> <isboss> <hasloot>");
 		return;
 	}
 	npcId = atoi(sep->arg[1]);
@@ -9746,6 +9746,13 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		c->Message(0, "Invalid value, either 0 or 1 for isBoss flag");
 		return;
 	}
+	isBoss = (atoi(sep->arg[2]) == 1);
+
+	if (!sep->IsNumber(3)) {
+		c->Message(0, "Invalid value, either 0 or 1 for hasLoot flag");
+		return;
+	}
+	hasLoot = (atoi(sep->arg[3]) == 1);
 
 	const NPCType* npctype = 0;
 	npctype = database.LoadNPCTypesData(npcId);
@@ -9754,43 +9761,95 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		return;
 	}
 
+	Item_Reward drop = Item_Reward(0, 0);
 	//we copy the npc_type data because we need to edit it a bit
 	if (isBoss) {
 		int groupSize = 1;
-		int avgLevel = 1;
+		int avgLevel = 3;
 		int range = 200;
 
 		float distance;
 		float range2 = range*range;
 		auto group = target->GetGroup();
-		if (!group) {
-			c->Message(0, "Target is not in group, cannot spawn boss.");
-			return;
-		}
+		
 
+		bool hasHealer = false;
+		bool hasTank = false;
+		bool hasDPS = false;
+		int playerTotalHP = 0;
+		int playerAC = 0;
 		Mob *gTarget;
 		unsigned int gi = 0;
-		for (; gi < MAX_GROUP_MEMBERS; gi++)
-		{
-			if (!group->members[gi]) continue;
-			gTarget = group->members[gi];
-			distance = DistanceSquared(gTarget->GetPosition(), target->GetPosition());
-			if (distance > range2) continue;
-			groupSize++;
-			avgLevel += gTarget->GetLevel();
+
+
+		if (group) {
+			for (; gi < MAX_GROUP_MEMBERS; gi++)
+			{
+				if (!group->members[gi]) continue;
+				gTarget = group->members[gi];
+				if (gTarget->GetZoneID() != target->GetZoneID()) continue; //don't count group members not in zone
+				distance = DistanceSquared(gTarget->GetPosition(), target->GetPosition());
+				if (distance > range2) continue;
+				playerTotalHP += gTarget->GetMaxHP();
+				groupSize++;
+				if (gTarget->GetClass() == CLERIC || gTarget->GetClass() == DRUID || gTarget->GetClass() == SHAMAN) hasHealer = true;
+				if (gTarget->GetClass() == WARRIOR || gTarget->GetClass() == SHADOWKNIGHT || gTarget->GetClass() == PALADIN) hasTank = true;
+				if (gTarget->GetClass() == WIZARD || gTarget->GetClass() == ROGUE || gTarget->GetClass() == MAGICIAN) hasDPS = true;
+				playerAC += gTarget->GetAC();
+				avgLevel += gTarget->GetLevel();
+			}
 		}
+		else { //solo boss!
+			if (target->GetClass() == CLERIC || target->GetClass() == DRUID || target->GetClass() == SHAMAN) hasHealer = true;
+			if (target->GetClass() == WARRIOR || target->GetClass() == SHADOWKNIGHT || target->GetClass() == PALADIN) hasTank = true;
+			if (target->GetClass() == WIZARD || target->GetClass() == ROGUE || target->GetClass() == MAGICIAN) hasDPS = true;
+			avgLevel += target->GetLevel();
+			playerTotalHP += target->GetMaxHP();
+			playerAC += target->GetAC();
+		}
+		
 		if (groupSize < 1) groupSize = 1;
-		avgLevel /= groupSize;
+		avgLevel /= groupSize; //get average level to spawn npc level.
+		playerAC /= groupSize; //get average AC
+		//playerAC /= 2; //divide by 2... I think..
 
 		NPCType *enpc = new NPCType;
 		memcpy(enpc, npctype, sizeof(NPCType));
 		enpc->level = avgLevel;
-		enpc = c->AdjustNPCToBoss(enpc, false, groupSize);
-
+		enpc = c->AdjustNPC(enpc, false, false);
+		//enpc->special_abilities = 
+		enpc->max_hp = playerTotalHP;		
+		enpc->AC = playerAC; //average AC is applied
+		if (hasTank) enpc->max_dmg *= 1.2f; //give 20% more max dmg if have a tank
+		if (hasHealer) enpc->min_dmg *= 1.2f; //another 20% more min dmg if have a healer
+		if (hasDPS && hasHealer && hasTank) {
+			enpc->max_hp *= 2; //double hp if they have a well balanced group
+			enpc->attack_delay -= enpc->attack_delay * 0.05f * groupSize; //reduce attack delay by 5% per group member, meaning 30% faster with solid group
+		}
+		
 		enpc->npc_faction_id = 79; // KoS non-assist
 
+		enpc->cur_hp = enpc->max_hp;
 		NPC* npc = new NPC(enpc, nullptr, target->GetPosition(), FlyMode3);
-		npc->AddLootTable();
+
+		if (hasLoot) npc->AddLootTable();
+
+		if (group) {
+			for (; gi < MAX_GROUP_MEMBERS; gi++)
+			{
+				if (!group->members[gi]) continue;
+				gTarget = group->members[gi];
+				if (gTarget->GetZoneID() != target->GetZoneID()) continue; //don't count group members not in zone
+				distance = DistanceSquared(gTarget->GetPosition(), target->GetPosition());
+				if (distance > range2) continue;
+				drop = gTarget->GetBoxReward(0, zone->random.Int(0, 1));
+				npc->AddItem(drop.item_id, 1, false);
+			}
+		}
+		else {
+			drop = target->GetBoxReward(0, zone->random.Int(0, 1));
+			npc->AddItem(drop.item_id, 1, false);
+		}
 		entity_list.AddNPC(npc, true, true);
 		npc->SendPositionUpdate();
 		c->Message(0, "Spawned adjusted boss npc");
@@ -9802,10 +9861,13 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		enpc->level = target->GetLevel();
 		enpc = c->AdjustNPC(enpc, false, false);
 
-		enpc->npc_faction_id = 79; // KoS non-assist
-
+		enpc->npc_faction_id = 79; // KoS non-assist		
 		NPC* npc = new NPC(enpc, nullptr, target->GetPosition(), FlyMode3);
-		npc->AddLootTable();
+		if (hasLoot) npc->AddLootTable();
+		if (hasLoot && zone->random.Roll(5)) { //5% chance of artifact loot
+			drop = target->GetBoxReward(0, zone->random.Int(0, 1));
+			npc->AddItem(drop.item_id, 1, false);
+		}
 		entity_list.AddNPC(npc, true, true);
 		npc->SendPositionUpdate();
 		c->Message(0, "Spawned adjusted npc");
