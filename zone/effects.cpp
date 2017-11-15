@@ -69,14 +69,6 @@ int32 Mob::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 	if (IsClient()) {
 		Client* client = CastToClient();
 
-
-		rank = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
-		if (rank > 0) {
-			if (spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562) { //spear spells
-				chance = CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
-				BuildEcho(StringFormat("Festering Spear %i increased chance for quad damage by %i", rank, chance));
-			}
-		}
 		rank = CastToClient()->GetBuildRank(DRUID, RB_DRU_STINGINGAFFLICTION);
 		if (rank > 0) {
 			chance = rank;
