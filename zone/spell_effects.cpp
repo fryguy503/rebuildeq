@@ -483,11 +483,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
 							if (rank > 0 &&
 								(spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562)) { //spear spells
-								int bonus_damage = (rank * casterClient->GetLevel());
-								bonus_damage += floor(-dmg * 0.1f * rank);
-								if (bonus_damage > 0) bonus_damage = -1;
+								int bonus_damage = (rank * casterClient->GetLevel() * -1);
 								bool is_quad = false;
-								if (rank > 0 && zone->random.Roll(1)) {
+								if (rank > 0 && zone->random.Roll(rank)) {
 									bonus_damage *= 4;
 									is_quad = true;
 								}
