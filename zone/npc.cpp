@@ -1522,7 +1522,7 @@ void NPC::PickPocket(Client* thief)
 	int rank = thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH);
 	int duration = zone->random.Int(0, rank);
 	if (rank > 0 && duration > 0) {		
-		switch (zone->random.Int(1, 7) {
+		switch (zone->random.Int(1, 7)) {
 		case 1:
 			thief->QuickBuff(thief, 884, duration); //calimony (hp regen, hp buff)
 			break;
