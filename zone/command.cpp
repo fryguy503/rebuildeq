@@ -9817,7 +9817,7 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		memcpy(enpc, npctype, sizeof(NPCType));
 		enpc->level = avgLevel;
 		enpc = c->AdjustNPC(enpc, false, false);
-		//enpc->special_abilities = 
+		strcpy(enpc->special_abilities, "1,1^21,1");
 		enpc->max_hp = playerTotalHP;		
 		enpc->AC = playerAC; //average AC is applied
 		if (hasTank) enpc->max_dmg *= 1.2f; //give 20% more max dmg if have a tank
@@ -9861,6 +9861,7 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		enpc->level = target->GetLevel();
 		enpc = c->AdjustNPC(enpc, false, false);
 
+		strcpy(enpc->special_abilities,  "1^21");
 		enpc->npc_faction_id = 79; // KoS non-assist		
 		NPC* npc = new NPC(enpc, nullptr, target->GetPosition(), FlyMode3);
 		if (hasLoot) npc->AddLootTable();
