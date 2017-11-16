@@ -874,7 +874,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Flowing Thought";
-			$newSkill->desc = 'Breeze now grants the enchanter many of their buffs.<br>Rank 1: Breeze (to mana users)<br><br>Rank 2: Visage Line (+to tanks, -to rest)<br>Rank 3: Haste(to non-casters)<br>Rank 4: Gift (to mana users)<br>Rank 5: Doubles duration of buffs';
+			$newSkill->desc = 'Breeze now grants the enchanter many of their buffs.<br>Rank 1: Breeze (to mana users)<br>Rank 2: Visage Line (+to tanks, -to rest)<br>Rank 3: Gift Line and Brilliance/Insight (to mana users)<br>Rank 4: Haste (to non-casters)<br>Rank 5: Doubles duration of buffs';
 			$newSkill->image = "/images/builds/icons/rb-enc-flowingthought.png";
 			$skills[42] = $newSkill;
 
