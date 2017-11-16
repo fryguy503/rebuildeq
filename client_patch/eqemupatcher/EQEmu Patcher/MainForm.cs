@@ -511,19 +511,15 @@ namespace EQEmu_Patcher
 
                 }
             }
-
-            if (filelist.deletes.Count > 0)
-            {
-                foreach (var entry in filelist.deletes)
-                {
-                    if (File.Exists(entry.name))
-                    {
+            
+            if (filelist.deletes != null && filelist.deletes.Count > 0) {
+                foreach (var entry in filelist.deletes) {
+                    if (File.Exists(entry.name)) {
                         LogEvent("Deleting " + entry.name + "...");
                         File.Delete(entry.name);
                     }
                     Application.DoEvents();
-                    if (!isPatching)
-                    {
+                    if (!isPatching) {
                         LogEvent("Patching cancelled.");
                         return;
                     }
