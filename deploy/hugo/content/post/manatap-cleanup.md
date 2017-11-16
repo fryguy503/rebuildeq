@@ -1,6 +1,6 @@
 +++
 banner = "post/images/manatap-cleanup.png"
-date = "2017-07-16T01:19:18-07:00"
+date = "2017-11-16T01:19:18-07:00"
 description = "Manatap Cleanup"
 images = ["post/images/manatap-cleanup.png"]
 tags = ["rogue", "monk"]
