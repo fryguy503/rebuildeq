@@ -1354,8 +1354,8 @@ public:
 
 	void DoMendingAura(int amount);
 
-	void DoDivineSurge();
-	void DoUntappedPotential();
+	void DoDivineSurge(Mob* from);
+	void DoUntappedPotential(Mob* from);
 	void DoZevfeersFeast();
 	void CalcMonkTranquility();
 	bool HasNegativeEffects();

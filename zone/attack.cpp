@@ -5813,13 +5813,6 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 		Client * attacker_client = CastToClient();
 		int bonus_damage = 0;
 
-		if (hit.skill == EQEmu::skills::SkillBackstab) {
-			rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_JARRINGSTAB);
-			if (rank > 0 && defender) {
-				int hate_count = defender->hate_list.LoseHatredNearby(this, (rank * 20), 200, defender, 6);
-				BuildEcho(StringFormat("Jarring Stab %i reduced hate by %i .", rank, rank * 20, hate_count));
-			}
-		}
 
 		if (hit.skill == EQEmu::skills::SkillBash && IsClient()) {
 			rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_BASHOFDEATH);
@@ -6157,7 +6150,7 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			hit.skill == EQEmu::skills::SkillTailRake ||
 			hit.skill == EQEmu::skills::SkillFlyingKick) {
 			Client *c = CastToClient();
-			c->DoDivineSurge();
+			c->DoDivineSurge(defender);
 
 			rank = GetBuildRank(MONK, RB_MNK_FAMILIARITY);
 			if (rank > 0 && defender->IsNPC()) {
@@ -6347,7 +6340,7 @@ void Client::SetAttackTimer()
 
 		uint32 rank = GetBuildRank(MONK, RB_MNK_WUSQUICKENING);
 		if (rank > 0) {
-			//BuildEcho(StringFormat("Wu's Quickening %u delay changed from %i to %i", rank, delay, (delay - (100 * rank))));
+			DebugEcho(StringFormat("Wu's Quickening %u delay changed from %i to %i", rank, delay, (delay - (100 * rank))));
 			delay -= 100 * rank;
 			if (delay < 700) delay = 700;
 		}

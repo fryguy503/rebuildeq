@@ -4148,7 +4148,7 @@ void Client::SendPickPocketResponse(Mob *from, uint32 amt, int type, const EQEmu
 			}
 		}
 		
-		DoUntappedPotential();
+		DoUntappedPotential(from);
 	}
 }
 
@@ -11115,7 +11115,7 @@ void Client::DoMendingAura(int amount) {
 }
 
 
-void Client::DoDivineSurge() {
+void Client::DoDivineSurge(Mob *from) {
 	uint32 rank = GetBuildRank(MONK, RB_MNK_DIVINESURGE);
 	if (rank < 1) return;
 	int manaCount = 0;
@@ -11138,6 +11138,7 @@ void Client::DoDivineSurge() {
 
 			amount = floor(target->GetMaxMana() * 0.0075f * rank);
 			if (amount < 1) continue;
+			if ((target->GetMaxMana() - target->GetMana()) < amount) amount = target->GetMaxMana() - target->GetMana();
 			manaTotal += amount;
 			manaCount++;			
 
@@ -11186,13 +11187,14 @@ void Client::DoDivineSurge() {
 
 	if (manaCount > 1) {
 		manaCount--; //exclude self
+		from->AddToHateList(this, manaTotal);
 		BuildEcho(StringFormat("Divine Surge %u gave %i allies %i mana within %i meters.", rank, manaCount, manaTotal, floor(rank * 5)));
 	}
 }
 
 
-void Client::DoUntappedPotential() {
-	uint32 rank = GetBuildRank(ROGUE, RB_ROG_JARRINGSTAB);
+void Client::DoUntappedPotential(Mob* from) {
+	uint32 rank = GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);
 	if (rank < 1) return;
 	int manaCount = 0;
 	int manaTotal = 0;
@@ -11242,6 +11244,7 @@ void Client::DoUntappedPotential() {
 
 				amount = floor(target->GetMaxMana() * 0.01f * rank);
 				if (amount < 1) continue;
+				if ((target->GetMaxMana() - target->GetMana()) < amount) amount = target->GetMaxMana() - target->GetMana();
 				manaTotal += amount;
 				manaCount++;
 
@@ -11257,7 +11260,8 @@ void Client::DoUntappedPotential() {
 
 	if (manaCount > 1) {
 		manaCount--; //exclude self
-		BuildEcho(StringFormat("Jarring Stab %u gave %i allies %i mana within %i meters.", rank, manaCount, manaTotal, floor(rank * 5)));
+		from->AddToHateList(this, manaTotal);
+		BuildEcho(StringFormat("Untapped Potential %u gave %i allies %i mana within %i meters.", rank, manaCount, manaTotal, floor(rank * 5)));
 	}
 }
 

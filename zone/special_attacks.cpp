@@ -622,6 +622,12 @@ void Mob::RogueBackstab(Mob* other, bool min_damage, int ReuseTime)
 	
 	DoSpecialAttackDamage(other, EQEmu::skills::SkillBackstab, base_damage, 0, hate, ReuseTime);
 	DoAnim(anim1HPiercing, 0, false);
+	rank = GetBuildRank(ROGUE, RB_ROG_JARRINGSTAB);
+	if (rank > 0) {
+		int hate_redux = int(hate * rank * 0.2f);
+		int hate_count = hate_list.LoseHatredNearby(this, hate_redux, 200, other, 6);
+		BuildEcho(StringFormat("Jarring Stab %i reduced hate by %i to %i enemies.", rank, hate_redux, hate_count));
+	}
 }
 
 // assassinate [No longer used for regular assassinate 6-29-14]
