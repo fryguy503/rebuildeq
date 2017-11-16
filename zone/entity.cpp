@@ -3856,6 +3856,15 @@ void Entity::BuildEcho(std::string message) {
 	CastToClient()->Message(MT_FocusEffect, message.c_str());
 }
 
+void Entity::DebugEcho(std::string message) {
+	if (!IsClient() ||
+		!CastToClient()->GetEPP().show_debug_echo) {
+		return;
+	}
+
+	CastToClient()->Message(MT_FocusEffect, message.c_str());
+}
+
 
 bool Entity::CheckCoordLosNoZLeaps(float cur_x, float cur_y, float cur_z,
 		float trg_x, float trg_y, float trg_z, float perwalk)

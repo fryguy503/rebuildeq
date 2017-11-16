@@ -301,9 +301,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST);
 							if (rank > 0 && (spell_id == 341 || spell_id == 502 || spell_id == 445 || spell_id == 446 || spell_id == 525 || spell_id == 447)) {
-								casterClient->DoZevfeersFeast();
+								casterClient->DoZevfeersFeast(this);
 							}
-
 
 							rank = casterClient->GetBuildRank(ROGUE, RB_ROG_MOSSSTONE);
 							if (rank > 0 && spell_id == 5225 && GetHPRatio() <= 20 && zone->random.Roll(20 * rank) && !HasSpellEffect(SE_MovementSpeed)) {

@@ -80,6 +80,7 @@ struct ExtendedProfile_Struct {
 	uint16				focus_enemy_id; //SK only skill, target of sworn enemy
 	int					passive_timeout; //Used for thunderfoot
 	int					ooc_last_expiration; //When OOC Regen triggers, this timestamp is snapshotted. If zero, it's assumed to reset to now
+	bool				show_debug_echo; //this flushes every time you zone, but put more spammy stuff in it.
 };
 
 #pragma pack()

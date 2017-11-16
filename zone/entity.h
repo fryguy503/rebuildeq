@@ -115,6 +115,7 @@ public:
 
 	virtual const char* GetName() { return ""; }
 	void BuildEcho(std::string message);
+	void DebugEcho(std::string message);
 	bool CheckCoordLosNoZLeaps(float cur_x, float cur_y, float cur_z, float trg_x, float trg_y, float trg_z, float perwalk=1);
 
 #ifdef BOTS

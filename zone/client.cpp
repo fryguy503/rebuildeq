@@ -11265,7 +11265,7 @@ void Client::DoUntappedPotential(Mob* from) {
 	}
 }
 
-void Client::DoZevfeersFeast() {
+void Client::DoZevfeersFeast(Mob *from) {
 	uint32 rank = GetBuildRank(ROGUE, RB_SHD_ZEVFEERSFEAST);
 	if (rank < 1) return;
 	int manaCount = 0;
@@ -11289,6 +11289,7 @@ void Client::DoZevfeersFeast() {
 
 			amount = floor(target->GetMaxMana() * 0.005f * rank);
 			if (amount < 1) continue;
+			if ((target->GetMaxMana() - target->GetMana()) < amount) amount = target->GetMaxMana() - target->GetMana();
 			manaTotal += amount;
 			manaCount++;
 
@@ -11317,6 +11318,7 @@ void Client::DoZevfeersFeast() {
 				if (dist2 > range2) continue;
 
 				amount = floor(target->GetMaxMana() * 0.005f * rank);
+				if ((target->GetMaxMana() - target->GetMana()) < amount) amount = target->GetMaxMana() - target->GetMana();
 				if (amount < 1) continue;
 				manaTotal += amount;
 				manaCount++;
@@ -11333,6 +11335,7 @@ void Client::DoZevfeersFeast() {
 
 	if (manaCount > 1) {
 		manaCount--; //exclude self
+		from->AddToHateList(this, manaTotal);
 		BuildEcho(StringFormat("Zevfeer's Feast %u gave %i allies %i mana within %i meters.", rank, manaCount, manaTotal, floor(rank * 5)));
 	}
 }

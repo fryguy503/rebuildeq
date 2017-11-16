@@ -1356,7 +1356,7 @@ public:
 
 	void DoDivineSurge(Mob* from);
 	void DoUntappedPotential(Mob* from);
-	void DoZevfeersFeast();
+	void DoZevfeersFeast(Mob* from);
 	void CalcMonkTranquility();
 	bool HasNegativeEffects();
 	char * GetIdentity();
