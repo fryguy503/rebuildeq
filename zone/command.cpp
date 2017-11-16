@@ -9735,9 +9735,10 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 	int npcId = 0;
 	bool isBoss = false;
 	bool hasLoot = false;
+	bool retainSpells = false;
 	
 	if (!sep->IsNumber(1)) {
-		c->Message(0, "Usage: #spawnpc <npcid> <isboss> <hasloot>");
+		c->Message(0, "Usage: #spawnpc <npcid> <isboss> <hasloot> <retainspells>");
 		return;
 	}
 	npcId = atoi(sep->arg[1]);
@@ -9756,6 +9757,12 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		return;
 	}
 	hasLoot = (atoi(sep->arg[3]) == 1);
+
+	if (!sep->IsNumber(4)) {
+		c->Message(0, "Invalid value, either 0 or 1 for retainSpells flag");
+		return;
+	}
+	retainSpells = (atoi(sep->arg[4]) == 1);
 
 	const NPCType* npctype = 0;
 	npctype = database.LoadNPCTypesData(npcId);
@@ -9816,8 +9823,8 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 		//playerAC /= 2; //divide by 2... I think..
 
 		enpc->level = avgLevel;
-		enpc = c->AdjustNPC(enpc, false, false);
-		strcpy(enpc->special_abilities, "1,1^21,1");
+		enpc = c->AdjustNPC(enpc, retainSpells, false);
+		strcpy(enpc->special_abilities, "1,1^12,1^21,1");
 		enpc->max_hp = playerTotalHP;		
 		enpc->AC = playerAC; //average AC is applied
 		if (hasTank) enpc->max_dmg *= 1.2f; //give 20% more max dmg if have a tank
@@ -9857,7 +9864,7 @@ void command_spawnanpc(Client *c, const Seperator *sep)
 	}
 	else {
 		enpc->level = target->GetLevel();
-		enpc = c->AdjustNPC(enpc, false, false);
+		enpc = c->AdjustNPC(enpc, retainSpells, false);
 
 		strcpy(enpc->special_abilities,  "1^21");
 		enpc->npc_faction_id = 79; // KoS non-assist		
