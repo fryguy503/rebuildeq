@@ -1985,7 +1985,7 @@ void Client::CalcRestState() {
 			float dist2 = DistanceSquared(m_Position, target->GetPosition());
 			float range2 = 100 * 100;
 			if (dist2 > range2) continue;	
-			group_size++;			
+			group_size++;
 		}
 	}
 	else if (this->IsRaidGrouped()) { //Raid healing
@@ -2011,8 +2011,8 @@ void Client::CalcRestState() {
 	}
 	if (group_size < 1) group_size = 1;
 	
-	rest_regen_percent = group_size * 2; //double mana regen per players
-	if (GetLevel() >= 40) rest_regen_percent /= 2; //cut ooc regen in half once 40.
+	rest_regen_percent = group_size * 3; //double mana regen per players
+	if (rest_regen_percent > 10) rest_regen_percent = 10;
 
 	RestRegenHP = (GetMaxHP() * rest_regen_percent / 100);
 	RestRegenMana = (GetMaxMana() * rest_regen_percent / 100);	
