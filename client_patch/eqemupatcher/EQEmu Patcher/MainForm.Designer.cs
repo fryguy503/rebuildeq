@@ -28,6 +28,7 @@ namespace EQEmu_Patcher
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.txtList = new System.Windows.Forms.TextBox();
@@ -36,6 +37,7 @@ namespace EQEmu_Patcher
             this.btnCheck = new System.Windows.Forms.Button();
             this.chkAutoPlay = new System.Windows.Forms.CheckBox();
             this.chkAutoPatch = new System.Windows.Forms.CheckBox();
+            this.tmrAutoPlay = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.splashLogo)).BeginInit();
             this.SuspendLayout();
             // 
@@ -77,7 +79,6 @@ namespace EQEmu_Patcher
             // 
             this.splashLogo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-         //   this.splashLogo.Image = global::EQEmu_Patcher.Properties.Resources.rof;
             this.splashLogo.Location = new System.Drawing.Point(10, 6);
             this.splashLogo.Margin = new System.Windows.Forms.Padding(0);
             this.splashLogo.MinimumSize = new System.Drawing.Size(400, 450);
@@ -120,6 +121,10 @@ namespace EQEmu_Patcher
             this.chkAutoPatch.UseVisualStyleBackColor = true;
             this.chkAutoPatch.CheckedChanged += new System.EventHandler(this.chkAutoPatch_CheckedChanged);
             // 
+            // tmrAutoPlay
+            // 
+            this.tmrAutoPlay.Interval = 1000;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -155,6 +160,7 @@ namespace EQEmu_Patcher
         private System.Windows.Forms.Button btnCheck;
         private System.Windows.Forms.CheckBox chkAutoPlay;
         private System.Windows.Forms.CheckBox chkAutoPatch;
+        private System.Windows.Forms.Timer tmrAutoPlay;
     }
 }
 

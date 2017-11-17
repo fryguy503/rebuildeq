@@ -469,6 +469,8 @@ namespace EQEmu_Patcher
 
                 filelist = deserializer.Deserialize<FileList>(input);
             }
+
+            LogEvent("Using " + filelist.downloadprefix + " as prefix.");
             int totalBytes = 0;
             List<FileEntry> filesToDownload = new List<FileEntry>();
             if (filelist == null)
@@ -577,7 +579,7 @@ namespace EQEmu_Patcher
         {
             if (isLoading) return;
             IniLibrary.instance.AutoPlay = (chkAutoPlay.Checked) ? "true" : "false";
-            if (chkAutoPlay.Checked) LogEvent("To disable autoplay: edit eqemupatcher.yml or wait until next patch.");
+            if (chkAutoPlay.Checked) LogEvent("AutoPlay is now enabled.");
             IniLibrary.Save();
         }
 
