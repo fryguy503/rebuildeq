@@ -9419,7 +9419,7 @@ void command_toggle(Client *c, const Seperator *sep)
 		return;
 	}
 	
-	if (strcasecmp(sep->arg[1], "debugecho")) {
+	if (!strcasecmp(sep->arg[1], "debugecho")) {
 		c->GetEPP().show_debug_echo = 1 - c->GetEPP().show_debug_echo;
 		c->Message(0, "You have %s debug echos. This goes away after zoning.", ((c->GetEPP().show_debug_echo) ? "enabled" : "disabled"));
 		return;

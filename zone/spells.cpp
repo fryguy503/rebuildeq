@@ -2281,7 +2281,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 	}
 
 	
-
+	DebugEcho(StringFormat("Casted spell %u.", spell_id));
 	// if a spell has the AEDuration flag, it becomes an AE on target
 	// spell that's recast every 2500 msec for AEDuration msec. There are
 	// spells of all kinds of target types that do this, strangely enough

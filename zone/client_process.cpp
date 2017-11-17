@@ -1834,8 +1834,8 @@ void Client::OPGMSummon(const EQApplicationPacket *app)
 void Client::DoHPRegen() {
 	if (GetHPRatio() == 100) return;
 	int finalHPRegen = CalcHPRegen();
-	//BuildEcho(StringFormat("HP Regen: %i", finalHPRegen));
-	entity_list.LogHPEvent(this, this, finalHPRegen);
+	DebugEcho(StringFormat("HP Regen: %i", finalHPRegen));
+	entity_list.LogHPEvent(this, this, finalHPRegen);	
 	SetHP(GetHP() + finalHPRegen);		
 	SendHPUpdate();
 }
@@ -1848,7 +1848,7 @@ void Client::DoManaRegen() {
 		CheckIncreaseSkill(EQEmu::skills::SkillMeditate, nullptr, -5);
 
 	entity_list.LogManaEvent(this, this, finalManaRegen);
-	//BuildEcho(StringFormat("Mana Regen: %i", finalManaRegen));
+	DebugEcho(StringFormat("Mana Regen: %i", finalManaRegen));
 	SetMana(GetMana() + finalManaRegen);
 	SendManaUpdate();
 	
