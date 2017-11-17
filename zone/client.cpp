@@ -9564,7 +9564,8 @@ void Client::RefreshBuild() {
 					Message(270, message.c_str());
 				}
 
-				if (GetClass() == BARD && i == RB_BRD_KINSONG && GetAA(aaLessonoftheDevoted) < 1) {					
+				if (GetClass() == BARD && i == RB_BRD_KINSONG && GetAA(aaLessonoftheDevoted) < 1) {		
+					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 

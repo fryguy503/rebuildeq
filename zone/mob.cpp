@@ -7989,7 +7989,7 @@ void Mob::SetTapFocus(Client * focus) {
 	if (focus == nullptr) {
 		return;
 	}
-
+	CastToClient()->tapFocus = focus;
 }
 
 Item_Reward Mob::GetBoxReward(int minimumRarity, int boxType) {
