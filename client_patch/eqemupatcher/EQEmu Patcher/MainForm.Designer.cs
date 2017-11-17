@@ -124,6 +124,7 @@ namespace EQEmu_Patcher
             // tmrAutoPlay
             // 
             this.tmrAutoPlay.Interval = 1000;
+            this.tmrAutoPlay.Tick += new System.EventHandler(this.tmrAutoPlay_Tick);
             // 
             // MainForm
             // 

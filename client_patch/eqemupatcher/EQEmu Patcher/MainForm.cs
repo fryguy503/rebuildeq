@@ -134,8 +134,12 @@ namespace EQEmu_Patcher
                 isNeedingPatch = true;
                btnCheck.BackColor = Color.Red;
             } else
-            {                
-                if ( IniLibrary.instance.AutoPlay.ToLower() == "true") PlayGame();
+            {
+                if (IniLibrary.instance.AutoPlay.ToLower() == "true")
+                {
+                    tmrAutoPlay.Enabled = true;
+                    btnStart.Text = "Play in 3...";
+                }
             }
             chkAutoPlay.Checked = (IniLibrary.instance.AutoPlay == "true");
             chkAutoPatch.Checked = (IniLibrary.instance.AutoPatch == "true");
@@ -579,7 +583,16 @@ namespace EQEmu_Patcher
         {
             if (isLoading) return;
             IniLibrary.instance.AutoPlay = (chkAutoPlay.Checked) ? "true" : "false";
-            if (chkAutoPlay.Checked) LogEvent("AutoPlay is now enabled.");
+            if (chkAutoPlay.Checked)
+            {
+                autoPlayCountdown = 3;
+                tmrAutoPlay.Enabled = true;
+                btnStart.Text = "Play in 3...";
+            } else
+            {
+                tmrAutoPlay.Enabled = false;
+                btnStart.Text = "Play";
+            }
             IniLibrary.Save();
         }
 
@@ -597,6 +610,14 @@ namespace EQEmu_Patcher
                 btnCheck.BackColor = SystemColors.Control;
                 StartPatch();
             }
+        }
+
+        int autoPlayCountdown = 3;
+        private void tmrAutoPlay_Tick(object sender, EventArgs e)
+        {
+            autoPlayCountdown--;
+            btnStart.Text = "Play in " + autoPlayCountdown + "...";
+            if (autoPlayCountdown < 1) PlayGame();
         }
     }
     public class FileList
