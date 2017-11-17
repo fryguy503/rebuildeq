@@ -843,6 +843,8 @@ public:
 	int GetSpentAA() { return m_pp.aapoints_spent; }
 	uint32 GetRequiredAAExperience();
 
+	void RebuildAA();
+
 	//old AA methods that we still use
 	void ResetAA();
 	void RefundAA();
