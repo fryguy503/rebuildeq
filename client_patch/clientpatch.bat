@@ -8,9 +8,10 @@ echo Copying filelist_rof.yml
 copy filelist_rof.yml ..\deploy\patch\rof\ /d
 echo Copying patch.zip
 copy patch.zip ..\deploy\patch\ /d
-echo Copying eqemupatcher.exe
+echo Copying RebuildEQ.exe
 copy "%~dp0\eqemupatcher\EQEmu Patcher\bin\Release\eqemupatcher.exe" . /d
-rename eqemupatcher.exe "RebuildEQ.exe"
+del RebuildEQ.exe
+rename eqemupatcher.exe RebuildEQ.exe
 
 echo Cleaning up lingering local files...
 del patch.zip

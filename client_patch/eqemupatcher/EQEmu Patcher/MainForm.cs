@@ -562,6 +562,12 @@ namespace EQEmu_Patcher
             }
             progressBar.Value = progressBar.Maximum;
             LogEvent("Complete! Press Play to begin.");
+            if (chkAutoPlay.Checked)
+            {
+                autoPlayCountdown = 3;
+                btnStart.Text = "Play in 3...";
+                tmrAutoPlay.Enabled = true;
+            }
             IniLibrary.instance.LastPatchedVersion = filelist.version;
             IniLibrary.Save();
             btnCheck.BackColor = SystemColors.Control;
