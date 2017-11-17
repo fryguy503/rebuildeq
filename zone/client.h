@@ -845,6 +845,7 @@ public:
 
 	//old AA methods that we still use
 	void ResetAA();
+	void RebuildAA();
 	void RefundAA();
 	void SendClearAA();
 	inline uint32 GetAAXP() const { return m_pp.expAA; }
