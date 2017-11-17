@@ -7352,9 +7352,9 @@ int Mob::GetMeleeDamageAdjustments(int dmg) {
 	else if (GetClass() == BARD) {
 		rank = GetBuildRank(BARD, RB_BRD_WARSONGOFZEK);
 		if (rank > 0) {
-			int dmgBonus = floor(dmg * 0.1f * rank);
+			int dmgBonus = int(dmg * 0.02f * rank);
 			if (dmgBonus < 1) dmgBonus = 1;
-			BuildEcho(StringFormat("Warsong of Zek %i increased damage by %i", rank, dmgBonus));
+			BuildEcho(StringFormat("Warsong of Zek %i increased damage from %i to %i", rank, dmg, dmg + dmgBonus));
 			return dmg + dmgBonus;
 		}
 	}
@@ -7816,7 +7816,7 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
 
 	rank = GetBuildRank(BARD, RB_BRD_FADINGMEMORIES);
 	if (rank > 0 && spell_id == 5243) {
-		mana_cost = (GetMaxMana() * 0.5f) - ((GetMaxMana() * 0.3f) * 0.2f * GetBuildRank(BARD, RB_BRD_FADINGMEMORIES));
+		mana_cost = int(GetMaxMana() * 0.5f) - ((GetMaxMana() * 0.3f) * 0.2f * GetBuildRank(BARD, RB_BRD_FADINGMEMORIES));
 	}
 
 	
@@ -7912,13 +7912,17 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
 		}
 	}
 
+	int mana_modifier = 0;
 	rank = GetBuildRank(BARD, RB_BRD_SIRENSSONG);
 	if (rank > 0 &&
 		(spell_id == 725 ||
 			spell_id == 750)) {
-		BuildEcho(StringFormat("Siren's Song %i reduced mana cost by %i.", rank, floor(mana_cost * 0.1f * rank)));
-		mana_cost -= floor(mana_cost * 0.1f * rank);
-		if (mana_cost < 1) mana_cost = 1;
+		mana_modifier = int(mana_cost * 0.1f * rank);
+		if (mana_modifier > 0) {
+			BuildEcho(StringFormat("Siren's Song %i reduced mana from %i to %i.", rank, mana_cost, (mana_cost-mana_modifier > 0) ? mana_cost - mana_modifier : 1));
+			mana_cost -= mana_modifier;
+			if (mana_cost < 1) mana_cost = 1;
+		}
 	}
 
 	rank = GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);

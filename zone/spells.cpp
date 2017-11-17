@@ -3538,7 +3538,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		Client * caster_client = caster->CastToClient();
 
 		// Bard
-		if (caster_client->GetClass() == BARD) {
+		if (caster_client->GetClass() == BARD && IsBeneficialSpell(spell_id)) {
 
 			int rank = caster->GetBuildRank(BARD, RB_BRD_BARDSWISH);
 			if (IsBardSong && rank == 5 && duration == 3) {

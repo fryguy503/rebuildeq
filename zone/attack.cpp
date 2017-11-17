@@ -568,14 +568,7 @@ bool Mob::AvoidDamage(Mob *other, DamageHitInfo &hit)
 		}
 		int rank = 0;
 		int bonus = 0;
-		rank = GetBuildRank(BARD, RB_BRD_BLADEDANCER);
-		if (rank > 0) {
-			bonus = floor(chance * 0.02f * GetGroupSize(200));
-			if (bonus > 0) {
-				BuildEcho(StringFormat("Blade Dancer %i increased dodge from %t to %i", rank, chance, chance + bonus));
-				chance += chance * 0.02f * GetGroupSize(200);
-			}
-		}
+		
 		rank = GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR);
 		if(rank > 0) {
 			bonus = floor(chance * 0.1f * rank);
@@ -1581,31 +1574,40 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			hate += opts->hate_flat;
 			hit_chance_bonus += opts->hit_chance;
 		}
-		if (Hand == EQEmu::inventory::slotSecondary && IsClient() && GetBuildRank(BARD, RB_BRD_OFFHANDATTACK) > 0) {
-			int hcb = floor(hit_chance_bonus * 0.05f * GetBuildRank(BARD, RB_BRD_OFFHANDATTACK));
-			BuildEcho(StringFormat("Offhand Attack %u chance to hit increased from %i to %i.", GetBuildRank(BARD, RB_BRD_OFFHANDATTACK), hit_chance_bonus, hcb));
-			if (hcb < 1) {
-				hcb = 1;
-			}
-			hit_chance_bonus += hcb;
-		}
+		int rank = 0;
+		
 
-		if (IsClient()) {
-			int rank = GetBuildRank(BARD, RB_BRD_INNATESONGBLADE);
-			if (rank > 0) {
-				int isb = floor(hit_chance_bonus * 0.02f * rank);
-				int isd = floor(my_hit.damage_done * 0.02f * rank);
-				if (isd > 0 && isb > 0) {
-					BuildEcho(StringFormat("Innate Songblade %u chance to hit increased from  %i to %i and %i to damage.", rank, hit_chance_bonus, isb, isd));
-					hit_chance_bonus += isb;
-					my_hit.damage_done += isd;
-				}
-			}
-		}
+		
 
 		my_hit.tohit = GetTotalToHit(my_hit.skill, hit_chance_bonus);
 
+		if (IsClient()) {
+			hit_chance_bonus = 0;
+			rank = GetBuildRank(BARD, RB_BRD_INNATESONGBLADE);
+			if (rank > 0) {
+				hit_chance_bonus = int(my_hit.tohit * 0.02f * rank);
+				int isd = int(my_hit.damage_done * 0.02f * rank);
+				if (hit_chance_bonus < 1) hit_chance_bonus = 1;
+				if (isd > 0 && hit_chance_bonus > 0) {
+					BuildEcho(StringFormat("Innate Songblade %u chance to hit increased from %i to %i and added %i bonus damage.", rank, my_hit.tohit, my_hit.tohit+hit_chance_bonus, isd));
+					my_hit.tohit += hit_chance_bonus;
+					my_hit.damage_done += isd;
+				}
+			}
+
+			rank = GetBuildRank(BARD, RB_BRD_OFFHANDATTACK);
+			if (Hand == EQEmu::inventory::slotSecondary && IsClient() && rank > 0) {
+				hit_chance_bonus = int(my_hit.tohit * 0.05f * rank);
+				if (hit_chance_bonus < 1) hit_chance_bonus = 1;
+				DebugEcho(StringFormat("Offhand Attack %i chance to hit increased from %i to %i.", rank, my_hit.tohit, my_hit.tohit+hit_chance_bonus));
+				
+				my_hit.tohit  += hit_chance_bonus;
+			}
+		}
+
 		DoAttack(other, my_hit, opts);
+		
+
 	}
 	else {
 		my_hit.damage_done = DMG_INVULNERABLE;
@@ -4543,6 +4545,20 @@ float Mob::GetProcChances(float ProcBonus, uint16 hand)
 			static_cast<float>(mydex) / RuleR(Combat, ProcDexDivideBy);
 		ProcChance += ProcChance * ProcBonus / 100.0f;
 	}
+	int rank = GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY);
+	float bonus = 0;
+	if (rank > 0) {
+		bonus = float(ProcChance * rank * 0.05f);
+		DebugEcho(StringFormat("Harmonic Affinity %i increased proc chance from %.3f%% to %.3f%%.", rank, ProcChance, ProcChance + bonus));
+		ProcChance += bonus;
+	}
+
+	rank = GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY);
+	if (rank > 0) {
+		bonus = float(ProcChance * rank * 0.05f);
+		DebugEcho(StringFormat("Thieve's Affinity %i increased proc chance from %.3f%% to %.3f%%.", rank, ProcChance, ProcChance + bonus));
+		ProcChance += bonus;
+	}
 
 	Log(Logs::Detail, Logs::Combat, "Proc chance %.2f (%.2f from bonuses)", ProcChance, ProcBonus);
 	return ProcChance;
@@ -4659,17 +4675,6 @@ void Mob::TryWeaponProc(const EQEmu::ItemInstance *inst, const EQEmu::ItemData *
 
 	if (hand != EQEmu::inventory::slotPrimary) //Is Archery intened to proc at 50% rate?
 		ProcChance /= 2;
-
-	if (IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY) > 0) { //Proc chance increases with this skill
-		BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), ProcChance, floor(ProcChance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY))));
-		ProcChance += floor(ProcChance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
-	}
-
-	if (IsClient() &&
-		CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) {
-		BuildEcho(StringFormat("Thieve's Affinity %i increased chance to proc from %i to %i", GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY), ProcChance, floor(ProcChance * 0.1f * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY))));
-		ProcChance += floor(ProcChance * 0.1f * CastToClient()->GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
-	}
 
 	// Try innate proc on weapon
 	// We can proc once here, either weapon or one aug
@@ -6018,17 +6023,15 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			uint32 buff_count = GetMaxTotalSlots();
 			for (uint16 buffIt = 0; buffIt < buff_count; buffIt++)
 			{
-				if (buffs[buffIt].spellid == 2834 && buffs[buffIt].client)
+				if (buffs[buffIt].spellid == 2604 && buffs[buffIt].client)
 				{
 					//figure out who gave buff
 					Client * c = entity_list.GetClientByID(buffs[buffIt].casterid);
 					if (c == nullptr) continue;
 					rank = c->GetBuildRank(BARD, RB_BRD_KATTASCONCORD);
 					if (rank < 1) continue;
-					chance = 300;
-					int chanceBonus = chance * 0.1f * c->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY);
-					if (c == this && chanceBonus > 0) BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", c->GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), chance, chance + chanceBonus));
-					chance += floor(chance * 0.1f * chanceBonus); //Chance boost from harmonic affinity
+					chance = 100;
+					
 					proc_damage = floor(GetLevel() * 0.4f * rank);
 					if (proc_damage < 1) proc_damage = 1;
 					if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
@@ -6041,28 +6044,21 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
 			if (rank > 0) {
 				chance = 400;
-				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) {
-					int bonusChance = floor(chance * 0.1f * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
-					BuildEcho(StringFormat("Thieves Affinity increased chance from %i to %i.", chance, chance + bonusChance));
-					chance += bonusChance;
-				}
 
 				proc_damage = floor(GetLevel() * 3.0f * (0.2f * rank));
 				if (proc_damage < 20) {
 					proc_damage = 20;
 				}
 
-				CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill);
+				if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
+					BuildEcho(StringFormat("Appraisal %i dealt %i damage.", rank, GetCleanName(), proc_damage));
+				}
 			}
 
 			rank = GetBuildRank(ROGUE, RB_ROG_MUGGINGSHOT);
 			if (rank > 0) {
 				chance = rank * 100;
-				if (GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY) > 0) {
-					int bonusChance = floor(chance * 0.1f * GetBuildRank(ROGUE, RB_ROG_THIEVESAFFINITY));
-					BuildEcho(StringFormat("Thieves Affinity increased chance from %i to %i.", chance, chance + bonusChance));
-					chance += bonusChance;
-				}
+				
 				bool is_interrupt = false;
 				if (hit.hand == EQEmu::inventory::slotSecondary) { //Get offhand
 					switch (hit.skill) {
@@ -6107,9 +6103,6 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			rank = GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE);
 			if (rank > 0) {
 				chance = 300;
-				int bonusChance = floor(chance * 0.1f * GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY));
-				if (bonusChance > 0) BuildEcho(StringFormat("Harmonic Affinity %i increased chance to proc from %i to %i", GetBuildRank(BARD, RB_BRD_HARMONICAFFINITY), chance, bonusChance));
-				chance += bonusChance; //Chance boost from harmonic affinity on jonthon whistle
 
 				proc_damage = floor(GetLevel() * 2.0f * (0.2f * rank));
 
@@ -6117,7 +6110,9 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 					proc_damage = 20;
 				}
 
-				CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill);
+				if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
+					BuildEcho(StringFormat("Jonthon's Whistle %i dealt %i damage.", rank, proc_damage));
+				}
 			}
 
 			rank = GetBuildRank(MONK, RB_MNK_INTENSIFIEDTRAINING);
@@ -6130,7 +6125,9 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 					proc_damage = 20;
 				}
 
-				CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill);
+				if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
+					BuildEcho(StringFormat("Intensified Training %i dealt %i damage.", rank, proc_damage));
+				}
 			}
 		}
 
@@ -6205,7 +6202,6 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 				}
 			}
 		}
-
 	}
 
 	// this appears where they do special attack dmg mods

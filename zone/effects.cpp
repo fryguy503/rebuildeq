@@ -321,8 +321,8 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 
 	rank = GetBuildRank(BARD, RB_BRD_CHANTCYCLE);
 	if (rank > 0) {
-		extra_dmg = floor(value * 0.1f * rank);
-		if (extra_dmg < rank) extra_dmg = floor(rank * 2);
+		extra_dmg = int(value * 0.1f * rank);
+		if (extra_dmg < 1) extra_dmg = 1;
 		BuildEcho(StringFormat("Chant Cycle %i increased damage by %i", rank, extra_dmg));
 		value += extra_dmg;
 	}
@@ -893,7 +893,7 @@ void EntityList::AESpell(Mob *caster, Mob *center, uint16 spell_id, bool affect_
 	int rank = caster->GetBuildRank(BARD, RB_BRD_SHOUT);
 	if (caster && (spell_id == 703 || spell_id == 730 || spell_id == 4806 || spell_id == 1758 ||
 		spell_id == 1756 || spell_id == 1764 || spell_id == 746 || spell_id == 736) && rank > 0) {
-		caster->BuildEcho(StringFormat("Shout %i increased range from %i to %i", rank, dist, floor(dist * 0.2f * rank)));
+		caster->BuildEcho(StringFormat("Shout %i increased range from %i to %i", rank, dist, int(dist * 0.2f * rank)));
 		dist += floor(dist * 0.2f * rank);
 	}
 	float dist2 = dist * dist;

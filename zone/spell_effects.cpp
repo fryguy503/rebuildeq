@@ -4027,13 +4027,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					uint8 level = GetLevel();
 					uint8 caster_level = casterClient->GetLevel();
 
-					rank = casterClient->GetBuildRank(BARD, RB_BRD_CASSINDRASSECRET);
-					if (spell_id == 745 && rank > 0 && effect == SE_INT) {
-						int manaAmount = rank * 2;
-						if (this == caster) BuildEcho(StringFormat("Cassindra's Secret %i gave %i mana.", rank, manaAmount));
-						entity_list.LogManaEvent(caster, this, manaAmount);
-						SetMana(GetMana() + manaAmount);
-					}
 
 
 					
@@ -4541,6 +4534,16 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 			return;
 		}
 	}
+	int rank = 0;
+	if (caster != nullptr && buff.spellid == 745) {
+		rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASSECRET);
+		if (rank > 0) {
+			int manaAmount = rank * 2;
+			if (this == caster) BuildEcho(StringFormat("Cassindra's Secret %i gave %i mana.", rank, manaAmount));
+			entity_list.LogManaEvent(caster, this, manaAmount);
+			SetMana(GetMana() + manaAmount);
+		}
+	}
 
 	for (int i = 0; i < EFFECT_COUNT; i++) {
 		if (IsBlankSpellEffect(buff.spellid, i))
@@ -4572,7 +4575,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 					Client* caster_client = caster->CastToClient();
 					int bonus_damage = 0;
 					
-					uint16 rank = caster_client->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED);
+					rank = caster_client->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED);
 					if (rank > 0 && buff.spellid == 8133) {
 						bonus_damage = -effect_value;
 						bonus_damage *= floor(rank * 5);

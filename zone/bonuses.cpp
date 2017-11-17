@@ -1601,6 +1601,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 	
 	if(CastToClient()->IsClient()) {
+		int bonus = 0;
 		uint32 rank = CastToClient()->GetBuildRank(CLERIC, RB_CLR_HARKENTHEGODS);
 		if(rank > 0 && (spell_id == 210 || spell_id == 43 || spell_id == 44 || spell_id == 1534 || spell_id == 2326)) {
 			new_bonus->ATK += (5 * rank);// ATK, 5 per rank
@@ -1608,9 +1609,15 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 			new_bonus->ManaRegen += (1 * rank); // Mana Regen, 1 per tick per rank
 		}
 
+		rank = CastToClient()->GetBuildRank(BARD, RB_BRD_BLADEDANCER);
+		if (rank > 0) {
+			DebugEcho(StringFormat("Blade Dancer %i increased dodge chance from %i to %i.", rank, new_bonus->DodgeChance, new_bonus->DodgeChance + (2 * rank)));
+			new_bonus->DodgeChance += (2 * rank);
+		}
+
 		rank = CastToClient()->GetBuildRank(MONK, RB_MNK_BLOCK);
 		if (rank > 0) {
-			//BuildEcho(StringFormat("Block %i increased block chance from %i to %i.", rank, new_bonus->IncreaseBlockChance, (2 * rank)));
+			DebugEcho(StringFormat("Block %i increased block chance from %i to %i.", rank, new_bonus->IncreaseBlockChance, (2 * rank)));
 			new_bonus->IncreaseBlockChance += (2 * rank);
 		}
 	}
@@ -1667,7 +1674,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 						}
 						rank = caster->GetBuildRank(BARD, RB_BRD_SOOTHINGMELODY);
 						if (rank > 0) {
-							int healBonus = floor(effect_value * 2 * rank);
+							int healBonus = int(effect_value * 2 * rank);
 							if (healBonus > 0 && 
 								this == caster && 
 								GetTarget() && 
@@ -1677,7 +1684,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 									if (hateAmount < healBonus) {
 										healBonus = hateAmount - 1;
 									}
-									BuildEcho(StringFormat("Soothing Melody %i reduced your hate by %i.", rank, effect_value));
+									BuildEcho(StringFormat("Soothing Melody %i reduced your hate by %i.", rank, healBonus));
 									GetTarget()->SetHateAmountOnEnt(this, -healBonus);
 								}
 							}
@@ -1728,10 +1735,6 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 					if (spell_id == 2585 && IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_PURPOSEOFMARR) > 0) {
 						effect_value += (int)(CastToClient()->GetBuildRank(PALADIN, RB_PAL_PURPOSEOFMARR) * 10);
-					}
-
-					if ((spell_id == 734 || spell_id == 749 || spell_id == 1762) && IsClient() && CastToClient()->GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE) > 0) {
-						effect_value += (int)(CastToClient()->GetBuildRank(BARD, RB_BRD_JONTHONSWHISTLE) * 10);
 					}
 
 					if ((effect_value - 100) > new_bonus->haste) {
@@ -1881,7 +1884,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				new_bonus->STA += effect_value;
 				break;
 			}
-
+			
 			case SE_INT:
 			{
 				new_bonus->INT += effect_value;
@@ -3132,8 +3135,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 1450 || spell_id == 1752 || spell_id == 1763 || spell_id == 748)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_SHIELDOFSONGS);
 					if (rank > 0) {
-						if (this == caster) BuildEcho(StringFormat("Shield of Songs %i increased rune from %i to %i", rank, effect_value, effect_value + floor(rank * 0.2f * effect_value)));
-						effect_value += floor(rank * 0.2f * effect_value);
+						if (this == caster) BuildEcho(StringFormat("Shield of Songs %i increased rune from %i to %i", rank, effect_value, effect_value + int(rank * 0.2f * effect_value)));
+						effect_value += int(rank * 0.2f * effect_value);
 					}
 				}
 				if (new_bonus->MeleeRune[0] && (new_bonus->MeleeRune[1] > buffslot)){
@@ -3149,13 +3152,6 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				break;
 
 			case SE_AbsorbMagicAtt:
-				if (caster != nullptr && (spell_id == 1450 || spell_id == 1752 || spell_id == 1763 || spell_id == 748)) {
-					rank = caster->GetBuildRank(BARD, RB_BRD_SHIELDOFSONGS);
-					if (rank > 0) {
-						if (this == caster) BuildEcho(StringFormat("Shield of Songs %i increased magic absorb from %i to %i", rank, effect_value, effect_value + floor(rank * 0.2f * effect_value)));
-						effect_value += floor(rank * 0.2f * effect_value);
-					}
-				}
 				if (new_bonus->AbsorbMagicAtt[0] && (new_bonus->AbsorbMagicAtt[1] > buffslot)){
 					new_bonus->AbsorbMagicAtt[0] = effect_value;
 					new_bonus->AbsorbMagicAtt[1] = buffslot;

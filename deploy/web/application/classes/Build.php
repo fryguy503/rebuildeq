@@ -341,7 +341,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Katta's Concord";
-			$newSkill->desc = 'Katta\'s Song of Sword (lvl 39) now also gives a 300 proc chance to those with the buff that deals (level * <em data-base="0.4">0.4</em>) damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Katta\'s Song of Sword (lvl 39) now also gives a 100 proc chance to those with the buff that deals (level * <em data-base="0.4">0.4</em>) damage<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-kattasconcord.png";
 			$skills[10] = $newSkill;
 
@@ -361,7 +361,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Jonthon's Whistle";
-			$newSkill->desc = 'Jonthon\'s Self Haste Songs (lvl 7) have improved haste, as well the bard has a passive 300 mod proc that deals (level * 2 * <em data-base="0.2">0.2</em>) magic damage.';
+			$newSkill->desc = 'Grants the bard a passive 300 mod proc that deals (level * 2 * <em data-base="0.2">0.2</em>) magic damage.';
 			$newSkill->image = "/images/builds/icons/rb-brd-jonathonswhistle.png";
 			$skills[18] = $newSkill;
 
@@ -379,7 +379,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Warsong of Zek";
-			$newSkill->desc = 'Increases bard\'s melee damage by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases bard\'s melee damage by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-warsongofzek.png";	
 			$skills[24] = $newSkill;
 
@@ -397,13 +397,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Harmonic Affinity";
-			$newSkill->desc = 'Increases proc chance of innate and card weapon procs by <em data-base="10">10</em>% effectiveness<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases proc chance modifier by <em data-base="5">5</em>% <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-harmonicaffinity.png";	
 			$skills[31] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Bard's Wish";
-			$newSkill->desc = 'When rank 5, all songs last an additional tick.';
+			$newSkill->desc = 'When rank 5, all beneficial songs last an additional tick.';
 			$newSkill->image = "/images/builds/icons/rb-brd-bardswish.png";	
 			$skills[34] = $newSkill;
 
@@ -451,7 +451,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Fading Memories";
-			$newSkill->desc = 'Grants the Fading Memories AA, allowing you to escape all aggressions towards you, the mana cost is reduced by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Fading Memories AA, allowing you to escape all aggressions towards you, By default this costs 50% of your max mana, reduced by <em data-base="5">5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-fadingmemories.png";	
 			$skills[52] = $newSkill;
 			break;
@@ -1490,7 +1490,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Thieves' Affinity";
-			$newSkill->desc = 'Increases proc chance of innate and card weapon procs by <em data-base="10">10</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Increases proc chance of innate and card weapon procs by <em data-base="2.5">2.5</em>%<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-rog-thievesaffinity.png";
 			$skills[49] = $newSkill;
 
