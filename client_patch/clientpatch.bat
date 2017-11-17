@@ -10,6 +10,7 @@ echo Copying patch.zip
 copy patch.zip ..\deploy\patch\ /d
 echo Copying eqemupatcher.exe
 copy "%~dp0\eqemupatcher\EQEmu Patcher\bin\Release\eqemupatcher.exe" . /d
+rename eqemupatcher.exe "RebuildEQ.exe"
 
 echo Cleaning up lingering local files...
 del patch.zip

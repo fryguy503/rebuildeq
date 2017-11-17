@@ -110,4 +110,4 @@ install_manifest.txt
 *.vcxproj
 *.filters
 
-!eqemupatcher.exe
+!RebuildEQ.exe
