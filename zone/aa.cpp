@@ -463,6 +463,54 @@ void Mob::WakeTheDead(uint16 spell_id, Mob *target, uint32 duration)
 		target->AddToHateList(this, 1, 0);
 }
 
+
+//Rebuild AA points by clearing then syncing it to latest of what they should be.
+void Client::RebuildAA() {
+	//clear AAs
+	//auto outapp = new EQApplicationPacket(OP_ClearAA, 0);
+	//FastQueuePacket(&outapp);
+
+	memset(&m_pp.aa_array[0], 0, sizeof(AA_Array) * MAX_PP_AA_ARRAY);
+
+	int i = 0;
+	for (auto &rank_value : aa_ranks) {
+		auto ability_rank = zone->GetAlternateAdvancementAbilityAndRank(rank_value.first, rank_value.second.first);
+		auto ability = ability_rank.first;
+		auto rank = ability_rank.second;
+
+		if (!rank) {
+			continue;
+		}
+
+		m_pp.aa_array[i].AA = rank_value.first;
+		m_pp.aa_array[i].value = rank_value.second.first;
+		m_pp.aa_array[i].charges = rank_value.second.second;
+		++i;
+	}
+
+	for (int i = 0; i < _maxLeaderAA; ++i)
+		m_pp.leader_abilities.ranks[i] = 0;
+
+	m_pp.group_leadership_points = 0;
+	m_pp.raid_leadership_points = 0;
+	m_pp.group_leadership_exp = 0;
+	m_pp.raid_leadership_exp = 0;
+
+	database.DeleteCharacterLeadershipAAs(CharacterID());
+	// undefined for these clients
+	if (ClientVersionBit() & EQEmu::versions::bit_TitaniumAndEarlier)
+		Kick();
+
+	//SetAA(rankId, rankLevel, charges);
+	//SendAlternateAdvancementPoints();
+	//SendAlternateAdvancementStats();
+
+	SendAlternateAdvancementPoints();
+	SendAlternateAdvancementStats();
+	CalcBonuses();
+	SaveAA();	
+}
+
 void Client::ResetAA() {
 	SendClearAA();
 	RefundAA();
