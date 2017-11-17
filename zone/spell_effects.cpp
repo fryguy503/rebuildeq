@@ -8110,8 +8110,26 @@ void Mob::ResourceTap(int32 damage, uint16 spellid)
 					damage = spells[spellid].max[i];
 	
 				if (spells[spellid].base2[i] == 0) { // HP Tap
-					if (damage > 0)
+					if (damage > 0) {
+						
+						int rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS);
+						Client *tapFocus = GetTapFocus();
+						if (rank > 0 && (spellid == 341 || spellid == 502 || spellid == 445 || spellid == 446 || spellid == 525 || spellid == 447) && tapFocus != nullptr && !tapFocus->IsDead()) {
+							float dist2 = DistanceSquared(GetPosition(), tapFocus->GetPosition());
+							float range2 = 100 * 100;
+							if (dist2 > range2) {
+								ClearTapFocus();
+							}
+							else { //in range
+								int focus_heal = int(damage * rank * 0.04f);
+								BuildEcho(StringFormat("Unholy Focus %i transferred %i hitpoints of the lifetap recourse to %s.", rank, focus_heal, tapFocus->GetCleanName()));
+								HealDamage(focus_heal);
+								damage -= focus_heal; //remove the tap amount
+							}
+						}
+
 						HealDamage(damage);
+					}
 					else
 						Damage(this, -damage, 0, EQEmu::skills::SkillEvocation, false);
 				}

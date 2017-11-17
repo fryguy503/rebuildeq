@@ -1512,7 +1512,7 @@ private:
 	bool AbilityTimer;
 	int Haste; //precalced value
 	uint32 tmSitting; // time stamp started sitting, used for HP regen bonus added on MAY 5, 2004
-	Client* tapFocus; //Focus of taps, NEC/SHD used.
+	Client* tapFocus = nullptr; //Focus of taps, NEC/SHD used.
 	int32 max_end;
 	int32 current_endurance;
 

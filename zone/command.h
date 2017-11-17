@@ -113,6 +113,7 @@ void command_flag(Client *c, const Seperator *sep);
 void command_flagedit(Client *c, const Seperator *sep);
 void command_flags(Client *c, const Seperator *sep);
 void command_flymode(Client *c, const Seperator *sep);
+void command_drainmana(Client* c, const Seperator *sep);
 void command_focus(Client* c, const Seperator *sep);
 void command_fov(Client *c, const Seperator *sep);
 void command_freeze(Client *c, const Seperator *sep);

@@ -2152,14 +2152,9 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 	//Shin: resist adjust penetration for Unholy Focus
 	int rank = 0;
 	if (IsClient()) {
-		rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS);
+		
 		int effect_value = 0;
-		int resist_mod = 0;
-		if (rank > 0 && IsDetrimentalSpell(spell_id)) {
-			resist_mod = floor(resist_adjust * 0.02f * rank);
-			BuildEcho(StringFormat("Unholy Focus %i reduced resists from %i to %i", rank, resist_adjust, resist_adjust - resist_mod));
-			resist_adjust -= resist_mod;
-		}
+		int resist_mod = 0;		
 		rank = GetBuildRank(ENCHANTER, RB_ENC_MANASPEAR);
 		effect_value = CalcSpellEffectValue(spell_id, SE_CurrentMana);
 		if (rank > 0 && 

@@ -3934,6 +3934,22 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					healed += healBonus;
 				}
 
+				int rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS);
+				Client *tapFocus = GetTapFocus();
+				if (rank > 0 && (spell_id == 341 || spell_id == 502 || spell_id == 445 || spell_id == 446 || spell_id == 525 || spell_id == 447) && tapFocus != nullptr && !tapFocus->IsDead()) {
+					float dist2 = DistanceSquared(GetPosition(), tapFocus->GetPosition());
+					float range2 = 100 * 100;
+					if (dist2 > range2) {
+						ClearTapFocus();
+					}
+					else { //in range
+						int focus_heal = int(healed * rank * 0.04f);
+						BuildEcho(StringFormat("Unholy Focus %i transferred %i hitpoints of the lifetap recourse to %s.", rank, focus_heal, tapFocus->GetCleanName()));
+						HealDamage(focus_heal);
+						healed -= focus_heal; //remove the tap amount
+					}
+				}
+
 				healed = attacker->GetActSpellHealing(spell_id, healed);
 				Log(Logs::Detail, Logs::Combat, "Applying lifetap heal of %d to %s", healed, attacker->GetName());
 				attacker->HealDamage(healed);

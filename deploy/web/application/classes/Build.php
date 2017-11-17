@@ -1754,7 +1754,7 @@ class Build {
 		
 			$newSkill = new stdClass();
 			$newSkill->title = "Unholy Focus";
-			$newSkill->desc = 'Improves all detrimental spells to penetrate <em data-base="2">2</em>% spell resists<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Enables use of the #focus command, transferring lifetaps to the focused ally for <em data-base="4">4</em>% of the recourse given<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-unholyfocus.png";	
 			$skills[31] = $newSkill;
 		

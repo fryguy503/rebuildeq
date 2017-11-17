@@ -196,6 +196,7 @@ int command_init(void)
 		command_add("distance", "- Reports the distance between you and your target.",  80, command_distance) ||
 		command_add("doanim", "[animnum] [type] - Send an EmoteAnim for you or your target", 50, command_doanim) ||
 		command_add("dps", "- Get a report of DPS on target", 0, command_dps) ||
+		command_add("drainmana", "- Drain mana of target", 200, command_drainmana) ||
 		command_add("emote", "['name'/'world'/'zone'] [type] [message] - Send an emote message", 80, command_emote) ||
 		command_add("emotesearch", "Searches NPC Emotes", 80, command_emotesearch) ||
 		command_add("emoteview", "Lists all NPC Emotes", 80, command_emoteview) ||
@@ -214,7 +215,7 @@ int command_init(void)
 		command_add("flagedit", "- Edit zone flags on your target", 100, command_flagedit) ||
 		command_add("flags", "- displays the flags of you or your target", 50, command_flags) ||
 		command_add("flymode", "[0/1/2] - Set your or your player target's flymode to off/on/levitate", 50, command_flymode) ||
-		command_add("focus", "focus - marks a grouped ally as the focus for beneficial effects (SHD/NEC only).", 0, command_focus) ||
+		command_add("focus", "- marks a grouped ally as the focus for beneficial effects (SHD/NEC only).", 0, command_focus) ||
 		command_add("fov", "- Check wether you're behind or in your target's field of view", 80, command_fov) ||
 		command_add("freeze", "- Freeze your target", 80, command_freeze) ||
 		command_add("gassign", "[id] - Assign targetted NPC to predefined wandering grid id", 100, command_gassign) ||
@@ -1478,29 +1479,39 @@ void command_fov(Client *c, const Seperator *sep)
 		c->Message(0, "I Need a target!");
 }
 
+void command_drainmana(Client *c, const Seperator *sep) {
+	if (c->GetTarget() == nullptr) {
+		c->Message(0, "Pick a target to empty mana.");
+		return;
+	}
+	c->GetTarget()->SetMana(0);
+}
+
 void command_focus(Client *c, const Seperator *sep) {
 	if (c->GetClass() != SHADOWKNIGHT && c->GetClass() != NECROMANCER) {
 		c->Message(0, "You must be a Shadow Knight or Necromancer to use this command.");
 		return;
 	}
-	Client *focus = c->GetTarget()->CastToClient();
-	if (!c->GetTarget()) {
+	Client *focus = nullptr;
+
+	if (c->GetTarget() == nullptr) {
 		focus = c->GetTapFocus();
-		if (focus) {
+		if (focus != nullptr && focus->IsClient()) {
 			c->Message(0, "Your current tap focus is: %s", focus->GetCleanName());
 			return;
 		}
-		c->Message(0, "You must target a grouped ally to set them as your focus.");
+		c->Message(0, "You currently have no focus. You must target a grouped ally to set them as your focus.");
 		return;
 	}
+
+	focus = c->GetTarget()->CastToClient();
 	
-	if (!focus || !focus->IsGrouped()) {
+	if (focus == nullptr /*|| !focus->IsGrouped() || focus == this*/) {
 		c->Message(0, "You must target a grouped ally to set them as your focus.");
 		return;
 	}
 	c->SetTapFocus(focus);
 	c->Message(0, "Your taps will now affect %s.", focus->GetCleanName());
-
 }
 
 void command_npcstats(Client *c, const Seperator *sep)
@@ -4009,6 +4020,8 @@ void command_bind(Client *c, const Seperator *sep)
 //List all available builds
 void command_builds(Client *c, const Seperator *sep)
 {
+	//c->RebuildAA();
+
 	if (c->IsTaskActivityActive(307, 7)) c->UpdateTaskActivity(FEAT_GETTINGSTARTED, 7, 1);
 	uint8 freeLevel = 61;
 	if (!c->IsBuildAvailable()) {
