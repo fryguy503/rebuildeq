@@ -9694,10 +9694,6 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Mind over Matter\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-				if (GetClass() == ENCHANTER && i == RB_ENC_DIRECHARM && GetAA(aaDireCharm) < 1) {
-					TrainAARank(aaDireCharm);
-					Message(15, "You have unlocked the AA \"Dire Charm\"! Find the hotkey in your Alternate Advancement Window.");
-				}
 
 				if (GetClass() == MAGICIAN && i == RB_MAG_SHAREDHEALTH && GetAA(aaSharedHealth) < 1) {
 					TrainAARank(aaSharedHealth);
@@ -10760,8 +10756,8 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_ENC_FEEDBACK) return "Feedback";
 		else if (id == RB_ENC_FOCUS) return "Focus";
 		else if (id == RB_ENC_LIFEFLOW) return "Life Flow";
-		else if (id == RB_ENC_DIRECHARM) return "Dire Charm";
-		else if (id == RB_ENC_ENTROPY) return "Entropy";
+		else if (id == RB_ENC_EXTENDEDCHARM) return "Extended Charm";
+		else if (id == RB_ENC_MINDDEVOURER) return "Mind Devorour";
 		else if (id == RB_ENC_COLORSHOCK) return "Color Shock";
 		else if (id == RB_ENC_MANASPEAR) return "Mana Spear";
 		else if (id == RB_ENC_FLOWINGTHOUGHT) return "Flowing Thought";

@@ -1609,17 +1609,6 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 			new_bonus->ManaRegen += (1 * rank); // Mana Regen, 1 per tick per rank
 		}
 
-		rank = CastToClient()->GetBuildRank(BARD, RB_BRD_BLADEDANCER);
-		if (rank > 0) {
-			DebugEcho(StringFormat("Blade Dancer %i increased dodge chance from %i to %i.", rank, new_bonus->DodgeChance, new_bonus->DodgeChance + (2 * rank)));
-			new_bonus->DodgeChance += (2 * rank);
-		}
-
-		rank = CastToClient()->GetBuildRank(MONK, RB_MNK_BLOCK);
-		if (rank > 0) {
-			DebugEcho(StringFormat("Block %i increased block chance from %i to %i.", rank, new_bonus->IncreaseBlockChance, (2 * rank)));
-			new_bonus->IncreaseBlockChance += (2 * rank);
-		}
 	}
 
 	for (i = 0; i < EFFECT_COUNT; i++)

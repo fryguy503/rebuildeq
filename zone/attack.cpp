@@ -515,6 +515,15 @@ bool Mob::AvoidDamage(Mob *other, DamageHitInfo &hit)
 		int chance = GetSkill(EQEmu::skills::SkillBlock) + 100;
 		chance += (chance * (aabonuses.IncreaseBlockChance + spellbonuses.IncreaseBlockChance + itembonuses.IncreaseBlockChance)) / 100;
 		chance /= 25;
+
+
+		int rank = CastToClient()->GetBuildRank(MONK, RB_MNK_BLOCK);
+		if (rank > 0) {
+			DebugEcho(StringFormat("Block %i increased block chance from %i to %i.", rank, chance, chance + int(chance * 0.02f * rank)));
+			chance += int(chance * 0.02f * rank);
+		}
+
+
 		chance += itembonuses.HeroicDEX / 25; // live has "heroic strickthrough" here to counter
 		if (counter_block || counter_all) {
 			float counter = (counter_block + counter_all) / 100.0f;
@@ -548,7 +557,7 @@ bool Mob::AvoidDamage(Mob *other, DamageHitInfo &hit)
 			return true;
 		}
 	}
-
+	int rank = 0;
 	// dodge
 	if (CanThisClassDodge() && (InFront || GetClass() == MONK)) {
 		if (IsClient())
@@ -561,6 +570,13 @@ bool Mob::AvoidDamage(Mob *other, DamageHitInfo &hit)
 		int chance = GetSkill(EQEmu::skills::SkillDodge) + 100;
 		chance += (chance * (aabonuses.DodgeChance + spellbonuses.DodgeChance + itembonuses.DodgeChance)) / 100;
 		chance /= 45;
+
+		rank = CastToClient()->GetBuildRank(BARD, RB_BRD_BLADEDANCER);
+		if (rank > 0) {
+			DebugEcho(StringFormat("Blade Dancer %i increased dodge chance from %i to %i.", rank, chance, chance + (2 * rank)));
+			chance += int(chance * 0.002f * rank);
+		}
+
 		chance += itembonuses.HeroicAGI / 25; // live has "heroic strickthrough" here to counter
 		if (counter_dodge || counter_all) {
 			float counter = (counter_dodge + counter_all) / 100.0f;

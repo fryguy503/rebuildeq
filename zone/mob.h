@@ -1244,12 +1244,14 @@ public:
 	bool CheckBackfire();
 	void BadMoonProc(Mob * defender, DamageHitInfo & hit);
 	int DoTranquilityRegen();
-	int ModifyManaUsage(int mana_used, uint16 spell_id, Mob * spell_target);
+	int ModifyManaUsage(int mana_used, uint16 spell_id, Mob * spell_target, bool is_final_calc);
 	Client * GetTapFocus();
 	void ClearTapFocus();
 	void SetTapFocus(Client * focus);
 	Item_Reward GetBoxReward(int minimumRarity, int boxType);
 	bool IsValidItem(int itemid);
+	bool DoBuffSystem(uint16 spell_id, Mob * spell_target);
+	bool IsCaster();
 	int engage_duration;
 
 	// Bots HealRotation methods

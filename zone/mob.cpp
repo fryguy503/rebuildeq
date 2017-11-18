@@ -7744,7 +7744,6 @@ int Mob::DoTranquilityRegen() {
 		if (!group->members[gi]) continue;
 		target = group->members[gi];
 		if (!target) continue;
-		if (target == this) continue;
 		if (target->GetZoneID() != GetZoneID()) continue;
 		if (!target->IsClient()) continue;
 		distance = DistanceSquared(GetPosition(), GetPosition());
@@ -7757,7 +7756,7 @@ int Mob::DoTranquilityRegen() {
 }
 
 //Modifies mana usage for players
-int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
+int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target, bool is_final_calc) {
 	if (!IsClient()) return mana_cost;
 	int rank = 0;
 
@@ -7845,6 +7844,19 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
 		if (spell_id == 495) mana_cost = 450;
 	}
 
+	rank = GetBuildRank(ENCHANTER, RB_ENC_DROWN);
+	if (GetClass() == ENCHANTER && (
+		spell_id == 286 || //shallow breath
+		spell_id == 294 || //suffocating sphere
+		spell_id == 521 || //choke
+		spell_id == 450 || //suffocate
+		spell_id == 195 || //gasping embrace
+		spell_id == 1703 //asphyxiate
+		) && is_final_calc) {
+		
+		int mana_redux = int(mana_cost * 0.03f * rank);
+		BuildEcho(StringFormat("Drown %i reduced mana cost from %i to %i.", mana_cost, mana_redux));
+	}
 
 
 	// Druid Ring Affinity - Ring spells cast 5% faster and cost 10% less mana per rank.
@@ -7866,7 +7878,7 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
 		spell_id == 2030 || //Ring of Wakening Lands
 		spell_id == 2031 || //Ring of Cobalt Scar
 		spell_id == 3794 //Ring of Stonebrunt
-		)) {
+		) && is_final_calc) {
 		int mana_cost_reduc = floor(0.1f * rank * mana_cost);
 		BuildEcho(StringFormat("Ring Affinity %i reduced mana cost by %i.", rank, mana_cost_reduc));
 		mana_cost -= mana_cost_reduc;
@@ -7914,7 +7926,7 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
 
 	int mana_modifier = 0;
 	rank = GetBuildRank(BARD, RB_BRD_SIRENSSONG);
-	if (rank > 0 &&
+	if (rank > 0 && is_final_calc &&
 		(spell_id == 725 ||
 			spell_id == 750)) {
 		mana_modifier = int(mana_cost * 0.1f * rank);
@@ -7945,20 +7957,27 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target) {
 	}
 
 	rank = GetBuildRank(CLERIC, RB_CLR_PROMISE);
-	if (rank > 0 && mana_cost > 0) {
+	if (rank > 0 && mana_cost > 0 && is_final_calc) {
 		int reduced = floor(mana_cost * 0.1f * rank);
-		BuildEcho(StringFormat("Promise reduced mana cost by %i", rank));
+		BuildEcho(StringFormat("Promise %i reduced mana cost by %i", rank, reduced));
 		mana_cost -= rank;
 		if (mana_cost < 1) mana_cost = 0;
 	}
 
-	rank = GetBuildRank(ENCHANTER, RB_ENC_FOCUS);
-	if (rank > 0 && /*IsDetrimentalSpell(spell_id) && GetSpellEffectIndex(spell_id, SE_CurrentHP) > -1 &&*/ mana_cost > 0) {
-		int reduced = floor(mana_cost * 0.07f * rank);
-		if (reduced < 1) reduced = 1;
-		BuildEcho(StringFormat("Focus %i reduced mana cost by %i.", rank, reduced));
+	rank = GetBuildRank(ENCHANTER, RB_ENC_ENTHRALL);
+	if (rank > 0 && (
+		spell_id == 292 || //Mesmerize
+		spell_id == 187 || //Enthrall
+		spell_id == 307 || //Mesmerization
+		spell_id == 188 || //Entrance
+		spell_id == 190 || //Dazzle
+		spell_id == 1690 || //Fascination
+		spell_id == 1691 || // Glamour of Kintaz
+		spell_id == 1692 // Rapture
+		)) {
+		int reduced = int(mana_cost * 0.01f * rank);
+		BuildEcho(StringFormat("Enthrall %i reduced mana cost by %i", rank, reduced));
 		mana_cost -= reduced;
-		if (mana_cost < 1) mana_cost = 0;
 	}
 
 	rank = GetBuildRank(MAGICIAN, RB_MAG_FRENZIEDBURNOUT);
@@ -8361,4 +8380,155 @@ Item_Reward Mob::GetBoxReward(int minimumRarity, int boxType) {
 bool Mob::IsValidItem(int itemid) {
 	if (!IsClient()) return true; //when this is called with an NPC in mind, always return true
 	return CastToClient()->IsValidItem(itemid);
+}
+
+//Do buff code calculations and discovery
+bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
+	//RB_ENC_FLOWINGTHOUGHT and RB_PAL_BRELLSBLESSING and RB_CLR_INTENSITYOFTHERESOLUTE are free if spell_ids removed
+	int rank = 0;
+	Mob *caster = this;
+	if (!this->IsClient()) return false;
+	int caster_level = GetLevel();
+
+	rank = GetBuildRank(ENCHANTER, RB_ENC_FLOWINGTHOUGHT);
+	if (spell_id == 697 && rank > 0) {
+		int duration = caster_level * 10;
+		if (rank < 5) duration /= 2;
+		int lowestLevel = caster_level;
+		if (level < caster_level) lowestLevel = level;
+
+		if (rank >= 1 && GetMaxMana() > 0 && GetClass() != BARD) { //rank 1= Breeze
+			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 2570, duration); //koadic's endless intellect 60
+			else if (lowestLevel >= 56) caster->QuickBuff(spell_target, 1695, duration); //gift of pure thought 56
+			else if (lowestLevel >= 52) caster->QuickBuff(spell_target, 1693, duration); //clarity ii 52
+			else if (lowestLevel >= 42) caster->QuickBuff(spell_target, 1694, duration); //boon of the clear mind 42
+			else if (lowestLevel >= 26) caster->QuickBuff(spell_target, 174, duration); //clarity 26
+																				//else caster->QuickBuff(spell_target, 697, duration); //breeze 14 (war1)
+		}
+		if (rank >= 2) { //visage lines, + to tanks, - to rest							
+			if (GetClass() == WARRIOR || GetClass() == SHADOWKNIGHT || GetClass() == PALADIN) {
+				if (lowestLevel >= 56) caster->QuickBuff(spell_target, 2568, duration); //horrifying visage 56
+				else caster->QuickBuff(spell_target, 2563, duration); //haunting visage 26 (war1)
+			}
+			else {
+				if (lowestLevel >= 58) caster->QuickBuff(spell_target, 2569, duration); //glamourous visage 58
+				else if (lowestLevel >= 54) caster->QuickBuff(spell_target, 2597, duration); //beguiling visage 54
+				else caster->QuickBuff(spell_target, 2564, duration); //calming visage 36 (war1)
+			}
+		}
+		if (rank >= 3 && GetMaxMana() > 0) { //gift line (only to those with mana)
+			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 1410, duration); //gift of brilliance 60
+			else if (lowestLevel >= 55) caster->QuickBuff(spell_target, 1409, duration); //gift of insight 55
+			else caster->QuickBuff(spell_target, 1408, duration); //gift of magic (war1)
+		}
+		if (rank >= 4 &&
+			GetClass() != ENCHANTER &&
+			GetClass() != MAGICIAN &&
+			GetClass() != WIZARD) { //Haste
+									//speed of the brood removed 2895
+			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 1710, duration); //visions of grandeur 60
+																			//wonderous rapidity 70%, removed for aug 1709 
+			else if (lowestLevel >= 56) caster->QuickBuff(spell_target, 1729, duration); //augment 56
+			else if (lowestLevel >= 53) caster->QuickBuff(spell_target, 1708, duration); //aanya's quickening  53
+			else if (lowestLevel >= 47) caster->QuickBuff(spell_target, 172, duration); //swift like the wind 47
+			else if (lowestLevel >= 39) caster->QuickBuff(spell_target, 171, duration); //celerity 39
+			else if (lowestLevel >= 28) caster->QuickBuff(spell_target, 10, duration); //augmentation 28
+			else if (lowestLevel >= 21) caster->QuickBuff(spell_target, 170, duration); //alacrity 21
+			else caster->QuickBuff(spell_target, 39, duration); //quickness 15 (war1)
+		}
+		return true;
+	}
+
+	rank = GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE);
+	if (spell_id == 202 && rank > 0) {
+		int duration = caster_level * 10;
+
+		//Spell Haste
+		if (level >= 60 && caster_level >= 60) caster->QuickBuff(spell_target, 3472, duration);
+		else if (level >= 35 && caster_level >= 35) caster->QuickBuff(spell_target, 3576, duration);
+		else caster->QuickBuff(spell_target, 3575, duration);
+
+		if (rank > 1) { // AC
+			if (level >= 57 && caster_level >= 57) caster->QuickBuff(spell_target, 1537, duration);
+			else if (level >= 45 && caster_level >= 45) caster->QuickBuff(spell_target, 20, duration);
+			else if (level >= 35 && caster_level >= 35) caster->QuickBuff(spell_target, 19, duration);
+			else if (level >= 25 && caster_level >= 25) caster->QuickBuff(spell_target, 18, duration);
+			else if (level >= 15 && caster_level >= 15) caster->QuickBuff(spell_target, 368, duration);
+			else caster->QuickBuff(spell_target, 11, duration);
+		}
+
+		if (rank > 2) { // HP
+			if (level >= 55 && caster_level >= 55) caster->QuickBuff(spell_target, 1539, duration); //fortitude
+			else if (level >= 52 && caster_level >= 52) caster->QuickBuff(spell_target, 1533, duration); //heroism
+			else if (level >= 42 && caster_level >= 42) caster->QuickBuff(spell_target, 314, duration); //resolution
+			else if (level >= 32 && caster_level >= 32) caster->QuickBuff(spell_target, 312, duration); //valor
+			else if (level >= 22 && caster_level >= 22) caster->QuickBuff(spell_target, 244, duration); //bravery
+			else if (level >= 17 && caster_level >= 17) caster->QuickBuff(spell_target, 89, duration); //daring
+			else if (level >= 7 && caster_level >= 7) caster->QuickBuff(spell_target, 219, duration); //center
+																							  //else caster->QuickBuff(spell_target, 202, duration); //courage is casted by this spell
+		}
+
+		if (rank > 3) { // HPv2
+			if (level >= 54 && caster_level >= 54) caster->QuickBuff(spell_target, 1535, duration); //symbol of marzin
+			else if (level >= 41 && caster_level >= 41) caster->QuickBuff(spell_target, 488, duration); //symbol of naltron
+			else if (level >= 31 && caster_level >= 31) caster->QuickBuff(spell_target, 487, duration); //symbol of pinzam
+			else if (level >= 21 && caster_level >= 21) caster->QuickBuff(spell_target, 486, duration); //symbol of ryltan
+			else caster->QuickBuff(spell_target, 485, duration); //courage
+		}
+
+		if (rank > 4) { //Yaulp
+			if (level >= 56 && caster_level >= 56) caster->QuickBuff(spell_target, 2326, duration);
+			if (level >= 53 && caster_level >= 53) caster->QuickBuff(spell_target, 1534, duration);
+			else if (level >= 41 && caster_level >= 41) caster->QuickBuff(spell_target, 44, duration);
+			else if (level >= 16 && caster_level >= 16) caster->QuickBuff(spell_target, 43, duration);
+			else caster->QuickBuff(spell_target, 210, duration);
+		}
+
+		return true;
+	}
+
+	rank = GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
+	if (spell_id == 202 && rank > 0) {
+		Log(Logs::General, Logs::Spells, "Applying Courage buff");
+		int duration = caster_level * 10;
+		if (rank < 5) duration /= 2;
+		//4065 blessing of austerity
+		//3578
+		int lowestLevel = caster_level;
+		if (level < caster_level) lowestLevel = level;
+
+		if (rank >= 1) { //rank 1= AC
+			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 20, duration); //shield of words 60
+			else if (lowestLevel >= 48) caster->QuickBuff(spell_target, 19, duration); //armor of faith 48
+			else if (lowestLevel >= 39) caster->QuickBuff(spell_target, 18, duration); //guard 39
+			else if (lowestLevel >= 30) caster->QuickBuff(spell_target, 368, duration); //spirit armor 30
+			else caster->QuickBuff(spell_target, 11, duration); //holy armor 15 (clr1)
+		}
+		if (rank >= 2) { //rank 2 = hp v1
+			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 314, duration); //resolution 60
+			else if (lowestLevel >= 47) caster->QuickBuff(spell_target, 312, duration); //valor 47
+			else if (lowestLevel >= 37) caster->QuickBuff(spell_target, 89, duration); //daring 37
+			else if (lowestLevel >= 20) caster->QuickBuff(spell_target, 219, duration); //center 20
+																				//else caster->QuickBuff(spell_target, 202, duration); //courage 8 (clr 1)
+		}
+		if (rank >= 3) { //rank 3 = hp symbol
+			if (lowestLevel >= 58) caster->QuickBuff(spell_target, 488, duration); //symbol of naltron 58
+			else if (lowestLevel >= 46) caster->QuickBuff(spell_target, 487, duration); //symbol of pizarn 46
+			else if (lowestLevel >= 33) caster->QuickBuff(spell_target, 486, duration); //symbol of ryltan 33
+			else caster->QuickBuff(spell_target, 485, duration); //symbol of transal 24 (clr 1)							
+		}
+		if (rank >= 4) { //rank 4 = brell line
+			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 2590, duration); //brell's mountainous barrier
+			else if (lowestLevel >= 53) caster->QuickBuff(spell_target, 1288, duration); //divine glory 53
+			else if (lowestLevel >= 49) caster->QuickBuff(spell_target, 3578, duration); //brell's steadfast aegis 49
+			else caster->QuickBuff(spell_target, 2584, duration); //divine vigor 35
+		}
+		return true;
+	}
+	return false;
+}
+
+
+bool Mob::IsCaster() {
+	return (GetClass() != WARRIOR && GetClass() != MONK && GetClass() != ROGUE);
 }

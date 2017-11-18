@@ -1363,8 +1363,9 @@ void EntityList::LogManaEvent(Mob *caster, Mob *target, int mana) {
 	if (target == nullptr) return;
 
 	int net_mana = mana;
-	if (target->GetMana() + mana > target->GetMaxMana()) net_mana = target->GetMaxMana() - target->GetMana(); //overheal, get difference of max - cur
-	if (target->GetMana() - mana < 0) net_mana = target->GetMana(); //reduce below zero, store mana left
+	//don't cap mana gains/losses, since the mechanic is different.
+	//if (target->GetMana() + mana > target->GetMaxMana()) net_mana = target->GetMaxMana() - target->GetMana(); //overheal, get difference of max - cur
+	//if (target->GetMana() - mana < 0) net_mana = target->GetMana(); //reduce below zero, store mana left
 
 	//if (net_mana == 0 || !target->IsClient()) return; //Ignore an NPC regenerating, or no events
 

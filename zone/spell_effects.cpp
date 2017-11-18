@@ -841,52 +841,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				}
 
 				if (caster->IsClient()) {
-					
-					rank = caster->CastToClient()->GetBuildRank(CLERIC, RB_CLR_INTENSITYOFTHERESOLUTE);
-					if (spell_id == 202 && rank > 0) {
-						int duration = caster_level * 10;
-
-						//Spell Haste
-						if (level >= 60 && caster_level >= 60) caster->QuickBuff(this, 3472, duration);
-						else if (level >= 35 && caster_level >= 35) caster->QuickBuff(this, 3576, duration);
-						else caster->QuickBuff(this, 3575, duration);
-
-						if (rank > 1) { // AC
-							if (level >= 57 && caster_level >= 57) caster->QuickBuff(this, 1537, duration);
-							else if (level >= 45 && caster_level >= 45) caster->QuickBuff(this, 20, duration);
-							else if (level >= 35 && caster_level >= 35) caster->QuickBuff(this, 19, duration);
-							else if (level >= 25 && caster_level >= 25) caster->QuickBuff(this, 18, duration);
-							else if (level >= 15 && caster_level >= 15) caster->QuickBuff(this, 368, duration);
-							else caster->QuickBuff(this, 11, duration);
-						}
-
-						if (rank > 2) { // HP
-							if (level >= 55 && caster_level >= 55) caster->QuickBuff(this, 1539, duration); //fortitude
-							else if (level >= 52 && caster_level >= 52) caster->QuickBuff(this, 1533, duration); //heroism
-							else if (level >= 42 && caster_level >= 42) caster->QuickBuff(this, 314, duration); //resolution
-							else if (level >= 32 && caster_level >= 32) caster->QuickBuff(this, 312, duration); //valor
-							else if (level >= 22 && caster_level >= 22) caster->QuickBuff(this, 244, duration); //bravery
-							else if (level >= 17 && caster_level >= 17) caster->QuickBuff(this, 89, duration); //daring
-							else if (level >= 7 && caster_level >= 7) caster->QuickBuff(this, 219, duration); //center
-																											  //else caster->QuickBuff(this, 202, duration); //courage is casted by this spell
-						}
-
-						if (rank > 3) { // HPv2
-							if (level >= 54 && caster_level >= 54) caster->QuickBuff(this, 1535, duration); //symbol of marzin
-							else if (level >= 41 && caster_level >= 41) caster->QuickBuff(this, 488, duration); //symbol of naltron
-							else if (level >= 31 && caster_level >= 31) caster->QuickBuff(this, 487, duration); //symbol of pinzam
-							else if (level >= 21 && caster_level >= 21) caster->QuickBuff(this, 486, duration); //symbol of ryltan
-							else caster->QuickBuff(this, 485, duration); //courage
-						}
-
-						if (rank > 4) { //Yaulp
-							if (level >= 56 && caster_level >= 56) caster->QuickBuff(this, 2326, duration);
-							if (level >= 53 && caster_level >= 53) caster->QuickBuff(this, 1534, duration);
-							else if (level >= 41 && caster_level >= 41) caster->QuickBuff(this, 44, duration);
-							else if (level >= 16 && caster_level >= 16) caster->QuickBuff(this, 43, duration);
-							else caster->QuickBuff(this, 210, duration);
-						}
-					}
 					if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 					{
 						EQApplicationPacket *outapp = MakeBuffsPacket(false);
@@ -985,11 +939,17 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if(GetClass() == BARD)
 					break;
 
+				//find out true amount of mana taken
+				int mana_taken = GetMaxMana() - GetMana();
+				if (effect_value < mana_taken) mana_taken = effect_value;
+
+
 				rank = caster->GetBuildRank(ENCHANTER, RB_ENC_ENERGYBURN);
-				if (IsNPC() && 
+				if (IsNPC() &&
+					IsCaster() &&
 					rank > 0 && 
 					effect_value < 0) {
-					int damage_amount = floor(-effect_value * 0.4f);
+					int damage_amount = int(-mana_taken * 0.7f);
 					if (GetMana() < damage_amount) damage_amount = GetMana();
 					if (damage_amount > 0) {
 						caster->BuildEcho(StringFormat("Energy Burn %i dealt %i damage to %s.", rank, damage_amount, GetCleanName()));
@@ -999,9 +959,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 				rank = caster->GetBuildRank(ENCHANTER, RB_ENC_LIFEFLOW);
 				if (IsNPC() &&
+					IsCaster() &&
 					rank > 0 &&
 					effect_value < 0) {
-					int damage_amount = floor(-effect_value * 0.4f);
+					int damage_amount = int(-mana_taken * 0.4f);
 					if (GetMana() < damage_amount) damage_amount = GetMana();
 					if (damage_amount > 0) {
 						caster->BuildEcho(StringFormat("Lifeflow %i healed you for %i hitpoints.", rank, damage_amount));
@@ -1357,7 +1318,16 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					//This is a bonus stun component for added aggro.
 
 					if (caster->IsClient() && IsNPC()) {
-						AddToHateList(caster, uint32(effect_value * 50)); //add 50 aggro for each second of stun
+
+						uint32 hate_amount = uint32(effect_value * 50);
+						rank = GetBuildRank(ENCHANTER, RB_ENC_FOCUS);
+						if (rank > 0 ) {
+							int hate_redux = int(hate_amount * rank * 0.07f);
+							BuildEcho(StringFormat("Focus %i reduced hate from %i to %i.", rank, hate_amount, hate_amount-hate_redux));
+							hate_amount -= hate_redux;
+						}
+
+						AddToHateList(caster, hate_amount); //add 50 aggro for each second of stun
 						//attacker->AddToHateList(this, uint32(10 * this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_SHIELDOFNIFE)));
 					}
 
@@ -1443,10 +1413,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						// Need to manually set target so that we can access it in the MakePet method
 						caster->SetTarget(this);
 						caster->CastToClient()->MakePet(spell_id, "RB_DRU_DIRECHARM");
-					} else if (caster->GetBuildRank(ENCHANTER, RB_ENC_DIRECHARM) > 0) {
-						// Need to manually set target so that we can access it in the MakePet method
-						caster->SetTarget(this);
-						caster->CastToClient()->MakePet(spell_id, "RB_ENC_DIRECHARM");
 					} else {
 						Message(0, "You must train Dire Charm for this effect to work.");
 					}
@@ -4026,47 +3992,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					Client * casterClient = caster->CastToClient();					
 					uint8 level = GetLevel();
 					uint8 caster_level = casterClient->GetLevel();
-
-
-
-					
-					rank = casterClient->GetBuildRank(PALADIN, RB_PAL_BRELLSBLESSING);
-					if (spell_id == 202 && rank > 0) {
-						Log(Logs::General, Logs::Spells, "Applying Courage buff");
-						int duration = caster_level * 10;
-						if (rank < 5) duration /= 2;
-						//4065 blessing of austerity
-						//3578
-						int lowestLevel = caster_level;
-						if (level < caster_level) lowestLevel = level;
-
-						if (rank >= 1) { //rank 1= AC
-							if (lowestLevel >= 60) caster->QuickBuff(this, 20, duration); //shield of words 60
-							else if (lowestLevel >= 48) caster->QuickBuff(this, 19, duration); //armor of faith 48
-							else if (lowestLevel >= 39) caster->QuickBuff(this, 18, duration); //guard 39
-							else if (lowestLevel >= 30) caster->QuickBuff(this, 368, duration); //spirit armor 30
-							else caster->QuickBuff(this, 11, duration); //holy armor 15 (clr1)
-						}
-						if (rank >= 2) { //rank 2 = hp v1
-							if (lowestLevel >= 60) caster->QuickBuff(this, 314, duration); //resolution 60
-							else if (lowestLevel >= 47) caster->QuickBuff(this, 312, duration); //valor 47
-							else if (lowestLevel >= 37) caster->QuickBuff(this, 89, duration); //daring 37
-							else if (lowestLevel >= 20) caster->QuickBuff(this, 219, duration); //center 20
-							//else caster->QuickBuff(this, 202, duration); //courage 8 (clr 1)
-						}
-						if (rank >= 3) { //rank 3 = hp symbol
-							if (lowestLevel >= 58) caster->QuickBuff(this, 488, duration); //symbol of naltron 58
-							else if (lowestLevel >= 46) caster->QuickBuff(this, 487, duration); //symbol of pizarn 46
-							else if (lowestLevel >= 33) caster->QuickBuff(this, 486, duration); //symbol of ryltan 33
-							else caster->QuickBuff(this, 485, duration); //symbol of transal 24 (clr 1)							
-						}
-						if (rank >= 4) { //rank 4 = brell line
-							if (lowestLevel >= 60) caster->QuickBuff(this, 2590, duration); //brell's mountainous barrier
-							else if (lowestLevel >= 53) caster->QuickBuff(this, 1288, duration); //divine glory 53
-							else if (lowestLevel >= 49) caster->QuickBuff(this, 3578, duration); //brell's steadfast aegis 49
-							else caster->QuickBuff(this, 2584, duration); //divine vigor 35
-						}
-					}
 
 					rank = casterClient->GetBuildRank(DRUID, RB_DRU_BLESSINGOFRO);
 					int maxInfect = zone->random.Int(0, rank);
