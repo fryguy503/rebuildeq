@@ -3505,7 +3505,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 			}
 			else {
 				if (lowestLevel >= 58) caster->QuickBuff(this, 2569, duration); //glamourous visage 58
-				else if (lowestLevel >= 54) caster->QuickBuff(this, 2597, duration); //beguiling visage 54
+				else if (lowestLevel >= 54) caster->QuickBuff(this, 2567, duration); //beguiling visage 54
 				else caster->QuickBuff(this, 2564, duration); //calming visage 36 (war1)
 			}
 		}
@@ -3513,6 +3513,15 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 			if (lowestLevel >= 60) caster->QuickBuff(this, 1410, duration); //gift of brilliance 60
 			else if (lowestLevel >= 55) caster->QuickBuff(this, 1409, duration); //gift of insight 55
 			else caster->QuickBuff(this, 1408, duration); //gift of magic (war1)
+			if (lowestLevel >= 35 &&
+				(GetClass() == CLERIC ||
+				GetClass() == DRUID ||
+				GetClass() == SHAMAN ||
+				GetClass() == PALADIN ||
+				GetClass() == RANGER)) {
+				caster->QuickBuff(this, 175, duration); //give insight to wis casters
+			}
+			else if (lowestLevel >= 41) caster->QuickBuff(this, 33, duration); //give brilliance to int casters
 		}
 		if (rank >= 4 &&
 			GetClass() != ENCHANTER &&
