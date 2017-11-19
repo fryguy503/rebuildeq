@@ -1637,7 +1637,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					int buff_count = GetMaxTotalSlots();
 					for (int slot = 0; slot < buff_count; slot++) {
 						if (buffs[slot].spellid != SPELL_UNKNOWN &&
-							IsDetrimentalSpell(buffs[slot].spellid))
+							IsDetrimentalSpell(buffs[slot].spellid) && 
+							buffs[slot].spellid != 756 &&  //rez sickness
+							buffs[slot].spellid != 757) //rez sick)
 						{
 							if (caster && TryDispel(caster->GetLevel(), buffs[slot].casterlevel, effect_value)) {
 								BuffFadeBySlot(slot);
@@ -1704,8 +1706,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					int buff_count = GetMaxTotalSlots();
 					for (int slot = 0; slot < buff_count; slot++) {
 						if (buffs[slot].spellid != SPELL_UNKNOWN &&
-							IsDetrimentalSpell(buffs[slot].spellid))
+							IsDetrimentalSpell(buffs[slot].spellid) &&
+							buffs[slot].spellid != 756 &&  //rez sickness
+							buffs[slot].spellid != 757) //rez sick
 						{
+							
 							if (caster && TryDispel(caster->GetLevel(), buffs[slot].casterlevel, effect_value)) {
 								BuffFadeBySlot(slot);
 								cureCount++;
