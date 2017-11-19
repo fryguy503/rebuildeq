@@ -8421,7 +8421,7 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 			else if (lowestLevel >= 55) caster->QuickBuff(spell_target, 1409, duration); //gift of insight 55
 			else caster->QuickBuff(spell_target, 1408, duration); //gift of magic (war1)
 
-			if (IsCaster()) caster->QuickBuff(this, 175, duration); //give insight to wis casters
+			if (spell_target->IsCaster()) caster->QuickBuff(spell_target, 175, duration); //give insight to wis casters
 		}
 		if (rank >= 4 &&
 			GetClass() != ENCHANTER &&
@@ -8527,6 +8527,134 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 		}
 		return true;
 	}
+
+
+	rank = GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID);
+	if (spell_id == 267 && rank > 0) {
+		int duration = caster_level * 10;
+		int str = 0;
+		int dex = 0;
+		int lowestLevel = caster_level;
+		if (level < caster_level) lowestLevel = level;
+
+		if (rank >= 5) {
+			if (lowestLevel >= 50) caster->QuickBuff(spell_target, 171, duration); // celerity 56
+			else if (lowestLevel >= 50) caster->QuickBuff(spell_target, 1430, duration); // spirit quickening 50
+			else if (lowestLevel >= 42) caster->QuickBuff(spell_target, 170, duration); // alacrity 42
+			else caster->QuickBuff(spell_target, 39, duration); // quickness 26
+		}
+
+		if (rank >= 4) { //HP/AC
+			if (lowestLevel >= 60) {
+				caster->QuickBuff(spell_target, 2530, duration);       //kura's focusing 60
+				str = 1; dex = 1;
+			}
+			else if (lowestLevel >= 55) caster->QuickBuff(spell_target, 1585, duration);    //talisman of kragg 55
+			else if (lowestLevel >= 46) {
+				caster->QuickBuff(spell_target, 2525, duration);  //harnessing of spirit 46
+				str = 1; dex = 1;
+			}
+			else if (lowestLevel >= 40) caster->QuickBuff(spell_target, 168, duration);     //talisman of altuna 40
+			else if (lowestLevel >= 32) caster->QuickBuff(spell_target, 167, duration);     //talisman of tnarg 32
+																					//else caster->QuickBuff(spell_target, 267, duration);                                            //inner fire -- cannot cast this because it is the same spell we're casting
+
+			if (lowestLevel >= 54) caster->QuickBuff(spell_target, 1584, duration);         //shroud of the spirits 54
+			else if (lowestLevel >= 42) caster->QuickBuff(spell_target, 389, duration);     //guardian 42
+			else if (lowestLevel >= 31) caster->QuickBuff(spell_target, 431, duration);     //shifting shield 20
+			else if (lowestLevel >= 20) caster->QuickBuff(spell_target, 649, duration);     //protect 20
+			else if (lowestLevel >= 11) caster->QuickBuff(spell_target, 283, duration);     //turtle skin 11
+			else caster->QuickBuff(spell_target, 274, duration);                                            //scale skin              		
+		}
+
+		caster->QuickBuff(spell_target, 278, duration);                                                 //spirit of wolf
+
+		if (rank >= 1 && str == 0) { //STR
+			if (level >= 57 && caster_level >= 57) caster->QuickBuff(spell_target, 1593, duration);         //maniacal strength 57
+			else if (level >= 46 && caster_level >= 46) caster->QuickBuff(spell_target, 159, duration);     //strength 46
+			else if (level >= 39 && caster_level >= 39) caster->QuickBuff(spell_target, 153, duration);     //furious strength 39
+			else if (level >= 28 && caster_level >= 28) caster->QuickBuff(spell_target, 151, duration);     //raging strength 28
+			else if (level >= 18 && caster_level >= 18) caster->QuickBuff(spell_target, 147, duration);     //spirit strength 18
+			else caster->QuickBuff(spell_target, 40, duration);                                             //strengthen
+		}
+
+		if (rank >= 2 && dex == 0) { //DEX
+			if (level >= 58 && caster_level >= 58) caster->QuickBuff(spell_target, 1583, duration);         //mortal deftness 58
+			else if (level >= 48 && caster_level >= 48) caster->QuickBuff(spell_target, 157, duration);     //dexterity 48
+			else if (level >= 39 && caster_level >= 39) caster->QuickBuff(spell_target, 152, duration);     //deftness 39
+			else if (level >= 25 && caster_level >= 25) caster->QuickBuff(spell_target, 349, duration);     //rising dexterity 25
+			else if (level >= 21 && caster_level >= 21) caster->QuickBuff(spell_target, 146, duration);     //spirit of monkey 21
+			else caster->QuickBuff(spell_target, 266, duration);                                            //dexterous aura
+		}
+
+		if (rank >= 2 && dex == 0) { //AGI
+			if (level >= 57 && caster_level >= 57) caster->QuickBuff(spell_target, 1579, duration);          //talisman of the cat 57
+			else if (level >= 53 && caster_level >= 53) caster->QuickBuff(spell_target, 1594, duration);     //deleriously nimble 53
+			else if (level >= 41 && caster_level >= 41) caster->QuickBuff(spell_target, 154, duration);      //agility 41
+			else if (level >= 31 && caster_level >= 31) caster->QuickBuff(spell_target, 160, duration);      //nimble 31
+			else if (level >= 18 && caster_level >= 18) caster->QuickBuff(spell_target, 148, duration);      //spirit of cat 18
+			else caster->QuickBuff(spell_target, 269, duration);                                             //feet like cat
+		}
+
+		if (rank >= 3) { //STA
+			if (level >= 54 && caster_level >= 54) caster->QuickBuff(spell_target, 1595, duration);    //riotous health 54
+			else if (level >= 43 && caster_level >= 43) caster->QuickBuff(spell_target, 158, duration);     //stamina 43
+			else if (level >= 30 && caster_level >= 30) caster->QuickBuff(spell_target, 161, duration);     //health 30
+			else if (level >= 21 && caster_level >= 21) caster->QuickBuff(spell_target, 149, duration);     //spirit of ox 21
+			else caster->QuickBuff(spell_target, 279, duration);                                            //spirit of Bear
+		}
+		return true;
+	}
+
+	rank = GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD);
+	if (spell_id == 3277 && rank > 0) {
+		int duration = caster_level * 10;
+		if (rank < 5) duration /= 2;
+		if (rank >= 4) { //Damage shield
+			if (level > 58 && caster_level > 58) caster->QuickBuff(spell_target, 1561, duration); //legacy of thorns 59
+			else if (level >= 58 && caster_level >= 58) caster->QuickBuff(spell_target, 1560, duration); //shield of blades 58
+			else if (level >= 49 && caster_level >= 49) caster->QuickBuff(spell_target, 1727, duration); //legacy of spike 49
+			else if (level >= 47 && caster_level >= 37) caster->QuickBuff(spell_target, 356, duration); //shield of thorns 47
+			else if (level >= 37 && caster_level >= 37) caster->QuickBuff(spell_target, 432, duration); //shield of spikes 37
+			else if (level >= 27 && caster_level >= 27) caster->QuickBuff(spell_target, 129, duration); //shield of brambles 27
+			else if (level >= 17 && caster_level >= 17) caster->QuickBuff(spell_target, 273, duration); //shield of barbs 17
+			else caster->QuickBuff(spell_target, 256, duration); //shield of thistles 
+		}
+		caster->QuickBuff(spell_target, 278, duration); //Spirit of wolf duration is based on natural stats
+
+		if (rank >= 3) { //HP
+			if (level >= 60 && caster_level >= 60) caster->QuickBuff(spell_target, 1442, duration); //prot glades 60
+			else if (level >= 59 && caster_level >= 59) caster->QuickBuff(spell_target, 2188, duration); //prot cabbage 59
+			else if (level >= 57 && caster_level >= 57) caster->QuickBuff(spell_target, 1559, duration); //natureskin 57									
+			else if (level >= 49 && caster_level >= 49) caster->QuickBuff(spell_target, 2515, duration); //prot of nature 49
+			else if (level >= 46 && caster_level >= 46) caster->QuickBuff(spell_target, 423, duration); //skin like nature 46
+			else if (level >= 39 && caster_level >= 39) caster->QuickBuff(spell_target, 2514, duration); //prot diamond 39
+			else if (level >= 36 && caster_level >= 36) caster->QuickBuff(spell_target, 422, duration); //skin like diamond 36
+			else if (level >= 27 && caster_level >= 27) caster->QuickBuff(spell_target, 2513, duration); //prot like steel 27
+			else if (level >= 24 && caster_level >= 24) caster->QuickBuff(spell_target, 421, duration); //skin like steel 24
+			else if (level >= 19 && caster_level >= 19) caster->QuickBuff(spell_target, 2512, duration); //prot of rock 19
+			else if (level >= 14 && caster_level >= 14) caster->QuickBuff(spell_target, 263, duration); //skin like rock 14
+			else if (level >= 9 && caster_level >= 9) caster->QuickBuff(spell_target, 2511, duration); //prot of wood 9
+			else caster->QuickBuff(spell_target, 26, duration); //skin like wood 1									
+		}
+		if (rank >= 2) { //HP Regen
+			if (level >= 60 && caster_level >= 60) caster->QuickBuff(spell_target, 2520, duration); //nature's recov - 60
+			else if (level >= 58 && caster_level >= 58) caster->QuickBuff(spell_target, 1569, duration); //regrowth of grove 58 /grpp
+			else if (level >= 54 && caster_level >= 54) caster->QuickBuff(spell_target, 1568, duration); //regrowuth 54
+			else if (level >= 45 && caster_level >= 45) caster->QuickBuff(spell_target, 138, duration); //pack chloro 45
+			else if (level >= 42 && caster_level >= 42) caster->QuickBuff(spell_target, 145, duration); //chloro 42
+			else if (level >= 39 && caster_level >= 39) caster->QuickBuff(spell_target, 137, duration); //pack regen 39		
+			else caster->QuickBuff(spell_target, 144, duration); //regeneration 34			
+		}		
+		if (rank >= 1) { //STR
+			if (level >= 44 && caster_level >= 44) caster->QuickBuff(spell_target, 430, duration); //storm str 44
+			else if (level >= 34 && caster_level >= 34) caster->QuickBuff(spell_target, 429, duration); //str of stone 34
+			else caster->QuickBuff(spell_target, 268, duration); //str of earth 1
+		}
+		return true;
+	}
+
+
+
 	return false;
 }
 
