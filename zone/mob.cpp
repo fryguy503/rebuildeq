@@ -8375,19 +8375,20 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 	//RB_ENC_FLOWINGTHOUGHT and RB_PAL_BRELLSBLESSING and RB_CLR_INTENSITYOFTHERESOLUTE are free if spell_ids removed
 	int rank = 0;
 	Mob *caster = this;
+	if (spell_target == nullptr) spell_target = this;
 	if (!this->IsClient()) return false;
 	int caster_level = GetLevel();
 
+	int lowestLevel = caster_level;
+	if (spell_target->GetLevel() < caster_level) lowestLevel = spell_target->GetLevel();
 	
 
 	rank = GetBuildRank(ENCHANTER, RB_ENC_FLOWINGTHOUGHT);
 	if (spell_id == 697 && rank > 0) {
 		int duration = caster_level * 10;
 		if (rank < 5) duration /= 2;
-		int lowestLevel = caster_level;
-		if (level < caster_level) lowestLevel = level;
 
-		if (rank >= 1 && GetMaxMana() > 0 && GetClass() != BARD) { //rank 1= Breeze
+		if (rank >= 1 && spell_target->GetMaxMana() > 0 && spell_target->GetClass() != BARD) { //rank 1= Breeze
 			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 2570, duration); //koadic's endless intellect 60
 			else if (lowestLevel >= 56) caster->QuickBuff(spell_target, 1695, duration); //gift of pure thought 56
 			else if (lowestLevel >= 52) caster->QuickBuff(spell_target, 1693, duration); //clarity ii 52
@@ -8396,17 +8397,17 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 																				//else caster->QuickBuff(spell_target, 697, duration); //breeze 14 (war1)
 		}
 		if (rank >= 2) { //visage lines, + to tanks, - to rest							
-			if (GetClass() == WARRIOR || GetClass() == SHADOWKNIGHT || GetClass() == PALADIN) {
+			if (spell_target->GetClass() == WARRIOR || spell_target->GetClass() == SHADOWKNIGHT || spell_target->GetClass() == PALADIN) {
 				if (lowestLevel >= 56) caster->QuickBuff(spell_target, 2568, duration); //horrifying visage 56
 				else caster->QuickBuff(spell_target, 2563, duration); //haunting visage 26 (war1)
 			}
 			else {
 				if (lowestLevel >= 58) caster->QuickBuff(spell_target, 2569, duration); //glamourous visage 58
-				else if (lowestLevel >= 54) caster->QuickBuff(spell_target, 2597, duration); //beguiling visage 54
+				else if (lowestLevel >= 54) caster->QuickBuff(spell_target, 2567, duration); //beguiling visage 54
 				else caster->QuickBuff(spell_target, 2564, duration); //calming visage 36 (war1)
 			}
 		}
-		if (rank >= 3 && GetMaxMana() > 0) { //gift line (only to those with mana)
+		if (rank >= 3 && spell_target->GetMaxMana() > 0) { //gift line (only to those with mana)
 			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 1410, duration); //gift of brilliance 60
 			else if (lowestLevel >= 55) caster->QuickBuff(spell_target, 1409, duration); //gift of insight 55
 			else caster->QuickBuff(spell_target, 1408, duration); //gift of magic (war1)
@@ -8414,9 +8415,10 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 			if (spell_target->IsCaster()) caster->QuickBuff(spell_target, 175, duration); //give insight to wis casters
 		}
 		if (rank >= 4 &&
-			GetClass() != ENCHANTER &&
-			GetClass() != MAGICIAN &&
-			GetClass() != WIZARD) { //Haste
+			spell_target->GetClass() != NECROMANCER &&
+			spell_target->GetClass() != ENCHANTER &&
+			spell_target->GetClass() != MAGICIAN &&
+			spell_target->GetClass() != WIZARD) { //Haste
 									//speed of the brood removed 2895
 			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 1710, duration); //visions of grandeur 60
 																			//wonderous rapidity 70%, removed for aug 1709 
@@ -8436,43 +8438,43 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 		int duration = caster_level * 10;
 
 		//Spell Haste
-		if (level >= 60 && caster_level >= 60) caster->QuickBuff(spell_target, 3472, duration);
-		else if (level >= 35 && caster_level >= 35) caster->QuickBuff(spell_target, 3576, duration);
+		if (lowestLevel >= 60) caster->QuickBuff(spell_target, 3472, duration);
+		else if (lowestLevel >= 35) caster->QuickBuff(spell_target, 3576, duration);
 		else caster->QuickBuff(spell_target, 3575, duration);
 
 		if (rank > 1) { // AC
-			if (level >= 57 && caster_level >= 57) caster->QuickBuff(spell_target, 1537, duration);
-			else if (level >= 45 && caster_level >= 45) caster->QuickBuff(spell_target, 20, duration);
-			else if (level >= 35 && caster_level >= 35) caster->QuickBuff(spell_target, 19, duration);
-			else if (level >= 25 && caster_level >= 25) caster->QuickBuff(spell_target, 18, duration);
-			else if (level >= 15 && caster_level >= 15) caster->QuickBuff(spell_target, 368, duration);
+			if (lowestLevel >= 57) caster->QuickBuff(spell_target, 1537, duration);
+			else if (lowestLevel >= 45) caster->QuickBuff(spell_target, 20, duration);
+			else if (lowestLevel >= 35) caster->QuickBuff(spell_target, 19, duration);
+			else if (lowestLevel >= 25) caster->QuickBuff(spell_target, 18, duration);
+			else if (lowestLevel >= 15) caster->QuickBuff(spell_target, 368, duration);
 			else caster->QuickBuff(spell_target, 11, duration);
 		}
 
 		if (rank > 2) { // HP
-			if (level >= 55 && caster_level >= 55) caster->QuickBuff(spell_target, 1539, duration); //fortitude
-			else if (level >= 52 && caster_level >= 52) caster->QuickBuff(spell_target, 1533, duration); //heroism
-			else if (level >= 42 && caster_level >= 42) caster->QuickBuff(spell_target, 314, duration); //resolution
-			else if (level >= 32 && caster_level >= 32) caster->QuickBuff(spell_target, 312, duration); //valor
-			else if (level >= 22 && caster_level >= 22) caster->QuickBuff(spell_target, 244, duration); //bravery
-			else if (level >= 17 && caster_level >= 17) caster->QuickBuff(spell_target, 89, duration); //daring
-			else if (level >= 7 && caster_level >= 7) caster->QuickBuff(spell_target, 219, duration); //center
+			if (lowestLevel >= 55) caster->QuickBuff(spell_target, 1539, duration); //fortitude
+			else if (lowestLevel >= 52) caster->QuickBuff(spell_target, 1533, duration); //heroism
+			else if (lowestLevel >= 42) caster->QuickBuff(spell_target, 314, duration); //resolution
+			else if (lowestLevel >= 32) caster->QuickBuff(spell_target, 312, duration); //valor
+			else if (lowestLevel >= 22) caster->QuickBuff(spell_target, 244, duration); //bravery
+			else if (lowestLevel >= 17) caster->QuickBuff(spell_target, 89, duration); //daring
+			else if (lowestLevel >= 7) caster->QuickBuff(spell_target, 219, duration); //center
 																							  //else caster->QuickBuff(spell_target, 202, duration); //courage is casted by this spell
 		}
 
 		if (rank > 3) { // HPv2
-			if (level >= 54 && caster_level >= 54) caster->QuickBuff(spell_target, 1535, duration); //symbol of marzin
-			else if (level >= 41 && caster_level >= 41) caster->QuickBuff(spell_target, 488, duration); //symbol of naltron
-			else if (level >= 31 && caster_level >= 31) caster->QuickBuff(spell_target, 487, duration); //symbol of pinzam
-			else if (level >= 21 && caster_level >= 21) caster->QuickBuff(spell_target, 486, duration); //symbol of ryltan
+			if (lowestLevel >= 54) caster->QuickBuff(spell_target, 1535, duration); //symbol of marzin
+			else if (lowestLevel >= 41) caster->QuickBuff(spell_target, 488, duration); //symbol of naltron
+			else if (lowestLevel >= 31) caster->QuickBuff(spell_target, 487, duration); //symbol of pinzam
+			else if (lowestLevel >= 21) caster->QuickBuff(spell_target, 486, duration); //symbol of ryltan
 			else caster->QuickBuff(spell_target, 485, duration); //courage
 		}
 
 		if (rank > 4) { //Yaulp
-			if (level >= 56 && caster_level >= 56) caster->QuickBuff(spell_target, 2326, duration);
-			if (level >= 53 && caster_level >= 53) caster->QuickBuff(spell_target, 1534, duration);
-			else if (level >= 41 && caster_level >= 41) caster->QuickBuff(spell_target, 44, duration);
-			else if (level >= 16 && caster_level >= 16) caster->QuickBuff(spell_target, 43, duration);
+			if (lowestLevel >= 56) caster->QuickBuff(spell_target, 2326, duration);
+			if (lowestLevel >= 53) caster->QuickBuff(spell_target, 1534, duration);
+			else if (lowestLevel >= 41) caster->QuickBuff(spell_target, 44, duration);
+			else if (lowestLevel >= 16) caster->QuickBuff(spell_target, 43, duration);
 			else caster->QuickBuff(spell_target, 210, duration);
 		}
 
@@ -8486,8 +8488,6 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 		if (rank < 5) duration /= 2;
 		//4065 blessing of austerity
 		//3578
-		int lowestLevel = caster_level;
-		if (level < caster_level) lowestLevel = level;
 
 		if (rank >= 1) { //rank 1= AC
 			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 20, duration); //shield of words 60
@@ -8529,10 +8529,12 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 			int duration = caster_level * 10;
 			int str = 0;
 			int dex = 0;
-			int lowestLevel = caster_level;
-			if (level < caster_level) lowestLevel = level;
-
-			if (rank >= 5) {
+			
+			if (rank >= 5 &&
+				spell_target->GetClass() != NECROMANCER &&
+				spell_target->GetClass() != ENCHANTER &&
+				spell_target->GetClass() != MAGICIAN &&
+				spell_target->GetClass() != WIZARD) { //Haste
 				if (lowestLevel >= 50) caster->QuickBuff(spell_target, 171, duration); // celerity 56
 				else if (lowestLevel >= 50) caster->QuickBuff(spell_target, 1430, duration); // spirit quickening 50
 				else if (lowestLevel >= 42) caster->QuickBuff(spell_target, 170, duration); // alacrity 42
@@ -8575,28 +8577,28 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 			}
 
 			if (rank >= 2 && dex == 0) { //DEX
-				if (level >= 58 && caster_level >= 58) caster->QuickBuff(spell_target, 1583, duration);         //mortal deftness 58
-				else if (level >= 48 && caster_level >= 48) caster->QuickBuff(spell_target, 157, duration);     //dexterity 48
-				else if (level >= 39 && caster_level >= 39) caster->QuickBuff(spell_target, 152, duration);     //deftness 39
-				else if (level >= 25 && caster_level >= 25) caster->QuickBuff(spell_target, 349, duration);     //rising dexterity 25
-				else if (level >= 21 && caster_level >= 21) caster->QuickBuff(spell_target, 146, duration);     //spirit of monkey 21
+				if (lowestLevel >= 58) caster->QuickBuff(spell_target, 1583, duration);         //mortal deftness 58
+				else if (lowestLevel >= 48) caster->QuickBuff(spell_target, 157, duration);     //dexterity 48
+				else if (lowestLevel >= 39) caster->QuickBuff(spell_target, 152, duration);     //deftness 39
+				else if (lowestLevel >= 25) caster->QuickBuff(spell_target, 349, duration);     //rising dexterity 25
+				else if (lowestLevel >= 21) caster->QuickBuff(spell_target, 146, duration);     //spirit of monkey 21
 				else caster->QuickBuff(spell_target, 266, duration);                                            //dexterous aura
 			}
 
 			if (rank >= 2 && dex == 0) { //AGI
-				if (level >= 57 && caster_level >= 57) caster->QuickBuff(spell_target, 1579, duration);          //talisman of the cat 57
-				else if (level >= 53 && caster_level >= 53) caster->QuickBuff(spell_target, 1594, duration);     //deleriously nimble 53
-				else if (level >= 41 && caster_level >= 41) caster->QuickBuff(spell_target, 154, duration);      //agility 41
-				else if (level >= 31 && caster_level >= 31) caster->QuickBuff(spell_target, 160, duration);      //nimble 31
-				else if (level >= 18 && caster_level >= 18) caster->QuickBuff(spell_target, 148, duration);      //spirit of cat 18
+				if (lowestLevel >= 57) caster->QuickBuff(spell_target, 1579, duration);          //talisman of the cat 57
+				else if (lowestLevel >= 53) caster->QuickBuff(spell_target, 1594, duration);     //deleriously nimble 53
+				else if (lowestLevel >= 41) caster->QuickBuff(spell_target, 154, duration);      //agility 41
+				else if (lowestLevel >= 31) caster->QuickBuff(spell_target, 160, duration);      //nimble 31
+				else if (lowestLevel >= 18) caster->QuickBuff(spell_target, 148, duration);      //spirit of cat 18
 				else caster->QuickBuff(spell_target, 269, duration);                                             //feet like cat
 			}
 
 			if (rank >= 3) { //STA
-				if (level >= 54 && caster_level >= 54) caster->QuickBuff(spell_target, 1595, duration);    //riotous health 54
-				else if (level >= 43 && caster_level >= 43) caster->QuickBuff(spell_target, 158, duration);     //stamina 43
-				else if (level >= 30 && caster_level >= 30) caster->QuickBuff(spell_target, 161, duration);     //health 30
-				else if (level >= 21 && caster_level >= 21) caster->QuickBuff(spell_target, 149, duration);     //spirit of ox 21
+				if (lowestLevel >= 54) caster->QuickBuff(spell_target, 1595, duration);    //riotous health 54
+				else if (lowestLevel >= 43) caster->QuickBuff(spell_target, 158, duration);     //stamina 43
+				else if (lowestLevel >= 30) caster->QuickBuff(spell_target, 161, duration);     //health 30
+				else if (lowestLevel >= 21) caster->QuickBuff(spell_target, 149, duration);     //spirit of ox 21
 				else caster->QuickBuff(spell_target, 279, duration);                                            //spirit of Bear
 			}
 		}
@@ -8609,29 +8611,29 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 		if (rank < 5) duration /= 2;
 		if (rank >= 4) { //Damage shield
 			if (level > 58 && caster_level > 58) caster->QuickBuff(spell_target, 1561, duration); //legacy of thorns 59
-			else if (level >= 58 && caster_level >= 58) caster->QuickBuff(spell_target, 1560, duration); //shield of blades 58
-			else if (level >= 49 && caster_level >= 49) caster->QuickBuff(spell_target, 1727, duration); //legacy of spike 49
-			else if (level >= 47 && caster_level >= 37) caster->QuickBuff(spell_target, 356, duration); //shield of thorns 47
-			else if (level >= 37 && caster_level >= 37) caster->QuickBuff(spell_target, 432, duration); //shield of spikes 37
-			else if (level >= 27 && caster_level >= 27) caster->QuickBuff(spell_target, 129, duration); //shield of brambles 27
-			else if (level >= 17 && caster_level >= 17) caster->QuickBuff(spell_target, 273, duration); //shield of barbs 17
+			else if (lowestLevel >= 58) caster->QuickBuff(spell_target, 1560, duration); //shield of blades 58
+			else if (lowestLevel >= 49) caster->QuickBuff(spell_target, 1727, duration); //legacy of spike 49
+			else if (lowestLevel >= 37) caster->QuickBuff(spell_target, 356, duration); //shield of thorns 47
+			else if (lowestLevel >= 37) caster->QuickBuff(spell_target, 432, duration); //shield of spikes 37
+			else if (lowestLevel >= 27) caster->QuickBuff(spell_target, 129, duration); //shield of brambles 27
+			else if (lowestLevel >= 17) caster->QuickBuff(spell_target, 273, duration); //shield of barbs 17
 			else caster->QuickBuff(spell_target, 256, duration); //shield of thistles 
 		}
 		caster->QuickBuff(spell_target, 278, duration); //Spirit of wolf duration is based on natural stats
 
 		if (rank >= 3) { //HP
-			if (level >= 60 && caster_level >= 60) caster->QuickBuff(spell_target, 1442, duration); //prot glades 60
-			else if (level >= 59 && caster_level >= 59) caster->QuickBuff(spell_target, 2188, duration); //prot cabbage 59
-			else if (level >= 57 && caster_level >= 57) caster->QuickBuff(spell_target, 1559, duration); //natureskin 57									
-			else if (level >= 49 && caster_level >= 49) caster->QuickBuff(spell_target, 2515, duration); //prot of nature 49
-			else if (level >= 46 && caster_level >= 46) caster->QuickBuff(spell_target, 423, duration); //skin like nature 46
-			else if (level >= 39 && caster_level >= 39) caster->QuickBuff(spell_target, 2514, duration); //prot diamond 39
-			else if (level >= 36 && caster_level >= 36) caster->QuickBuff(spell_target, 422, duration); //skin like diamond 36
-			else if (level >= 27 && caster_level >= 27) caster->QuickBuff(spell_target, 2513, duration); //prot like steel 27
-			else if (level >= 24 && caster_level >= 24) caster->QuickBuff(spell_target, 421, duration); //skin like steel 24
-			else if (level >= 19 && caster_level >= 19) caster->QuickBuff(spell_target, 2512, duration); //prot of rock 19
-			else if (level >= 14 && caster_level >= 14) caster->QuickBuff(spell_target, 263, duration); //skin like rock 14
-			else if (level >= 9 && caster_level >= 9) caster->QuickBuff(spell_target, 2511, duration); //prot of wood 9
+			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 1442, duration); //prot glades 60
+			else if (lowestLevel >= 59) caster->QuickBuff(spell_target, 2188, duration); //prot cabbage 59
+			else if (lowestLevel >= 57) caster->QuickBuff(spell_target, 1559, duration); //natureskin 57									
+			else if (lowestLevel >= 49) caster->QuickBuff(spell_target, 2515, duration); //prot of nature 49
+			else if (lowestLevel >= 46) caster->QuickBuff(spell_target, 423, duration); //skin like nature 46
+			else if (lowestLevel >= 39) caster->QuickBuff(spell_target, 2514, duration); //prot diamond 39
+			else if (lowestLevel >= 36) caster->QuickBuff(spell_target, 422, duration); //skin like diamond 36
+			else if (lowestLevel >= 27) caster->QuickBuff(spell_target, 2513, duration); //prot like steel 27
+			else if (lowestLevel >= 24) caster->QuickBuff(spell_target, 421, duration); //skin like steel 24
+			else if (lowestLevel >= 19) caster->QuickBuff(spell_target, 2512, duration); //prot of rock 19
+			else if (lowestLevel >= 14) caster->QuickBuff(spell_target, 263, duration); //skin like rock 14
+			else if (lowestLevel >= 9) caster->QuickBuff(spell_target, 2511, duration); //prot of wood 9
 			else caster->QuickBuff(spell_target, 26, duration); //skin like wood 1									
 		}
 		if (rank >= 2) { //HP Regen
@@ -8644,8 +8646,8 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 			else caster->QuickBuff(spell_target, 144, duration); //regeneration 34			
 		}		
 		if (rank >= 1) { //STR
-			if (level >= 44 && caster_level >= 44) caster->QuickBuff(spell_target, 430, duration); //storm str 44
-			else if (level >= 34 && caster_level >= 34) caster->QuickBuff(spell_target, 429, duration); //str of stone 34
+			if (lowestLevel >= 44) caster->QuickBuff(spell_target, 430, duration); //storm str 44
+			else if (lowestLevel >= 34) caster->QuickBuff(spell_target, 429, duration); //str of stone 34
 			else caster->QuickBuff(spell_target, 268, duration); //str of earth 1
 		}
 		return true;
