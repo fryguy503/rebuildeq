@@ -300,7 +300,7 @@ bool Mob::CheckHitChance(Mob* other, DamageHitInfo &hit)
 			int avoidBonus = int(avoidance * 0.01f * rank);
 
 			avoidance += avoidBonus;
-			if (avoidBonus > 0) defender->BuildEcho(StringFormat("Destiny %i increased avoidance by %i", rank, int(avoidance * 0.01f * rank)));
+			if (avoidBonus > 0) defender->DebugEcho(StringFormat("Destiny %i increased avoidance by %i", rank, int(avoidance * 0.01f * rank)));
 		}
 	}
 
@@ -572,7 +572,7 @@ bool Mob::AvoidDamage(Mob *other, DamageHitInfo &hit)
 		chance /= 45;
 
 		rank = CastToClient()->GetBuildRank(BARD, RB_BRD_BLADEDANCER);
-		if (rank > 0) {
+		if (rank > 0 && CastToClient()->IsGrouped()) {
 			DebugEcho(StringFormat("Blade Dancer %i increased dodge chance from %i to %i.", rank, chance, chance + (2 * rank)));
 			chance += int(chance * 0.002f * rank);
 		}
