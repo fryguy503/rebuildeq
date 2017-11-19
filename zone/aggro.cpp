@@ -1361,27 +1361,25 @@ void Mob::RogueEvade(Mob *other)
 
 void EntityList::LogManaEvent(Mob *caster, Mob *target, int mana) {
 	if (target == nullptr) return;
-
+	if (mana == 0) return;
 	int net_mana = mana;
-	//don't cap mana gains/losses, since the mechanic is different.
-	//if (target->GetMana() + mana > target->GetMaxMana()) net_mana = target->GetMaxMana() - target->GetMana(); //overheal, get difference of max - cur
-	//if (target->GetMana() - mana < 0) net_mana = target->GetMana(); //reduce below zero, store mana left
+
+	if (mana > 0 && target->GetMana() + mana > target->GetMaxMana()) net_mana = target->GetMaxMana() - target->GetMana();
+	if (mana < 0 && target->GetMana() + mana < 0) net_mana = -target->GetMana();
 
 	//if (net_mana == 0 || !target->IsClient()) return; //Ignore an NPC regenerating, or no events
 
 	for (auto it = npc_list.begin(); it != npc_list.end(); ++it) {
 		NPC *mob = it->second;
-
-		if (!mob) continue;
-		if (mob->GetID() == target->GetID()) {
-			if (mob->IsOnHatelist(caster) ||
-				mob->IsOnHatelist(target) ||
-				mob->GetID() == caster->GetID() ||
-				mob->GetID() == target->GetID()) {
-			}
-			mob->AddManaEvent(caster, mana, net_mana, 1);
-			mob->AddManaEvent(target, mana, net_mana, 0);
-		}		
+		if (!mob) continue;		
+		if (!mob->IsOnHatelist(caster) && 
+			!mob->IsOnHatelist(target) &&
+			mob->GetID() != caster->GetID() &&
+			mob->GetID() != target->GetID()) continue;
+			
+		mob->AddManaEvent(caster, mana, net_mana, 1);
+		mob->AddManaEvent(target, mana, net_mana, 0);
+				
 	}
 }
 //caster: me, target: enemy.
