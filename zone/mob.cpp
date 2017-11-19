@@ -7240,25 +7240,19 @@ int Mob::GetTier() {
 		if (npc_type_id == 112025) return 0; //Velketor_the_Sorcerer
 		if (npc_type_id == 110099) return 0; //Lodizal
 		if (npc_type_id == 112049) return 0; //Lord_Doljonijiarnimorinar
-		if (npc_type_id == 72090) return 1; //a_dracoliche
-		if (npc_type_id == 71057) return 1; //Noble_Dojorn
+		if (npc_type_id == 2000054) return 1; //Dragon_of_Fear
+		if (npc_type_id == 2000056) return 1; //Noble_of_Air
 		if (npc_type_id == 71059) return 1; //Protector_of_Sky
-		if (npc_type_id == 71021) return 1; //Gorgalosk
+		if (npc_type_id == 71021) return 1; //Harpie_of_Air
 		if (npc_type_id == 71060) return 1; //the_Hand_of_Veeshan
 		if (npc_type_id == 71076) return 1; //#Sister_of_the_Spire
 		if (npc_type_id == 71075) return 1; //Keeper_of_Souls
-		if (npc_type_id == 71012) return 1; //The_Spiroc_Lord
+		if (npc_type_id == 2000057) return 1; //Spiroc_of_Air
 		if (npc_type_id == 71065) return 1; //Eye_of_Veeshan
 		if (npc_type_id == 2000036) return 1; //The_Avatar_of_Sky
-		if (npc_type_id == 999249) return 2; //Lord_Nagafen
-		if (npc_type_id == 999250) return 2; //Lady_Vox
 		if (npc_type_id == 117073) return 2; //Kelorek`Dar
 		if (npc_type_id == 119112) return 2; //Wuoshi
-		if (npc_type_id == 94009) return 2; //Severilous
-		if (npc_type_id == 86014) return 2; //Gorenaire
 		if (npc_type_id == 124037) return 2; //#Dozekar_the_Cursed
-		if (npc_type_id == 89154) return 2; //Trakanon
-		if (npc_type_id == 89181) return 2; //#Trakanon
 		if (npc_type_id == 91093) return 2; //Talendor
 		if (npc_type_id == 96073) return 2; //#Faydedar
 		if (npc_type_id == 96089) return 2; //Faydedar
@@ -7266,16 +7260,8 @@ int Mob::GetTier() {
 		if (npc_type_id == 124105) return 2; //#Gozzrem
 		if (npc_type_id == 123115) return 3; //Zlandicar
 		if (npc_type_id == 120084) return 3; //Klandicar
-		if (npc_type_id == 72004) return 3; //Fright
-		if (npc_type_id == 72002) return 3; //Terror
-		if (npc_type_id == 72001) return 3; //Dread
 		if (npc_type_id == 72003) return 3; //The_Avatar_of_Fear
 		if (npc_type_id == 120005) return 3; //Sontalak
-		if (npc_type_id == 103055) return 4; //Queen_Velazul_Di`zok
-		if (npc_type_id == 103056) return 4; //Overking_Bathezid
-		if (npc_type_id == 103080) return 4; //Prince_Selrach_Di`zok
-		if (npc_type_id == 102112) return 4; //#Venril_Sathir
-		if (npc_type_id == 102126) return 4; //Venril_Sathir
 		if (npc_type_id == 113457) return 4; //The_Avatar_of_War
 		if (npc_type_id == 127098) return 4; //The_Avatar_of_Growth
 		if (npc_type_id == 108048) return 4; //Phara_Dar
