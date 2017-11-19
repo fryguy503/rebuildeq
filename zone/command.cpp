@@ -1506,7 +1506,7 @@ void command_focus(Client *c, const Seperator *sep) {
 
 	focus = c->GetTarget()->CastToClient();
 	
-	if (focus == nullptr /*|| !focus->IsGrouped() || focus == this*/) {
+	if (focus == nullptr || !focus->IsGrouped() || focus == c) {
 		c->Message(0, "You must target a grouped ally to set them as your focus.");
 		return;
 	}

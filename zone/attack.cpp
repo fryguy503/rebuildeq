@@ -3952,18 +3952,20 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					healed += healBonus;
 				}
 
-				int rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS);
-				Client *tapFocus = GetTapFocus();
-				if (rank > 0 && (spell_id == 341 || spell_id == 502 || spell_id == 445 || spell_id == 446 || spell_id == 525 || spell_id == 447) && tapFocus != nullptr && !tapFocus->IsDead()) {
-					float dist2 = DistanceSquared(GetPosition(), tapFocus->GetPosition());
+
+				rank = attacker->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS);
+				Client *tapFocus = attacker->GetTapFocus();
+				if (rank > 0 && //
+					(spell_id == 341 || spell_id == 502 || spell_id == 445 || spell_id == 446 || spell_id == 525 || spell_id == 447) && tapFocus != nullptr && !tapFocus->IsDead()) {
+					float dist2 = DistanceSquared(attacker->GetPosition(), tapFocus->GetPosition());
 					float range2 = 100 * 100;
 					if (dist2 > range2) {
 						ClearTapFocus();
 					}
 					else { //in range
 						int focus_heal = int(healed * rank * 0.04f);
-						BuildEcho(StringFormat("Unholy Focus %i transferred %i hitpoints of the lifetap recourse to %s.", rank, focus_heal, tapFocus->GetCleanName()));
-						HealDamage(focus_heal);
+						attacker->BuildEcho(StringFormat("Unholy Focus %i transferred %i hitpoints of the lifetap recourse to %s.", rank, focus_heal, tapFocus->GetCleanName()));
+						tapFocus->HealDamage(focus_heal, attacker);
 						healed -= focus_heal; //remove the tap amount
 					}
 				}
@@ -4454,9 +4456,11 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 	else
 		acthealed = amount;
 
-	if (caster) {
-		int rank = caster->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE);
+	int rank = 0;
 
+
+	if (caster) {
+		rank = caster->GetBuildRank(PALADIN, RB_PAL_REFRESHINGBREEZE);
 		if (rank > 0 && 
 			spell_id != 3261 && //not hand of piety
 			caster != this) { //not caster
@@ -4483,6 +4487,8 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 			acthealed += floor(rank * 0.04f * acthealed);
 			BuildEcho(StringFormat("Inner Chakra %i healed for an additional %i hitpoints", rank, acthealed));
 		}
+
+
 	}
 
 	if (acthealed > 100) {
