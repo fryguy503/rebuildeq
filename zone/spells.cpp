@@ -3510,9 +3510,9 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		if (caster_client->GetClass() == BARD && IsBeneficialSpell(spell_id)) {
 
 			int rank = caster->GetBuildRank(BARD, RB_BRD_BARDSWISH);
-			if (IsBardSong && rank == 5 && duration == 3) {
+			if (IsBardSong && rank == 5 && duration == 2) {
 				caster->BuildEcho(StringFormat("Bard's Wish %i increased duration by 1 tick.", rank));
-				duration = 4;
+				duration = 3;
 			}
 			// Lingering Twilight
 			{
