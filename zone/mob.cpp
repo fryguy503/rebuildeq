@@ -6433,6 +6433,8 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true, bool isPet = f
 	if (isPet) { //lower max hp of pets.
 		npctype->max_hp /= 2;
 		npctype->cur_hp /= 2;
+		npctype->min_dmg /= 2;
+		npctype->max_dmg /= 2;
 	}
 	
 	return npctype;
