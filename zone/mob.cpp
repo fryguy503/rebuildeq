@@ -8420,6 +8420,8 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 1410, duration); //gift of brilliance 60
 			else if (lowestLevel >= 55) caster->QuickBuff(spell_target, 1409, duration); //gift of insight 55
 			else caster->QuickBuff(spell_target, 1408, duration); //gift of magic (war1)
+
+			if (IsCaster()) caster->QuickBuff(this, 175, duration); //give insight to wis casters
 		}
 		if (rank >= 4 &&
 			GetClass() != ENCHANTER &&

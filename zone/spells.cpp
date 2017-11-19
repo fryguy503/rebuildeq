@@ -307,7 +307,7 @@ bool Mob::CastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		parse->EventNPC(EVENT_CAST_BEGIN, CastToNPC(), nullptr, temp, 0);
 	}
 	
-	mana_cost = ModifyManaUsage(mana_cost, spell_id, GetTarget());
+	mana_cost = ModifyManaUsage(mana_cost, spell_id, GetTarget(), false);
 	
 	//To prevent NPC ghosting when spells are cast from scripts
 	if (IsNPC() && IsMoving() && cast_time > 0)
@@ -462,7 +462,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 	
 	// mana is checked for clients on the frontend. we need to recheck it for NPCs though
 	// If you're at full mana, let it cast even if you dont have enough mana
-	mana_cost = ModifyManaUsage(mana_cost, spell_id, GetTarget());
+	mana_cost = ModifyManaUsage(mana_cost, spell_id, GetTarget(), false);
 
 	if ((spell_id == 1455 || spell_id == 2589 || spell_id == 3577) &&
 		IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_WAVEOFMARR) > 0) {
@@ -2213,15 +2213,17 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 		}
 	}
 
-	rank = GetBuildRank(ENCHANTER, RB_ENC_ENTROPY);
-	if (rank > 0 && spell_target && spell_target->IsNPC()) {
-		int effect = GetSpellEffectIndex(spell_id, SE_STR);
-		if (effect < 0) {
-			effect = floor(effect * 0.2f * rank);
-			if (effect < 1) effect = 1;
-			BuildEcho(StringFormat("Entropy %i dealt %i damage.", rank, effect));
-			spell_target->Damage(this, effect, spell_id, EQEmu::skills::SkillAlteration, true);
-		}
+	rank = GetBuildRank(ENCHANTER, RB_ENC_MINDDEVOURER);
+	if (rank > 0 && 
+		spell_target && 
+		spell_target->IsNPC() && 
+		spell_target->IsCaster() && 
+		IsDetrimentalSpell(spell_id) && 
+		zone->random.Roll(rank * 2)) {
+		int mana_return = int(mana_used * rank * 0.1f);
+		BuildEcho(StringFormat("Mind Devourer %i recovered %i mana.", rank, mana_return));
+		entity_list.LogManaEvent(this, this, mana_return);
+		SetMana(GetMana() + mana_return);
 	}
 
 
@@ -2281,7 +2283,6 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 	}
 
 	
-	DebugEcho(StringFormat("Casted spell %u.", spell_id));
 	// if a spell has the AEDuration flag, it becomes an AE on target
 	// spell that's recast every 2500 msec for AEDuration msec. There are
 	// spells of all kinds of target types that do this, strangely enough
@@ -2396,11 +2397,14 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 			if (isproc) {
 				SpellOnTarget(spell_id, spell_target, false, true, resist_adjust, true, level_override);
 			} else {
+				
 				if (spells[spell_id].targettype == ST_TargetOptional){
 					if (!TrySpellProjectile(spell_target, spell_id))
 						return false;
 				}
-				//RB_ENC_FLOWINGTHOUGHT and RB_PAL_BRELLSBLESSING and RB_CLR_INTENSITYOFTHERESOLUTE are free if spell_ids removed
+				else if (DoBuffSystem(spell_id, spell_target)) { //RB_ENC_FLOWINGTHOUGHT and RB_PAL_BRELLSBLESSING and RB_CLR_INTENSITYOFTHERESOLUTE are free if spell_ids removed
+					//we are all good!
+				}				
 				else if(!SpellOnTarget(spell_id, spell_target, false, true, resist_adjust, false, level_override) && spell_id != 202 && spell_id != 697) {
 					if(IsBuffSpell(spell_id) && IsBeneficialSpell(spell_id)) {
 						// Prevent mana usage/timers being set for beneficial buffs
@@ -2577,7 +2581,9 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 
 	bool mgb = HasMGB() && spells[spell_id].can_mgb;
 
-	mana_used = ModifyManaUsage(mana_used, spell_id, spell_target);
+	mana_used = ModifyManaUsage(mana_used, spell_id, spell_target, false);
+
+	DebugEcho(StringFormat("Casted spell %u for %i mana.", spell_id, mana_used));
 	// if this was a spell slot or an ability use up the mana for it
 	if(slot != CastingSlot::Item && slot != CastingSlot::PotionBelt && mana_used > 0)
 	{		
@@ -2709,7 +2715,7 @@ bool Mob::ApplyNextBardPulse(uint16 spell_id, Mob *spell_target, CastingSlot slo
 	//use mana, if this spell has a mana cost
 	int mana_used = spells[spell_id].mana;
 
-	mana_used = ModifyManaUsage(mana_used, spell_id, spell_target);
+	mana_used = ModifyManaUsage(mana_used, spell_id, spell_target, true);
 	if(mana_used > 0) {
 		if(mana_used > GetMana()) {
 			//ran out of mana... this calls StopSong() for us
@@ -2987,33 +2993,9 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 	if(rank > 0 && spell_id == 37903) { // heart of flame		
 		return rank; // one tick per rank: 6 - 30 seconds
 	}
-	rank = caster->GetBuildRank(ENCHANTER, RB_ENC_DROWN);
-	if (caster->GetClass() == ENCHANTER && (
-		spell_id == 286 || //shallow breath
-		spell_id == 294 || //suffocating sphere
-		spell_id == 521 || //choke
-		spell_id == 450 || //suffocate
-		spell_id == 195 || //gasping embrace
-		spell_id == 1703 //asphyxiate
-		)) {
-		if (rank < 1) return 1;
-		return rank;
-	}
+	
 
-	rank = caster->GetBuildRank(ENCHANTER, RB_ENC_ENTHRALL);
-	if (caster->GetClass() == ENCHANTER && (
-		spell_id == 292 || //Mesmerize
-		spell_id == 187 || //Enthrall
-		spell_id == 307 || //Mesmerization
-		spell_id == 188 || //Entrance
-		spell_id == 190 || //Dazzle
-		spell_id == 1690 || //Fascination
-		spell_id == 1691 || // Glamour of Kintaz
-		spell_id == 1692 // Rapture
-		)) {
-		if (rank < 1) return 1;
-		return rank;
-	}
+	
 	
 
 	formula = spells[spell_id].buffdurationformula;
@@ -3033,6 +3015,22 @@ int Mob::CalcBuffDuration(Mob *caster, Mob *target, uint16 spell_id, int32 caste
 
 	Log(Logs::Detail, Logs::Spells, "Spell %d: Casting level %d, formula %d, base_duration %d: result %d",
 		spell_id, castlevel, formula, duration, res);
+
+	rank = caster->GetBuildRank(ENCHANTER, RB_ENC_ENTHRALL);
+	if (caster->GetClass() == ENCHANTER && (
+		spell_id == 292 || //Mesmerize
+		spell_id == 187 || //Enthrall
+		spell_id == 307 || //Mesmerization
+		spell_id == 188 || //Entrance
+		spell_id == 190 || //Dazzle
+		spell_id == 1690 || //Fascination
+		spell_id == 1691 || // Glamour of Kintaz
+		spell_id == 1692 // Rapture
+		) &&
+		rank >= 5) {
+		res += 1;
+		BuildEcho(StringFormat("Enthrall 5 increased duration by 1 tick."));
+	}
 
 	return res;
 }
@@ -3470,10 +3468,28 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 	if (IsClient() && CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR) > 0 && spell_id == 4549) {
 		duration = 2 * caster->CastToClient()->GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR);
 	}
+	
 
 	int rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTION);
 	if (rank > 0 && spell_id == 292) { //rogue casts mesmerize
 		duration = zone->random.Int(0, rank);
+	}
+
+	rank = GetBuildRank(ENCHANTER, RB_ENC_EXTENDEDCHARM);
+	if (rank > 0 && (
+		spell_id == 300 || //charm,
+		spell_id == 182 || //buguile,
+		spell_id == 183 || //conjoling whispers,
+		spell_id == 184 || //allure
+		spell_id == 4407 || //ordinance
+		spell_id == 1705 || //boltran's agacerie
+		spell_id == 1707 //dictate
+		)) {
+		int new_duration = zone->random.Int(0, rank);
+		if (new_duration > 0) {
+			BuildEcho(StringFormat("Extended Charm %i increased duration by %i ticks.", rank, new_duration));
+			duration += new_duration;
+		}
 	}
 	
 	if (duration == 0) {
@@ -3483,62 +3499,6 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 
 
 
-	rank = caster->GetBuildRank(ENCHANTER, RB_ENC_FLOWINGTHOUGHT);
-	if (spell_id == 697 && rank > 0) {
-		int duration = caster_level * 10;
-		if (rank < 5) duration /= 2;
-		int lowestLevel = caster_level;
-		if (level < caster_level) lowestLevel = level;
-
-		if (rank >= 1 && GetMaxMana() > 0 && GetClass() != BARD) { //rank 1= Breeze
-			if (lowestLevel >= 60) caster->QuickBuff(this, 2570, duration); //koadic's endless intellect 60
-			else if (lowestLevel >= 56) caster->QuickBuff(this, 1695, duration); //gift of pure thought 56
-			else if (lowestLevel >= 52) caster->QuickBuff(this, 1693, duration); //clarity ii 52
-			else if (lowestLevel >= 42) caster->QuickBuff(this, 1694, duration); //boon of the clear mind 42
-			else if (lowestLevel >= 26) caster->QuickBuff(this, 174, duration); //clarity 26
-																				//else caster->QuickBuff(this, 697, duration); //breeze 14 (war1)
-		}
-		if (rank >= 2) { //visage lines, + to tanks, - to rest							
-			if (GetClass() == WARRIOR || GetClass() == SHADOWKNIGHT || GetClass() == PALADIN) {
-				if (lowestLevel >= 56) caster->QuickBuff(this, 2568, duration); //horrifying visage 56
-				else caster->QuickBuff(this, 2563, duration); //haunting visage 26 (war1)
-			}
-			else {
-				if (lowestLevel >= 58) caster->QuickBuff(this, 2569, duration); //glamourous visage 58
-				else if (lowestLevel >= 54) caster->QuickBuff(this, 2567, duration); //beguiling visage 54
-				else caster->QuickBuff(this, 2564, duration); //calming visage 36 (war1)
-			}
-		}
-		if (rank >= 3 && GetMaxMana() > 0) { //gift line (only to those with mana)
-			if (lowestLevel >= 60) caster->QuickBuff(this, 1410, duration); //gift of brilliance 60
-			else if (lowestLevel >= 55) caster->QuickBuff(this, 1409, duration); //gift of insight 55
-			else caster->QuickBuff(this, 1408, duration); //gift of magic (war1)
-			if (lowestLevel >= 35 &&
-				(GetClass() == CLERIC ||
-				GetClass() == DRUID ||
-				GetClass() == SHAMAN ||
-				GetClass() == PALADIN ||
-				GetClass() == RANGER)) {
-				caster->QuickBuff(this, 175, duration); //give insight to wis casters
-			}
-			else if (lowestLevel >= 41) caster->QuickBuff(this, 33, duration); //give brilliance to int casters
-		}
-		if (rank >= 4 &&
-			GetClass() != ENCHANTER &&
-			GetClass() != MAGICIAN &&
-			GetClass() != WIZARD) { //Haste
-									//speed of the brood removed 2895
-			if (lowestLevel >= 60) caster->QuickBuff(this, 1710, duration); //visions of grandeur 60
-																			//wonderous rapidity 70%, removed for aug 1709 
-			else if (lowestLevel >= 56) caster->QuickBuff(this, 1729, duration); //augment 56
-			else if (lowestLevel >= 53) caster->QuickBuff(this, 1708, duration); //aanya's quickening  53
-			else if (lowestLevel >= 47) caster->QuickBuff(this, 172, duration); //swift like the wind 47
-			else if (lowestLevel >= 39) caster->QuickBuff(this, 171, duration); //celerity 39
-			else if (lowestLevel >= 28) caster->QuickBuff(this, 10, duration); //augmentation 28
-			else if (lowestLevel >= 21) caster->QuickBuff(this, 170, duration); //alacrity 21
-			else caster->QuickBuff(this, 39, duration); //quickness 15 (war1)
-		}
-	}
 
 	Log(Logs::Detail, Logs::Spells, "Trying to add buff %d cast by %s (cast level %d) with duration %d",
 		spell_id, caster ? caster->GetName() : "UNKNOWN", caster_level, duration);
@@ -4995,20 +4955,6 @@ bool Mob::IsImmuneToSpell(uint16 spell_id, Mob *caster)
                     caster->CastToClient()->ResetAlternateAdvancementTimer(aaDireCharm);
 					caster->CastToClient()->ResetAlternateAdvancementTimer(aaDireCharm2);
                     return true;
-				}
-
-			} else if (spell_id == 2759 && caster->IsClient()) {
-				int rank = caster->CastToClient()->GetBuildRank(ENCHANTER, RB_ENC_DIRECHARM);
-				if ((rank == 1 && GetLevel() > caster->CastToClient()->GetLevel() - 10) ||
-					(rank == 2 && GetLevel() > caster->CastToClient()->GetLevel() - 8) ||
-					(rank == 3 && GetLevel() > caster->CastToClient()->GetLevel() - 7) ||
-					(rank == 4 && GetLevel() > caster->CastToClient()->GetLevel() - 6) ||
-					(rank == 5 && GetLevel() > caster->CastToClient()->GetLevel() - 5)
-					) {
-					Log(Logs::Detail, Logs::Spells, "Our level (%d) is higher than the limit of this Charm spell (%d)", GetLevel(), spells[spell_id].max[effect_index]);
-					caster->Message_StringID(MT_Shout, CANNOT_CHARM_YET);
-					caster->CastToClient()->ResetAlternateAdvancementTimer(aaDireCharm);
-					return true;
 				}
 			}
 			else if(GetLevel() > spells[spell_id].max[effect_index] && spells[spell_id].max[effect_index] != 0) {
