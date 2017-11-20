@@ -8408,9 +8408,12 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 			}
 		}
 		if (rank >= 3 && spell_target->GetMaxMana() > 0) { //gift line (only to those with mana)
+			//this needs to be broken down more detailed.
+			//local testing confirms that gift stacks with brilliance.
 			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 1410, duration); //gift of brilliance 60
 			else if (lowestLevel >= 55) caster->QuickBuff(spell_target, 1409, duration); //gift of insight 55
 			else caster->QuickBuff(spell_target, 1408, duration); //gift of magic (war1)
+			//brilliance 33 lvl 41
 
 			if (spell_target->IsCaster()) caster->QuickBuff(spell_target, 175, duration); //give insight to wis casters
 		}

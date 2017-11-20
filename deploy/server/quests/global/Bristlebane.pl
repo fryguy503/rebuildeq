@@ -1,8 +1,4 @@
-#encounter_zombie 187000
-
-my @group;
-my $winners;
-my @riddles = { 
+my %riddles = ( 
 	"How do you divide the sea in half?" => "sea saw",
 	"I lay in your room every morning. I travel with you every day. I echo beside you every night. What am I?" => "watch",
 	"Forward I mean something past, backward I am now. What am I?" => "won",
@@ -16,55 +12,28 @@ my @riddles = {
 	"I get wet when drying. I get dirty when wiping. What am I?" => "towel",
 	"I wiggle and cannot see, sometimes underground and sometimes on a tree. I really don't want to be on a hook, and I become a person when combined with book. What am I?" => "worm",
 	"I am lighter than air but a hundred people cannot lift me. Careful, I am fragile. What am I?" => "bubble"
-}
-my $pickedRiddle;
+);
 
-
-sub EVENT_SAY {
-}
+my $answer;
 
 sub EVENT_SPAWN {
-	@group = ();
-	@groupname = ();
-	@enemies = ();	
-	$winners = "";
-	quest::settimer("reminder", 30);
-	quest::settimer("endriddle", 120);
-
-	@group = plugin::GetGroupMembers($c);
-	foreach $c (@group) {
-		if (!$c) { next; }
-		#quest::say($c->CharacterID());
-		$winners .= $c->GetCleanName().", ";		
+	quest::say("Spawning");
+	$pickedRiddle = int(rand(13));
+	my $i = 0;	
+	foreach my $riddle (keys %riddles) {
+		if ($i == $pickedRiddle) {
+			quest::say($riddle);
+			$answer = $riddles[$riddle];
+			end;
+		}
+		$i++;
 	}
-	pickedRiddle = int(rand(12));
-	quest::say(@riddles[pickedRiddle]);
 }
 
-
-sub givereward {
-	$dbh = plugin::LoadMysql();
-	if (!$dbh) {
-		quest::say("Failed to load MySQL... Tell Shin wtfm8! $winners");
-		return;
-	}
-	foreach $c (@group) {
-    	$sth = $dbh->prepare("UPDATE `account_custom` SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1 WHERE account_id = ?");
-    	$sth->execute($c->AccountID());	    	
-    }
-    quest::we(13, "$winners successfully answered a riddle in $zoneln!");
-	$dbh->disconnect();
-	quest::depop();
-}
-
-sub EVENT_TIMER {
-
-	if ($timer eq "endriddle") { #encounter init, set variables to an easier to handle group
-		quest::say("took too long, bye!");
-		quest::depop();
-		return;		
-	}
-	if ($timer eq "reminder") {
-		quest::say("time is a ticking, hurry hurry, what's the answer?");
-	}
+sub EVENT_SAY {
+	 if($text=$answer){
+	 	quest::say("Correct");
+	 } else {
+	 	quest::say("Incorrect.. try again!");
+	 }
 }
