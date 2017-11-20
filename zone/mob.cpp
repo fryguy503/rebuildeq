@@ -8394,7 +8394,7 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 			else if (lowestLevel >= 52) caster->QuickBuff(spell_target, 1693, duration); //clarity ii 52
 			else if (lowestLevel >= 42) caster->QuickBuff(spell_target, 1694, duration); //boon of the clear mind 42
 			else if (lowestLevel >= 26) caster->QuickBuff(spell_target, 174, duration); //clarity 26
-																				//else caster->QuickBuff(spell_target, 697, duration); //breeze 14 (war1)
+			//else caster->QuickBuff(spell_target, 697, duration); //breeze 14 (war1)
 		}
 		if (rank >= 2) { //visage lines, + to tanks, - to rest							
 			if (spell_target->GetClass() == WARRIOR || spell_target->GetClass() == SHADOWKNIGHT || spell_target->GetClass() == PALADIN) {
@@ -8407,15 +8407,16 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 				else caster->QuickBuff(spell_target, 2564, duration); //calming visage 36 (war1)
 			}
 		}
-		if (rank >= 3 && spell_target->GetMaxMana() > 0) { //gift line (only to those with mana)
+		if (rank >= 3 && spell_target->IsCaster()) {//GetMaxMana() > 0) { //gift line (only to those with mana)
 			//this needs to be broken down more detailed.
 			//local testing confirms that gift stacks with brilliance.
 			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 1410, duration); //gift of brilliance 60
 			else if (lowestLevel >= 55) caster->QuickBuff(spell_target, 1409, duration); //gift of insight 55
 			else caster->QuickBuff(spell_target, 1408, duration); //gift of magic (war1)
-			//brilliance 33 lvl 41
-
-			if (spell_target->IsCaster()) caster->QuickBuff(spell_target, 175, duration); //give insight to wis casters
+			if (lowestLevel >= 35 && IsWISCaster()) {
+				caster->QuickBuff(spell_target, 175, duration); //give insight to wis casters
+			}
+			else if (lowestLevel >= 41) caster->QuickBuff(spell_target, 33, duration); //give brilliance to int casters
 		}
 		if (rank >= 4 &&
 			spell_target->GetClass() != NECROMANCER &&
@@ -8424,7 +8425,7 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 			spell_target->GetClass() != WIZARD) { //Haste
 									//speed of the brood removed 2895
 			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 1710, duration); //visions of grandeur 60
-																			//wonderous rapidity 70%, removed for aug 1709 
+																					//wonderous rapidity 70%, removed for aug 1709 
 			else if (lowestLevel >= 56) caster->QuickBuff(spell_target, 1729, duration); //augment 56
 			else if (lowestLevel >= 53) caster->QuickBuff(spell_target, 1708, duration); //aanya's quickening  53
 			else if (lowestLevel >= 47) caster->QuickBuff(spell_target, 172, duration); //swift like the wind 47
@@ -8664,4 +8665,8 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 
 bool Mob::IsCaster() {
 	return (GetClass() != WARRIOR && GetClass() != MONK && GetClass() != ROGUE);
+}
+
+bool Mob::IsWISCaster() {
+	return (IsCaster() && (GetClass() == CLERIC || GetClass() == DRUID || GetClass() == SHAMAN || GetClass() == PALADIN || GetClass() == RANGER));
 }
