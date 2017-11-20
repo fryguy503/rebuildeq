@@ -1,5 +1,6 @@
 # Instructions for Rebuild EQ.
 
+## Compile Code
 We use 64bit version of binaries.
 
 * Grab git. I use sourcetree (https://www.sourcetreeapp.com/) the latest version sucks though.. 
@@ -15,3 +16,30 @@ We use 64bit version of binaries.
 * Cmake: Hit generate.
 * Extract the \rebuildeq\dependencies\protobuf\lib_x64\libprotobufd.zip into the directory. It's too big for github uncompressed, is why it's zipped.
 * Go to your rebuildeq/build directory, and double click the EQEmu.sln file (or right click, open with -> visual studio 2015).
+
+## Prep environment to local test
+
+* Grab docker. https://www.docker.com/docker-windows
+* Grab docker-compose. (NOTE: I believe Docker for windows comes with this, so you may skip this step until confirmed)
+* Start command line. cd into your rebuildeq root directory. (You can also, in explorer, hold shift and right click the rebuildeq folder, to open command prompt/powershell here.)
+* type in: build.bat
+* This is going to spin up 4 instances of docker. It may or may not fail, but that's not a huge deal.. you mainly are after the DB and NATS instance, and maybe web.
+* When it's done it'll tell you to run start.bat, but ignore that step for now.
+* type in: docker-compose run eqemu
+* This is going to spin up all linked dependencies of eqemu in the docker-compose.yml file. It's going to fail on the eqemu step, but let it boot for a while, and when it's done tap ctrl+c, to cancel eqemu instance.
+* type in: docker ps
+* you will see a result of all instances still running. Something similar to this: ![docker ps](https://i.imgur.com/ozxFrlq.png)
+* notice that 0.0.0.0: portion, that means the docker instance is binding to your local network device. You can now connect to the SQL database with your ideal client, or:
+* Grab SQLyog. This is a SQL client. https://github.com/webyog/sqlyog-community/wiki/Downloads
+* You want to configure SQLYog the same as what docker-compose defines, which by default is: MARIADB_DATABASE: eqemu, MARIADB_USER: eqemu, MARIADB_PASSWORD: eqemupass. so user: eqemu, pass: eqemupass , ip address is just 127.0.0.1 (default)
+* NAvigate to your /deploy/server/ directory in eqemu. Verify there's a eqemu_config.xml file. If there isn't, copy the one from /docker/eqemu/eqemuconfig_config.xml. This is set up to automatically connect to your local dB instance.
+* You may need to edit the entries for db that say mariadb and change them to 127.0.0.1 (this step isn't applicable if you're doing a linux build)
+* Go to the releases in github: https://github.com/xackery/rebuildeq/releases  and grab the latest database snapshot
+* Inside SQLYog, go to Database, Import.. Execute SQL Script. There's a checkmark that says Abort On error, uncheck it.
+* Tap the ... button to browse for directory, and point the SQL file it asks to the one you grabbed from releases. (You may have to extract the file to sql form)
+* Execute. You likely will get some errors for some user defined functions, can be ignored.
+* Go to your /deploy/server directory, and run shared_memory.exe .. if your db settings are correct, the box will open up, show a few lines of yellow text (and no red text), then poof.
+* if it does as described above, go into eqemu_config.xml again in deploy/server and change the server name.
+* run deploy/server/world.exe . See if any errors, and give it a bit. If it gets to the Listening on TCP blah blah step, you're good!
+* run deploy/server/zone.exe. Same as above, see if any errors..
+* once both seem to be up, log in like usual via everquest and see if your server appears. See if you can connect. Some times you won't be able to and require port forwarding, but i'll do that for another instruction set.
