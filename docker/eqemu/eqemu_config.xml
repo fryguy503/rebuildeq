@@ -99,16 +99,4 @@
 		<!-- <plugins>plugins</plugins> -->
 	</directories>
 
-<discord>
-        <username>shinnoir@hotmail.com</username>
-        <password>nothing</password>
-	<telnetusername>xackery</telnetusername>
-	<telnetpassword>nothing</telnetpassword>
-        <serverid>138438371700637696</serverid>
-        <channelid>142522212203626496</channelid>
-        <refreshrate>15</refreshrate>
-	<itemurl></itemurl>
-</discord>
-
-	<github personalaccesstoken="783ae8581cc90d12b701b3f5fa76f60a187b9af5" repouser="Xackery" reponame="rebuildeq" issuelabel="ingame" characterlabel="character" npclabel="npc" itemlabel="item" refreshrate="500"/>
 </server>
