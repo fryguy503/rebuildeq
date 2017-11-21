@@ -43,3 +43,9 @@ We use 64bit version of binaries.
 * run deploy/server/world.exe . See if any errors, and give it a bit. If it gets to the Listening on TCP blah blah step, you're good!
 * run deploy/server/zone.exe. Same as above, see if any errors..
 * once both seem to be up, log in like usual via everquest and see if your server appears. See if you can connect. Some times you won't be able to and require port forwarding, but i'll do that for another instruction set.
+
+## Using the dev environment for local test
+
+* In order to test your dev environment, it's suggseted to update your account status to have GM access. You do this in sqlyog by going to database, account, and finding your login. Set status to 200+
+* With the minimum prep environment, you have one world.exe and zone.exe. This means you can't zone, since each zone you want to support requires another zone.exe. So, e.g. if you have 2 zone.exe ran, you can hop between zones.
+* The reason I only roll with just 1 zone and 1 world is, you can #gm 1 while targetting yourself to flag GM, /camp, and instantly log out. When logged out you can kill the zone.exe, compile code, and spin it back up. Your char re-entering the game will access the new spun up zone.
