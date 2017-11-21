@@ -2,4 +2,4 @@
 
 :: Starts the docker containers.
 echo Starting RebuildEQ Docker containers..
-docker-compose up
+docker-compose run eqemu
