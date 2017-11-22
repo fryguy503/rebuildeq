@@ -6067,13 +6067,13 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			if (rank > 0) {
 				chance = 400;
 
-				proc_damage = floor(GetLevel() * 3.0f * (0.2f * rank));
+				proc_damage = int(GetLevel() * 3.0f * (0.2f * rank));
 				if (proc_damage < 20) {
 					proc_damage = 20;
 				}
 
 				if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
-					BuildEcho(StringFormat("Appraisal %i dealt %i damage.", rank, GetCleanName(), proc_damage));
+					BuildEcho(StringFormat("Appraisal %i dealt %i damage.", rank, proc_damage));
 				}
 			}
 
