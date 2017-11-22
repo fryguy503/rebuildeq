@@ -29,7 +29,7 @@ sub EVENT_SPAWN {
 	$notargetTicker = 0;
 	$winnerList = "";
 	quest::settimer("start", 1);
-	quest::settimer("eventendcheck", 3)
+	quest::settimer("eventendcheck", 3);
 }
 
 
@@ -43,7 +43,6 @@ sub EVENT_TIMER {
 		foreach $z (@enemies) {
 			$checkMob = $entity_list->GetMobID($newid);	
 			if ($checkMob && !$checkMob->IsCorpse()) { #if the mob is up
-
 				if (!$checkMob->GetTarget()) { #if the mob has no target, do a depop counter
 					$noTargetTicker++;
 					if ($noTargetTicker > 300) {
@@ -57,26 +56,12 @@ sub EVENT_TIMER {
 
 					#}
 				}
-
 				return;
 			}
 		}
 
-    	$dbh = plugin::LoadMysql();
-    	if (!$dbh) {
-    		quest::say("Failed to load MySQL... Tell Shin wtfm8! $winnerList");
-    		return;
-    	}
-    	foreach $c (@group) {
-	    	$sth = $dbh->prepare("UPDATE `account_custom` SET unclaimed_encounter_rewards = unclaimed_encounter_rewards + 1, unclaimed_encounter_rewards_total = unclaimed_encounter_rewards_total + 1 WHERE account_id = ?");
-	    	$sth->execute($c->AccountID());	    	
-	    }
-	    if ($isRare == 1) {
-			quest::we(13, "$winnerList successfully stopped $encounterType in $zoneln!");
-	    } else {
-	    	quest::we(13, "$winnerList successfully stopped $encounterType in $zoneln!");
-		}
-    	$dbh->disconnect();
+
+		plugin::encounterreward(@group, $winnerList, $zoneln);
     	#despawn
 		quest::depop();
 	}
@@ -106,7 +91,7 @@ sub EVENT_TIMER {
 		}
 		$isRareSpawned = 0;
 
-
+		plugin::spawnwave(@group, )
 		#spawn first wave of enemies
 		foreach $c (@group) {
 			if (!$c) { next; }

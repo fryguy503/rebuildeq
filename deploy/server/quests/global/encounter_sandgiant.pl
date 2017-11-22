@@ -29,7 +29,7 @@ sub EVENT_SPAWN {
 	$notargetTicker = 0;
 	$winnerList = "";
 	quest::settimer("start", 1);
-	quest::settimer("eventendcheck", 3)
+	quest::settimer("eventendcheck", 3);
 }
 
 
