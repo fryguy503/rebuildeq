@@ -1252,6 +1252,7 @@ public:
 	bool IsValidItem(int itemid);
 	bool DoBuffSystem(uint16 spell_id, Mob * spell_target);
 	bool IsCaster();
+	bool IsWISCaster();
 	int engage_duration;
 
 	// Bots HealRotation methods
