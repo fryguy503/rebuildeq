@@ -1358,7 +1358,11 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	//Shin: set spell Id override
 	int spellid = rank->spell;
 	int manacost = -1;
-	int cooldown = 0;
+	//calculate cooldown
+	int cooldown = rank->recast_time - GetAlternateAdvancementCooldownReduction(rank);
+	if (cooldown < 0) {
+		cooldown = 0;
+	}
 	uint8 rb_rank = 0;
 	
 
@@ -1631,12 +1635,6 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		}
 
 		return;
-	}
-
-	//calculate cooldown
-	cooldown = rank->recast_time - GetAlternateAdvancementCooldownReduction(rank);
-	if(cooldown < 0) {
-		cooldown = 0;
 	}
 
 	if (!IsCastWhileInvis(spellid))
