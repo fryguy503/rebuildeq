@@ -49,3 +49,14 @@ We use 64bit version of binaries.
 * In order to test your dev environment, it's suggseted to update your account status to have GM access. You do this in sqlyog by going to database, account, and finding your login. Set status to 200+
 * With the minimum prep environment, you have one world.exe and zone.exe. This means you can't zone, since each zone you want to support requires another zone.exe. So, e.g. if you have 2 zone.exe ran, you can hop between zones.
 * The reason I only roll with just 1 zone and 1 world is, you can #gm 1 while targetting yourself to flag GM, /camp, and instantly log out. When logged out you can kill the zone.exe, compile code, and spin it back up. Your char re-entering the game will access the new spun up zone.
+* Here is easiest way to test on the environment:
+    Create a character on the test server
+    #gm 1
+    #level 60
+    #setallbuilds 5 - sets all builds to 5
+    #setallskills 400 - sets all skills to 400
+    #findspell 3m - get the spell_id of the 3 million GM HP Buff (should be 6824)
+    #cast <spell_id of 3mGMHPBuff> - to cast the GM 3 million HP buff and now you don't have to worry about dying
+    #heal - to heal yourself to full
+    #spawn Test 0 60 - to spawn a lvl 60 mob
+    You can find all commands here: https://github.com/xackery/rebuildeq/wiki/Commands
