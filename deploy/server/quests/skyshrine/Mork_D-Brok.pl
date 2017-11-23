@@ -1,22 +1,14 @@
 sub EVENT_SAY { 
   my $classid = $client->GetClass();
-  if ($faction == 1 || $client->GetGM()) {
-    plugin::velious_armor_hail($text, $zoneid, $classid);
-  } else {
-    quest::say("You must prove your dedication before I will speak to you.");
-  }
+  plugin::velious_armor_hail($text, $zoneid, $classid);
+  
 }
 
 sub EVENT_ITEM {
   my $classid = $client->GetClass();
   my $cash = $copper + $silver * 10 + $gold * 100 + $platinum * 1000;
   my $slot = 0;
-  if ($faction != 1 && !$client->GetGM()) {
-    quest::say("I do not know you well enough to entrust such an item to you, yet.");
-    quest::givecash($copper, $silver, $gold, $platinum);
-    plugin::return_items(\%itemcount);  
-    return;
-  }
+ 
 
   #armor turn in
   foreach my $req (keys %itemcount) { #iterate turned in items
@@ -39,8 +31,22 @@ sub EVENT_ITEM {
   #gem turn in
 
   if ($cash < 200000) {
+    quest::say("Not enough platinum for gem turn in");
     quest::givecash($copper, $silver, $gold, $platinum);
     plugin::return_items(\%itemcount);
+    return;
+  }
+
+  if ($faction != 1 && !$client->GetGM()) {
+    quest::say("I do not know you well enough to do gem interaction with you, yet. I will give you armor rewards, however.");
+    quest::givecash($copper, $silver, $gold, $platinum);
+    plugin::return_items(\%itemcount);  
+    return;
+  }
+  if ($level < 60) {
+    quest::say("You must be level 60 before you can turn in gems.");
+    quest::givecash($copper, $silver, $gold, $platinum);
+    plugin::return_items(\%itemcount);  
     return;
   }
 
