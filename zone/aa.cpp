@@ -1415,15 +1415,13 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			else if(rb_rank == 4) cooldown = 10800; // 3 hours
 			else if(rb_rank == 5) cooldown = 3600; // 1 hours
 		}
-	}
-	else if (rank_id == aaCalloftheHero) {
+	} else if (rank_id == aaCalloftheHero) {
 		rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO);
 		if (rb_rank)
 			cooldown = 2 * ((5 - rb_rank) * 5 + 10);
-	}
-	else if (rank_id == aaDivineArbitration) {
+	} else if (rank_id == aaDivineArbitration) {
 		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION);
-		if (rb_rank > 0) cooldown = cooldown - (rb_rank * 30);
+		if (rb_rank > 0) cooldown = 180 - (rb_rank * 30);
 	} else if (rank_id == aaDivineResurrection) {
 		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION);
 		if (rb_rank > 0) {
