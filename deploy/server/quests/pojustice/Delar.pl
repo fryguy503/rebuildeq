@@ -54,10 +54,10 @@ sub EVENT_SAY {
 			if ($classid == 3 || $classid == 8 || $classid == 1 || $classid == 5 || $classid == 2) {
 				$tmp_id = 24958; #plate			
 			}
-			if ($classid == 4 || $classid == 9 || $classid == 10) {
+			elsif ($classid == 4 || $classid == 9 || $classid == 10) {
 				$tmp_id = 24965; #chain
 			}
-			if ($classid == 6 || $classid == 7) {
+			elsif ($classid == 6 || $classid == 7) {
 				$tmp_id = 24972; #leather
 			}
 			else {
@@ -68,10 +68,10 @@ sub EVENT_SAY {
 			if ($classid == 3 || $classid == 8 || $classid == 1 || $classid == 5 || $classid == 2) {
 				$tmp_id = 24960; #plate
 			}
-			if ($classid == 4 || $classid == 9 || $classid == 10) {
+			elsif ($classid == 4 || $classid == 9 || $classid == 10) {
 				$tmp_id = 24967; #chain
 			}
-			if ($classid == 6 || $classid == 7) {
+			elsif ($classid == 6 || $classid == 7) {
 				$tmp_id = 24974; #leather
 			}
 			else {
@@ -82,10 +82,10 @@ sub EVENT_SAY {
 			if ($classid == 3 || $classid == 8 || $classid == 1 || $classid == 5 || $classid == 2) {
 				$tmp_id = 24962; #plate			
 			}
-			if ($classid == 4 || $classid == 9 || $classid == 10) {
+			elsif ($classid == 4 || $classid == 9 || $classid == 10) {
 				$tmp_id = 24969; #chain
 			}
-			if ($classid == 6 || $classid == 7) {
+			elsif ($classid == 6 || $classid == 7) {
 				$tmp_id = 24976; #leather
 			}
 			else {
@@ -96,10 +96,10 @@ sub EVENT_SAY {
 			if ($classid == 3 || $classid == 8 || $classid == 1 || $classid == 5 || $classid == 2) {
 				$tmp_id = 24957; #plate			
 			}
-			if ($classid == 4 || $classid == 9 || $classid == 10) {
+			elsif ($classid == 4 || $classid == 9 || $classid == 10) {
 				$tmp_id = 24964; #chain
 			}
-			if ($classid == 6 || $classid == 7) {
+			elsif ($classid == 6 || $classid == 7) {
 				$tmp_id = 24971; #leather
 			}
 			else {
@@ -110,10 +110,10 @@ sub EVENT_SAY {
 			if ($classid == 3 || $classid == 8 || $classid == 1 || $classid == 5 || $classid == 2) {
 				$tmp_id = 24959; #plate			
 			}
-			if ($classid == 4 || $classid == 9 || $classid == 10) {
+			elsif ($classid == 4 || $classid == 9 || $classid == 10) {
 				$tmp_id = 24966; #chain
 			}
-			if ($classid == 6 || $classid == 7) {
+			elsif ($classid == 6 || $classid == 7) {
 				$tmp_id = 24973; #leather
 			}
 			else {
