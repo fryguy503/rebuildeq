@@ -3943,13 +3943,17 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 						spell_id == 476 //vampiric embrace
 					)
 					) {
-					uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA);
-					int aggroCap = attacker->CastToClient()->GetAggroCount();
-					if (aggroCap > rank) aggroCap = rank;
-					int healBonus = floor(healed * 0.1f * floor(attacker->CastToClient()->GetAggroCount()) * attacker->CastToClient()->GetAggroCount());
-					if (healBonus < 1) healBonus = aggroCap * rank;
-					attacker->CastToClient()->Message(MT_NonMelee, "Hungering Aura %u with %i enemies added %i bonus healing.", rank, attacker->CastToClient()->GetAggroCount(), healBonus);
-					healed += healBonus;
+					int groupSize = attacker->GetGroupSize(200);
+					if (groupSize > 0) {
+						uint32 rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_HUNGERINGAURA);
+						int aggroCap = attacker->CastToClient()->GetAggroCount();
+						if (aggroCap > rank) aggroCap = rank;
+						if (groupSize < aggroCap) aggroCap = groupSize;
+						int healBonus = floor(healed * 0.05f * floor(attacker->CastToClient()->GetAggroCount()) * attacker->CastToClient()->GetAggroCount());
+						if (healBonus < 1) healBonus = aggroCap * rank;
+						attacker->CastToClient()->Message(MT_NonMelee, "Hungering Aura %u with %i enemies added %i bonus healing.", rank, attacker->CastToClient()->GetAggroCount(), healBonus);
+						healed += healBonus;
+					}
 				}
 
 
