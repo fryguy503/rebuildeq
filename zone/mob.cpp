@@ -7243,7 +7243,7 @@ int Mob::GetTier() {
 		if (npc_type_id == 2000054) return 1; //Dragon_of_Fear
 		if (npc_type_id == 2000056) return 1; //Noble_of_Air
 		if (npc_type_id == 71059) return 1; //Protector_of_Sky
-		if (npc_type_id == 71021) return 1; //Harpie_of_Air
+		if (npc_type_id == 2000055) return 1; //Harpie_of_Air
 		if (npc_type_id == 71060) return 1; //the_Hand_of_Veeshan
 		if (npc_type_id == 71076) return 1; //#Sister_of_the_Spire
 		if (npc_type_id == 71075) return 1; //Keeper_of_Souls
