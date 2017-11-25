@@ -7770,7 +7770,14 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target, bool
 	}
 
 	rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
-	if (rank > 0) {
+	if (rank > 0 && (
+		spell_id == 341 ||  //lifetap
+		spell_id == 502 || //lifespike
+		spell_id == 445 || //lifedraw
+		spell_id == 446 || //siphon life
+		spell_id == 525 || //drain spirit
+		spell_id == 447 //drain soul
+		)) {
 		int level = GetLevel();
 		if (level >= 60) mana_cost = 248;
 		else if (level >= 57) mana_cost = 200;
