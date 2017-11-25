@@ -10819,6 +10819,11 @@ std::string Client::GetBuildName(uint32 id) {
 		if (id == RB_NEC_CORRUPTION) return "Corruption";
 		if (id == RB_NEC_CAVORTINGBONES) return "Cavorting Bones";
 		if (id == RB_NEC_SHOCKINGBOLT) return "Shocking Bolt";
+		if (id == RB_NEC_BURNINGSOUL) return "Burning Soul";
+		if (id == RB_NEC_LINGERINGCURSE) return "Lingering Curse";
+		if (id == RB_NEC_DECAY) return "Decay";
+		if (id == RB_NEC_SPLURT) return "Splurt";
+		if (id == RB_NEC_VENOMSTRIKE) return "Venom Strike";
 		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";
@@ -10943,8 +10948,7 @@ bool Client::IsStanding() {
 }
 
 bool Client::IsBuildAvailable() {
-	if (GetClass() == NECROMANCER ||
-		GetClass() == RANGER ||
+	if (GetClass() == RANGER ||
 		GetClass() == WARRIOR ||
 		GetClass() == WIZARD) {		
 		return false;

@@ -479,6 +479,31 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg -= bonus_damage;
 							}
 
+							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_NEC_VENOMSTRIKE);
+							if (rank > 0 && zone->random.Roll(rank)) {
+								//poison bolt, lvl 4 348
+								//venom of the snake lvl 34 435
+								//chilling embrace, lvl 36 1412
+								//envenomed bolt, lvl 50 436 
+
+								if (spell_id == 204) { //shock of poison, lvl 21
+									caster->SpellFinished(348, this);
+									casterClient->BuildEcho(StringFormat("Venom Strike %i triggered Shock of Poison on %s.", rank, GetCleanName()));
+								}
+								if (spell_id == 1415) { //acid blast, lvl 32
+									caster->SpellFinished(435, this);
+									casterClient->BuildEcho(StringFormat("Venom Strike %i triggered Venom of the Snake on %s.", rank, GetCleanName()));
+								}
+								if (spell_id == 3571) { //torbas' poison blast, lvl 49
+									caster->SpellFinished(435, this);
+									casterClient->BuildEcho(StringFormat("Venom Strike %i triggered Chilling Embrace on %s.", rank, GetCleanName()));
+								}
+								if (spell_id == 3572 || spell_id == 2115) { //torbas' venom blast, lvl 54, ancient lifebane lvl 60
+									caster->SpellFinished(436, this);
+									casterClient->BuildEcho(StringFormat("Venom Strike %i triggered Envenomed Bolt on %s.", rank, GetCleanName()));
+								}
+							}
+
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGSPEAR);
 							if (rank > 0 &&
 								(spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562)) { //spear spells
@@ -4344,6 +4369,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 		// I copied the calculation into each case which needed it instead of
 		// doing it every time up here, since most buff effects dont need it
 
+		int spell_id = buff.spellid;
 		switch (effect) {
 		case SE_CurrentHP: {
 			if (!PassCastRestriction(false, spells[buff.spellid].base2[i], true))
@@ -4382,6 +4408,50 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 						effect_value -= bonus_damage;
 					}
 
+
+
+
+
+					rank = caster_client->GetBuildRank(DRUID, RB_NEC_DECAY);
+					if (rank > 0 && (
+						spell_id == 340 || //disease cloud
+						spell_id == 344 || //clinging darkness
+						spell_id == 348 || //poison bolt
+						spell_id == 1509 || //leech
+						spell_id == 360 || //heat blood
+						spell_id == 355 || //engulfing darkness
+						spell_id == 367 || //heart flutter
+						spell_id == 365 || //infectious cloud
+						spell_id == 2543 || //eternities torment
+						spell_id == 452 || //dooming darkness
+						spell_id == 451 || //boil blood
+						spell_id == 454 || //vampiric curse
+						spell_id == 435 || //venom of the snake
+						spell_id == 31 || //scourge
+						spell_id == 1412 || // chilling embrace
+						spell_id == 4096 || // dark soul
+						spell_id == 1508 || // asystole
+						spell_id == 3702 || //auspice
+						spell_id == 453 || // cascading darkness
+						spell_id == 6 || //ignite blood
+						spell_id == 456 || //bond of death
+						spell_id == 436 || //envenomed bolt
+						spell_id == 32 || //plague
+						spell_id == 4097 || //imprecation
+						spell_id == 2015 || //conglaciation of bone
+						spell_id == 1615 || //cessation of cor
+						spell_id == 1616 || //vexing mordinia
+						spell_id == 1617 || //pyrocruor
+						spell_id == 1619 || //devouring darkness
+						spell_id == 2550 || //zevfeer's theft of vitae
+						spell_id == 2885  //funeral pyre of kelador
+						)
+						) {
+						int mana_return = int(spell.mana * 0.05f);
+						if (mana_return < 1) mana_return = 1;
+						caster->DebugEcho(StringFormat("Decay %i returned %i mana.", rank, mana_return));
+						SetMana(GetMana() + mana_return);
+					}
 					
 					rank = caster_client->GetBuildRank(DRUID, RB_DRU_FOCUSEDSWARM);
 					if (rank > 0 && caster_client->IsGrouped()) {

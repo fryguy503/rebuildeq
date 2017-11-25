@@ -720,7 +720,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Focused Swarm";
-			$newSkill->desc = 'When standing nearby a mob, DoTs now deal <em data-base="1">1</em>% more damage for each ally in group. This damage bonus reduces by 10% for every 20m you\'re away from an enemy, with a minimum of <em data-base="10">10</em>% more damage.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When standing nearby a mob, DoTs now deal <em data-base="1">1</em>% more damage for each ally in group. This damage bonus reduces by 10% for every 20m you\'re away from an enemy<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-focusedswarm.png";	
 			$skills[40] = $newSkill;
 
@@ -1220,11 +1220,35 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-nec-shockingbolt.png";
 			$skills[4] = $newSkill;
 
-			/*$newSkill = new stdClass();
+			$newSkill = new stdClass();
+			$newSkill->title = "Burning Soul";
+			$newSkill->desc = 'When a fire-based DoT deals damage, it has a <em data-base="2">2</em>% chance to critical hit for double damage<span class="perLevel"> per rank</span>. (#toggle debugecho to see return)';
+			$newSkill->image = "/images/builds/icons/rb-nec-burningsoul.png";
+			$skills[6] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Lingering Curse";
+			$newSkill->desc = 'Increases DoT duration by <em data-base="1">1</em> tick per rank, the duration is lowered the closer the enemy is to your level. Minimum 1 tick<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-nec-lingeringcurse.png";
+			$skills[8] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Decay";
+			$newSkill->desc = 'While a DoT affects an enemy, mana is returned to the necromancer at a rate of <em data-base="1">1</em>% of cost per tick<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-nec-decay.png";
+			$skills[10] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Splurt";
+			$newSkill->desc = 'Splurt now deals <em data-base="10">10</em>% more damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-nec-splurt.png";
+			$skills[13] = $newSkill;
+
+			$newSkill = new stdClass();
 			$newSkill->title = "Venom Strike";
-			$newSkill->desc = 'Poison-based direct damage spells now have a <em data-base="1">1</em>% chance to also apply a damage over time<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Poison-based direct damage spells such as Torbas line of spells, now have a <em data-base="1">1</em>% chance to also apply a poison damage over time<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-nec-venomstrike.png";
-			$skills[16] = $newSkill;*/
+			$skills[16] = $newSkill;
 
 
 

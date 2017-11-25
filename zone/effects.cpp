@@ -74,6 +74,18 @@ int32 Mob::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 			chance = rank;
 		}
 
+
+		rank = GetBuildRank(NECROMANCER, RB_NEC_BURNINGSOUL);
+		if (rank > 0 && (
+			spell_id == 360 || //heat blood
+			spell_id == 451 || //boil blood
+			spell_id == 6 || //ignite blood
+			spell_id == 1617 || //pyrocruor
+			spell_id == 2885  //funeral pyre of kelador
+			)) {
+			chance = rank * 2;
+		}
+
 		// Shaman
 		if (GetClass() == SHAMAN) {
 
@@ -372,8 +384,16 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 		value += extra_dmg;
 	}
 
+	rank = GetBuildRank(NECROMANCER, RB_NEC_SPLURT);
+	if (rank > 0 && spell_id == 1620) {
+		extra_dmg = int(value * 0.1f * rank);
+		BuildEcho(StringFormat("Splurt %i increased damage by %i", rank, extra_dmg));
+		value += extra_dmg;
+	}
+
 	if (IsNPC() && CastToNPC()->GetSpellScale())
 		value = int(static_cast<float>(value) * CastToNPC()->GetSpellScale() / 100.0f);
+
 
 	return value;
 }
