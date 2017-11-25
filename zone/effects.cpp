@@ -312,7 +312,46 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 		value += extra_dmg;
 	}
 
-
+	rank = GetBuildRank(NECROMANCER, RB_NEC_CORRUPTION);
+	if (rank > 0 && IsGrouped() && (
+		spell_id == 340 || //disease cloud
+		spell_id == 344 || //clinging darkness
+		spell_id == 348 || //poison bolt
+		spell_id == 1509 || //leech
+		spell_id == 360 || //heat blood
+		spell_id == 355 || //engulfing darkness
+		spell_id == 367 || //heart flutter
+		spell_id == 365 || //infectious cloud
+		spell_id == 2543 || //eternities torment
+		spell_id == 452 || //dooming darkness
+		spell_id == 451 || //boil blood
+		spell_id == 454 || //vampiric curse
+		spell_id == 435 || //venom of the snake
+		spell_id == 31 || //scourge
+		spell_id == 1412 || // chilling embrace
+		spell_id == 4096 || // dark soul
+		spell_id == 1508 || // asystole
+		spell_id == 3702 || //auspice
+		spell_id == 453 || // cascading darkness
+		spell_id == 6 || //ignite blood
+		spell_id == 456 || //bond of death
+		spell_id == 436 || //envenomed bolt
+		spell_id == 32 || //plague
+		spell_id == 4097 || //imprecation
+		spell_id == 2015 || //conglaciation of bone
+		spell_id == 1615 || //cessation of cor
+		spell_id == 1616 || //vexing mordinia
+		spell_id == 1617 || //pyrocruor
+		spell_id == 1619 || //devouring darkness
+		spell_id == 2550 || //zevfeer's theft of vitae
+		spell_id == 2885  //funeral pyre of kelador
+		)) {
+		int group_size = GetGroupSize(200);
+		extra_dmg = floor(value * 0.01f * rank * group_size);
+		if (extra_dmg < rank) extra_dmg = floor(rank * 2);
+		BuildEcho(StringFormat("Corruption %i increased damage by %i", rank, extra_dmg));
+		value += extra_dmg;
+	}
 	rank = GetBuildRank(SHAMAN, RB_SHM_POISON);
 	if (rank > 0 && IsGrouped()) {
 

@@ -1492,6 +1492,11 @@ void command_focus(Client *c, const Seperator *sep) {
 		c->Message(0, "You must be a Shadow Knight or Necromancer to use this command.");
 		return;
 	}
+
+	if (c->GetAggroCount() > 0) {
+		c->Message(0, "This command does not work while in combat.");
+		return;
+	}
 	Client *focus = nullptr;
 
 	if (c->GetTarget() == nullptr) {

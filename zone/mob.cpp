@@ -7769,6 +7769,20 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target, bool
 		mana_cost /= floor(0.4f * rank);
 	}
 
+	rank = GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL);
+	if (rank > 0 && spell_id == 3283) {
+		int level = GetLevel();
+		if (level >= 60) mana_cost = 450;
+		else if (level >= 58) mana_cost = 390;
+		else if (level >= 52) mana_cost = 290;
+		else if (level >= 46) mana_cost = 200;
+		else if (level >= 38) mana_cost = 160;
+		else if (level >= 30) mana_cost = 80;
+		else if (level >= 22) mana_cost = 40;
+		else if (level >= 14) mana_cost = 20;
+		else mana_cost = 10;
+	}
+
 	rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
 	if (rank > 0 && (
 		spell_id == 341 ||  //lifetap
@@ -7823,7 +7837,18 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target, bool
 	if (rank > 0 && spell_id == 5243) {
 		mana_cost = int(GetMaxMana() * 0.5f) - ((GetMaxMana() * 0.3f) * 0.2f * GetBuildRank(BARD, RB_BRD_FADINGMEMORIES));
 	}
-
+	rank = GetBuildRank(NECROMANCER, RB_NEC_CAVORTINGBONES);
+	if (rank > 0 && spell_id == 338) {
+		if (GetLevel() < 3) mana_cost = 5;
+		if (GetLevel() < 14) mana_cost = 20;
+		else if (GetLevel() < 22) mana_cost = 40;
+		else if (GetLevel() < 30) mana_cost = 80;
+		else if (GetLevel() < 38) mana_cost = 160;
+		else if (GetLevel() < 46) mana_cost = 200;
+		else if (GetLevel() < 52) mana_cost = 290;
+		else if (GetLevel() < 58) mana_cost = 390;
+		else mana_cost = 450;
+	}
 	
 	rank = GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL);
 	if (rank > 0 && spell_id == 164) {

@@ -386,6 +386,50 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->max_hp *= 0.75f; // 75% of normal hp
 		npc_type->AC *= 0.80f; // 80% of normal ac
 		npc_type->max_dmg *= 0.60f; // 60% of max dmg
+		npc_type->min_dmg *= 0.60f; // 60% of min dmg
+	}
+
+	//necro pet
+	if (spell_id == 338 && GetClass() == NECROMANCER) {
+
+		rank = CastToClient()->GetBuildRank(NECROMANCER, RB_NEC_CAVORTINGBONES);
+
+		npc_type->level = CastToClient()->GetLevel();
+		npc_type = this->AdjustNPC(npc_type, true, true);
+		//44+ give lifetap
+		if (GetLevel() >= 44 && rank == 5) {
+			npc_type->npc_spells_id = 534;
+		}
+		if (GetLevel() >= 59) {
+			if (rank == 5) npc_type->race = 485;
+			else npc_type->race = 85;
+		}
+		else {
+			//todo skeleton pet
+			//if (rank == 5) npc_type->race = 
+		}
+
+		npc_type->STR *= .90f;
+		npc_type->STA *= .90f;
+		npc_type->AGI *= .90f;
+		npc_type->DEX *= .90f;
+		npc_type->WIS *= .90f;
+		npc_type->INT *= .90f;
+		npc_type->CHA *= .90f;
+
+		//Now that we generated base HP, let's nerf it on a new formula
+		npc_type->max_hp = floor(npc_type->max_hp * 0.2f * rank); //50 % of normal hp
+		if (npc_type->max_hp < 50) {
+			npc_type->max_hp = 50;
+		}
+		npc_type->AC = floor(npc_type->AC * 0.1f * rank); //this formula likely needs tweaks
+		npc_type->size = floor(rank * (GetLevel() / 50)); //1.04 to 7.4
+		npc_type->max_dmg = floor(npc_type->max_dmg * 0.1f * rank); //50% dmg at max
+		npc_type->min_dmg = floor(npc_type->min_dmg * 0.1f * rank); //50% dmg at max
+
+		if (npc_type->max_hp < 50) {
+			npc_type->max_hp = 50;
+		}
 	}
 
 	//mage pet
@@ -404,6 +448,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 
 		//Now that we generated base HP, let's nerf it on a new formula
 		npc_type->max_dmg *= 0.5f; //50% dmg at max
+		npc_type->min_dmg *= 0.5f; //50% dmg at min
 		npc_type->size = 3 + (GetLevel() / 15); //3.0 to 7.0
 		npc_type->race = ELEMENTAL;
 		
@@ -436,18 +481,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 			
 		rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL);
 		//Nerf level, since that's used as a factor for HP/Dmg calculation
-
-		if (CastToClient()->GetLevel() < 6) {
-			if (CastToClient()->GetLevel() < rank) {
-				npc_type->level = rank;
-			}
-			else {
-				npc_type->level = CastToClient()->GetLevel();
-			}
-		}
-		else {
-			npc_type->level = (CastToClient()->GetLevel() - (4 - rank));
-		}
+		npc_type->level = CastToClient()->GetLevel();
 		npc_type = this->AdjustNPC(npc_type, true, true);
 		//Now that we generated base HP, let's nerf it on a new formula
 		npc_type->max_hp = floor(npc_type->max_hp * 0.2f * rank); //50 % of normal hp
@@ -457,6 +491,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->AC = floor(npc_type->AC * 0.1f * rank); //this formula likely needs tweaks
 		npc_type->size = floor(rank * (GetLevel() / 50)); //1.04 to 7.4
 		npc_type->max_dmg = floor(npc_type->max_dmg * 0.1f * rank); //50% dmg at max
+		npc_type->min_dmg = floor(npc_type->min_dmg * 0.1f * rank); //50% dmg at max
 
 		//Turn it into a pet
 		switch (GetBaseRace())

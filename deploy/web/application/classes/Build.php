@@ -1202,7 +1202,39 @@ class Build {
 
 			//==================NECROMANCER======================
 			case "necromancer":
+			$newSkill = new stdClass();
+			$newSkill->title = "Corruption";
+			$newSkill->desc = 'DoT damage is increased by <em data-base="1">1</em>% per ally in group<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-nec-corruption.png";
+			$skills[0] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Cavorting Bones";
+			$newSkill->desc = 'Empowers your pet to dynamically level with you at <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>. Once 44+, at max rank the pet will lifetap. At 59+, the pet will be a spectre.';
+			$newSkill->image = "/images/builds/icons/rb-nec-cavoringbones.png";
+			$skills[2] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Shocking Bolt";
+			$newSkill->desc = 'When a poison-based direct damage spell with bolt in it\'s name (or venom of the snake) lands on an enemy, the instant damage is increased by <em data-base="5">5</em>% <span class="perLevel"> per rank</span>. It also has a <em data-base="1">1</em>% chance to hit for quad damage.';
+			$newSkill->image = "/images/builds/icons/rb-nec-shockingbolt.png";
+			$skills[4] = $newSkill;
+
+			/*$newSkill = new stdClass();
+			$newSkill->title = "Venom Strike";
+			$newSkill->desc = 'Poison-based direct damage spells now have a <em data-base="1">1</em>% chance to also apply a damage over time<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-nec-venomstrike.png";
+			$skills[16] = $newSkill;*/
+
+
+
+			/*$newSkill = new stdClass();
+			$newSkill->title = "Life Link";
+			$newSkill->desc = 'Necromancer pets now recourse to the #focus target, or the necro themselves.<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-nec-venomstrike.png";
+			$skills[31] = $newSkill;*/
 			break;
+
 
 			//==================PALADIN======================
 			case "paladin":

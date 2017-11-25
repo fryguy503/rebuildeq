@@ -10815,6 +10815,11 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MNK_MOVINGMOUNTAINS) return "Moving Mountains";
 		else if (id == RB_MNK_SLOWHEARTRATE) return "Slow Heart Rate";
 		break;
+	case NECROMANCER:
+		if (id == RB_NEC_CORRUPTION) return "Corruption";
+		if (id == RB_NEC_CAVORTINGBONES) return "Cavorting Bones";
+		if (id == RB_NEC_SHOCKINGBOLT) return "Shocking Bolt";
+		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";
 		else if (id == RB_PAL_HANDOFPIETY) return "Hand of Piety";

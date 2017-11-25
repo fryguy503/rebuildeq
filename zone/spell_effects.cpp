@@ -492,6 +492,20 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg -= bonus_damage;
 							}
 
+							rank = casterClient->GetBuildRank(NECROMANCER, RB_NEC_SHOCKINGBOLT);
+							if (rank > 0 &&
+								(spell_id == 436 || spell_id == 348 || spell_id == 435)) {
+
+								int bonus_damage = int(-dmg * 0.05f * rank);
+								bool is_quad = false;
+								if (rank > 0 && zone->random.Roll(rank)) {
+									bonus_damage *= 4;
+									is_quad = true;
+								}
+								casterClient->BuildEcho(StringFormat("Shocking Bolt %u added %i %s bonus damage.", rank, bonus_damage, (is_quad) ? "QUAD" : ""));
+								dmg -= bonus_damage;
+							}
+
 							// Shock of Swords
 							rank = casterClient->GetBuildRank(MAGICIAN, RB_MAG_SHOCKOFSWORDS);
 							if (rank > 0 &&

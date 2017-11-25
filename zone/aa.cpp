@@ -1509,28 +1509,20 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		if(GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL)) {
 			spellid = 164;
 			if (GetLevel() < 14) {
-				manacost = 20;
 				cooldown = 16;
 			} else if (GetLevel() < 22) {
-				manacost = 40;
 				cooldown = 16;
 			} else if (GetLevel() < 30) {
-				manacost = 80;
 				cooldown = 16;
 			} else if (GetLevel() < 38) {
-				manacost = 160;
 				cooldown = 16;
 			} else if (GetLevel() < 46) {
-				manacost = 200;
 				cooldown = 16;
 			} else if (GetLevel() < 52) {
-				manacost = 290;
 				cooldown = 16;
 			} else if (GetLevel() < 58) {
-				manacost = 390;
 				cooldown = 16;
 			} else {
-				manacost = 450;
 				cooldown = 16;
 			}
 		}
