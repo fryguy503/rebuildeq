@@ -936,6 +936,8 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 	
 	int rb_rank = 0;
 	
+	aai->spell_refresh = rank->recast_time;
+
 	if (rank->id == aaCalloftheWild) {
 		rb_rank = GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD);
 		if(rb_rank)
@@ -980,9 +982,7 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 		if (rb_rank) {
 			aai->spell_refresh = rank->recast_time - (rb_rank * 30);
 		}
-	}else {
-		aai->spell_refresh = rank->recast_time;
-	}	
+	}
 	
 	aai->classes = ability->classes;
 	aai->level_req = rank->level_req;
