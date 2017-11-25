@@ -22,4 +22,5 @@ title = "ToV Armor improvements"
 * Entrance of sola is safer.
 * Hungering Aura was cut in half and now requires group to get effect.
 * Levitation now affects all levels
+* Word of Redemption no longer exists
 <!--more-->
