@@ -7771,11 +7771,40 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target, bool
 
 	rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
 	if (rank > 0) {
-		if (spell_id == 341) mana_cost = 8;
-		if (spell_id == 502) mana_cost = 13;
-		if (spell_id == 445) mana_cost = 86;
-		if (spell_id == 446) mana_cost = 115;
-		if (spell_id == 525) mana_cost = 152;
+		//let's try to ramp up the mana cost, by level, so the next life tap used is not as big of a jump.
+		int level = GetLevel();
+		if (spell_id == 341) //mana_cost = 8;
+			if (level < 15) { //lifetap
+				if (level >= 14) mana_cost = 12;
+				else if (level >= 10) mana_cost = 11;
+				else if (level >= 5) mana_cost = 10;
+				else mana_cost = 8;
+			}
+		if (spell_id == 502) //mana_cost = 13;
+			if (level < 29) { //lifespike
+				if (level >= 28) mana_cost = 85;
+				else if (level >= 24) mana_cost = 61;
+				else if (level >= 20) mana_cost = 37;
+				else mana_cost = 13;
+			}
+		if (spell_id == 445) //mana_cost = 86;
+			if (level < 51) { //lifedraw
+				if (level >= 50) mana_cost = 114;
+				else if (level >= 45) mana_cost = 107;
+				else if (level >= 40) mana_cost = 100;
+				else if (level >= 35) mana_cost = 93;
+				else mana_cost = 86;
+			}
+		if (spell_id == 446) //mana_cost = 115;
+			if (level < 55) { //siphon life
+				if (level > 52) mana_cost = 133;
+				else mana_cost = 115;
+			}
+		if (spell_id == 525) //mana_cost = 152;
+			if (level < 60) { //drain spirit
+				if (level > 57) mana_cost = 200;
+				else mana_cost = 152;
+			}
 		if (spell_id == 447) mana_cost = 248;
 	}
 
