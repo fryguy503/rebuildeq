@@ -1458,27 +1458,21 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			if (GetLevel() < 15) { //lifetap
 				spellid = 341;  //10
 				cooldown = 4;
-				//manacost = 8;
 			} else if (GetLevel() < 29) { //lifespike
 				spellid = 502; //19
 				cooldown = 4;
-				//manacost = 13;
 			} else if (GetLevel() < 51) { //lifedraw
 				spellid = 445; //195
 				cooldown = 4;
-				//manacost = 86;
 			} else if (GetLevel() < 55) { //siphon life
 				spellid = 446; //250
 				cooldown = 4;
-				//manacost = 115;
 			} else if (GetLevel() < 60) { //drain spirit
 				spellid = 525; //514
 				cooldown = 4;
-				//manacost = 152;
 			} else { //drain soul
 				spellid = 447; // 656
 				cooldown = 4;
-				//manacost = 248;
 			}
 		}		
 	} else if (rank_id == aaSpiritoftheWood || rank_id == aaNaturesBoon || rank_id == aaAncestralAid) {
