@@ -409,7 +409,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Chant Cycle";
-			$newSkill->desc = 'Chants with damage over time effects now deal <em data-base="10">10</em>% more damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Chants with DoT effects now deal <em data-base="1">1</em>% more damage per ally in group <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-chantcycle.png";	
 			$skills[36] = $newSkill;
 
@@ -708,7 +708,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Intensity";
-			$newSkill->desc = 'When an enemy is affected by a damage over time, it deals <em data-base="10">10</em>% more damage.';
+			$newSkill->desc = 'When an enemy is affected by a DoT, it deals <em data-base="0.7">0.7</em>% more damage for each ally in group.';
 			$newSkill->image = "/images/builds/icons/rb-dru-intensity.png";	
 			$skills[36] = $newSkill;
 
@@ -720,7 +720,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Focused Swarm";
-			$newSkill->desc = 'When standing nearby a mob, DoTs now deal <em data-base="10">10</em>% more damage. This damage bonus reduces by 10% for every 20m you\'re away from an enemy, with a minimum of <em data-base="10">10</em>% more damage.<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When standing nearby a mob, DoTs now deal <em data-base="1">1</em>% more damage for each ally in group. This damage bonus reduces by 10% for every 20m you\'re away from an enemy, with a minimum of <em data-base="10">10</em>% more damage.<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-focusedswarm.png";	
 			$skills[40] = $newSkill;
 
@@ -759,7 +759,7 @@ class Build {
 			case "enchanter":
 			$newSkill = new stdClass();
 			$newSkill->title = "Nightmare";
-			$newSkill->desc = 'Damage over time spells do an additional <em data-base="10"></em>% damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'DoT spells do an additional <em data-base="1"></em>% damage per ally in group<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-enc-nightmare.png";
 			$skills[0] = $newSkill;
 
@@ -1575,7 +1575,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Poison";
-			$newSkill->desc = 'All poison-based DoTs now deal <em data-base="5">5</em>% additional damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'All poison-based DoTs now deal <em data-base="1">1</em>% additional damage per ally in group<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shm-poison.png";
 			$skills[24] = $newSkill;
 			
@@ -1724,7 +1724,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Festering Wound";
-			$newSkill->desc = 'Improves DoT damage by <em data-base="4">4</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Improves DoT damage by <em data-base="1">1</em>% for each ally in group<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-festeringwound.png";	
 			$skills[20] = $newSkill;
 		

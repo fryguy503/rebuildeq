@@ -4370,8 +4370,8 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 					
 					rank = caster_client->GetBuildRank(DRUID, RB_DRU_FOCUSEDSWARM);
-					if (rank > 0) {
-						float dist2 = DistanceSquared(m_Position, caster->GetPosition());						
+					if (rank > 0 && caster_client->IsGrouped()) {
+						float dist2 = DistanceSquared(m_Position, caster_client->GetPosition());
 						float multiplier = 1.0f;
 						if (dist2 <= (20 * 20)) {
 							multiplier = 1.0f;
@@ -4392,26 +4392,30 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							multiplier = 0.5f;
 						}
 						if (multiplier > 0) {
+							int group_size = caster_client->GetGroupSize(200);
 							bonus_damage = -effect_value;
-							bonus_damage = floor(bonus_damage * multiplier * 0.1f * rank);
+							bonus_damage = int(bonus_damage * multiplier * 0.01f * rank * group_size);
 							if (bonus_damage > 0) bonus_damage = 1;
 							caster_client->Message(MT_DoTDamage, "Focused Swarm %u caused %i bonus damage to %s.", rank, bonus_damage, GetCleanName());
 							effect_value -= bonus_damage;
 						}
 					}
 					rank = caster_client->GetBuildRank(DRUID, RB_DRU_INTENSITY);
-					if (rank > 0) {
+					if (rank > 0 && caster_client->IsGrouped()) {
+						int group_size = caster_client->GetGroupSize(200);
 						bonus_damage = -effect_value;
-						bonus_damage = floor(bonus_damage * 0.1f * rank);
+						bonus_damage = int(bonus_damage * 0.007f * rank * group_size);
+
 						if (bonus_damage < 1) bonus_damage = 1;
 						caster_client->BuildEcho(StringFormat("Intensity %u caused %i bonus damage to %s.", rank, bonus_damage, GetCleanName()));
 						effect_value -= bonus_damage;
 					}
 					rank = caster_client->GetBuildRank(ENCHANTER, RB_ENC_NIGHTMARE);
-					if (rank > 0) {
+					if (rank > 0 && caster_client->IsGrouped()) {
+						int group_size = caster_client->GetGroupSize(200);
 						//flip damage
 						bonus_damage = -effect_value;
-						bonus_damage = floor(bonus_damage * 0.1f * rank);
+						bonus_damage = int(bonus_damage * 0.01f * rank * group_size);
 						if (bonus_damage <  1) bonus_damage = 1;
 						caster_client->BuildEcho(StringFormat("Nightmare %u caused %i bonus damage to %s.", rank, bonus_damage, GetCleanName()));
 						effect_value -= bonus_damage;

@@ -293,7 +293,7 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 		value -= extra_dmg;
 	}
 	rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_FESTERINGWOUND);
-	if (rank > 0 && (
+	if (rank > 0 && IsGrouped() && (
 		spell_id == 1508 || //asystole
 		spell_id == 367 || //heart flutter
 		spell_id == 340 || //disease cloud
@@ -305,23 +305,29 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 		spell_id == 360 || //heat blood
 		spell_id == 451  //boil blood
 		)) {		
-		extra_dmg = floor(value * 0.04f * rank);
+		int group_size = GetGroupSize(200);
+		extra_dmg = floor(value * 0.01f * rank * group_size);
 		if (extra_dmg < rank) extra_dmg = floor(rank * 2);
 		BuildEcho(StringFormat("Festering Wound %i increased damage by %i", rank, extra_dmg));
 		value += extra_dmg;
 	}
 
+
 	rank = GetBuildRank(SHAMAN, RB_SHM_POISON);
-	if (rank > 0) {
-		extra_dmg = floor(value * 0.05f * rank);
+	if (rank > 0 && IsGrouped()) {
+
+		int group_size = GetGroupSize(200);
+		extra_dmg = int(value * 0.01f * rank * group_size);
 		if (extra_dmg < rank) extra_dmg = floor(rank * 2);
 		BuildEcho(StringFormat("Poison %i increased damage by %i", rank, extra_dmg));
 		value += extra_dmg;
 	}
 
 	rank = GetBuildRank(BARD, RB_BRD_CHANTCYCLE);
-	if (rank > 0) {
-		extra_dmg = int(value * 0.1f * rank);
+	if (rank > 0 && IsGrouped()) {
+
+		int group_size = GetGroupSize(200);
+		extra_dmg = int(value * 0.01f * rank * group_size);
 		if (extra_dmg < 1) extra_dmg = 1;
 		BuildEcho(StringFormat("Chant Cycle %i increased damage by %i", rank, extra_dmg));
 		value += extra_dmg;
