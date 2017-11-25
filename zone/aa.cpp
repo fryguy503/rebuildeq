@@ -1573,7 +1573,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	} else if (rank_id == aaLessonoftheDevoted) {
 		if (GetBuildRank(BARD, RB_BRD_KINSONG)) spellid = 6239;		
 		else if (GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE)) spellid = 6233;
-		else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) spellid = 6233;
+		else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) spellid = 6237;
 		else if (GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER)) spellid = 6238;
 		else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION)) spellid = 6234;
 		else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT)) spellid = 6240;
