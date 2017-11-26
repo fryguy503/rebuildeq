@@ -731,11 +731,9 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 						if (dmg < 1) dmg = 1;
 						caster->SetHP(GetHP() - dmg);
 						caster->BuildEcho(StringFormat("Life Burn %i dealt %i damage.", rank, dmg));
-						dmg = -dmg;
-					}
-					//dmg = caster->GetHP();
+					}		
+					Damage(caster, dmg, spell_id, spell.skill, false, buffslot, false);
 					break;
-
 				}
 
 				if (caster->IsClient()) {
