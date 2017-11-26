@@ -4039,7 +4039,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 
 
 				rank = attacker->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS);
-				Client *tapFocus = attacker->GetTapFocus();
+				tapFocus = attacker->GetTapFocus();
 				if (rank > 0 && //
 					(spell_id == 341 || spell_id == 502 || spell_id == 445 || spell_id == 446 || spell_id == 525 || spell_id == 447) && tapFocus != nullptr && !tapFocus->IsDead()) {
 					float dist2 = DistanceSquared(attacker->GetPosition(), tapFocus->GetPosition());
