@@ -721,9 +721,21 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				}
 				if (spell_id == 2755 && caster) //Lifeburn
 				{
+					/*
 					dmg = caster->GetHP(); // just your current HP
 					caster->SetHP(dmg / 4); // 2003 patch notes say ~ 1/4 HP. Should this be 1/4 your current HP or do 3/4 max HP dmg? Can it kill you?
-					dmg = -dmg;
+					dmg = -dmg;*/
+					rank = caster->GetBuildRank(NECROMANCER, RB_NEC_LIFEBURN);
+					if (rank > 0) {
+						dmg = int(caster->GetHP() * 0.02f * rank);
+						if (dmg < 1) dmg = 1;
+						caster->SetHP(GetHP() - dmg);
+						caster->BuildEcho(StringFormat("Life Burn %i dealt %i damage.", rank, dmg));
+						dmg = -dmg;
+					}
+					//dmg = caster->GetHP();
+					break;
+
 				}
 
 				if (caster->IsClient()) {

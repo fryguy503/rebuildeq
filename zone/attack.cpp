@@ -6067,6 +6067,38 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 				}
 			}
 
+
+			if (IsPet() && HasOwner() && GetOwner()->IsClient()) {
+				Mob *owner = GetOwner();
+				rank = owner->GetBuildRank(NECROMANCER, RB_NEC_SHROUDOFDEATH);
+				if (rank > 0) {
+					chance = 400;
+
+					proc_damage = int(owner->GetLevel() * 0.2f * rank);
+					if (proc_damage < 10) {
+						proc_damage = 10;
+					}
+					
+					if (owner->CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
+						owner->BuildEcho(StringFormat("Shroud of Death %i dealt %i damage.", rank, proc_damage));
+						//apply recourse
+						Mob * tapFocus = owner->GetTapFocus();
+						if (owner->GetBuildRank(NECROMANCER, RB_NEC_SPIRITFOCUS) > 0 && tapFocus != nullptr) {
+							float dist2 = DistanceSquared(GetPosition(), tapFocus->GetPosition());
+							float range2 = 100 * 100;
+							if (dist2 > range2) {
+								owner->ClearTapFocus();
+							}
+							else { //in range
+								owner->BuildEcho(StringFormat("Spirit Focus %i transferred %i hitpoints of the lifetap recourse to %s.", rank, proc_damage, tapFocus->GetCleanName()));
+								owner->GetTapFocus()->HealDamage(proc_damage, owner);
+							}
+						}
+					}
+				}
+			}
+			
+
 			rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
 			if (rank > 0) {
 				chance = 400;

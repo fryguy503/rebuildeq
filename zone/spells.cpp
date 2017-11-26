@@ -3444,7 +3444,8 @@ uint32 Client::GetLastBuffSlot(bool disc, bool song)
 // the level of the mob
 int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_override)
 {
-
+	if (spell_id == 2488) return -2; //life burn recourse
+	if (spell_id == 2755) return -2; //life burn 250 dot
 	int buffslot, ret, caster_level, emptyslot = -1;
 	bool will_overwrite = false;
 	std::vector<int> overwrite_slots;

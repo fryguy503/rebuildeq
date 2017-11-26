@@ -966,11 +966,15 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 			else if(rb_rank == 4) aai->spell_refresh = 10800; // 3 hours
 			else if(rb_rank == 5) aai->spell_refresh = 3600; // 1 hour
 		}
-	} else if (rank->id == aaCalloftheHero) {
+	}
+	else if (rank->id == aaCalloftheHero) {
 		rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO);
-		if(rb_rank) {
+		if (rb_rank) {
 			aai->spell_refresh = 2 * ((5 - rb_rank) * 5 + 10);
 		}
+	}
+	else if (rank->id == aaLifeBurn) {
+		aai->spell_refresh = 30;	
 	} else if (rank->id == aaDivineArbitration) {
 		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION);
 		if (rb_rank > 0) aai->spell_refresh = 180 - (rb_rank * 30);
@@ -1305,9 +1309,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 
 		rank_id == aaPurifyBody && GetBuildRank(MONK, RB_MNK_PURIFYBODY) < 1 ||
 
+		rank_id == aaLifeBurn && GetBuildRank(NECROMANCER, RB_NEC_LIFEBURN) < 1 ||
+
 		rank_id == aaHandofPiety && GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY) < 1 ||
 		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
-
 		rank_id == aaActOfValor && GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR) < 1 ||
 		rank_id == aaDivineStun && GetBuildRank(PALADIN, RB_PAL_DIVINESTUN) < 1 ||
 		
@@ -1421,10 +1426,14 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			else if(rb_rank == 4) cooldown = 10800; // 3 hours
 			else if(rb_rank == 5) cooldown = 3600; // 1 hours
 		}
-	} else if (rank_id == aaCalloftheHero) {
+	}
+	else if (rank_id == aaCalloftheHero) {
 		rb_rank = GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO);
 		if (rb_rank)
 			cooldown = 2 * ((5 - rb_rank) * 5 + 10);
+	}
+	else if (rank_id == aaLifeBurn) {
+		cooldown = 30;
 	} else if (rank_id == aaDivineArbitration) {
 		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION);
 		if (rb_rank > 0) {

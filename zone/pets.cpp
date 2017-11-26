@@ -397,9 +397,9 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->level = CastToClient()->GetLevel();
 		npc_type = this->AdjustNPC(npc_type, true, true);
 		//44+ give lifetap
-		if (GetLevel() >= 44 && rank == 5) {
-			npc_type->npc_spells_id = 534;
-		}
+		//if (GetLevel() >= 44 && rank == 5) {
+		//	npc_type->npc_spells_id = 534;
+		//}
 		if (GetLevel() >= 59) {
 			if (rank == 5) npc_type->race = 485;
 			else npc_type->race = 85;

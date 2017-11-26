@@ -9770,7 +9770,6 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Servant of Ro\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
-
 				if (GetClass() == MONK && i == RB_MNK_GRACEOFTHEORDER && GetAA(aaLessonoftheDevoted) < 1) {
 					TrainAARank(aaLessonoftheDevoted);
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
@@ -9779,6 +9778,11 @@ void Client::RefreshBuild() {
 				if (GetClass() == MONK && i == RB_MNK_PURIFYBODY && GetAA(aaPurifyBody) < 1) {
 					TrainAARank(aaPurification);
 					Message(15, "You have unlocked the AA \"Purify Body\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == NECROMANCER && i == RB_NEC_LIFEBURN && GetAA(aaLifeBurn) < 1) {
+					TrainAARank(aaLifeBurn);
+					Message(15, "You have unlocked the AA \"Life Burn\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
 				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
@@ -10824,6 +10828,11 @@ std::string Client::GetBuildName(uint32 id) {
 		if (id == RB_NEC_DECAY) return "Decay";
 		if (id == RB_NEC_SPLURT) return "Splurt";
 		if (id == RB_NEC_VENOMSTRIKE) return "Venom Strike";
+		if (id == RB_NEC_SHROUDOFDEATH) return "Shroud of Death";
+		if (id == RB_NEC_LIFEBURN) return "Life Burn";
+
+
+		if (id == RB_NEC_SPIRITFOCUS) return "Spirit Focus";
 		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";

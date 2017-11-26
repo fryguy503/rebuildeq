@@ -1488,8 +1488,8 @@ void command_drainmana(Client *c, const Seperator *sep) {
 }
 
 void command_focus(Client *c, const Seperator *sep) {
-	if (c->GetClass() != SHADOWKNIGHT && c->GetClass() != NECROMANCER) {
-		c->Message(0, "You must be a Shadow Knight or Necromancer to use this command.");
+	if (c->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS) <= 0 && c->GetBuildRank(NECROMANCER, RB_NEC_SPIRITFOCUS) <= 0) {
+		c->Message(0, "You must be a Shadow Knight with Unholy Focus trained or a Necromancer with Spirit Focus trained to use this command.");
 		return;
 	}
 

@@ -1251,6 +1251,19 @@ class Build {
 			$skills[16] = $newSkill;
 
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Shroud of Death";
+			$newSkill->desc = 'Your pet gains a 400 mod proc lifetap that deals (level * <em data-base="0.2">0.2</em>) magic damage and if Spirit Focus is trained and a focus target is set, a recourse heal for 100% of damage dealt is given<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-nec-shroudofdeath.png";
+			$skills[18] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Life Burn";
+			$newSkill->desc = 'Unlocks the Life Burn AA, dealing <em data-base="2">2</em>% of your current health as damage<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-nec-lifeburn.png";
+			$skills[20] = $newSkill;
+
+
 
 			/*$newSkill = new stdClass();
 			$newSkill->title = "Life Link";
