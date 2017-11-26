@@ -234,6 +234,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if (buffslot >= 0)
 					break;
 
+				if (spell_id == 2755 || spell_id == 2488) break; //don't bother with lifeburn , part of RB_NEC_LIFEBURN
 				
 				if (caster) {
 					if (caster->IsClient()) { //Ensure caster is client for these mechanics
@@ -479,7 +480,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg -= bonus_damage;
 							}
 
-							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_NEC_VENOMSTRIKE);
+							rank = casterClient->GetBuildRank(NECROMANCER, RB_NEC_VENOMSTRIKE);
 							if (rank > 0 && zone->random.Roll(rank)) {
 								//poison bolt, lvl 4 348
 								//venom of the snake lvl 34 435
