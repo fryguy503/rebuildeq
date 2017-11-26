@@ -1263,6 +1263,23 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-nec-lifeburn.png";
 			$skills[20] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Pact of Hate";
+			$newSkill->desc = 'Dark Pact line spells now regenerate an additional <em data-base="10">10</em>% mana based on damage dealt<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-nec-pactofhate.png";
+			$skills[22] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Blood Magic";
+			$newSkill->desc = 'Unlocks the Blood Magic AA, giving the necromancer the ability to cast spells at the cost of health. With a base of 10 minutes, each rank reduces cooldown by 30 seconds.';
+			$newSkill->image = "/images/builds/icons/rb-nec-bloodmagic.png";
+			$skills[24] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Life Blood";
+			$newSkill->desc = 'Increases amount healed by lifetaps by (<em data-base="2">2</em>% * group size) <span class="perLevel"> per rank</span> and increases chance to critical heal by <em data-base="2">2</em>%.';
+			$newSkill->image = "/images/builds/icons/rb-nec-lifeblood.png";
+			$skills[26] = $newSkill;
 
 
 			/*$newSkill = new stdClass();
@@ -1739,7 +1756,8 @@ class Build {
 			//0
 			$newSkill = new stdClass();
 			$newSkill->title = "Leech Touch";
-			$newSkill->desc = 'Grants the Leech Touch AA, which replaces all normal Knight lifetaps. It will use your best lifetap, curved up, as well as improves all lifetap damage by <em data-base="4">4</em>% and grants a <em data-base="1">1</em>% critical heal rate<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Leech Touch AA, which replaces all normal Knight lifetaps. It will use your best lifetap, curved up, as well as improves all lifetaps by (<em data-base="2">2</em>% * group size) <span class="perLevel"> per rank</span> and grants a <em data-base="1">1</em>% critical heal rate<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = '.';
 			$newSkill->image = "/images/builds/icons/rb-shd-leechtouch.png";	
 			$skills[0] = $newSkill;
 			

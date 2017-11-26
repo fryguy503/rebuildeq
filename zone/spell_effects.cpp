@@ -4403,12 +4403,28 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 				if (caster->IsClient()) {
 					Client* caster_client = caster->CastToClient();
 					int bonus_damage = 0;
-					
+					rank = caster_client->GetBuildRank(NECROMANCER, RB_NEC_PACTOFHATE);
+					if (rank > 0 && (
+						buff.spellid == 641 || //dark pact
+						buff.spellid == 642 || //allure of death
+						buff.spellid == 1514 || //rapacious subvention
+						buff.spellid == 643 || //call of bones
+						buff.spellid == 644 || // lich
+						buff.spellid == 1611 || //demi lich
+						buff.spellid == 2114 //ancient master of death
+						)) {
+						bonus_damage = int(-effect_value * 0.1f * rank);
+						caster_client->DebugEcho(StringFormat("Pact of Hate %i gave you %i additional mana.", rank, bonus_damage));
+						caster_client->SetMana(GetMana() + bonus_damage);
+						//effect_value -= bonus_damage;
+					}
+
+
 					rank = caster_client->GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED);
 					if (rank > 0 && buff.spellid == 8133) {
 						bonus_damage = -effect_value;
 						bonus_damage *= floor(rank * 5);
-						BuildEcho(StringFormat("Turn Summoned %i caused %i bonus damage.", rank, bonus_damage));
+						caster_client->BuildEcho(StringFormat("Turn Summoned %i caused %i bonus damage.", rank, bonus_damage));
 						effect_value -= bonus_damage;						
 					}
 
@@ -4419,9 +4435,6 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 						caster_client->Message(MT_DoTDamage, "Focused Swarm %u caused %i bonus damage to %s.", rank, bonus_damage, GetCleanName());
 						effect_value -= bonus_damage;
 					}
-
-
-
 
 
 					rank = caster_client->GetBuildRank(DRUID, RB_NEC_DECAY);
@@ -4543,15 +4556,8 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 					if (mana_amount < 1) mana_amount = 1;
 					entity_list.LogManaEvent(caster, caster, mana_amount);
 					caster->SetMana(caster->GetMana() + mana_amount);
-					caster->Message(MT_FocusEffect, "Celestial Regeneration %u gifted %i mana.", rank, mana_amount);
+					caster->BuildEcho(StringFormat("Celestial Regeneration %u gifted %i mana.", rank, mana_amount));
 				}
-
-
-				//rank = caster->CastToClient()->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
-				//if (rank > 0 && buff.spellid != 6241) {
-//					effect_value += floor(effect_value * 0.15f * rank);
-	//			}
-
 				rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
 				if (rank > 0 && buff.spellid == 8190) {
 
@@ -4577,7 +4583,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							int32 mana_amount = floor(amount_healed * (0.02f * rank));
 							if (mana_amount < 1) mana_amount = 1;
 							if (caster != this) {
-								caster->Message(MT_FocusEffect, "Nature's Whisper %u gifted %i mana.", rank, mana_amount);
+								caster->BuildEcho(StringFormat("Nature's Whisper %u gifted %i mana.", rank, mana_amount));
 								entity_list.LogManaEvent(caster, caster, mana_amount);
 								caster->SetMana(caster->GetMana() + mana_amount);
 							}
@@ -4607,7 +4613,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 					if (amount_healed > 0) { //if any healing was done, display
 						if (caster != this) caster->Message(MT_NonMelee, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
-						Message(MT_FocusEffect, "Nature's Boon %u healed for %i points of damage.", rank, amount_healed);
+						BuildEcho(StringFormat("Nature's Boon %u healed for %i points of damage.", rank, amount_healed));
 						HealDamage(amount_healed, caster);
 
 						rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESWHISPER);

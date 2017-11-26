@@ -975,6 +975,14 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 	}
 	else if (rank->id == aaLifeBurn) {
 		aai->spell_refresh = 30;	
+	}
+	else if (rank->id == aaBloodMagic) {
+		rb_rank = GetBuildRank(NECROMANCER, RB_NEC_BLOODMAGIC);
+		if (rb_rank > 0) aai->spell_refresh = 360 - (rb_rank * 30);
+	}
+	else if (rank->id == aaCelestialRegeneration) {
+		rb_rank = GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION);
+		if (rb_rank > 0) aai->spell_refresh = 360;
 	} else if (rank->id == aaDivineArbitration) {
 		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION);
 		if (rb_rank > 0) aai->spell_refresh = 180 - (rb_rank * 30);
@@ -1310,6 +1318,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		rank_id == aaPurifyBody && GetBuildRank(MONK, RB_MNK_PURIFYBODY) < 1 ||
 
 		rank_id == aaLifeBurn && GetBuildRank(NECROMANCER, RB_NEC_LIFEBURN) < 1 ||
+		rank_id == aaBloodMagic && GetBuildRank(NECROMANCER, RB_NEC_BLOODMAGIC) < 1 ||
 
 		rank_id == aaHandofPiety && GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY) < 1 ||
 		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		

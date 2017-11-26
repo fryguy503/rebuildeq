@@ -3919,9 +3919,56 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					}
 
 					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
-					int bonusDamage = floor(damage * 0.04f * rank);
-					if (bonusDamage > 0) attacker->BuildEcho(StringFormat("Leech Touch %u added %i bonus damage.", rank, bonusDamage));
-					damage += bonusDamage;
+					if (attacker->IsGrouped()) {
+						int bonusDamage = int(damage * 0.01f * rank * attacker->GetGroupSize(200));
+						if (bonusDamage > 0) attacker->BuildEcho(StringFormat("Leech Touch %u added %i bonus damage.", rank, bonusDamage));
+						damage += bonusDamage;
+					}
+				}
+
+				if (attacker &&
+					attacker->IsClient() &&
+					attacker->CastToClient()->GetBuildRank(NECROMANCER, RB_NEC_LIFEBLOOD) > 0 &&
+					(
+						spell_id == 341 || //lifetap
+						spell_id == 502 || //lifespike
+						spell_id == 445 || //life draw
+						spell_id == 446 || //siphon life
+						spell_id == 524 || //spirit tap
+						spell_id == 525 || //drain spirit
+						spell_id == 447 || //drain soul
+						spell_id == 1613 || //deflux
+						spell_id == 1618 || //touch of night
+						spell_id == 1393 || //gangreous touch of zum'uul
+						spell_id == 1735|| //trucidation
+						spell_id == 852 || //soul consumption
+						spell_id == 1471 || //shroud of death effect
+						spell_id == 2718 || //scream of death effect
+						spell_id == 476 //vampiric embrace
+						)) {
+					//Ratio base damage based on new curve.
+					int scale_damage = 0;
+					int attacker_level = attacker->GetLevel();
+					if (attacker_level <= 10) {
+						scale_damage = 10 + (attacker_level - 2);
+					}
+					else if (attacker_level <= 20) {
+						scale_damage = 18 + (attacker_level - 10) * (attacker_level - 10);
+					}
+					else if (attacker_level <= 60) {
+						scale_damage = 118 + ((attacker_level - 20) * 5);
+					}
+					Log(Logs::General, Logs::Spells, "Applying lifetap scale for SHD: %i to %i", damage, scale_damage);
+					if (scale_damage > damage) {
+						damage = scale_damage;
+					}
+
+					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_NEC_LIFEBLOOD);
+					if (attacker->IsGrouped()) {
+						int bonusDamage = int(damage * 0.02f * rank * attacker->GetGroupSize(200));
+						if (bonusDamage > 0) attacker->BuildEcho(StringFormat("Life Blood %u added %i bonus damage.", rank, bonusDamage));
+						damage += bonusDamage;
+					}
 				}
 
 				int healed = damage;

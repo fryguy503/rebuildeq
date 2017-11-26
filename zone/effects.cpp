@@ -527,7 +527,8 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 		if (spells[spell_id].override_crit_chance > 0 && chance > spells[spell_id].override_crit_chance)
 			chance = spells[spell_id].override_crit_chance;
 
-		if (IsClient() && CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH) > 0 && 
+		rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
+		if (rank > 0 && 
 			(
 				spell_id == 341 || //lifetap
 				spell_id == 502 || //lifespike
@@ -540,8 +541,30 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 				spell_id == 2718 || //scream of death effect
 				spell_id == 476 //vampiric embrace
 				)) {
-			chance += 1 * CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
+			chance += rank;
+		}		
+		rank = GetBuildRank(NECROMANCER, RB_SHD_LEECHTOUCH);
+		if (rank > 0 &&
+			(
+				spell_id == 341 || //lifetap
+				spell_id == 502 || //lifespike
+				spell_id == 445 || //life draw
+				spell_id == 446 || //siphon life
+				spell_id == 524 || //spirit tap
+				spell_id == 525 || //drain spirit
+				spell_id == 447 || //drain soul
+				spell_id == 1613 || //deflux
+				spell_id == 1618 || //touch of night
+				spell_id == 1393 || //gangreous touch of zum'uul
+				spell_id == 1735 || //trucidation
+				spell_id == 852 || //soul consumption
+				spell_id == 1471 || //shroud of death effect
+				spell_id == 2718 || //scream of death effect
+				spell_id == 476 //vampiric embrace
+				)) {
+			chance += 2 * rank;
 		}
+
 
 		if(chance && (zone->random.Roll(chance))) {
 			Critical = true;

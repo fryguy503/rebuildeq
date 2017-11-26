@@ -9593,7 +9593,7 @@ void Client::RefreshBuild() {
 					TrainAARank(aaCelestialRegeneration);
 					Message(15, "You have unlocked the AA \"Celestial Regeneration\"! Find the hotkey in your Alternate Advancement Window.");
 				}
-
+				
 				if (GetClass() == CLERIC && i == RB_CLR_DIVINEARBITRATION && GetAA(aaDivineArbitration) < 1) {
 					TrainAARank(aaDivineArbitration);
 					Message(15, "You have unlocked the AA \"Divine Arbitration\"! Find the hotkey in your Alternate Advancement Window.");
@@ -9783,6 +9783,11 @@ void Client::RefreshBuild() {
 				if (GetClass() == NECROMANCER && i == RB_NEC_LIFEBURN && GetAA(aaLifeBurn) < 1) {
 					TrainAARank(aaLifeBurn);
 					Message(15, "You have unlocked the AA \"Life Burn\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == NECROMANCER && i == RB_NEC_BLOODMAGIC && GetAA(aaBloodMagic) < 1) {
+					TrainAARank(aaBloodMagic);
+					Message(15, "You have unlocked the AA \"Blood Magic\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
 				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
@@ -10830,8 +10835,9 @@ std::string Client::GetBuildName(uint32 id) {
 		if (id == RB_NEC_VENOMSTRIKE) return "Venom Strike";
 		if (id == RB_NEC_SHROUDOFDEATH) return "Shroud of Death";
 		if (id == RB_NEC_LIFEBURN) return "Life Burn";
-
-
+		if (id == RB_NEC_PACTOFHATE) return "Pact of Hate";
+		if (id == RB_NEC_BLOODMAGIC) return "Blood Magic";
+		if (id == RB_NEC_LIFEBLOOD) return "Life Blood";
 		if (id == RB_NEC_SPIRITFOCUS) return "Spirit Focus";
 		break;
 	case PALADIN:		
