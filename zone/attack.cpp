@@ -4004,6 +4004,40 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				}
 
 
+				rank = attacker->GetBuildRank(NECROMANCER, RB_NEC_SPIRITFOCUS);
+				Client *tapFocus = attacker->GetTapFocus();
+				if (rank > 0 && //
+					(
+						spell_id == 341 || //lifetap
+						spell_id == 502 || //lifespike
+						spell_id == 445 || //life draw
+						spell_id == 446 || //siphon life
+						spell_id == 524 || //spirit tap
+						spell_id == 525 || //drain spirit
+						spell_id == 447 || //drain soul
+						spell_id == 1613 || //deflux
+						spell_id == 1618 || //touch of night
+						spell_id == 1393 || //gangreous touch of zum'uul
+						spell_id == 1735 || //trucidation
+						spell_id == 852 || //soul consumption
+						spell_id == 1471 || //shroud of death effect
+						spell_id == 2718 || //scream of death effect
+						spell_id == 476 //vampiric embrace
+					) && tapFocus != nullptr && !tapFocus->IsDead()) {
+					float dist2 = DistanceSquared(attacker->GetPosition(), tapFocus->GetPosition());
+					float range2 = 100 * 100;
+					if (dist2 > range2) {
+						ClearTapFocus();
+					}
+					else { //in range
+						int focus_heal = int(healed * rank * 0.16f);
+						attacker->BuildEcho(StringFormat("Spirit Focus %i transferred %i hitpoints of the lifetap recourse to %s.", rank, focus_heal, tapFocus->GetCleanName()));
+						tapFocus->HealDamage(focus_heal, attacker);
+						healed -= focus_heal; //remove the tap amount
+					}
+				}
+
+
 				rank = attacker->GetBuildRank(SHADOWKNIGHT, RB_SHD_UNHOLYFOCUS);
 				Client *tapFocus = attacker->GetTapFocus();
 				if (rank > 0 && //

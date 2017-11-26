@@ -354,7 +354,7 @@ class Build {
 			//http://everquest.allakhazam.com/db/spell.html?spell=6239
 			$newSkill = new stdClass();
 			$newSkill->title = "Kinsong";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, Increasing the groups spell critical dot dmg, dot, and accuracy for <em data-base="12">12</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, Increasing the groups spell critical dot dmg, dot, and accuracy. 10 minute recast time, each rank reduces recast by 30 seconds.';
 			$newSkill->image = "/images/builds/icons/rb-brd-kinsong.png";	
 			$skills[16] = $newSkill;
 			
@@ -550,7 +550,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Harmonic Balance";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, <em data-base="2">2</em> chance to have the mana cost reduced by <em data-base="10">10</em>% mana <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, balancing the group\'s hitpoints and healing them. 10 minute recast time, each rank reduces recast by 30 seconds.';
 			$newSkill->image = "/images/builds/icons/rb-clr-harmonicbalance.png";	
 			$skills[34] = $newSkill;
 			
@@ -750,7 +750,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Nature's Blight";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, causing the target to take 5% increased spell damage for <em data-base="24">24</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, causing the target to take 5% increased spell damage. 5 minute recast time, each rank reduces recast by 30 seconds..';
 			$newSkill->image = "/images/builds/icons/rb-dru-naturesblight.png";	
 			$skills[52] = $newSkill;
 			break;
@@ -1096,7 +1096,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Grace of the Order";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, increasing max health by 15% and a 250dd stun for <em data-base="6">6</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, increasing max health by 15% and a 250dd stun. 10 minute recast time, each rank reduces recast by 30 seconds.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-graceoftheorder.png";
 			$skills[16] = $newSkill;
 
@@ -1271,7 +1271,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Blood Magic";
-			$newSkill->desc = 'Unlocks the Blood Magic AA, giving the necromancer the ability to cast spells at the cost of health. With a base of 10 minutes, each rank reduces cooldown by 30 seconds.';
+			$newSkill->desc = 'Grants the Blood Magic AA, giving the necromancer the ability to cast spells at the cost of health. With a base of 10 minutes, each rank reduces cooldown by 30 seconds.';
 			$newSkill->image = "/images/builds/icons/rb-nec-bloodmagic.png";
 			$skills[24] = $newSkill;
 
@@ -1281,6 +1281,23 @@ class Build {
 			$newSkill->image = "/images/builds/icons/rb-nec-lifeblood.png";
 			$skills[26] = $newSkill;
 
+			$newSkill = new stdClass();
+			$newSkill->title = "Spirit Focus";
+			$newSkill->desc = 'Enables use of the #focus command, transferring recourses such as life taps to the focused ally for <em data-base="16">16</em>% of the recourse given<span class="perLevel"> per rank</span>.';
+			$newSkill->image = "/images/builds/icons/rb-nec-spiritfocus.png";
+			$skills[28] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Dying Grasp";
+			$newSkill->desc = 'Grants the Dying Grasp AA, a high damage, fast casting lifetap. Base cooldown of 360 seconds, each rank reduces cooldown by 30 seconds.';
+			$newSkill->image = "/images/builds/icons/rb-nec-dyinggrasp.png";
+			$skills[28] = $newSkill;
+
+			$newSkill = new stdClass();
+			$newSkill->title = "Servant of Blood";
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, summoning a blood skeleton that lifetaps health to the group for 30 seconds. 10 minute recast time, each rank reduces recast by 30 seconds.';
+			$newSkill->image = "/images/builds/icons/rb-nec-servantofblood.png";
+			$skills[28] = $newSkill;
 
 			/*$newSkill = new stdClass();
 			$newSkill->title = "Life Link";
@@ -1384,7 +1401,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Flames of Redemption";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, causing flames of redemption buff improving healing effectiveness by 25% and the flames of redemption DD proc for<em data-base="12">12</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, causing flames of redemption buff improving healing effectiveness by 25% and the flames of redemption DD proc. 10 minute recast time, each rank reduces recast by 30 seconds.';
 			$newSkill->image = "/images/builds/icons/rb-pal-flamesofredemption.png";
 			$skills[34] = $newSkill;
 
@@ -1486,7 +1503,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Assassin's Taint";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, granting the assassins taint buff that grants triple backstab and a proc that causes skill taken damage to be increased by 7% and increases duration by <em data-base="12">12</em> seconds <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, granting the assassins taint buff that grants triple backstab and a proc that causes skill taken damage to be increased by 7%. 10 minute recast time, each rank reduces recast by 30 seconds.';
 			$newSkill->image = "/images/builds/icons/rb-rog-assassinstaint.png";	
 			$skills[16] = $newSkill;
 
@@ -1637,7 +1654,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Fateseer's Boon";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, giving a group buff that increases critical damage by 70% with all skills, chance to critical hit by 50% with all skills, as well as a 400 hitpoint per tick regen. Each rank increases duration by <em data-base="12">12</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, giving a group buff that increases critical damage by 70% with all skills, chance to critical hit by 50% with all skills, as well as a 400 hitpoint per tick regen. 10 minute recast time, each rank reduces recast by 30 seconds.';
 			$newSkill->image = "/images/builds/icons/rb-shm-fateseersboon.png";
 			$skills[16] = $newSkill;
 			
@@ -1799,7 +1816,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Reaper's Strike";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, which improves accuracy by 50% and gain lifetap from weapon damage for <em data-base="6">6</em>seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, which improves accuracy by 50% and gain lifetap from weapon damage. 10 minute recast time, each rank reduces recast by 30 seconds.';
 			$newSkill->image = "/images/builds/icons/rb-shd-reapersstrike.png";	
 			$skills[16] = $newSkill;
 			

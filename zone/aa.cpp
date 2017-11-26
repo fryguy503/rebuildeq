@@ -1319,6 +1319,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 
 		rank_id == aaLifeBurn && GetBuildRank(NECROMANCER, RB_NEC_LIFEBURN) < 1 ||
 		rank_id == aaBloodMagic && GetBuildRank(NECROMANCER, RB_NEC_BLOODMAGIC) < 1 ||
+		rank_id == aaDyingGrasp && GetBuildRank(NECROMANCER, RB_NEC_DYINGGRASP) < 1 ||
 
 		rank_id == aaHandofPiety && GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY) < 1 ||
 		rank_id == aaPurification && GetBuildRank(PALADIN, RB_PAL_PURIFICATION) < 1 ||		
@@ -1345,9 +1346,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			GetBuildRank(BARD, RB_BRD_KINSONG) < 1 &&
 			GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE) < 1 &&			
 			GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT) < 1 &&
-			GetBuildRank(DRUID, RB_MNK_GRACEOFTHEORDER) < 1 &&
+			GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER) < 1 &&
+			GetBuildRank(NECROMANCER, RB_NEC_SERVANTOFBLOOD) < 1 &&
 			GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION) < 1 &&
-			GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1 &&
+			GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT) < 1 &&			
 			GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE) < 1 &&
 			GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON) < 1 
 		) //end lessons
@@ -1455,9 +1457,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			cooldown = 86400 - ((5 - rb_rank) * 14400); //12 hours per rank
 			BuildEcho(StringFormat("Divine Resurrection %u reduced cooldown by %i", rb_rank, (rb_rank * 43200)));
 		}
-	} else if (rank_id == aaAppraisal) {
+	}
+	else if (rank_id == aaAppraisal) {
 		rb_rank = GetBuildRank(ROGUE, RB_ROG_APPRAISAL);
-		if(rb_rank) {
+		if (rb_rank) {
 			AddBuff(this, 271, rb_rank);
 			if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 			{
@@ -1470,6 +1473,8 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			SendAlternateAdvancementTimer(rank->spell_type, 0, 0);
 			return;
 		}
+	} else if (rank_id == aaDyingGrasp) {
+		cooldown = 360 - GetBuildRank(NECROMANCER, RB_NEC_DYINGGRASP);
 	} else if (rank_id == aaLeechTouch) {
 		rb_rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
 		if(rb_rank) {
@@ -1581,14 +1586,24 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			}		
 		}
 	} else if (rank_id == aaLessonoftheDevoted) {
-		if (GetBuildRank(BARD, RB_BRD_KINSONG)) spellid = 6239;		
-		else if (GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE)) spellid = 6233;
-		else if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) spellid = 6237;
-		else if (GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER)) spellid = 6238;
-		else if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION)) spellid = 6234;
-		else if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT)) spellid = 6240;
-		else if (GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON)) spellid = 6241;
-		else if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE)) spellid = 6236;
+		rb_rank = GetBuildRank(BARD, RB_BRD_KINSONG);
+		if (rb_rank > 0) { spellid = 6239; cooldown = 360 - (30 * rb_rank); }
+		rb_rank = GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE);
+		if (rb_rank > 0) { spellid = 6233; cooldown = 360 - (30 * rb_rank); }
+		rb_rank = GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT);
+		if (rb_rank > 0) { spellid = 6237; cooldown = 120 - (10 * rb_rank); }
+		rb_rank = GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER);
+		if (rb_rank > 0) { spellid = 6237; cooldown = 360 - (30 * rb_rank); }
+		rb_rank = GetBuildRank(NECROMANCER, RB_NEC_SERVANTOFBLOOD);
+		if (rb_rank > 0) { spellid = 6242; cooldown = 360 - (30 * rb_rank); }
+		rb_rank = GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION);
+		if (rb_rank > 0) { spellid = 6234; cooldown = 360 - (30 * rb_rank); }
+		rb_rank = GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT);
+		if (rb_rank > 0) { spellid = 6240; cooldown = 360 - (30 * rb_rank); }
+		rb_rank = GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON);
+		if (rb_rank > 0) { spellid = 6241; cooldown = 360 - (30 * rb_rank); }
+		rb_rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE);
+		if (rb_rank > 0) { spellid = 6236; cooldown = 360 - (30 * rb_rank); }
 	} else if (rank_id == aaBoastfulBellow) {
 		rb_rank = GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW);
 		if(rb_rank) {

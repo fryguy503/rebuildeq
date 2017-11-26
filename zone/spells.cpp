@@ -3534,16 +3534,6 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				}
 			}
 
-			// Kinsong
-			{
-				static uint16 KINSONG = 6239;
-				const bool isAffected = spell_id == KINSONG;
-				const uint32 rank = caster_client->GetBuildRank(BARD, RB_BRD_KINSONG);
-
-				if (rank > 0 && isAffected) {
-					duration = floor(10 * 0.2f * rank);
-				}
-			}
 		}
 		
 
@@ -3560,18 +3550,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 					duration = 14 - (rank * 2);
 				}
 			}
-
-			// Nature's Blight
-			{
-				static uint16 KINSONG = 6239;
-				const bool isAffected = spell_id == KINSONG;
-				const uint32 rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT);
-
-				if (rank > 0 && isAffected) {
-					duration = floor(10 * 0.2f * rank);
-				}
-			}
-
+			
 			// Convergence of Spirits
 			{
 				static uint16 CONVERGENCE_OF_SPIRITS = 8190;
@@ -3584,19 +3563,6 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 			}
 		}
 
-		// Monk
-		else if (caster_client->GetClass() == MONK) {
-			// GRACE OF THE ORDER
-			{
-				static uint16 GRACE = 6238;
-				const bool isAffected = spell_id == GRACE;
-				const uint32 rank = caster->CastToClient()->GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER);
-
-				if (rank > 0 && isAffected) {
-					duration = floor(6 * 0.2f * rank);
-				}
-			}
-		}
 
 		// Monk
 		else if (caster_client->GetClass() == MONK) {
@@ -3656,50 +3622,7 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 		}
 
 
-		// Paladin
-		else if (caster_client->GetClass() == PALADIN) {
-
-			// Flames of Redemption
-			{
-				static uint16 FLAMES_OF_REDEMPTION = 6234;
-				const bool isAffected = spell_id == FLAMES_OF_REDEMPTION;
-				const uint32 rank = caster_client->GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION);
-
-				if (rank > 0 && isAffected) {
-					duration = floor(10 * 0.2f * rank);
-				}
-			}
-		}
-
-		// Rogue
-		else if (caster_client->GetClass() == ROGUE) {
-
-			// Assassin's Taint
-			{
-				static uint16 ASSASSINS_TAINT = 6240;
-				const bool isAffected = spell_id == ASSASSINS_TAINT;
-				const uint32 rank = caster_client->GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT);
-
-				if (rank > 0 && isAffected) {
-					duration = floor(10 * 0.2f * rank);
-				}
-			}
-		}
-
-		// Shadowknight
-		else if (caster_client->GetClass() == SHADOWKNIGHT) {
-
-			// Reaper's Strike
-			{
-				static uint16 REAPER_STRIKE_RECOURSE = 6299;
-				const bool isAffected = spell_id == REAPER_STRIKE_RECOURSE;
-				const uint32 rank = caster_client->GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE);
-
-				if (rank > 0 && isAffected) {
-					duration = floor(10 * 0.2f * rank);
-				}
-			}
-		}
+		
 
 		// Shaman
 		else if (caster_client->GetClass() == SHAMAN) {
@@ -3786,16 +3709,6 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 				}
 			}
 
-			// Fateseer's Boon
-			{
-				static uint16 FATESEERS_BOON = 6241;
-				const bool isAffected = spell_id == FATESEERS_BOON;
-				const uint32 rank = caster_client->GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON);
-
-				if (rank > 0 && isAffected) {
-					duration = 10 * 0.2f * rank;
-				}
-			}
 		}
 	}
 

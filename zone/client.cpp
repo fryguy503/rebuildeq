@@ -9790,6 +9790,16 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Blood Magic\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == NECROMANCER && i == RB_NEC_SERVANTOFBLOOD && GetAA(aaLessonoftheDevoted) < 1) {
+					TrainAARank(aaLessonoftheDevoted);
+					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
+				if (GetClass() == NECROMANCER && i == RB_NEC_DYINGGRASP && GetAA(aaDyingGrasp) < 1) {
+					TrainAARank(aaDyingGrasp);
+					Message(15, "You have unlocked the AA \"Dying Grasp\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
 					TrainAARank(aaHandofPiety);
 					Message(15, "You have unlocked the AA \"Hand of Piety\"! Find the hotkey in your Alternate Advancement Window.");
@@ -10839,6 +10849,8 @@ std::string Client::GetBuildName(uint32 id) {
 		if (id == RB_NEC_BLOODMAGIC) return "Blood Magic";
 		if (id == RB_NEC_LIFEBLOOD) return "Life Blood";
 		if (id == RB_NEC_SPIRITFOCUS) return "Spirit Focus";
+		if (id == RB_NEC_DYINGGRASP) return "Dying Grasp";
+		if (id == RB_NEC_SERVANTOFBLOOD) return "Servant of Blood";
 		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";
