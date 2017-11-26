@@ -1259,7 +1259,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Life Burn";
-			$newSkill->desc = 'Unlocks the Life Burn AA, dealing <em data-base="2">2</em>% of your current health as damage<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Unlocks the Life Burn AA, dealing <em data-base="2">2</em>% of your current health as damage<span class="perLevel"> per rank</span> at a very low mana cost.';
 			$newSkill->image = "/images/builds/icons/rb-nec-lifeburn.png";
 			$skills[20] = $newSkill;
 
