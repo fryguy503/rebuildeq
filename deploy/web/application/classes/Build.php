@@ -1216,13 +1216,13 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Shocking Bolt";
-			$newSkill->desc = 'When a poison-based direct damage spell with bolt in it\'s name (or venom of the snake) lands on an enemy, the instant damage is increased by <em data-base="5">5</em>% <span class="perLevel"> per rank</span>. It also has a <em data-base="1">1</em>% chance to hit for quad damage.';
+			$newSkill->desc = 'When a poison-based DoT with bolt in it\'s name (or venom of the snake) lands on an enemy, the instant damage is increased by <em data-base="5">5</em>% <span class="perLevel"> per rank</span>. It also has a <em data-base="1">1</em>% chance to hit for quad damage.';
 			$newSkill->image = "/images/builds/icons/rb-nec-shockingbolt.png";
 			$skills[4] = $newSkill;
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Burning Soul";
-			$newSkill->desc = 'When a fire-based DoT deals damage, it has a <em data-base="2">2</em>% chance to critical hit for double damage<span class="perLevel"> per rank</span>. (#toggle debugecho to see return)';
+			$newSkill->desc = 'When an enemy is affected by a fire-based DoT, it deals <em data-base="1">1</em>% more damage for each ally in group.';
 			$newSkill->image = "/images/builds/icons/rb-nec-burningsoul.png";
 			$skills[6] = $newSkill;
 

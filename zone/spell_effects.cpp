@@ -518,20 +518,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								dmg -= bonus_damage;
 							}
 
-							rank = casterClient->GetBuildRank(NECROMANCER, RB_NEC_SHOCKINGBOLT);
-							if (rank > 0 &&
-								(spell_id == 436 || spell_id == 348 || spell_id == 435)) {
-
-								int bonus_damage = int(-dmg * 0.05f * rank);
-								bool is_quad = false;
-								if (rank > 0 && zone->random.Roll(rank)) {
-									bonus_damage *= 4;
-									is_quad = true;
-								}
-								casterClient->BuildEcho(StringFormat("Shocking Bolt %u added %i %s bonus damage.", rank, bonus_damage, (is_quad) ? "QUAD" : ""));
-								dmg -= bonus_damage;
-							}
-
 							// Shock of Swords
 							rank = casterClient->GetBuildRank(MAGICIAN, RB_MAG_SHOCKOFSWORDS);
 							if (rank > 0 &&
@@ -4436,7 +4422,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 					}
 
 
-					rank = caster_client->GetBuildRank(DRUID, RB_NEC_DECAY);
+					rank = caster_client->GetBuildRank(NECROMANCER, RB_NEC_DECAY);
 					if (rank > 0 && (
 						spell_id == 340 || //disease cloud
 						spell_id == 344 || //clinging darkness
@@ -4474,7 +4460,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 						int mana_return = int(spell.mana * 0.05f);
 						if (mana_return < 1) mana_return = 1;
 						caster->DebugEcho(StringFormat("Decay %i returned %i mana.", rank, mana_return));
-						SetMana(GetMana() + mana_return);
+						caster->SetMana(caster->GetMana() + mana_return);
 					}
 					
 					rank = caster_client->GetBuildRank(DRUID, RB_DRU_FOCUSEDSWARM);
@@ -4504,10 +4490,29 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 							bonus_damage = -effect_value;
 							bonus_damage = int(bonus_damage * multiplier * 0.01f * rank * group_size);
 							if (bonus_damage > 0) bonus_damage = 1;
-							caster_client->Message(MT_DoTDamage, "Focused Swarm %u caused %i bonus damage to %s.", rank, bonus_damage, GetCleanName());
+							caster->BuildEcho(StringFormat("Focused Swarm %u caused %i bonus damage to %s.", rank, bonus_damage, GetCleanName()));
 							effect_value -= bonus_damage;
 						}
 					}
+
+					rank = caster->GetBuildRank(NECROMANCER, RB_NEC_BURNINGSOUL);
+					if (rank > 0 && caster_client->IsGrouped() && (
+						spell_id == 360 || //heat blood
+						spell_id == 451 || //boil blood
+						spell_id == 6 || //ignite blood
+						spell_id == 1617 || //pyrocruor
+						spell_id == 2885  //funeral pyre of kelador
+						)) {
+
+						int group_size = caster_client->GetGroupSize(200);
+						bonus_damage = -effect_value;
+						bonus_damage = int(bonus_damage * 0.01f * rank * group_size);
+
+						if (bonus_damage < 1) bonus_damage = 1;
+						caster->BuildEcho(StringFormat("Burning Soul %u caused %i bonus damage to %s.", rank, bonus_damage, GetCleanName()));
+						effect_value -= bonus_damage;
+					}
+
 					rank = caster_client->GetBuildRank(DRUID, RB_DRU_INTENSITY);
 					if (rank > 0 && caster_client->IsGrouped()) {
 						int group_size = caster_client->GetGroupSize(200);
@@ -4841,6 +4846,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 		case SE_CastOnFadeEffectNPC:
 		case SE_CastOnFadeEffectAlways: {
 			if (buff.ticsremaining == 0) {
+				if (buff.spellid == 8205) break; //don't bother reapplying blood magic for RB_NEC_BLOODMAGIC
 				SpellOnTarget(spells[buff.spellid].base[i], this);
 			}
 			break;

@@ -3949,7 +3949,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 					//Ratio base damage based on new curve.
 					
 
-					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_NEC_LIFEBLOOD);
+					rank = attacker->CastToClient()->GetBuildRank(NECROMANCER, RB_NEC_LIFEBLOOD);
 					if (attacker->IsGrouped()) {
 						int bonusDamage = int(damage * 0.02f * rank * attacker->GetGroupSize(200));
 						if (bonusDamage > 0) attacker->BuildEcho(StringFormat("Life Blood %u added %i bonus damage.", rank, bonusDamage));

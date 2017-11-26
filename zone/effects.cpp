@@ -75,16 +75,6 @@ int32 Mob::GetActSpellDamage(uint16 spell_id, int32 value, Mob* target) {
 		}
 
 
-		rank = GetBuildRank(NECROMANCER, RB_NEC_BURNINGSOUL);
-		if (rank > 0 && (
-			spell_id == 360 || //heat blood
-			spell_id == 451 || //boil blood
-			spell_id == 6 || //ignite blood
-			spell_id == 1617 || //pyrocruor
-			spell_id == 2885  //funeral pyre of kelador
-			)) {
-			chance = rank * 2;
-		}
 
 		// Shaman
 		if (GetClass() == SHAMAN) {
@@ -324,6 +314,19 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 		value += extra_dmg;
 	}
 
+	rank = GetBuildRank(NECROMANCER, RB_NEC_SHOCKINGBOLT);
+	if (rank > 0 && (
+		spell_id == 436 || spell_id == 348 || spell_id == 435
+		)) {
+
+		bool is_quad = false;
+		if (rank > 0 && zone->random.Roll(rank)) {
+			int bonus_damage = value * 4;
+			is_quad = true;
+			BuildEcho(StringFormat("Shocking Bolt %u added %i %s bonus damage.", rank, -bonus_damage, (is_quad) ? "QUAD" : ""));
+			value = bonus_damage;
+		}			
+	}
 	rank = GetBuildRank(NECROMANCER, RB_NEC_CORRUPTION);
 	if (rank > 0 && IsGrouped() && (
 		spell_id == 340 || //disease cloud
@@ -360,7 +363,7 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 		)) {
 		int group_size = GetGroupSize(200);
 		extra_dmg = floor(value * 0.01f * rank * group_size);
-		if (extra_dmg < rank) extra_dmg = floor(rank * 2);
+		if (extra_dmg < rank) extra_dmg = int(rank * 2);
 		BuildEcho(StringFormat("Corruption %i increased damage by %i", rank, extra_dmg));
 		value += extra_dmg;
 	}
@@ -387,7 +390,7 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 	rank = GetBuildRank(NECROMANCER, RB_NEC_SPLURT);
 	if (rank > 0 && spell_id == 1620) {
 		extra_dmg = int(value * 0.1f * rank);
-		BuildEcho(StringFormat("Splurt %i increased damage by %i", rank, extra_dmg));
+		BuildEcho(StringFormat("Splurt %i increased damage by %i", rank, -extra_dmg));
 		value += extra_dmg;
 	}
 
