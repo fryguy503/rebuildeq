@@ -842,20 +842,22 @@ void Client::RefundAA() {
 			continue;
 		}
 
-		if(ability->grant_only) {
+		//RebuildEQ - due to AA's being granted, this has to be removed for #resetaa command to work
+		/*if(ability->grant_only) {
+			this->Message(13, "granted AA, no points");
 			++rank_value;
 			continue;
-		}
+		}*/
 
-		refunded += rank->total_cost;
+		//refunded += rank->total_cost;
 		rank_value = aa_ranks.erase(rank_value);
 	}
 
-	if(refunded > 0) {
+	//if(refunded > 0) {
 		m_pp.aapoints += refunded;
 		SaveAA();
 		Save();
-	}
+	//}
 
 	SendAlternateAdvancementTable();
 	SendAlternateAdvancementPoints();
