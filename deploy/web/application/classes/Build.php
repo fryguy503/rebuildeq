@@ -1774,7 +1774,6 @@ class Build {
 			$newSkill = new stdClass();
 			$newSkill->title = "Leech Touch";
 			$newSkill->desc = 'Grants the Leech Touch AA, which replaces all normal Knight lifetaps. It will use your best lifetap, curved up, as well as improves all lifetaps by (<em data-base="2">2</em>% * group size) <span class="perLevel"> per rank</span> and grants a <em data-base="1">1</em>% critical heal rate<span class="perLevel"> per rank</span>.';
-			$newSkill->desc = '.';
 			$newSkill->image = "/images/builds/icons/rb-shd-leechtouch.png";	
 			$skills[0] = $newSkill;
 			
