@@ -1875,7 +1875,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Darkness";
-			$newSkill->desc = 'All darkness type spells slow movement for an additional <em data-base="4">4</em>%<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Darkness-based and Terror spells now cause <em data-base="40">40</em>% more hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-darkness.png";	
 			$skills[38] = $newSkill;
 			
