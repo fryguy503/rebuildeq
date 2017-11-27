@@ -346,6 +346,7 @@ int command_init(void)
 		command_add("reloadzps", "- Reload zone points from database", 150, command_reloadzps) ||		
 		command_add("repop", "[delay] - Repop the zone with optional delay", 100, command_repop) ||
 		command_add("repopclose", "[distance in units] Repops only NPC's nearby for fast development purposes", 100, command_repopclose) ||
+		command_add("rebuildaa", "- Rebuild AAs.", 200, command_rebuildaa) ||
 		command_add("resetaa", "- Resets a Player's AA in their profile and refunds spent AA's to unspent, may disconnect player.", 200, command_resetaa) ||
 		command_add("resetaa_timer", "Command to reset AA cooldown timers.", 200, command_resetaa_timer) ||
 		command_add("return", "- Return to the safe point of the last zone you died", 0, command_return) ||
@@ -694,6 +695,11 @@ void command_incstat(Client* c, const Seperator* sep){
 		c->Message(0,"Note: The value is in increments of 2, so a value of 3 will actually increase the stat by 6");
 		c->Message(0,"Types: Str: 0, Sta: 1, Agi: 2, Dex: 3, Int: 4, Wis: 5, Cha: 6");
 	}
+}
+
+
+void command_rebuildaa(Client* c, const Seperator *sep) {
+	c->RebuildAA();
 }
 
 void command_resetaa(Client* c,const Seperator *sep) {

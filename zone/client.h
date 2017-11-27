@@ -831,6 +831,7 @@ public:
 	bool GrantAlternateAdvancementAbility(int aa_id, int points, bool ignore_cost = false);
 	void IncrementAlternateAdvancementRank(int rank_id);
 	void ActivateAlternateAdvancementAbility(int rank_id, int target_id);
+	void RebuildAA();
 	void SendAlternateAdvancementPoints();
 	void SendAlternateAdvancementTimer(int ability, int begin, int end);
 	void SendAlternateAdvancementTimers();
@@ -842,9 +843,7 @@ public:
 	int GetAAPoints() { return m_pp.aapoints; }
 	int GetSpentAA() { return m_pp.aapoints_spent; }
 	uint32 GetRequiredAAExperience();
-
-	void RebuildAA();
-
+	
 	//old AA methods that we still use
 	void ResetAA();
 	void RefundAA();

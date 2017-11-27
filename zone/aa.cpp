@@ -463,54 +463,6 @@ void Mob::WakeTheDead(uint16 spell_id, Mob *target, uint32 duration)
 		target->AddToHateList(this, 1, 0);
 }
 
-
-//Rebuild AA points by clearing then syncing it to latest of what they should be.
-void Client::RebuildAA() {
-	//clear AAs
-	//auto outapp = new EQApplicationPacket(OP_ClearAA, 0);
-	//FastQueuePacket(&outapp);
-
-	memset(&m_pp.aa_array[0], 0, sizeof(AA_Array) * MAX_PP_AA_ARRAY);
-
-	int i = 0;
-	for (auto &rank_value : aa_ranks) {
-		auto ability_rank = zone->GetAlternateAdvancementAbilityAndRank(rank_value.first, rank_value.second.first);
-		auto ability = ability_rank.first;
-		auto rank = ability_rank.second;
-
-		if (!rank) {
-			continue;
-		}
-
-		m_pp.aa_array[i].AA = rank_value.first;
-		m_pp.aa_array[i].value = rank_value.second.first;
-		m_pp.aa_array[i].charges = rank_value.second.second;
-		++i;
-	}
-
-	for (int i = 0; i < _maxLeaderAA; ++i)
-		m_pp.leader_abilities.ranks[i] = 0;
-
-	m_pp.group_leadership_points = 0;
-	m_pp.raid_leadership_points = 0;
-	m_pp.group_leadership_exp = 0;
-	m_pp.raid_leadership_exp = 0;
-
-	database.DeleteCharacterLeadershipAAs(CharacterID());
-	// undefined for these clients
-	if (ClientVersionBit() & EQEmu::versions::bit_TitaniumAndEarlier)
-		Kick();
-
-	//SetAA(rankId, rankLevel, charges);
-	//SendAlternateAdvancementPoints();
-	//SendAlternateAdvancementStats();
-
-	SendAlternateAdvancementPoints();
-	SendAlternateAdvancementStats();
-	CalcBonuses();
-	SaveAA();	
-}
-
 void Client::ResetAA() {
 	SendClearAA();
 	RefundAA();
@@ -2217,4 +2169,103 @@ bool Mob::CheckAATimer(int timer)
 		}
 	}
 	return false;
+}
+
+
+void Client::RebuildAA() {
+	SendClearAA();
+	RefundAA();
+
+	memset(&m_pp.aa_array[0], 0, sizeof(AA_Array) * MAX_PP_AA_ARRAY);
+	
+	if (GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW)) SetAA(aaBoastfulBellow, 1);
+	if (GetBuildRank(BARD, RB_BRD_DANCEOFBLADES)) SetAA(aaDanceofBlades, 1);
+	if (GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR)) SetAA(aaDivineAvatar, 1);
+	if (GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION)) SetAA(aaCelestialRegeneration, 1);
+	if (GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION)) SetAA(aaDivineArbitration, 1);
+	if (GetBuildRank(CLERIC, RB_CLR_DIVINERESURRECTION)) SetAA(aaDivineResurrection, 1);
+	if (GetBuildRank(CLERIC, RB_CLR_DIVINERETRIBUTION)) SetAA(aaDivineRetribution, 1);
+	if (GetBuildRank(CLERIC, RB_CLR_TURNUNDEAD)) SetAA(aaTurnUndead2, 1);
+	if (GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION)) SetAA(aaExquisiteBenediction, 1);
+	if (GetBuildRank(DRUID, RB_DRU_TELEPORTBIND)) SetAA(aaTeleportBind, 1);
+	if (GetBuildRank(DRUID, RB_DRU_ENTRAP)) SetAA(aaEntrap, 1);
+	if (GetBuildRank(DRUID, RB_DRU_EXODUS)) SetAA(aaExodus, 1);
+	if (GetBuildRank(DRUID, RB_DRU_CALLOFTHEWILD)) SetAA(aaCalloftheWild, 1);
+	if (GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL)) SetAA(aaSecondaryRecall, 1);
+	if (GetBuildRank(DRUID, RB_DRU_DIRECHARM)) SetAA(aaDireCharm, 1);
+	if (GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS)) SetAA(aaConvergenceofSpirits, 1);
+	if (GetBuildRank(DRUID, RB_DRU_SPIRITOFTHEWOOD)) SetAA(aaSpiritoftheWood, 1);
+	if (GetBuildRank(DRUID, RB_DRU_NATURESBOON)) SetAA(aaNaturesBoon, 1);
+	if (GetBuildRank(DRUID, RB_DRU_NATURESGUARDIAN)) SetAA(aaNaturesGuardian, 1);
+	if (GetBuildRank(ENCHANTER, RB_ENC_SOOTHINGWORDS)) SetAA(aaSoothingWords, 1);
+	if (GetBuildRank(ENCHANTER, RB_ENC_MINDOVERMATTER)) SetAA(aaMindOverMatter, 1);
+	if (GetBuildRank(ENCHANTER, RB_ENC_COLORSHOCK)) SetAA(aaColorShock, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_SHAREDHEALTH)) SetAA(aaSharedHealth, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_DIMENSIONALSHIELD)) SetAA(aaDimensionalShield, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_HOSTINTHESHELL)) SetAA(aaHostintheShell, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_HEARTOFSTONE)) SetAA(aaHeartofStone, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_IMPROVEDRECLAIMENERGY)) SetAA(aaImprovedReclaimEnergy, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_TURNSUMMONED)) SetAA(aaTurnSummoned2, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_HEARTOFVAPOR)) SetAA(aaHeartofVapor, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_MODULATIONSHARD)) SetAA(aaSmallModulationShard, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_HEARTOFICE)) SetAA(aaHeartofIce, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_SUSPENDEDMINION)) SetAA(aaSuspendedMinion, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_CALLOFTHEHERO)) SetAA(aaCalloftheHero, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_MENDCOMPANION)) SetAA(aaMendCompanion, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_CLOCKWORKMERCHANT)) SetAA(aaClockworkBanker, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_HEARTOFFLAMES)) SetAA(aaHeartofFlames, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_COMPANIONOFNECESSITY)) SetAA(aaCompanionofNecessity, 1);
+	if (GetBuildRank(MAGICIAN, RB_MAG_SERVANTOFRO)) SetAA(aaServantofRo, 1);
+	if (GetBuildRank(MONK, RB_MNK_PURIFYBODY)) SetAA(aaPurifyBody, 1);
+	if (GetBuildRank(NECROMANCER, RB_NEC_LIFEBURN)) SetAA(aaLifeBurn, 1);
+	if (GetBuildRank(NECROMANCER, RB_NEC_BLOODMAGIC)) SetAA(aaBloodMagic, 1);
+	if (GetBuildRank(NECROMANCER, RB_NEC_DYINGGRASP)) SetAA(aaDyingGrasp, 1);
+	if (GetBuildRank(PALADIN, RB_PAL_HANDOFPIETY)) SetAA(aaHandofPiety, 1);
+	if (GetBuildRank(PALADIN, RB_PAL_PURIFICATION)) SetAA(aaPurification, 1);
+	if (GetBuildRank(PALADIN, RB_PAL_ACTOFVALOR)) SetAA(aaActOfValor, 1);
+	if (GetBuildRank(PALADIN, RB_PAL_DIVINESTUN)) SetAA(aaDivineStun, 1);
+	if (GetBuildRank(ROGUE, RB_ROG_APPRAISAL)) SetAA(aaAppraisal, 1);
+	if (GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH)) SetAA(aaLeechTouch, 1);
+	if (GetBuildRank(SHADOWKNIGHT, RB_SHD_EMBRACEDEATH)) SetAA(aaDeathPeace2, 1);
+	if (GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT)) SetAA(aaSteadfastServant, 1);
+	if (GetBuildRank(SHAMAN, RB_SHM_ANCESTRALAID)) SetAA(aaAncestralAid, 1);
+	if (GetBuildRank(SHAMAN, RB_SHM_PURIFYSOUL)) SetAA(aaPurifySoul, 1);
+	if (GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL)) SetAA(aaSpiritCall, 1);
+	if (GetBuildRank(SHAMAN, RB_SHM_VIRULENTPARALYSIS)) SetAA(aaVirulentParalysis, 1);
+	if (GetBuildRank(SHAMAN, RB_SHM_RABIDBEAR)) SetAA(aaRabidBear, 1);
+	if (GetBuildRank(SHAMAN, RB_SHM_ANCESTRALGUARD)) SetAA(aaAncestralGuard, 1);
+	if (GetBuildRank(SHAMAN, RB_SHM_FERALSWIPE)) SetAA(aaFeralSwipe, 1);
+	if (GetBuildRank(SHAMAN, RB_SHM_CANNIBALIZE)) SetAA(aaCannibalization, 1);
+	if (GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT)) SetAA(aaParagonofSpirit, 1);
+	if (GetBuildRank(BARD, RB_BRD_KINSONG)) SetAA(aaLessonoftheDevoted, 1);
+	if (GetBuildRank(CLERIC, RB_CLR_HARMONICBALANCE)) SetAA(aaLessonoftheDevoted, 1);
+	if (GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT)) SetAA(aaLessonoftheDevoted, 1);
+	if (GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER)) SetAA(aaLessonoftheDevoted, 1);
+	if (GetBuildRank(NECROMANCER, RB_NEC_SERVANTOFBLOOD)) SetAA(aaLessonoftheDevoted, 1);
+	if (GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION)) SetAA(aaLessonoftheDevoted, 1);
+	if (GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT)) SetAA(aaLessonoftheDevoted, 1);
+	if (GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE)) SetAA(aaLessonoftheDevoted, 1);
+	if (GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON)) SetAA(aaLessonoftheDevoted, 1);
+
+	if (IsTaskCompleted(FEAT_PETDISCIPLINE)) SetAA(aaPetDiscipline, 1);
+	if (IsTaskCompleted(FEAT_INNATERUNSPEED)) SetAA(aaInnateRunSpeed, 3);
+	if (IsTaskCompleted(FEAT_PETAFFINITY)) SetAA(aaPetAffinity, 1);
+
+	SetAA(aaOrigin, 1);
+	SendAlternateAdvancementPoints();
+	SendAlternateAdvancementStats();
+	CalcBonuses();
+	SaveAA();
+
+	/*
+	for (int i = 0; i < _maxLeaderAA; ++i)
+		m_pp.leader_abilities.ranks[i] = 0;
+
+	m_pp.group_leadership_points = 0;
+	m_pp.raid_leadership_points = 0;
+	m_pp.group_leadership_exp = 0;
+	m_pp.raid_leadership_exp = 0;
+
+	database.DeleteCharacterLeadershipAAs(CharacterID());*/
+	
 }
