@@ -7793,14 +7793,14 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target, bool
 		spell_id == 447 //drain soul
 		)) {
 		int level = GetLevel();
-		if (level >= 60) mana_cost = 248;
-		else if (level >= 57) mana_cost = 200;
-		else if (level >= 55) mana_cost = 152;
-		else if (level >= 52) mana_cost = 133;
-		else if (level >= 50) mana_cost = 114;
-		else if (level >= 45) mana_cost = 107;
-		else if (level >= 40) mana_cost = 100;
-		else if (level >= 35) mana_cost = 93;
+		if (level >= 60) mana_cost = 145;
+		else if (level >= 57) mana_cost = 133;
+		else if (level >= 55) mana_cost = 114;
+		else if (level >= 52) mana_cost = 107;
+		else if (level >= 50) mana_cost = 100;
+		else if (level >= 45) mana_cost = 95;
+		else if (level >= 40) mana_cost = 90;
+		else if (level >= 35) mana_cost = 88;
 		else if (level >= 29) mana_cost = 86;
 		else if (level >= 28) mana_cost = 85;
 		else if (level >= 24) mana_cost = 61;
