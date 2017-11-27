@@ -1210,7 +1210,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Cavorting Bones";
-			$newSkill->desc = 'Empowers your pet to dynamically level with you at <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>. Once 44+, at max rank the pet will lifetap. At 59+, the pet will be a spectre.';
+			$newSkill->desc = 'Empowers your pet to dynamically level with you at <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>. At 59+, the pet will be a spectre.';
 			$newSkill->image = "/images/builds/icons/rb-nec-cavoringbones.png";
 			$skills[2] = $newSkill;
 
@@ -1253,7 +1253,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Shroud of Death";
-			$newSkill->desc = 'Your pet gains a 400 mod proc lifetap that deals (level * <em data-base="0.2">0.2</em>) magic damage and if Spirit Focus is trained and a focus target is set, a recourse heal for 100% of damage dealt is given<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Your pet gains a 400 mod proc DD that deals (level * <em data-base="0.2">0.2</em>) magic damage and if Spirit Focus is trained and a focus target is set, a recourse heal for 100% of damage dealt is given<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-nec-shroudofdeath.png";
 			$skills[18] = $newSkill;
 
