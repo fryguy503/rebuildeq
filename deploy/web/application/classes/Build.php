@@ -1803,7 +1803,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Sworn Enemy";
-			$newSkill->desc = 'When you use taunt, you mark a target as your sworn enemy. For the next 3 ticks, any spell damage dealt to target causes an additional <em data-base="100">100</em> hate<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When you use taunt, you mark a target as your sworn enemy. For the next 3 ticks, any spell damage dealt to target causes (mana * <em data-base="0.5">0.5</em>) hate<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shd-swornenemy.png";	
 			$skills[10] = $newSkill;
 			

@@ -1495,14 +1495,15 @@ void Mob::CastedSpellFinished(uint16 spell_id, uint32 target_id, CastingSlot slo
 	//
 	
 
+	int rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_SWORNENEMY);
 	if (IsClient() && 
 		target &&
 		target != this &&
 		target->IsNPC() &&
-		CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SWORNENEMY) > 0 &&
-		CastToClient()->IsSwornEnemyActive()) {
-			Message(270, "%s intensifies his hatred towards you.", target->GetCleanName());
-			target->AddToHateList(this, 100);
+		rank > 0 &&
+		CastToClient()->IsSwornEnemyActive() && mana_used > 0) {
+			Message(270, "%s intensifies his hatred towards you with %i hate.", target->GetCleanName(), int(mana_used * 0.5f * rank));
+			target->AddToHateList(this, int(mana_used * 0.5f * rank));
 	}
 	
 
