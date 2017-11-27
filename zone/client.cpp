@@ -10861,7 +10861,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_PAL_SOULCLEANSING) return "Soul Cleansing";
 		else if (id == RB_PAL_BRELLSBLESSING) return "Brell's Blessing";
 		else if (id == RB_PAL_WAVEOFMARR) return "Wave of Marr";
-		else if (id == RB_PAL_SHIELDOFNIFE) return "Sheild of Nife";
+		else if (id == RB_PAL_SHIELDOFNIFE) return "Shield of Nife";
 		else if (id == RB_PAL_ARMOROFFAITH) return "Armor of Faith";
 		else if (id == RB_PAL_PURIFICATION) return "Purification";
 		else if (id == RB_PAL_HOLYSERVANT) return "Holy Servant";
