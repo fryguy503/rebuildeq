@@ -4415,6 +4415,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob *spelltar, bool reflect, bool use_r
 					spelltar->Message_StringID(MT_SpellFailure, YOU_RESIST, spells[spell_id].name);
 				}
 
+				BuildEcho(StringFormat("Darkness Build Test. this was resisted"));
 				if (spelltar->IsAIControlled()) {
 					int32 aggro = CheckAggroAmount(spell_id, spelltar);
 					rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_DARKNESS);

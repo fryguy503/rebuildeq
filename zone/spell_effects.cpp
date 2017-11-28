@@ -3553,9 +3553,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if (buffslot >= 0)
 					break;
 
+				BuildEcho(StringFormat("Darkness Build Test. spell_effects.cpp"));
 				if(caster){
 					if(effect_value > 0){
-						
+
 						if(caster){
 							rank = caster->GetBuildRank(SHADOWKNIGHT, RB_SHD_DARKNESS);
 							if (rank > 0 && (
