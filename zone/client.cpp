@@ -11169,7 +11169,7 @@ void Client::DoDivineSurge(Mob *from) {
 			float range2 = (rank * 5) * (rank * 5);
 			if (dist2 > range2) continue;
 
-			amount = floor(target->GetMaxMana() * 0.0075f * rank);
+			amount = rank * 2;
 			if (amount < 1) continue;
 			if ((target->GetMaxMana() - target->GetMana()) < amount) amount = target->GetMaxMana() - target->GetMana();
 			manaTotal += amount;
@@ -11200,8 +11200,7 @@ void Client::DoDivineSurge(Mob *from) {
 				float range2 = (rank * 5) * (rank * 5);
 				if (dist2 > range2) continue;
 
-
-				amount = floor(target->GetMaxMana() * 0.0075f * rank);
+				amount = rank * 2;
 				if (amount < 1) continue;
 				manaTotal += amount;
 				manaCount++;
