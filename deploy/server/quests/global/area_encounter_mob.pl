@@ -39,9 +39,8 @@ sub EVENT_TIMER{
 				return;
 			}
 		}
-	#DB calls not working locally
-	#plugin::encounterReward(@group, $winnerList, $encounterstrings[2], $zoneln);
-	
+	#db reward
+	plugin::encounterReward(\@group, $winnerList, $encounterstrings[2], $zoneln);
 	#set next activation time
 	$randomtime = time + quest::ChooseRandom(1100..2100);
 	quest::setglobal("encounteractivation", $randomtime, 3, F);

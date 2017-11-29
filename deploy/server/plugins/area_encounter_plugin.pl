@@ -36,10 +36,11 @@ sub encounterStrings{ #array of strings for enouncter text, order: message, soun
 }
 
 sub encounterReward{
-	my @group = $_[0];
+	my $groupref = $_[0];
 	my $winnerList = $_[1];
 	my $encounterType = $_[2];
 	my $zoneln = $_[3];
+	my @group = @$groupref;
 	
 	$dbh = plugin::LoadMysql();
     if (!$dbh) {
