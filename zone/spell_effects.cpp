@@ -820,7 +820,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if (IsNPC() &&
 					IsCaster() &&
 					rank > 0 && 
-					effect_value < 0) {
+					mana_taken < 0) {
 					int damage_amount = int(-mana_taken * 0.7f);
 					if (GetMana() < damage_amount) damage_amount = GetMana();
 					if (damage_amount > 0) {
@@ -833,7 +833,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				if (IsNPC() &&
 					IsCaster() &&
 					rank > 0 &&
-					effect_value < 0) {
+					mana_taken < 0) {
 					int damage_amount = int(-mana_taken * 0.4f);
 					if (GetMana() < damage_amount) damage_amount = GetMana();
 					if (damage_amount > 0) {
