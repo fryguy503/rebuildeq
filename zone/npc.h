@@ -195,6 +195,7 @@ public:
 	void AddCardTable();
 	void AddFeatTable();
 	void AddTeleportTable();
+	void AddTierTable();
 	void	DescribeAggro(Client *towho, Mob *mob, bool verbose);
 	void	RemoveItem(uint32 item_id, uint16 quantity = 0, uint16 slot = 0);
 	void	CheckMinMaxLevel(Mob *them);
