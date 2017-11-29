@@ -318,12 +318,11 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 	if (rank > 0 && (
 		spell_id == 436 || spell_id == 348 || spell_id == 435
 		)) {
-
 		bool is_quad = false;
 		if (rank > 0 && zone->random.Roll(rank)) {
 			int bonus_damage = value * 4;
 			is_quad = true;
-			BuildEcho(StringFormat("Shocking Bolt %u added %i %s bonus damage.", rank, -bonus_damage, (is_quad) ? "QUAD" : ""));
+			BuildEcho(StringFormat("Shocking Bolt %u caused %i %s damage.", rank, -bonus_damage, "QUAD"));
 			value = bonus_damage;
 		}			
 	}
@@ -362,29 +361,29 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 		spell_id == 2885  //funeral pyre of kelador
 		)) {
 		int group_size = GetGroupSize(200);
-		extra_dmg = floor(value * 0.01f * rank * group_size);
+		extra_dmg = int(-value * 0.01f * rank * group_size);
 		if (extra_dmg < rank) extra_dmg = int(rank * 2);
 		BuildEcho(StringFormat("Corruption %i increased damage by %i", rank, extra_dmg));
-		value += extra_dmg;
+		value -= extra_dmg;
 	}
 	rank = GetBuildRank(SHAMAN, RB_SHM_POISON);
 	if (rank > 0 && IsGrouped()) {
 
 		int group_size = GetGroupSize(200);
-		extra_dmg = int(value * 0.01f * rank * group_size);
+		extra_dmg = int(-value * 0.01f * rank * group_size);
 		if (extra_dmg < rank) extra_dmg = floor(rank * 2);
 		BuildEcho(StringFormat("Poison %i increased damage by %i", rank, extra_dmg));
-		value += extra_dmg;
+		value -= extra_dmg;
 	}
 
 	rank = GetBuildRank(BARD, RB_BRD_CHANTCYCLE);
 	if (rank > 0 && IsGrouped()) {
 
 		int group_size = GetGroupSize(200);
-		extra_dmg = int(value * 0.01f * rank * group_size);
+		extra_dmg = int(-value * 0.01f * rank * group_size);
 		if (extra_dmg < 1) extra_dmg = 1;
 		BuildEcho(StringFormat("Chant Cycle %i increased damage by %i", rank, extra_dmg));
-		value += extra_dmg;
+		value -= extra_dmg;
 	}
 
 	rank = GetBuildRank(NECROMANCER, RB_NEC_SPLURT);
