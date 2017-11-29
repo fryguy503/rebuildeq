@@ -663,12 +663,13 @@ void Client::RangedAttack(Mob* other, bool CanDoubleAttack) {
 
 	if (!RangeWeapon || !RangeWeapon->IsClassCommon()) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Missing or invalid ranged weapon (%d) in slot %d", GetItemIDAt(EQEmu::inventory::slotRange), EQEmu::inventory::slotRange);
-		Message(0, "Error: Rangeweapon: GetItem(%i)==0, you have no bow!", GetItemIDAt(EQEmu::inventory::slotRange));
+		//Message(0, "Error: Rangeweapon: GetItem(%i)==0, you have no bow!", GetItemIDAt(EQEmu::inventory::slotRange));
+		Message(0, "Error! You have no bow!");
 		return;
 	}
 	if (!Ammo || !Ammo->IsClassCommon()) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Missing or invalid ammo item (%d) in slot %d", GetItemIDAt(EQEmu::inventory::slotAmmo), EQEmu::inventory::slotAmmo);
-		Message(0, "Error: Ammo: GetItem(%i)==0, you have no ammo!", GetItemIDAt(EQEmu::inventory::slotAmmo));
+		Message(0, "Error! You have no ammo!");
 		return;
 	}
 
@@ -677,12 +678,12 @@ void Client::RangedAttack(Mob* other, bool CanDoubleAttack) {
 
 	if (RangeItem->ItemType != EQEmu::item::ItemTypeBow) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Ranged item is not a bow. type %d.", RangeItem->ItemType);
-		Message(0, "Error: Rangeweapon: Item %d is not a bow.", RangeWeapon->GetID());
+		Message(0, "Error! Item %d is not a bow.", RangeWeapon->GetID());
 		return;
 	}
 	if (AmmoItem->ItemType != EQEmu::item::ItemTypeArrow) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Ammo item is not an arrow. type %d.", AmmoItem->ItemType);
-		Message(0, "Error: Ammo: type %d != %d, you have the wrong type of ammo!", AmmoItem->ItemType, EQEmu::item::ItemTypeArrow);
+		Message(0, "Error! You have the wrong type of ammo!");
 		return;
 	}
 
@@ -1253,14 +1254,14 @@ void Client::ThrowingAttack(Mob* other, bool CanDoubleAttack) { //old was 51
 
 	if (!RangeWeapon || !RangeWeapon->IsClassCommon()) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Missing or invalid ranged weapon (%d) in slot %d", GetItemIDAt(EQEmu::inventory::slotRange), EQEmu::inventory::slotRange);
-		Message(0, "Error: Rangeweapon: GetItem(%i)==0, you have nothing to throw!", GetItemIDAt(EQEmu::inventory::slotRange));
+		Message(0, "Error! You have nothing to throw!", GetItemIDAt(EQEmu::inventory::slotRange));
 		return;
 	}
 
 	const EQEmu::ItemData* item = RangeWeapon->GetItem();
 	if (item->ItemType != EQEmu::item::ItemTypeLargeThrowing && item->ItemType != EQEmu::item::ItemTypeSmallThrowing) {
 		Log(Logs::Detail, Logs::Combat, "Ranged attack canceled. Ranged item %d is not a throwing weapon. type %d.", item->ItemType);
-		Message(0, "Error: Rangeweapon: GetItem(%i)==0, you have nothing useful to throw!", GetItemIDAt(EQEmu::inventory::slotRange));
+		Message(0, "Error! You have nothing useful to throw!", GetItemIDAt(EQEmu::inventory::slotRange));
 		return;
 	}
 
