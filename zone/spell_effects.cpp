@@ -562,17 +562,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								}
 							}
 
-							//Siphon of Death
-							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH);
-							if ((spell_id == 2718 || spell_id == 1471 || spell_id == 821) &&
-								rank > 0) {
-								int mana_amount = floor(-dmg * 0.05f * rank);
-								if (mana_amount < rank) mana_amount = rank;
-								caster->BuildEcho(StringFormat("Siphon of Death %u siphoned %i mana.", rank, mana_amount));
-								entity_list.LogManaEvent(caster, caster, mana_amount);
-								caster->SetMana(caster->GetMana() + mana_amount);
-							}	
-
 						}
 
 						dmg = caster->GetActSpellDamage(spell_id, dmg, this);

@@ -3925,6 +3925,24 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 						damage += bonusDamage;
 					}
 				}
+				
+				if (attacker &&
+					attacker->IsClient() &&
+					attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH) > 0 &&
+					(
+						spell_id == 2718 ||	//Scream of Death Strike
+						spell_id == 1471 ||	//Shroud of Death Strike
+						spell_id == 821		//Vampiric Embrace
+						)) {
+
+					//Siphon of Death
+					rank = attacker->CastToClient()->GetBuildRank(SHADOWKNIGHT, RB_SHD_SIPHONOFDEATH);
+					int mana_amount = int(damage * 0.05f * rank);
+					if (mana_amount < rank) mana_amount = rank;
+					attacker->BuildEcho(StringFormat("Siphon of Death %u siphoned %i mana.", rank, mana_amount));
+					entity_list.LogManaEvent(attacker, this, mana_amount);
+					attacker->SetMana(attacker->GetMana() + mana_amount);
+				}
 
 				if (attacker &&
 					attacker->IsClient() &&
