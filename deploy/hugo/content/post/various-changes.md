@@ -1,6 +1,6 @@
 +++
 banner = "post/images/various-changes.png"
-date = "2017-11-11T01:29:18-07:00"
+date = "2017-11-29T01:29:18-07:00"
 description = "Various changes across rebuildeq"
 images = ["post/images/various-changes.png"]
 menu = ""
