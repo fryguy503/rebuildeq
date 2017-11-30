@@ -586,7 +586,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Exquisite Benediction";
-			$newSkill->desc = 'While meleeing an undead creature, increases proc chance of all build procs by <em data-base="20">20</em>';
+			$newSkill->desc = 'While meleeing an undead creature, increases proc chance of all build procs by <em data-base="20">20</em><span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-exquisitebenediction.png";	
 			$skills[46] = $newSkill;
 			
