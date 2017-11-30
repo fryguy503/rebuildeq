@@ -6116,47 +6116,56 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 
 			rank = GetBuildRank(CLERIC, RB_CLR_AUGMENTEDRETRIBUTION);
 			if (rank > 0) {
+				chance = 40 * rank;
+				if (GetTarget() != nullptr &&
+					GetTarget()->IsNPC() &&
+					(
+						GetTarget()->GetBodyType() == BT_Undead ||
+						GetTarget()->GetBodyType() == BT_SummonedUndead ||
+						GetTarget()->GetBodyType() == BT_Vampire
+						)) chance += (20 * GetBuildRank(CLERIC, RB_CLR_EXQUISITEBENEDICTION));
 
-				if (zone->random.Roll((int)rank)) {
-					int levelRange = 0;
-					if (GetLevel() == 60) levelRange = 6;
-					else if (GetLevel() >= 54) levelRange = 5;
-					else if (GetLevel() >= 44) levelRange = 4;
-					else if (GetLevel() >= 29) levelRange = 3;
-					else if (GetLevel() >= 14) levelRange = 2;
-					else if (GetLevel() >= 5) levelRange = 1;
+				chance = CastToClient()->GetProcChances(chance, hit.hand);
 
-					int option = zone->random.Int(0, levelRange);
+				int levelRange = 0;
+				if (GetLevel() == 60) levelRange = 6;
+				else if (GetLevel() >= 54) levelRange = 5;
+				else if (GetLevel() >= 44) levelRange = 4;
+				else if (GetLevel() >= 29) levelRange = 3;
+				else if (GetLevel() >= 14) levelRange = 2;
+				else if (GetLevel() >= 5) levelRange = 1;
 
-					switch (option) {
-					case 0:
-						spellid = 14; // Strike
-						break;
-					case 1:
-						spellid = 560; // Furor
-						break;
-					case 2:
-						spellid = 16; // Smite
-						break;
-					case 3:
-						spellid = 329; // Wrath
-						break;
-					case 4:
-						spellid = 672; // Retribution
-						break;
-					case 5:
-						spellid = 1543; // Reckoning
-						break;
-					case 6:
-						spellid = 2508; // Judgement
-						break;
-					}
-					
-					SpellOnTarget(spellid, defender);
+				int option = zone->random.Int(0, levelRange);
+
+				switch (option) {
+				case 0:
+					spellid = 14; // Strike
+					break;
+				case 1:
+					spellid = 560; // Furor
+					break;
+				case 2:
+					spellid = 16; // Smite
+					break;
+				case 3:
+					spellid = 329; // Wrath
+					break;
+				case 4:
+					spellid = 672; // Retribution
+					break;
+				case 5:
+					spellid = 1543; // Reckoning
+					break;
+				case 6:
+					spellid = 2508; // Judgement
+					break;
+				}
+
+				if (defender->IsNPC() && zone->random.Roll(chance)) {
 					BuildEcho(StringFormat("Augmented Retribution %i casted on %s", rank, defender->GetCleanName()));
+					SpellOnTarget(spellid, defender);
 				}
 			}
-
 
 			uint32 buff_count = GetMaxTotalSlots();
 			for (uint16 buffIt = 0; buffIt < buff_count; buffIt++)
