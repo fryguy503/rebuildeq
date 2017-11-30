@@ -262,16 +262,18 @@ sub EVENT_ITEM {
 		quest::say("You cannot deposit into the [ ".quest::saylink("heirloom") ." ] chests until you finish my quest.");
 		return;
 	}
-	
-	if(plugin::check_handin(\%itemcount, 10000001 => 1)) { #eat potions
-		quest::say("Thank you for your potion of experience, $name.");
-		return;
-	}
+
 
 	if (!quest::istaskcompleted(501)) {
-		if(plugin::check_handin(\%itemcount, 10000001 => 1)) { #eat potions
+		if(plugin::check_handin(\%itemcount, 1001 => 1)) { #eat potions
+			quest::say("Thank you for your potion of experience for tier 1 progression, $name.");	
 			return;
 		}		
+	}
+
+	if(plugin::check_handin(\%itemcount, 100001 => 1)) { #eat potions
+		quest::say("Thank you for your potion of experience, $name.");
+		return;
 	}
 
 	$acct_id = $client->AccountID();
