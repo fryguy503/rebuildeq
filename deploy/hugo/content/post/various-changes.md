@@ -19,7 +19,6 @@ title = "Various Changes"
 * Fixed Typo with Shield of Nife
 * Spirit of Wood no longer cures rez sickness.
 * Tier mobs now drop elu, shards, and gems.
-* Energy Burn and Lifeflow should now be repaired
 * Siphon of Death now does proper mana regeneration.
 * Fixed out of ammo message for arrows and throwing to be less weirdly errored
 * Shadowknight Sworn Enemy changed from static 100 hate per spell to mana * 2.5 hate.
