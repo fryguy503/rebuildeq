@@ -10,7 +10,7 @@ title = "Various Changes"
 +++
 * Changed server time zone, this may have side effects, but more likely may resolve the internal time system.
 * All build-based procs were changed to only work on primary attacks. This means your proc chances should be reduced, we will be assessing and adjusting proc rates after data.
-* Monk's divine surge was temporarily nerfed to 2 * rank mana until I rewrite a new mana regen system for rogue/monk/shd. (Monks became pivotal to end game and is scewing how I am trying to tune epic/tier fights, they'll be nerfed to be easier as I collect data)
+* Monk's divine surge was temporarily nerfed to 2 * rank mana until I rewrite a new mana regen system for rogue/monk/shd. (Monks became pivotal to end game and is scewing how I am trying to tune epic/tier fights, this skill will be improved after I collect data)
 * Augmented Retribution now should proc based on description.
 * Energy Burn and Lifeflow now works properly.
 * Poison and Corruption should now properly add bonus damage
