@@ -2569,7 +2569,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 
 			if (!c->GetEPP().use_full_dps && c->GetID() != d.ent_id) continue; //Don't show DPS if self only is flagged
 			c->Message(MT_CritMelee, "- %s: %i damage (%.1f DPS)", d.character_name.c_str(), d.hp_target_loss_net, cur_dps);
-			adminMessage.append(StringFormat("- %s: %i damage (%.1f DPS)", d.character_name.c_str(), d.hp_target_loss_net, cur_dps));
+			adminMessage.append(StringFormat("- %s: %i damage (%.1f DPS)\n", d.character_name.c_str(), d.hp_target_loss_net, cur_dps));
 		}
 		++iterator;
 	}
