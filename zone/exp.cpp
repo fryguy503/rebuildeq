@@ -581,10 +581,38 @@ void Client::SetEXP(uint32 set_exp, uint32 set_aaxp, bool isrezzexp) {
 		//Message(0, "setexp %i vs expneeded %i", set_exp, expneeded);
 		if (set_exp > expneeded) {
 			
+			uint64 exp_pool = 0; //pull current bottles of experience before adding overflow
+			auto query = StringFormat("SELECT exp_pool FROM character_custom WHERE character_id = %i", CharacterID());
+			auto results = database.QueryDatabase(query);
+			if (results.Success() && results.RowCount() != 0) {
+				auto row = results.begin();
+				exp_pool = atoll(row[0]);
+			}
+			int currentbottles = exp_pool / RuleI(AA, ExpPerPoint);
+
 			//Give EXP to buffer
 			uint32 excess_exp = set_exp - expneeded; //excess exp from gaining
-			std::string query = StringFormat("UPDATE character_custom SET exp_pool = exp_pool + %i WHERE character_id = %i", excess_exp, CharacterID());
-			auto results = database.QueryDatabase(query);
+			query = StringFormat("UPDATE character_custom SET exp_pool = exp_pool + %i WHERE character_id = %i", excess_exp, CharacterID());
+			results = database.QueryDatabase(query);
+
+			//pull amount of bottles after adding overflow
+			query = StringFormat("SELECT exp_pool FROM character_custom WHERE character_id = %i", CharacterID());
+			results = database.QueryDatabase(query);
+			if (results.Success() && results.RowCount() != 0) {
+				auto row = results.begin();
+				exp_pool = atoll(row[0]);
+			}
+			int bottles = exp_pool / RuleI(AA, ExpPerPoint);
+
+			if (bottles > currentbottles) { //do we have more bottles than before the overflow was added
+				SendSound();
+				if (bottles > 1) {
+					Message(15, "You can now fill %i bottles of experience!", bottles);
+				}
+				else {
+					Message(15, "You have gained enough experience to fill a bottle!");
+				}
+			}
 			//Message(0, "Gave %i excess exp", excess_exp);
 			//Old bottle code, used for the bottle mechanic later.
 			/*int16 slotid = m_inv.HasItem(100000, 1, invWherePersonal); //check personal inventory for any bottles
