@@ -1689,7 +1689,7 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 					rank = caster->GetBuildRank(PALADIN, RB_PAL_INSTILLPURPOSE);
 					if (rank > 0 && (spell_id == 1453 || spell_id == 2588)) {
 						int bonus_effect = int(effect_value * 0.2f * rank);
-						caster->DebugEcho(StringFormat("Instill Purpose added %u extra HP, per tick", bonus_effect));
+						caster->BuildEcho(StringFormat("Instill Purpose added %u extra HP, per tick", bonus_effect));
 						effect_value += bonus_effect;
 					}
 				}
@@ -1829,8 +1829,8 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				}
 
 				rank = GetBuildRank(PALADIN, RB_PAL_INSTILLPURPOSE);
-				if (rank > 0 && (spell_id == 1453 || spell_id == 2588) && IsClient()) {
-					DebugEcho(StringFormat("Instill Purpose is removing %i mana, per tick", -effect_value));
+				if (rank > 0 && (spell_id == 1453 || spell_id == 2588)) {
+					BuildEcho(StringFormat("Instill Purpose is removing %i mana, per tick", -effect_value));
 				}
 				
 				new_bonus->ManaRegen += effect_value;
