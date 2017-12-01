@@ -1685,6 +1685,13 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 							effect_value += floor(rank * 0.2f * effect_value);
 						}
 					}
+					
+					rank = caster->GetBuildRank(PALADIN, RB_PAL_INSTILLPURPOSE);
+					if (rank > 0 && (spell_id == 1453 || spell_id == 2588)) {
+						int bonus_effect = int(effect_value * 0.2f * rank);
+						caster->DebugEcho(StringFormat("Instill Purpose added %u extra HP, per tick", bonus_effect));
+						effect_value += bonus_effect;
+					}
 				}
 				if(effect_value > 0) {
 					new_bonus->HPRegen += effect_value;
@@ -1819,6 +1826,11 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 						if (this == caster) BuildEcho(StringFormat("Cassindra's Chorus increased ManaRegen from %i to %i.", rank, effect_value, effect_value + floor(rank * 0.1f * effect_value)));
 						effect_value += floor(rank * 0.1f * effect_value);
 					}
+				}
+
+				rank = GetBuildRank(PALADIN, RB_PAL_INSTILLPURPOSE);
+				if (rank > 0 && (spell_id == 1453 || spell_id == 2588) && IsClient()) {
+					DebugEcho(StringFormat("Instill Purpose is removing %i mana, per tick", -effect_value));
 				}
 				
 				new_bonus->ManaRegen += effect_value;
@@ -3801,14 +3813,6 @@ void Mob::NegateSpellsBonuses(uint16 spell_id)
 			{
 				case SE_CurrentHP:
 					if(spells[spell_id].base[i] == 1) {
-						//Instill Purpose
-						if (spell_id == 1453 || spell_id == 2588 && this->IsClient()) {
-							if (this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_INSTILLPURPOSE) > 0) {
-								uint32 rank = this->CastToClient()->GetBuildRank(PALADIN, RB_PAL_INSTILLPURPOSE);
-
-								effect_value += floor(effect_value * 0.2f * rank); //Change heal to max HP heal
-							}
-						}
 
 						spellbonuses.HPRegen = effect_value;
 						aabonuses.HPRegen = effect_value;
