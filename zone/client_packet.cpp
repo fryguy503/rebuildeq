@@ -4990,16 +4990,16 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 		//else if (tmob->GetLevel() > GetLevel() - 11) {
 		else if (con->level == CON_LIGHTBLUE){// && (tmob->GetLevel() > GetLevel() - 11)) { //for some reason green was coming up early.
 			level_text = "looks kind of dangerous.";
-			color = 7;
+			color = 18;
 		}
 		//else if (tmob->GetLevel() > GetLevel() - 20) {
 		else if (con->level == CON_GREEN) {
 			level_text = "You would probably win this fight... it's not certain though.";
 			color = 2;
-		}	//gray con
-		else {
+		}
+		else {//CON_GRAY
 			level_text = "You could probably win this fight.";
-			color = 6;
+			color = 12;
 		}
 		std::string race_name;
 		if (tmob->IsNPC()) {
@@ -5056,32 +5056,32 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 	// and need con to still be around so, do it here!
 	if (tmob->IsRaidTarget()) {
 		switch (con->level) {
-		case CON_GREEN:
-			color = 2;
+		case CON_RED:
+			color = 13;
 			break;
-		case CON_LIGHTBLUE:
-			color = 10;
-			break;
-		case CON_BLUE:
-			color = 4;
+		case CON_YELLOW:
+			color = 15;
 			break;
 		case CON_WHITE_TITANIUM:
 		case CON_WHITE:
 			color = 10;
 			break;
-		case CON_YELLOW:
-			color = 15;
+		case CON_BLUE:
+			color = 4;
 			break;
-		case CON_RED:
-			color = 13;
+		case CON_LIGHTBLUE:
+			color = 18;
+			break;
+		case CON_GREEN:
+			color = 2;
 			break;
 		case CON_GRAY:
-			color = 6;
+			color = 12;
 			break;
 		}
 
 		if (ClientVersion() <= EQEmu::versions::ClientVersion::Titanium) {
-			if (color == 6)	{
+			if (color == 12)	{
 				color = 2;
 			}
 		}
