@@ -4999,7 +4999,7 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 		}
 		else {//CON_GRAY
 			level_text = "You could probably win this fight.";
-			color = 12;
+			color = 6;
 		}
 		std::string race_name;
 		if (tmob->IsNPC()) {
@@ -5076,12 +5076,12 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 			color = 2;
 			break;
 		case CON_GRAY:
-			color = 12;
+			color = 6;
 			break;
 		}
 
 		if (ClientVersion() <= EQEmu::versions::ClientVersion::Titanium) {
-			if (color == 12)	{
+			if (color == 6)	{
 				color = 2;
 			}
 		}
