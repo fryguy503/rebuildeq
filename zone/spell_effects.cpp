@@ -1723,7 +1723,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 
 			case SE_Purify:
 			{
-				rank = GetBuildRank(MONK, RB_PAL_PURIFICATION);
+				rank = GetBuildRank(PALADIN, RB_PAL_PURIFICATION);
 				if (rank > 0) {
 					int cureCount = 0;
 
