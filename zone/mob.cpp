@@ -8486,7 +8486,8 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 		else caster->QuickBuff(spell_target, 3575, duration);
 
 		if (rank > 1) { // AC
-			if (lowestLevel >= 57) caster->QuickBuff(spell_target, 1537, duration);
+			if (lowestLevel >= 60) caster->QuickBuff(spell_target, 1537, duration);
+			else if (lowestLevel >= 57) caster->QuickBuff(spell_target, 1537, duration);
 			else if (lowestLevel >= 45) caster->QuickBuff(spell_target, 20, duration);
 			else if (lowestLevel >= 35) caster->QuickBuff(spell_target, 19, duration);
 			else if (lowestLevel >= 25) caster->QuickBuff(spell_target, 18, duration);
@@ -8495,8 +8496,8 @@ bool Mob::DoBuffSystem(uint16 spell_id, Mob *spell_target) {
 		}
 
 		if (rank > 2) { // HP
-			if (lowestLevel >= 55) caster->QuickBuff(spell_target, 1539, duration); //fortitude
-			else if (lowestLevel >= 52) caster->QuickBuff(spell_target, 1533, duration); //heroism
+			if (lowestLevel >= 55) caster->QuickBuff(spell_target, 1533, duration); //heroism
+			else if (lowestLevel >= 52) caster->QuickBuff(spell_target, 1539, duration); //fortitude
 			else if (lowestLevel >= 42) caster->QuickBuff(spell_target, 314, duration); //resolution
 			else if (lowestLevel >= 32) caster->QuickBuff(spell_target, 312, duration); //valor
 			else if (lowestLevel >= 22) caster->QuickBuff(spell_target, 244, duration); //bravery
