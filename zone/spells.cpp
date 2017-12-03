@@ -521,7 +521,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
             int mana_cost_reduc = floor(0.1f * rank * mana_cost);
             int cast_time_reduc = floor(0.05f * rank * cast_time);
             Log(Logs::Detail, Logs::Spells, "Ring Affinity (Rank %d) Reduced Mana by %d and Casting Time by %d", rank, mana_cost_reduc, cast_time_reduc);
-			BuildEcho(StringFormat("Ring Affinity (Rank %d) Reduced Mana by %d and Casting Time by %d", rank, mana_cost_reduc, cast_time_reduc));
+			BuildEcho(StringFormat("Ring Affinity %i reduced mana by %i and casting time by %.1f", rank, mana_cost_reduc, cast_time_reduc));
             cast_time -= cast_time_reduc;
     }
 
@@ -531,7 +531,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
                 // 5 second cast time, 1 less second per rank: 5000ms/4000ms/3000ms/2000ms/1000ms
 		int cast_time_new = 6000 - (rank * 1000);
 		Log(Logs::Detail, Logs::Spells, "Exodus (Rank %d) Casting Time %d", rank, cast_time_new);
-		BuildEcho(StringFormat("Exodus (Rank %d) Casting Time %d", rank, cast_time_new));
+		BuildEcho(StringFormat("Exodus %i casting time %i", rank, cast_time_new));
         	cast_time = cast_time_new;
 	}
 	
@@ -546,7 +546,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		if(rank == 4) cast_time_bonus = floor(cast_time * 0.15f);
 		if(rank == 5) cast_time_bonus = floor(cast_time * 0.20f);
 		Log(Logs::Detail, Logs::Spells, "Quick Damage (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
-		BuildEcho(StringFormat("Quick Damage (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f));
+		BuildEcho(StringFormat("Quick Damage %i reduced casting time by %.1f seconds", rank, cast_time_bonus / 1000.0f));
         cast_time -= cast_time_bonus;
 	}
 	
@@ -560,7 +560,7 @@ bool Mob::DoCastSpell(uint16 spell_id, uint16 target_id, CastingSlot slot,
 		if(rank == 4) cast_time_bonus = floor(cast_time * 0.40f);
 		if(rank == 5) cast_time_bonus = floor(cast_time * 0.50f);
 		Log(Logs::Detail, Logs::Spells, "Quick Summoning (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f);
-		BuildEcho(StringFormat("Quick Summoning (Rank %d) Reduced Casting Time By %.1f Seconds", rank, cast_time_bonus / 1000.0f));
+		BuildEcho(StringFormat("Quick Summoning %i reduced casting time by %.1f seconds", rank, cast_time_bonus / 1000.0f));
 		cast_time -= cast_time_bonus;
 	}
 	
