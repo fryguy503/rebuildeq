@@ -2269,6 +2269,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 		spell_target && 
 		!spell_target->IsPetOwnerClient() && 
 		!spell_target->IsClient() && 
+		!spell_target->IsCharmed() &&
 		!IsEffectInSpell(spell_id, SE_Revive) //Rezzes are beneficial spells, but need to target self.
 		) {
 		if (IsClient() && 
