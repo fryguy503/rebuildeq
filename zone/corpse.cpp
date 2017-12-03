@@ -1211,8 +1211,10 @@ void Corpse::LootItem(Client *client, const EQApplicationPacket *app)
 
 			//just clear it so player knows it's deleted
 			SendEndLootErrorPacket(client);
-			being_looted_by = 0;
-			delete inst;
+			//being_looted_by = 0;
+			ResetLooter();
+			//delete inst;
+			safe_delete(inst);
 			return;
 		}
 		// safe to ACK now
