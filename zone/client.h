@@ -1533,6 +1533,9 @@ private:
 	unsigned int RestRegenMana;
 	unsigned int RestRegenEndurance;
 
+	//Does the client currently know our rested state is rested or not?
+	bool isClientRestedOP;
+
 	bool CanBeInZone();
 	void SendLogoutPackets();
 	void SendZoneInPackets();

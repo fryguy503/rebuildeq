@@ -1968,6 +1968,7 @@ void Client::CalcRestState() {
 
 	RestRegenHP = (GetMaxHP() * RuleI(Character, RestRegenPercent) / 100);
 
+	bool isGroupMateAggrod = false;
 	Mob * target = nullptr;
 	float rest_regen_percent = RuleI(Character, RestRegenPercent);
 	int group_size = 1; //start at 1, it's me.
@@ -1981,6 +1982,11 @@ void Client::CalcRestState() {
 			if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
 			Client *c = target->CastToClient();
 			if (c->IsDead()) continue; //not dead
+
+			if (target->GetAggroCount() > 0) {
+				isGroupMateAggrod = true;
+				break;
+			}
 
 			float dist2 = DistanceSquared(m_Position, target->GetPosition());
 			float range2 = 100 * 100;
@@ -2001,7 +2007,10 @@ void Client::CalcRestState() {
 				if (this->GetZoneID() != target->GetZoneID()) continue; //same zone
 				Client *c = target->CastToClient();
 				if (c->IsDead()) continue; //not dead
-
+				if (target->GetAggroCount() > 0) {
+					isGroupMateAggrod = true;
+					break;
+				}
 				float dist2 = DistanceSquared(m_Position, target->GetPosition());
 				float range2 = 100 * 100;
 				if (dist2 > range2) continue;
@@ -2011,6 +2020,42 @@ void Client::CalcRestState() {
 	}
 	if (group_size < 1) group_size = 1;
 	
+	if (isGroupMateAggrod) { //group mate is aggro'd, no ooc regen permitted
+		if (isClientRestedOP) { //we were rested, but someone just aggro'd, let's fix that
+
+			if (ClientVersion() >= EQEmu::versions::ClientVersion::SoF) {
+				auto outapp = new EQApplicationPacket(OP_RestState, 1);
+				char *Buffer = (char *)outapp->pBuffer;
+				VARSTRUCT_ENCODE_TYPE(uint8, Buffer, 0x01);
+				QueuePacket(outapp);
+				safe_delete(outapp);
+			}
+			isClientRestedOP = false;
+		}
+
+		return;
+	}
+	else if (!isClientRestedOP) { //group mate isn't aggro'd, but there's also no rested op yet
+		if (rest_timer.GetRemainingTime() > 0) return; //return early if a timer is already counting down
+
+		//set a timer
+		int time_until_rest = RuleI(Character, RestRegenTimeToActivate) * 1000;
+		rest_timer.Start(time_until_rest);
+
+		//inform client the remaining time
+		if (ClientVersion() >= EQEmu::versions::ClientVersion::SoF) {
+			auto outapp = new EQApplicationPacket(OP_RestState, 5);
+			char *Buffer = (char *)outapp->pBuffer;
+			VARSTRUCT_ENCODE_TYPE(uint8, Buffer, 0x00);
+			VARSTRUCT_ENCODE_TYPE(uint32, Buffer, (uint32)(time_until_rest / 1000));
+			QueuePacket(outapp);
+			safe_delete(outapp);
+		}
+		isClientRestedOP = true;
+
+		return;
+	}
+
 	rest_regen_percent = group_size * 3; //double mana regen per players
 	if (rest_regen_percent > 10) rest_regen_percent = 10;
 
