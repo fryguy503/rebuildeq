@@ -190,6 +190,17 @@ void Mob::DoSpecialAttackDamage(Mob *who, EQEmu::skills::SkillType skill, int32 
 	if (skill == EQEmu::skills::SkillThrowing || skill == EQEmu::skills::SkillArchery)
 		my_hit.hand = EQEmu::inventory::slotRange;
 
+	if (IsClient()) {
+		int rank = GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);
+		if (skill == EQEmu::skills::SkillBackstab && rank > 0 && who->GetHPRatio() >= 90.0f && CastToClient()->sneaking) {
+			int hit_chance_bonus = int(my_hit.tohit * 20 * rank);
+			if (hit_chance_bonus < 1) hit_chance_bonus = 1;
+			BuildEcho(StringFormat("Sneak Attack %i chance to hit increased from %i to %i.", rank, my_hit.tohit, my_hit.tohit + hit_chance_bonus));
+
+			my_hit.tohit += hit_chance_bonus;
+		}
+	}
+
 	DoAttack(who, my_hit);
 
 	who->AddToHateList(this, hate, 0, false);
