@@ -487,14 +487,6 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 			value += healAmount;
 		}
 
-
-		rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_REINFORCETORPOR);
-		if (rank > 0 && (spell_id == 19127 || spell_id == 1576)) {
-			int healAmount = floor(value * 0.1f * rank);
-			BuildEcho(StringFormat("Reinforce Torpor %i gave a bonus %i healing.", rank, healAmount));			
-			value += healAmount;
-		}
-
 		rank = GetBuildRank(SHAMAN, RB_SHM_SPIRITUALHEALING);
 		if (rank > 0 && target != nullptr && target != this) {
 			int healAmount = floor(value * 0.05f * rank);
@@ -609,6 +601,13 @@ int32 Mob::GetActSpellHealing(uint16 spell_id, int32 value, Mob* target) {
 
 		if(chance && zone->random.Roll(chance))
 			value *= 2;
+
+		rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_REINFORCETORPOR);
+		if (rank > 0 && (spell_id == 3694 || spell_id == 1576)) {
+			int healAmount = floor(value * 0.1f * rank);
+			BuildEcho(StringFormat("Reinforce Torpor %i gave a bonus %i healing.", rank, healAmount));
+			value += healAmount;
+		}
 	}
 
 	if (IsNPC() && CastToNPC()->GetHealScale())
