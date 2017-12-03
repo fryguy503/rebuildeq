@@ -10672,9 +10672,14 @@ void Client::ResetBuild() {
 		return;
 	}
 	
-	//poof pet if they reset.
+	//break charm or poof pet if they reset.
 	if (HasPet()) {
-		this->GetPet()->Depop();
+		if (this->GetPet()->IsCharmed()) {
+			this->GetPet()->BuffFadeByEffect(SE_Charm);
+		}
+		else {
+			this->GetPet()->Depop();
+		}
 	}
 	
 	SendAlternateAdvancementTable();
