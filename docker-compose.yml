@@ -4,7 +4,6 @@ services:
     image: "bitnami/mariadb:latest"
     volumes:
       - ./docker/db:/bitnami/mariadb
-    restart: always
     environment:
    #   MARIADB_ROOT_PASSWORD: rootpass
       MARIADB_DATABASE: eqemu
@@ -19,7 +18,6 @@ services:
   eqemu:
     stdin_open: true
     build: ./docker/eqemu/.
-    restart: always
     volumes:
       - "./deploy/server:/eqemu"
     links:
@@ -40,7 +38,6 @@ services:
   web:
     stdin_open: true
     build: ./docker/web/.
-    restart: always
     volumes:
       - "./deploy/web:/var/www"
     links:
