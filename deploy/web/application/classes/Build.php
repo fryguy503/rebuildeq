@@ -892,7 +892,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Tranquility";
-			$newSkill->desc = 'While in a group, you and your allies gain (level * <em data-base="0.1">0.1</em>) mana regen per tick<span class="perLevel"> per rank</span>';
+			$newSkill->desc = 'While in a group, you and your allies gain (group size * level * <em data-base="0.1">0.1</em>) mana regen per tick<span class="perLevel"> per rank</span>';
 			$newSkill->image = "/images/builds/icons/rb-enc-tranquility.png";
 			$skills[49] = $newSkill;
 
