@@ -62,7 +62,7 @@
 
 	<!-- Database configuration, replaces db.ini.  Defaults shown -->
 	<database>
-		<host>mariadb</host>
+		<host>127.0.0.1</host>
 		<port>3306</port>
 		<username>eqemu</username>
 		<password>eqemupass</password>
@@ -70,7 +70,7 @@
 	</database>
 
 	<qsdatabase>
-		<host>mariadb</host>
+		<host>127.0.0.1</host>
 		<port>3306</port>
 		<username>eqemu</username>
 		<password>eqemupass</password>
