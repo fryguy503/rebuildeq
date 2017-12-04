@@ -7718,7 +7718,31 @@ int Mob::DoTranquilityRegen() {
 
 	Mob *target;
 	unsigned int gi = 0;
-	for (; gi < MAX_GROUP_MEMBERS; gi++)
+
+	for (; gi < MAX_GROUP_MEMBERS; gi++) {
+		// error checking
+		if (!group->members[gi]) continue;
+		target = group->members[gi];
+		if (!target) continue;
+		if (target->GetZoneID() != GetZoneID()) continue;
+		if (!target->IsClient()) continue;
+		distance = DistanceSquared(GetPosition(), GetPosition());
+		if (distance > range2) continue;
+		rank = target->GetBuildRank(ENCHANTER, RB_ENC_TRANQUILITY);
+		if (rank < 1) continue; 
+		int regengivers = 0;
+		//we have an enchanter groupmember that has tranquility
+		for (int memb = 0; memb < MAX_GROUP_MEMBERS; memb++) { //for each group member, increment regengivers for each eligible member
+			if (!group->members[memb]) continue;
+			if (group->members[memb]->GetZoneID() != GetZoneID()) continue;
+			if (!group->members[memb]->IsClient()) continue;
+			if (distance > range2) continue;
+			regengivers++;
+		}
+		if (regengivers > 3) regengivers = 3;//only 3 members can contribute to increased regen per enchanter.
+		manaRegen += floor(regengivers * rank * .04f * GetLevel());//12 regen per mana giver at 60
+	}
+	/*for (; gi < MAX_GROUP_MEMBERS; gi++)
 	{
 		if (!group->members[gi]) continue;
 		target = group->members[gi];
@@ -7730,7 +7754,7 @@ int Mob::DoTranquilityRegen() {
 		rank = target->GetBuildRank(ENCHANTER, RB_ENC_TRANQUILITY);
 		if (rank < 1) continue;
 		manaRegen += GetLevel() * 0.1f * rank;
-	}
+	}*/
 	return manaRegen;
 }
 
