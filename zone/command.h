@@ -71,6 +71,7 @@ void command_bug(Client *c, const Seperator *sep);
 
 void command_camerashake(Client *c, const Seperator *sep);
 void command_castspell(Client *c, const Seperator *sep);
+void command_changefaction(Client *c, const Seperator *sep);
 void command_chat(Client *c, const Seperator *sep);
 void command_checklos(Client *c, const Seperator *sep);
 void command_clearinvsnapshots(Client *c, const Seperator *sep);
