@@ -7705,7 +7705,7 @@ void Mob::BadMoonProc(Mob *defender, DamageHitInfo &hit) {
 	}
 }
 
-int Mob::DoTranquilityRegen() {
+int Mob::DoBuildManaRegen() {
 	int manaRegen = 0;
 	if (!IsClient()) return manaRegen;
 	int range = 200;
@@ -7719,8 +7719,11 @@ int Mob::DoTranquilityRegen() {
 	Mob *target;
 	unsigned int gi = 0;
 
+	int groupSize = GetGroupSize(200);
+
+	if (groupSize > 3) groupSize = 3;
+
 	for (; gi < MAX_GROUP_MEMBERS; gi++) {
-		// error checking
 		if (!group->members[gi]) continue;
 		target = group->members[gi];
 		if (!target) continue;
@@ -7728,33 +7731,27 @@ int Mob::DoTranquilityRegen() {
 		if (!target->IsClient()) continue;
 		distance = DistanceSquared(GetPosition(), GetPosition());
 		if (distance > range2) continue;
+
 		rank = target->GetBuildRank(ENCHANTER, RB_ENC_TRANQUILITY);
-		if (rank < 1) continue; 
-		int regengivers = 0;
-		//we have an enchanter groupmember that has tranquility
-		for (int memb = 0; memb < MAX_GROUP_MEMBERS; memb++) { //for each group member, increment regengivers for each eligible member
-			if (!group->members[memb]) continue;
-			if (group->members[memb]->GetZoneID() != GetZoneID()) continue;
-			if (!group->members[memb]->IsClient()) continue;
-			if (distance > range2) continue;
-			regengivers++;
+		if (rank > 0) {
+			manaRegen += ceil(groupSize * rank * 0.04f * GetLevel()); //12 regen per mana giver at 60
 		}
-		if (regengivers > 3) regengivers = 3;//only 3 members can contribute to increased regen per enchanter.
-		manaRegen += floor(regengivers * rank * .04f * GetLevel());//12 regen per mana giver at 60
+
+		rank = target->GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);
+		if (rank > 0) {
+			manaRegen += ceil(groupSize * rank * 0.04f * GetLevel());
+		}
+
+		rank = target->GetBuildRank(MONK, RB_MNK_DIVINESURGE);
+		if (rank > 0) {
+			manaRegen += ceil(groupSize * rank * 0.04f * GetLevel());
+		}
+
+		rank = target->GetBuildRank(ENCHANTER, RB_SHD_ZEVFEERSFEAST);
+		if (rank > 0) {
+			manaRegen += ceil(groupSize * rank * 0.04f * GetLevel());
+		}		
 	}
-	/*for (; gi < MAX_GROUP_MEMBERS; gi++)
-	{
-		if (!group->members[gi]) continue;
-		target = group->members[gi];
-		if (!target) continue;
-		if (target->GetZoneID() != GetZoneID()) continue;
-		if (!target->IsClient()) continue;
-		distance = DistanceSquared(GetPosition(), GetPosition());
-		if (distance > range2) continue;
-		rank = target->GetBuildRank(ENCHANTER, RB_ENC_TRANQUILITY);
-		if (rank < 1) continue;
-		manaRegen += GetLevel() * 0.1f * rank;
-	}*/
 	return manaRegen;
 }
 
