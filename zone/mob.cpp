@@ -7719,8 +7719,8 @@ int Mob::DoBuildManaRegen() {
 	Mob *target;
 	unsigned int gi = 0;
 
-	int groupSize = GetGroupSize(200);
-
+	int groupSize = GetGroupSize(200) - 1;//GetGroupSize starts its size at 1 and iterates the member calling it as well, so -1
+	BuildEcho(StringFormat("Group Size for Mana Calc: %i", groupSize));
 	if (groupSize > 3) groupSize = 3;
 
 	for (; gi < MAX_GROUP_MEMBERS; gi++) {
@@ -7731,25 +7731,26 @@ int Mob::DoBuildManaRegen() {
 		if (!target->IsClient()) continue;
 		distance = DistanceSquared(GetPosition(), GetPosition());
 		if (distance > range2) continue;
+		int level = ((GetLevel() < target->GetLevel()) ? GetLevel() : target->GetLevel());
 
 		rank = target->GetBuildRank(ENCHANTER, RB_ENC_TRANQUILITY);
 		if (rank > 0) {
-			manaRegen += ceil(groupSize * rank * 0.04f * GetLevel()); //12 regen per mana giver at 60
+			manaRegen += ceil(groupSize * rank * 0.04f * level); //12 regen per groupSize at 60
 		}
 
 		rank = target->GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);
 		if (rank > 0) {
-			manaRegen += ceil(groupSize * rank * 0.04f * GetLevel());
+			manaRegen += floor(groupSize * rank * 0.019f * level);
 		}
 
 		rank = target->GetBuildRank(MONK, RB_MNK_DIVINESURGE);
 		if (rank > 0) {
-			manaRegen += ceil(groupSize * rank * 0.04f * GetLevel());
+			manaRegen += floor(groupSize * rank * 0.028f * level);
 		}
 
-		rank = target->GetBuildRank(ENCHANTER, RB_SHD_ZEVFEERSFEAST);
+		rank = target->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST);
 		if (rank > 0) {
-			manaRegen += ceil(groupSize * rank * 0.04f * GetLevel());
+			manaRegen += floor(groupSize * rank * 0.028f * level);
 		}		
 	}
 	return manaRegen;
