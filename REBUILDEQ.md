@@ -12,6 +12,7 @@ We use 64bit version of binaries.
 * Cmake: run it. When it asks path, set it to root dir of rebuildeq. e.g. D:/code/go/src/github.com/xackery/rebuildeq
 * Cmake: set the where to build the binaries path to your root dir of rebuildeq/build.. e.g. D:/code/go/src/github.com/xackery/rebuildeq/build
 * Cmake: Hit Configure, be sure to set to Visual Studio 14 2015 Win64. Use native compilers (default option)
+* (IF ERROR ABOVE STEP): If you get an error noting it can't find a C compiler, you installed Visual Studio without actually installing C++. The fix is simply, start up visual studio 2015. Create a new project (C++) via the wizard. It'll download additional components (The C compiler), and when it's done, don't even bother saving the project, just hit configure again on cmake.
 * Cmake: While configures, you may get red background.. hit configure twice some times it'll go away, or let me know the error. USually lib boost dir not found
 * Cmake: Hit generate.
 * Extract the \rebuildeq\dependencies\protobuf\lib_x64\libprotobufd.zip into the directory. It's too big for github uncompressed, is why it's zipped.
