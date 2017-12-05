@@ -7356,7 +7356,7 @@ void Mob::CheckChannelChakra(int dmg) {
 int Mob::GetManaTapBonus(int dmg) {
 	if (!IsClient()) return 0;
 	if (GetClass() != SHAMAN && GetClass() != CLERIC && GetClass() != DRUID) return 0;
-	int manaBonus = floor(dmg * 0.1f);
+	int manaBonus = floor(dmg * 0.2f);
 	if (manaBonus < 1) manaBonus = 1;
 	return manaBonus;
 }
@@ -7720,7 +7720,6 @@ int Mob::DoBuildManaRegen() {
 	unsigned int gi = 0;
 
 	int groupSize = GetGroupSize(200) - 1;//GetGroupSize starts its size at 1 and iterates the member calling it as well, so -1
-	BuildEcho(StringFormat("Group Size for Mana Calc: %i", groupSize));
 	if (groupSize > 3) groupSize = 3;
 
 	for (; gi < MAX_GROUP_MEMBERS; gi++) {
@@ -7735,23 +7734,34 @@ int Mob::DoBuildManaRegen() {
 
 		rank = target->GetBuildRank(ENCHANTER, RB_ENC_TRANQUILITY);
 		if (rank > 0) {
+			int enchregen = ceil(groupSize * rank * 0.04f * level);
+			DebugEcho(StringFormat("%s's Tranquility %i provided %i mana regen.", target->GetCleanName(), rank, enchregen));
 			manaRegen += ceil(groupSize * rank * 0.04f * level); //12 regen per groupSize at 60
 		}
 
 		rank = target->GetBuildRank(ROGUE, RB_ROG_UNTAPPEDPOTENTIAL);
 		if (rank > 0) {
+			DebugEcho(StringFormat("%s's Untapped Potential %i provided %i mana regen.", target->GetCleanName(), rank, int(groupSize * rank * 0.019f * level)));
 			manaRegen += floor(groupSize * rank * 0.019f * level);
 		}
 
 		rank = target->GetBuildRank(MONK, RB_MNK_DIVINESURGE);
 		if (rank > 0) {
+			DebugEcho(StringFormat("%s's Divine Surge %i provided %i mana regen.", target->GetCleanName(), rank, int(groupSize * rank * 0.028f * level)));
 			manaRegen += floor(groupSize * rank * 0.028f * level);
 		}
 
 		rank = target->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST);
 		if (rank > 0) {
+			DebugEcho(StringFormat("%s's Zevfeer's Feast %i provided %i mana regen.", target->GetCleanName(), rank, int(groupSize * rank * 0.028f * level)));
 			manaRegen += floor(groupSize * rank * 0.028f * level);
-		}		
+		}
+
+		rank = target->GetBuildRank(BARD, RB_BRD_CASSINDRASSECRET);
+		if (rank > 0 && IsAffectedByBuff(745)) {
+			DebugEcho(StringFormat("%s's Cassindra's Secret %i provided %i mana regen.", target->GetCleanName(), rank, rank * 3));
+			manaRegen += rank * 3;
+		}
 	}
 	return manaRegen;
 }
