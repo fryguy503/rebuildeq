@@ -18,6 +18,7 @@
 
 #include "../common/global_define.h"
 #include "../common/eqemu_logsys.h"
+#include "../common/say_link.h"
 
 #include "../common/string_util.h"
 #include "quest_parser_collection.h"
@@ -574,6 +575,32 @@ bool Client::SummonItem(uint32 item_id, int16 charges, uint32 aug1, uint32 aug2,
 	}
 	else {
 		PutItemInInventory(to_slot, *inst, true);
+	}
+
+	//check if the item summoned is the client's epic and make an announcement
+	int itemid = inst->GetID();
+	if (itemid == 20542 ||	//bard
+		itemid == 5532  ||	//cleric
+		itemid == 20490 ||	//druid
+		itemid == 10650 ||	//enchanter
+		itemid == 19436 ||	//magician (spell to summon epic)
+		itemid == 10652 ||	//monk
+		itemid == 20544 ||	//necromancer
+		itemid == 10099 ||	//paladin
+		itemid == 20487 ||	//ranger - swiftwind
+		itemid == 20488 ||	//ranger - earthcaller
+		itemid == 11057 ||	//rogue
+		itemid == 14383 ||	//shadowknight
+		itemid == 10651 ||	//shaman
+		itemid == 10908 ||	//warrior
+		itemid == 14341 	//wizard
+		) {
+		EQEmu::SayLinkEngine linker;
+		linker.SetLinkType(EQEmu::saylink::SayLinkItemData);
+		linker.SetItemData(inst->GetItem());
+		std::string item_link;
+		item_link = linker.GenerateLink();
+		worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s has recieved their epic, %s!", GetCleanName(), item_link.c_str()).c_str());
 	}
 
 	safe_delete(inst);
