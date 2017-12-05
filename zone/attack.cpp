@@ -6311,7 +6311,6 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			hit.skill == EQEmu::skills::SkillTailRake ||
 			hit.skill == EQEmu::skills::SkillFlyingKick) {
 			Client *c = CastToClient();
-			c->DoDivineSurge(defender);
 
 			rank = GetBuildRank(MONK, RB_MNK_FAMILIARITY);
 			if (rank > 0 && defender->IsNPC()) {

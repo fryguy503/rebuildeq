@@ -300,11 +300,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							Client * casterClient = caster->CastToClient();
 							uint8 caster_level = casterClient->GetLevel();
 
-							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_ZEVFEERSFEAST);
-							if (rank > 0 && (spell_id == 341 || spell_id == 502 || spell_id == 445 || spell_id == 446 || spell_id == 525 || spell_id == 447)) {
-								casterClient->DoZevfeersFeast(this);
-							}
-
 							rank = casterClient->GetBuildRank(ROGUE, RB_ROG_MOSSSTONE);
 							if (rank > 0 && spell_id == 5225 && GetHPRatio() <= 20 && zone->random.Roll(20 * rank) && !HasSpellEffect(SE_MovementSpeed)) {
 								casterClient->Message(MT_NonMelee, "Moss Stone %u snares the target.", rank);
@@ -4337,16 +4332,6 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 			return;
 		}
 	}
-	int rank = 0;
-	if (caster != nullptr && buff.spellid == 745) {
-		rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASSECRET);
-		if (rank > 0) {
-			int manaAmount = rank * 2;
-			if (this == caster) BuildEcho(StringFormat("Cassindra's Secret %i gave %i mana.", rank, manaAmount));
-			entity_list.LogManaEvent(caster, this, manaAmount);
-			SetMana(GetMana() + manaAmount);
-		}
-	}
 
 	for (int i = 0; i < EFFECT_COUNT; i++) {
 		if (IsBlankSpellEffect(buff.spellid, i))
@@ -4377,6 +4362,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 				if (caster->IsClient()) {
 					Client* caster_client = caster->CastToClient();
+					int rank = 0;
 					int bonus_damage = 0;
 					rank = caster_client->GetBuildRank(NECROMANCER, RB_NEC_PACTOFHATE);
 					if (rank > 0 && (

@@ -329,7 +329,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Cassindra's Chorus";
-			$newSkill->desc = 'Mana effects on songs (lvl 20) are <em data-base="10">10</em>% more effective<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Mana effects on songs (lvl 20) are <em data-base="26">26</em>% more effective<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-cassindraschorus.png";	
 			$skills[6] = $newSkill;
 
@@ -347,7 +347,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Cassindra's Secret";
-			$newSkill->desc = 'Enhances Cassindra\'s Elegy (lvl 44) to also give <em data-base="2">2</em> mana<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Enhances Cassindra\'s Elegy (lvl 44) to also give <em data-base="3">3</em> mana<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-rizlonaspurpose.png";	
 			$skills[13] = $newSkill;
 
@@ -892,7 +892,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Tranquility";
-			$newSkill->desc = 'While in a group, you and your allies gain (group size * level * <em data-base="0.1">0.1</em>) mana regen per tick<span class="perLevel"> per rank</span>';
+			$newSkill->desc = 'While in a group, you and your allies gain (group size * level * <em data-base="0.04">0.04</em>) mana regen per tick, capped at maximum group size 3<span class="perLevel"> per rank</span>';
 			$newSkill->image = "/images/builds/icons/rb-enc-tranquility.png";
 			$skills[49] = $newSkill;
 
@@ -1127,7 +1127,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Surge";
-			$newSkill->desc = 'When you land Tiger Claw, Eagle Strike, Tail Whip or other special attacks, your group recovers <em data-base="2">2</em> mana within <em data-base="5">5</em>m<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While in a group, you and your allies gain (group size * level * <em data-base="0.028">0.028</em>) mana regen per tick, capped at maximum group size 3<span class="perLevel"> per rank</span>';
 			$newSkill->image = "/images/builds/icons/rb-mnk-divinesurge.png";
 			$skills[26] = $newSkill;
 
@@ -1521,7 +1521,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Untapped Potential";
-			$newSkill->desc = 'When you successfully pickpocket, your group recovers <em data-base="1">1</em>% of a target\'s max mana when within <em data-base="5">5</em>m<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While in a group, you and your allies gain (group size * level * <em data-base="0.019">0.019</em>) mana regen per tick, capped at maximum group size 3<span class="perLevel"> per rank</span>';
 			$newSkill->image = "/images/builds/icons/rb-rog-untappedpotential.png";
 			$skills[22] = $newSkill;
 
@@ -1797,7 +1797,7 @@ class Build {
 			
 			$newSkill = new stdClass();
 			$newSkill->title = "Zevfeer's Feast";
-			$newSkill->desc = 'When you use the Leech Touch AA, your group recover <em data-base="0.5">0.5</em>% of a target\'s max mana when within <em data-base="5">5</em>m<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While in a group, you and your allies gain (group size * level * <em data-base="0.028">0.028</em>) mana regen per tick, capped at maximum group size 3<span class="perLevel"> per rank</span>';
 			$newSkill->image = "/images/builds/icons/rb-shd-zevfeersfeast.png";	
 			$skills[8] = $newSkill;
 			

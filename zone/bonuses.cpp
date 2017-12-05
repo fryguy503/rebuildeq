@@ -1810,8 +1810,9 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 1287 || spell_id == 723 || spell_id == 1448 || spell_id == 1759 || spell_id == 2609 || spell_id == 1196)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASCHORUS);
 					if (rank > 0) {
-						if (this == caster) BuildEcho(StringFormat("Cassindra's Chorus increased ManaRegen from %i to %i.", rank, effect_value, effect_value + floor(rank * 0.1f * effect_value)));
-						effect_value += floor(rank * 0.1f * effect_value);
+						int with_build = effect_value + floor(rank * 0.26f * effect_value);
+						if (this == caster) BuildEcho(StringFormat("Cassindra's Chorus %i increased ManaRegen from %i to %i.", rank, effect_value, with_build));
+						effect_value += floor(rank * 0.26f * effect_value);
 					}
 				}
 				new_bonus->ManaRegen += effect_value;
@@ -1823,8 +1824,9 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 				if (caster != nullptr && (spell_id == 1287 || spell_id == 723 || spell_id == 1448 || spell_id == 1759 || spell_id == 2609 || spell_id == 1196)) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASCHORUS);
 					if (rank > 0) {
-						if (this == caster) BuildEcho(StringFormat("Cassindra's Chorus increased ManaRegen from %i to %i.", rank, effect_value, effect_value + floor(rank * 0.1f * effect_value)));
-						effect_value += floor(rank * 0.1f * effect_value);
+						int with_build = effect_value + floor(rank * 0.26f * effect_value);
+						if (this == caster) BuildEcho(StringFormat("Cassindra's Chorus %i increased ManaRegen from %i to %i.", rank, effect_value, with_build));
+						effect_value += floor(rank * 0.26f * effect_value);
 					}
 				}
 
