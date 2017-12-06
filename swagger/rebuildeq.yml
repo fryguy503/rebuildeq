@@ -36,11 +36,17 @@ paths:
           description: 'Validation exception'                      
         default:
           description: Unandled Error
-  /builds:    
+  /builds/{id}:    
     get:
       tags: ["Build"]
       description: Get all trained build points
       operationId: getSpentBuildPoints
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of character
+          type: string
       responses:
         200:
           description: '200 / OK'
