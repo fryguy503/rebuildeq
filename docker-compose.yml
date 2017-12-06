@@ -36,17 +36,14 @@ services:
       - "9000/udp"
       - "9080/udp"
   web:
+    image: nginx
     stdin_open: true
-    build: ./docker/web/.
-    volumes:
-      - "./deploy/web:/var/www"
-    links:
-      - mariadb
-      - nats
-    depends_on:
-      - mariadb
     ports:
       - "80:80"
+    volumes:
+      - "./deploy/www/:/usr/share/nginx/html"
+    expose:
+      - "80"
   nats:
     image: "nats:latest"
     ports:
