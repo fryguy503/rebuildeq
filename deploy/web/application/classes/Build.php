@@ -490,7 +490,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Mark of Karn";
-			$newSkill->desc = 'Healing an ally with a single target spell, while they target an enemy, will cause the target to be affected by the Mark of Karn, healing allies who hit the enemy, for 0 to <em data-base="1">1</em>ticks randomly.';
+			$newSkill->desc = 'Healing an ally with a single target spell, while they target an enemy, will cause the target to be affected by the Mark of Karn, healing allies who hit the enemy, for 1 to <em data-base="1">1</em>ticks randomly.';
 			$newSkill->image = "/images/builds/icons/rb-clr-piouszealot.png";
 			$skills[10] = $newSkill;
 
