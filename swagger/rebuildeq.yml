@@ -1,0 +1,330 @@
+swagger: "2.0"
+info:
+  description: "RebuildEQ API"
+  version: "1.0.0"
+  title: "RebuildEQ API"
+  termsOfService: "http://dilectus/terms.html"
+  contact:
+    email: "rebuildeq@gmail.com"
+  license:
+    name: "No real copyright"
+    url: "http://rebuildeq.com"
+host: "app.rebuildeq.com"
+basePath: "/"
+produces:
+  - application/json
+security:
+  - CompanyUserSecurity: []
+paths:
+  login:
+    get: 
+      tags: ["Authorization"]
+      summary: Log in to the system
+      operationId: login
+      parameters:
+        - in: query
+          name: key
+          required: true
+          description: Key to log in with
+          type: string
+      responses:
+        200:
+          description: 200 / OK
+          schema:
+            $ref: '#/definitions/LoginResponse'
+        400:
+          description: 400 / Bad Request
+        401:
+          description: '401 / Unauthorized, Invalid token'
+          schema:
+            $ref: '#/definitions/InvalidTokenError'
+        403:
+          description: 403 / Forbidden
+        404:
+          description: 404 / Page not found
+        500:
+          description: 500 / Internal server error
+        default:
+          description: Unknown Error
+  scheduling/:
+    get:      
+      tags:
+        - "Schedule"
+      summary: "List all schedules"      
+      operationId: listSchedule     
+      responses:
+        200:
+          description: 200 / OK
+          schema:
+            $ref: '#/definitions/Schedules'
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Schedule not found"
+        405:
+          description: "Validation exception"
+    post:
+      tags:
+        - "Schedule"
+      summary: "Create a scheduled event"
+      operationId: createSchedule
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Scheduling object with details of what to schedule"
+        required: true
+        schema:
+          $ref: "#/definitions/Schedule"
+      responses:
+        200:
+          description: Success!
+        400:
+          description: Invalid Input
+        404:
+          description: Not found
+        405:
+          description: "Invalid input"
+    put:
+      tags:
+        - "Schedule"
+      summary: "Update an existing scheduled event"
+      operationId: updateSchedule
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Scheduling object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Schedule"
+      responses:
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Schedule not found"
+        405:
+          description: "Validation exception"   
+  scheduling/{id}:       
+    get:
+      tags:
+        - "Schedule"
+      summary: "Get a schedule event by ID"      
+      operationId: getSchedule
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of schedule
+          type: string
+      responses:
+        200:
+          description: 200 / OK
+          schema:
+            $ref: '#/definitions/Schedule'
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "Schedule not found"
+        405:
+          description: "Validation exception"
+  calendar:
+    get:
+      tags:
+        - "calendar"
+      summary: "Get calendars provided"
+      operationId: getCalendar
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "emails to retrieve"
+        required: true
+        schema:
+          $ref: "#/definitions/CalendarListRequest"
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/Calendars'
+        400:
+          description: Invalid Input
+        404:
+          description: Not found
+        405:
+          description: "Invalid input"
+  user/{id}:    
+    get:
+      tags: 
+        - "user"
+      summary: "Get user by id"
+      operationId: getUser
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of user
+          type: string
+      responses:
+        200:
+          description: 200 / OK
+          schema:
+            $ref: '#/definitions/User'
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "User not found"
+        405:
+          description: "Validation exception"
+definitions:
+  CalendarListRequest:
+    type: object
+    properties:
+      emails:
+        type: array
+        items:
+          $ref: '#/definitions/Emails'       
+  Calendar:
+    type: object
+    properties:
+      email:
+        type: string
+        description: Email of owner of calendar
+        example: 
+          - test@test.com
+          - test2@test.com
+      events:
+        type: array
+        items:
+          $ref: '#/definitions/Events'
+  Calendars:
+    type: array
+    items:
+      $ref: '#/definitions/Calendar'
+  Email:
+    type: string
+    example: 'Test@here.com'
+  Emails:
+    type: array
+    items:
+      $ref: '#/definitions/Email'
+  Events:
+    type: array
+    items:
+      $ref: '#/definitions/Event'
+  Event:
+    type: object
+    properties:
+      title: 
+        type: string
+        description: Title of an event
+        example: Meeting at 5
+      subject:
+        type: string
+        description: Subject of an event
+        example: Meeting at 5 will be held
+      date:
+        type: string
+        description: date of an event
+        example: '2017-01-01 1pm'
+  InvalidTokenError:
+    properties:
+      errorDescription:
+        type: string
+      sessionId:
+        type: string
+      transactionId:
+        type: string
+    example:
+      errorDescription: 'ea: invalid token'
+      sessionId: 5738ea32-61b1-11e7-a8b9-0242ac110003
+      transactionId: 62c736af-ab9f-4c86-a480-f251a37e986e
+  LoginResponse:
+    properties:
+      sessionId:
+        type: string
+      transactionId:
+        type: string
+      token:
+        properties:
+          accessToken:
+            type: string
+          expiresIn:
+            type: string
+          tokenType:
+            type: string  
+  ScheduleListRequest:
+    type: object
+    properties:
+      limit: 
+        type: string
+        example: 1
+        description: Limit of how many results to return
+  Schedules:
+    type: array
+    items:
+      $ref: '#/definitions/Schedule'
+  Schedule:
+    type: object
+    required:
+    - "from_email"
+    - "to_email"
+    - "body"
+    properties:
+      from_email:
+        type: "string"
+        example: "from@here.com"
+      to_email:
+        type: "string"
+        example: "to@test.com"
+      body:
+        type: "string"
+        example: "Hello, please schedule me from 10am to 5pm 8/1/2017"
+      subject:
+        type: "string"
+        example: "Schedule an event"   
+  User:
+    type: object
+    properties:
+      id:
+        type: string
+        description: User ID
+      email:
+        type: string
+        description: Email for user
+        example: test@test.com
+securityDefinitions:
+  CompanyUserSecurity: 
+    type: oauth2
+    description: This API uses Oauth 2 with implicit grant flow. [More info](https://api.example.com/docs/auth)    
+    flow: accessCode
+    authorizationUrl: http://app.dilectus.co/authorization
+    tokenUrl: http://app.dilectus.co/token      
+    scopes:
+      user: User scope                
+  CompanyAdminSecurity:
+    type: oauth2
+    description: This API uses Oauth 2 with implicit grant flow. [More info](https://api.example.com/docs/auth)    
+    flow: accessCode
+    authorizationUrl: http://app.dilectus.co/authorization
+    tokenUrl: http://app.dilectus.co/token      
+    scopes:
+      admin: Admin scope
+  GlobalUserSecurity:
+    type: oauth2
+    description: This API uses Oauth 2 with implicit grant flow. [More info](https://api.example.com/docs/auth)    
+    flow: accessCode
+    authorizationUrl: http://app.dilectus.co/authorization
+    tokenUrl: http://app.dilectus.co/token      
+    scopes:
+      user: User scope
+      global: Global scope
+  GlobalAdminSecurity:
+    type: oauth2
+    description: This API uses Oauth 2 with implicit grant flow. [More info](https://api.example.com/docs/auth)    
+    flow: accessCode
+    authorizationUrl: http://app.dilectus.co/authorization
+    tokenUrl: http://app.dilectus.co/token      
+    scopes:
+      admin: Admin scope
+      global: Global scope      
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

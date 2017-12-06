@@ -1,4 +1,7 @@
 
+/tmp/
+/swagger/swagger-codegen/
+/swagger/out/
 
 #bin and build for temp build files
 bin/
