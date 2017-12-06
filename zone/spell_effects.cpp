@@ -264,19 +264,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								QuickBuff(this, 1547, duration);
 							}
 						}
-
-						rank = GetBuildRank(CLERIC, RB_CLR_MARKOFKARN);
-						if (rank > 0 && GetSpellTargetType(spell_id) == ST_Target) {
-							int duration = zone->random.Int(0, rank);
-							if (duration > 0 &&  //duration was greater than 0
-								GetTarget() != nullptr && //has a target
-								GetTarget()->IsNPC() && //is npc
-								CheckAggro(GetTarget()) //aggro'd with target
-								) {								
-								caster->BuildEcho(StringFormat("Mark of Karn %i applied to %s for %i ticks.", rank, GetTarget()->GetCleanName(), duration));
-								QuickBuff(GetTarget(), 1548, duration);
-							}
-						}
 					}
 				}
 

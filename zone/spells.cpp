@@ -2283,7 +2283,22 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 		}
 	}
 
-	
+	rank = GetBuildRank(CLERIC, RB_CLR_MARKOFKARN);
+	if (rank > 0 && IsClient() && spell_target->IsClient() &&//client is casting spell, has build trained
+		IsBeneficialSpell (spell_id) && //is beneficial
+		GetSpellTargetType(spell_id) == SpellTargetType::ST_Target && //the spell is single target
+		(GetSpellEffectIndex(spell_id, SE_CurrentHP) != -1 || GetSpellEffectIndex(spell_id, SE_HealOverTime) != -1) && //spell is heal/hot
+		spell_target != this && //not self
+		spell_target->GetTarget() != nullptr && //target has a target
+		spell_target->GetTarget()->IsNPC() &&   //target is an npc
+		spell_target->GetTarget()->CheckAggro(spell_target)   //target of target has agro on target
+		) {
+			int duration = zone->random.Int(0, rank);
+			if (duration < 1) { duration = 1; }
+			BuildEcho(StringFormat("Mark of Karn %i applied to %s for %i ticks.", rank, spell_target->GetTarget()->GetCleanName(), duration));
+			QuickBuff(spell_target->GetTarget(), 1548, duration);
+	}
+
 	// if a spell has the AEDuration flag, it becomes an AE on target
 	// spell that's recast every 2500 msec for AEDuration msec. There are
 	// spells of all kinds of target types that do this, strangely enough
