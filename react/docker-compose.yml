@@ -1,0 +1,14 @@
+version: '3'
+services:
+  react:
+    stdin_open: true
+    build: ./docker/react
+    volumes:
+      - ".:/app"
+    environment:
+      NODE_ENV: dev
+    ports:
+      - "35729:35729" # for live reload
+      #- "4000:80"
+    expose: 
+      - "35729"

@@ -2,6 +2,7 @@
 /tmp/
 /swagger/swagger-codegen/
 /swagger/out/
+react/node_modules/
 
 #bin and build for temp build files
 bin/
