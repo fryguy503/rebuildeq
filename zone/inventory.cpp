@@ -577,24 +577,6 @@ bool Client::SummonItem(uint32 item_id, int16 charges, uint32 aug1, uint32 aug2,
 		PutItemInInventory(to_slot, *inst, true);
 	}
 
-	//check if the item summoned is the client's epic and make an announcement
-	//not sure why the epicitem column was not included in the item info pulled from the database, to begin with
-	std::string query = StringFormat("SELECT `epicitem` FROM `items` WHERE `id` = '%i'", inst->GetID());
-
-	auto result = database.QueryDatabase(query);
-
-	if (result.Success()) {
-		auto row = result.begin();
-		if (atoi(row[0]) == 1 || (inst->GetID() == 19436 && inst->GetID() != 28034)) {	//mages summon their epic, we don't want to announc every time it's summoned
-			EQEmu::SayLinkEngine linker;
-			linker.SetLinkType(EQEmu::saylink::SayLinkItemData);
-			linker.SetItemData(inst->GetItem());
-			std::string item_link;
-			item_link = linker.GenerateLink();
-			worldserver.SendEmoteMessage(0, 0, MT_Broadcasts, StringFormat("%s has recieved their epic, %s!", GetCleanName(), item_link.c_str()).c_str());
-		}
-	}
-
 	safe_delete(inst);
 
 	// discover item and any augments
