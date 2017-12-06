@@ -52,10 +52,73 @@ var routes = Routes{
 	},
 
 	Route{
+		"GetSpentBuildPoints",
+		"GET",
+		"/builds",
+		GetSpentBuildPoints,
+	},
+
+	Route{
+		"TrainBuildPoint",
+		"PUT",
+		"/build/{id}",
+		TrainBuildPoint,
+	},
+
+	Route{
+		"GetChangelog",
+		"GET",
+		"/changelog/{id}",
+		GetChangelog,
+	},
+
+	Route{
+		"GetChangelogs",
+		"GET",
+		"/changelogs",
+		GetChangelogs,
+	},
+
+	Route{
+		"GetCharacter",
+		"GET",
+		"/character/{id}",
+		GetCharacter,
+	},
+
+	Route{
 		"GetCharacters",
 		"GET",
 		"/characters",
 		GetCharacters,
+	},
+
+	Route{
+		"GetInventory",
+		"GET",
+		"/inventory/{id}",
+		GetInventory,
+	},
+
+	Route{
+		"GetItem",
+		"GET",
+		"/item/{id}",
+		GetItem,
+	},
+
+	Route{
+		"GetNPC",
+		"GET",
+		"/npc/{id}",
+		GetNPC,
+	},
+
+	Route{
+		"GetZone",
+		"GET",
+		"/zone/{id}",
+		GetZone,
 	},
 
 }

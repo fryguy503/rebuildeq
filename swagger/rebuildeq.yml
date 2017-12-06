@@ -13,8 +13,181 @@ host: "app.rebuildeq.com"
 produces:
   - application/json
 paths:
+  /build/{id}:
+    put:
+      security:
+      - ApiKey: []
+      - Session: []
+      tags: ["Build"]
+      description: Train a build point
+      operationId: trainBuildPoint
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of build to be trained
+          type: string
+      responses:
+        200:
+          description: '200 / OK'
+        400:
+          description: 'Invalid build point request'
+        405:
+          description: 'Validation exception'                      
+        default:
+          description: Unandled Error
+  /builds:    
+    get:
+      tags: ["Build"]
+      description: Get all trained build points
+      operationId: getSpentBuildPoints
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            $ref: '#/definitions/BuildPoints'
+        default:
+          description: Unandled Error
+  /changelog/{id}:
+    get:
+      tags: ["Changelog"]
+      description: Get changelog by id
+      operationId: getChangelog
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of changelog
+          type: string
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            $ref: '#/definitions/Changelog'
+        default:
+          description: Unandled Error
+  /changelogs:
+    get:
+      tags: ["Changelog"]
+      description: Get listing of most recent changelog
+      operationId: getChangelogs
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            $ref: '#/definitions/Changelogs'
+        default:
+          description: Unandled Error
+  /character/{id}:
+    get:
+      security:
+      - ApiKey: []
+      - Session: []
+      tags: ["Character"]
+      description: Get information about a character
+      operationId: getCharacter
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of Character
+          type: string
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            $ref: '#/definitions/Character'
+        default:
+          description: Unhandled Error          
+  /characters:
+    get:
+      security:
+      - ApiKey: []
+      - Session: []
+      tags: ["Character"]
+      description: Get list of owned characters
+      operationId: getCharacters
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            $ref: '#/definitions/Characters'
+        default:
+          description: Unhandled Error
+  /inventory/{id}:
+    get:
+      tags: ["Inventory"]
+      description: Get inventory of character
+      operationId: getInventory
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of Character
+          type: string
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            $ref: '#/definitions/Inventory'
+        default:
+          description: Unhandled Error
+  /item/{id}:
+    get:
+      tags: ["Item"]
+      description: Get information about a specific item
+      operationId: getItem
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of Item
+          type: string
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            $ref: '#/definitions/Item'
+        default:
+          description: Unhandled Error
+  /npc/{id}:
+    get:
+      tags: ["NPC"]
+      description: Get information about a specific NPC
+      operationId: getNPC
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of NPC
+          type: string
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            $ref: '#/definitions/NPC'
+        default:
+          description: Unhandled Error
+  /zone/{id}:
+    get:
+      tags: ["Zone"]
+      description: Get information about a specific Zone
+      operationId: getZone
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of Zone
+          type: string
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            $ref: '#/definitions/Zone'
+        default:
+          description: Unhandled Error
   /login:
-    post: 
+    post:
       tags: ["Authorization"]
       description: Log in
       operationId: postLogin
@@ -32,19 +205,27 @@ paths:
             $ref: '#/definitions/LoginResponse'        
         default:
           description: Unhandled Error
-  /characters:
-    get:
-      tags: ["Character"]
-      description: Get list of characters
-      operationId: getCharacters
-      responses:
-        200:
-          description: '200 / OK'
-          schema:
-            $ref: '#/definitions/Characters'
-        default:
-          description: Unhandled Error
-definitions:
+definitions:  
+  BuildPoints:
+    type: object
+    properties:
+      build:
+        type: string
+        example: '5550500505'
+  Changelog:
+    type: object
+    properties:
+      title: 
+        type: string
+        example: 'Nerfed some class'
+      date:
+        type: string
+        description: Date the change applied
+        example: '2017-01-01 01:02:03'  
+  Changelogs:
+    type: array
+    items: 
+      $ref: '#/definitions/Changelog'
   Character:
     type: object
     properties:
@@ -58,6 +239,19 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/Character'
+  Item:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Cloth Shirt
+      id:
+        type: integer
+        example: 1001
+  Inventory:
+    type: array
+    items:
+      $ref: '#/definitions/Item'
   LoginRequest:
     properties:
       username:
@@ -72,6 +266,25 @@ definitions:
         type: string
       expiresIn:
         type: string  
+  NPC:
+    properties:
+      name:
+        type: string
+        example: Orc Pawn
+      id:
+        type: integer
+        example: 100111
+  Zone:
+    properties:
+      name:
+        type: string
+        example: The Overthere
+      shortname:
+        type: string
+        example: overthere
+      id:
+        type: integer
+        example: 101   
 securityDefinitions:
   ApiKey:
     type: apiKey

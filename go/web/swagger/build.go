@@ -4,16 +4,16 @@ import (
 	"net/http"
 )
 
-type Character struct {
+type Build struct {
 
 }
 
-func GetCharacter(w http.ResponseWriter, r *http.Request) {
+func GetSpentBuildPoints(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusOK)
 }
 
-func GetCharacters(w http.ResponseWriter, r *http.Request) {
+func TrainBuildPoint(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusOK)
 }

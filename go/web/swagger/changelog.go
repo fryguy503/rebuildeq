@@ -4,16 +4,16 @@ import (
 	"net/http"
 )
 
-type Character struct {
+type Changelog struct {
 
 }
 
-func GetCharacter(w http.ResponseWriter, r *http.Request) {
+func GetChangelog(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusOK)
 }
 
-func GetCharacters(w http.ResponseWriter, r *http.Request) {
+func GetChangelogs(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(http.StatusOK)
 }
