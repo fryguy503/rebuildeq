@@ -1,10 +1,9 @@
-package main
+package swagger 
 
 import (
 	"net/http"
-
+	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/xackery/rebuildeq/go/web/swagger"
 )
 
 type Route struct {
@@ -16,23 +15,27 @@ type Route struct {
 
 type Routes []Route
 
-//Apply new routes based on override
-func ApplyRoutes(router *mux.Router) {
-	if router == nil {
-		return
-	}
+func NewRouter() *mux.Router {
+	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range routes {
 		var handler http.Handler
 		handler = route.HandlerFunc
-		handler = swagger.Logger(handler, route.Name)
-		r := router.GetRoute(route.Name)
-		r.Handler(handler)
-		//fmt.Println("overrode " + route.Name)
+		handler = Logger(handler, route.Name)
+
+		router.
+			Methods(route.Method).
+			Path(route.Pattern).
+			Name(route.Name).
+			Handler(handler)
 	}
-	return
+
+	return router
 }
 
-//Define routes you want to override here
+func Index(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hello World!")
+}
+
 var routes = Routes{
 	Route{
 		"Index",
@@ -54,4 +57,5 @@ var routes = Routes{
 		"/characters",
 		GetCharacters,
 	},
+
 }
