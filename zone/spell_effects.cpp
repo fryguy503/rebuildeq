@@ -440,16 +440,11 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							// Elixir of Might
 							// NOTE: This must be done after extra damage from Chosen has been calculated.
 							rank = casterClient->GetBuildRank(PALADIN, RB_PAL_ELIXIROFMIGHT);
-							if ((spell_id == 2729 || spell_id == 823) && rank > 0) {								
-								static const float TriggerChance = 0.05f;		// 5% chance per rank (25% max)
-								static const float BaseHealth = 0.1;			// 10% per rank (50% max)
-								static const float BaseMana = 2;				// 2 mana per rank. (10 max)
-
-								int healAmount = rank * BaseHealth * dmg;
-								int manaAmount = rank * BaseMana;
+							if ((spell_id == 2729 || spell_id == 823) && rank > 0) {
+								int healAmount = -floor(rank * 0.1f * dmg);
+								int manaAmount = rank * 2;
 								if (healAmount < 1) healAmount = 1;
 								if (manaAmount < 1) manaAmount = 1;
-
 								casterClient->BuildEcho(StringFormat("Elixir of Might %u gifted %i health and %i mana.", rank, healAmount, manaAmount));
 
 								casterClient->HealDamage(healAmount, caster);
