@@ -4843,7 +4843,7 @@ void command_buff(Client *c, const Seperator *sep) {
 
 		if (c->HasPet()) {
 			target = c->GetPet();
-			if (level < 39) target->QuickBuff(target, 144, duration); //regeneration 38
+			if (level < 39 && level > 34) target->QuickBuff(target, 144, duration); //regeneration 38
 			else if (level < 52) target->QuickBuff(target, 145, duration); //chloro 51
 			else target->QuickBuff(target, 1568, duration); //regrowth 52+
 
