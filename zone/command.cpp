@@ -175,6 +175,7 @@ int command_init(void)
 		command_add("refer", "- Refer-a-friend reward system", 0, command_refer) ||
 		command_add("camerashake",  "Shakes the camera on everyone's screen globally.",  80, command_camerashake) ||
 		command_add("castspell", "[spellid] - Cast a spell", 50, command_castspell) ||
+		command_add("changefaction", "[faction number] [value] - Add or remove faction to you or your target player", 100, command_changefaction) ||
 		command_add("chat", "[channel num] [message] - Send a channel message to all zones", 200, command_chat) ||
 		command_add("checklos", "- Check for line of sight to your target", 50, command_checklos) ||
 		command_add("clearinvsnapshots", "[use rule] - Clear inventory snapshot history (true - elapsed entries, false - all entries)", 200, command_clearinvsnapshots) ||
@@ -1870,6 +1871,7 @@ void command_stats(Client *c, const Seperator *sep)
 	c->Message(0, "NPC Stats:");
 	c->Message(0, "Name: %s   NpcID: %u", c->GetTarget()->GetName(), c->GetTarget()->GetNPCTypeID());
 	c->Message(0, "Race: %i  Level: %i  Class: %i  Material: %i", c->GetTarget()->GetRace(), c->GetTarget()->GetLevel(), c->GetTarget()->GetClass(), c->GetTarget()->GetTexture());
+	c->Message(0, "Faction: %i", target->GetPrimaryFaction());
 	c->Message(0, "HP: %i, AC: %i", target->GetMaxHP(), target->GetAC());
 	c->Message(0, "STR: %i, DEX: %i", target->GetSTR(), target->GetAGI());
 	c->Message(0, "Min: %i, Max: %i, Delay: %i", target->CastToNPC()->GetMinDamage(), target->CastToNPC()->GetMaxDamage(), target->CastToNPC()->GetAttackDelay());
@@ -5421,6 +5423,24 @@ void command_setxp(Client *c, const Seperator *sep)
 	}
 	else
 		c->Message(0, "Usage: #setxp number");
+}
+
+void command_changefaction(Client *c, const Seperator *sep)
+{
+	Client *t = c;
+
+	if (c->GetTarget() && c->GetTarget()->IsClient()) {
+		t = c->GetTarget()->CastToClient();
+	}
+	if (sep->IsNumber(1) && sep->IsNumber(2)) {
+		if (atoi(sep->arg[1]) < 1)
+			c->Message(0, "Error: Value not a faction");
+		else
+			t->SetFactionLevel2(t->GetID(), atoi(sep->arg[1]), 0, 0, 0, atoi(sep->arg[2]), 0);
+	}
+	else {
+		c->Message(0, "Usage: #addfaction FactionNumber FactionAmount");
+	}
 }
 
 void command_setpvppoints(Client *c, const Seperator *sep)
