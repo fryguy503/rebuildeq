@@ -4805,9 +4805,9 @@ void command_buff(Client *c, const Seperator *sep) {
 		}
 		duration *= 10;
 
-		if (level < 35) target->QuickBuff(target, 144, duration); //regeneration 34
-		else if (level < 50) target->QuickBuff(target, 145, duration); //chloro 42
-		else target->QuickBuff(target, 1568, duration); //regrowuth 54
+		if (level < 39) target->QuickBuff(target, 144, duration); //regeneration 38
+		else if (level < 52) target->QuickBuff(target, 145, duration); //chloro 51
+		else target->QuickBuff(target, 1568, duration); //regrowth 52+
 
 		if (level < 10) target->QuickBuff(target, 26, duration); //skin like wood 1
 		else if (level < 20) target->QuickBuff(target, 2511, duration); //prot of wood 9
@@ -4843,9 +4843,9 @@ void command_buff(Client *c, const Seperator *sep) {
 
 		if (c->HasPet()) {
 			target = c->GetPet();
-			if (level < 35 && level > 34) target->QuickBuff(target, 144, duration); //regeneration 34
-			else if (level < 50) target->QuickBuff(target, 145, duration); //chloro 42
-			else target->QuickBuff(target, 1568, duration); //regrowuth 54
+			if (level < 39 && level > 34) target->QuickBuff(target, 144, duration); //regeneration 38
+			else if (level < 52) target->QuickBuff(target, 145, duration); //chloro 51
+			else target->QuickBuff(target, 1568, duration); //regrowth 52+
 
 			if (level < 10) target->QuickBuff(target, 26, duration); //skin like wood 1
 			else if (level < 20) target->QuickBuff(target, 2511, duration); //prot of wood 9
