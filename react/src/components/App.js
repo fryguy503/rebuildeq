@@ -11,7 +11,7 @@ const App = () => (
   	<Navigation />    
   	<div id="wrapper">
 	  	<BreadCrumb />
-	  	<div id="content">
+	  	<div className="content">
 	    	<Main />
 	    </div>
 	    <Footer />

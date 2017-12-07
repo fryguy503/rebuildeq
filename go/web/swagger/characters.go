@@ -10,11 +10,5 @@
 
 package swagger
 
-type Zone struct {
-
-	Name string `json:"name,omitempty"`
-
-	Shortname string `json:"shortname,omitempty"`
-
-	Id int32 `json:"id,omitempty"`
+type Characters struct {
 }

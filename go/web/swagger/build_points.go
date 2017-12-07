@@ -10,11 +10,7 @@
 
 package swagger
 
-type Zone struct {
+type BuildPoints struct {
 
-	Name string `json:"name,omitempty"`
-
-	Shortname string `json:"shortname,omitempty"`
-
-	Id int32 `json:"id,omitempty"`
+	Build string `json:"build,omitempty"`
 }

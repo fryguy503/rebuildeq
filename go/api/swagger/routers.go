@@ -54,7 +54,7 @@ var routes = Routes{
 	Route{
 		"GetSpentBuildPoints",
 		"GET",
-		"/builds",
+		"/builds/{id}",
 		GetSpentBuildPoints,
 	},
 

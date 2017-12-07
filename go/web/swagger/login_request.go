@@ -10,11 +10,9 @@
 
 package swagger
 
-type Zone struct {
+type LoginRequest struct {
 
-	Name string `json:"name,omitempty"`
+	Username string `json:"username,omitempty"`
 
-	Shortname string `json:"shortname,omitempty"`
-
-	Id int32 `json:"id,omitempty"`
+	Password string `json:"password,omitempty"`
 }

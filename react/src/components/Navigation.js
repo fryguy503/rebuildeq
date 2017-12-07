@@ -37,10 +37,10 @@ const Navigation = () => (
         </div>
 
         <ul className="nav" id="side-menu">
-	        <li><a><span className="nav-label"><Link to='/'>Home</Link></span></a></li>
-	        <li><a><span className="nav-label"><Link to='/cards'>Cards</Link></span></a></li>
-	        <li><a><span className="nav-label"><Link to='/roster'>Roster</Link></span></a></li>
-	        <li><a><span className="nav-label"><Link to='/schedule'>Schedule</Link></span></a></li>
+	        <li><Link to='/'><span className="nav-label">Home</span></Link></li>
+	        <li><Link to='/cards'><span className="nav-label">Cards</span></Link></li>
+	        <li><Link to='/roster'><span className="nav-label">Roster</span></Link></li>
+	        <li><Link to='/schedule'><span className="nav-label">Schedule</span></Link></li>
         </ul>
     </div>
 </aside>
