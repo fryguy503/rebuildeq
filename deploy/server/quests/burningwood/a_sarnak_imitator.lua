@@ -32,6 +32,7 @@ function event_trade(e)
 		e.other:Faction(342,30);
 		e.other:AddEXP(1500000);
 		e.other:SummonItem(10650);
+		eq.world_emote(269, "" ..e.other:GetName() .." received the epic weapon, " .. eq.item_link(10650) .. "!");
 	end
 	item_lib.return_items(e.self, e.other, e.trade)
 end

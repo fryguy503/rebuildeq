@@ -16,6 +16,8 @@ sub EVENT_ITEM {
     if (plugin::check_handin(\%itemcount, 14384 => 1)) { #Lhranc's Token
       quest::say("Very good, I will go deliver this right away.");
       quest::summonitem(14383); #Innoruuk's Curse
+      my $itemLink = quest::varlink(14383);
+      quest::we(15, "$name received the epic weapon, $itemLink!");
       quest::depop();
     }
   }

@@ -35,6 +35,7 @@ function event_trade(e)
 	if(item_lib.check_turn_in(e.trade, {item1 = 29010, item2 = 11050})) then
 		e.self:Emote("screams so loudly it echoes across the valley as the mark and flames of your holy sword touch his rotted bones. As his body twists he quiets and then speaks. 'Your selflessness has made it possible to redeem my honor. With the cleansing of my corruption your own soul has been strengthened. Your power comes from your devotion to your god and with this you have been rewarded. Remember always your purity, devotion, and why you have sacrificed. I must go now to sacrifice myself upon the spear of pain.'");
 		e.other:SummonItem(10099); --fiery defender
+		eq.world_emote(269, "" ..e.other:GetName() .." received the epic weapon, " .. eq.item_link(10099) .. "!");
 	end
 	item_lib.return_items(e.self, e.other, e.trade)
 end
