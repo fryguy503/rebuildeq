@@ -1104,10 +1104,12 @@ int Mob::GetWeaponDamage(Mob *against, const EQEmu::ItemData *weapon_item) {
 		if (weapon_item) {
 			if (weapon_item->BaneDmgBody == against->GetBodyType()) {
 				banedmg += weapon_item->BaneDmgAmt;
+				DebugEcho(StringFormat("You caused %i BodyType bane damage", banedmg));
 			}
 
 			if (weapon_item->BaneDmgRace == against->GetRace()) {
 				banedmg += weapon_item->BaneDmgRaceAmt;
+				DebugEcho(StringFormat("You caused %i Racial bane damage", banedmg));
 			}
 		}
 
@@ -1124,10 +1126,12 @@ int Mob::GetWeaponDamage(Mob *against, const EQEmu::ItemData *weapon_item) {
 		if (weapon_item) {
 			if (weapon_item->BaneDmgBody == against->GetBodyType()) {
 				banedmg += weapon_item->BaneDmgAmt;
+				DebugEcho(StringFormat("Added %i BodyType bane damage", banedmg));
 			}
 
 			if (weapon_item->BaneDmgRace == against->GetRace()) {
 				banedmg += weapon_item->BaneDmgRaceAmt;
+				DebugEcho(StringFormat("Added %i Racial bane damage", banedmg));
 			}
 		}
 
@@ -1250,6 +1254,8 @@ int Mob::GetWeaponDamage(Mob *against, const EQEmu::ItemInstance *weapon_item, u
 			banedmg += rank;
 		}
 	}
+
+	DebugEcho(StringFormat("Added %i bane damage", banedmg));
 
 	if (against->GetSpecialAbility(IMMUNE_MELEE_EXCEPT_BANE)) {
 		if (!banedmg) {
