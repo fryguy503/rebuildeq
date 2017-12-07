@@ -1312,7 +1312,7 @@ int32 Client::CalcManaRegen(bool bCombat)
 		regen += RestRegenMana;
 	}
 
-	regen += DoTranquilityRegen();
+	regen += DoBuildManaRegen();
 	regen += spellbonuses.ManaRegen; // TODO: live does this in buff tick
 	return (regen * RuleI(Character, ManaRegenMultiplier) / 100);
 }
