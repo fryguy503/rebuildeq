@@ -175,7 +175,7 @@ int command_init(void)
 		command_add("refer", "- Refer-a-friend reward system", 0, command_refer) ||
 		command_add("camerashake",  "Shakes the camera on everyone's screen globally.",  80, command_camerashake) ||
 		command_add("castspell", "[spellid] - Cast a spell", 50, command_castspell) ||
-		command_add("changefaction", "[faction number] [value] - Add or remove faction to you or your target player", 100, command_changefaction) ||
+		command_add("changefaction", "[faction number] [value] - Add or remove faction to you or your target player", 250, command_changefaction) ||
 		command_add("chat", "[channel num] [message] - Send a channel message to all zones", 200, command_chat) ||
 		command_add("checklos", "- Check for line of sight to your target", 50, command_checklos) ||
 		command_add("clearinvsnapshots", "[use rule] - Clear inventory snapshot history (true - elapsed entries, false - all entries)", 200, command_clearinvsnapshots) ||
