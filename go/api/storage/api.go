@@ -5,5 +5,5 @@ import (
 )
 
 type Api interface {
-	GetCharacters() *client.Character
+	GetCharacters() (characters []*client.Character, err error)
 }

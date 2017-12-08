@@ -241,6 +241,9 @@ definitions:
       id:
         type: integer
         example: 666123
+      zoneid:
+        type: integer
+        example: 123
   Characters:
     type: array
     items:

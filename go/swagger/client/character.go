@@ -15,4 +15,6 @@ type Character struct {
 	Name string `json:"name,omitempty"`
 
 	Id int32 `json:"id,omitempty"`
+
+	Zoneid int32 `json:"zoneid,omitempty"`
 }

@@ -69,8 +69,8 @@ cd ..
 
 echo "Copying all files (minus index.html) to ${outdir}interactive/..."
 for f in dist/* ; do 
-	if [ -f "$f" ] && "$f" != "dist/interactive/index.html" ]; then
-		cp $f dist/interactive/
+	if [ -f "$f" ] && "$f" != "${outdir}/interactive/index.html" ]; then
+		cp $f {$outdir}/interactive/
 		echo $f...
 	fi
 done
