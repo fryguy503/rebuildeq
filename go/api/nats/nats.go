@@ -10,11 +10,14 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/nats-io/go-nats"
+	"github.com/xackery/rebuildeq/go/api/storage"
 	"github.com/xackery/rebuildeq/go/eqproto"
 )
 
-func StartServer() (err error) {
+var api storage.Api
 
+func StartServer(a storage.Api) (err error) {
+	api = a
 	var nc *nats.Conn
 	if nc, err = nats.Connect(nats.DefaultURL); err != nil {
 		return

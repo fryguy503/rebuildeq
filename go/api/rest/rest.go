@@ -5,13 +5,16 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/xackery/rebuildeq/go/api/rest/swagger"
+	"github.com/xackery/rebuildeq/go/api/storage"
+	"github.com/xackery/rebuildeq/go/swagger/server"
 )
 
-func StartServer() {
-	log.Println("Started server")
+var api storage.Api
 
-	router := swagger.NewRouter()
+func StartServer(a storage.Api) {
+	log.Println("Started server")
+	api = a
+	router := server.NewRouter()
 	ApplyRoutes(router)
 
 	log.Fatal(http.ListenAndServe(":8901", router))

@@ -5,11 +5,13 @@ import (
 
 	"github.com/xackery/rebuildeq/go/api/nats"
 	"github.com/xackery/rebuildeq/go/api/rest"
+	"github.com/xackery/rebuildeq/go/api/storage/mariadb"
 )
 
 func main() {
-	go rest.StartServer()
-	go nats.StartServer()
+	api := &mariadb.Api{}
+	go rest.StartServer(api)
+	go nats.StartServer(api)
 	log.Println("started")
 	select {}
 }

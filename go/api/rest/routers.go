@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/xackery/rebuildeq/go/api/rest/swagger"
+	"github.com/xackery/rebuildeq/go/swagger/server"
 )
 
 type Route struct {
@@ -24,7 +24,7 @@ func ApplyRoutes(router *mux.Router) {
 	for _, route := range routes {
 		var handler http.Handler
 		handler = route.HandlerFunc
-		handler = swagger.Logger(handler, route.Name)
+		handler = server.Logger(handler, route.Name)
 		r := router.GetRoute(route.Name)
 		r.Handler(handler)
 		//fmt.Println("overrode " + route.Name)

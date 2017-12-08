@@ -3,19 +3,14 @@ package main
 import (
 	"fmt"
 
-	"github.com/xackery/rebuildeq/go/web/swagger"
+	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
 func main() {
-	cfg := &swagger.Configuration{
+	cfg := &client.Configuration{
 		Host: "localhost:8901",
 	}
 
-	api := swagger.NewAPIClient(cfg)
-	api.ItemApi
-	//api.InventoryApi.
+	api := client.NewAPIClient(cfg)
 	fmt.Println(api)
-	//http.ListenAndServe(":8080", static.Handler)
-	//fmt.Println("Started")
-	//select {}
 }
