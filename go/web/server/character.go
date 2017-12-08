@@ -3,11 +3,15 @@ package server
 import (
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func GetCharacter(w http.ResponseWriter, r *http.Request) {
 
-	character, resp, err := api.CharacterApi.GetCharacter(nil, "661778")
+	vars := mux.Vars(r)
+
+	character, resp, err := api.CharacterApi.GetCharacter(nil, vars["id"])
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)
