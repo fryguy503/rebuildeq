@@ -17,7 +17,7 @@ func (s *Storage) GetNPC(npcId int) (npc *client.Npc, err error) {
 		return
 	}
 	npc = &client.Npc{}
-	err = s.db.Get(npc, `SELECT nt.id, nt.name
+	err = s.db.Get(npc, `SELECT nt.id, nt.name, nt.loottable_id loottableid
 		FROM npc_types nt
 		WHERE nt.id = ? LIMIT 1`, npcId)
 	if err != nil {
@@ -40,10 +40,46 @@ func (s *Storage) GetNPC(npcId int) (npc *client.Npc, err error) {
 		}
 
 		npc.SpawnsIn = append(npc.SpawnsIn, se)
-		//characters = append(characters, &c)
+	}
+
+	type LootDrops struct {
+		Probability int32
+		Lootdropid  int32
+		Loottableid int32
+		Itemid      int32
+		Charges     int32
+		Chance      float32
 	}
 
 	//Get drops
+	rows, err = s.db.Queryx(`SELECT lt.probability, lt.loottable_id loottableid, lt.lootdrop_id lootdropid, ld.item_charges charges, ld.item_id itemid, ld.chance
+		FROM loottable_entries lt
+		INNER JOIN lootdrop_entries ld ON ld.lootdrop_id = lt.lootdrop_id	
+		WHERE lt.loottable_id = ? GROUP BY lt.loottable_id, lt.lootdrop_id`, npc.LootTableId)
+	if err != nil {
+		return
+	}
+
+	lte := client.LootTableEntry{
+		LootTableId: npc.LootTableId,
+	}
+
+	for rows.Next() {
+		ld := LootDrops{}
+		if err = rows.StructScan(&ld); err != nil {
+			return
+		}
+
+		lte.Probability = ld.Probability
+		lde := client.LootDropEntry{
+			ItemId:      ld.Itemid,
+			LootDropId:  ld.Lootdropid,
+			ItemCharges: ld.Charges,
+			Chance:      ld.Chance,
+		}
+		lte.LootDrops = append(lte.LootDrops, lde)
+	}
+	npc.LootTableEntry = &lte
 
 	return
 }

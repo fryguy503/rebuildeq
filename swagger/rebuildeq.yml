@@ -295,10 +295,35 @@ definitions:
       id:
         type: integer
         example: 100111
+      lootTableId:
+        type: integer
+        example: 123
       spawnsIn:
         type: array
         items:
           $ref: '#/definitions/SpawnEntry'
+      lootTableEntry:        
+        $ref: '#/definitions/LootTableEntry'
+  LootTableEntry:
+    properties:
+      lootDrops:      
+        type: array
+        items:
+          $ref: '#/definitions/LootDropEntry'      
+      probability:
+        type: integer
+      lootTableId:
+        type: integer
+  LootDropEntry:
+    properties:
+      lootDropId:
+        type: integer
+      itemId:
+        type: integer
+      itemCharges:
+        type: integer
+      chance:
+        type: number
   SpawnEntry:
     properties:
       chance:

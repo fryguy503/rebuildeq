@@ -42,6 +42,8 @@ Class | Method | HTTP request | Description
  - [Item](docs/Item.md)
  - [LoginRequest](docs/LoginRequest.md)
  - [LoginResponse](docs/LoginResponse.md)
+ - [LootDropEntry](docs/LootDropEntry.md)
+ - [LootTableEntry](docs/LootTableEntry.md)
  - [Npc](docs/Npc.md)
  - [SpawnEntry](docs/SpawnEntry.md)
  - [Zone](docs/Zone.md)

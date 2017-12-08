@@ -10,15 +10,11 @@
 
 package client
 
-type Npc struct {
+type LootTableEntry struct {
 
-	Name string `json:"name,omitempty"`
+	LootDrops []LootDropEntry `json:"lootDrops,omitempty"`
 
-	Id int32 `json:"id,omitempty"`
+	Probability int32 `json:"probability,omitempty"`
 
 	LootTableId int32 `json:"lootTableId,omitempty"`
-
-	SpawnsIn []SpawnEntry `json:"spawnsIn,omitempty"`
-
-	LootTableEntry *LootTableEntry `json:"lootTableEntry,omitempty"`
 }
