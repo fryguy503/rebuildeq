@@ -4,15 +4,24 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
+
+	"github.com/gorilla/mux"
 )
 
-func GetCharacters(w http.ResponseWriter, r *http.Request) {
+func GetNPC(w http.ResponseWriter, r *http.Request) {
 	var err error
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-
-	c, err := api.GetCharacters(74887)
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		log.Printf("Failed to get characters: %s\n", err.Error())
+		http.Error(w, err.Error(), http.StatusExpectationFailed)
+		return
+	}
+
+	c, err := api.GetNpc(id)
+	if err != nil {
+		log.Printf("Failed to get npc: %s\n", err.Error())
 		http.Error(w, err.Error(), http.StatusExpectationFailed)
 		return
 	}

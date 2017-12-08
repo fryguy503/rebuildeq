@@ -61,4 +61,11 @@ var routes = Routes{
 		"/zone/{id}",
 		GetZone,
 	},
+
+	Route{
+		"GetNPC",
+		"GET",
+		"/npc/{id}",
+		GetNPC,
+	},
 }
