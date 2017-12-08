@@ -94,14 +94,14 @@ func (a *ChangelogApiService) GetChangelog(ctx context.Context, id string) (Chan
 /* ChangelogApiService 
  Get listing of most recent changelog
  * @param ctx context.Context for authentication, logging, tracing, etc.
- @return Changelogs*/
-func (a *ChangelogApiService) GetChangelogs(ctx context.Context) (Changelogs,  *http.Response, error) {
+ @return []Changelog*/
+func (a *ChangelogApiService) GetChangelogs(ctx context.Context) ([]Changelog,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
 		localVarFileName string
 		localVarFileBytes []byte
-	 	successPayload  Changelogs
+	 	successPayload  []Changelog
 	)
 
 	// create path and map variables

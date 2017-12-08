@@ -9,7 +9,9 @@ import (
 	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
-var api *client.APIClient
+var (
+	api *client.APIClient
+)
 
 type Route struct {
 	Name        string
@@ -21,10 +23,8 @@ type Route struct {
 type Routes []Route
 
 func StartServer() {
-	cfg := &client.Configuration{
-		Host: "localhost:8901",
-	}
-
+	cfg := client.NewConfiguration()
+	cfg.BasePath = "http://127.0.0.1:8901"
 	api = client.NewAPIClient(cfg)
 	router := NewRouter()
 	router.StrictSlash(false)
@@ -81,6 +81,13 @@ var routes = Routes{
 		"GET",
 		"/character/{id}",
 		GetCharacter,
+	},
+
+	Route{
+		"GetCharacters",
+		"GET",
+		"/characters",
+		GetCharacters,
 	},
 
 	Route{

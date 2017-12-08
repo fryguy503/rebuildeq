@@ -118,14 +118,14 @@ func (a *CharacterApiService) GetCharacter(ctx context.Context, id string) (Char
 /* CharacterApiService 
  Get list of owned characters
  * @param ctx context.Context for authentication, logging, tracing, etc.
- @return Characters*/
-func (a *CharacterApiService) GetCharacters(ctx context.Context) (Characters,  *http.Response, error) {
+ @return []Character*/
+func (a *CharacterApiService) GetCharacters(ctx context.Context) ([]Character,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
 		localVarFileName string
 		localVarFileBytes []byte
-	 	successPayload  Characters
+	 	successPayload  []Character
 	)
 
 	// create path and map variables

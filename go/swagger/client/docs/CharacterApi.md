@@ -37,7 +37,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **GetCharacters**
-> Characters GetCharacters(ctx, )
+> []Character GetCharacters(ctx, )
 
 
 Get list of owned characters
@@ -47,7 +47,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**Characters**](Characters.md)
+[**[]Character**](Character.md)
 
 ### Authorization
 

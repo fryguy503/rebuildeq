@@ -37,7 +37,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **GetChangelogs**
-> Changelogs GetChangelogs(ctx, )
+> []Changelog GetChangelogs(ctx, )
 
 
 Get listing of most recent changelog
@@ -47,7 +47,7 @@ This endpoint does not need any parameter.
 
 ### Return type
 
-[**Changelogs**](Changelogs.md)
+[**[]Changelog**](Changelog.md)
 
 ### Authorization
 
