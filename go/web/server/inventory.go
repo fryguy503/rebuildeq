@@ -23,6 +23,19 @@ func GetInventory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	character, resp, err := api.CharacterApi.GetCharacter(nil, vars["id"])
+	if err != nil {
+		//TODO: Handle errors more gracefully
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("Failed", err.Error())
+		return
+	}
+	if resp.StatusCode != 200 {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("Invalid status code", err.Error())
+		return
+	}
+
 	tmp := getTemplate("")
 	if tmp == nil {
 
@@ -50,10 +63,12 @@ func GetInventory(w http.ResponseWriter, r *http.Request) {
 	type Content struct {
 		Site      Site
 		Inventory interface{}
+		Character interface{}
 	}
 	content := Content{
 		Site:      site,
 		Inventory: inventory,
+		Character: character,
 	}
 
 	w.WriteHeader(http.StatusOK)

@@ -199,7 +199,7 @@
                 </ol>
             </div>
             <h2 class="font-light m-b-xs">
-                Tables design
+                {{.Character.Name}}
             </h2>
             <small>Examples of various designs of tables.</small>
         </div>
@@ -234,7 +234,7 @@
                     <tr>
                         <td>{{$value.Icon}}</td>
                         <td>{{$value.Slot}}</td>
-                        <td><a href="/character/{{$value.Id}}">{{$value.Name}}</a></td>
+                        <td><a href="/item/{{$value.Id}}">{{$value.Name}}</a></td>
                         <td>{{$value.Id}}</td>
                         
                     </tr>
