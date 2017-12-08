@@ -16,10 +16,10 @@ func (s *Storage) GetInventory(characterId int) (inventory []*client.Item, err e
 		err = fmt.Errorf("Invalid character id: %d", characterId)
 		return
 	}
-	rows, err := s.db.Queryx(`SELECT itemid id, items.name
+	rows, err := s.db.Queryx(`SELECT itemid id, items.name, inventory.charges, inventory.slotid slot, items.icon
 		FROM inventory 
 		INNER JOIN items on items.id = inventory.itemid
-		WHERE charid = ?`, characterId)
+		WHERE charid = ? LIMIT 1`, characterId)
 	if err != nil {
 		return
 	}

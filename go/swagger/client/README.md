@@ -43,6 +43,7 @@ Class | Method | HTTP request | Description
  - [LoginRequest](docs/LoginRequest.md)
  - [LoginResponse](docs/LoginResponse.md)
  - [Npc](docs/Npc.md)
+ - [SpawnEntry](docs/SpawnEntry.md)
  - [Zone](docs/Zone.md)
 
 

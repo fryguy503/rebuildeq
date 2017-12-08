@@ -15,4 +15,13 @@ type Item struct {
 	Name string `json:"name,omitempty"`
 
 	Id int32 `json:"id,omitempty"`
+
+	// Icon to display for art reasons
+	Icon int32 `json:"icon,omitempty"`
+
+	// Used by inventory, which slot the item is at
+	Slot int32 `json:"slot,omitempty"`
+
+	// Used by inventory, how many charges of the item
+	Charges int32 `json:"charges,omitempty"`
 }

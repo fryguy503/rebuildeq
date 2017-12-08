@@ -260,7 +260,19 @@ definitions:
         example: Cloth Shirt
       id:
         type: integer
-        example: 1001  
+        example: 1001
+      icon:
+        type: integer
+        example: 101
+        description: Icon to display for art reasons
+      slot:
+        type: integer
+        example: 21
+        description: Used by inventory, which slot the item is at
+      charges:
+        type: integer
+        example: 2
+        description: Used by inventory, how many charges of the item
   LoginRequest:
     properties:
       username:
@@ -283,6 +295,36 @@ definitions:
       id:
         type: integer
         example: 100111
+      spawnsIn:
+        type: array
+        items:
+          $ref: '#/definitions/SpawnEntry'
+  SpawnEntry:
+    properties:
+      chance:
+        type: integer
+        example: 50
+        description: 50 is 50% chance
+      respawnTime:
+        type: integer
+        example: 640
+        description: number of seconds for mob to respawn
+      variance:
+        type: integer
+        example: 120
+        description: variance is a randomizer to make respawn less predictable
+      x:
+        type: number
+      y:
+        type: number
+      z:
+        type: number
+      zoneName:
+        type: string
+      zoneShortName:
+        type: string
+      zoneId:
+        type: integer        
   Zone:
     properties:
       name:

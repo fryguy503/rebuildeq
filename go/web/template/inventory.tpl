@@ -223,6 +223,8 @@
                 <table cellpadding="1" cellspacing="1" class="table">
                     <thead>
                     <tr>
+                        <th>Icon</th>
+                        <th>Slot</th>
                         <th>Name</th>
                         <th>ItemID</th>                        
                     </tr>
@@ -230,7 +232,8 @@
                     <tbody>
                     {{range $key, $value := .Inventory}}
                     <tr>
-                        
+                        <td>{{$value.Icon}}</td>
+                        <td>{{$value.Slot}}</td>
                         <td><a href="/character/{{$value.Id}}">{{$value.Name}}</a></td>
                         <td>{{$value.Id}}</td>
                         

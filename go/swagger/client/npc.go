@@ -15,4 +15,6 @@ type Npc struct {
 	Name string `json:"name,omitempty"`
 
 	Id int32 `json:"id,omitempty"`
+
+	SpawnsIn []SpawnEntry `json:"spawnsIn,omitempty"`
 }
