@@ -17,7 +17,7 @@ func (s *Storage) GetChangelog(changelogId int) (changelog *client.Changelog, er
 		return
 	}
 	changelog = &client.Changelog{}
-	err = s.db.Get(changelog, `SELECT title, date
+	err = s.db.Get(changelog, `SELECT title, date, id, body
 		FROM changelog 
 		WHERE id = ?`, changelogId)
 	if err != nil {
@@ -33,7 +33,7 @@ func (s *Storage) GetChangelogs() (changelogs []*client.Changelog, err error) {
 			return
 		}
 	}
-	rows, err := s.db.Queryx(`SELECT title, date
+	rows, err := s.db.Queryx(`SELECT title, date, id, body
 		FROM changelog 
 		ORDER BY date DESC LIMIT 5`)
 	if err != nil {

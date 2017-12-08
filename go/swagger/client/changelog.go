@@ -12,7 +12,11 @@ package client
 
 type Changelog struct {
 
+	Id int32 `json:"id,omitempty"`
+
 	Title string `json:"title,omitempty"`
+
+	Body string `json:"body,omitempty"`
 
 	// Date the change applied
 	Date string `json:"date,omitempty"`

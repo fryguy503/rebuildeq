@@ -225,9 +225,15 @@ definitions:
   Changelog:
     type: object
     properties:
+      id:
+        type: integer
+        example: 123
       title: 
         type: string
         example: 'Nerfed some class'
+      body:
+        type: string
+        example: '* Did something that is worth putting in changelog'
       date:
         type: string
         description: Date the change applied

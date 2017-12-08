@@ -33,6 +33,12 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 			log.Println("failed to load template", tErr.Error())
 			return
 		}
+		newTmp, tErr = loadTemplate(newTmp, "navmenu", "navmenu.tpl")
+		if tErr != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			log.Println("failed to load template", tErr.Error())
+			return
+		}
 		newTmp, tErr = loadTemplate(newTmp, "root", "root.tpl")
 		if tErr != nil {
 			w.WriteHeader(http.StatusInternalServerError)
