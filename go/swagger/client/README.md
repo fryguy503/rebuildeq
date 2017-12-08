@@ -39,7 +39,6 @@ Class | Method | HTTP request | Description
  - [BuildPoints](docs/BuildPoints.md)
  - [Changelog](docs/Changelog.md)
  - [Character](docs/Character.md)
- - [Inventory](docs/Inventory.md)
  - [Item](docs/Item.md)
  - [LoginRequest](docs/LoginRequest.md)
  - [LoginResponse](docs/LoginResponse.md)

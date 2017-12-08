@@ -139,7 +139,9 @@ paths:
         200:
           description: '200 / OK'
           schema:
-            $ref: '#/definitions/Inventory'
+            type: array
+            items:
+              $ref: '#/definitions/Item'
         default:
           description: Unhandled Error
   /item/{id}:
@@ -258,11 +260,7 @@ definitions:
         example: Cloth Shirt
       id:
         type: integer
-        example: 1001
-  Inventory:
-    type: array
-    items:
-      $ref: '#/definitions/Item'
+        example: 1001  
   LoginRequest:
     properties:
       username:

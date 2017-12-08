@@ -31,14 +31,14 @@ type InventoryApiService service
  Get inventory of character
  * @param ctx context.Context for authentication, logging, tracing, etc.
  @param id ID of Character
- @return Inventory*/
-func (a *InventoryApiService) GetInventory(ctx context.Context, id string) (Inventory,  *http.Response, error) {
+ @return []Item*/
+func (a *InventoryApiService) GetInventory(ctx context.Context, id string) ([]Item,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
 		localVarFileName string
 		localVarFileBytes []byte
-	 	successPayload  Inventory
+	 	successPayload  []Item
 	)
 
 	// create path and map variables

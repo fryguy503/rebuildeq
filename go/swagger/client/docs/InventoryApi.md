@@ -8,7 +8,7 @@ Method | HTTP request | Description
 
 
 # **GetInventory**
-> Inventory GetInventory(ctx, id)
+> []Item GetInventory(ctx, id)
 
 
 Get inventory of character
@@ -22,7 +22,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**Inventory**](Inventory.md)
+[**[]Item**](Item.md)
 
 ### Authorization
 
