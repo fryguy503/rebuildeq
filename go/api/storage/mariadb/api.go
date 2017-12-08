@@ -22,16 +22,19 @@ func (a *Api) Initialize() (err error) {
 	return
 }
 
-func (a *Api) GetCharacters() (characters []*client.Character, err error) {
+func (a *Api) GetCharacters(accountId int) (characters []*client.Character, err error) {
 	if a.db == nil {
 		if err = a.Initialize(); err != nil {
 			return
 		}
 	}
-	id := 74887
+	if accountId == 0 {
+		err = fmt.Errorf("Invalid account id: %d", accountId)
+		return
+	}
 	rows, err := a.db.Queryx(`SELECT id, name, zone_id zoneid 
 		FROM character_data 
-		WHERE account_id = ?`, id)
+		WHERE account_id = ?`, accountId)
 	if err != nil {
 		return
 	}
@@ -44,5 +47,26 @@ func (a *Api) GetCharacters() (characters []*client.Character, err error) {
 		log.Println("Test:", c.Name)
 		characters = append(characters, &c)
 	}
+	return
+}
+
+func (a *Api) GetZone(zoneId int) (zone *client.Zone, err error) {
+	if a.db == nil {
+		if err = a.Initialize(); err != nil {
+			return
+		}
+	}
+	if zoneId == 0 {
+		err = fmt.Errorf("Invalid zone id: %d", zoneId)
+		return
+	}
+	zone = &client.Zone{}
+	err = a.db.Get(zone, `SELECT id, long_name name, short_name shortname 
+		FROM zone 
+		WHERE id = ?`, zoneId)
+	if err != nil {
+		return
+	}
+
 	return
 }

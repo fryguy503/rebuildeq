@@ -7,10 +7,10 @@ import (
 	"net/http"
 )
 
-func GetCharacters(w http.ResponseWriter, r *http.Request) {
+func GetZone(w http.ResponseWriter, r *http.Request) {
 	var err error
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	c, err := api.GetCharacters(74887)
+	c, err := api.GetZone(1)
 	if err != nil {
 		log.Printf("Failed to get characters: %s\n", err.Error())
 		http.Error(w, err.Error(), http.StatusExpectationFailed)

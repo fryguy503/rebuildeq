@@ -5,5 +5,6 @@ import (
 )
 
 type Api interface {
-	GetCharacters() (characters []*client.Character, err error)
+	GetCharacters(accountId int) (characters []*client.Character, err error)
+	GetZone(zoneId int) (zone *client.Zone, err error)
 }

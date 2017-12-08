@@ -54,4 +54,11 @@ var routes = Routes{
 		"/characters",
 		GetCharacters,
 	},
+
+	Route{
+		"GetZone",
+		"GET",
+		"/zone/{id}",
+		GetZone,
+	},
 }

@@ -21,5 +21,5 @@ func StartServer(a storage.Api) {
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World 2!")
+	fmt.Fprintf(w, "Please contact Shin on discord to learn more about the API.")
 }
