@@ -1,10 +1,10 @@
-package main
+package rest
 
 import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"github.com/xackery/rebuildeq/go/web/swagger"
+	"github.com/xackery/rebuildeq/go/api/rest/swagger"
 )
 
 type Route struct {

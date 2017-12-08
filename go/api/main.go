@@ -1,23 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"net/http"
 
-	"github.com/xackery/rebuildeq/go/web/swagger"
+	"github.com/xackery/rebuildeq/go/api/nats"
+	"github.com/xackery/rebuildeq/go/api/rest"
 )
 
 func main() {
-	log.Println("Started server")
-
-	router := swagger.NewRouter()
-	ApplyRoutes(router)
-
-	log.Fatal(http.ListenAndServe(":8901", router))
-
-}
-
-func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World 2!")
+	go rest.StartServer()
+	go nats.StartServer()
+	log.Println("started")
+	select {}
 }
