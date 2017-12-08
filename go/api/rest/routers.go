@@ -89,4 +89,18 @@ var routes = Routes{
 		"/inventory/{id}",
 		GetInventory,
 	},
+
+	Route{
+		"GetChangelog",
+		"GET",
+		"/changelog/{id}",
+		GetChangelog,
+	},
+
+	Route{
+		"GetChangelogs",
+		"GET",
+		"/changelogs",
+		GetChangelogs,
+	},
 }
