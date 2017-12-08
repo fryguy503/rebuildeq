@@ -56,6 +56,13 @@ var routes = Routes{
 	},
 
 	Route{
+		"GetCharacter",
+		"GET",
+		"/character/{id}",
+		GetCharacter,
+	},
+
+	Route{
 		"GetZone",
 		"GET",
 		"/zone/{id}",
@@ -74,5 +81,12 @@ var routes = Routes{
 		"GET",
 		"/item/{id}",
 		GetItem,
+	},
+
+	Route{
+		"GetInventory",
+		"GET",
+		"/inventory/{id}",
+		GetInventory,
 	},
 }

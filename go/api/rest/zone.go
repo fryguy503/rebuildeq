@@ -22,7 +22,7 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 
 	c, err := api.GetZone(id)
 	if err != nil {
-		log.Printf("Failed to get characters: %s\n", err.Error())
+		log.Printf("Failed to get zone: %s\n", err.Error())
 		http.Error(w, err.Error(), http.StatusExpectationFailed)
 		return
 	}

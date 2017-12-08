@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetItem(w http.ResponseWriter, r *http.Request) {
+func GetInventory(w http.ResponseWriter, r *http.Request) {
 	var err error
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	vars := mux.Vars(r)
@@ -19,15 +19,15 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c, err := api.GetItem(id)
+	i, err := api.GetInventory(id)
 	if err != nil {
-		log.Printf("Failed to get item: %s\n", err.Error())
+		log.Printf("Failed to get inventory: %s\n", err.Error())
 		http.Error(w, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 
 	js := []byte{}
-	if js, err = json.Marshal(c); err != nil {
+	if js, err = json.Marshal(i); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
