@@ -13,4 +13,6 @@ type Storage interface {
 	GetItem(itemId int) (zone *client.Item, err error)
 	GetInventory(characterId int) (inventory []*client.Item, err error)
 	GetNPC(npcId int) (npc *client.Npc, err error)
+	UpdateBuild(characterId int, buildPoints *client.BuildPoints) (err error)
+	GetSpentBuildPoints(characterId int) (buildPoints *client.BuildPoints, err error)
 }

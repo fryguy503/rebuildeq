@@ -103,4 +103,18 @@ var routes = Routes{
 		"/changelogs",
 		GetChangelogs,
 	},
+
+	Route{
+		"GetSpentBuildPoints",
+		"GET",
+		"/builds/{id}",
+		GetSpentBuildPoints,
+	},
+
+	Route{
+		"TrainBuildPoint",
+		"PUT",
+		"/build/{id}",
+		TrainBuildPoint,
+	},
 }
