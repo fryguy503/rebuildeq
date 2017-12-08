@@ -8,7 +8,6 @@ import (
 )
 
 func GetCharacter(w http.ResponseWriter, r *http.Request) {
-
 	vars := mux.Vars(r)
 
 	character, resp, err := api.CharacterApi.GetCharacter(nil, vars["id"])
@@ -24,7 +23,7 @@ func GetCharacter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tmp := getTemplate("character")
+	tmp := getTemplate("")
 	if tmp == nil {
 
 		newTmp, tErr := loadTemplate(nil, "body", "character.tpl")
@@ -51,8 +50,17 @@ func GetCharacter(w http.ResponseWriter, r *http.Request) {
 		tmp = newTmp
 	}
 
+	type Content struct {
+		Site      Site
+		Character interface{}
+	}
+	content := Content{
+		Site:      site,
+		Character: character,
+	}
+
 	w.WriteHeader(http.StatusOK)
-	if err = tmp.Execute(w, character); err != nil {
+	if err = tmp.Execute(w, content); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Println("Template rendering error", err.Error())
 		return
@@ -99,9 +107,16 @@ func GetCharacters(w http.ResponseWriter, r *http.Request) {
 		setTemplate("characters", newTmp)
 		tmp = newTmp
 	}
-
+	type Content struct {
+		Site       Site
+		Characters interface{}
+	}
+	content := Content{
+		Site:       site,
+		Characters: characters,
+	}
 	w.WriteHeader(http.StatusOK)
-	if err = tmp.Execute(w, characters); err != nil {
+	if err = tmp.Execute(w, content); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Println("Template rendering error", err.Error())
 		return

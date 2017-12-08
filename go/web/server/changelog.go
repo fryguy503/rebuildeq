@@ -48,9 +48,16 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 		setTemplate("changelog", newTmp)
 		tmp = newTmp
 	}
-
+	type Content struct {
+		Site      Site
+		Changelog interface{}
+	}
+	content := Content{
+		Site:      site,
+		Changelog: changelog,
+	}
 	w.WriteHeader(http.StatusOK)
-	if err = tmp.Execute(w, changelog); err != nil {
+	if err = tmp.Execute(w, content); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Println("Template rendering error", err.Error())
 		return
@@ -97,9 +104,17 @@ func GetChangelogs(w http.ResponseWriter, r *http.Request) {
 		setTemplate("changelogs", newTmp)
 		tmp = newTmp
 	}
+	type Content struct {
+		Site       Site
+		Changelogs interface{}
+	}
+	content := Content{
+		Site:       site,
+		Changelogs: changelogs,
+	}
 
 	w.WriteHeader(http.StatusOK)
-	if err = tmp.Execute(w, changelogs); err != nil {
+	if err = tmp.Execute(w, content); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Println("Template rendering error", err.Error())
 		return

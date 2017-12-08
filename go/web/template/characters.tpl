@@ -229,7 +229,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {{range $key, $value := .}}
+                    {{range $key, $value := .Characters}}
                     <tr>
                         
                         <td><a href="/character/{{$value.Id}}">{{$value.Name}}</a></td>

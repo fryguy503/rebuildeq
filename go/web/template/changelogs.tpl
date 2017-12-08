@@ -239,7 +239,7 @@
         General topics
     </div>
 
-    {{range $key, $value := .}}
+    {{range $key, $value := .Changelogs}}
     <div class="panel-body">
         <div class="row">
             <div class="col-md-1">

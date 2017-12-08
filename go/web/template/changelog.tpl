@@ -387,8 +387,8 @@
             </div>
         </div>
         <div class="media-body">
-            <h5>{{.Title}}</h5>
-            {{.Body}}
+            <h5>{{.Changelog.Title}}</h5>
+            {{.Changelog.Body}}
         </div>
     </div>
 </div>

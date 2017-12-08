@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -10,7 +9,8 @@ import (
 )
 
 var (
-	api *client.APIClient
+	api  *client.APIClient
+	site Site
 )
 
 //Global variables loaded to most templates
@@ -34,13 +34,9 @@ func StartServer() {
 	api = client.NewAPIClient(cfg)
 	router := NewRouter()
 	router.StrictSlash(false)
+	site.Title = "RebuildEQ"
 
 	log.Fatal(http.ListenAndServe(":8080", router))
-}
-
-func Index(w http.ResponseWriter, r *http.Request) {
-
-	fmt.Fprintf(w, "Please contact Shin on discord to learn more about the API.")
 }
 
 func NewRouter() *mux.Router {

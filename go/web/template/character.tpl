@@ -220,8 +220,8 @@
                     </div>
                 </div>
                 <img alt="logo" class="img-circle m-b m-t-md" src="/images/profile.jpg">
-                <h3><a href="/profile.html">{{.Name}}</a></h3>
-                <div class="text-muted font-bold m-b-xs">{{.Zoneid}}</div>
+                <h3><a href="/profile.html">{{.Character.Name}}</a></h3>
+                <div class="text-muted font-bold m-b-xs">{{.Character.Zoneid}}</div>
                 <p>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan.
                 </p>

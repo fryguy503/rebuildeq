@@ -220,10 +220,10 @@
                     </div>
                 </div>
                 <img alt="logo" class="img-circle m-b m-t-md" src="/images/profile.jpg">
-                <h3><a href="/profile.html">{{.Name}}</a></h3>
-                <div class="text-muted font-bold m-b-xs">{{.Shortname}}</div>
+                <h3><a href="/profile.html">{{.Zone.Name}}</a></h3>
+                <div class="text-muted font-bold m-b-xs">{{.Zone.Shortname}}</div>
                 <p>
-                    {{.Id}}
+                    {{.Zone.Id}}
                 </p>
                 <div class="progress m-t-xs full progress-small">
                     <div style="width: 65%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="65" role="progressbar" class=" progress-bar progress-bar-success">

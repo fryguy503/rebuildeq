@@ -48,9 +48,17 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 		setTemplate("zone", newTmp)
 		tmp = newTmp
 	}
+	type Content struct {
+		Site Site
+		Zone interface{}
+	}
+	content := Content{
+		Site: site,
+		Zone: zone,
+	}
 
 	w.WriteHeader(http.StatusOK)
-	if err = tmp.Execute(w, zone); err != nil {
+	if err = tmp.Execute(w, content); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Println("Template rendering error", err.Error())
 		return
