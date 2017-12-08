@@ -6,9 +6,9 @@ import (
 	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
-func (a *Api) GetZone(zoneId int) (zone *client.Zone, err error) {
-	if a.db == nil {
-		if err = a.Initialize(); err != nil {
+func (s *Storage) GetZone(zoneId int) (zone *client.Zone, err error) {
+	if s.db == nil {
+		if err = s.Initialize(); err != nil {
 			return
 		}
 	}
@@ -17,7 +17,7 @@ func (a *Api) GetZone(zoneId int) (zone *client.Zone, err error) {
 		return
 	}
 	zone = &client.Zone{}
-	err = a.db.Get(zone, `SELECT id, long_name name, short_name shortname 
+	err = s.db.Get(zone, `SELECT id, long_name name, short_name shortname 
 		FROM zone 
 		WHERE id = ?`, zoneId)
 	if err != nil {

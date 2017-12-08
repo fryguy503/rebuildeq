@@ -9,9 +9,9 @@ import (
 )
 
 func main() {
-	api := &mariadb.Api{}
-	go rest.StartServer(api)
-	go nats.StartServer(api)
+	storage := &mariadb.Storage{}
+	go rest.StartServer(storage)
+	go nats.StartServer(storage)
 	log.Println("started")
 	select {}
 }

@@ -6,9 +6,9 @@ import (
 	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
-func (a *Api) GetNpc(npcId int) (npc *client.Npc, err error) {
-	if a.db == nil {
-		if err = a.Initialize(); err != nil {
+func (s *Storage) GetNPC(npcId int) (npc *client.Npc, err error) {
+	if s.db == nil {
+		if err = s.Initialize(); err != nil {
 			return
 		}
 	}
@@ -17,7 +17,7 @@ func (a *Api) GetNpc(npcId int) (npc *client.Npc, err error) {
 		return
 	}
 	npc = &client.Npc{}
-	err = a.db.Get(npc, `SELECT id, name
+	err = s.db.Get(npc, `SELECT id, name
 		FROM npc_types 
 		WHERE id = ?`, npcId)
 	if err != nil {

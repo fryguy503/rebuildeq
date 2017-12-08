@@ -9,11 +9,11 @@ import (
 	"github.com/xackery/rebuildeq/go/swagger/server"
 )
 
-var api storage.Api
+var api storage.Storage
 
-func StartServer(a storage.Api) {
+func StartServer(s storage.Storage) {
 	log.Println("Started server")
-	api = a
+	api = s
 	router := server.NewRouter()
 	ApplyRoutes(router)
 

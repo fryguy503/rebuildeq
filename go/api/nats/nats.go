@@ -14,10 +14,10 @@ import (
 	"github.com/xackery/rebuildeq/go/eqproto"
 )
 
-var api storage.Api
+var api storage.Storage
 
-func StartServer(a storage.Api) (err error) {
-	api = a
+func StartServer(s storage.Storage) (err error) {
+	api = s
 	var nc *nats.Conn
 	if nc, err = nats.Connect(nats.DefaultURL); err != nil {
 		return

@@ -6,9 +6,9 @@ import (
 	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
-func (a *Api) GetCharacters(accountId int) (characters []*client.Character, err error) {
-	if a.db == nil {
-		if err = a.Initialize(); err != nil {
+func (s *Storage) GetCharacters(accountId int) (characters []*client.Character, err error) {
+	if s.db == nil {
+		if err = s.Initialize(); err != nil {
 			return
 		}
 	}
@@ -16,7 +16,7 @@ func (a *Api) GetCharacters(accountId int) (characters []*client.Character, err 
 		err = fmt.Errorf("Invalid account id: %d", accountId)
 		return
 	}
-	rows, err := a.db.Queryx(`SELECT id, name, zone_id zoneid 
+	rows, err := s.db.Queryx(`SELECT id, name, zone_id zoneid 
 		FROM character_data 
 		WHERE account_id = ?`, accountId)
 	if err != nil {

@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetNPC(w http.ResponseWriter, r *http.Request) {
+func GetItem(w http.ResponseWriter, r *http.Request) {
 	var err error
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	vars := mux.Vars(r)
@@ -19,7 +19,7 @@ func GetNPC(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c, err := api.GetNPC(id)
+	c, err := api.GetItem(id)
 	if err != nil {
 		log.Printf("Failed to get npc: %s\n", err.Error())
 		http.Error(w, err.Error(), http.StatusExpectationFailed)

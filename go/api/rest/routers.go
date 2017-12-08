@@ -68,4 +68,11 @@ var routes = Routes{
 		"/npc/{id}",
 		GetNPC,
 	},
+
+	Route{
+		"GetItem",
+		"GET",
+		"/item/{id}",
+		GetItem,
+	},
 }
