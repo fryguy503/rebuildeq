@@ -950,7 +950,39 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 		if (rb_rank) {
 			aai->spell_refresh = rank->recast_time - (rb_rank * 30);
 		}
-	}
+		rb_rank = GetBuildRank(BARD, RB_BRD_KINSONG);
+		if (rb_rank) {
+			aai->spell_refresh = rank->recast_time - (30 * rb_rank);
+		}
+		rb_rank = GetBuildRank(DRUID, RB_DRU_NATURESBLIGHT);
+		if (rb_rank) {
+			aai->spell_refresh = (rank->recast_time / 2) - (10 * rb_rank);
+		}
+		rb_rank = GetBuildRank(MONK, RB_MNK_GRACEOFTHEORDER);
+		if (rb_rank) {
+			aai->spell_refresh = rank->recast_time - (30 * rb_rank);
+		}
+		rb_rank = GetBuildRank(NECROMANCER, RB_NEC_SERVANTOFBLOOD);
+		if (rb_rank) {
+			aai->spell_refresh = rank->recast_time - (30 * rb_rank);
+		}
+		rb_rank = GetBuildRank(PALADIN, RB_PAL_FLAMESOFREDEMPTION);
+		if (rb_rank) {
+			aai->spell_refresh = rank->recast_time - (30 * rb_rank);
+		}
+		rb_rank = GetBuildRank(ROGUE, RB_ROG_ASSASSINSTAINT);
+		if (rb_rank) {
+			aai->spell_refresh = rank->recast_time - (30 * rb_rank);
+		}
+		rb_rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_REAPERSSTRIKE);
+		if (rb_rank) {
+			aai->spell_refresh = rank->recast_time - (30 * rb_rank);
+		}
+		rb_rank = GetBuildRank(SHAMAN, RB_SHM_FATESEERSBOON);
+		if (rb_rank) {
+			aai->spell_refresh = rank->recast_time - (30 * rb_rank);
+		}
+	} 
 	
 	aai->classes = ability->classes;
 	aai->level_req = rank->level_req;
