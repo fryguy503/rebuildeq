@@ -2294,9 +2294,11 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 		spell_target->GetTarget()->CheckAggro(spell_target)   //target of target has agro on target
 		) {
 			int duration = zone->random.Int(0, rank);
-			if (duration < 1) { duration = 1; }
-			BuildEcho(StringFormat("Mark of Karn %i applied to %s for %i ticks.", rank, spell_target->GetTarget()->GetCleanName(), duration));
-			QuickBuff(spell_target->GetTarget(), 1548, duration);
+			if (duration < 1) { BuildEcho(StringFormat("Mark of Karn %i applied to %s for %i ticks.", rank, spell_target->GetTarget()->GetCleanName(), duration)); }
+			else {
+				BuildEcho(StringFormat("Mark of Karn %i applied to %s for %i ticks.", rank, spell_target->GetTarget()->GetCleanName(), duration));
+				QuickBuff(spell_target->GetTarget(), 1548, duration);
+			}
 	}
 
 	// if a spell has the AEDuration flag, it becomes an AE on target
