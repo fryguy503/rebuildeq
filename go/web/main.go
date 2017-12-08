@@ -1,16 +1,10 @@
 package main
 
 import (
-	"fmt"
-
-	"github.com/xackery/rebuildeq/go/swagger/client"
+	"github.com/xackery/rebuildeq/go/web/server"
 )
 
 func main() {
-	cfg := &client.Configuration{
-		Host: "localhost:8901",
-	}
-
-	api := client.NewAPIClient(cfg)
-	fmt.Println(api)
+	go server.StartServer()
+	select {}
 }
