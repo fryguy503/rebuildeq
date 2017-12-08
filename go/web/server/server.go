@@ -13,6 +13,11 @@ var (
 	api *client.APIClient
 )
 
+//Global variables loaded to most templates
+type Site struct {
+	Title string //Title of site
+}
+
 type Route struct {
 	Name        string
 	Method      string
@@ -23,6 +28,7 @@ type Route struct {
 type Routes []Route
 
 func StartServer() {
+
 	cfg := client.NewConfiguration()
 	cfg.BasePath = "http://127.0.0.1:8901"
 	api = client.NewAPIClient(cfg)
@@ -50,6 +56,8 @@ func NewRouter() *mux.Router {
 			Name(route.Name).
 			Handler(handler)
 	}
+
+	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("www"))))
 
 	return router
 }
