@@ -521,9 +521,17 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							// Ancient Wrath
 							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_ANCIENTWRATH);
 							if (rank > 0 && caster != this) { // Ancient Wrath does not affect spells cast on self.
-								int bonus = floor(dmg * 0.1f * rank * -1);
+								int bonus = floor(dmg * 0.075f * rank * -1);
 								casterClient->BuildEcho(StringFormat("Ancient Wrath %u added %i bonus damage.", rank, bonus));
 								dmg -= bonus;
+							}
+
+							// Spiritual Wrath
+							rank = casterClient->GetBuildRank(SHAMAN, RB_SHM_SPIRITUALWRATH);
+							if (rank > 0 && casterClient->HasPet() && caster != this) {
+								 int bonus = floor(effect_value * 0.025f * rank * -1); //use effect_value so we dont double dib with RB_SHM_ANCIENTWRATH
+								 casterClient->BuildEcho(StringFormat("Spiritual Wrath %u added %i bonus damage.", rank, bonus));
+								 dmg -= bonus;
 							}
 
 							// Elemental Alacrity

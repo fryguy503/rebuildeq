@@ -1691,7 +1691,7 @@ class Build {
 			//38
 			$newSkill = new stdClass();
 			$newSkill->title = "Ancient Wrath";
-			$newSkill->desc = 'All direct damage spells now deal <em data-base="10">10</em>% more damage as well as <em data-base="1">1</em>% chance to critical hit<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'All direct damage spells now deal <em data-base="7.5">7.5</em>% more damage as well as <em data-base="1">1</em>% chance to critical hit<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shm-ancientwrath.png";
 			$skills[28] = $newSkill;
 			
@@ -1733,7 +1733,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Spiritual Wrath";
-			$newSkill->desc = 'Grants the Spiritual Wrath AA, attacking your target<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'While you have an active pet, all direct damage spells now deal <em data-base="2.5">2.5</em>% more damage.';
 			$newSkill->image = "/images/builds/icons/rb-shm-spiritualwrath.png";
 			$skills[44] = $newSkill;
 
