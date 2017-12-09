@@ -502,7 +502,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Divine Avatar";
-			$newSkill->desc = 'Grants the Divine Avatar AA, allowing a cleric many statistic bonuses and a <em data-base="10">10</em>% chance dodge and longer duration <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Passively grants a <em data-base="10">10</em>% increased chance to dodge as well as the Divine Avatar AA, allowing the cleric many statistic bonuses and longer duration <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-clr-divineavatar.png";	
 			$skills[16] = $newSkill;
 
