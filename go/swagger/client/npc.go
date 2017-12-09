@@ -20,5 +20,5 @@ type Npc struct {
 
 	SpawnsIn []SpawnEntry `json:"spawnsIn,omitempty"`
 
-	LootTableEntry *LootTableEntry `json:"lootTableEntry,omitempty"`
+	Drops *LootTableEntry `json:"drops,omitempty"`
 }

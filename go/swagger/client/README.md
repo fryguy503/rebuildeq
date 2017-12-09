@@ -31,6 +31,7 @@ Class | Method | HTTP request | Description
 *InventoryApi* | [**GetInventory**](docs/InventoryApi.md#getinventory) | **Get** /inventory/{id} | 
 *ItemApi* | [**GetItem**](docs/ItemApi.md#getitem) | **Get** /item/{id} | 
 *NPCApi* | [**GetNPC**](docs/NPCApi.md#getnpc) | **Get** /npc/{id} | 
+*NPCApi* | [**GetNPCsByItem**](docs/NPCApi.md#getnpcsbyitem) | **Get** /npc/search/item/{id} | 
 *ZoneApi* | [**GetZone**](docs/ZoneApi.md#getzone) | **Get** /zone/{id} | 
 
 

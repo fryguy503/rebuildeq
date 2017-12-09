@@ -23,6 +23,5 @@ func (s *Storage) GetItem(itemId int) (item *client.Item, err error) {
 	if err != nil {
 		return
 	}
-
 	return
 }

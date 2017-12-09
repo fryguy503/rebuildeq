@@ -16,6 +16,8 @@ type LootDropEntry struct {
 
 	ItemId int32 `json:"itemId,omitempty"`
 
+	ItemName string `json:"itemName,omitempty"`
+
 	ItemCharges int32 `json:"itemCharges,omitempty"`
 
 	Chance float32 `json:"chance,omitempty"`

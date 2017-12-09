@@ -6,7 +6,7 @@ import (
 	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
-func (s *Storage) GetNPC(npcId int) (npc *client.Npc, err error) {
+func (s *Storage) GetNPC(npcId int32) (npc *client.Npc, err error) {
 	if s.db == nil {
 		if err = s.Initialize(); err != nil {
 			return
@@ -29,7 +29,10 @@ func (s *Storage) GetNPC(npcId int) (npc *client.Npc, err error) {
 		FROM spawnentry se
 		INNER JOIN spawn2 s ON s.spawngroupid = se.spawngroupid
 		INNER JOIN zone z ON z.short_name = s.zone
-		WHERE se.npcid = ? AND s.version = 0 AND s.enabled = 1`, npcId)
+		WHERE se.npcid = ? AND z.min_status = 0 AND s.version = 0 
+			AND s.enabled = 1
+		GROUP BY z.short_name
+		ORDER BY se.chance DESC`, npcId)
 	if err != nil {
 		return
 	}
@@ -47,15 +50,17 @@ func (s *Storage) GetNPC(npcId int) (npc *client.Npc, err error) {
 		Lootdropid  int32
 		Loottableid int32
 		Itemid      int32
+		Itemname    string
 		Charges     int32
 		Chance      float32
 	}
 
 	//Get drops
-	rows, err = s.db.Queryx(`SELECT lt.probability, lt.loottable_id loottableid, lt.lootdrop_id lootdropid, ld.item_charges charges, ld.item_id itemid, ld.chance
+	rows, err = s.db.Queryx(`SELECT lt.probability, items.name itemname, lt.loottable_id loottableid, lt.lootdrop_id lootdropid, ld.item_charges charges, ld.item_id itemid, ld.chance
 		FROM loottable_entries lt
-		INNER JOIN lootdrop_entries ld ON ld.lootdrop_id = lt.lootdrop_id	
-		WHERE lt.loottable_id = ? GROUP BY lt.loottable_id, lt.lootdrop_id`, npc.LootTableId)
+		INNER JOIN lootdrop_entries ld ON ld.lootdrop_id = lt.lootdrop_id
+		INNER JOIN items ON items.id = ld.item_id
+		WHERE lt.loottable_id = ? AND ld.chance > 0 GROUP BY lt.loottable_id, lt.lootdrop_id ORDER BY ld.chance DESC`, npc.LootTableId)
 	if err != nil {
 		return
 	}
@@ -73,13 +78,49 @@ func (s *Storage) GetNPC(npcId int) (npc *client.Npc, err error) {
 		lte.Probability = ld.Probability
 		lde := client.LootDropEntry{
 			ItemId:      ld.Itemid,
+			ItemName:    ld.Itemname,
 			LootDropId:  ld.Lootdropid,
 			ItemCharges: ld.Charges,
 			Chance:      ld.Chance,
 		}
 		lte.LootDrops = append(lte.LootDrops, lde)
 	}
-	npc.LootTableEntry = &lte
+	npc.Drops = &lte
 
+	return
+}
+
+func (s *Storage) GetNPCsByItem(itemId int) (npcs []*client.Npc, err error) {
+	//First, get npcs
+	if s.db == nil {
+		if err = s.Initialize(); err != nil {
+			return
+		}
+	}
+	if itemId == 0 {
+		err = fmt.Errorf("Invalid item id: %d", itemId)
+		return
+	}
+
+	rows, err := s.db.Queryx(`SELECT nt.id
+		FROM lootdrop_entries ld
+		INNER JOIN loottable_entries lt ON lt.lootdrop_id = ld.lootdrop_id
+		INNER JOIN npc_types nt ON nt.loottable_id = lt.loottable_id
+		WHERE ld.item_id = ? AND ld.chance > 0 ORDER BY chance DESC LIMIT 10`, itemId)
+	if err != nil {
+		return
+	}
+
+	for rows.Next() {
+		n := &client.Npc{}
+		if err = rows.StructScan(n); err != nil {
+			return
+		}
+
+		if n, err = s.GetNPC(n.Id); err != nil {
+			return
+		}
+		npcs = append(npcs, n)
+	}
 	return
 }

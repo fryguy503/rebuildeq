@@ -121,4 +121,11 @@ var routes = Routes{
 		"/zone/{id}",
 		GetZone,
 	},
+
+	Route{
+		"GetBuild",
+		"GET",
+		"/build/{id}",
+		GetBuild,
+	},
 }

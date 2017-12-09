@@ -117,4 +117,11 @@ var routes = Routes{
 		"/build/{id}",
 		TrainBuildPoint,
 	},
+
+	Route{
+		"GetNPCsByItem",
+		"GET",
+		"/npc/search/item/{id}",
+		GetNPCsByItem,
+	},
 }

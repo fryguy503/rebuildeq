@@ -162,6 +162,26 @@ paths:
             $ref: '#/definitions/Item'
         default:
           description: Unhandled Error
+  /npc/search/item/{id}:
+    get:
+      tags: ["NPC"]
+      description: Search for NPCs who drop provided item
+      operationId: getNPCsByItem
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of Item
+          type: string
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NPC'
+        default:
+          description: Unhandled Error
   /npc/{id}:
     get:
       tags: ["NPC"]
@@ -301,8 +321,8 @@ definitions:
       spawnsIn:
         type: array
         items:
-          $ref: '#/definitions/SpawnEntry'
-      lootTableEntry:        
+          $ref: '#/definitions/SpawnEntry'      
+      drops:        
         $ref: '#/definitions/LootTableEntry'
   LootTableEntry:
     properties:
@@ -320,6 +340,8 @@ definitions:
         type: integer
       itemId:
         type: integer
+      itemName:
+        type: string
       itemCharges:
         type: integer
       chance:

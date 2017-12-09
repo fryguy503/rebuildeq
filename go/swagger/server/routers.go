@@ -115,6 +115,13 @@ var routes = Routes{
 	},
 
 	Route{
+		"GetNPCsByItem",
+		"GET",
+		"/npc/search/item/{id}",
+		GetNPCsByItem,
+	},
+
+	Route{
 		"GetZone",
 		"GET",
 		"/zone/{id}",
