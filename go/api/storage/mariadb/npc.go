@@ -51,12 +51,13 @@ func (s *Storage) GetNPC(npcId int32) (npc *client.Npc, err error) {
 		Loottableid int32
 		Itemid      int32
 		Itemname    string
+		Itemicon    int32
 		Charges     int32
 		Chance      float32
 	}
 
 	//Get drops
-	rows, err = s.db.Queryx(`SELECT lt.probability, items.name itemname, lt.loottable_id loottableid, lt.lootdrop_id lootdropid, ld.item_charges charges, ld.item_id itemid, ld.chance
+	rows, err = s.db.Queryx(`SELECT lt.probability, items.icon itemicon, items.name itemname, lt.loottable_id loottableid, lt.lootdrop_id lootdropid, ld.item_charges charges, ld.item_id itemid, ld.chance
 		FROM loottable_entries lt
 		INNER JOIN lootdrop_entries ld ON ld.lootdrop_id = lt.lootdrop_id
 		INNER JOIN items ON items.id = ld.item_id
@@ -79,6 +80,7 @@ func (s *Storage) GetNPC(npcId int32) (npc *client.Npc, err error) {
 		lde := client.LootDropEntry{
 			ItemId:      ld.Itemid,
 			ItemName:    ld.Itemname,
+			ItemIcon:    ld.Itemicon,
 			LootDropId:  ld.Lootdropid,
 			ItemCharges: ld.Charges,
 			Chance:      ld.Chance,

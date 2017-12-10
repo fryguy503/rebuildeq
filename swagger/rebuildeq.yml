@@ -372,6 +372,8 @@ definitions:
         type: string
       itemCharges:
         type: integer
+      itemIcon:
+        type: integer
       chance:
         type: number
   SpawnEntry:

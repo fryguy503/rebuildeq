@@ -20,5 +20,7 @@ type LootDropEntry struct {
 
 	ItemCharges int32 `json:"itemCharges,omitempty"`
 
+	ItemIcon int32 `json:"itemIcon,omitempty"`
+
 	Chance float32 `json:"chance,omitempty"`
 }

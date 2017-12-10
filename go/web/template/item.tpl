@@ -14,17 +14,16 @@
                 <ol class="hbreadcrumb breadcrumb">
                     <li><a href="/index.html">Dashboard</a></li>
                     <li>
-                        <span>App views</span>
+                        <span>Item</span>
                     </li>
                     <li class="active">
-                        <span>Profile </span>
+                        <span>{{.Item.Name}}</span>
                     </li>
                 </ol>
             </div>
             <h2 class="font-light m-b-xs">
-                Profile
+                {{.Item.Name}}
             </h2>
-            <small>Show user data in clear profile design</small>
         </div>
     </div>
 </div>
@@ -34,30 +33,10 @@
 <div class="row">
     <div class="col-lg-4">
         <div class="hpanel hgreen">
-            <div class="panel-body">
-                <div class="pull-right text-right">
-                    <div class="btn-group">
-                        <i class="fa fa-facebook btn btn-default btn-xs"></i>
-                        <i class="fa fa-twitter btn btn-default btn-xs"></i>
-                        <i class="fa fa-linkedin btn btn-default btn-xs"></i>
-                    </div>
-                </div>
-                <img alt="logo" class="img-circle m-b m-t-md" src="/images/profile.jpg">
-                <h3><a href="/profile.html">{{.Item.Name}}</a></h3>
-                <div class="text-muted font-bold m-b-xs"></div>
-                <p>
-                    {{.Item.Id}}
-                </p>
-                <div class="progress m-t-xs full progress-small">
-                    <div style="width: 65%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="65" role="progressbar" class=" progress-bar progress-bar-success">
-                        <span class="sr-only">35% Complete (success)</span>
-                    </div>
-                </div>
-            </div>
-            <div class="border-right border-left">
-                <section id="map">
-                    <div id="map1" style="height: 200px"></div>
-                </section>
+            <div class="panel-body">                
+                <img alt="logo" class="img-circle m-b m-t-md item icon-{{.Item.Icon}}"><br>
+                <h3>{{.Item.Name}}</h3>
+                <div class="text-muted font-bold m-b-xs text-right">{{.Item.Id}}</div>
             </div>
             <div class="panel-body">
                 <dl>
@@ -97,7 +76,7 @@
             </div>
             <div class="panel-body">
                 <div class="table-responsive">
-                <table cellpadding="1" cellspacing="1" class="table">
+                <table cellpadding="1" cellspacing="1" class="table table-striped">
                     <thead>
                     <tr>
                         <th>Name</th>

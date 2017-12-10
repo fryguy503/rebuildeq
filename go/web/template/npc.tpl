@@ -131,14 +131,18 @@
                     <table cellpadding="1" cellspacing="1" class="table">
                         <thead>
                         <tr>
-                            <th>ItemId</th>
+                            <th>Name</th>
                             <th>Charges</th>
+                            <th>Chance</th>
                         </tr>
                         </thead>
                         <tbody>
                         {{range $key, $value := .Npc.Drops.LootDrops}}
                         <tr>
-                            <td><a href="/item/{{$value.ItemId}}">{{$value.ItemName}}</a></td>
+                            <td class="text-left"><a href="/item/{{$value.ItemId}}"><span class="item icon-{{$value.ItemIcon}}"></span></a>
+                            <a href="/item/{{$value.ItemId}}">{{$value.ItemName}}</a></td>
+                            <td><a href="/item/{{$value.ItemId}}">{{$value.ItemCharges}}</a></td>
+                            <td><a href="/item/{{$value.ItemId}}">{{$value.Chance}}</a></td>
                         </tr>
                         {{end}}
                         </tbody>
@@ -269,13 +273,5 @@
         </div>
 
     </div>
-
-    <!-- Footer-->
-    <footer class="footer">
-        <span class="pull-right">
-            Example text
-        </span>
-        Company 2015-2020
-    </footer>
 
 </div>
