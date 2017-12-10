@@ -200,6 +200,20 @@ paths:
             $ref: '#/definitions/NPC'
         default:
           description: Unhandled Error
+  /zone/chart:
+    get:
+      tags: ["Zone"]
+      description: Get a list of zone charts
+      operationId: getZoneChart
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Zone'          
+        default:
+          description: Unhandled Error
   /zone/{id}:
     get:
       tags: ["Zone"]
@@ -396,7 +410,11 @@ definitions:
         example: overthere
       id:
         type: integer
-        example: 101   
+        example: 101
+      levels:
+        type: integer
+        description: a bitwise number representing level ranges
+        example: 32
 securityDefinitions:
   ApiKey:
     type: apiKey

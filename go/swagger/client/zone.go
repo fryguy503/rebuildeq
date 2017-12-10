@@ -17,4 +17,7 @@ type Zone struct {
 	Shortname string `json:"shortname,omitempty"`
 
 	Id int32 `json:"id,omitempty"`
+
+	// a bitwise number representing level ranges
+	Levels int32 `json:"levels,omitempty"`
 }

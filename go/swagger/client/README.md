@@ -33,6 +33,7 @@ Class | Method | HTTP request | Description
 *NPCApi* | [**GetNPC**](docs/NPCApi.md#getnpc) | **Get** /npc/{id} | 
 *NPCApi* | [**GetNPCsByItem**](docs/NPCApi.md#getnpcsbyitem) | **Get** /npc/search/item/{id} | 
 *ZoneApi* | [**GetZone**](docs/ZoneApi.md#getzone) | **Get** /zone/{id} | 
+*ZoneApi* | [**GetZoneChart**](docs/ZoneApi.md#getzonechart) | **Get** /zone/chart | 
 
 
 ## Documentation For Models

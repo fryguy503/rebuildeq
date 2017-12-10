@@ -117,6 +117,12 @@ var routes = Routes{
 		"/build/{id}",
 		TrainBuildPoint,
 	},
+	Route{
+		"GetZoneChart",
+		"GET",
+		"/zone/chart",
+		GetZoneChart,
+	},
 
 	Route{
 		"GetNPCsByItem",

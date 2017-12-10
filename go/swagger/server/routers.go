@@ -128,4 +128,11 @@ var routes = Routes{
 		GetZone,
 	},
 
+	Route{
+		"GetZoneChart",
+		"GET",
+		"/zone/chart",
+		GetZoneChart,
+	},
+
 }

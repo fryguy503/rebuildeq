@@ -40,7 +40,7 @@
 <div class="panel-body">
     
     <div class="media">
-        <div class="media-body">
+        <div class="media-body text-left">
             {{.Body}}
         </div>
     </div>

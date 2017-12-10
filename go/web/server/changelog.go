@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -44,7 +45,9 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 		setTemplate("changelog", tmp)
 	}
 	changelog.Body = strings.Replace(changelog.Body, "\n", "<br/>", -1)
-
+	changelog.Body = "<ul>\n" + changelog.Body
+	changelog.Body = strings.Replace(changelog.Body, "*", "<li>", -1)
+	changelog.Body = "\n</ul>" + changelog.Body
 	type Content struct {
 		Site      Site
 		Changelog interface{}
@@ -96,6 +99,21 @@ func GetChangelogs(w http.ResponseWriter, r *http.Request) {
 		}
 		setTemplate("changelogs", tmp)
 	}
+	for i, _ := range changelogs {
+		if strings.Contains(changelogs[i].Body, "*") {
+			changelogs[i].Body = changelogs[i].Body[strings.Index(changelogs[i].Body, "*")+1:]
+			if strings.Contains(changelogs[i].Body, "*") {
+				count := strings.Count(changelogs[i].Body, "*")
+				changelogs[i].Body = changelogs[i].Body[0:strings.Index(changelogs[i].Body, "*")]
+				if len(changelogs[i].Body) > 100 {
+					changelogs[i].Body = changelogs[i].Body[0:100]
+				}
+				changelogs[i].Body += fmt.Sprintf(", plus %d more changes", count)
+			}
+			changelogs[i].Body = strings.Replace(changelogs[i].Body, "*", "", -1)
+		}
+	}
+
 	type Content struct {
 		Site       Site
 		Changelogs interface{}

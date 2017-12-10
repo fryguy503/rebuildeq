@@ -135,6 +135,20 @@ var routes = Routes{
 		"/build",
 		GetBuild,
 	},
+
+	Route{
+		"GetZone",
+		"GET",
+		"/zone",
+		GetZone,
+	},
+
+	Route{
+		"GetZoneChart",
+		"GET",
+		"/zone/chart",
+		GetZoneChart,
+	},
 }
 
 func NewSite() (site Site) {
