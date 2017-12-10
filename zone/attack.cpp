@@ -6042,32 +6042,30 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 		uint16 spellid = 0;
 
 		rank = GetBuildRank(ROGUE, RB_ROG_MUGGINGSHOT);
-		if (rank > 0) {
+		if (rank > 0 && hit.hand == EQEmu::inventory::slotSecondary) {
 			chance = rank * 100;
 			int mana_drain = 0;
 			int hate_lower = 0;
-
 			bool is_interrupt = false;
-			BuildEcho(StringFormat("Mugging Shot hand %i", hit.hand));
-			if (hit.hand == EQEmu::inventory::slotSecondary) { //Get offhand
-				switch (hit.skill) {
-				case EQEmu::skills::Skill1HBlunt:
-					hate_lower = 50 * rank;
-					proc_damage = 0;
-					is_interrupt = true;
-					break;
-				case EQEmu::skills::Skill1HSlashing:
-					proc_damage = 5 * rank;
-					break;
-				case EQEmu::skills::Skill1HPiercing:
-					proc_damage = 2 * rank;
-					mana_drain = 100 * rank;
-					break;
-				default:
-					proc_damage = 5 * rank;
-					break;
-				}
+			 //Get offhand skill
+			switch (hit.skill) {
+			case EQEmu::skills::Skill1HBlunt:
+				hate_lower = 50 * rank;
+				proc_damage = 0;
+				is_interrupt = true;
+				break;
+			case EQEmu::skills::Skill1HSlashing:
+				proc_damage = 5 * rank;
+				break;
+			case EQEmu::skills::Skill1HPiercing:
+				proc_damage = 2 * rank;
+				mana_drain = 100 * rank;
+				break;
+			default:
+				proc_damage = 5 * rank;
+				break;
 			}
+			
 			chance = GetProcChances(chance, hit.hand);
 			//cut it in half since it's offhand
 			chance /= 2;
