@@ -689,9 +689,8 @@ void HateList::OnDeathTrigger()
 			}
 			rank = mobHated->CastToClient()->GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
 			if (rank > 0) {
-
-				mobHated->CastToClient()->AddCoreCounter(1);
 				uint32 counters = mobHated->CastToClient()->GetCoreCounter();
+				mobHated->CastToClient()->AddCoreCounter(1);
 				if (counters < mobHated->CastToClient()->GetCoreCounter()) {
 					mobHated->Message(MT_FocusEffect, "Killing Spree %u increased to %u counters.", rank, mobHated->CastToClient()->GetCoreCounter());
 				}
