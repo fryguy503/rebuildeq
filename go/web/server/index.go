@@ -6,6 +6,8 @@ import (
 )
 
 func Index(w http.ResponseWriter, r *http.Request) {
+	site := NewSite()
+	site.Page = "index"
 	var err error
 	tmp := getTemplate("")
 	if tmp == nil {
@@ -18,7 +20,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		}
 
 		setTemplate("index", newTmp)
-		tmp = newTmp
 
 	}
 

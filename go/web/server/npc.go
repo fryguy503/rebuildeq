@@ -8,6 +8,8 @@ import (
 )
 
 func GetNPC(w http.ResponseWriter, r *http.Request) {
+	site := NewSite()
+	site.Page = "npc"
 	vars := mux.Vars(r)
 
 	npc, resp, err := api.NPCApi.GetNPC(nil, vars["id"])
@@ -26,26 +28,19 @@ func GetNPC(w http.ResponseWriter, r *http.Request) {
 	tmp := getTemplate("")
 	if tmp == nil {
 
-		newTmp, tErr := loadTemplate(nil, "body", "npc.tpl")
-		if tErr != nil {
+		if tmp, err = loadTemplate(nil, "body", "npc.tpl"); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
+			log.Println("failed to load template", err.Error())
 			return
 		}
-		newTmp, tErr = loadTemplate(newTmp, "navmenu", "navmenu.tpl")
-		if tErr != nil {
+
+		if tmp, err = loadStandardTemplate(tmp); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
+			log.Println("failed to load template", err.Error())
 			return
 		}
-		newTmp, tErr = loadTemplate(newTmp, "root", "root.tpl")
-		if tErr != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
-			return
-		}
-		setTemplate("npc", newTmp)
-		tmp = newTmp
+		setTemplate("npc", tmp)
+
 	}
 	type Content struct {
 		Site Site

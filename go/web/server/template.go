@@ -13,6 +13,27 @@ var (
 	templates map[string]*Template = map[string]*Template{}
 )
 
+func loadStandardTemplate(oldTemplate *template.Template) (tmp *template.Template, err error) {
+	tmp = oldTemplate
+	tmp, err = loadTemplate(tmp, "navigation", "navigation.tpl")
+	if err != nil {
+		return
+	}
+	tmp, err = loadTemplate(tmp, "header", "header.tpl")
+	if err != nil {
+		return
+	}
+	tmp, err = loadTemplate(tmp, "navmenu", "navmenu.tpl")
+	if err != nil {
+		return
+	}
+	tmp, err = loadTemplate(tmp, "root", "root.tpl")
+	if err != nil {
+		return
+	}
+	return
+}
+
 func getTemplate(key string) (value *template.Template) {
 
 	if tmp, ok := templates[key]; ok {

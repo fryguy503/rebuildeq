@@ -8,6 +8,8 @@ import (
 )
 
 func GetInventory(w http.ResponseWriter, r *http.Request) {
+	site := NewSite()
+	site.Page = "inventory"
 	vars := mux.Vars(r)
 
 	inventory, resp, err := api.InventoryApi.GetInventory(nil, vars["id"])
@@ -39,26 +41,19 @@ func GetInventory(w http.ResponseWriter, r *http.Request) {
 	tmp := getTemplate("")
 	if tmp == nil {
 
-		newTmp, tErr := loadTemplate(nil, "body", "inventory.tpl")
-		if tErr != nil {
+		if tmp, err = loadTemplate(nil, "body", "inventory.tpl"); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
+			log.Println("failed to load template", err.Error())
 			return
 		}
-		newTmp, tErr = loadTemplate(newTmp, "navmenu", "navmenu.tpl")
-		if tErr != nil {
+
+		if tmp, err = loadStandardTemplate(tmp); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
+			log.Println("failed to load template", err.Error())
 			return
 		}
-		newTmp, tErr = loadTemplate(newTmp, "root", "root.tpl")
-		if tErr != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
-			return
-		}
-		setTemplate("inventory", newTmp)
-		tmp = newTmp
+		setTemplate("inventory", tmp)
+
 	}
 	type Content struct {
 		Site      Site

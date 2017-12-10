@@ -9,13 +9,14 @@ import (
 )
 
 var (
-	api  *client.APIClient
-	site Site
+	api *client.APIClient
 )
 
 //Global variables loaded to most templates
 type Site struct {
-	Title string //Title of site
+	Title       string //Title of site
+	Page        string
+	Description string //Description for oprop
 }
 
 type Route struct {
@@ -34,7 +35,6 @@ func StartServer() {
 	api = client.NewAPIClient(cfg)
 	router := NewRouter()
 	router.StrictSlash(false)
-	site.Title = "RebuildEQ"
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
@@ -128,4 +128,19 @@ var routes = Routes{
 		"/build/{id}",
 		GetBuild,
 	},
+
+	Route{
+		"GetBuild",
+		"GET",
+		"/build",
+		GetBuild,
+	},
+}
+
+func NewSite() (site Site) {
+	site = Site{
+		Title:       "RebuildEQ",
+		Description: "RebuildEQ rocks.",
+	}
+	return
 }

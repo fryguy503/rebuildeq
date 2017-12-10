@@ -12,6 +12,9 @@ package client
 
 type Character struct {
 
+	// class ID representing character, e.g. 1 = warrior
+	ClassId int32 `json:"classId,omitempty"`
+
 	Name string `json:"name,omitempty"`
 
 	Id int32 `json:"id,omitempty"`

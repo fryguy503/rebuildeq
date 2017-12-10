@@ -3,6 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**ClassId** | **int32** | class ID representing character, e.g. 1 &#x3D; warrior | [optional] [default to null]
 **Name** | **string** |  | [optional] [default to null]
 **Id** | **int32** |  | [optional] [default to null]
 **Zoneid** | **int32** |  | [optional] [default to null]

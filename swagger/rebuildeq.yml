@@ -263,6 +263,10 @@ definitions:
   Character:
     type: object
     properties:
+      classId:
+        type: integer
+        example: 1
+        description: class ID representing character, e.g. 1 = warrior
       name: 
         type: string
         example: Shin

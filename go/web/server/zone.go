@@ -8,7 +8,8 @@ import (
 )
 
 func GetZone(w http.ResponseWriter, r *http.Request) {
-
+	site := NewSite()
+	site.Page = "zone"
 	vars := mux.Vars(r)
 
 	zone, resp, err := api.ZoneApi.GetZone(nil, vars["id"])
@@ -27,26 +28,18 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 	tmp := getTemplate("zone")
 	if tmp == nil {
 
-		newTmp, tErr := loadTemplate(nil, "body", "zone.tpl")
-		if tErr != nil {
+		if tmp, err = loadTemplate(nil, "body", "zone.tpl"); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
+			log.Println("failed to load template", err.Error())
 			return
 		}
-		newTmp, tErr = loadTemplate(newTmp, "navmenu", "navmenu.tpl")
-		if tErr != nil {
+
+		if tmp, err = loadStandardTemplate(tmp); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
+			log.Println("failed to load template", err.Error())
 			return
 		}
-		newTmp, tErr = loadTemplate(newTmp, "root", "root.tpl")
-		if tErr != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
-			return
-		}
-		setTemplate("zone", newTmp)
-		tmp = newTmp
+		setTemplate("zone", tmp)
 	}
 	type Content struct {
 		Site Site

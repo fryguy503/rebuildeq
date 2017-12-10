@@ -8,7 +8,8 @@ import (
 )
 
 func GetChangelog(w http.ResponseWriter, r *http.Request) {
-
+	site := NewSite()
+	site.Page = "changelog"
 	vars := mux.Vars(r)
 
 	changelog, resp, err := api.ChangelogApi.GetChangelog(nil, vars["id"])
@@ -27,26 +28,18 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 	tmp := getTemplate("")
 	if tmp == nil {
 
-		newTmp, tErr := loadTemplate(nil, "body", "changelog.tpl")
-		if tErr != nil {
+		if tmp, err = loadTemplate(nil, "body", "changelog.tpl"); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
+			log.Println("failed to load template", err.Error())
 			return
 		}
-		newTmp, tErr = loadTemplate(newTmp, "navmenu", "navmenu.tpl")
-		if tErr != nil {
+
+		if tmp, err = loadStandardTemplate(tmp); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
+			log.Println("failed to load template", err.Error())
 			return
 		}
-		newTmp, tErr = loadTemplate(newTmp, "root", "root.tpl")
-		if tErr != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
-			return
-		}
-		setTemplate("changelog", newTmp)
-		tmp = newTmp
+		setTemplate("changelog", tmp)
 	}
 	type Content struct {
 		Site      Site
@@ -66,7 +59,8 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetChangelogs(w http.ResponseWriter, r *http.Request) {
-	//w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	site := NewSite()
+	site.Page = "changelog"
 
 	changelogs, resp, err := api.ChangelogApi.GetChangelogs(nil)
 	if err != nil {
@@ -83,26 +77,18 @@ func GetChangelogs(w http.ResponseWriter, r *http.Request) {
 	tmp := getTemplate("")
 	if tmp == nil {
 
-		newTmp, tErr := loadTemplate(nil, "body", "changelogs.tpl")
-		if tErr != nil {
+		if tmp, err = loadTemplate(nil, "body", "changelogs.tpl"); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
+			log.Println("failed to load template", err.Error())
 			return
 		}
-		newTmp, tErr = loadTemplate(newTmp, "navmenu", "navmenu.tpl")
-		if tErr != nil {
+
+		if tmp, err = loadStandardTemplate(tmp); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
+			log.Println("failed to load template", err.Error())
 			return
 		}
-		newTmp, tErr = loadTemplate(newTmp, "root", "root.tpl")
-		if tErr != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
-			return
-		}
-		setTemplate("changelogs", newTmp)
-		tmp = newTmp
+		setTemplate("changelogs", tmp)
 	}
 	type Content struct {
 		Site       Site
