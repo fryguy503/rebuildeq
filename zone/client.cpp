@@ -10836,6 +10836,7 @@ std::string Client::GetBuildName(uint32 id) {
 		else if (id == RB_MNK_GROUNDEDESSENCE) return "Grounded Essence";
 		else if (id == RB_MNK_MOVINGMOUNTAINS) return "Moving Mountains";
 		else if (id == RB_MNK_SLOWHEARTRATE) return "Slow Heart Rate";
+		else if (id == RB_MNK_EXPOSEWEAKNESS) return "Expose Weakness";
 		break;
 	case NECROMANCER:
 		if (id == RB_NEC_CORRUPTION) return "Corruption";
