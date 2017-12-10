@@ -259,7 +259,11 @@ definitions:
       date:
         type: string
         description: Date the change applied
-        example: '2017-01-01 01:02:03'  
+        example: '2017-01-01 01:02:03'
+      image:
+        type: string
+        description: Image URL
+        example: /post/images/site.png        
   Character:
     type: object
     properties:
