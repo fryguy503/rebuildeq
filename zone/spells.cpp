@@ -3476,25 +3476,6 @@ int Mob::AddBuff(Mob *caster, uint16 spell_id, int duration, int32 level_overrid
 	}
 
 	int rank = 0;
-
-	if (caster) {
-		rank = caster->GetBuildRank(NECROMANCER, RB_NEC_SHOCKINGBOLT);
-		if (rank > 0 &&
-			(spell_id == 436 || spell_id == 348 || spell_id == 435)) {
-			int dmg = CalcSpellEffectValue(spell_id, 1);
-			if (dmg < 0) dmg = -dmg;
-			int bonus_damage = int(dmg * 0.05f * rank);
-			bool is_quad = false;
-			if (rank > 0 && zone->random.Roll(rank)) {
-				bonus_damage *= 4;
-				is_quad = true;
-			}
-			caster->BuildEcho(StringFormat("Shocking Bolt %u added %i %s bonus damage.", rank, bonus_damage, (is_quad) ? "QUAD" : ""));
-			dmg += bonus_damage;
-			Damage(caster, dmg, spell_id, EQEmu::skills::SkillConjuration);
-		}
-	}
-
 	rank = GetBuildRank(ROGUE, RB_ROG_SLEIGHTDISTRACTION);
 	if (rank > 0 && spell_id == 292) { //rogue casts mesmerize
 		duration = zone->random.Int(0, rank);
