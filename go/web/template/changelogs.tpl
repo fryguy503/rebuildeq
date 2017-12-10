@@ -51,7 +51,7 @@
 
 <div class="hpanel forum-box">
 
-    <div class="panel-heading">
+    <div class="panel-heading  hbuilt">
                 <span class="pull-right">
                     <i class="fa fa-clock-o"> </i> Last modification: 10.12.2015, 10:22 am
                 </span>

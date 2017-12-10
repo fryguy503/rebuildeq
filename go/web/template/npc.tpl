@@ -32,15 +32,8 @@
 
 <div class="row">
     <div class="col-lg-4">
-        <div class="hpanel hgreen">
+        <div class="hpanel">
             <div class="panel-body">
-                <div class="pull-right text-right">
-                    <div class="btn-group">
-                        <i class="fa fa-facebook btn btn-default btn-xs"></i>
-                        <i class="fa fa-twitter btn btn-default btn-xs"></i>
-                        <i class="fa fa-linkedin btn btn-default btn-xs"></i>
-                    </div>
-                </div>
                 <img alt="logo" class="img-circle m-b m-t-md" src="/images/profile.jpg">
                 <h3><a href="/profile.html">{{.Npc.Name}}</a></h3>
                 <div class="text-muted font-bold m-b-xs"></div>
@@ -52,12 +45,7 @@
                         <span class="sr-only">35% Complete (success)</span>
                     </div>
                 </div>
-            </div>
-            <div class="border-right border-left">
-                <section id="map">
-                    <div id="map1" style="height: 200px"></div>
-                </section>
-            </div>
+            </div>           
             <div class="panel-body">
                 <dl>
                     <dt>Description lists</dt>
@@ -69,26 +57,13 @@
                     <dd>Etiam porta sem malesuada magna mollis euismod.</dd>
                 </dl>
             </div>
-            <div class="panel-footer contact-footer">
-                <div class="row">
-                    <div class="col-md-4 border-right">
-                        <div class="contact-stat"><span>Projects: </span> <strong>200</strong></div>
-                    </div>
-                    <div class="col-md-4 border-right">
-                        <div class="contact-stat"><span>Messages: </span> <strong>300</strong></div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="contact-stat"><span>Views: </span> <strong>400</strong></div>
-                    </div>
-                </div>
-            </div>
 
         </div>
     </div>
     <div class="col-lg-8">
         <div id="row">
             <div class="hpanel">
-                <div class="panel-heading">
+                <div class="panel-heading hbuilt">
                     <div class="panel-tools">
                         <a class="showhide"><i class="fa fa-chevron-up"></i></a>
                         <a class="closebox"><i class="fa fa-times"></i></a>
@@ -114,12 +89,9 @@
                     </div>
 
                 </div>
-                <div class="panel-footer">
-                    Total Count
-                </div>
             </div>
             <div class="hpanel">
-                <div class="panel-heading">
+                <div class="panel-heading hbuilt">
                     <div class="panel-tools">
                         <a class="showhide"><i class="fa fa-chevron-up"></i></a>
                         <a class="closebox"><i class="fa fa-times"></i></a>
@@ -149,9 +121,6 @@
                     </table>
                     </div>
 
-                </div>
-                <div class="panel-footer">
-                    Table - 6 rows
                 </div>
             </div>
         </div>

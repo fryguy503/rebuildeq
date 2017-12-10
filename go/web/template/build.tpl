@@ -67,12 +67,7 @@
         {{end}}
 
         <div class="hpanel">
-            <div class="panel-heading hbuilt">
-                <div class="panel-tools">
-                    <a class="showhide"><i class="fa fa-chevron-up"></i></a>
-                    <a class="closebox"><i class="fa fa-times"></i></a>
-                </div>
-            </div>
+            
             <div class="panel-body">
                 <div class="text-center m-b-md">
                     <h3>

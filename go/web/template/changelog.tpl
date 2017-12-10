@@ -36,7 +36,6 @@
 
 <div class="hpanel forum-box">
 
-
 <div class="panel-body">
     
     <div class="media">
