@@ -2495,10 +2495,5 @@ func getSkills(className string) (skills map[int]*Skill) {
 		break
 	}
 
-	for i := 0; i < 53; i++ {
-		if _, ok := skills[i]; !ok {
-			skills[i] = &Skill{}
-		}
-	}
 	return
 }

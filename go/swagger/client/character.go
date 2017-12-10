@@ -17,7 +17,12 @@ type Character struct {
 
 	Name string `json:"name,omitempty"`
 
+	// Character ID
 	Id int32 `json:"id,omitempty"`
 
+	// Level of character
+	Level int32 `json:"level,omitempty"`
+
+	// ID of zone character curerently is in
 	Zoneid int32 `json:"zoneid,omitempty"`
 }

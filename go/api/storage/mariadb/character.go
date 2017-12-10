@@ -17,7 +17,7 @@ func (s *Storage) GetCharacter(characterId int) (character *client.Character, er
 		return
 	}
 	character = &client.Character{}
-	err = s.db.Get(character, `SELECT id, name, zone_id zoneid, class classid
+	err = s.db.Get(character, `SELECT id, name, zone_id zoneid, class classid, level
 		FROM character_data 
 		WHERE id = ?`, characterId)
 	if err != nil {
@@ -37,7 +37,7 @@ func (s *Storage) GetCharacters(accountId int) (characters []*client.Character, 
 		err = fmt.Errorf("Invalid account id: %d", accountId)
 		return
 	}
-	rows, err := s.db.Queryx(`SELECT id, name, zone_id zoneid, class classid
+	rows, err := s.db.Queryx(`SELECT id, name, zone_id zoneid, class classid, level
 		FROM character_data 
 		WHERE account_id = ?`, accountId)
 	if err != nil {

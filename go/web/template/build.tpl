@@ -69,6 +69,9 @@
                 <div class="text-center m-b-md">
                     <h3>{{if .Character}}{{.Character.Name}}{{else}}{{.Info.FullName}}{{end}}</h3>
                     <small>{{.Info.Description}}</small><br/>
+
+                    <span class="charPointsLeft">0</span> points left to spend.
+                    <div style="display: none"><span class="charLevel">1</span></div>
                 </div>                
                 <div class="treeCollection">
             <div class="treewrapper green">
@@ -297,15 +300,29 @@
                     <a class="closebox"><i class="fa fa-times"></i></a>
                 </div>
             </div>
-            <div class="panel-body">                
-                {{range $key, $value := .Skills}}                    
-                    {{if $value.Title}}
-                    {{$key}} {{$value.Title}}<br>
-                    {{else}}
-                    {{$key}} N/A<br>
-                    {{end}}
-                {{end}}
-
+            <div class="panel-body">
+                 <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Description</th>                            
+                        </tr>
+                        </thead>
+                        <tbody> 
+                        {{range $key, $value := .Skills}}
+                            {{if $value.Title}}
+                            <tr>
+                                <td>{{$key}}</td>
+                                <td>{{$value.Title}}</td>
+                                <td>{{$value.Description}}</td>
+                            </tr>
+                            {{end}}
+                        {{end}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -428,3 +445,19 @@
 
     </div>
 </div>
+
+<script>
+    {{if .Character.Level}}
+        classLevel = {{.Character.Level}};
+        {{if .Sesssion}}
+            isTest = false;
+            session = "{{.Character.Session}}";
+        {{else}}
+            isTest = true;
+            isReadOnly = true;
+        {{end}}
+    {{else}}
+        classLevel = 60;
+        isTest = true;
+    {{end}}
+</script>

@@ -266,7 +266,7 @@ definitions:
         example: /post/images/site.png        
   Character:
     type: object
-    properties:
+    properties:      
       classId:
         type: integer
         example: 1
@@ -277,9 +277,15 @@ definitions:
       id:
         type: integer
         example: 666123
+        description: Character ID
+      level:
+        type: integer
+        example: 60
+        description: Level of character
       zoneid:
         type: integer
         example: 123
+        description: ID of zone character curerently is in
   Item:
     type: object
     properties:

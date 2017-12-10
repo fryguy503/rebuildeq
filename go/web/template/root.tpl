@@ -42,6 +42,7 @@
 <script src="/vendor/sparkline/index.js"></script>
 <!-- App scripts -->
 <script src="/scripts/homer.js"></script>
+<script src="/js/skillManager.js"></script>
 
 <script>
 
