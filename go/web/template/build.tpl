@@ -11,12 +11,18 @@
 
             <div id="hbreadcrumb" class="pull-right m-t-lg">
                 <ol class="hbreadcrumb breadcrumb">
-                    <li><a href="index.html">Dashboard</a></li>
+                    <li><a href="index.html">Dashboard</a></li>                    
                     <li>
-                        <span>Interface</span>
+                        <a href="/build/"><span>Build</span></a>
                     </li>
-                    <li class="active">
-                        <span>Components</span>
+                    <li class="active">                        
+                        <span>
+                            {{if eq .BuildType 0}}
+                                {{.Info.FullName}}
+                            {{else}}
+                                {{.Character.Name}}
+                            {{end}}
+                        </span>
                     </li>
                 </ol>
             </div>
@@ -31,32 +37,34 @@
 
 <div class="row">
     <div class="col-lg-12">
+        {{if eq .BuildType 0}}
         <div class="row">
         <div class="col-md-offset-2 col-md-8">
             <div class="hpanel">            
-                <div class="panel-body">
-                    <div class="row">
-                    <div class="form-group text-center">                        
-                        <a href="/build/bard"><img class="classicon {if $class eq 'bard'}classicon-active{/if}" src="/images/classicons/brd.png"/></a>
-                        <a href="/build/cleric"><img class="classicon {if $class eq 'cleric'}classicon-active{/if}" src="/images/classicons/clr.png"/></a>
-                        <a href="/build/druid"><img class="classicon {if $class eq 'druid'}classicon-active{/if}" src="/images/classicons/dru.png"/></a>
-                        <a href="/build/enchanter"><img class="classicon {if $class eq 'enchanter'}classicon-active{/if}" src="/images/classicons/enc.png"/></a>
-                        <a href="/build/magician"><img class="classicon {if $class eq 'magician'}classicon-active{/if}" src="/images/classicons/mag.png"/></a>
-                        <a href="/build/monk"><img class="classicon {if $class eq 'monk'}classicon-active{/if}" src="/images/classicons/mnk.png"/></a>
-                        <a href="/build/necromancer"><img class="classicon {if $class eq 'necromancer'}classicon-active{/if}" src="/images/classicons/nec.png"/></a>
-                        <a href="/build/paladin"><img class="classicon {if $class eq 'paladin'}classicon-active{/if}" src="/images/classicons/pal.png"/></a>
-                        <a href="/build/ranger"><img class="classicon {if $class eq 'ranger'}classicon-active{/if}" src="/images/classicons/rng.png"/></a>
-                        <a href="/build/rogue"><img class="classicon {if $class eq 'rogue'}classicon-active{/if}" src="/images/classicons/rog.png"/></a>
-                        <a href="/build/shadowknight"><img class="classicon {if $class eq 'shadowknight'}classicon-active{/if}" src="/images/classicons/shd.png"/></a>
-                        <a href="/build/shaman"><img class="classicon {if $class eq 'shaman'}classicon-active{/if}" src="/images/classicons/shm.png"/></a>
-                        <a href="/build/warrior"><img class="classicon {if $class eq 'warrior'}classicon-active{/if}" src="/images/classicons/war.png"/></a>
-                        <a href="/build/wizard"><img class="classicon {if $class eq 'wizard'}classicon-active{/if}" src="/images/classicons/wiz.png"/></a>
-                    </div>
-                    </div>
-                    </div>
+            <div class="panel-body">
+                <div class="row">
+                <div class="form-group text-center">                        
+                    <a href="/build/bard"><img class="classicon {if $class eq 'bard'}classicon-active{/if}" src="/images/classicons/brd.png"/></a>
+                    <a href="/build/cleric"><img class="classicon {if $class eq 'cleric'}classicon-active{/if}" src="/images/classicons/clr.png"/></a>
+                    <a href="/build/druid"><img class="classicon {if $class eq 'druid'}classicon-active{/if}" src="/images/classicons/dru.png"/></a>
+                    <a href="/build/enchanter"><img class="classicon {if $class eq 'enchanter'}classicon-active{/if}" src="/images/classicons/enc.png"/></a>
+                    <a href="/build/magician"><img class="classicon {if $class eq 'magician'}classicon-active{/if}" src="/images/classicons/mag.png"/></a>
+                    <a href="/build/monk"><img class="classicon {if $class eq 'monk'}classicon-active{/if}" src="/images/classicons/mnk.png"/></a>
+                    <a href="/build/necromancer"><img class="classicon {if $class eq 'necromancer'}classicon-active{/if}" src="/images/classicons/nec.png"/></a>
+                    <a href="/build/paladin"><img class="classicon {if $class eq 'paladin'}classicon-active{/if}" src="/images/classicons/pal.png"/></a>
+                    <a href="/build/ranger"><img class="classicon {if $class eq 'ranger'}classicon-active{/if}" src="/images/classicons/rng.png"/></a>
+                    <a href="/build/rogue"><img class="classicon {if $class eq 'rogue'}classicon-active{/if}" src="/images/classicons/rog.png"/></a>
+                    <a href="/build/shadowknight"><img class="classicon {if $class eq 'shadowknight'}classicon-active{/if}" src="/images/classicons/shd.png"/></a>
+                    <a href="/build/shaman"><img class="classicon {if $class eq 'shaman'}classicon-active{/if}" src="/images/classicons/shm.png"/></a>
+                    <a href="/build/warrior"><img class="classicon {if $class eq 'warrior'}classicon-active{/if}" src="/images/classicons/war.png"/></a>
+                    <a href="/build/wizard"><img class="classicon {if $class eq 'wizard'}classicon-active{/if}" src="/images/classicons/wiz.png"/></a>
+                </div>
                 </div>
             </div>
             </div>
+        </div>
+        </div>
+        {{end}}
 
         <div class="hpanel">
             <div class="panel-heading hbuilt">
@@ -67,10 +75,19 @@
             </div>
             <div class="panel-body">
                 <div class="text-center m-b-md">
-                    <h3>{{if .Character}}{{.Character.Name}}{{else}}{{.Info.FullName}}{{end}}</h3>
-                    <small>{{.Info.Description}}</small><br/>
+                    <h3>
+                    {{if ne .BuildType 0}}
+                        {{.Character.Name}}
+                    {{else}}            
+                        {{.Info.FullName}}                        
+                    {{end}}
+                    </h3>
+                    {{if eq .BuildType 0}}
+                    <small>{{.Info.Description}}</small>
+                    {{end}}
+                    <br/>
 
-                    <span class="charPointsLeft">0</span> points left to spend.
+                    {{if ne .BuildType 1}}<span class="charPointsLeft">0</span> points left to spend.{{end}}
                     <div style="display: none"><span class="charLevel">1</span></div>
                 </div>                
                 <div class="treeCollection">
@@ -302,7 +319,7 @@
             </div>
             <div class="panel-body">
                  <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped text-left">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -447,17 +464,20 @@
 </div>
 
 <script>
-    {{if .Character.Level}}
-        classLevel = {{.Character.Level}};
-        {{if .Sesssion}}
-            isTest = false;
-            session = "{{.Character.Session}}";
-        {{else}}
-            isTest = true;
-            isReadOnly = true;
-        {{end}}
-    {{else}}
+    {{if eq .BuildType 0}}
         classLevel = 60;
         isTest = true;
+        isReadOnly = false;
+    {{else if eq .BuildType 1}}
+        isTest = true;
+        isReadOnly = true;
+        classLevel = {{.Character.Level}};
+        initialHash = "{{.Build.Build}}";
+    {{else if eq .BuildType 2}}
+        isTest = false;
+        session = "{{.Character.Session}}";
+        isReadOnly = false;
+        initialHash = "{{.Build.Build}}";
     {{end}}
+
 </script>

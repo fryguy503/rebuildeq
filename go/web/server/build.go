@@ -30,6 +30,7 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var err error
 	var className string
+	var session string
 	site := NewSite()
 	site.Page = "build"
 
@@ -37,6 +38,12 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 		vars["id"] = "shadowknight"
 	}
 	isGeneric := isClass(vars["id"])
+
+	//Check if it's a session or not
+	if _, err = strconv.ParseInt(vars["id"], 10, 0); err != nil {
+		session = vars["id"]
+	}
+
 	var build client.BuildPoints
 	var character client.Character
 	var resp *http.Response
@@ -73,6 +80,7 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 	} else {
 		className = vars["id"]
 	}
+	log.Println("Loading class", className)
 
 	info, err := getBuildInfo(className)
 	if err != nil {
@@ -106,15 +114,24 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 		Character client.Character
 		Info      *BuildInfo
 		Skills    map[int]*Skill
+		Session   string
+		BuildType int
 	}
 	content := Content{
-		Site:   site,
-		Info:   info,
-		Skills: skills,
+		Site:      site,
+		Info:      info,
+		Skills:    skills,
+		BuildType: 0,
 	}
 	if !isGeneric {
 		content.Build = build
 		content.Character = character
+		if len(session) > 0 {
+			content.BuildType = 2
+		} else {
+			content.BuildType = 1
+		}
+
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -2322,7 +2339,6 @@ func getSkills(className string) (skills map[int]*Skill) {
 
 	//==================SHADOWKNIGHT======================
 	case "shadowknight":
-	default:
 		//0
 		skill = &Skill{
 			Title:       "Leech Touch",

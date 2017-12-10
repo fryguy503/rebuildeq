@@ -50,6 +50,9 @@ function updatePoints(skillHandle, change) {
 	if (isLocked) {
 		return;
 	}
+	if (isReadOnly) {
+		return
+	}
 	var tree = skillHandle.parent().parent();
 	var thisLevel = parseInt(skillHandle.parent().attr("data-level"));
 	var invested = parseInt(skillHandle.parent().attr("data-invested"));
@@ -74,6 +77,7 @@ function updatePoints(skillHandle, change) {
 	if (change == -1 && !isTest) { //ignore right clicks
 		return
 	}
+
 
 	if (typeof classLevel == 'number' && grandTotal >= classLevel) { //stop spending once they hit max
 		return;
