@@ -6,14 +6,9 @@
 <!-- Main Wrapper -->
 <div id="wrapper">
 
-<div class="normalheader ">
+<div class="normalheader small-header">
     <div class="hpanel">
-        <div class="panel-body">
-            <a class="small-header-action" href="tables_design.html">
-                <div class="clip-header">
-                    <i class="fa fa-arrow-up"></i>
-                </div>
-            </a>
+        <div class="panel-body">           
 
             <div id="hbreadcrumb" class="pull-right m-t-lg">
                 <ol class="hbreadcrumb breadcrumb">

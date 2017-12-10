@@ -20,4 +20,7 @@ type Changelog struct {
 
 	// Date the change applied
 	Date string `json:"date,omitempty"`
+
+	// Image URL
+	Image string `json:"image,omitempty"`
 }

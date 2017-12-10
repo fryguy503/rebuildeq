@@ -1,8 +1,10 @@
 package server
 
 import (
+	"html/template"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -41,13 +43,17 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 		}
 		setTemplate("changelog", tmp)
 	}
+	changelog.Body = strings.Replace(changelog.Body, "\n", "<br/>", -1)
+
 	type Content struct {
 		Site      Site
 		Changelog interface{}
+		Body      template.HTML
 	}
 	content := Content{
 		Site:      site,
 		Changelog: changelog,
+		Body:      template.HTML(changelog.Body),
 	}
 	w.WriteHeader(http.StatusOK)
 	if err = tmp.Execute(w, content); err != nil {

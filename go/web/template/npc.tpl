@@ -5,14 +5,9 @@
 <!-- Main Wrapper -->
 <div id="wrapper">
 
-<div class="normalheader ">
+<div class="normalheader small-header">
     <div class="hpanel">
-        <div class="panel-body">
-            <a class="small-header-action" href="/profile.html">
-                <div class="clip-header">
-                    <i class="fa fa-arrow-up"></i>
-                </div>
-            </a>
+        <div class="panel-body">           
 
             <div id="hbreadcrumb" class="pull-right m-t-lg">
                 <ol class="hbreadcrumb breadcrumb">
@@ -98,7 +93,7 @@
                         <a class="showhide"><i class="fa fa-chevron-up"></i></a>
                         <a class="closebox"><i class="fa fa-times"></i></a>
                     </div>
-                    Spawn Location
+                    Spawns In
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">
@@ -129,7 +124,7 @@
                         <a class="showhide"><i class="fa fa-chevron-up"></i></a>
                         <a class="closebox"><i class="fa fa-times"></i></a>
                     </div>
-                   Items Dropped
+                   Drops
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">

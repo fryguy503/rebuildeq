@@ -6,30 +6,22 @@
 <div id="wrapper">
 
 
-    <div class="normalheader ">
+    <div class="normalheader small-header">
         <div class="hpanel">
             <div class="panel-body">
-                <a class="small-header-action" href="forum.html">
-                    <div class="clip-header">
-                        <i class="fa fa-arrow-up"></i>
-                    </div>
-                </a>
-
+                
                 <div id="hbreadcrumb" class="pull-right m-t-lg">
                     <ol class="hbreadcrumb breadcrumb">
-                        <li><a href="index.html">Dashboard</a></li>
-                        <li>
-                            <span>App views</span>
-                        </li>
+                        <li><a href="/dashboard">Dashboard</a></li>                        
                         <li class="active">
-                            <span>Forum</span>
+                            <span>Changelog</span>
                         </li>
                     </ol>
                 </div>
                 <h2 class="font-light m-b-xs">
-                    Forum
+                    Changelog
                 </h2>
-                <small>Topics board for forum page.</small>
+                <small>Patch notes</small>
             </div>
         </div>
     </div>
@@ -40,7 +32,7 @@
 
 <div class="row" >
 <div class="col-lg-12">
-
+<!--
 <div class="hpanel">
     <div class="panel-body">
         <div class="text-muted small pull-right text-right">
@@ -55,7 +47,7 @@
     </div>
 
 </div>
-
+-->
 
 <div class="hpanel forum-box">
 
@@ -63,18 +55,18 @@
                 <span class="pull-right">
                     <i class="fa fa-clock-o"> </i> Last modification: 10.12.2015, 10:22 am
                 </span>
-        General topics
+        Ordered By Date Descending
     </div>
 
     {{range $key, $value := .Changelogs}}
     <div class="panel-body">
         <div class="row">
             <div class="col-md-1">
-                IMAGE
+                <a href="/changelog/{{$value.Id}}"><img class="img-fluid img-thumbnail float-left" src="{{$value.Image}}"></a>
             </div>
             <div class="col-md-8 forum-heading">
-                <a href="/changelog/{{$value.Id}}" ><h4>{{$value.Title}}</h4></a>
-                <div class="desc">Mauris feugiat ante vitae euismod vestibulum. Suspendisse id ullamcorper odio, ut tristique ante. In scelerisque dolor in mi condimentum consequat.</div>
+                <a href="/changelog/{{$value.Id}}"><h4>{{$value.Title}}</h4></a>
+                <div class="desc">{{ printf "%.125s" $value.Body }}</div>
             </div>
             <div class="col-md-3 forum-info">
                 <span class="number">{{$value.Date}}</span>

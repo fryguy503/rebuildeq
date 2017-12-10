@@ -11,11 +11,10 @@
     </div>
     <div id="logo" class="light-version">
         <span>
-            Homer Theme
+            <img class="img-fluid" src="/images/logo.png" alt="RebuildEQ" style="width: 20px"/>  RebuildEQ
         </span>
     </div>
     <nav role="navigation">
-        <div class="header-link hide-menu"><i class="fa fa-bars"></i></div>
         <div class="small-logo">
             <span class="text-primary">HOMER APP</span>
         </div>
