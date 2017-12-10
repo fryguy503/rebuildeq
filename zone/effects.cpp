@@ -305,13 +305,14 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 		spell_id == 453 || //cascading darkness
 		spell_id == 3686 || //blood of pain
 		spell_id == 360 || //heat blood
-		spell_id == 451  //boil blood
+		spell_id == 451 || //boil blood
+		spell_id == 6 //ignite blood (from lingering pain)
 		)) {		
 		int group_size = GetGroupSize(200);
-		extra_dmg = floor(value * 0.01f * rank * group_size);
+		extra_dmg = floor(-value * 0.01f * rank * group_size);
 		if (extra_dmg < rank) extra_dmg = floor(rank * 2);
 		BuildEcho(StringFormat("Festering Wound %i increased damage by %i", rank, extra_dmg));
-		value += extra_dmg;
+		value -= extra_dmg;
 	}
 
 	rank = GetBuildRank(NECROMANCER, RB_NEC_SHOCKINGBOLT);
