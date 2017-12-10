@@ -6,7 +6,7 @@ sub EVENT_SAY {
             quest::updatetaskactivity(307,2);    
         }
 	    quest::say("Binding your origin.");
-	    $client->SetStartZone(22, $client->GetX(), $client->GetY(), $client->GetZ()); 
+	    $client->SetStartZone(201, $client->GetX(), $client->GetY(), $client->GetZ()); 
 	} elsif($text=~/bind affinity/i) {
 	    quest::say("Binding your affinity.");
 	    quest::selfcast(2049);
