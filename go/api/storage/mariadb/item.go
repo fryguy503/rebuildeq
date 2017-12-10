@@ -17,7 +17,7 @@ func (s *Storage) GetItem(itemId int) (item *client.Item, err error) {
 		return
 	}
 	item = &client.Item{}
-	err = s.db.Get(item, `SELECT id, name
+	err = s.db.Get(item, `SELECT id, name, icon
 		FROM items 
 		WHERE id = ?`, itemId)
 	if err != nil {

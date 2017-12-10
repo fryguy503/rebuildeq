@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
 func GetInventory(w http.ResponseWriter, r *http.Request) {
@@ -55,14 +56,21 @@ func GetInventory(w http.ResponseWriter, r *http.Request) {
 		setTemplate("inventory", tmp)
 
 	}
+
+	itemInventory := map[int]client.Item{}
+
+	for i, _ := range inventory {
+		itemInventory[int(inventory[i].Slot)] = inventory[i]
+	}
+
 	type Content struct {
 		Site      Site
-		Inventory interface{}
+		Inventory map[int]client.Item
 		Character interface{}
 	}
 	content := Content{
 		Site:      site,
-		Inventory: inventory,
+		Inventory: itemInventory,
 		Character: character,
 	}
 

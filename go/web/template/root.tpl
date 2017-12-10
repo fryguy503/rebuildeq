@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="/fonts/pe-icon-7-stroke/css/helper.css" />
     <link rel="stylesheet" href="/styles/style.css">
     <link rel="stylesheet" href="/styles/builds.css" />
+    <link rel="stylesheet" href="/styles/inventory.css" />
+    <link rel="stylesheet" href="/styles/icons.css" />
 </head>
 <body class="light-skin fixed-navbar sidebar-scroll">
     {{ template "body" .}}
