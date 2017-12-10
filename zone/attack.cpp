@@ -1586,9 +1586,6 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 		my_hit.offense = offense(my_hit.skill); // we need this a few times
 		my_hit.hand = Hand;
 
-		//RB_MNK_EXPOSEWEAKNESS is a raw bonus based on hit chance bonus
-		hit_chance_bonus += (hit_chance_bonus * 0.01 * expose_weakness);
-
 		if (opts) {
 			my_hit.base_damage *= opts->damage_percent;
 			my_hit.base_damage += opts->damage_flat;
@@ -1597,14 +1594,20 @@ bool Client::Attack(Mob* other, int Hand, bool bRiposte, bool IsStrikethrough, b
 			hit_chance_bonus += opts->hit_chance;
 		}
 		int rank = 0;
-		
-
-		
 
 		my_hit.tohit = GetTotalToHit(my_hit.skill, hit_chance_bonus);
 
 		if (IsClient()) {
 			hit_chance_bonus = 0;
+
+			//RB_MNK_EXPOSEWEAKNESS is a raw bonus based on hit chance bonus
+			if (other->expose_weakness > 0) { 
+				hit_chance_bonus = int(my_hit.tohit * other->expose_weakness * 0.01f);
+				if (hit_chance_bonus < 1) hit_chance_bonus = 1;
+				DebugEcho(StringFormat("Expose Weakness %i increased chance to hit from %i to %i.", other->expose_weakness, my_hit.tohit, my_hit.tohit + hit_chance_bonus));
+				my_hit.tohit += hit_chance_bonus;
+			}
+
 			rank = GetBuildRank(BARD, RB_BRD_INNATESONGBLADE);
 			if (rank > 0) {
 				hit_chance_bonus = int(my_hit.tohit * 0.02f * rank);
@@ -6339,10 +6342,10 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 
 			rank = GetBuildRank(MONK, RB_MNK_EXPOSEWEAKNESS);
 			if (rank > 0 && defender->IsNPC()) {
-				int new_weakness = zone->random.Int(0, rank);
-				if (new_weakness > 0 && new_weakness > expose_weakness) {
-					expose_weakness = new_weakness;
-					BuildEcho(StringFormat("Expose Weakness %u has exposed vulnerability on %s, increasing accuracy by %i.", rank, defender->GetCleanName(), expose_weakness));
+				int new_weakness = zone->random.Int(0, rank * 2);
+				if (new_weakness > 0 && new_weakness > defender->expose_weakness) {
+					defender->expose_weakness = new_weakness;
+					BuildEcho(StringFormat("Expose Weakness %u has exposed vulnerability on %s, increasing accuracy by %i.", rank, defender->GetCleanName(), defender->expose_weakness));
 				}
 			}
 
