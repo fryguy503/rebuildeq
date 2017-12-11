@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -66,6 +67,7 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 		setTemplate("item", tmp)
 
 	}
+	site.Title = fmt.Sprintf("%s", item.Name)
 	type Content struct {
 		Site Site
 		Item interface{}

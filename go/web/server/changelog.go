@@ -44,6 +44,7 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 		}
 		setTemplate("changelog", tmp)
 	}
+	site.Title = fmt.Sprintf("Changelog - %s", changelog.Title)
 	changelog.Body = strings.Replace(changelog.Body, "\n", "<br/>", -1)
 	changelog.Body = "<ul>\n" + changelog.Body
 	changelog.Body = strings.Replace(changelog.Body, "*", "<li>", -1)
@@ -70,7 +71,7 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 func GetChangelogs(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "changelog"
-
+	site.Title = "Changelog"
 	changelogs, resp, err := api.ChangelogApi.GetChangelogs(nil)
 	if err != nil {
 		//TODO: Handle errors more gracefully

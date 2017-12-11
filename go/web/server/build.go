@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/xackery/rebuildeq/go/swagger/client"
@@ -32,13 +33,13 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 	var className string
 	var session string
 	site := NewSite()
+	site.Title = "Builds"
 	site.Page = "build"
 
 	if len(vars["id"]) == 0 {
 		vars["id"] = "shadowknight"
 	}
 	isGeneric := isClass(vars["id"])
-
 	//Check if it's a session or not
 	if _, err = strconv.ParseInt(vars["id"], 10, 0); err != nil {
 		session = vars["id"]
@@ -77,8 +78,10 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 		}
 
 		className = classNameFromId(int(character.ClassId))
+		site.Title = fmt.Sprintf("%s's Build", className)
 	} else {
 		className = vars["id"]
+		site.Title = fmt.Sprintf("%s Build", strings.ToTitle(className))
 	}
 	log.Println("Loading class", className)
 

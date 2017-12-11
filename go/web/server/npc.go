@@ -46,6 +46,7 @@ func GetNPC(w http.ResponseWriter, r *http.Request) {
 		Site Site
 		Npc  interface{}
 	}
+	site.Title = npc.Name
 	content := Content{
 		Site: site,
 		Npc:  npc,

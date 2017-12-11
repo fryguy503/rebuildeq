@@ -56,6 +56,8 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 		Zone: zone,
 	}
 
+	site.Title = zone.Name
+
 	w.WriteHeader(http.StatusOK)
 	if err = tmp.Execute(w, content); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

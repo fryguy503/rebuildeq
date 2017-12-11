@@ -16,6 +16,7 @@ var (
 type Site struct {
 	Title       string //Title of site
 	Page        string
+	Section     string
 	Description string //Description for oprop
 }
 
@@ -148,6 +149,20 @@ var routes = Routes{
 		"GET",
 		"/zone/chart",
 		GetZoneChart,
+	},
+
+	Route{
+		"GetGuideGettingStarted",
+		"GET",
+		"/guide/getting-started",
+		GetGuideGettingStarted,
+	},
+
+	Route{
+		"GetGuideEncounterSystem",
+		"GET",
+		"/guide/encounter-system",
+		GetGuideEncounterSystem,
 	},
 }
 

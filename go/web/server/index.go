@@ -8,6 +8,7 @@ import (
 func Index(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "index"
+	site.Title = "RebuildEQ"
 	var err error
 	tmp := getTemplate("")
 	if tmp == nil {

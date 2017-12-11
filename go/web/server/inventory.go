@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -56,7 +57,7 @@ func GetInventory(w http.ResponseWriter, r *http.Request) {
 		setTemplate("inventory", tmp)
 
 	}
-
+	site.Title = fmt.Sprintf("%s's Inventory", character.Name)
 	itemInventory := map[int]client.Item{}
 
 	for i, _ := range inventory {

@@ -34,6 +34,16 @@
         </div>
 
         <ul class="nav" id="side-menu">
+            <li class="{{if eq .Site.Section "guide"}}active{{end}}">
+                <a href="#" aira-expanded="{{if eq .Site.Section "guide"}}true{{else}}false{{end}}"> 
+                    <span class="nav-label">Guides</span>
+                    <span class="fa arrow"/>
+                </a>
+                <ul class="nav nav-second-level collapse {{if eq .Site.Section "guide"}}in{{end}}" aria-expanded="{{if eq .Site.Section "guide"}}true{{else}}false{{end}}">
+                    <li class="{{if eq .Site.Page "getting-started"}}active{{end}}"><a href="/guide/getting-started"> <span class="nav-label">Getting Started</span></a></li>
+                    <li class="{{if eq .Site.Page "encounter-system"}}active{{end}}"><a href="/guide/encounter-system"> <span class="nav-label">Encounter System</span></a></li>
+                </ul>
+            </li>
             <li class="{{if eq .Site.Page "changelog"}}active{{end}}"><a href="/changelogs"> <span class="nav-label">Changelog</span></a></li>
             <li class="{{if eq .Site.Page "build"}}active{{end}}"><a href="/build"> <span class="nav-label">Build</span></a></li>
             <li class="{{if eq .Site.Page "npc"}}active{{end}}"><a href="/npc/10001"> <span class="nav-label">NPC</span></a></li>

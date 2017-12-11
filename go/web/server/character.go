@@ -42,7 +42,7 @@ func GetCharacter(w http.ResponseWriter, r *http.Request) {
 		setTemplate("character", tmp)
 
 	}
-
+	site.Title = character.Name
 	type Content struct {
 		Site      Site
 		Character interface{}
