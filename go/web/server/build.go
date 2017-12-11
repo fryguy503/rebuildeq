@@ -48,10 +48,10 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 	var build client.BuildPoints
 	var character client.Character
 	var resp *http.Response
-
+	ctx := GetContext(r)
 	if !isGeneric {
 
-		build, resp, err = api.BuildApi.GetSpentBuildPoints(nil, vars["id"])
+		build, resp, err = api.BuildApi.GetSpentBuildPoints(ctx, vars["id"])
 		if err != nil {
 			//TODO: Handle errors more gracefully
 			w.WriteHeader(http.StatusInternalServerError)
@@ -64,7 +64,7 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		character, resp, err = api.CharacterApi.GetCharacter(nil, vars["id"])
+		character, resp, err = api.CharacterApi.GetCharacter(ctx, vars["id"])
 		if err != nil {
 			//TODO: Handle errors more gracefully
 			w.WriteHeader(http.StatusInternalServerError)

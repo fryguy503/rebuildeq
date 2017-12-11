@@ -11,8 +11,8 @@ func GetCharacter(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "character"
 	vars := mux.Vars(r)
-
-	character, resp, err := api.CharacterApi.GetCharacter(nil, vars["id"])
+	ctx := GetContext(r)
+	character, resp, err := api.CharacterApi.GetCharacter(ctx, vars["id"])
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)
@@ -64,8 +64,8 @@ func GetCharacter(w http.ResponseWriter, r *http.Request) {
 func GetCharacters(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "character"
-
-	characters, resp, err := api.CharacterApi.GetCharacters(GetContext(r))
+	ctx := GetContext(r)
+	characters, resp, err := api.CharacterApi.GetCharacters(ctx)
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)

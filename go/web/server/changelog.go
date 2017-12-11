@@ -14,8 +14,8 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "changelog"
 	vars := mux.Vars(r)
-
-	changelog, resp, err := api.ChangelogApi.GetChangelog(nil, vars["id"])
+	ctx := GetContext(r)
+	changelog, resp, err := api.ChangelogApi.GetChangelog(ctx, vars["id"])
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)
@@ -72,7 +72,8 @@ func GetChangelogs(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "changelog"
 	site.Title = "Changelog"
-	changelogs, resp, err := api.ChangelogApi.GetChangelogs(nil)
+	ctx := GetContext(r)
+	changelogs, resp, err := api.ChangelogApi.GetChangelogs(ctx)
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)

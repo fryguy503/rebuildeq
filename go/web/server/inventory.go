@@ -13,8 +13,8 @@ func GetInventory(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "inventory"
 	vars := mux.Vars(r)
-
-	inventory, resp, err := api.InventoryApi.GetInventory(nil, vars["id"])
+	ctx := GetContext(r)
+	inventory, resp, err := api.InventoryApi.GetInventory(ctx, vars["id"])
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)
@@ -27,7 +27,7 @@ func GetInventory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	character, resp, err := api.CharacterApi.GetCharacter(nil, vars["id"])
+	character, resp, err := api.CharacterApi.GetCharacter(ctx, vars["id"])
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)

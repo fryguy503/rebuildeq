@@ -17,8 +17,9 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 		GetZoneChart(w, r)
 		return
 	}
+	ctx := GetContext(r)
 
-	zone, resp, err := api.ZoneApi.GetZone(nil, vars["id"])
+	zone, resp, err := api.ZoneApi.GetZone(ctx, vars["id"])
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)
@@ -70,8 +71,8 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 func GetZoneChart(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "zone"
-
-	zones, resp, err := api.ZoneApi.GetZoneChart(nil)
+	ctx := GetContext(r)
+	zones, resp, err := api.ZoneApi.GetZoneChart(ctx)
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)

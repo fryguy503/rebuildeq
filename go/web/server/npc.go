@@ -11,8 +11,8 @@ func GetNPC(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "npc"
 	vars := mux.Vars(r)
-
-	npc, resp, err := api.NPCApi.GetNPC(nil, vars["id"])
+	ctx := GetContext(r)
+	npc, resp, err := api.NPCApi.GetNPC(ctx, vars["id"])
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)

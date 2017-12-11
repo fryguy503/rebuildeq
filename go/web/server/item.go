@@ -13,8 +13,9 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "item"
 	vars := mux.Vars(r)
+	ctx := GetContext(r)
 
-	item, resp, err := api.ItemApi.GetItem(nil, vars["id"])
+	item, resp, err := api.ItemApi.GetItem(ctx, vars["id"])
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)
@@ -27,7 +28,7 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	npcsBase, resp, err := api.NPCApi.GetNPCsByItem(nil, vars["id"])
+	npcsBase, resp, err := api.NPCApi.GetNPCsByItem(ctx, vars["id"])
 	type NPCsExtended struct {
 		*client.Npc
 		ZoneSnippet   string
