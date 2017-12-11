@@ -65,11 +65,11 @@ func GetCharacters(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "character"
 
-	characters, resp, err := api.CharacterApi.GetCharacters(nil)
+	characters, resp, err := api.CharacterApi.GetCharacters(GetContext(r))
 	if err != nil {
 		//TODO: Handle errors more gracefully
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Failed", err.Error())
+		log.Println("Failed", err.Error(), resp.Status)
 		return
 	}
 	if resp.StatusCode != 200 {

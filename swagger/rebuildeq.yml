@@ -331,10 +331,10 @@ definitions:
         example: foo      
   LoginResponse:
     properties:
-      api-key:
+      apiKey:
         type: string
-      expiresIn:
-        type: string  
+      expiresAt:
+        type: integer  
   NPC:
     properties:
       name:
@@ -423,7 +423,7 @@ definitions:
 securityDefinitions:
   ApiKey:
     type: apiKey
-    name: api-key
+    name: Authorization
     in: header
   Session:
     type: apiKey

@@ -42,6 +42,7 @@
                 <ul class="nav nav-second-level collapse {{if eq .Site.Section "guide"}}in{{end}}" aria-expanded="{{if eq .Site.Section "guide"}}true{{else}}false{{end}}">
                     <li class="{{if eq .Site.Page "getting-started"}}active{{end}}"><a href="/guide/getting-started"> <span class="nav-label">Getting Started</span></a></li>
                     <li class="{{if eq .Site.Page "encounter-system"}}active{{end}}"><a href="/guide/encounter-system"> <span class="nav-label">Encounter System</span></a></li>
+                    <li class="{{if eq .Site.Page "faq"}}active{{end}}"><a href="/guide/faq"> <span class="nav-label">FAQ</span></a></li>
                 </ul>
             </li>
             <li class="{{if eq .Site.Page "changelog"}}active{{end}}"><a href="/changelogs"> <span class="nav-label">Changelog</span></a></li>

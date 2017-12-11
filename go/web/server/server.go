@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"log"
 	"net/http"
 
@@ -164,6 +165,31 @@ var routes = Routes{
 		"/guide/encounter-system",
 		GetGuideEncounterSystem,
 	},
+
+	Route{
+		"GetGuideFAQ",
+		"GET",
+		"/guide/faq",
+		GetGuideFAQ,
+	},
+}
+
+func GetContext(r *http.Request) context.Context {
+	tokens, ok := r.Header["Authorization"]
+	token := ""
+	if ok && len(tokens) >= 1 {
+		token = tokens[0]
+	}
+	if len(token) == 0 { //try cookie
+		cookie, err := r.Cookie("access_token")
+		if err == nil {
+			token = cookie.Value
+		}
+	}
+	return context.WithValue(context.Background(), client.ContextAPIKey, client.APIKey{
+		Key: token,
+		//Prefix: "Bearer", // Omit if not necessary.
+	})
 }
 
 func NewSite() (site Site) {

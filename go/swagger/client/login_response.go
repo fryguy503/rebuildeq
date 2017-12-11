@@ -12,7 +12,7 @@ package client
 
 type LoginResponse struct {
 
-	ApiKey string `json:"api-key,omitempty"`
+	ApiKey string `json:"apiKey,omitempty"`
 
-	ExpiresIn string `json:"expiresIn,omitempty"`
+	ExpiresAt int32 `json:"expiresAt,omitempty"`
 }

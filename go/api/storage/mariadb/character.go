@@ -7,6 +7,7 @@ import (
 )
 
 func (s *Storage) GetCharacter(characterId int) (character *client.Character, err error) {
+
 	if s.db == nil {
 		if err = s.Initialize(); err != nil {
 			return

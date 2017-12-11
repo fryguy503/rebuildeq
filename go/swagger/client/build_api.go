@@ -141,7 +141,7 @@ func (a *BuildApiService) TrainBuildPoint(ctx context.Context, id string) ( *htt
 			} else {
 				key = auth.Key
 			}
-			localVarHeaderParams["api-key"] = key
+			localVarHeaderParams["Authorization"] = key
 		}
 	}
 	if ctx != nil {

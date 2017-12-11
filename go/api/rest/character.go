@@ -11,6 +11,7 @@ import (
 
 func GetCharacter(w http.ResponseWriter, r *http.Request) {
 	var err error
+
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
@@ -39,7 +40,13 @@ func GetCharacters(w http.ResponseWriter, r *http.Request) {
 	var err error
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
-	c, err := api.GetCharacters(74887)
+	claims, err := getAuthClaims(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusUnauthorized)
+		return
+	}
+
+	c, err := api.GetCharacters(claims.AccountId)
 	if err != nil {
 		log.Printf("Failed to get characters: %s\n", err.Error())
 		http.Error(w, err.Error(), http.StatusExpectationFailed)

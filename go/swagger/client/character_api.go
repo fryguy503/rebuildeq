@@ -78,7 +78,7 @@ func (a *CharacterApiService) GetCharacter(ctx context.Context, id string) (Char
 			} else {
 				key = auth.Key
 			}
-			localVarHeaderParams["api-key"] = key
+			localVarHeaderParams["Authorization"] = key
 		}
 	}
 	if ctx != nil {
@@ -164,7 +164,7 @@ func (a *CharacterApiService) GetCharacters(ctx context.Context) ([]Character,  
 			} else {
 				key = auth.Key
 			}
-			localVarHeaderParams["api-key"] = key
+			localVarHeaderParams["Authorization"] = key
 		}
 	}
 	if ctx != nil {

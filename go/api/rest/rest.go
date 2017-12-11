@@ -9,7 +9,10 @@ import (
 	"github.com/xackery/rebuildeq/go/swagger/server"
 )
 
-var api storage.Storage
+var (
+	api          storage.Storage
+	mySigningKey = []byte("secret")
+)
 
 func StartServer(s storage.Storage) {
 	log.Println("Started server")
