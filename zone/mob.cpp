@@ -7591,7 +7591,7 @@ int Mob::DoCripplingPresenceAndEmpathy(Mob *attacker, DamageHitInfo &hit) {
 			}
 
 			rank = c->GetBuildRank(ENCHANTER, RB_ENC_CHOKE);
-			if (!isChoke &&
+			if (rank > 0 && !isChoke &&
 				(spell_id == 286 || //shallow breath
 					spell_id == 294 || //suffocating sphere
 					spell_id == 521 || //choke
@@ -7599,41 +7599,13 @@ int Mob::DoCripplingPresenceAndEmpathy(Mob *attacker, DamageHitInfo &hit) {
 					spell_id == 195 || //gasping embrace
 					spell_id == 1703 //asphyxiate
 					)) {
-				int choke_damage = floor(level * rank / 4);
+				int choke_damage = floor(c->GetLevel() * rank / 4);
 				c->BuildEcho(StringFormat("Choke %i caused %i damage.", rank, choke_damage));
 				attacker->Damage(c, choke_damage, spell_id, EQEmu::skills::SkillAbjuration, false);
 				isChoke = true;
 			}
 
 			if (isChoke && isCripplingPresence) break;
-		}
-
-		if (attacker->IsClient() && IsNPC()) { //these are player targetted effects
-			if (!attacker->IsGrouped()) return bonus_damage; //tash doesn't work when not grouped.
-			if (!c->IsGrouped()) continue; //ench that debuffed isn't grouped, continue			
-			if (attacker->GetGroup()->GetID() != c->GetGroup()->GetID()) continue; //not in same group
-			if (c == attacker) continue; //enchanters don't get tash bonus
-
-			rank = c->GetBuildRank(ENCHANTER, RB_ENC_TASH);
-			if (rank > 0 && 
-				!isTash && (
-				spell_id == 676 || //tashina
-				spell_id == 677 || //tashani
-				spell_id == 678 ||//tashania
-				spell_id == 1699 ||//wind of tashani
-				spell_id == 1702 ||//tashanian
-				spell_id == 1704 //wind of tashanian
-				)) {
-
-				
-				int chance = 300;
-				int proc_damage = floor(GetLevel() * 0.2f * rank);
-				if (proc_damage < 5) proc_damage = 5;
-				attacker->CastToClient()->BuildProcCalc(chance, hit.hand, this, proc_damage, hit.skill);
-				isTash = true;
-			}
-
-			if (isTash) break;
 		}
 	}
 	return bonus_damage;

@@ -5929,7 +5929,7 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 
 	hit.damage_done += hit.min_damage;
 	
-	hit.damage_done += defender->DoCripplingPresenceAndEmpathy(this, hit);
+	hit.damage_done -= DoCripplingPresenceAndEmpathy(this, hit);
 
 	int rank = 0;
 	int proc_damage = 1;
