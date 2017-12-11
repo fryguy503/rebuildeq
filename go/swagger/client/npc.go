@@ -14,6 +14,8 @@ type Npc struct {
 
 	Name string `json:"name,omitempty"`
 
+	CleanName string `json:"cleanName,omitempty"`
+
 	Id int32 `json:"id,omitempty"`
 
 	LootTableId int32 `json:"lootTableId,omitempty"`

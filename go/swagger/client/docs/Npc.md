@@ -4,6 +4,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Name** | **string** |  | [optional] [default to null]
+**CleanName** | **string** |  | [optional] [default to null]
 **Id** | **int32** |  | [optional] [default to null]
 **LootTableId** | **int32** |  | [optional] [default to null]
 **SpawnsIn** | [**[]SpawnEntry**](SpawnEntry.md) |  | [optional] [default to null]

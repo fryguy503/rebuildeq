@@ -34,7 +34,7 @@
     <div class="col-lg-4">
         <div class="hpanel hgreen">
             <div class="panel-body">                
-                <img alt="logo" class="img-circle m-b m-t-md item icon-{{.Item.Icon}}"><br>
+                <span class="slot1 slotdrop"><span alt="{{.Item.Name}}" class="img-circle m-b m-t-md item icon-{{.Item.Icon}}"></span></span><br>
                 <h3>{{.Item.Name}}</h3>
                 <div class="text-muted font-bold m-b-xs text-right">{{.Item.Id}}</div>
             </div>

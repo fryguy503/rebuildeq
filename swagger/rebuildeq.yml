@@ -339,7 +339,10 @@ definitions:
     properties:
       name:
         type: string
-        example: Orc Pawn
+        example: an_orc_pawn
+      cleanName:
+        type: string
+        example: an orc pawn
       id:
         type: integer
         example: 100111

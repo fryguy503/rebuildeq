@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/xackery/rebuildeq/go/swagger/client"
+	"github.com/xackery/rebuildeq/go/utils"
 )
 
 func (s *Storage) GetNPC(npcId int32) (npc *client.Npc, err error) {
@@ -23,6 +24,7 @@ func (s *Storage) GetNPC(npcId int32) (npc *client.Npc, err error) {
 	if err != nil {
 		return
 	}
+	npc.CleanName = utils.CleanName(npc.Name)
 
 	//get every spawn entry
 	rows, err := s.db.Queryx(`SELECT se.chance, s.variance, s.x, s.y, s.z, z.short_name zoneshortname, z.long_name zonename, z.id zoneid

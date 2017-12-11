@@ -35,7 +35,7 @@
         <div class="hpanel">
             <div class="panel-body">
                 <img alt="logo" class="img-circle m-b m-t-md" src="/images/profile.jpg">
-                <h3><a href="/profile.html">{{.Npc.Name}}</a></h3>
+                <h3>{{.Npc.CleanName}}</h3>
                 <div class="text-muted font-bold m-b-xs"></div>
                 <p>
                     {{.Npc.Id}}
