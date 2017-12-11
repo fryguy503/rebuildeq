@@ -6047,6 +6047,8 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			hit.skill != EQEmu::skills::SkillKick &&
 			hit.hand == EQEmu::inventory::slotPrimary) {
 			
+			EnchanterBuildProc(defender, hit);
+
 			rank = GetBuildRank(DRUID, RB_DRU_SPIRITUALAWAKENING);
 			if (rank > 0) {
 				BuildEcho(StringFormat("Spiritual Awakening %u gave %u mana", rank, rank));
