@@ -950,6 +950,9 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 		if (rb_rank) {
 			aai->spell_refresh = rank->recast_time - (rb_rank * 30);
 		}
+	} else if (rank->id == aaDyingGrasp) {
+		rb_rank = GetBuildRank(NECROMANCER, RB_NEC_DYINGGRASP);
+		if (rb_rank > 0) aai->spell_refresh = 360 - (rb_rank * 30);
 	}
 	
 	aai->classes = ability->classes;
@@ -1428,7 +1431,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			return;
 		}
 	} else if (rank_id == aaDyingGrasp) {
-		cooldown = 360 - GetBuildRank(NECROMANCER, RB_NEC_DYINGGRASP);
+		rb_rank = GetBuildRank(NECROMANCER, RB_NEC_DYINGGRASP);
+		if (rb_rank) {
+			cooldown = 360 - (rb_rank * 30);
+		}
 	} else if (rank_id == aaLeechTouch) {
 		rb_rank = GetBuildRank(SHADOWKNIGHT, RB_SHD_LEECHTOUCH);
 		if(rb_rank) {
