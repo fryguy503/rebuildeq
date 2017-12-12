@@ -824,7 +824,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					IsCaster() &&
 					rank > 0 &&
 					mana_taken < 0) {
-					int damage_amount = int(-mana_taken * 0.4f);
+					int damage_amount = int(-mana_taken * 0.4f * rank);
 					if (GetMana() < damage_amount) damage_amount = GetMana();
 					if (damage_amount > 0) {
 						caster->BuildEcho(StringFormat("Lifeflow %i healed you for %i hitpoints.", rank, damage_amount));
