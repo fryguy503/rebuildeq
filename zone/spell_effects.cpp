@@ -6779,7 +6779,7 @@ int16 Client::GetFocusEffect(focusType type, uint16 spell_id)
 		
 		if (IsClient()) {
 			int rank = GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE);
-			if (rank > 0 && realTotal2 > 0) {
+			if (rank > 0 && type == focusSpellHaste && realTotal2 > 0) {
 				int newhaste = floor(realTotal2 * (1 + (.2f * rank)));
 				DebugEcho(StringFormat("Blessing of Haste %i increased spell haste contribution from %i to %i", rank, realTotal2, newhaste));
 				realTotal2 = newhaste;
