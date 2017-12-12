@@ -1399,6 +1399,9 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	}
 	else if (rank_id == aaLifeBurn) {
 		cooldown = 30;
+	} else if (rank->id == aaCelestialRegeneration) {
+		rb_rank = GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION);
+		if (rb_rank > 0) cooldown = 360;
 	} else if (rank_id == aaDivineArbitration) {
 		rb_rank = GetBuildRank(CLERIC, RB_CLR_DIVINEARBITRATION);
 		if (rb_rank > 0) {
