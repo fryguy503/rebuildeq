@@ -6777,8 +6777,13 @@ int16 Client::GetFocusEffect(focusType type, uint16 spell_id)
 			m_spellHitsLeft[buff_tracker] = focusspell_tracker;
 		}
 		
-		if(type == focusSpellHaste && CastToClient()->IsClient() && CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE) > 0) {
-			realTotal2 *= floor(1 + (0.20f * CastToClient()->GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE)));
+		if (IsClient()) {
+			int rank = GetBuildRank(CLERIC, RB_CLR_BLESSINGOFHASTE);
+			if (rank > 0 && realTotal2 > 0) {
+				int newhaste = floor(realTotal2 * (1 + (.2f * rank)));
+				DebugEcho(StringFormat("Blessing of Haste %i increased spell haste contribution from %i to %i", rank, realTotal2, newhaste));
+				realTotal2 = newhaste;
+			}
 		}
 	}
 
