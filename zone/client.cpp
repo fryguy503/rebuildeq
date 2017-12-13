@@ -10401,8 +10401,10 @@ void Client::EmoteEncounter() {
 		) {
 		pool += 250;
 		encounterTable[pool] = EN_HILLGIANT;
-		pool += 500;
-		encounterTable[pool] = EN_GRIFFIN;
+		if (!zoneid == 12) {
+			pool += 500;
+			encounterTable[pool] = EN_GRIFFIN;
+		}
 	}
 
 	if (zoneid == 20 || //kith
