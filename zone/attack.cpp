@@ -4574,11 +4574,10 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 
 		rank = caster->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR);
 		if (rank > 0 
-			//&& caster != this //cannot use on self
+			&& caster != this //cannot use on self
 			) {
 			int32 zDamage = floor(rank * 0.01f * amount);
 			int zCount = caster->hate_list.DamageNearby(caster, zDamage, 50, this, rank);
-			caster->BuildEcho(StringFormat("You have %i mobs on your Hate List", caster->hate_list.GetAggroCount()));
 			if (zCount > 0) caster->BuildEcho(StringFormat("Zealot's Fervor %i hit %i enemies for %i points of non-melee damage.", rank, zCount, zDamage));
 		}
 
