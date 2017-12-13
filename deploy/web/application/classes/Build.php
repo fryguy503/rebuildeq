@@ -1727,7 +1727,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Call of the Ancients";
-			$newSkill->desc = 'Grants the Call of the Ancients AA, summoning a spirit that deals <em data-base="1">1</em> %of an enemy\'s current health (maximum <em data-base="100">100</em>) per attack<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Call of the Ancients AA, summoning a spirit that deals (level * 1.5 * <em data-base="1">1</em>) damage per hit for 60 seconds (maximum level * 12 *<em data-base="1">1</em>) damage <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-shm-calloftheancients.png";
 			$skills[42] = $newSkill;
 
