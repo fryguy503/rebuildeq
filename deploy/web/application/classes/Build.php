@@ -1407,7 +1407,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Zealot's Fervor";
-			$newSkill->desc = 'When a heal is casted by a paladin, up to <em data-base="1">1</em> nearby enemies of the target are dealt <em data-base="1">1</em>% of the healing as damage. <span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When a heal is cast by the paladin on another character, up to <em data-base="1">1</em> nearby enemies of the target are dealt <em data-base="1">1</em>% of the healing as damage. <span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-pal-zealotsfervor.png";
 			$skills[36] = $newSkill;
 
