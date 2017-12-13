@@ -537,7 +537,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
-							if (rank > 0) {
+							if (rank > 0 &&
+								(spell_id == 341 || spell_id == 502 || spell_id == 445 || spell_id == 446 || spell_id == 525 || spell_id == 447 || //taps
+								spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562 || //spears
+								spell_id == 218 || spell_id == 233 || spell_id == 4102 || spell_id == 117 || spell_id == 4103 || spell_id == 662)) { //undead nukes) 
 								int duration = zone->random.Int(0, rank);
 								caster->BuildEcho(StringFormat("Lingering Pain %i activated for %i ticks.", rank, duration));
 
