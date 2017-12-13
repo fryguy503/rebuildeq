@@ -1,8 +1,6 @@
 package rest
 
 import (
-	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -11,7 +9,6 @@ import (
 
 func TrainBuildPoint(w http.ResponseWriter, r *http.Request) {
 	var err error
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -19,10 +16,9 @@ func TrainBuildPoint(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	characterId := 661778
+	characterId := id
 	//todo: do more stuff
 
-	log.Println(id)
 	build, err := api.GetSpentBuildPoints(characterId)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusExpectationFailed)
@@ -33,8 +29,7 @@ func TrainBuildPoint(w http.ResponseWriter, r *http.Request) {
 
 	err = api.UpdateBuild(characterId, build)
 	if err != nil {
-		log.Printf("Failed to get build: %s\n", err.Error())
-		http.Error(w, err.Error(), http.StatusExpectationFailed)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 
@@ -43,7 +38,7 @@ func TrainBuildPoint(w http.ResponseWriter, r *http.Request) {
 
 func GetSpentBuildPoints(w http.ResponseWriter, r *http.Request) {
 	var err error
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -52,16 +47,9 @@ func GetSpentBuildPoints(w http.ResponseWriter, r *http.Request) {
 	}
 	c, err := api.GetSpentBuildPoints(id)
 	if err != nil {
-		log.Printf("Failed to get builds: %s\n", err.Error())
-		http.Error(w, err.Error(), http.StatusExpectationFailed)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 
-	js := []byte{}
-	if js, err = json.Marshal(c); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	w.Write(js)
+	returnData(w, r, c, http.StatusOK)
 }

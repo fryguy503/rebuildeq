@@ -16,13 +16,14 @@ type AuthClaims struct {
 	jwt.StandardClaims
 }
 
+//exposed primarily for testing
+type LoginResponse struct {
+	ApiKey    string `json:"apiKey"`
+	ExpiresAt int64  `json:"expiresAt"`
+}
+
 func PostLogin(w http.ResponseWriter, r *http.Request) {
 	var err error
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	type LoginResponse struct {
-		ApiKey    string `json:"apiKey"`
-		ExpiresAt int64  `json:"expiresAt"`
-	}
 
 	expiresAt := time.Now().Add(time.Hour * 24).Unix()
 
@@ -45,12 +46,13 @@ func PostLogin(w http.ResponseWriter, r *http.Request) {
 
 	js := []byte{}
 	if js, err = json.Marshal(loginResponse); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		returnError(w, r, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write(js)
 }
+
 func getAuthClaims(r *http.Request) (*AuthClaims, error) {
 	tokens, ok := r.Header["Authorization"]
 	token := ""
