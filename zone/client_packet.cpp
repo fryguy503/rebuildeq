@@ -9682,9 +9682,11 @@ void Client::Handle_OP_Mend(const EQApplicationPacket *app)
 	int mendhp = GetMaxHP() / 4;
 	int currenthp = GetHP();
 	int roll = zone->random.Int(0, 199);
-	if (roll < (int)GetSkill(EQEmu::skills::SkillMend)) mendhp = 0;
-	if (mendhp == 0 && rank > 0) mendhp = (GetMaxHP() / 4) * 0.1f * rank;
-
+	if (roll > (int)GetSkill(EQEmu::skills::SkillMend)) mendhp = 0;
+	if (mendhp == 0 && rank > 0) {
+		mendhp = (GetMaxHP() / 4) * 0.1f * rank;
+		BuildEcho(StringFormat("Partial Mending %i prevented mend from failing! Mend healed for %i.", rank, mendhp));
+	}
 	if (mendhp > 0) {
 		
 		int criticalchance = spellbonuses.CriticalMend + itembonuses.CriticalMend + aabonuses.CriticalMend;
