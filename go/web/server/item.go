@@ -3,18 +3,26 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
 func GetItem(w http.ResponseWriter, r *http.Request) {
+	var err error
 	site := NewSite()
 	site.Page = "item"
 	vars := mux.Vars(r)
 	ctx := GetContext(r)
 
-	item, resp, err := api.ItemApi.GetItem(ctx, vars["id"])
+	var iId int64
+	if iId, err = strconv.ParseInt(vars["itemId"], 10, 0); err != nil {
+		show404(w, r, err.Error())
+	}
+	itemId := int32(iId)
+
+	item, resp, err := api.ItemApi.GetItem(ctx, itemId)
 	if err != nil {
 		show500(w, r, err.Error())
 		return
@@ -24,7 +32,7 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	npcsBase, resp, err := api.NPCApi.GetNPCsByItem(ctx, vars["id"])
+	npcsBase, resp, err := api.NPCApi.ListItemNPC(ctx, itemId)
 	type NPCsExtended struct {
 		*client.Npc
 		ZoneSnippet   string

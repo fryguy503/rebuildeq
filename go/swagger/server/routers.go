@@ -52,94 +52,94 @@ var routes = Routes{
 	},
 
 	Route{
-		"GetSpentBuildPoints",
+		"ListBuild",
 		"GET",
-		"/builds/{id}",
-		GetSpentBuildPoints,
+		"/character/{characterId}/build",
+		ListBuild,
 	},
 
 	Route{
-		"TrainBuildPoint",
+		"TrainBuild",
 		"PUT",
-		"/build/{id}",
-		TrainBuildPoint,
+		"/character/{characterId}/build/{buildId}/detail",
+		TrainBuild,
 	},
 
 	Route{
 		"GetChangelog",
 		"GET",
-		"/changelog/{id}",
+		"/changelog/{changelogId}/detail",
 		GetChangelog,
 	},
 
 	Route{
-		"GetChangelogs",
+		"ListChangelog",
 		"GET",
-		"/changelogs",
-		GetChangelogs,
+		"/changelog",
+		ListChangelog,
 	},
 
 	Route{
 		"GetCharacter",
 		"GET",
-		"/character/{id}",
+		"/character/{characterId}/detail",
 		GetCharacter,
 	},
 
 	Route{
-		"GetCharacters",
+		"ListCharacter",
 		"GET",
-		"/characters",
-		GetCharacters,
+		"/character",
+		ListCharacter,
 	},
 
 	Route{
-		"GetInventory",
+		"ListInventory",
 		"GET",
-		"/inventory/{id}",
-		GetInventory,
+		"/character/{characterId}/inventory",
+		ListInventory,
 	},
 
 	Route{
 		"GetItem",
 		"GET",
-		"/item/{id}",
+		"/item/{itemId}/detail",
 		GetItem,
 	},
 
 	Route{
 		"GetNPC",
 		"GET",
-		"/npc/{id}",
+		"/npc/{npcId}/detail",
 		GetNPC,
 	},
 
 	Route{
-		"GetNPCsByItem",
+		"ListItemNPC",
 		"GET",
-		"/npc/search/item/{id}",
-		GetNPCsByItem,
+		"/item/{itemId}/npc",
+		ListItemNPC,
 	},
 
 	Route{
 		"GetZone",
 		"GET",
-		"/zone/{id}",
+		"/zone/{zoneId}/detail",
 		GetZone,
 	},
 
 	Route{
-		"GetZoneChart",
+		"ListZoneChart",
 		"GET",
 		"/zone/chart",
-		GetZoneChart,
+		ListZoneChart,
 	},
 
 	Route{
-		"GetZoneSearch",
+		"ListZoneSearch",
 		"GET",
 		"/zone/search",
-		GetZoneSearch,
+		ListZoneSearch,
 	},
 
 }

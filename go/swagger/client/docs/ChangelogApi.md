@@ -4,12 +4,12 @@ All URIs are relative to *https://app.rebuildeq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**GetChangelog**](ChangelogApi.md#GetChangelog) | **Get** /changelog/{id} | 
-[**GetChangelogs**](ChangelogApi.md#GetChangelogs) | **Get** /changelogs | 
+[**GetChangelog**](ChangelogApi.md#GetChangelog) | **Get** /changelog/{changelogId}/detail | 
+[**ListChangelog**](ChangelogApi.md#ListChangelog) | **Get** /changelog | 
 
 
 # **GetChangelog**
-> Changelog GetChangelog(ctx, id)
+> Changelog GetChangelog(ctx, changelogId)
 
 
 Get changelog by id
@@ -19,7 +19,7 @@ Get changelog by id
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | **string**| ID of changelog | 
+  **changelogId** | **int32**| ID of changelog | 
 
 ### Return type
 
@@ -36,8 +36,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **GetChangelogs**
-> []Changelog GetChangelogs(ctx, )
+# **ListChangelog**
+> []Changelog ListChangelog(ctx, )
 
 
 Get listing of most recent changelog

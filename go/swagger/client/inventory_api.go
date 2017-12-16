@@ -30,9 +30,9 @@ type InventoryApiService service
 /* InventoryApiService 
  Get inventory of character
  * @param ctx context.Context for authentication, logging, tracing, etc.
- @param id ID of Character
+ @param characterId ID of Character
  @return []Item*/
-func (a *InventoryApiService) GetInventory(ctx context.Context, id string) ([]Item,  *http.Response, error) {
+func (a *InventoryApiService) ListInventory(ctx context.Context, characterId int32) ([]Item,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
@@ -42,8 +42,8 @@ func (a *InventoryApiService) GetInventory(ctx context.Context, id string) ([]It
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/inventory/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", fmt.Sprintf("%v", id), -1)
+	localVarPath := a.client.cfg.BasePath + "/character/{characterId}/inventory"
+	localVarPath = strings.Replace(localVarPath, "{"+"characterId"+"}", fmt.Sprintf("%v", characterId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

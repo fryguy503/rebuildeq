@@ -45,13 +45,13 @@
                     <li class="{{if eq .Site.Page "faq"}}active{{end}}"><a href="/guide/faq"> <span class="nav-label">FAQ</span></a></li>
                 </ul>
             </li>
-            <li class="{{if eq .Site.Page "changelog"}}active{{end}}"><a href="/changelogs"> <span class="nav-label">Changelog</span></a></li>
-            <li class="{{if eq .Site.Page "build"}}active{{end}}"><a href="/build"> <span class="nav-label">Build</span></a></li>
-            <li class="{{if eq .Site.Page "npc"}}active{{end}}"><a href="/npc/10001"> <span class="nav-label">NPC</span></a></li>
+            <li class="{{if eq .Site.Page "changelog"}}active{{end}}"><a href="/changelog"> <span class="nav-label">Changelog</span></a></li>
+            <li class="{{if eq .Site.Page "build"}}active{{end}}"><a href="/build/shadowknight/detail"> <span class="nav-label">Build</span></a></li>
+            <li class="{{if eq .Site.Page "npc"}}active{{end}}"><a href="/npc/10001/detail"> <span class="nav-label">NPC</span></a></li>
             <li class="{{if eq .Site.Page "zone"}}active{{end}}"><a href="/zone/chart"> <span class="nav-label">Zone</span></a></li>
-            <li class="{{if eq .Site.Page "item"}}active{{end}}"><a href="/item/1001"> <span class="nav-label">Item</span></a></li>
-            <li class="{{if eq .Site.Page "inventory"}}active{{end}}"><a href="/inventory/661861"> <span class="nav-label">Inventory</span></a></li>
-            <li class="{{if eq .Site.Page "character"}}active{{end}}"><a href="/character/661861"> <span class="nav-label">Character</span></a></li>
+            <li class="{{if eq .Site.Page "item"}}active{{end}}"><a href="/item/1001/detail"> <span class="nav-label">Item</span></a></li>
+            <li class="{{if eq .Site.Page "inventory"}}active{{end}}"><a href="/character/661861/inventory"> <span class="nav-label">Inventory</span></a></li>
+            <li class="{{if eq .Site.Page "character"}}active{{end}}"><a href="/character/661861/detail"> <span class="nav-label">Character</span></a></li>
         </ul>
     </div>
 </aside>

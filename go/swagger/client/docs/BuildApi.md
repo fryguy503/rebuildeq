@@ -4,12 +4,12 @@ All URIs are relative to *https://app.rebuildeq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**GetSpentBuildPoints**](BuildApi.md#GetSpentBuildPoints) | **Get** /builds/{id} | 
-[**TrainBuildPoint**](BuildApi.md#TrainBuildPoint) | **Put** /build/{id} | 
+[**ListBuild**](BuildApi.md#ListBuild) | **Get** /character/{characterId}/build | 
+[**TrainBuild**](BuildApi.md#TrainBuild) | **Put** /character/{characterId}/build/{buildId}/detail | 
 
 
-# **GetSpentBuildPoints**
-> BuildPoints GetSpentBuildPoints(ctx, id)
+# **ListBuild**
+> BuildPoints ListBuild(ctx, characterId)
 
 
 Get all trained build points
@@ -19,7 +19,7 @@ Get all trained build points
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | **string**| ID of character | 
+  **characterId** | **int32**| ID of character | 
 
 ### Return type
 
@@ -36,8 +36,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **TrainBuildPoint**
-> TrainBuildPoint(ctx, id)
+# **TrainBuild**
+> TrainBuild(ctx, characterId, buildId)
 
 
 Train a build point
@@ -47,7 +47,8 @@ Train a build point
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | **string**| ID of build to be trained | 
+  **characterId** | **int32**| ID of character | 
+  **buildId** | **int32**| ID of build | 
 
 ### Return type
 

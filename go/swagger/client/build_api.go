@@ -30,9 +30,9 @@ type BuildApiService service
 /* BuildApiService 
  Get all trained build points
  * @param ctx context.Context for authentication, logging, tracing, etc.
- @param id ID of character
+ @param characterId ID of character
  @return BuildPoints*/
-func (a *BuildApiService) GetSpentBuildPoints(ctx context.Context, id string) (BuildPoints,  *http.Response, error) {
+func (a *BuildApiService) ListBuild(ctx context.Context, characterId int32) (BuildPoints,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
@@ -42,8 +42,8 @@ func (a *BuildApiService) GetSpentBuildPoints(ctx context.Context, id string) (B
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/builds/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", fmt.Sprintf("%v", id), -1)
+	localVarPath := a.client.cfg.BasePath + "/character/{characterId}/build"
+	localVarPath = strings.Replace(localVarPath, "{"+"characterId"+"}", fmt.Sprintf("%v", characterId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -94,9 +94,10 @@ func (a *BuildApiService) GetSpentBuildPoints(ctx context.Context, id string) (B
 /* BuildApiService 
  Train a build point
  * @param ctx context.Context for authentication, logging, tracing, etc.
- @param id ID of build to be trained
+ @param characterId ID of character
+ @param buildId ID of build
  @return */
-func (a *BuildApiService) TrainBuildPoint(ctx context.Context, id string) ( *http.Response, error) {
+func (a *BuildApiService) TrainBuild(ctx context.Context, characterId int32, buildId int32) ( *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Put")
 		localVarPostBody interface{}
@@ -105,8 +106,9 @@ func (a *BuildApiService) TrainBuildPoint(ctx context.Context, id string) ( *htt
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/build/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", fmt.Sprintf("%v", id), -1)
+	localVarPath := a.client.cfg.BasePath + "/character/{characterId}/build/{buildId}/detail"
+	localVarPath = strings.Replace(localVarPath, "{"+"characterId"+"}", fmt.Sprintf("%v", characterId), -1)
+	localVarPath = strings.Replace(localVarPath, "{"+"buildId"+"}", fmt.Sprintf("%v", buildId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

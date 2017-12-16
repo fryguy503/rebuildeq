@@ -4,12 +4,12 @@ All URIs are relative to *https://app.rebuildeq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**GetNPC**](NPCApi.md#GetNPC) | **Get** /npc/{id} | 
-[**GetNPCsByItem**](NPCApi.md#GetNPCsByItem) | **Get** /npc/search/item/{id} | 
+[**GetNPC**](NPCApi.md#GetNPC) | **Get** /npc/{npcId}/detail | 
+[**ListItemNPC**](NPCApi.md#ListItemNPC) | **Get** /item/{itemId}/npc | 
 
 
 # **GetNPC**
-> Npc GetNPC(ctx, id)
+> Npc GetNPC(ctx, npcId)
 
 
 Get information about a specific NPC
@@ -19,7 +19,7 @@ Get information about a specific NPC
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | **string**| ID of NPC | 
+  **npcId** | **int32**| ID of NPC | 
 
 ### Return type
 
@@ -36,8 +36,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **GetNPCsByItem**
-> []Npc GetNPCsByItem(ctx, id)
+# **ListItemNPC**
+> []Npc ListItemNPC(ctx, itemId)
 
 
 Search for NPCs who drop provided item
@@ -47,7 +47,7 @@ Search for NPCs who drop provided item
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | **string**| ID of Item | 
+  **itemId** | **int32**| ID of Item | 
 
 ### Return type
 

@@ -2,16 +2,23 @@ package server
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
 func GetCharacter(w http.ResponseWriter, r *http.Request) {
+	var err error
 	site := NewSite()
 	site.Page = "character"
 	vars := mux.Vars(r)
 	ctx := GetContext(r)
-	character, resp, err := api.CharacterApi.GetCharacter(ctx, vars["id"])
+	var cId int64
+	if cId, err = strconv.ParseInt(vars["characterId"], 10, 0); err != nil {
+		show404(w, r, err.Error())
+	}
+	characterId := int32(cId)
+	character, resp, err := api.CharacterApi.GetCharacter(ctx, characterId)
 	if err != nil {
 		show500(w, r, err.Error())
 		return
@@ -54,11 +61,11 @@ func GetCharacter(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func GetCharacters(w http.ResponseWriter, r *http.Request) {
+func ListCharacter(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "character"
 	ctx := GetContext(r)
-	characters, resp, err := api.CharacterApi.GetCharacters(ctx)
+	characters, resp, err := api.CharacterApi.ListCharacter(ctx)
 	if err != nil {
 		show500(w, r, err.Error())
 		return

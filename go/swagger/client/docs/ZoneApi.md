@@ -4,13 +4,13 @@ All URIs are relative to *https://app.rebuildeq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**GetZone**](ZoneApi.md#GetZone) | **Get** /zone/{id} | 
-[**GetZoneChart**](ZoneApi.md#GetZoneChart) | **Get** /zone/chart | 
-[**GetZoneSearch**](ZoneApi.md#GetZoneSearch) | **Get** /zone/search | 
+[**GetZone**](ZoneApi.md#GetZone) | **Get** /zone/{zoneId}/detail | 
+[**ListZoneChart**](ZoneApi.md#ListZoneChart) | **Get** /zone/chart | 
+[**ListZoneSearch**](ZoneApi.md#ListZoneSearch) | **Get** /zone/search | 
 
 
 # **GetZone**
-> Zone GetZone(ctx, id)
+> Zone GetZone(ctx, zoneId)
 
 
 Get information about a specific Zone
@@ -20,7 +20,7 @@ Get information about a specific Zone
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | **string**| ID of Zone | 
+  **zoneId** | **int32**| ID of Zone | 
 
 ### Return type
 
@@ -37,8 +37,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **GetZoneChart**
-> GetZoneChart(ctx, )
+# **ListZoneChart**
+> ListZoneChart(ctx, )
 
 
 Get a list of zone charts
@@ -61,8 +61,8 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **GetZoneSearch**
-> []Zone GetZoneSearch(ctx, optional)
+# **ListZoneSearch**
+> []Zone ListZoneSearch(ctx, optional)
 
 
 Search for zone

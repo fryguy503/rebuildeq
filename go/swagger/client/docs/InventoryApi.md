@@ -4,11 +4,11 @@ All URIs are relative to *https://app.rebuildeq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**GetInventory**](InventoryApi.md#GetInventory) | **Get** /inventory/{id} | 
+[**ListInventory**](InventoryApi.md#ListInventory) | **Get** /character/{characterId}/inventory | 
 
 
-# **GetInventory**
-> []Item GetInventory(ctx, id)
+# **ListInventory**
+> []Item ListInventory(ctx, characterId)
 
 
 Get inventory of character
@@ -18,7 +18,7 @@ Get inventory of character
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | **string**| ID of Character | 
+  **characterId** | **int32**| ID of Character | 
 
 ### Return type
 

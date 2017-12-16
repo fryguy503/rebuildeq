@@ -22,19 +22,19 @@ All URIs are relative to *https://app.rebuildeq.com*
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
 *AuthorizationApi* | [**PostLogin**](docs/AuthorizationApi.md#postlogin) | **Post** /login | 
-*BuildApi* | [**GetSpentBuildPoints**](docs/BuildApi.md#getspentbuildpoints) | **Get** /builds/{id} | 
-*BuildApi* | [**TrainBuildPoint**](docs/BuildApi.md#trainbuildpoint) | **Put** /build/{id} | 
-*ChangelogApi* | [**GetChangelog**](docs/ChangelogApi.md#getchangelog) | **Get** /changelog/{id} | 
-*ChangelogApi* | [**GetChangelogs**](docs/ChangelogApi.md#getchangelogs) | **Get** /changelogs | 
-*CharacterApi* | [**GetCharacter**](docs/CharacterApi.md#getcharacter) | **Get** /character/{id} | 
-*CharacterApi* | [**GetCharacters**](docs/CharacterApi.md#getcharacters) | **Get** /characters | 
-*InventoryApi* | [**GetInventory**](docs/InventoryApi.md#getinventory) | **Get** /inventory/{id} | 
-*ItemApi* | [**GetItem**](docs/ItemApi.md#getitem) | **Get** /item/{id} | 
-*NPCApi* | [**GetNPC**](docs/NPCApi.md#getnpc) | **Get** /npc/{id} | 
-*NPCApi* | [**GetNPCsByItem**](docs/NPCApi.md#getnpcsbyitem) | **Get** /npc/search/item/{id} | 
-*ZoneApi* | [**GetZone**](docs/ZoneApi.md#getzone) | **Get** /zone/{id} | 
-*ZoneApi* | [**GetZoneChart**](docs/ZoneApi.md#getzonechart) | **Get** /zone/chart | 
-*ZoneApi* | [**GetZoneSearch**](docs/ZoneApi.md#getzonesearch) | **Get** /zone/search | 
+*BuildApi* | [**ListBuild**](docs/BuildApi.md#listbuild) | **Get** /character/{characterId}/build | 
+*BuildApi* | [**TrainBuild**](docs/BuildApi.md#trainbuild) | **Put** /character/{characterId}/build/{buildId}/detail | 
+*ChangelogApi* | [**GetChangelog**](docs/ChangelogApi.md#getchangelog) | **Get** /changelog/{changelogId}/detail | 
+*ChangelogApi* | [**ListChangelog**](docs/ChangelogApi.md#listchangelog) | **Get** /changelog | 
+*CharacterApi* | [**GetCharacter**](docs/CharacterApi.md#getcharacter) | **Get** /character/{characterId}/detail | 
+*CharacterApi* | [**ListCharacter**](docs/CharacterApi.md#listcharacter) | **Get** /character | 
+*InventoryApi* | [**ListInventory**](docs/InventoryApi.md#listinventory) | **Get** /character/{characterId}/inventory | 
+*ItemApi* | [**GetItem**](docs/ItemApi.md#getitem) | **Get** /item/{itemId}/detail | 
+*NPCApi* | [**GetNPC**](docs/NPCApi.md#getnpc) | **Get** /npc/{npcId}/detail | 
+*NPCApi* | [**ListItemNPC**](docs/NPCApi.md#listitemnpc) | **Get** /item/{itemId}/npc | 
+*ZoneApi* | [**GetZone**](docs/ZoneApi.md#getzone) | **Get** /zone/{zoneId}/detail | 
+*ZoneApi* | [**ListZoneChart**](docs/ZoneApi.md#listzonechart) | **Get** /zone/chart | 
+*ZoneApi* | [**ListZoneSearch**](docs/ZoneApi.md#listzonesearch) | **Get** /zone/search | 
 
 
 ## Documentation For Models

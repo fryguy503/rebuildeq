@@ -30,9 +30,9 @@ type ChangelogApiService service
 /* ChangelogApiService 
  Get changelog by id
  * @param ctx context.Context for authentication, logging, tracing, etc.
- @param id ID of changelog
+ @param changelogId ID of changelog
  @return Changelog*/
-func (a *ChangelogApiService) GetChangelog(ctx context.Context, id string) (Changelog,  *http.Response, error) {
+func (a *ChangelogApiService) GetChangelog(ctx context.Context, changelogId int32) (Changelog,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
@@ -42,8 +42,8 @@ func (a *ChangelogApiService) GetChangelog(ctx context.Context, id string) (Chan
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/changelog/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", fmt.Sprintf("%v", id), -1)
+	localVarPath := a.client.cfg.BasePath + "/changelog/{changelogId}/detail"
+	localVarPath = strings.Replace(localVarPath, "{"+"changelogId"+"}", fmt.Sprintf("%v", changelogId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -95,7 +95,7 @@ func (a *ChangelogApiService) GetChangelog(ctx context.Context, id string) (Chan
  Get listing of most recent changelog
  * @param ctx context.Context for authentication, logging, tracing, etc.
  @return []Changelog*/
-func (a *ChangelogApiService) GetChangelogs(ctx context.Context) ([]Changelog,  *http.Response, error) {
+func (a *ChangelogApiService) ListChangelog(ctx context.Context) ([]Changelog,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
@@ -105,7 +105,7 @@ func (a *ChangelogApiService) GetChangelogs(ctx context.Context) ([]Changelog,  
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/changelogs"
+	localVarPath := a.client.cfg.BasePath + "/changelog"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

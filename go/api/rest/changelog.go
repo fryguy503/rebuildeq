@@ -10,9 +10,9 @@ import (
 func GetChangelog(w http.ResponseWriter, r *http.Request) {
 	var err error
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
+	id, err := strconv.Atoi(vars["changelogId"])
 	if err != nil {
-		returnError(w, r, err.Error(), http.StatusExpectationFailed)
+		returnError(w, r, "Failed to convert "+err.Error(), http.StatusExpectationFailed)
 		return
 	}
 
@@ -25,7 +25,7 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 	returnData(w, r, c, http.StatusOK)
 }
 
-func GetChangelogs(w http.ResponseWriter, r *http.Request) {
+func ListChangelog(w http.ResponseWriter, r *http.Request) {
 	var err error
 	c, err := api.GetChangelogs()
 	if err != nil {

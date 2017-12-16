@@ -4,17 +4,27 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
 )
 
 func GetChangelog(w http.ResponseWriter, r *http.Request) {
+	var err error
 	site := NewSite()
 	site.Page = "changelog"
 	vars := mux.Vars(r)
 	ctx := GetContext(r)
-	changelog, resp, err := api.ChangelogApi.GetChangelog(ctx, vars["id"])
+
+	var cId int64
+	if cId, err = strconv.ParseInt(vars["changelogId"], 10, 32); err != nil {
+		show500(w, r, err.Error())
+		return
+	}
+	changelogId := int32(cId)
+
+	changelog, resp, err := api.ChangelogApi.GetChangelog(ctx, changelogId)
 	if err != nil {
 		show500(w, r, err.Error())
 		return
@@ -27,7 +37,7 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 	tmp := getTemplate("")
 	if tmp == nil {
 
-		if tmp, err = loadTemplate(nil, "body", "changelog.tpl"); err != nil {
+		if tmp, err = loadTemplate(nil, "body", "changelog_detail.tpl"); err != nil {
 			show500(w, r, err.Error())
 			return
 		}
@@ -61,12 +71,12 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func GetChangelogs(w http.ResponseWriter, r *http.Request) {
+func ListChangelog(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "changelog"
 	site.Title = "Changelog"
 	ctx := GetContext(r)
-	changelogs, resp, err := api.ChangelogApi.GetChangelogs(ctx)
+	changelogs, resp, err := api.ChangelogApi.ListChangelog(ctx)
 	if err != nil {
 		show500(w, r, err.Error())
 		return
@@ -78,7 +88,7 @@ func GetChangelogs(w http.ResponseWriter, r *http.Request) {
 	tmp := getTemplate("")
 	if tmp == nil {
 
-		if tmp, err = loadTemplate(nil, "body", "changelogs.tpl"); err != nil {
+		if tmp, err = loadTemplate(nil, "body", "changelog.tpl"); err != nil {
 			show500(w, r, err.Error())
 			return
 		}

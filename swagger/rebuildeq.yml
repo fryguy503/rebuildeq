@@ -13,70 +13,11 @@ host: "app.rebuildeq.com"
 produces:
   - application/json
 paths:
-  /build/{id}:
-    put:
-      security:
-      - ApiKey: []
-      - Session: []
-      tags: ["Build"]
-      description: Train a build point
-      operationId: trainBuildPoint
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: ID of build to be trained
-          type: string
-      responses:
-        200:
-          description: '200 / OK'
-        400:
-          description: 'Invalid build point request'
-        405:
-          description: 'Validation exception'                      
-        default:
-          description: Unandled Error
-  /builds/{id}:    
-    get:
-      tags: ["Build"]
-      description: Get all trained build points
-      operationId: getSpentBuildPoints
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: ID of character
-          type: string
-      responses:
-        200:
-          description: '200 / OK'
-          schema:
-            $ref: '#/definitions/BuildPoints'
-        default:
-          description: Unandled Error
-  /changelog/{id}:
-    get:
-      tags: ["Changelog"]
-      description: Get changelog by id
-      operationId: getChangelog
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: ID of changelog
-          type: string
-      responses:
-        200:
-          description: '200 / OK'
-          schema:
-            $ref: '#/definitions/Changelog'
-        default:
-          description: Unandled Error
-  /changelogs:
+  /changelog:
     get:
       tags: ["Changelog"]
       description: Get listing of most recent changelog
-      operationId: getChangelogs
+      operationId: listChangelog
       responses:
         200:
           description: '200 / OK'
@@ -86,35 +27,32 @@ paths:
               $ref: '#/definitions/Changelog'
         default:
           description: Unandled Error
-  /character/{id}:
+  /changelog/{changelogId}/detail:
     get:
-      security:
-      - ApiKey: []
-      - Session: []
-      tags: ["Character"]
-      description: Get information about a character
-      operationId: getCharacter
+      tags: ["Changelog"]
+      description: Get changelog by id
+      operationId: getChangelog
       parameters:
         - in: path
-          name: id
+          name: changelogId
           required: true
-          description: ID of Character
-          type: string          
+          description: ID of changelog
+          type: integer
       responses:
         200:
           description: '200 / OK'
           schema:
-            $ref: '#/definitions/Character'
+            $ref: '#/definitions/Changelog'
         default:
-          description: Unhandled Error          
-  /characters:
+          description: Unandled Error
+  /character:
     get:
       security:
       - ApiKey: []
       - Session: []
       tags: ["Character"]
       description: Get list of owned characters
-      operationId: getCharacters
+      operationId: listCharacter
       responses:
         200:
           description: '200 / OK'
@@ -124,17 +62,84 @@ paths:
               $ref: '#/definitions/Character'
         default:
           description: Unhandled Error
-  /inventory/{id}:
+  /character/{characterId}/detail:
+    get:
+      security:
+      - ApiKey: []
+      - Session: []
+      tags: ["Character"]
+      description: Get information about a character
+      operationId: getCharacter
+      parameters:
+        - in: path
+          name: characterId
+          required: true
+          description: ID of Character
+          type: integer          
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            $ref: '#/definitions/Character'
+        default:
+          description: Unhandled Error
+  /character/{characterId}/build:    
+    get:
+      tags: ["Build"]
+      description: Get all trained build points
+      operationId: listBuild
+      parameters:
+        - in: path
+          name: characterId
+          required: true
+          description: ID of character
+          type: integer  
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            $ref: '#/definitions/BuildPoints'
+        default:
+          description: Unandled Error
+  /character/{characterId}/build/{buildId}/detail:
+    put:
+      security:
+      - ApiKey: []
+      - Session: []
+      tags: ["Build"]
+      description: Train a build point
+      operationId: trainBuild
+      parameters:
+        - in: path
+          name: characterId
+          required: true
+          description: ID of character
+          type: integer
+        - in: path
+          name: buildId
+          required: true
+          description: ID of build
+          type: integer  
+      responses:
+        200:
+          description: '200 / OK'
+        400:
+          description: 'Invalid build point request'
+        405:
+          description: 'Validation exception'                      
+        default:
+          description: Unandled Error
+  /character/{characterId}/inventory:
     get:
       tags: ["Inventory"]
       description: Get inventory of character
-      operationId: getInventory
+      operationId: listInventory
       parameters:
         - in: path
-          name: id
+          name: characterId
           required: true
           description: ID of Character
-          type: string
+          type: integer
       responses:
         200:
           description: '200 / OK'
@@ -144,17 +149,17 @@ paths:
               $ref: '#/definitions/Item'
         default:
           description: Unhandled Error
-  /item/{id}:
+  /item/{itemId}/detail:
     get:
       tags: ["Item"]
       description: Get information about a specific item
       operationId: getItem
       parameters:
         - in: path
-          name: id
+          name: itemId
           required: true
           description: ID of Item
-          type: string
+          type: integer
       responses:
         200:
           description: '200 / OK'
@@ -162,17 +167,17 @@ paths:
             $ref: '#/definitions/Item'
         default:
           description: Unhandled Error
-  /npc/search/item/{id}:
+  /item/{itemId}/npc:
     get:
       tags: ["NPC"]
       description: Search for NPCs who drop provided item
-      operationId: getNPCsByItem
+      operationId: listItemNPC
       parameters:
         - in: path
-          name: id
+          name: itemId
           required: true
           description: ID of Item
-          type: string
+          type: integer
       responses:
         200:
           description: '200 / OK'
@@ -182,17 +187,17 @@ paths:
               $ref: '#/definitions/NPC'
         default:
           description: Unhandled Error
-  /npc/{id}:
+  /npc/{npcId}/detail:
     get:
       tags: ["NPC"]
       description: Get information about a specific NPC
       operationId: getNPC
       parameters:
         - in: path
-          name: id
+          name: npcId
           required: true
           description: ID of NPC
-          type: string
+          type: integer
       responses:
         200:
           description: '200 / OK'
@@ -204,7 +209,7 @@ paths:
     get:
       tags: ["Zone"]
       description: Get a list of zone charts
-      operationId: getZoneChart
+      operationId: listZoneChart
       responses:
         200:
           description: '200 / OK'
@@ -217,7 +222,7 @@ paths:
     get:
       tags: ["Zone"]
       description: Search for zone
-      operationId: getZoneSearch
+      operationId: listZoneSearch
       parameters:
         - in: query
           name: query
@@ -233,17 +238,17 @@ paths:
               $ref: '#/definitions/Zone'
         404:
           description: 'No zones found'
-  /zone/{id}:
+  /zone/{zoneId}/detail:
     get:
       tags: ["Zone"]
       description: Get information about a specific Zone
       operationId: getZone
       parameters:
         - in: path
-          name: id
+          name: zoneId
           required: true
           description: ID of Zone
-          type: string
+          type: integer
       responses:
         200:
           description: '200 / OK'

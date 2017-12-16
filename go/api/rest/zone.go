@@ -14,23 +14,14 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	vars := mux.Vars(r)
-	if vars["id"] == "chart" {
-		GetZoneChart(w, r)
-		return
-	}
-	if vars["id"] == "search" || len(vars["query"]) > 0 {
-		fmt.Println("search")
-		GetZoneSearch(w, r)
-		return
-	}
-	id, err := strconv.Atoi(vars["id"])
+
+	zoneId, err := strconv.Atoi(vars["zoneId"])
 	if err != nil {
-		err = nil
-		GetZoneSearch(w, r)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 
-	c, err := api.GetZone(id)
+	c, err := api.GetZone(zoneId)
 	if err != nil {
 		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
@@ -48,7 +39,7 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 	w.Write(js)
 }
 
-func GetZoneChart(w http.ResponseWriter, r *http.Request) {
+func ListZoneChart(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	c, err := api.GetZoneChart()
@@ -66,7 +57,7 @@ func GetZoneChart(w http.ResponseWriter, r *http.Request) {
 	w.Write(js)
 }
 
-func GetZoneSearch(w http.ResponseWriter, r *http.Request) {
+func ListZoneSearch(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	vars := mux.Vars(r)

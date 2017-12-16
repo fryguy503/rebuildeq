@@ -7,10 +7,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func TrainBuildPoint(w http.ResponseWriter, r *http.Request) {
+func TrainBuild(w http.ResponseWriter, r *http.Request) {
 	var err error
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
+	id, err := strconv.Atoi(vars["characterId"])
 	if err != nil {
 		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
@@ -36,11 +36,11 @@ func TrainBuildPoint(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func GetSpentBuildPoints(w http.ResponseWriter, r *http.Request) {
+func ListBuild(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
+	id, err := strconv.Atoi(vars["characterId"])
 	if err != nil {
 		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return

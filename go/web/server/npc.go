@@ -2,16 +2,24 @@ package server
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
 func GetNPC(w http.ResponseWriter, r *http.Request) {
+	var err error
 	site := NewSite()
 	site.Page = "npc"
 	vars := mux.Vars(r)
 	ctx := GetContext(r)
-	npc, resp, err := api.NPCApi.GetNPC(ctx, vars["id"])
+	var nId int64
+	if nId, err = strconv.ParseInt(vars["npcId"], 10, 0); err != nil {
+		show404(w, r, err.Error())
+	}
+	npcId := int32(nId)
+
+	npc, resp, err := api.NPCApi.GetNPC(ctx, npcId)
 	if err != nil {
 		show500(w, r, err.Error())
 		return

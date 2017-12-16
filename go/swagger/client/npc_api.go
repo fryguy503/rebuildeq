@@ -30,9 +30,9 @@ type NPCApiService service
 /* NPCApiService 
  Get information about a specific NPC
  * @param ctx context.Context for authentication, logging, tracing, etc.
- @param id ID of NPC
+ @param npcId ID of NPC
  @return Npc*/
-func (a *NPCApiService) GetNPC(ctx context.Context, id string) (Npc,  *http.Response, error) {
+func (a *NPCApiService) GetNPC(ctx context.Context, npcId int32) (Npc,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
@@ -42,8 +42,8 @@ func (a *NPCApiService) GetNPC(ctx context.Context, id string) (Npc,  *http.Resp
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/npc/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", fmt.Sprintf("%v", id), -1)
+	localVarPath := a.client.cfg.BasePath + "/npc/{npcId}/detail"
+	localVarPath = strings.Replace(localVarPath, "{"+"npcId"+"}", fmt.Sprintf("%v", npcId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -94,9 +94,9 @@ func (a *NPCApiService) GetNPC(ctx context.Context, id string) (Npc,  *http.Resp
 /* NPCApiService 
  Search for NPCs who drop provided item
  * @param ctx context.Context for authentication, logging, tracing, etc.
- @param id ID of Item
+ @param itemId ID of Item
  @return []Npc*/
-func (a *NPCApiService) GetNPCsByItem(ctx context.Context, id string) ([]Npc,  *http.Response, error) {
+func (a *NPCApiService) ListItemNPC(ctx context.Context, itemId int32) ([]Npc,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
@@ -106,8 +106,8 @@ func (a *NPCApiService) GetNPCsByItem(ctx context.Context, id string) ([]Npc,  *
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/npc/search/item/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", fmt.Sprintf("%v", id), -1)
+	localVarPath := a.client.cfg.BasePath + "/item/{itemId}/npc"
+	localVarPath = strings.Replace(localVarPath, "{"+"itemId"+"}", fmt.Sprintf("%v", itemId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

@@ -3,17 +3,24 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
-func GetInventory(w http.ResponseWriter, r *http.Request) {
+func ListInventory(w http.ResponseWriter, r *http.Request) {
+	var err error
 	site := NewSite()
 	site.Page = "inventory"
 	vars := mux.Vars(r)
 	ctx := GetContext(r)
-	inventory, resp, err := api.InventoryApi.GetInventory(ctx, vars["id"])
+	var cId int64
+	if cId, err = strconv.ParseInt(vars["characterId"], 10, 0); err != nil {
+		show404(w, r, err.Error())
+	}
+	characterId := int32(cId)
+	inventory, resp, err := api.InventoryApi.ListInventory(ctx, characterId)
 	if err != nil {
 		show500(w, r, err.Error())
 		return
@@ -23,7 +30,7 @@ func GetInventory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	character, resp, err := api.CharacterApi.GetCharacter(ctx, vars["id"])
+	character, resp, err := api.CharacterApi.GetCharacter(ctx, characterId)
 	if err != nil {
 		show500(w, r, err.Error())
 		return

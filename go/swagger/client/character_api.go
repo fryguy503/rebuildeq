@@ -30,9 +30,9 @@ type CharacterApiService service
 /* CharacterApiService 
  Get information about a character
  * @param ctx context.Context for authentication, logging, tracing, etc.
- @param id ID of Character
+ @param characterId ID of Character
  @return Character*/
-func (a *CharacterApiService) GetCharacter(ctx context.Context, id string) (Character,  *http.Response, error) {
+func (a *CharacterApiService) GetCharacter(ctx context.Context, characterId int32) (Character,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
@@ -42,8 +42,8 @@ func (a *CharacterApiService) GetCharacter(ctx context.Context, id string) (Char
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/character/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", fmt.Sprintf("%v", id), -1)
+	localVarPath := a.client.cfg.BasePath + "/character/{characterId}/detail"
+	localVarPath = strings.Replace(localVarPath, "{"+"characterId"+"}", fmt.Sprintf("%v", characterId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -119,7 +119,7 @@ func (a *CharacterApiService) GetCharacter(ctx context.Context, id string) (Char
  Get list of owned characters
  * @param ctx context.Context for authentication, logging, tracing, etc.
  @return []Character*/
-func (a *CharacterApiService) GetCharacters(ctx context.Context) ([]Character,  *http.Response, error) {
+func (a *CharacterApiService) ListCharacter(ctx context.Context) ([]Character,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
@@ -129,7 +129,7 @@ func (a *CharacterApiService) GetCharacters(ctx context.Context) ([]Character,  
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/characters"
+	localVarPath := a.client.cfg.BasePath + "/character"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}

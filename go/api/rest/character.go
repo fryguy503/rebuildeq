@@ -10,7 +10,7 @@ import (
 func GetCharacter(w http.ResponseWriter, r *http.Request) {
 	var err error
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
+	id, err := strconv.Atoi(vars["characterId"])
 	if err != nil {
 		returnError(w, r, err.Error(), http.StatusInternalServerError)
 		return
@@ -25,7 +25,7 @@ func GetCharacter(w http.ResponseWriter, r *http.Request) {
 	returnData(w, r, c, http.StatusOK)
 }
 
-func GetCharacters(w http.ResponseWriter, r *http.Request) {
+func ListCharacter(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	claims, err := getAuthClaims(r)

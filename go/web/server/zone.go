@@ -15,19 +15,14 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "zone"
 	vars := mux.Vars(r)
-
-	if vars["id"] == "chart" {
-		GetZoneChart(w, r)
-		return
-	}
 	ctx := GetContext(r)
-
-	if _, err = strconv.ParseInt(vars["id"], 10, 0); err != nil {
-		GetZoneSearch(w, r)
-		return
+	var zId int64
+	if zId, err = strconv.ParseInt(vars["zoneId"], 10, 0); err != nil {
+		show404(w, r, err.Error())
 	}
+	zoneId := int32(zId)
 
-	zone, resp, err := api.ZoneApi.GetZone(ctx, vars["id"])
+	zone, resp, err := api.ZoneApi.GetZone(ctx, zoneId)
 	if err != nil {
 		log.Println(err.Error())
 		//this is a 404, but let's handle it gracefully.
@@ -74,12 +69,12 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func GetZoneChart(w http.ResponseWriter, r *http.Request) {
+func ListZoneChart(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "zone"
 	ctx := GetContext(r)
 
-	zones, err := api.ZoneApi.GetZoneChart(ctx)
+	zones, err := api.ZoneApi.ListZoneChart(ctx)
 	if err != nil {
 		show500(w, r, err.Error())
 		return
@@ -121,7 +116,7 @@ func GetZoneChart(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func GetZoneSearch(w http.ResponseWriter, r *http.Request) {
+func ListZoneSearch(w http.ResponseWriter, r *http.Request) {
 	var err error
 	site := NewSite()
 	site.Page = "zone"
@@ -131,13 +126,13 @@ func GetZoneSearch(w http.ResponseWriter, r *http.Request) {
 	var zones []client.Zone
 	var zone client.Zone
 
-	if len(vars["query"]) > 0 || len(vars["id"]) > 0 {
+	if len(vars["query"]) > 0 || len(vars["zoneId"]) > 0 {
 		ctx := GetContext(r)
 		req := make(map[string]interface{})
 		for key, val := range vars {
 			req[key] = val
 		}
-		zones, _, err = api.ZoneApi.GetZoneSearch(ctx, req)
+		zones, _, err = api.ZoneApi.ListZoneSearch(ctx, req)
 		if err != nil {
 			show500(w, r, err.Error())
 			return

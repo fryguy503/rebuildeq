@@ -26,7 +26,7 @@ type Skill struct {
 	Image       string
 }
 
-func GetBuild(w http.ResponseWriter, r *http.Request) {
+func ListBuild(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	var err error
 	var className string
@@ -35,14 +35,17 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 	site.Title = "Builds"
 	site.Page = "build"
 
-	if len(vars["id"]) == 0 {
-		vars["id"] = "shadowknight"
+	if len(vars["characterId"]) == 0 {
+		vars["characterId"] = "shadowknight"
 	}
-	isGeneric := isClass(vars["id"])
+	isGeneric := isClass(vars["characterId"])
 	//Check if it's a session or not
-	if _, err = strconv.ParseInt(vars["id"], 10, 0); err != nil {
-		session = vars["id"]
+	var cId int64
+
+	if cId, err = strconv.ParseInt(vars["characterId"], 10, 32); err != nil {
+		session = vars["characterId"]
 	}
+	characterId := int32(cId)
 
 	var build client.BuildPoints
 	var character client.Character
@@ -50,7 +53,7 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 	ctx := GetContext(r)
 	if !isGeneric {
 
-		build, resp, err = api.BuildApi.GetSpentBuildPoints(ctx, vars["id"])
+		build, resp, err = api.BuildApi.ListBuild(ctx, characterId)
 		if err != nil {
 			show500(w, r, err.Error())
 			return
@@ -60,7 +63,7 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		character, resp, err = api.CharacterApi.GetCharacter(ctx, vars["id"])
+		character, resp, err = api.CharacterApi.GetCharacter(ctx, characterId)
 		if err != nil {
 			show500(w, r, err.Error())
 			return
@@ -73,7 +76,7 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 		className = classNameFromId(int(character.ClassId))
 		site.Title = fmt.Sprintf("%s's Build", className)
 	} else {
-		className = vars["id"]
+		className = vars["characterId"]
 		site.Title = fmt.Sprintf("%s Build", strings.ToTitle(className))
 	}
 

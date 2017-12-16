@@ -30,9 +30,9 @@ type ZoneApiService service
 /* ZoneApiService 
  Get information about a specific Zone
  * @param ctx context.Context for authentication, logging, tracing, etc.
- @param id ID of Zone
+ @param zoneId ID of Zone
  @return Zone*/
-func (a *ZoneApiService) GetZone(ctx context.Context, id string) (Zone,  *http.Response, error) {
+func (a *ZoneApiService) GetZone(ctx context.Context, zoneId int32) (Zone,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
@@ -42,8 +42,8 @@ func (a *ZoneApiService) GetZone(ctx context.Context, id string) (Zone,  *http.R
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/zone/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", fmt.Sprintf("%v", id), -1)
+	localVarPath := a.client.cfg.BasePath + "/zone/{zoneId}/detail"
+	localVarPath = strings.Replace(localVarPath, "{"+"zoneId"+"}", fmt.Sprintf("%v", zoneId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -95,7 +95,7 @@ func (a *ZoneApiService) GetZone(ctx context.Context, id string) (Zone,  *http.R
  Get a list of zone charts
  * @param ctx context.Context for authentication, logging, tracing, etc.
  @return */
-func (a *ZoneApiService) GetZoneChart(ctx context.Context) ( *http.Response, error) {
+func (a *ZoneApiService) ListZoneChart(ctx context.Context) ( *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
@@ -153,7 +153,7 @@ func (a *ZoneApiService) GetZoneChart(ctx context.Context) ( *http.Response, err
  @param optional (nil or map[string]interface{}) with one or more of:
      @param "query" (string) Zone details to search for
  @return []Zone*/
-func (a *ZoneApiService) GetZoneSearch(ctx context.Context, localVarOptionals map[string]interface{}) ([]Zone,  *http.Response, error) {
+func (a *ZoneApiService) ListZoneSearch(ctx context.Context, localVarOptionals map[string]interface{}) ([]Zone,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}

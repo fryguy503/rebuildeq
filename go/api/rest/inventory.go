@@ -7,11 +7,11 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func GetInventory(w http.ResponseWriter, r *http.Request) {
+func ListInventory(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
+	id, err := strconv.Atoi(vars["characterId"])
 	if err != nil {
 		returnError(w, r, err.Error(), http.StatusInternalServerError)
 		return

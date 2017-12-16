@@ -49,92 +49,93 @@ var routes = Routes{
 	},
 
 	Route{
-		"GetCharacters",
+		"ListBuild",
 		"GET",
-		"/characters",
-		GetCharacters,
+		"/character/{characterId}/build",
+		ListBuild,
 	},
 
 	Route{
-		"GetCharacter",
-		"GET",
-		"/character/{id}",
-		GetCharacter,
-	},
-
-	Route{
-		"GetZoneSearch",
-		"GET",
-		"/zone/search",
-		GetZoneSearch,
-	},
-
-	Route{
-		"GetZone",
-		"GET",
-		"/zone/{id}",
-		GetZone,
-	},
-
-	Route{
-		"GetNPC",
-		"GET",
-		"/npc/{id}",
-		GetNPC,
-	},
-
-	Route{
-		"GetItem",
-		"GET",
-		"/item/{id}",
-		GetItem,
-	},
-
-	Route{
-		"GetInventory",
-		"GET",
-		"/inventory/{id}",
-		GetInventory,
+		"TrainBuild",
+		"PUT",
+		"/character/{characterId}/build/{buildId}/detail",
+		TrainBuild,
 	},
 
 	Route{
 		"GetChangelog",
 		"GET",
-		"/changelog/{id}",
+		"/changelog/{id}/detail",
 		GetChangelog,
 	},
 
 	Route{
-		"GetChangelogs",
+		"ListChangelog",
 		"GET",
-		"/changelogs",
-		GetChangelogs,
+		"/changelog",
+		ListChangelog,
 	},
 
 	Route{
-		"GetSpentBuildPoints",
+		"GetCharacter",
 		"GET",
-		"/builds/{id}",
-		GetSpentBuildPoints,
+		"/character/{characterId}/detail",
+		GetCharacter,
 	},
 
 	Route{
-		"TrainBuildPoint",
-		"PUT",
-		"/build/{id}",
-		TrainBuildPoint,
+		"ListCharacter",
+		"GET",
+		"/character",
+		ListCharacter,
 	},
+
 	Route{
-		"GetZoneChart",
+		"ListInventory",
+		"GET",
+		"/character/{characterId}/inventory",
+		ListInventory,
+	},
+
+	Route{
+		"GetItem",
+		"GET",
+		"/item/{itemId}/detail",
+		GetItem,
+	},
+
+	Route{
+		"GetNPC",
+		"GET",
+		"/npc/{id}/detail",
+		GetNPC,
+	},
+
+	Route{
+		"ListItemNPC",
+		"GET",
+		"/item/{itemId}/npc",
+		ListItemNPC,
+	},
+
+	Route{
+		"GetZone",
+		"GET",
+		"/zone/{zoneId}/detail",
+		GetZone,
+	},
+
+	Route{
+		"ListZoneChart",
 		"GET",
 		"/zone/chart",
-		GetZoneChart,
+		ListZoneChart,
 	},
 
 	Route{
-		"GetNPCsByItem",
+		"ListZoneSearch",
 		"GET",
-		"/npc/search/item/{id}",
-		GetNPCsByItem,
+		"/zone/search",
+		ListZoneSearch,
 	},
 }

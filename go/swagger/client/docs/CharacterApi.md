@@ -4,12 +4,12 @@ All URIs are relative to *https://app.rebuildeq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**GetCharacter**](CharacterApi.md#GetCharacter) | **Get** /character/{id} | 
-[**GetCharacters**](CharacterApi.md#GetCharacters) | **Get** /characters | 
+[**GetCharacter**](CharacterApi.md#GetCharacter) | **Get** /character/{characterId}/detail | 
+[**ListCharacter**](CharacterApi.md#ListCharacter) | **Get** /character | 
 
 
 # **GetCharacter**
-> Character GetCharacter(ctx, id)
+> Character GetCharacter(ctx, characterId)
 
 
 Get information about a character
@@ -19,7 +19,7 @@ Get information about a character
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | **string**| ID of Character | 
+  **characterId** | **int32**| ID of Character | 
 
 ### Return type
 
@@ -36,8 +36,8 @@ Name | Type | Description  | Notes
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
-# **GetCharacters**
-> []Character GetCharacters(ctx, )
+# **ListCharacter**
+> []Character ListCharacter(ctx, )
 
 
 Get list of owned characters

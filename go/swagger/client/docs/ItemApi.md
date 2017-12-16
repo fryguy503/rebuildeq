@@ -4,11 +4,11 @@ All URIs are relative to *https://app.rebuildeq.com*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**GetItem**](ItemApi.md#GetItem) | **Get** /item/{id} | 
+[**GetItem**](ItemApi.md#GetItem) | **Get** /item/{itemId}/detail | 
 
 
 # **GetItem**
-> Item GetItem(ctx, id)
+> Item GetItem(ctx, itemId)
 
 
 Get information about a specific item
@@ -18,7 +18,7 @@ Get information about a specific item
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ctx** | **context.Context** | context for logging, tracing, authentication, etc.
-  **id** | **string**| ID of Item | 
+  **itemId** | **int32**| ID of Item | 
 
 ### Return type
 

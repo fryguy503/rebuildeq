@@ -30,9 +30,9 @@ type ItemApiService service
 /* ItemApiService 
  Get information about a specific item
  * @param ctx context.Context for authentication, logging, tracing, etc.
- @param id ID of Item
+ @param itemId ID of Item
  @return Item*/
-func (a *ItemApiService) GetItem(ctx context.Context, id string) (Item,  *http.Response, error) {
+func (a *ItemApiService) GetItem(ctx context.Context, itemId int32) (Item,  *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody interface{}
@@ -42,8 +42,8 @@ func (a *ItemApiService) GetItem(ctx context.Context, id string) (Item,  *http.R
 	)
 
 	// create path and map variables
-	localVarPath := a.client.cfg.BasePath + "/item/{id}"
-	localVarPath = strings.Replace(localVarPath, "{"+"id"+"}", fmt.Sprintf("%v", id), -1)
+	localVarPath := a.client.cfg.BasePath + "/item/{itemId}/detail"
+	localVarPath = strings.Replace(localVarPath, "{"+"itemId"+"}", fmt.Sprintf("%v", itemId), -1)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
