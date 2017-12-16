@@ -3,7 +3,6 @@ package server
 import (
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -53,27 +52,21 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 
 		build, resp, err = api.BuildApi.GetSpentBuildPoints(ctx, vars["id"])
 		if err != nil {
-			//TODO: Handle errors more gracefully
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("Failed", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 		if resp.StatusCode != 200 {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("Invalid status code", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 
 		character, resp, err = api.CharacterApi.GetCharacter(ctx, vars["id"])
 		if err != nil {
-			//TODO: Handle errors more gracefully
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("Failed", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 		if resp.StatusCode != 200 {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("Invalid status code", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 
@@ -83,12 +76,10 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 		className = vars["id"]
 		site.Title = fmt.Sprintf("%s Build", strings.ToTitle(className))
 	}
-	log.Println("Loading class", className)
 
 	info, err := getBuildInfo(className)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Could not get build info", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 
@@ -98,14 +89,12 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 	if tmp == nil {
 
 		if tmp, err = loadTemplate(nil, "body", "build.tpl"); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 
 		if tmp, err = loadStandardTemplate(tmp); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 
@@ -139,8 +128,7 @@ func GetBuild(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	if err = tmp.Execute(w, content); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Template rendering error", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	return

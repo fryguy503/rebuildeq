@@ -1,8 +1,8 @@
-package server 
+package server
 
 import (
 	"net/http"
-	"fmt"
+
 	"github.com/gorilla/mux"
 )
 
@@ -20,7 +20,7 @@ func NewRouter() *mux.Router {
 	for _, route := range routes {
 		var handler http.Handler
 		handler = route.HandlerFunc
-		handler = Logger(handler, route.Name)
+		//handler = serevr.Logger(handler, route.Name)
 
 		router.
 			Methods(route.Method).
@@ -29,11 +29,9 @@ func NewRouter() *mux.Router {
 			Handler(handler)
 	}
 
-	return router
-}
+	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("www"))))
 
-func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello World!")
+	return router
 }
 
 var routes = Routes{
@@ -42,27 +40,6 @@ var routes = Routes{
 		"GET",
 		"/",
 		Index,
-	},
-
-	Route{
-		"PostLogin",
-		"POST",
-		"/login",
-		PostLogin,
-	},
-
-	Route{
-		"GetSpentBuildPoints",
-		"GET",
-		"/builds/{id}",
-		GetSpentBuildPoints,
-	},
-
-	Route{
-		"TrainBuildPoint",
-		"PUT",
-		"/build/{id}",
-		TrainBuildPoint,
 	},
 
 	Route{
@@ -94,6 +71,20 @@ var routes = Routes{
 	},
 
 	Route{
+		"GetZoneSearch",
+		"GET",
+		"/zone/search",
+		GetZoneSearch,
+	},
+
+	Route{
+		"GetZoneChart",
+		"GET",
+		"/zone/chart",
+		GetZoneChart,
+	},
+
+	Route{
 		"GetInventory",
 		"GET",
 		"/inventory/{id}",
@@ -115,13 +106,6 @@ var routes = Routes{
 	},
 
 	Route{
-		"GetNPCsByItem",
-		"GET",
-		"/npc/search/item/{id}",
-		GetNPCsByItem,
-	},
-
-	Route{
 		"GetZone",
 		"GET",
 		"/zone/{id}",
@@ -129,17 +113,44 @@ var routes = Routes{
 	},
 
 	Route{
-		"GetZoneChart",
+		"GetBuild",
 		"GET",
-		"/zone/chart",
-		GetZoneChart,
+		"/build/{id}",
+		GetBuild,
 	},
 
 	Route{
-		"GetZoneSearch",
+		"GetBuild",
 		"GET",
-		"/zone/search",
-		GetZoneSearch,
+		"/build",
+		GetBuild,
 	},
 
+	Route{
+		"GetZone",
+		"GET",
+		"/zone",
+		GetZone,
+	},
+
+	Route{
+		"GetGuideGettingStarted",
+		"GET",
+		"/guide/getting-started",
+		GetGuideGettingStarted,
+	},
+
+	Route{
+		"GetGuideEncounterSystem",
+		"GET",
+		"/guide/encounter-system",
+		GetGuideEncounterSystem,
+	},
+
+	Route{
+		"GetGuideFAQ",
+		"GET",
+		"/guide/faq",
+		GetGuideFAQ,
+	},
 }

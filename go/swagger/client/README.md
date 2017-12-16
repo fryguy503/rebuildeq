@@ -34,6 +34,7 @@ Class | Method | HTTP request | Description
 *NPCApi* | [**GetNPCsByItem**](docs/NPCApi.md#getnpcsbyitem) | **Get** /npc/search/item/{id} | 
 *ZoneApi* | [**GetZone**](docs/ZoneApi.md#getzone) | **Get** /zone/{id} | 
 *ZoneApi* | [**GetZoneChart**](docs/ZoneApi.md#getzonechart) | **Get** /zone/chart | 
+*ZoneApi* | [**GetZoneSearch**](docs/ZoneApi.md#getzonesearch) | **Get** /zone/search | 
 
 
 ## Documentation For Models

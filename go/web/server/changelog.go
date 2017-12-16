@@ -3,7 +3,6 @@ package server
 import (
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"strings"
 
@@ -17,14 +16,11 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 	ctx := GetContext(r)
 	changelog, resp, err := api.ChangelogApi.GetChangelog(ctx, vars["id"])
 	if err != nil {
-		//TODO: Handle errors more gracefully
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Failed", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	if resp.StatusCode != 200 {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Invalid status code", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 
@@ -32,14 +28,12 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 	if tmp == nil {
 
 		if tmp, err = loadTemplate(nil, "body", "changelog.tpl"); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 
 		if tmp, err = loadStandardTemplate(tmp); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 		setTemplate("changelog", tmp)
@@ -61,8 +55,7 @@ func GetChangelog(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	if err = tmp.Execute(w, content); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Template rendering error", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	return
@@ -75,28 +68,23 @@ func GetChangelogs(w http.ResponseWriter, r *http.Request) {
 	ctx := GetContext(r)
 	changelogs, resp, err := api.ChangelogApi.GetChangelogs(ctx)
 	if err != nil {
-		//TODO: Handle errors more gracefully
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Failed", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	if resp.StatusCode != 200 {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Invalid status code", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	tmp := getTemplate("")
 	if tmp == nil {
 
 		if tmp, err = loadTemplate(nil, "body", "changelogs.tpl"); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 
 		if tmp, err = loadStandardTemplate(tmp); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 		setTemplate("changelogs", tmp)
@@ -127,8 +115,7 @@ func GetChangelogs(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	if err = tmp.Execute(w, content); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Template rendering error", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	return

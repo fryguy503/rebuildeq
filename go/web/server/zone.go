@@ -4,11 +4,14 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
 func GetZone(w http.ResponseWriter, r *http.Request) {
+	var err error
 	site := NewSite()
 	site.Page = "zone"
 	vars := mux.Vars(r)
@@ -19,31 +22,35 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx := GetContext(r)
 
-	zone, resp, err := api.ZoneApi.GetZone(ctx, vars["id"])
-	if err != nil {
-		//TODO: Handle errors more gracefully
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Failed", err.Error())
-		return
-	}
-	if resp.StatusCode != 200 {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Invalid status code", err.Error())
+	if _, err = strconv.ParseInt(vars["id"], 10, 0); err != nil {
+		GetZoneSearch(w, r)
 		return
 	}
 
+	zone, resp, err := api.ZoneApi.GetZone(ctx, vars["id"])
+	if err != nil {
+		log.Println(err.Error())
+		//this is a 404, but let's handle it gracefully.
+		//return
+	}
+
+	//if resp.StatusCode != 200 {
+	//showError(w, r, "Unhandled Response", resp.StatusCode)
+	//	return
+	//}
+	if resp.StatusCode == 200 {
+		//Todo
+	}
 	tmp := getTemplate("")
 	if tmp == nil {
 
 		if tmp, err = loadTemplate(nil, "body", "zone.tpl"); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 
 		if tmp, err = loadStandardTemplate(tmp); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 		setTemplate("zone", tmp)
@@ -61,8 +68,7 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	if err = tmp.Execute(w, content); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Template rendering error", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	return
@@ -72,16 +78,10 @@ func GetZoneChart(w http.ResponseWriter, r *http.Request) {
 	site := NewSite()
 	site.Page = "zone"
 	ctx := GetContext(r)
-	zones, resp, err := api.ZoneApi.GetZoneChart(ctx)
+
+	zones, err := api.ZoneApi.GetZoneChart(ctx)
 	if err != nil {
-		//TODO: Handle errors more gracefully
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Failed api request", err.Error())
-		return
-	}
-	if resp.StatusCode != 200 {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Invalid status code", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 
@@ -93,14 +93,12 @@ func GetZoneChart(w http.ResponseWriter, r *http.Request) {
 		tmp = template.New("body").Funcs(funcMap)
 
 		if tmp, err = loadTemplate(tmp, "body", "zone_chart.tpl"); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 
 		if tmp, err = loadStandardTemplate(tmp); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 		setTemplate("zone", tmp)
@@ -114,15 +112,108 @@ func GetZoneChart(w http.ResponseWriter, r *http.Request) {
 		Zones: zones,
 	}
 
+	if err = tmp.Execute(w, content); err != nil {
+		show500(w, r, err.Error())
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	return
+}
+
+func GetZoneSearch(w http.ResponseWriter, r *http.Request) {
+	var err error
+	site := NewSite()
+	site.Page = "zone"
+	tmp := getTemplate("")
+
+	vars := mux.Vars(r)
+	var zones []client.Zone
+	var zone client.Zone
+
+	if len(vars["query"]) > 0 || len(vars["id"]) > 0 {
+		ctx := GetContext(r)
+		req := make(map[string]interface{})
+		for key, val := range vars {
+			req[key] = val
+		}
+		zones, _, err = api.ZoneApi.GetZoneSearch(ctx, req)
+		if err != nil {
+			show500(w, r, err.Error())
+			return
+		}
+		log.Println(zones)
+
+	}
+	if len(zones) == 1 { //only one result, just show result page
+		zone = zones[0]
+		tmp := getTemplate("")
+		if tmp == nil {
+
+			if tmp, err = loadTemplate(nil, "body", "zone.tpl"); err != nil {
+				show500(w, r, err.Error())
+				return
+			}
+
+			if tmp, err = loadStandardTemplate(tmp); err != nil {
+				show500(w, r, err.Error())
+				return
+			}
+			setTemplate("zone", tmp)
+		}
+		type Content struct {
+			Site Site
+			Zone interface{}
+		}
+		content := Content{
+			Site: site,
+			Zone: zone,
+		}
+
+		site.Title = zone.Name
+
+		w.WriteHeader(http.StatusOK)
+		if err = tmp.Execute(w, content); err != nil {
+			show500(w, r, err.Error())
+			return
+		}
+		return
+	}
+
+	if tmp == nil {
+		funcMap := template.FuncMap{"iszonelevel": isZoneLevel}
+
+		tmp = template.New("body").Funcs(funcMap)
+
+		if tmp, err = loadTemplate(tmp, "body", "zone_search.tpl"); err != nil {
+			show500(w, r, err.Error())
+			return
+		}
+
+		if tmp, err = loadStandardTemplate(tmp); err != nil {
+			show500(w, r, err.Error())
+			return
+		}
+		setTemplate("zone", tmp)
+	}
+	type Content struct {
+		Site   Site
+		Zones  interface{}
+		Search string
+	}
+	content := Content{
+		Site:   site,
+		Zones:  zones,
+		Search: vars["id"],
+	}
+
 	w.WriteHeader(http.StatusOK)
 	if err = tmp.Execute(w, content); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Template rendering error", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	return
 }
-
 func isZoneLevel(level int32, levels int32) bool {
 	return ((levels & level) == level)
 }

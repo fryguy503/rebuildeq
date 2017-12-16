@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -17,14 +16,11 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 
 	item, resp, err := api.ItemApi.GetItem(ctx, vars["id"])
 	if err != nil {
-		//TODO: Handle errors more gracefully
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Failed", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	if resp.StatusCode != 200 {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Invalid status code", err.Error())
+		show404(w, r, err.Error())
 		return
 	}
 
@@ -55,14 +51,12 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 	if tmp == nil {
 
 		if tmp, err = loadTemplate(nil, "body", "item.tpl"); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show404(w, r, "Failed to load template: "+err.Error())
 			return
 		}
 
 		if tmp, err = loadStandardTemplate(tmp); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show404(w, r, "Failed to load template: "+err.Error())
 			return
 		}
 		setTemplate("item", tmp)
@@ -79,13 +73,10 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 		Item: item,
 		NPCs: npcs,
 	}
-	for _, npc := range npcs {
-		log.Println(npc.Name)
-	}
+
 	w.WriteHeader(http.StatusOK)
 	if err = tmp.Execute(w, content); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Template rendering error", err.Error())
+		show404(w, r, "Failed to render template: "+err.Error())
 		return
 	}
 	return

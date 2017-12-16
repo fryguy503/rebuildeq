@@ -208,12 +208,31 @@ paths:
       responses:
         200:
           description: '200 / OK'
-          schema:
-            type: array
+          schema:            
             items:
               $ref: '#/definitions/Zone'          
         default:
           description: Unhandled Error
+  /zone/search:
+    get:
+      tags: ["Zone"]
+      description: Search for zone
+      operationId: getZoneSearch
+      parameters:
+        - in: query
+          name: query
+          type: string
+          description: Zone details to search for
+          required: false
+      responses:
+        200:
+          description: '200 / OK'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Zone'
+        404:
+          description: 'No zones found'
   /zone/{id}:
     get:
       tags: ["Zone"]

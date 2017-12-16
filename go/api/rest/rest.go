@@ -28,7 +28,7 @@ func StartServer(s storage.Storage) (err error) {
 	router := server.NewRouter()
 	ApplyRoutes(router)
 
-	err = http.ListenAndServe(":8080", router)
+	err = http.ListenAndServe(":8081", router)
 	return
 }
 
@@ -115,6 +115,7 @@ func returnError(w http.ResponseWriter, r *http.Request, message string, statusC
 			return
 		}
 	}
+	log.Printf("Failed request to %s: %s\n", r.URL, string(data))
 	http.Error(w, string(data), statusCode)
 	return
 }

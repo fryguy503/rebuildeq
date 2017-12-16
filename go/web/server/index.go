@@ -1,7 +1,6 @@
 package server
 
 import (
-	"log"
 	"net/http"
 )
 
@@ -13,21 +12,19 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	tmp := getTemplate("")
 	if tmp == nil {
 
-		newTmp, tErr := loadTemplate(nil, "index", "index.tpl")
-		if tErr != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", tErr.Error())
+		tmp, err = loadTemplate(nil, "index", "index.tpl")
+		if err != nil {
+			show500(w, r, err.Error())
 			return
 		}
 
-		setTemplate("index", newTmp)
+		setTemplate("index", tmp)
 
 	}
 
 	w.WriteHeader(http.StatusOK)
 	if err = tmp.Execute(w, site); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Template rendering error", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	return

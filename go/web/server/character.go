@@ -1,7 +1,6 @@
 package server
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -14,14 +13,11 @@ func GetCharacter(w http.ResponseWriter, r *http.Request) {
 	ctx := GetContext(r)
 	character, resp, err := api.CharacterApi.GetCharacter(ctx, vars["id"])
 	if err != nil {
-		//TODO: Handle errors more gracefully
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Failed", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	if resp.StatusCode != 200 {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Invalid status code", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 
@@ -29,14 +25,12 @@ func GetCharacter(w http.ResponseWriter, r *http.Request) {
 	if tmp == nil {
 
 		if tmp, err = loadTemplate(nil, "body", "character.tpl"); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 
 		if tmp, err = loadStandardTemplate(tmp); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 		setTemplate("character", tmp)
@@ -54,8 +48,7 @@ func GetCharacter(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	if err = tmp.Execute(w, content); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Template rendering error", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	return
@@ -67,28 +60,23 @@ func GetCharacters(w http.ResponseWriter, r *http.Request) {
 	ctx := GetContext(r)
 	characters, resp, err := api.CharacterApi.GetCharacters(ctx)
 	if err != nil {
-		//TODO: Handle errors more gracefully
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Failed", err.Error(), resp.Status)
+		show500(w, r, err.Error())
 		return
 	}
 	if resp.StatusCode != 200 {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Invalid status code", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	tmp := getTemplate("characters")
 	if tmp == nil {
 
 		if tmp, err = loadTemplate(nil, "body", "characters.tpl"); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 
 		if tmp, err = loadStandardTemplate(tmp); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			log.Println("failed to load template", err.Error())
+			show500(w, r, err.Error())
 			return
 		}
 		setTemplate("characters", tmp)
@@ -104,8 +92,7 @@ func GetCharacters(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	if err = tmp.Execute(w, content); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		log.Println("Template rendering error", err.Error())
+		show500(w, r, err.Error())
 		return
 	}
 	return

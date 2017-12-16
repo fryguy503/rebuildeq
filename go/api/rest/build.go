@@ -12,7 +12,7 @@ func TrainBuildPoint(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusExpectationFailed)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 
@@ -21,7 +21,7 @@ func TrainBuildPoint(w http.ResponseWriter, r *http.Request) {
 
 	build, err := api.GetSpentBuildPoints(characterId)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusExpectationFailed)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 
@@ -42,7 +42,7 @@ func GetSpentBuildPoints(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusExpectationFailed)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 	c, err := api.GetSpentBuildPoints(id)

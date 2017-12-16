@@ -119,7 +119,7 @@ func TestEndpoints(t *testing.T) {
 	}
 	go StartServer(s)
 
-	url := "http://localhost:8080"
+	url := "http://localhost:8081"
 
 	client := &http.Client{}
 	for _, test := range tests {

@@ -2,10 +2,10 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
 	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
@@ -21,157 +21,15 @@ type Site struct {
 	Description string //Description for oprop
 }
 
-type Route struct {
-	Name        string
-	Method      string
-	Pattern     string
-	HandlerFunc http.HandlerFunc
-}
-
-type Routes []Route
-
 func StartServer() {
 
 	cfg := client.NewConfiguration()
-	cfg.BasePath = "http://127.0.0.1:8901"
+	cfg.BasePath = "http://127.0.0.1:8081"
 	api = client.NewAPIClient(cfg)
 	router := NewRouter()
 	router.StrictSlash(false)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
-}
-
-func NewRouter() *mux.Router {
-	router := mux.NewRouter().StrictSlash(true)
-	for _, route := range routes {
-		var handler http.Handler
-		handler = route.HandlerFunc
-		//handler = serevr.Logger(handler, route.Name)
-
-		router.
-			Methods(route.Method).
-			Path(route.Pattern).
-			Name(route.Name).
-			Handler(handler)
-	}
-
-	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("www"))))
-
-	return router
-}
-
-var routes = Routes{
-	Route{
-		"Index",
-		"GET",
-		"/",
-		Index,
-	},
-
-	Route{
-		"GetChangelog",
-		"GET",
-		"/changelog/{id}",
-		GetChangelog,
-	},
-
-	Route{
-		"GetChangelogs",
-		"GET",
-		"/changelogs",
-		GetChangelogs,
-	},
-
-	Route{
-		"GetCharacter",
-		"GET",
-		"/character/{id}",
-		GetCharacter,
-	},
-
-	Route{
-		"GetCharacters",
-		"GET",
-		"/characters",
-		GetCharacters,
-	},
-
-	Route{
-		"GetInventory",
-		"GET",
-		"/inventory/{id}",
-		GetInventory,
-	},
-
-	Route{
-		"GetItem",
-		"GET",
-		"/item/{id}",
-		GetItem,
-	},
-
-	Route{
-		"GetNPC",
-		"GET",
-		"/npc/{id}",
-		GetNPC,
-	},
-
-	Route{
-		"GetZone",
-		"GET",
-		"/zone/{id}",
-		GetZone,
-	},
-
-	Route{
-		"GetBuild",
-		"GET",
-		"/build/{id}",
-		GetBuild,
-	},
-
-	Route{
-		"GetBuild",
-		"GET",
-		"/build",
-		GetBuild,
-	},
-
-	Route{
-		"GetZone",
-		"GET",
-		"/zone",
-		GetZone,
-	},
-
-	Route{
-		"GetZoneChart",
-		"GET",
-		"/zone/chart",
-		GetZoneChart,
-	},
-
-	Route{
-		"GetGuideGettingStarted",
-		"GET",
-		"/guide/getting-started",
-		GetGuideGettingStarted,
-	},
-
-	Route{
-		"GetGuideEncounterSystem",
-		"GET",
-		"/guide/encounter-system",
-		GetGuideEncounterSystem,
-	},
-
-	Route{
-		"GetGuideFAQ",
-		"GET",
-		"/guide/faq",
-		GetGuideFAQ,
-	},
 }
 
 func GetContext(r *http.Request) context.Context {
@@ -198,4 +56,52 @@ func NewSite() (site Site) {
 		Description: "RebuildEQ rocks.",
 	}
 	return
+}
+
+func show404(w http.ResponseWriter, r *http.Request, message string) {
+	showError(w, r, message, http.StatusNotFound)
+}
+
+func show500(w http.ResponseWriter, r *http.Request, message string) {
+	showError(w, r, message, http.StatusInternalServerError)
+}
+
+func showError(w http.ResponseWriter, r *http.Request, message string, statusCode int) {
+	var err error
+	status := fmt.Sprintf("%d", statusCode)
+	tmp := getTemplate(status)
+	if tmp == nil {
+
+		if tmp, err = loadTemplate(nil, "body", "error.tpl"); err != nil {
+			//this is a major error
+			log.Println("Failed to load body on showerror:", err.Error())
+			return
+		}
+
+		if tmp, err = loadStandardTemplate(tmp); err != nil {
+			//this is a major error
+			log.Println("Failed to load standard on showerror:", err.Error())
+			return
+		}
+		setTemplate(status, tmp)
+	}
+	type Content struct {
+		Site Site
+		Url  string
+	}
+	site := NewSite()
+	site.Page = status
+	site.Description = message
+	content := Content{
+		Site: site,
+		Url:  r.URL.String(),
+	}
+
+	log.Println(fmt.Sprintf("%s: %s", r.URL, message))
+
+	w.WriteHeader(statusCode)
+	if err = tmp.Execute(w, content); err != nil {
+		log.Println("Failed to execute template:", err.Error())
+		return
+	}
 }

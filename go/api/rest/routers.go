@@ -63,6 +63,13 @@ var routes = Routes{
 	},
 
 	Route{
+		"GetZoneSearch",
+		"GET",
+		"/zone/search",
+		GetZoneSearch,
+	},
+
+	Route{
 		"GetZone",
 		"GET",
 		"/zone/{id}",

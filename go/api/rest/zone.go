@@ -2,38 +2,46 @@ package rest
 
 import (
 	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/xackery/rebuildeq/go/swagger/client"
 )
 
 func GetZone(w http.ResponseWriter, r *http.Request) {
 	var err error
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	vars := mux.Vars(r)
 	if vars["id"] == "chart" {
 		GetZoneChart(w, r)
 		return
 	}
+	if vars["id"] == "search" || len(vars["query"]) > 0 {
+		fmt.Println("search")
+		GetZoneSearch(w, r)
+		return
+	}
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusExpectationFailed)
+		err = nil
+		GetZoneSearch(w, r)
 		return
 	}
 
 	c, err := api.GetZone(id)
 	if err != nil {
-		log.Printf("Failed to get zone: %s\n", err.Error())
-		http.Error(w, err.Error(), http.StatusExpectationFailed)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
+	}
+	if c == nil || c.Name == "" {
+		returnError(w, r, "No results found", http.StatusNotFound)
 	}
 
 	js := []byte{}
 	if js, err = json.Marshal(c); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -42,18 +50,42 @@ func GetZone(w http.ResponseWriter, r *http.Request) {
 
 func GetZoneChart(w http.ResponseWriter, r *http.Request) {
 	var err error
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	c, err := api.GetZoneChart()
 	if err != nil {
-		log.Printf("Failed to get zone: %s\n", err.Error())
-		http.Error(w, err.Error(), http.StatusExpectationFailed)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 
 	js := []byte{}
 	if js, err = json.Marshal(c); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(js)
+}
+
+func GetZoneSearch(w http.ResponseWriter, r *http.Request) {
+	var err error
+
+	vars := mux.Vars(r)
+	zone := &client.Zone{
+		Name:      vars["query"],
+		Shortname: vars["query"],
+	}
+
+	fmt.Println(zone)
+
+	c, err := api.GetZoneSearch(zone)
+	if err != nil {
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
+		return
+	}
+
+	js := []byte{}
+	if js, err = json.Marshal(c); err != nil {
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

@@ -2,7 +2,6 @@ package rest
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -15,20 +14,19 @@ func GetItem(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusExpectationFailed)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 
 	c, err := api.GetItem(id)
 	if err != nil {
-		log.Printf("Failed to get item: %s\n", err.Error())
-		http.Error(w, err.Error(), http.StatusExpectationFailed)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 
 	js := []byte{}
 	if js, err = json.Marshal(c); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		returnError(w, r, err.Error(), http.StatusExpectationFailed)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
