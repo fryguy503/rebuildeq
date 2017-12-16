@@ -9912,6 +9912,10 @@ void Client::RefreshBuild() {
 					TrainAARank(aaCalloftheAncients);
 					Message(15, "You have unlocked the AA \"Call of the Ancients\"! Find the hotkey in your Alternate Advancement Window.");
 				}
+				if (GetClass() == SHAMAN && i == RB_SHM_PARAGONOFSPIRIT && GetAA(aaParagonofSpirit) < 1) {
+					TrainAARank(aaParagonofSpirit);
+					Message(15, "You have unlocked the AA \"Paragon of Spirit\"! Find the hotkey in your Alternate Advancement Window.");
+				}
 			}
 		}
 
