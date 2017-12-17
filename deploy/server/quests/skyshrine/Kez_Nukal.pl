@@ -43,7 +43,7 @@ sub EVENT_ITEM {
     plugin::return_items(\%itemcount);  
     return;
   }
-  if ($level < 60) {
+  if ($client->GetLevel() < 60) {
     quest::say("You must be level 60 before you can turn in gems.");
     quest::givecash($copper, $silver, $gold, $platinum);
     plugin::return_items(\%itemcount);  
