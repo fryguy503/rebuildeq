@@ -2783,7 +2783,7 @@ std::vector<SpecialLoot_Struct> NPC::SpecialLoot(bool card_only) {
 		if (i.item_id == 100130 && GetRace() == OGRE) loot_list.push_back(i); //Ogre Card
 		if (i.item_id == 100131 && GetRace() == HALFLING) loot_list.push_back(i); //Halfling Card
 		if (i.item_id == 100132 && GetRace() == GNOME) loot_list.push_back(i); //Gnome Card
-		if (i.item_id == 100133 && (GetRace() == FROGLOK || GetRace() == FROGLOK2 || GetRace() == 26 /* Old Model Froglok*/ || GetRace() == 27 /* Old Model Undead Froglok */)) loot_list.push_back(i); //Froglok Card
+		if (i.item_id == 100133 && (GetRace() == FROGLOK || GetRace() == 26 /* Old Model Froglok*/ || GetRace() == 27 /* Old Model Undead Froglok */)) loot_list.push_back(i); //Froglok Card
 		if (i.item_id == 100134 && (GetRace() == INVISIBLE_MAN || GetRace() == DERVISH || GetRace() == 431 /*Rock Derivsh*/)) loot_list.push_back(i); //Shadowed Man Card
 		if (i.item_id == 100135 && (GetRace() == 38 || GetRace() == 440 /*NewSpider*/ || GetRace() == 450 /*Lavaspinnder*/)) loot_list.push_back(i); //Spider Card
 		if (i.item_id == 100136 && (GetRace() == 22)) loot_list.push_back(i); //Beetle card
