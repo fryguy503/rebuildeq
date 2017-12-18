@@ -5096,6 +5096,16 @@ void Mob::TryCriticalHit(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *
 	else if (GetClass() == ROGUE && GetLevel() >= 12 && hit.skill == EQEmu::skills::SkillThrowing)
 		innate_crit = true;
 
+	rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);
+	if (rank > 0 && defender->GetHPRatio() >= 90.0f && hit.skill == EQEmu::skills::SkillBackstab && CastToClient()->sneaking) {
+		Log(Logs::Detail, Logs::Attack, "Sneak Attack crit? %u %i %i skill : %i", rank, CastToClient()->hidden, CastToClient()->sneaking, hit.skill);
+		BuildEcho(StringFormat("Sneak Attack %u catches %s off guard.", rank, defender->GetCleanName()));
+		crit_chance += floor(RuleI(Combat, MeleeCritDifficulty) * rank * .1f);
+
+		CastToClient()->sneaking = false; //Disable sneak
+		CastToClient()->SendAppearancePacket(AT_Sneak, 0);
+	}
+
 	// we have a chance to crit!
 	if (innate_crit || crit_chance) {
 		int difficulty = 0;
@@ -5115,16 +5125,6 @@ void Mob::TryCriticalHit(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *
 						 // so if we have an innate crit we have a better chance, except for ber throwing
 		if (!innate_crit || (GetClass() == BERSERKER && hit.skill == EQEmu::skills::SkillThrowing))
 			dex_bonus = dex_bonus * 3 / 5;
-
-		uint8 rank = CastToClient()->GetBuildRank(ROGUE, RB_ROG_SNEAKATTACK);		
-		if (rank > 0 && defender->GetHPRatio() >= 90.0f && hit.skill == EQEmu::skills::SkillBackstab && CastToClient()->sneaking) {
-			Log(Logs::Detail, Logs::Attack, "Sneak Attack crit? %u %i %i skill : %i", rank, CastToClient()->hidden, CastToClient()->sneaking, hit.skill);
-			BuildEcho(StringFormat("Sneak Attack %u catches %s off guard.", rank, defender->GetCleanName()));
-			crit_chance += 10 * rank;
-
-			CastToClient()->sneaking = false; //Disable sneak
-			CastToClient()->SendAppearancePacket(AT_Sneak, 0);
-		}
 
 
 		if (crit_chance)
