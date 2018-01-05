@@ -4524,13 +4524,15 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 
 			if (caster && caster->IsClient()) {
 				rank = caster->CastToClient()->GetBuildRank(CLERIC, RB_CLR_CELESTIALREGENERATION);
-				if (rank > 0 && buff.spellid != 2740) {
+				if (rank > 0 && buff.spellid == 2740) {
 					effect_value = 36 * rank;
-					int32 mana_amount = 2 * rank;
-					if (mana_amount < 1) mana_amount = 1;
-					entity_list.LogManaEvent(caster, caster, mana_amount);
-					caster->SetMana(caster->GetMana() + mana_amount);
-					caster->BuildEcho(StringFormat("Celestial Regeneration %u gifted %i mana.", rank, mana_amount));
+					if (GetMaxMana() > 0) {
+						int32 mana_amount = 2 * rank;
+						if (mana_amount < 1) mana_amount = 1;
+						entity_list.LogManaEvent(caster, this, mana_amount);
+						SetMana(GetMana() + mana_amount);
+						BuildEcho(StringFormat("%s's Celestial Regeneration %u gifted %i mana.", caster->GetCleanName(), rank, mana_amount));
+					}
 				}
 				rank = caster->CastToClient()->GetBuildRank(DRUID, RB_DRU_CONVERGENCEOFSPIRITS);
 				if (rank > 0 && buff.spellid == 8190) {
