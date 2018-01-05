@@ -327,11 +327,10 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 								spell_id == 113 || spell_id == 114 || spell_id == 330 || spell_id == 324
 								|| spell_id == 410 || spell_id == 1663 || spell_id == 313 || spell_id == 93 || spell_id == 94 || spell_id == 322 || spell_id == 328 || spell_id == 334 || spell_id == 83 || spell_id == 68 || spell_id == 189 || spell_id == 120 || spell_id == 69 || spell_id == 121 || spell_id == 122 || spell_id == 70 || spell_id == 1659 || spell_id == 1660 || spell_id == 1661 || spell_id == 1662 || spell_id == 1664 || spell_id == 2118 || spell_id == 2540 || spell_id == 4078
 								) && HasPet()) {
-								int bonusDamage = floor(dmg * 0.05f * rank);
+								int bonusDamage = floor(-dmg * 0.05f * rank);
 								if (bonusDamage > 0) {
-									
-									BuildEcho(StringFormat("Primal Fusion %i caused your pet to echo your spell for %i damage.", rank, bonusDamage));
-									GetPet()->Damage(GetPet(), bonusDamage, spell_id, spell.skill, false, buffslot, false);
+									casterClient->BuildEcho(StringFormat("Primal Fusion %i caused your pet to echo your spell for %i damage.", rank, bonusDamage));
+									Damage(GetPet(), bonusDamage, spell_id, spell.skill, false, buffslot, false);
 								}
 								 
 							}
