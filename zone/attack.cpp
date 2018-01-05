@@ -2973,7 +2973,8 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 					AddRampage(target);
 					if (on_hatelist) continue;
 					
-					hate_list.AddEntToHateList(target, 50, 0, bFrenzy, !iBuffTic); //Just toss 50, 100 is default on initial aggro.
+					hate_list.AddEntToHateList(target, 50, 0, bFrenzy, !iBuffTic); //Just t1oss 50, 100 is default on initial aggro.
+					target->hate_list.AddEntToHateList(this);
 					target->CastToClient()->AddAutoXTarget(this);										
 				}
 			}
@@ -3000,6 +3001,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 						if (on_hatelist) continue;
 
 						hate_list.AddEntToHateList(target, 50, 0, bFrenzy, !iBuffTic); //Just toss 50, 100 is default on initial aggro.
+						target->hate_list.AddEntToHateList(this);
 						target->CastToClient()->AddAutoXTarget(this);
 					}
 				}
@@ -3106,6 +3108,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 	}
 
 	hate_list.AddEntToHateList(other, hate, damage, bFrenzy, !iBuffTic);
+	other->hate_list.AddEntToHateList(this);
 
 	if (other->IsClient() && !on_hatelist)
 		other->CastToClient()->AddAutoXTarget(this);
@@ -3149,6 +3152,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 			if (!owner->GetSpecialAbility(IMMUNE_AGGRO))
 			{
 				hate_list.AddEntToHateList(owner, 0, 0, false, !iBuffTic);
+				owner->hate_list.AddEntToHateList(this);
 				if (owner->IsClient() && !CheckAggro(owner))
 					owner->CastToClient()->AddAutoXTarget(this);
 			}
@@ -4569,8 +4573,8 @@ void Mob::HealDamage(uint32 amount, Mob *caster, uint16 spell_id)
 		}
 
 		rank = caster->GetBuildRank(PALADIN, RB_PAL_ZEALOTSFERVOR);
-		if (rank > 0 &&
-			caster != this //cannot use on self
+		if (rank > 0 
+			&& caster != this //cannot use on self
 			) {
 			int32 zDamage = floor(rank * 0.01f * amount);
 			int zCount = caster->hate_list.DamageNearby(caster, zDamage, 50, this, rank);
