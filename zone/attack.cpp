@@ -6510,7 +6510,7 @@ void Client::SetAttackTimer()
 			delay = 100 * ItemToUse->Delay;
 
 		uint32 rank = GetBuildRank(MONK, RB_MNK_WUSQUICKENING);
-		if (rank > 0) {
+		if (rank > 0 && TimerToUse == &attack_timer) {
 			DebugEcho(StringFormat("Wu's Quickening %u delay changed from %i to %i", rank, delay, (delay - (100 * rank))));
 			delay -= 100 * rank;
 			if (delay < 700) delay = 700;
