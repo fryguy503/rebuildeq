@@ -105,6 +105,30 @@ void Mob::TemporaryPets(uint16 spell_id, Mob *targ, const char *name_override, u
 		npc_type = made_npc;
 	}
 
+	
+	if (IsClient() && spell_id == 4828) {
+		auto swarm_editable = new NPCType;
+		memcpy(swarm_editable, npc_type, sizeof(NPCType));
+		int rank = CastToClient()->GetBuildRank(SHAMAN, RB_SHM_CALLOFTHEANCIENTS);
+		if (rank > 0) {
+			swarm_editable->level = CastToClient()->GetLevel();
+			swarm_editable = this->AdjustNPC(swarm_editable, true, true);
+			//Now that we generated base HP, let's nerf it on a new formula
+			swarm_editable->max_hp = floor(npc_type->max_hp * 0.2f * rank); //50 % of normal hp
+			if (swarm_editable->max_hp < 50) {
+				swarm_editable->max_hp = 50;
+			}
+			swarm_editable->AC = floor(npc_type->AC * 0.1f * rank); 
+			swarm_editable->size = floor(rank * (GetLevel() / 50)); 
+			swarm_editable->attack_count = 1;
+
+			duration_override = 60; //60 second duration for COTA pet
+			if (GetTarget() != nullptr) targ = GetTarget(); //the shaman's target
+			
+			made_npc = swarm_editable;
+		}
+	}
+
 	int summon_count = 0;
 	summon_count = pet.count;
 
@@ -902,7 +926,10 @@ void Client::SendAlternateAdvancementRank(int aa_id, int level) {
 	} else if (rank->id == aaSpiritCall) {
 		if(GetBuildRank(SHAMAN, RB_SHM_SPIRITCALL))
 			aai->spell_refresh = 16;
-	} else if (rank->id == aaSecondaryRecall) {
+	}else if (rank->id == aaCalloftheAncients) {
+		if (GetBuildRank(SHAMAN, RB_SHM_CALLOFTHEANCIENTS))
+			aai->spell_refresh = 900;
+	}else if (rank->id == aaSecondaryRecall) {
 		rb_rank = GetBuildRank(DRUID, RB_DRU_SECONDARYRECALL);
 		if(rb_rank) {
 			if(rb_rank == 1) aai->spell_refresh = 86400; // 24 hours
@@ -1502,6 +1529,10 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 			} else {
 				cooldown = 16;
 			}
+		}
+	} else if (rank_id == aaCalloftheAncients) {
+		if (GetBuildRank(SHAMAN, RB_SHM_CALLOFTHEANCIENTS)) {
+			cooldown = 900;
 		}
 	} else if (rank_id == aaSteadfastServant) {
 		if(GetBuildRank(SHADOWKNIGHT, RB_SHD_STEADFASTSERVANT)) {

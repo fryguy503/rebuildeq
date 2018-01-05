@@ -5970,6 +5970,21 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 		}
 	}
 
+	if (IsTempPet() && GetOwner()->IsClient()) {
+		Mob *owner = GetOwner();
+		rank = owner->GetBuildRank(SHAMAN, RB_SHM_CALLOFTHEANCIENTS);
+		if (rank > 0) {
+			int petdmg = floor(owner->GetLevel() * 1.5f * rank);
+			if (petdmg < 1) petdmg = 1;
+			if (expose_weakness < 0) expose_weakness = 0; //initialize our max dmg tracker
+			expose_weakness += petdmg;//track damage done
+			if (expose_weakness >= (owner->GetLevel() * rank * 12)) { // pet should never have expose weakness applied otherise, use to calc max damage
+				Depop();
+			}
+			hit.damage_done = petdmg;
+			owner->BuildEcho(StringFormat("Call of the Ancients %i pet did %i damage.", rank, petdmg));
+		}
+	}
 
 	if (IsClient()) {
 		int extra = 0;
