@@ -7607,34 +7607,6 @@ int Mob::DoCripplingPresenceAndEmpathy(Mob *attacker, DamageHitInfo &hit) {
 
 			if (isChoke && isCripplingPresence) break;
 		}
-
-		if (attacker->IsClient() && IsNPC()) { //these are player targetted effects
-			if (!attacker->IsGrouped()) return bonus_damage; //tash doesn't work when not grouped.
-			if (!c->IsGrouped()) continue; //ench that debuffed isn't grouped, continue			
-			if (attacker->GetGroup()->GetID() != c->GetGroup()->GetID()) continue; //not in same group
-			if (c == attacker) continue; //enchanters don't get tash bonus
-
-			rank = c->GetBuildRank(ENCHANTER, RB_ENC_TASH);
-			if (rank > 0 && 
-				!isTash && (
-				spell_id == 676 || //tashina
-				spell_id == 677 || //tashani
-				spell_id == 678 ||//tashania
-				spell_id == 1699 ||//wind of tashani
-				spell_id == 1702 ||//tashanian
-				spell_id == 1704 //wind of tashanian
-				)) {
-
-				
-				int chance = 300;
-				int proc_damage = floor(GetLevel() * 0.2f * rank);
-				if (proc_damage < 5) proc_damage = 5;
-				attacker->CastToClient()->BuildProcCalc(chance, hit.hand, this, proc_damage, hit.skill);
-				isTash = true;
-			}
-
-			if (isTash) break;
-		}
 	}
 	return bonus_damage;
 }
@@ -7670,36 +7642,57 @@ bool Mob::CheckBackfire() {
 	return false;
 }
 
-void Mob::BadMoonProc(Mob *defender, DamageHitInfo &hit) {
-	if (!IsClient()) return; //this only affects clients.
-	if (!defender || defender->IsNPC()) return; //only npc targets
-	if (!IsGrouped()) return; //bad moon doesn't work if not grouped
+void Mob::EnchanterBuildProc(Mob *defender, DamageHitInfo &hit) {
+	if (!IsClient()) return;
+	if (!defender || !defender->IsNPC()) return; //only npc targets
+	int range = 200;
 
-	int rank;
-	int bonus_damage = 0;
+	float distance;
+	float range2 = range*range;
+	auto group = GetGroup();
+	if (!group) return;
+	int rank = 0;
+	unsigned int gi = 0;
+	Mob *target;
 
-	int buff_count = GetMaxTotalSlots();
-	for (int j = 0; j < buff_count; j++) {
-		int spell_id = buffs[j].spellid;
-		if (spell_id == SPELL_UNKNOWN) continue;
-		if (!IsDetrimentalSpell(buffs[j].spellid)) continue;
-		if (buffs[j].casterid < 1) continue;
-		Client *c = entity_list.GetClientByID(buffs[j].casterid);
-		if (!c) continue;		
-		if (!c->IsGrouped()) continue;
-		if (GetGroup()->GetID() != c->GetGroup()->GetID()) continue; //not in same group
+	for (; gi < MAX_GROUP_MEMBERS; gi++) {
+		if (!group->members[gi]) continue;
+		target = group->members[gi];
+		if (!target) continue;
+		if (target->GetZoneID() != GetZoneID()) continue;
+		if (!target->IsClient()) continue;
+		distance = DistanceSquared(GetPosition(), GetPosition());
+		if (distance > range2) continue;
+		int level = ((GetLevel() < target->GetLevel()) ? GetLevel() : target->GetLevel());
 
-
-		rank = c->GetBuildRank(ENCHANTER, RB_ENC_BADMOON);
-		if (rank > 0) {
+		rank = target->GetBuildRank(ENCHANTER, RB_ENC_BADMOON);
+		if (rank > 0 && target != this) {
 			int chance = 100;
-			int proc_damage = floor(GetLevel() * 0.2f * rank);
+			int proc_damage = floor(level * 0.2f * rank);
 			if (proc_damage < 5) proc_damage = 5;
-			
-			if (CastToClient()->BuildProcCalc(chance, hit.hand, this, proc_damage, hit.skill)) {
+
+			if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
 				BuildEcho(StringFormat("Bad Moon %i caused you to lifetap for %i damage.", rank, proc_damage));
-				c->BuildEcho(StringFormat("Bad Moon %i caused %s to lifetap for %i damage.", rank, GetCleanName(), proc_damage));
+				target->BuildEcho(StringFormat("Bad Moon %i caused %s to lifetap for %i damage.", rank, GetCleanName(), proc_damage));
 				HealDamage(proc_damage);
+			}
+		}
+
+		rank = target->GetBuildRank(ENCHANTER, RB_ENC_TASH);
+		if (rank > 0 && target != this && (
+			defender->IsAffectedByBuff(676) || //tashina
+			defender->IsAffectedByBuff(677) || //tashani
+			defender->IsAffectedByBuff(678) || //tashania
+			defender->IsAffectedByBuff(1699) || //wind of tashani
+			defender->IsAffectedByBuff(1702) || //tashanian
+			defender->IsAffectedByBuff(1704) // wind of tashanian
+			)) {
+			int chance = 300;
+			int proc_damage = floor(defender->GetLevel() * 0.2f * rank);
+			if (proc_damage < 5) proc_damage = 5;
+			if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
+				BuildEcho(StringFormat("Tash %i caused %i damage.", rank, proc_damage));
+				target->BuildEcho(StringFormat("Tash %i caused %s to deal %i damage.", rank, GetCleanName(), proc_damage));
 			}
 		}
 	}

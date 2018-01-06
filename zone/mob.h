@@ -1242,7 +1242,7 @@ public:
 
 	int DoCripplingPresenceAndEmpathy(Mob *attacker, DamageHitInfo &hit);
 	bool CheckBackfire();
-	void BadMoonProc(Mob * defender, DamageHitInfo & hit);
+	void EnchanterBuildProc(Mob * defender, DamageHitInfo & hit);
 	int DoBuildManaRegen();
 	int ModifyManaUsage(int mana_used, uint16 spell_id, Mob * spell_target, bool is_final_calc);
 	Client * GetTapFocus();
