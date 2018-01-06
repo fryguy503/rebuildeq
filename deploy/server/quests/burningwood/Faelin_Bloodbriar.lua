@@ -10,6 +10,7 @@ function event_trade(e)
 		e.self:Emote("smiles at you, then closes her eyes as she sets the gem 'Nature's Balance' into the crossguard and begins to channel her spirit into the sword. The ground rumbles loudly as she casts. She collapses in exhaustion after a short time. 'Take the blade, and perhaps you can finish this. You must strike at the heart of Innoruuk's lair. Bring a shattered gem and the mithril blade to Xanuusus. Only by weakening Innoruuk's grip over his realm can the balance of the land once again be restored. If we do not meet again, " .. e.other:GetName() .. ", remember you always have my eternal thanks.'");
 		e.other:Ding();
 		e.other:SummonItem(20487);
+		eq.world_emote(269, "" ..e.other:GetName() .." received the epic weapon, " .. eq.item_link(20487) .. "!");
 		e.other:AddEXP(1000000);
 		eq.depop();
 	end

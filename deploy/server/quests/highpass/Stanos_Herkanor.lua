@@ -37,6 +37,7 @@ function event_trade(e)
 	elseif(item_lib.check_turn_in(e.trade, {item1 = 28013,item2 = 7506,item3 = 7505})) then
 		e.self:Say(string.format("Very well done. I leave now to confront Hanns with this evidence. Even so, it will not be easy to regain his trust. That is why I need those daggers, in case all else fails. Bristlebane grant me luck - I can no longer live like a hunted dog. In any case, I am grateful for your aid. Take this wretched blade, I can bear it no longer. I must warn you, I feel it carries Innoruuk's curse; all who are near it learn the meaning of hate. Ironic, isn't it? You went to all that work to redeem yourself for a rapier, yet the true reward came when you redeemed another..Good luck, %s, for much as I, you will need it.",e.other:GetName()));
 		e.other:SummonItem(11057);
+		eq.world_emote(269, "" ..e.other:GetName() .." received the epic weapon, " .. eq.item_link(11057) .. "!");
 		e.other:Ding();
 		e.other:Faction(149,5,0);
 		e.other:Faction(31,10,0);

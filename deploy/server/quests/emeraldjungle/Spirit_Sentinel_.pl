@@ -22,6 +22,8 @@ sub EVENT_SAY {
  if(($text=~/breach/i) && ($ShmEpic1==1)){ #Part of Shaman Epic 1.0
   quest::say("The tear in the fabric of existence created enough negative material to cancel out Miragul's abomination. Thalger's strike was so perfect that he cut just enough planar material to destroy the mantle and nothing else. Unfortunately, Thalger himself was lost in the process. All that was left was the spear that fell from the heavens to the ground where we recovered it. We have kept it since then and now we wish you to have it. When you strike with it, you must have the same singularity of purpose as did Thalger when he defeated Miragul's mantle.");
    quest::summonitem(10651);
+   my $itemLink = quest::varlink(10651);
+   quest::we(15, "$name received the epic weapon, $itemLink!");
    quest::delglobal("ShmEpic1");
 
  }
