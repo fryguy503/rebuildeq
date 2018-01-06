@@ -536,21 +536,20 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 
 							rank = casterClient->GetBuildRank(SHADOWKNIGHT, RB_SHD_LINGERINGPAIN);
-							if (rank > 0) {
+							if (rank > 0 &&
+								(spell_id == 341 || spell_id == 502 || spell_id == 445 || spell_id == 446 || spell_id == 525 || spell_id == 447 || //taps
+								spell_id == 5012 || spell_id == 3561 || spell_id == 3560 || spell_id == 3562 || //spears
+								spell_id == 218 || spell_id == 233 || spell_id == 4102 || spell_id == 117 || spell_id == 4103 || spell_id == 662)) { //undead nukes) 
 								int duration = zone->random.Int(0, rank);
+								caster->BuildEcho(StringFormat("Lingering Pain %i activated for %i ticks.", rank, duration));
+
 								if (duration > 0) {
-									if (GetLevel() > 57) { //Ignite Blood)
-										SpellFinished(6, this, EQEmu::CastingSlot::Ability, 0, -1, spells[6].ResistDiff, true, level_override);
-									}
-									else if (GetLevel() > 36) { //boil blood
-										SpellFinished(451, this, EQEmu::CastingSlot::Ability, 0, -1, spells[451].ResistDiff, true, level_override);
-									}
-									else if (GetLevel() > 20) { //heat blood
-										SpellFinished(360, this, EQEmu::CastingSlot::Ability, 0, -1, spells[360].ResistDiff, true, level_override);
-									}
+									if (caster_level > 57) AddBuff(caster, 6, duration);
+									else if (caster_level > 36) AddBuff(caster, 451, duration);
+									else if (caster_level > 20) AddBuff(caster, 360, duration);
+									else AddBuff(caster, 340, duration);
 								}
 							}
-
 						}
 
 						dmg = caster->GetActSpellDamage(spell_id, dmg, this);
