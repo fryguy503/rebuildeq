@@ -6063,8 +6063,62 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			}
 		}
 
-
 		uint16 spellid = 0;
+
+		rank = GetBuildRank(ROGUE, RB_ROG_MUGGINGSHOT);
+		if (rank > 0 && hit.hand == EQEmu::inventory::slotSecondary) {
+			chance = rank * 100;
+			int mana_drain = 0;
+			int hate_lower = 0;
+			bool is_interrupt = false;
+			 //Get offhand skill
+			switch (hit.skill) {
+			case EQEmu::skills::Skill1HBlunt:
+				hate_lower = 50 * rank;
+				proc_damage = 0;
+				is_interrupt = true;
+				break;
+			case EQEmu::skills::Skill1HSlashing:
+				proc_damage = 5 * rank;
+				break;
+			case EQEmu::skills::Skill1HPiercing:
+				proc_damage = 2 * rank;
+				mana_drain = 100 * rank;
+				break;
+			default:
+				proc_damage = 5 * rank;
+				break;
+			}
+			
+			chance = GetProcChances(chance, hit.hand);
+			//cut it in half since it's offhand
+			chance /= 2;
+			if (!(defender->IsClient() && defender->CastToClient()->dead) && zone->random.Roll(chance)) {
+				//Deal damage
+				if (proc_damage > 0) {
+					defender->Damage(this, proc_damage, 615, hit.skill, true, -1, false);
+					BuildEcho(StringFormat("Mugging Shot %i dealt %i damage.", rank, proc_damage));
+				}
+				//interrupt					
+				if (is_interrupt &&
+					defender->IsCasting()
+					) {
+					defender->InterruptSpell(); //This may be too powerful, may need nerf
+				}
+				if (mana_drain > 0) {
+					if (defender->GetMana() - mana_drain < 0) mana_drain = defender->GetMana();
+					defender->SetMana(defender->GetMana() - mana_drain);
+					BuildEcho(StringFormat("Mugging Shot %i drained %i mana.", rank, mana_drain));
+				}
+				if (hate_lower > 0) {
+					int newhate = defender->GetHateAmount(this) - hate_lower;
+					if (newhate < 1) defender->SetHateAmountOnEnt(this, 1);
+					else defender->SetHateAmountOnEnt(this, newhate);
+					BuildEcho(StringFormat("Mugging Shot %i lowered hate by %i.", rank, hate_lower));
+				}
+			}
+		}
+	
 
 		if (hit.skill != EQEmu::skills::SkillBash &&
 			hit.skill != EQEmu::skills::SkillBackstab &&
@@ -6232,51 +6286,6 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 
 				if (CastToClient()->BuildProcCalc(chance, hit.hand, defender, proc_damage, hit.skill)) {
 					BuildEcho(StringFormat("Appraisal %i dealt %i damage.", rank, proc_damage));
-				}
-			}
-
-			rank = GetBuildRank(ROGUE, RB_ROG_MUGGINGSHOT);
-			if (rank > 0) {
-				chance = rank * 100;
-				
-				bool is_interrupt = false;
-				if (hit.hand == EQEmu::inventory::slotSecondary) { //Get offhand
-					switch (hit.skill) {
-					case EQEmu::skills::Skill1HBlunt:
-						spellid = 1741; //jolt
-						proc_damage = 0;
-						is_interrupt = true;
-						break;
-					case EQEmu::skills::Skill1HSlashing:
-						proc_damage = 5 * rank;
-						break;
-					case EQEmu::skills::Skill1HPiercing:
-						spellid = 943; //Mana Drain
-						proc_damage = 2 * rank;
-					default:
-						proc_damage = 5 * rank;
-						break;
-					}
-				}
-
-				chance = GetProcChances(chance, hit.hand);
-				//cut it in half since it's offhand
-				chance /= 2;
-
-				if (!(defender->IsClient() && defender->CastToClient()->dead) && zone->random.Roll(chance)) {
-					BuildEcho(StringFormat("Mugging Shot %i affected %s.", rank, defender->GetCleanName()));
-					//Deal damage
-					if (proc_damage > 0) defender->Damage(this, proc_damage, 615, hit.skill, true, -1, false, m_specialattacks);
-					//interrupt					
-					if (is_interrupt &&
-						defender->IsCasting()
-						) {
-						defender->InterruptSpell(); //This may be too powerful, may need nerf
-					}
-					//cast spell
-					if (spellid > 0) {
-						SpellFinished(spellid, defender);
-					}
 				}
 			}
 
