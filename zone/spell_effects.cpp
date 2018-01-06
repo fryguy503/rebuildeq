@@ -810,7 +810,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					IsCaster() &&
 					rank > 0 && 
 					mana_taken < 0) {
-					int damage_amount = int(-mana_taken * 0.7f);
+					int damage_amount = int(-mana_taken * 0.7f * rank);
 					if (GetMana() < damage_amount) damage_amount = GetMana();
 					if (damage_amount > 0) {
 						caster->BuildEcho(StringFormat("Energy Burn %i dealt %i damage to %s.", rank, damage_amount, GetCleanName()));
