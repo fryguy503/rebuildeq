@@ -315,18 +315,6 @@ int32 Mob::GetActDoTDamage(uint16 spell_id, int32 value, Mob* target) {
 		value -= extra_dmg;
 	}
 
-	rank = GetBuildRank(NECROMANCER, RB_NEC_SHOCKINGBOLT);
-	if (rank > 0 && (
-		spell_id == 436 || spell_id == 348 || spell_id == 435
-		)) {
-		bool is_quad = false;
-		if (rank > 0 && zone->random.Roll(rank)) {
-			int bonus_damage = value * 4;
-			is_quad = true;
-			BuildEcho(StringFormat("Shocking Bolt %u caused %i %s damage.", rank, -bonus_damage, "QUAD"));
-			value = bonus_damage;
-		}			
-	}
 	rank = GetBuildRank(NECROMANCER, RB_NEC_CORRUPTION);
 	if (rank > 0 && IsGrouped() && (
 		spell_id == 340 || //disease cloud

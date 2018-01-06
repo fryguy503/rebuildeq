@@ -700,6 +700,24 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					break;
 				}
 
+				if (spell_id == 436 || spell_id == 348 || spell_id == 435 && caster) {
+					rank = caster->GetBuildRank(NECROMANCER, RB_NEC_SHOCKINGBOLT);
+					if (rank > 0) {
+						if (dmg < 0) dmg = -dmg;
+						int bonus_damage = int(dmg * 0.05f * rank);
+						bool is_quad = false;
+						if (rank > 0 && zone->random.Roll(rank)) {
+							bonus_damage *= 4;
+							is_quad = true;
+						}
+						caster->BuildEcho(StringFormat("Shocking Bolt %u added %i %s bonus damage.", rank, bonus_damage, (is_quad) ? "QUAD" : ""));
+						dmg += bonus_damage;
+						Damage(caster, dmg, spell_id, EQEmu::skills::SkillConjuration);
+						break;
+					}
+				}
+
+
 				if (caster->IsClient()) {
 					if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
 					{
