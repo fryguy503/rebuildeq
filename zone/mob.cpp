@@ -7591,7 +7591,7 @@ int Mob::DoCripplingPresenceAndEmpathy(Mob *attacker, DamageHitInfo &hit) {
 			}
 
 			rank = c->GetBuildRank(ENCHANTER, RB_ENC_CHOKE);
-			if (!isChoke &&
+			if (rank > 0 && !isChoke &&
 				(spell_id == 286 || //shallow breath
 					spell_id == 294 || //suffocating sphere
 					spell_id == 521 || //choke
@@ -7599,7 +7599,7 @@ int Mob::DoCripplingPresenceAndEmpathy(Mob *attacker, DamageHitInfo &hit) {
 					spell_id == 195 || //gasping embrace
 					spell_id == 1703 //asphyxiate
 					)) {
-				int choke_damage = floor(level * rank / 4);
+				int choke_damage = floor(c->GetLevel() * rank / 4);
 				c->BuildEcho(StringFormat("Choke %i caused %i damage.", rank, choke_damage));
 				attacker->Damage(c, choke_damage, spell_id, EQEmu::skills::SkillAbjuration, false);
 				isChoke = true;
