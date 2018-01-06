@@ -6038,16 +6038,13 @@ void Mob::CommonOutgoingHitSuccess(Mob* defender, DamageHitInfo &hit, ExtraAttac
 			hit.damage_done += bonus_damage;
 		}
 
-		rank = attacker_client->CastToClient()->GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
+		rank = attacker_client->GetBuildRank(ROGUE, RB_ROG_KILLINGSPREE);
 		if (rank > 0) {
-
 			uint8 counters = attacker_client->GetCoreCounter();
 			if (counters > 0) {
 				bonus_damage = floor(hit.damage_done * 0.05f * counters);
 				if (bonus_damage < 1) bonus_damage = 1;
-				if (bonus_damage > 100) {
-					attacker_client->BuildEcho(StringFormat("Killing Spree %u added %i bonus damage with %u counters.", rank, bonus_damage, counters));
-				}
+				attacker_client->DebugEcho(StringFormat("Killing Spree %u added %i bonus damage with %u counters.", rank, bonus_damage, counters));
 				hit.damage_done += bonus_damage;
 			}
 		}
