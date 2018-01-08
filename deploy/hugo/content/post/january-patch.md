@@ -1,6 +1,6 @@
 +++
 banner = "post/images/buildecho.png"
-date = "2017-01-08T01:19:18-07:00"
+date = "2018-01-08T01:19:18-07:00"
 description = "January Patch"
 images = ["post/images/january-patch.png"]
 tags = ["builds"]
