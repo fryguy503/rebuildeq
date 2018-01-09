@@ -23,7 +23,12 @@ We use 64bit version of binaries.
 
 * Grab docker. https://www.docker.com/docker-windows
 * Grab docker-compose. (NOTE: I believe Docker for windows comes with this, so you may skip this step until confirmed)
+* Start Docker for Windows from your start menu. (if you can't run latest docker, the older version is called Docker Quick Terminal).
 * Start command line. cd into your rebuildeq root directory. (You can also, in explorer, hold shift and right click the rebuildeq folder, to open command prompt/powershell here.)
+* type in: docker ps. It should be an empty list with titles, if it shows an error, docker didn't start properly. Reach out to us to help diagnose why.
+```
+CONTAINER ID        IMAGE                    COMMAND                  CREATED             STATUS                         PORTS                  
+```
 * type in: install.bat
 * This is going to spin up 3 instances of docker, and prep some folders
 * When it's done it'll tell you to run start.bat, but ignore that step for now.
