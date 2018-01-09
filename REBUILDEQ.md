@@ -9,6 +9,7 @@ We use 64bit version of binaries.
 * Grab ActivePerl 64bit 5.16.3 or greater. http://eqemu.github.io/downloads/ActivePerl-5.16.3.1604-MSWin32-x64-298023.msi
 * Grab docker for windows https://www.docker.com/docker-windows (Optional if you only are looking to compile)
 * Grab Visual Studio 2015. https://www.visualstudio.com/vs/older-downloads/
+* Start Visual Studio, and create a new C++ project. Location doesn't matter, you may have to download some additional files, since Visual Studio likes to install without actually installing C++, so once the project opens up, just exit VS.
 * Cmake: run it. When it asks path, set it to root dir of rebuildeq. e.g. D:/code/go/src/github.com/xackery/rebuildeq
 * Cmake: set the where to build the binaries path to your root dir of rebuildeq/build.. e.g. D:/code/go/src/github.com/xackery/rebuildeq/build
 * Cmake: Hit Configure, be sure to set to Visual Studio 14 2015 Win64. Use native compilers (default option)
