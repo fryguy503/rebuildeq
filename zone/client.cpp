@@ -9823,6 +9823,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Lesson of the Devoted\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == RANGER && i == RB_RNG_TRICKSHOT && GetAA(aaTrickShot) < 1) {
+					TrainAARank(aaTrickShot);
+					Message(15, "You have unlocked the passive AA \"Trickshot\"!");
+				}
+
 				if (GetClass() == ROGUE && i == RB_ROG_APPRAISAL && GetAA(aaAppraisal) < 1) {
 					TrainAARank(aaAppraisal);
 					Message(15, "You have unlocked the AA \"Appraisal\"! Find the hotkey in your Alternate Advancement Window.");
@@ -10682,7 +10687,8 @@ void Client::ResetBuild() {
 		}
 	}
 	
-	SendAlternateAdvancementTable();
+	SendAlternateAdvancementTable(); 
+	RebuildAA();
 }
 
 std::string Client::GetBuildName(uint32 id) {

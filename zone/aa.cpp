@@ -2244,6 +2244,7 @@ void Client::RebuildAA() {
 
 	memset(&m_pp.aa_array[0], 0, sizeof(AA_Array) * MAX_PP_AA_ARRAY);
 	
+	if (GetBuildRank(RANGER, RB_RNG_TRICKSHOT)) SetAA(aaTrickShot, 1);
 	if (GetBuildRank(BARD, RB_BRD_BOASTFULBELLOW)) SetAA(aaBoastfulBellow, 1);
 	if (GetBuildRank(BARD, RB_BRD_DANCEOFBLADES)) SetAA(aaDanceofBlades, 1);
 	if (GetBuildRank(CLERIC, RB_CLR_DIVINEAVATAR)) SetAA(aaDivineAvatar, 1);

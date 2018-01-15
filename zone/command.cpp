@@ -4106,6 +4106,7 @@ void command_builds(Client *c, const Seperator *sep)
 			c->GetTarget()->CastToClient()->ResetBuild();
 			c->GetTarget()->Message(0, "Your build points were reset by the GM %s.", c->GetCleanName());
 			c->Message(0, "You reset the build points of %s.", c->GetTarget()->GetCleanName());
+			c->ResetAA();
 			return;
 		}
 
