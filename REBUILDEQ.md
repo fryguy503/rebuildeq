@@ -31,7 +31,8 @@ CONTAINER ID        IMAGE                    COMMAND                  CREATED   
 ```
 * type in: install.bat
 * This is going to spin up 3 instances of docker, and prep some folders
-* When it's done it'll tell you to run start.bat, but ignore that step for now.
+* When it's done it'll tell you to run start.bat.
+* do `docker ps` again, it should list containers now, one of which is the database instance
 * Grab SQLyog. This is a SQL client. https://github.com/webyog/sqlyog-community/wiki/Downloads
 * You want to configure SQLYog the same as what docker-compose defines, which by default is: MARIADB_DATABASE: eqemu, MARIADB_USER: eqemu, MARIADB_PASSWORD: eqemupass. so user: eqemu, pass: eqemupass , ip address is just 127.0.0.1 (default)
 * Navigate to your /deploy/server/ directory in eqemu. Verify there's a eqemu_config.xml file. If there isn't, copy the one from /docker/eqemu/eqemuconfig_config.xml. This is set up to automatically connect to your local dB instance. Edit it and change your local hosting environment
