@@ -1854,10 +1854,12 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 			case SE_ACv2:
 			case SE_ArmorClass:
 			{
-				rank = caster->GetBuildRank(NECROMANCER, RB_NEC_SHADOWTAP);
-				if (rank > 0 && //ac taps come in negative, recourses positive
-					spell_id == 2547 || spell_id == 2478){ //succussion of shadows / recourse
-					effect_value += rank * 0.2f * effect_value; 
+				if (caster != nullptr) {
+					rank = caster->GetBuildRank(NECROMANCER, RB_NEC_SHADOWTAP);
+					if (rank > 0 && //ac taps come in negative, recourses positive
+						spell_id == 2547 || spell_id == 2478) { //succussion of shadows / recourse
+						effect_value += rank * 0.2f * effect_value;
+					}
 				}
 				new_bonus->AC += effect_value;
 				break;
