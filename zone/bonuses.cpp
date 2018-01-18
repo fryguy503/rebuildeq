@@ -1867,6 +1867,13 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_ATK:
 			{
+				if (caster != nullptr) {
+					rank = caster->GetBuildRank(NECROMANCER, RB_NEC_CRIPPLINGCLAUDICATION);
+					if (rank > 0 && //recourse only
+						spell_id == 2479) { //20% increased recourse effect per rank
+						effect_value += rank * 0.2f * effect_value;
+					}
+				}
 				new_bonus->ATK += effect_value;
 				break;
 			}
