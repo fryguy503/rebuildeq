@@ -1866,6 +1866,17 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_STR:
 			{
+				if (caster != nullptr) {
+					rank = caster->GetBuildRank(NECROMANCER, RB_NEC_IMPARTSTRENGTH);
+					if (rank > 0 && spell_id == 2464){ // impart strength recourse
+						int atk = rank * casterlevel;
+						new_bonus->ATK -= atk; // -atk to necro
+					}
+					if (rank > 0 && spell_id == 358) {
+						int atk = rank * casterlevel;
+						new_bonus->ATK += atk; // +atk to impartee
+					}
+				}
 				new_bonus->STR += effect_value;
 				break;
 			}
