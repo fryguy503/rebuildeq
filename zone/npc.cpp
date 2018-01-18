@@ -1522,7 +1522,7 @@ void NPC::PickPocket(Client* thief)
 	int rank = thief->GetBuildRank(ROGUE, RB_ROG_SLEIGHTOFSTRENGTH);
 	int duration = zone->random.Int(0, rank);
 	if (rank > 0 && duration > 0) {		
-		switch (zone->random.Int(1, 7)) {
+		switch (zone->random.Int(1, 6)) {   //remove potion of assailing as 7th option for now due to it not working well w/ duration override
 		case 1:
 			thief->QuickBuff(thief, 884, duration); //calimony (hp regen, hp buff)
 			break;
@@ -1530,18 +1530,15 @@ void NPC::PickPocket(Client* thief)
 			thief->QuickBuff(thief, 1331, duration); //skin of flame ds
 			break;
 		case 3:
-			thief->QuickBuff(thief, 883, duration); //potion of assailing (str/agi/atk)
-			break;
-		case 4:
 			thief->QuickBuff(thief, 879, duration); //troll's essence (str/regen)
 			break;
-		case 5:
+		case 4:
 			thief->QuickBuff(thief, 1166, duration); //draconic rage (150 dd)
 			break;
-		case 6:
+		case 5:
 			thief->QuickBuff(thief, 6914, duration); //potion of healing V
 			break;
-		case 7:
+		case 6:
 			thief->QuickBuff(thief, 2434, duration); //avatar
 			break;
 		}
