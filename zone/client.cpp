@@ -9798,6 +9798,11 @@ void Client::RefreshBuild() {
 					Message(15, "You have unlocked the AA \"Dying Grasp\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 
+				if (GetClass() == NECROMANCER && i == RB_NEC_DEATHBLOOM && GetAA(7703) < 1) {
+					TrainAARank(7703);
+					Message(15, "You have unlocked the AA \"Death Bloom\"! Find the hotkey in your Alternate Advancement Window.");
+				}
+
 				if (GetClass() == PALADIN && i == RB_PAL_HANDOFPIETY && GetAA(aaHandofPiety) < 1) {
 					TrainAARank(aaHandofPiety);
 					Message(15, "You have unlocked the AA \"Hand of Piety\"! Find the hotkey in your Alternate Advancement Window.");
