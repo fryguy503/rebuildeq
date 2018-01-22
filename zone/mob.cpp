@@ -7469,8 +7469,11 @@ int Mob::AdjustTierPenalty(Mob* caster, int value) {
 	//temporary tier placeholder
 	int tmpTier = 0;
 
-	//Figure out highest tier NPC in interaction
-	if (IsNPC()) highTier = GetTier(); //grab my tier, default behavior.
+	//Figure out highest tier NPC in interaction. Grab defaults first.
+	if (IsNPC()) {
+		highTier = GetTier(); //grab my tiers, default behavior.
+		lowTier = GetTier();  //also initialize low.
+	}
 	if (IsClient()) { //I'm a client, let's see if I have any high tier mobs on me.
 		tmpTier = GetAggroTier();
 		if (tmpTier > highTier) highTier = tmpTier;
