@@ -714,15 +714,12 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				}
 
 				//do any AAs apply to these spells?
+				// Only do damage: healing effect removed from this spell type to prevent overpowered buff spam
 				if(dmg < 0) {
 					if (!PassCastRestriction(false, spells[spell_id].base2[i], true))
 						break;
 					dmg = -dmg;
 					Damage(caster, dmg, spell_id, spell.skill, false, buffslot, false);
-				} else {
-					if (!PassCastRestriction(false, spells[spell_id].base2[i], false))
-						break;
-					HealDamage(dmg, caster);
 				}
 				break;
 			}
