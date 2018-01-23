@@ -712,16 +712,6 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 					}
 				}
 
-
-				if (caster->IsClient()) {
-					if (IsClient() && CastToClient()->ClientVersionBit() & EQEmu::versions::bit_UFAndLater)
-					{
-						EQApplicationPacket *outapp = MakeBuffsPacket(false);
-						CastToClient()->FastQueuePacket(&outapp);
-					}
-					break; //maybe break?
-				}
-
 				//do any AAs apply to these spells?
 				if(dmg < 0) {
 					if (!PassCastRestriction(false, spells[spell_id].base2[i], true))
