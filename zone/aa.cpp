@@ -1629,6 +1629,9 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		if(rb_rank) {
 			cooldown = rank->recast_time - (rb_rank * 2);
 		}
+		
+	} else if (rank_id == aaPurifyBody) {
+		cooldown = 5;  //bring this in parity with Paladin
 	}
 
 	manacost = ModifyManaUsage(manacost, spellid, GetTarget(), false);
