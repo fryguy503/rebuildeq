@@ -5113,6 +5113,10 @@ void Mob::TryCriticalHit(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *
 			CastToClient()->sneaking = false; //Disable sneak
 			CastToClient()->SendAppearancePacket(AT_Sneak, 0);
 		}
+
+		rank = CastToClient()->GetBuildRank(PALADIN, RB_PAL_DISMISSEVIL);  //simplify, move up to before we actually check crit chance
+		if (rank > 0 && (defender->GetBodyType() == BT_Undead || defender->GetBodyType() == BT_Vampire)) 
+			crit_chance += rank;
 	}
 
 	// we have a chance to crit!
@@ -5157,12 +5161,6 @@ void Mob::TryCriticalHit(Mob *defender, DamageHitInfo &hit, ExtraAttackOptions *
 			Log(Logs::Detail, Logs::Combat,
 				"Crit success roll %d dex chance %d og dmg %d crit_mod %d new dmg %d", roll, dex_bonus,
 				og_damage, crit_mod, hit.damage_done);
-
-			if ((defender->GetBodyType() == BT_Undead || 
-				defender->GetBodyType() == BT_Vampire) && 
-				IsClient() && CastToClient()->GetBuildRank(PALADIN, RB_PAL_DISMISSEVIL) > 0) {
-				crit_chance += CastToClient()->GetBuildRank(PALADIN, RB_PAL_DISMISSEVIL);
-			}
 
 			// step 3: check deadly strike
 			if (GetClass() == ROGUE && hit.skill == EQEmu::skills::SkillThrowing) {
