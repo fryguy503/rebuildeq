@@ -4439,7 +4439,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 						spell_id == 2885  //funeral pyre of kelador
 						)
 						) {
-						int mana_return = int(spell.mana * 0.05f);
+						int mana_return = int(spell.mana * rank * 0.01f);  //1% per rank
 						if (mana_return < 1) mana_return = 1;
 						caster->DebugEcho(StringFormat("Decay %i returned %i mana.", rank, mana_return));
 						caster->SetMana(caster->GetMana() + mana_return);
