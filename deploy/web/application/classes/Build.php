@@ -1527,7 +1527,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Confuse";
-			$newSkill->desc = 'When a rogue uses beg on an enemy, there is a very small chance to cause the enemy to be mesmerized for 6 seconds.';
+			$newSkill->desc = 'When a rogue uses Beg on an enemy, there is a <em data-base=".5">0.5</em>% chance to cause the enemy to be mesmerized for 6 ticks.';
 			$newSkill->image = "/images/builds/icons/rb-rog-confuse.png";
 			$skills[24] = $newSkill;
 
