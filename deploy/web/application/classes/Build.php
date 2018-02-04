@@ -714,7 +714,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Lingering Pain";
-			$newSkill->desc = 'When a direct spell is casted, a 0 to <em data-base="1">1</em> tick duration DoT will also affect the target if the spell casted was obtained within 15 levels of the enemy\'s level<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'When a direct spell is casted, a 0 to <em data-base="1">1</em> tick duration DoT will also affect the target if the spell casted was obtained within 15 levels of your current level<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-dru-lingeringpain.png";	
 			$skills[38] = $newSkill;
 
