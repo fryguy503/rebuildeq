@@ -9774,7 +9774,7 @@ void Client::RefreshBuild() {
 				}
 
 				if (GetClass() == MONK && i == RB_MNK_PURIFYBODY && GetAA(aaPurifyBody) < 1) {
-					TrainAARank(aaPurification);
+					TrainAARank(aaPurifyBody);
 					Message(15, "You have unlocked the AA \"Purify Body\"! Find the hotkey in your Alternate Advancement Window.");
 				}
 

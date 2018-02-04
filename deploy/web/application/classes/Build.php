@@ -1139,7 +1139,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Purify Body";
-			$newSkill->desc = 'Grants the Purify Body AA, curing <em data-base="1">1</em> detrimental effect on the monk<span class="perLevel"> per rank</span>. At rank 5, it will also cure resurrection sickness.';
+			$newSkill->desc = 'Grants the Purify Body AA, curing <em data-base="1">1</em> detrimental effect on the monk<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-mnk-purifybody.png";
 			$skills[31] = $newSkill;
 
