@@ -4244,11 +4244,13 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 
 
 		//final damage has been determined.
+		int32 pre_hit_hp;
 		damage = AdjustTierPenalty(attacker, damage);
 		entity_list.LogHPEvent(attacker, this, -damage);
-		SetHP(GetHP() - damage);
+		pre_hit_hp = GetHP();
+		SetHP(pre_hit_hp - damage);
 
-		if (HasDied()) {
+		if (HasDied() && pre_hit_hp > 0) {  // Don't make the mob die over and over if it was at 0 hp
 			bool IsSaved = false;
 
 			if (TryDivineSave())
