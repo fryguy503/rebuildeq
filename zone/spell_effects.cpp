@@ -323,7 +323,7 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 							}
 
 							rank = casterClient->GetBuildRank(DRUID, RB_DRU_LINGERINGPAIN);
-							if (rank > 0 && spells[spell_id].classes[DRUID] > (GetLevel() - 15) &&
+							if (rank > 0 && spells[spell_id].classes[DRUID - 1] > (GetLevel() - 15) &&
 								(spell_id == 239 || spell_id == 93 || spell_id == 92 || spell_id == 252 || spell_id == 91 || spell_id == 419 || spell_id == 52 || spell_id == 405 || spell_id == 27 || spell_id == 115 || spell_id == 217 || spell_id == 1439 || spell_id == 406 || spell_id == 418 || spell_id == 664 || spell_id == 57 || spell_id == 1436 || spell_id == 29 || spell_id == 420 || spell_id == 433 || spell_id == 671 || spell_id == 1603 || spell_id == 1529 || spell_id == 1605 || spell_id == 2518 || spell_id == 1606 || spell_id == 1607 || spell_id == 2126 || spell_id == 2877 || spell_id == 1740)
 								) {
 
