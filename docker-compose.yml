@@ -22,16 +22,17 @@ services:
       - "./deploy/server:/eqemu"
     links:
       - mariadb
-      - nats
       - web
     depends_on:
       - mariadb
     ports:
+      - "5998-5999:5998-5999/udp"
       - "7000-7100:7000-7100/udp"
       - "9000:9000/udp"
       - "9001:9001"
       - "9080:9080"
     expose:
+      - "5998-5999/udp"
       - "7000-7100/udp"
       - "9000/udp"
       - "9080/udp"
@@ -42,18 +43,7 @@ services:
       - "./deploy/web:/var/www"
     links:
       - mariadb
-      - nats
     depends_on:
       - mariadb
     ports:
       - "80:80"
-  nats:
-    image: "nats:latest"
-    ports:
-      - "4222:4222"
-      - "6222:6222"
-      - "8222:8222"
-    expose:
-      - "4222/tcp"
-      - "6222/tcp"
-      - "8222/tcp"

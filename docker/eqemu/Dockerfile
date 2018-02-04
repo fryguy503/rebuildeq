@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 MAINTAINER Xackery <xackery@gmail.com>
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

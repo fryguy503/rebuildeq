@@ -20,7 +20,6 @@ message ChannelMessage {
   int32 zone_id = 14;
 }
 
-
 message CommandMessage {
   string author = 1;
   string command = 2;
