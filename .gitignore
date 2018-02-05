@@ -44,6 +44,9 @@ deploy/server/luabind/
 deploy/server/Win32/
 deploy/server/eqlaunch/
 deploy/server/shared/*
+deploy/server/discordnats
+deploy/server/loginserver
+deploy/web/html/web
 
 # Csharp sln
 [Oo]bj
@@ -78,6 +81,7 @@ deploy/client/patch/*
 *.svn
 .svn/
 *.suo
+.wget-hsts
 
 #common/
 *.pdb
@@ -111,3 +115,7 @@ install_manifest.txt
 *.filters
 
 !RebuildEQ.exe
+dailyreport.yml
+
+# OS X Indexes
+.DS_Store

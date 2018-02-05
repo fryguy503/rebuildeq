@@ -15,10 +15,12 @@
 extern ZSList zoneserver_list;
 extern LoginServerList loginserverlist;
 extern ClientList client_list;
+const WorldConfig *worldConfig;
 
 NatsManager::NatsManager()
 {
 	//new timers, object initialization
+	worldConfig = WorldConfig::get();
 }
 
 NatsManager::~NatsManager()
@@ -196,6 +198,31 @@ void NatsManager::CommandMessageEvent(eqproto::CommandMessage* message, const ch
 		}
 	}
 
+	if(message->command().compare("worldshutdown") == 0) {
+		uint32 time=0;
+		uint32 interval=0;
+
+		if(message->params_size() < 1) {
+			message->set_result("worldshutdown - Shuts down the server and all zones.\n \
+		Usage: worldshutdown now - Shuts down the server and all zones immediately.\n \
+		Usage: worldshutdown disable - Stops the server from a previously scheduled shut down.\n \
+		Usage: worldshutdown [timer] [interval] - Shuts down the server and all zones after [timer] seconds and sends warning every [interval] seconds\n");
+		} else if(message->params_size() == 2 && ((time=atoi(message->params(0).c_str()))>0) && ((interval=atoi(message->params(1).c_str()))>0)) {
+			message->set_result(StringFormat("Sending shutdown packet now, World will shutdown in: %i minutes with an interval of: %i seconds",  (time / 60), interval));
+			zoneserver_list.WorldShutDown(time, interval);
+		}
+		else if(strcasecmp(message->params(0).c_str(), "now") == 0){
+			message->set_result("Sending shutdown packet now");
+			zoneserver_list.WorldShutDown(0, 0);
+		}
+		else if(strcasecmp(message->params(0).c_str(), "disable") == 0){
+			message->set_result("Shutdown prevented, next time I may not be so forgiving...");
+			zoneserver_list.SendEmoteMessage(0, 0, 0, 15, "<SYSTEMWIDE MESSAGE>:SYSTEM MSG:World shutdown aborted.");
+			zoneserver_list.shutdowntimer->Disable();
+			zoneserver_list.reminder->Disable();
+		}
+	}
+
 	if (message->result().length() <= 1) {
 		message->set_result("Failed to parse command.");		
 	}
@@ -242,7 +269,7 @@ void NatsManager::Save()
 
 void NatsManager::Load()
 {	
-	s = natsConnection_Connect(&conn, opts);
+	s = natsConnection_ConnectTo(&conn, StringFormat("nats://%s:%d", worldConfig->NATSHost.c_str(), worldConfig->NATSPort).c_str());
 	if (s != NATS_OK) {
 		Log(Logs::General, Logs::World_Server, "Nats status isn't OK, hmm.");
 		conn = NULL;

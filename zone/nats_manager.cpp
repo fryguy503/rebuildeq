@@ -1,11 +1,17 @@
 #include "nats.h"
+#include "zone_config.h"
 #include "../common/eqemu_logsys.h"
 #include "nats_manager.h"
 #include "../common/proto/message.pb.h"
+#include "../common/string_util.h"
+
+const ZoneConfig *zoneConfig;
 
 NatsManager::NatsManager()
 {
 	//new timers, object initialization
+
+	zoneConfig = ZoneConfig::get();
 }
 
 NatsManager::~NatsManager()
@@ -78,7 +84,7 @@ void NatsManager::SendAdminMessage(std::string adminMessage) {
 
 void NatsManager::Load()
 {
-	s = natsConnection_Connect(&conn, opts);
+	s = natsConnection_ConnectTo(&conn, StringFormat("nats://%s:%d", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort).c_str());
 	if (s != NATS_OK) {
 		Log(Logs::General, Logs::Zone_Server, "Nats status isn't OK: %s", nats_GetLastError(&s));
 		conn = NULL;

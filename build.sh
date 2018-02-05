@@ -11,7 +11,7 @@ echo "Building 'build' docker container..."
 docker build docker/build/. -t buildeq
 
 echo "Prepping Cmake..."
-docker run -v $PWD:/src -v $PWD/deploy/server:/eqemu buildeq /bin/bash -c "/usr/bin/cmake ~/."
+docker run -v $PWD:/src -v $PWD/deploy/server:/eqemu buildeq /bin/bash -c "/usr/bin/cmake -DEQEMU_BUILD_LOGIN=true ~/."
 
 echo "Building binaries..."
 docker run -v $PWD:/src -v $PWD/deploy/server:/eqemu buildeq
@@ -49,5 +49,11 @@ fi
 
 echo "Running shared memory..."
 docker-compose run eqemu /eqemu/shared_memory
+
+echo "Building discordnats"
+(cd go/discordnats/ && GOOS="linux" go build -o discordnats && cp ./discordnats ../../deploy/server/ && rm ./discordnats)
+
+echo "Configuring libprotobuf"
+ln -s deploy/server/libprotobuf.so deploy/server/libprotobuf.so.14
 
 echo "Build completed. Run start.sh start the environment, inject DB via localhost. When modifications are done, run rebuild.sh from now on. DO NOT re-run build.sh unless it's a big issue."
