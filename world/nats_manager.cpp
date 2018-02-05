@@ -15,10 +15,12 @@
 extern ZSList zoneserver_list;
 extern LoginServerList loginserverlist;
 extern ClientList client_list;
+const WorldConfig *worldConfig;
 
 NatsManager::NatsManager()
 {
 	//new timers, object initialization
+	worldConfig = WorldConfig::get();
 }
 
 NatsManager::~NatsManager()
@@ -267,7 +269,7 @@ void NatsManager::Save()
 
 void NatsManager::Load()
 {	
-	s = natsConnection_Connect(&conn, opts);
+	s = natsConnection_ConnectTo(&conn, StringFormat("nats://%s:%d", worldConfig->NATSHost.c_str(), worldConfig->NATSPort).c_str());
 	if (s != NATS_OK) {
 		Log(Logs::General, Logs::World_Server, "Nats status isn't OK, hmm.");
 		conn = NULL;

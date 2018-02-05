@@ -11,7 +11,7 @@ echo "Building 'build' docker container..."
 docker build docker/build/. -t buildeq
 
 echo "Prepping Cmake..."
-docker run -v $PWD:/src -v $PWD/deploy/server:/eqemu buildeq /bin/bash -c "/usr/bin/cmake ~/."
+docker run -v $PWD:/src -v $PWD/deploy/server:/eqemu buildeq /bin/bash -c "/usr/bin/cmake -DEQEMU_BUILD_LOGIN=true ~/."
 
 echo "Building binaries..."
 docker run -v $PWD:/src -v $PWD/deploy/server:/eqemu buildeq

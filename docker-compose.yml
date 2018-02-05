@@ -23,8 +23,10 @@ services:
     links:
       - mariadb
       - web
+      - nats
     depends_on:
       - mariadb
+      - nats
     ports:
       - "5998-5999:5998-5999/udp"
       - "7000-7100:7000-7100/udp"
@@ -43,7 +45,19 @@ services:
       - "./deploy/web:/var/www"
     links:
       - mariadb
+      - nats
     depends_on:
       - mariadb
+      - nats
     ports:
       - "80:80"
+  nats:
+     image: "nats:latest"
+     ports:
+       - "4222:4222"
+       - "6222:6222"
+       - "8222:8222"
+     expose:
+       - "4222/tcp"
+       - "6222/tcp"
+       - "8222/tcp"
