@@ -1,8 +1,8 @@
 +++
-banner = "post/images/buildecho.png"
+banner = "post/images/tier-adjustments.png"
 date = "2018-02-04T01:19:18-07:00"
 description = "Tier Adjustments"
-images = ["post/images/tieradjustments.png"]
+images = ["post/images/tier-adjustments.png"]
 tags = ["tier"]
 title = "Tier Adjustments"
 +++
