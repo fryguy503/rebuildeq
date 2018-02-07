@@ -354,7 +354,7 @@ class Build {
 			//http://everquest.allakhazam.com/db/spell.html?spell=6239
 			$newSkill = new stdClass();
 			$newSkill->title = "Kinsong";
-			$newSkill->desc = 'Grants the Lesson of the Devoted AA, Increasing the groups spell critical dot dmg, dot, and accuracy. 10 minute recast time, each rank reduces recast by 30 seconds.';
+			$newSkill->desc = 'Grants the Lesson of the Devoted AA, increasing spell crit chance for nukes and DoTs and melee accuracy for the group. 10 minute recast time, each rank reduces recast by 30 seconds.';
 			$newSkill->image = "/images/builds/icons/rb-brd-kinsong.png";	
 			$skills[16] = $newSkill;
 			
@@ -415,7 +415,7 @@ class Build {
 
 			$newSkill = new stdClass();
 			$newSkill->title = "Boastful Bellow";
-			$newSkill->desc = 'Grants the Boastful Bellow AA, and lowers the reuse time by <em data-base="10">10</em> seconds<span class="perLevel"> per rank</span>.';
+			$newSkill->desc = 'Grants the Boastful Bellow AA which causes damage and briefly stuns the enemy, and lowers the reuse time by <em data-base="2">2</em> seconds<span class="perLevel"> per rank</span>.';
 			$newSkill->image = "/images/builds/icons/rb-brd-boastfulbellow.png";	
 			$skills[38] = $newSkill;
 
