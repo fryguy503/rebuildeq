@@ -38,27 +38,34 @@ void NatsManager::Process()
 
 void NatsManager::Unregister()
 {
-
-	s = natsSubscription_Unsubscribe(zoneSub);
-	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "Unsubscribe failed: %s", nats_GetLastError(&s));
-		return;
+	if (zoneSub != NULL) {
+		s = natsSubscription_Unsubscribe(zoneSub);
+		if (s != NATS_OK) {
+			Log(Logs::General, Logs::Zone_Server, "Unsubscribe failed: %s", nats_GetLastError(&s));
+			return;
+		}
+		zoneSub = NULL;
+		Log(Logs::General, Logs::Zone_Server, "NATS Unsubscribed");
 	}
-	Log(Logs::General, Logs::Zone_Server, "NATS Unsubscribed");
+	else {
+		Log(Logs::General, Logs::Zone_Server, "Unsubscribe failed: Not subscribed");
+	}
 	return;
 }
 
 void NatsManager::ZoneSubscribe(const char* zonename) {
-	/*if (subscribedZonename == zonename) return;
+	if (subscribedZonename == zonename) return;
 	if (!conn) return;
-	s = natsSubscription_Unsubscribe(zoneSub);
+	if (zoneSub != NULL) {
+		s = natsSubscription_Unsubscribe(zoneSub);
+	}
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "Failed to unsubscribe from zone: %s", nats_GetLastError(&s));
 	subscribedZonename = zonename;
 	Log(Logs::General, Logs::Zone_Server, "Subscribed to %s", zonename);
-	
+
 	s = natsConnection_SubscribeSync(&zoneSub, conn, zonename);
 	// For maximum performance, set no limit on the number of pending messages.
-	if (s == NATS_OK) s = natsSubscription_SetPendingLimits(zoneSub, -1, -1);	*/
+	if (s == NATS_OK) s = natsSubscription_SetPendingLimits(zoneSub, -1, -1);
 }
 
 
