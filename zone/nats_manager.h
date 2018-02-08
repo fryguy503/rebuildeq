@@ -12,7 +12,7 @@ public:
 	~NatsManager();
 	void Process();
 	void Unregister();
-	bool IsZoneSubscribed() { return (subscribedZonename != NULL && subscribedZonename[0] != '\0'); };
+	bool IsZoneSubscribed() { return (subscribedZonename.length() != 0); };
 	void ZoneSubscribe(const char * zonename);
 	void Load();
 	void DailyGain(int account_id, int character_id, const char * identity, int levels_gained = 0, int experience_gained = 0, int money_earned = 0);
@@ -23,7 +23,7 @@ protected:
 	natsOptions *opts = NULL;
 	natsSubscription *zoneSub = NULL;
 	natsSubscription *adminMessageSub = NULL;
-	const char * subscribedZonename;	
+	std::string subscribedZonename;	
 };
 
 #endif

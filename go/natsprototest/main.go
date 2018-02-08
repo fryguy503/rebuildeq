@@ -22,17 +22,10 @@ func main() {
 	defer nc.Close()
 
 	//testSyncSubscriber()
-	//testAsyncSubscriber()
-	testBroadcastMessage()
+	//go testAsyncSubscriber()
+	//go testBroadcastMessage()
+	testZoneMessage("ecommons", "hello, world!")
 	time.Sleep(1000 * time.Second)
-}
-
-func testPublish() {
-	if err = nc.Publish("ChannelMessage", []byte("Hello World")); err != nil {
-		log.Println("Failed to publish:", err.Error())
-		return
-	}
-	log.Println("test: hello World")
 }
 
 func testAsyncSubscriber() {
@@ -83,15 +76,24 @@ func testBroadcastMessage() {
 	message := &eqproto.ChannelMessage{
 		From:    "Someone",
 		Message: "Test",
-		ChanNum: 6, //5 is ooc, 6 is bc
+		ChanNum: 5, //5 is ooc, 6 is bc
 	}
 	d, err := proto.Marshal(message)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if err = nc.Publish("ChannelMessage", d); err != nil {
+	if err = nc.Publish("ChannelMessageWorld", d); err != nil {
 		log.Println("Failed to publish:", err.Error())
 		return
 	}
 	log.Println("Sending message", message)
+}
+
+func testZoneMessage(zone string, message string) {
+
+	if err = nc.Publish(zone, []byte(message)); err != nil {
+		log.Println("Failed to publish:", err.Error())
+		return
+	}
+	log.Println("Sent message", message, "to zone", zone)
 }

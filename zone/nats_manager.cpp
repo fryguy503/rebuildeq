@@ -26,52 +26,70 @@ NatsManager::~NatsManager()
 
 void NatsManager::Process()
 {
+	if (zoneSub == NULL) {
+		return;
+	}
+	
 	natsMsg *msg = NULL;
+
+	s = NATS_OK;
+
 	for (int count = 0; (s == NATS_OK) && count < 100; count++)
 	{
 		s = natsSubscription_NextMsg(&msg, zoneSub, 1);
 		if (s != NATS_OK) break;
-		Log(Logs::General, Logs::Zone_Server, "Got Message '%s'", natsMsg_GetData(msg));
+		Log(Logs::General, Logs::Zone_Server, "NATS got message '%s'", natsMsg_GetData(msg));
 		natsMsg_Destroy(msg);
 	}
 }
 
+//Unregister is called when a zone is being put to sleep.
 void NatsManager::Unregister()
 {
-	if (zoneSub != NULL) {
-		s = natsSubscription_Unsubscribe(zoneSub);
-		if (s != NATS_OK) {
-			Log(Logs::General, Logs::Zone_Server, "Unsubscribe failed: %s", nats_GetLastError(&s));
-			return;
-		}
-		zoneSub = NULL;
-		Log(Logs::General, Logs::Zone_Server, "NATS Unsubscribed");
+	if (zoneSub == NULL) {
+		return;
 	}
-	else {
-		Log(Logs::General, Logs::Zone_Server, "Unsubscribe failed: Not subscribed");
+	s = natsSubscription_Unsubscribe(zoneSub);
+	zoneSub = NULL;	
+	if (s != NATS_OK) {
+		Log(Logs::General, Logs::Zone_Server, "NATS unsubscribe from %s failed: %s", subscribedZonename.c_str(), nats_GetLastError(&s));
+		subscribedZonename.clear();
+		return;
 	}
+	Log(Logs::General, Logs::Zone_Server, "NATS unsubscribed from %s", subscribedZonename.c_str());	
+	subscribedZonename.clear();
 	return;
 }
 
 void NatsManager::ZoneSubscribe(const char* zonename) {
-	if (subscribedZonename == zonename) return;
+	if (strcmp(subscribedZonename.c_str(), zonename) == 0) return;
 	if (!conn) return;
 	if (zoneSub != NULL) {
 		s = natsSubscription_Unsubscribe(zoneSub);
+		if (s != NATS_OK) {
+			Log(Logs::General, Logs::Zone_Server, "NATS failed to unsubscribe from previous zone: %s", nats_GetLastError(&s));
+		}
 	}
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "Failed to unsubscribe from zone: %s", nats_GetLastError(&s));
-	subscribedZonename = zonename;
-	Log(Logs::General, Logs::Zone_Server, "Subscribed to %s", zonename);
-
-	s = natsConnection_SubscribeSync(&zoneSub, conn, zonename);
-	// For maximum performance, set no limit on the number of pending messages.
-	if (s == NATS_OK) s = natsSubscription_SetPendingLimits(zoneSub, -1, -1);
+	
+	subscribedZonename = std::string(zonename);
+	
+	s = natsConnection_SubscribeSync(&zoneSub, conn, subscribedZonename.c_str());
+	if (s != NATS_OK) {
+		Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to zone %s", subscribedZonename.c_str());
+		return;
+	}	
+	s = natsSubscription_SetPendingLimits(zoneSub, -1, -1);	
+	if (s != NATS_OK) {
+		Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits while subscribed to zone %s", subscribedZonename.c_str());
+		return;
+	}
+	Log(Logs::General, Logs::Zone_Server, "NATS subscribed to %s", subscribedZonename.c_str());
 }
 
 
 void NatsManager::SendAdminMessage(std::string adminMessage) {
 	if (!conn) {
-		Log(Logs::General, Logs::World_Server, "Send channel message failed, no connection to NATS");
+		Log(Logs::General, Logs::Zone_Server, "NATS Send channel message failed, no connection to NATS");
 		return;
 	}
 
@@ -79,24 +97,25 @@ void NatsManager::SendAdminMessage(std::string adminMessage) {
 	message.set_message(adminMessage.c_str());
 	std::string pubMessage;
 	if (!message.SerializeToString(&pubMessage)) {
-		Log(Logs::General, Logs::World_Server, "Failed to serialize message to string");
+		Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string");
 		return;
 	}
-	s = natsConnection_PublishString(conn, "AdminMessage", pubMessage.c_str());
+	s = natsConnection_PublishString(conn, "NATS AdminMessage", pubMessage.c_str());
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::World_Server, "Failed to SendAdminMessage");
+		Log(Logs::General, Logs::Zone_Server, "NATS Failed to SendAdminMessage");
 	}
-	Log(Logs::General, Logs::World_Server, "AdminMessage: %s", adminMessage.c_str());
+	Log(Logs::General, Logs::Zone_Server, "NATS AdminMessage: %s", adminMessage.c_str());
 }
 
 void NatsManager::Load()
 {
 	s = natsConnection_ConnectTo(&conn, StringFormat("nats://%s:%d", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort).c_str());
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "Nats status isn't OK: %s", nats_GetLastError(&s));
+		Log(Logs::General, Logs::Zone_Server, "NATS failed to load: %s", nats_GetLastError(&s));
 		conn = NULL;
 		return;
 	}
+
 
 	Log(Logs::General, Logs::Zone_Server, "NATS Connected.");
 	return;
@@ -114,9 +133,10 @@ void NatsManager::DailyGain(int account_id, int character_id, const char* identi
 	daily.set_money_earned(money_earned);
 	std::string pubMessage;
 	if (!daily.SerializeToString(&pubMessage)) {
-		Log(Logs::General, Logs::Zone_Server, "Failed to serialize dailygain to string");
+		Log(Logs::General, Logs::Zone_Server, "NATS failed to serialize dailygain to string");
 		return;
 	}
+
 	s = natsConnection_PublishString(conn, "DailyGain", pubMessage.c_str());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "Failed to send DailyGain: %s", nats_GetLastError(&s));	
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to send DailyGain: %s", nats_GetLastError(&s));	
 }

@@ -1869,7 +1869,7 @@ void command_stats(Client *c, const Seperator *sep)
 	float dps = floor(max_dmg * num_hits*(delay / 1000)/40);
 
 	c->Message(0, "NPC Stats:");
-	c->Message(0, "Name: %s   NpcID: %u", c->GetTarget()->GetName(), c->GetTarget()->GetNPCTypeID());
+	c->Message(0, "Name: %s   NpcID: %u, Entity ID: %u", c->GetTarget()->GetName(), c->GetTarget()->GetNPCTypeID(), c->GetTarget()->GetID());
 	c->Message(0, "Race: %i  Level: %i  Class: %i  Material: %i", c->GetTarget()->GetRace(), c->GetTarget()->GetLevel(), c->GetTarget()->GetClass(), c->GetTarget()->GetTexture());
 	c->Message(0, "Faction: %i", target->GetPrimaryFaction());
 	c->Message(0, "HP: %i, AC: %i", target->GetMaxHP(), target->GetAC());

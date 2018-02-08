@@ -29,11 +29,9 @@ protected:
 	natsStatus      s;
 	natsStatistics *stats = NULL;
 	natsOptions *opts = NULL;
-	natsSubscription *testSub = NULL;
 	natsSubscription *channelMessageSub = NULL;
 	natsSubscription *commandMessageSub = NULL;
 	natsSubscription *adminMessageSub = NULL;
-	//int testSubMax = 100;
 };
 
 #endif
