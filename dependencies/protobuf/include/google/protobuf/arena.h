@@ -880,6 +880,7 @@ class LIBPROTOBUF_EXPORT Arena {
   friend class internal::ArenaString;  // For AllocateAligned.
   friend class internal::LazyField;    // For CreateMaybeMessage.
   template <typename Key, typename T>
+
   friend class Map;
 };
 

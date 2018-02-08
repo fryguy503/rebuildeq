@@ -36,3 +36,105 @@ message DailyGain  {
   int32 money_earned = 5;  
   string identity = 6;
 }
+
+//Entity is full of entity data.
+message Entity {
+  int32 id = 1;
+  string name = 2;
+  int32 type = 3;
+  int32 hp = 4;
+}
+
+//EntityEvent is triggered for different types of events of an entity
+message EntityEvent {
+  Entity entity = 1;
+  int32 event = 2;
+  //I can't get eventtype to compile in c++
+  /*enum EventType {
+    SAY = 0;
+    TRADE = 1;		//being given an item or money
+    DEATH = 2;		//being killed
+    SPAWN = 3;		//triggered when we first spawn
+    ATTACK = 4;		//being attacked (resets after an interval of not being attacked)
+    COMBAT = 5;		//being attacked or attacking (resets after an interval of not being attacked)
+    AGGRO = 6;		//entering combat mode due to a PC attack
+    SLAY = 7;			//killing a PC
+    NPC_SLAY = 8;		//killing an NPC
+    WAYPOINT_ARRIVE = 9;	// reaching a waypoint on a grid
+    WAYPOINT_DEPART = 10;	// departing a waypoint on a grid
+    TIMER = 11;
+    SIGNAL = 12;
+    HP = 13;
+    ENTER = 14;		//PC entering your set proximity
+    EXIT = 15;			//PC leaving your set proximity
+    ENTER_ZONE = 16;		//PC only, you enter zone
+    CLICK_DOOR = 17;		//pc only, you click a door
+    LOOT = 18;			//pc only
+    ZONE = 19;			//pc only
+    LEVEL_UP = 20;		//pc only
+    KILLED_MERIT = 21; //killed by a PC or group, gave experience; will repeat several times for groups
+    CAST_ON = 22;		//pc casted a spell on npc
+    TASK_ACCEPTED = 23;	//pc accepted a task
+    TASK_STAGE_COMPLETE = 24;
+    TASK_UPDATE = 25;
+    TASK_COMPLETE = 26;
+    TASK_FAIL = 27;
+    AGGRO_SAY = 28;
+    PLAYER_PICKUP = 29;
+    POPUP_RESPONSE = 30;
+    ENVIRONMENTAL_DAMAGE = 31;
+    PROXIMITY_SAY = 32;
+    CAST = 33;
+    CAST_BEGIN = 34;
+    SCALE_CALC = 35;
+    ITEM_ENTER_ZONE = 36;
+    TARGET_CHANGE = 37;	//target selected, target changed, or target removed
+    HATE_LIST = 38;
+    SPELL_EFFECT_CLIENT = 39;
+    SPELL_EFFECT_NPC = 40;
+    SPELL_BUFF_TIC_CLIENT = 41;
+    SPELL_BUFF_TIC_NPC = 42;
+    SPELL_FADE = 43;
+    SPELL_EFFECT_TRANSLOCATE_COMPLETE = 44;
+    COMBINE_SUCCESS = 45; //PC successfully combined a recipe
+    COMBINE_FAILURE = 46; //PC failed to combine a recipe
+    ITEM_CLICK = 47;	//SoF+ Item Right Clicked from worn or main/top inventory slot
+    ITEM_CLICK_CAST = 48;
+    GROUP_CHANGE = 49;
+    FORAGE_SUCCESS = 50;
+    FORAGE_FAILURE = 51;
+    FISH_START = 52;
+    FISH_SUCCESS = 53;
+    FISH_FAILURE = 54;
+    CLICK_OBJECT = 55;
+    DISCOVER_ITEM = 56;
+    DISCONNECT = 57;
+    CONNECT = 58;
+    ITEM_TICK = 59;
+    DUEL_WIN = 60;
+    DUEL_LOSE = 61;
+    ENCOUNTER_LOAD = 62;
+    ENCOUNTER_UNLOAD = 63;
+    COMMAND = 64;
+    DROP_ITEM = 65;
+    DESTROY_ITEM = 66;
+    FEIGN_DEATH = 67;
+    WEAPON_PROC = 68;
+    EQUIP_ITEM = 69;
+    UNEQUIP_ITEM = 70;
+    AUGMENT_ITEM = 71;
+    UNAUGMENT_ITEM = 72;
+    AUGMENT_INSERT = 73;
+    AUGMENT_REMOVE = 74;
+    ENTER_AREA = 75;
+    LEAVE_AREA = 76;
+    RESPAWN = 77;
+    DEATH_COMPLETE = 78;
+    UNHANDLED_OPCODE = 79;
+    TICK = 80;
+    SPAWN_ZONE = 81;
+    DEATH_ZONE = 82;
+    USE_SKILL = 83;
+  }*/
+
+}

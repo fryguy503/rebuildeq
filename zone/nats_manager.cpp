@@ -1,3 +1,5 @@
+#include "entity.h"
+#include "event_codes.h"
 #include "nats.h"
 #include "zone_config.h"
 #include "../common/eqemu_logsys.h"
@@ -139,4 +141,48 @@ void NatsManager::DailyGain(int account_id, int character_id, const char* identi
 
 	s = natsConnection_PublishString(conn, "DailyGain", pubMessage.c_str());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to send DailyGain: %s", nats_GetLastError(&s));	
+}
+
+
+void NatsManager::OnEntityEvent(QuestEventID evt, Entity *ent) {
+
+	if (!conn) {
+		Log(Logs::General, Logs::World_Server, "OnChannelMessage failed, no connection to NATS");
+		return;
+	}
+
+	eqproto::EntityEvent event;
+
+	eqproto::Entity entity;
+	entity.set_id(ent->GetID());
+	entity.set_name(ent->GetName());
+	
+	if (ent->IsClient()) {
+		entity.set_type(1);
+	}
+	else if (ent->IsNPC()) {
+		entity.set_type(2);
+	}
+	if (ent->IsMob()) {
+		
+		//entity.set_hp(ent->GetHP());
+	}
+	
+	
+	event.set_event(int(evt));
+
+	event.set_allocated_entity(&entity);
+	
+	std::string pubMessage;
+	bool isSerialized = event.SerializeToString(&pubMessage);
+	event.release_entity();
+	if (!isSerialized) {
+		Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string");		
+		return;
+	}
+	s = natsConnection_PublishString(conn, "EntityEvent", pubMessage.c_str());
+	if (s != NATS_OK) {
+		Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	}
+	return;
 }

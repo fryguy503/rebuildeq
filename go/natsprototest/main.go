@@ -24,12 +24,35 @@ func main() {
 	//testSyncSubscriber()
 	//go testAsyncSubscriber()
 	//go testBroadcastMessage()
-	testZoneMessage("ecommons", "hello, world!")
+	//testAsyncSubscriber("EntityEvent")
+	go testAsyncEntityEventSubscriber()
+	//testZoneMessage("fieldofbone", "hello, world!")
 	time.Sleep(1000 * time.Second)
 }
 
-func testAsyncSubscriber() {
-	nc.Subscribe("ChannelMessage", func(m *nats.Msg) {
+func testAsyncSubscriber(channel string) {
+	nc.Subscribe(channel, func(m *nats.Msg) {
+		log.Printf("Received a message: %s\n", string(m.Data))
+	})
+	log.Println("Waiting on messages...")
+
+	time.Sleep(500 * time.Second)
+}
+
+func testAsyncEntityEventSubscriber() {
+	nc.Subscribe("EntityEvent", func(m *nats.Msg) {
+		//log.Printf("Received a message: %s\n", string(m.Data))
+		event := &eqproto.EntityEvent{}
+		proto.Unmarshal(m.Data, event)
+		log.Println(event)
+	})
+	log.Println("Waiting on messages...")
+
+	time.Sleep(500 * time.Second)
+}
+
+func testAsyncChannelMessageSubscriber() {
+	nc.Subscribe("ChannelMessageWorld", func(m *nats.Msg) {
 		//log.Printf("Received a message: %s\n", string(m.Data))
 		message := &eqproto.ChannelMessage{}
 		proto.Unmarshal(m.Data, message)

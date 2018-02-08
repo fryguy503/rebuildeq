@@ -40,6 +40,12 @@ extern CommandMessageDefaultTypeInternal _CommandMessage_default_instance_;
 class DailyGain;
 class DailyGainDefaultTypeInternal;
 extern DailyGainDefaultTypeInternal _DailyGain_default_instance_;
+class Entity;
+class EntityDefaultTypeInternal;
+extern EntityDefaultTypeInternal _Entity_default_instance_;
+class EntityEvent;
+class EntityEventDefaultTypeInternal;
+extern EntityEventDefaultTypeInternal _EntityEvent_default_instance_;
 }  // namespace eqproto
 
 namespace eqproto {
@@ -574,6 +580,239 @@ class DailyGain : public ::google::protobuf::Message /* @@protoc_insertion_point
   ::google::protobuf::int32 levels_gained_;
   ::google::protobuf::int32 experience_gained_;
   ::google::protobuf::int32 money_earned_;
+  mutable int _cached_size_;
+  friend struct protobuf_message_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class Entity : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:eqproto.Entity) */ {
+ public:
+  Entity();
+  virtual ~Entity();
+
+  Entity(const Entity& from);
+
+  inline Entity& operator=(const Entity& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Entity(Entity&& from) noexcept
+    : Entity() {
+    *this = ::std::move(from);
+  }
+
+  inline Entity& operator=(Entity&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Entity& default_instance();
+
+  static inline const Entity* internal_default_instance() {
+    return reinterpret_cast<const Entity*>(
+               &_Entity_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    3;
+
+  void Swap(Entity* other);
+  friend void swap(Entity& a, Entity& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Entity* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  Entity* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const Entity& from);
+  void MergeFrom(const Entity& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(Entity* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // string name = 2;
+  void clear_name();
+  static const int kNameFieldNumber = 2;
+  const ::std::string& name() const;
+  void set_name(const ::std::string& value);
+  #if LANG_CXX11
+  void set_name(::std::string&& value);
+  #endif
+  void set_name(const char* value);
+  void set_name(const char* value, size_t size);
+  ::std::string* mutable_name();
+  ::std::string* release_name();
+  void set_allocated_name(::std::string* name);
+
+  // int32 id = 1;
+  void clear_id();
+  static const int kIdFieldNumber = 1;
+  ::google::protobuf::int32 id() const;
+  void set_id(::google::protobuf::int32 value);
+
+  // int32 type = 3;
+  void clear_type();
+  static const int kTypeFieldNumber = 3;
+  ::google::protobuf::int32 type() const;
+  void set_type(::google::protobuf::int32 value);
+
+  // int32 hp = 4;
+  void clear_hp();
+  static const int kHpFieldNumber = 4;
+  ::google::protobuf::int32 hp() const;
+  void set_hp(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:eqproto.Entity)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr name_;
+  ::google::protobuf::int32 id_;
+  ::google::protobuf::int32 type_;
+  ::google::protobuf::int32 hp_;
+  mutable int _cached_size_;
+  friend struct protobuf_message_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class EntityEvent : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:eqproto.EntityEvent) */ {
+ public:
+  EntityEvent();
+  virtual ~EntityEvent();
+
+  EntityEvent(const EntityEvent& from);
+
+  inline EntityEvent& operator=(const EntityEvent& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  EntityEvent(EntityEvent&& from) noexcept
+    : EntityEvent() {
+    *this = ::std::move(from);
+  }
+
+  inline EntityEvent& operator=(EntityEvent&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const EntityEvent& default_instance();
+
+  static inline const EntityEvent* internal_default_instance() {
+    return reinterpret_cast<const EntityEvent*>(
+               &_EntityEvent_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    4;
+
+  void Swap(EntityEvent* other);
+  friend void swap(EntityEvent& a, EntityEvent& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline EntityEvent* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  EntityEvent* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const EntityEvent& from);
+  void MergeFrom(const EntityEvent& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(EntityEvent* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // .eqproto.Entity entity = 1;
+  bool has_entity() const;
+  void clear_entity();
+  static const int kEntityFieldNumber = 1;
+  const ::eqproto::Entity& entity() const;
+  ::eqproto::Entity* mutable_entity();
+  ::eqproto::Entity* release_entity();
+  void set_allocated_entity(::eqproto::Entity* entity);
+
+  // int32 event = 2;
+  void clear_event();
+  static const int kEventFieldNumber = 2;
+  ::google::protobuf::int32 event() const;
+  void set_event(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:eqproto.EntityEvent)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::eqproto::Entity* entity_;
+  ::google::protobuf::int32 event_;
   mutable int _cached_size_;
   friend struct protobuf_message_2eproto::TableStruct;
 };
@@ -1300,10 +1539,171 @@ inline void DailyGain::set_allocated_identity(::std::string* identity) {
   // @@protoc_insertion_point(field_set_allocated:eqproto.DailyGain.identity)
 }
 
+// -------------------------------------------------------------------
+
+// Entity
+
+// int32 id = 1;
+inline void Entity::clear_id() {
+  id_ = 0;
+}
+inline ::google::protobuf::int32 Entity::id() const {
+  // @@protoc_insertion_point(field_get:eqproto.Entity.id)
+  return id_;
+}
+inline void Entity::set_id(::google::protobuf::int32 value) {
+  
+  id_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Entity.id)
+}
+
+// string name = 2;
+inline void Entity::clear_name() {
+  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Entity::name() const {
+  // @@protoc_insertion_point(field_get:eqproto.Entity.name)
+  return name_.GetNoArena();
+}
+inline void Entity::set_name(const ::std::string& value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:eqproto.Entity.name)
+}
+#if LANG_CXX11
+inline void Entity::set_name(::std::string&& value) {
+  
+  name_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:eqproto.Entity.name)
+}
+#endif
+inline void Entity::set_name(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:eqproto.Entity.name)
+}
+inline void Entity::set_name(const char* value, size_t size) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:eqproto.Entity.name)
+}
+inline ::std::string* Entity::mutable_name() {
+  
+  // @@protoc_insertion_point(field_mutable:eqproto.Entity.name)
+  return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Entity::release_name() {
+  // @@protoc_insertion_point(field_release:eqproto.Entity.name)
+  
+  return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Entity::set_allocated_name(::std::string* name) {
+  if (name != NULL) {
+    
+  } else {
+    
+  }
+  name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:eqproto.Entity.name)
+}
+
+// int32 type = 3;
+inline void Entity::clear_type() {
+  type_ = 0;
+}
+inline ::google::protobuf::int32 Entity::type() const {
+  // @@protoc_insertion_point(field_get:eqproto.Entity.type)
+  return type_;
+}
+inline void Entity::set_type(::google::protobuf::int32 value) {
+  
+  type_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Entity.type)
+}
+
+// int32 hp = 4;
+inline void Entity::clear_hp() {
+  hp_ = 0;
+}
+inline ::google::protobuf::int32 Entity::hp() const {
+  // @@protoc_insertion_point(field_get:eqproto.Entity.hp)
+  return hp_;
+}
+inline void Entity::set_hp(::google::protobuf::int32 value) {
+  
+  hp_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Entity.hp)
+}
+
+// -------------------------------------------------------------------
+
+// EntityEvent
+
+// .eqproto.Entity entity = 1;
+inline bool EntityEvent::has_entity() const {
+  return this != internal_default_instance() && entity_ != NULL;
+}
+inline void EntityEvent::clear_entity() {
+  if (GetArenaNoVirtual() == NULL && entity_ != NULL) delete entity_;
+  entity_ = NULL;
+}
+inline const ::eqproto::Entity& EntityEvent::entity() const {
+  const ::eqproto::Entity* p = entity_;
+  // @@protoc_insertion_point(field_get:eqproto.EntityEvent.entity)
+  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Entity*>(
+      &::eqproto::_Entity_default_instance_);
+}
+inline ::eqproto::Entity* EntityEvent::mutable_entity() {
+  
+  if (entity_ == NULL) {
+    entity_ = new ::eqproto::Entity;
+  }
+  // @@protoc_insertion_point(field_mutable:eqproto.EntityEvent.entity)
+  return entity_;
+}
+inline ::eqproto::Entity* EntityEvent::release_entity() {
+  // @@protoc_insertion_point(field_release:eqproto.EntityEvent.entity)
+  
+  ::eqproto::Entity* temp = entity_;
+  entity_ = NULL;
+  return temp;
+}
+inline void EntityEvent::set_allocated_entity(::eqproto::Entity* entity) {
+  delete entity_;
+  entity_ = entity;
+  if (entity) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:eqproto.EntityEvent.entity)
+}
+
+// int32 event = 2;
+inline void EntityEvent::clear_event() {
+  event_ = 0;
+}
+inline ::google::protobuf::int32 EntityEvent::event() const {
+  // @@protoc_insertion_point(field_get:eqproto.EntityEvent.event)
+  return event_;
+}
+inline void EntityEvent::set_event(::google::protobuf::int32 value) {
+  
+  event_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.EntityEvent.event)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
