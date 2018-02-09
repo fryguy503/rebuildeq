@@ -120,6 +120,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_ATTRIBUTE_SECTION
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, name_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, type_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, hp_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Entity, level_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EntityEvent, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -133,7 +134,7 @@ static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_ATTR
   { 19, -1, sizeof(CommandMessage)},
   { 28, -1, sizeof(DailyGain)},
   { 39, -1, sizeof(Entity)},
-  { 48, -1, sizeof(EntityEvent)},
+  { 49, -1, sizeof(EntityEvent)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -204,14 +205,14 @@ void AddDescriptorsImpl() {
       "\001(\t\"\217\001\n\tDailyGain\022\022\n\naccount_id\030\001 \001(\005\022\024\n"
       "\014character_id\030\002 \001(\005\022\025\n\rlevels_gained\030\003 \001"
       "(\005\022\031\n\021experience_gained\030\004 \001(\005\022\024\n\014money_e"
-      "arned\030\005 \001(\005\022\020\n\010identity\030\006 \001(\t\"<\n\006Entity\022"
+      "arned\030\005 \001(\005\022\020\n\010identity\030\006 \001(\t\"K\n\006Entity\022"
       "\n\n\002id\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022\014\n\004type\030\003 \001(\005\022"
-      "\n\n\002hp\030\004 \001(\005\"=\n\013EntityEvent\022\037\n\006entity\030\001 \001"
-      "(\0132\017.eqproto.Entity\022\r\n\005event\030\002 \001(\005B\003\370\001\000b"
-      "\006proto3"
+      "\n\n\002hp\030\004 \001(\005\022\r\n\005level\030\005 \001(\005\"=\n\013EntityEven"
+      "t\022\037\n\006entity\030\001 \001(\0132\017.eqproto.Entity\022\r\n\005ev"
+      "ent\030\002 \001(\005b\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 647);
+      descriptor, 657);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "message.proto", &protobuf_RegisterTypes);
 }
@@ -2604,6 +2605,7 @@ const int Entity::kIdFieldNumber;
 const int Entity::kNameFieldNumber;
 const int Entity::kTypeFieldNumber;
 const int Entity::kHpFieldNumber;
+const int Entity::kLevelFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Entity::Entity()
@@ -2624,16 +2626,16 @@ Entity::Entity(const Entity& from)
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
   ::memcpy(&id_, &from.id_,
-    static_cast<size_t>(reinterpret_cast<char*>(&hp_) -
-    reinterpret_cast<char*>(&id_)) + sizeof(hp_));
+    static_cast<size_t>(reinterpret_cast<char*>(&level_) -
+    reinterpret_cast<char*>(&id_)) + sizeof(level_));
   // @@protoc_insertion_point(copy_constructor:eqproto.Entity)
 }
 
 void Entity::SharedCtor() {
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&hp_) -
-      reinterpret_cast<char*>(&id_)) + sizeof(hp_));
+      reinterpret_cast<char*>(&level_) -
+      reinterpret_cast<char*>(&id_)) + sizeof(level_));
   _cached_size_ = 0;
 }
 
@@ -2677,8 +2679,8 @@ void Entity::Clear() {
 
   name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(&id_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&hp_) -
-      reinterpret_cast<char*>(&id_)) + sizeof(hp_));
+      reinterpret_cast<char*>(&level_) -
+      reinterpret_cast<char*>(&id_)) + sizeof(level_));
   _internal_metadata_.Clear();
 }
 
@@ -2750,6 +2752,20 @@ bool Entity::MergePartialFromCodedStream(
         break;
       }
 
+      // int32 level = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &level_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -2801,6 +2817,11 @@ void Entity::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->hp(), output);
   }
 
+  // int32 level = 5;
+  if (this->level() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->level(), output);
+  }
+
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
@@ -2839,6 +2860,11 @@ void Entity::SerializeWithCachedSizes(
   // int32 hp = 4;
   if (this->hp() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->hp(), target);
+  }
+
+  // int32 level = 5;
+  if (this->level() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->level(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -2886,6 +2912,13 @@ size_t Entity::ByteSizeLong() const {
         this->hp());
   }
 
+  // int32 level = 5;
+  if (this->level() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->level());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = cached_size;
@@ -2928,6 +2961,9 @@ void Entity::MergeFrom(const Entity& from) {
   if (from.hp() != 0) {
     set_hp(from.hp());
   }
+  if (from.level() != 0) {
+    set_level(from.level());
+  }
 }
 
 void Entity::CopyFrom(const ::google::protobuf::Message& from) {
@@ -2958,6 +2994,7 @@ void Entity::InternalSwap(Entity* other) {
   swap(id_, other->id_);
   swap(type_, other->type_);
   swap(hp_, other->hp_);
+  swap(level_, other->level_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
 }
@@ -3063,6 +3100,20 @@ void Entity::set_hp(::google::protobuf::int32 value) {
   
   hp_ = value;
   // @@protoc_insertion_point(field_set:eqproto.Entity.hp)
+}
+
+// int32 level = 5;
+void Entity::clear_level() {
+  level_ = 0;
+}
+::google::protobuf::int32 Entity::level() const {
+  // @@protoc_insertion_point(field_get:eqproto.Entity.level)
+  return level_;
+}
+void Entity::set_level(::google::protobuf::int32 value) {
+  
+  level_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Entity.level)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

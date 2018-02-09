@@ -1,11 +1,13 @@
 #include "entity.h"
+#include "mob.h"
 #include "event_codes.h"
 #include "nats.h"
 #include "zone_config.h"
-#include "../common/eqemu_logsys.h"
 #include "nats_manager.h"
-#include "../common/proto/message.pb.h"
+
+#include "../common/eqemu_logsys.h"
 #include "../common/string_util.h"
+#include "../common/proto/message.pb.h"
 
 const ZoneConfig *zoneConfig;
 
@@ -109,6 +111,7 @@ void NatsManager::SendAdminMessage(std::string adminMessage) {
 	Log(Logs::General, Logs::Zone_Server, "NATS AdminMessage: %s", adminMessage.c_str());
 }
 
+
 void NatsManager::Load()
 {
 	s = natsConnection_ConnectTo(&conn, StringFormat("nats://%s:%d", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort).c_str());
@@ -152,11 +155,12 @@ void NatsManager::OnEntityEvent(QuestEventID evt, Entity *ent) {
 	}
 
 	eqproto::EntityEvent event;
+	event.set_event(int(evt));
 
 	eqproto::Entity entity;
 	entity.set_id(ent->GetID());
 	entity.set_name(ent->GetName());
-	
+
 	if (ent->IsClient()) {
 		entity.set_type(1);
 	}
@@ -164,12 +168,11 @@ void NatsManager::OnEntityEvent(QuestEventID evt, Entity *ent) {
 		entity.set_type(2);
 	}
 	if (ent->IsMob()) {
-		
-		//entity.set_hp(ent->GetHP());
+		auto mob = ent->CastToMob();
+		entity.set_hp(mob->GetHP());
+		entity.set_level(mob->GetLevel());
+		entity.set_name(mob->GetName());
 	}
-	
-	
-	event.set_event(int(evt));
 
 	event.set_allocated_entity(&entity);
 	

@@ -698,6 +698,12 @@ class Entity : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::int32 hp() const;
   void set_hp(::google::protobuf::int32 value);
 
+  // int32 level = 5;
+  void clear_level();
+  static const int kLevelFieldNumber = 5;
+  ::google::protobuf::int32 level() const;
+  void set_level(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:eqproto.Entity)
  private:
 
@@ -706,6 +712,7 @@ class Entity : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::int32 id_;
   ::google::protobuf::int32 type_;
   ::google::protobuf::int32 hp_;
+  ::google::protobuf::int32 level_;
   mutable int _cached_size_;
   friend struct protobuf_message_2eproto::TableStruct;
 };
@@ -1636,6 +1643,20 @@ inline void Entity::set_hp(::google::protobuf::int32 value) {
   
   hp_ = value;
   // @@protoc_insertion_point(field_set:eqproto.Entity.hp)
+}
+
+// int32 level = 5;
+inline void Entity::clear_level() {
+  level_ = 0;
+}
+inline ::google::protobuf::int32 Entity::level() const {
+  // @@protoc_insertion_point(field_get:eqproto.Entity.level)
+  return level_;
+}
+inline void Entity::set_level(::google::protobuf::int32 value) {
+  
+  level_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Entity.level)
 }
 
 // -------------------------------------------------------------------

@@ -245,7 +245,7 @@ int QuestParserCollection::EventNPC(QuestEventID evt, NPC *npc, Mob *init, std::
 	int rl = EventNPCLocal(evt, npc, init, data, extra_data, extra_pointers);
 	int rg = EventNPCGlobal(evt, npc, init, data, extra_data, extra_pointers);
 	
-	//nats.OnEntityEvent(evt, npc);
+	nats.OnEntityEvent(evt, npc);
 	//Local quests returning non-default values have priority over global quests
     if(rl != 0) {
 		return rl;

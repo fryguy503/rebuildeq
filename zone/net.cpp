@@ -134,7 +134,7 @@ int main(int argc, char** argv) {
 		std::string filename = Config->MapDir;
 		filename += mapfile;
 
-		auto m = new Map();
+		auto m = new EQEmu::Map();
 		auto success = m->Load(filename, true);
 		delete m;
 		std::cout << mapfile.c_str() << " conversion " << (success ? "succeeded" : "failed") << std::endl;

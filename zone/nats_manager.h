@@ -3,6 +3,7 @@
 #include "nats.h"
 #include "event_codes.h"
 #include "entity.h";
+#include "mob.h";
 
 #include "../common/global_define.h"
 #include "../common/types.h"

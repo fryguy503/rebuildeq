@@ -43,6 +43,7 @@ message Entity {
   string name = 2;
   int32 type = 3;
   int32 hp = 4;
+  int32 level = 5;
 }
 
 //EntityEvent is triggered for different types of events of an entity
@@ -87,6 +88,7 @@ message EntityEvent {
     CAST = 33;
     CAST_BEGIN = 34;
     SCALE_CALC = 35;
+    
     ITEM_ENTER_ZONE = 36;
     TARGET_CHANGE = 37;	//target selected, target changed, or target removed
     HATE_LIST = 38;
