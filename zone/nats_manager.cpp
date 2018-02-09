@@ -222,7 +222,6 @@ void NatsManager::OnEntityEvent(const EmuOpcode op, Entity *ent, Entity *target)
 		return;
 	}
 
-
 	eqproto::EntityEvent event;
 	event.set_op(eqproto::OpCode(op));
 	eqproto::Entity entity;
@@ -281,7 +280,8 @@ void NatsManager::OnEntityEvent(const EmuOpcode op, Entity *ent, Entity *target)
 	bool isSerialized = event.SerializeToString(&pubMessage);	
 	if (!isSerialized) Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string");
 	Log(Logs::General, Logs::Zone_Server, "NATS Event: %d", op);
-	s = natsConnection_PublishString(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), ent->GetID()).c_str(), pubMessage.c_str());
+	
+	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), ent->GetID()).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 	entity.release_name();
 	targetEntity.release_name();

@@ -1878,7 +1878,7 @@ void command_stats(Client *c, const Seperator *sep)
 	c->Message(0, "DPS: %f", dps);		
 	c->Message(0, "Specials: %s", specials.c_str());
 	c->Message(0, "Spawn Group: %i  Grid: %i", c->GetTarget()->CastToNPC()->GetSp2(), c->GetTarget()->CastToNPC()->GetGrid());
-	c->GetTarget()->CastToNPC()->QueryLoot(c);
+	if (c->GetTarget()->IsNPC()) c->GetTarget()->CastToNPC()->QueryLoot(c);
 
 }
 

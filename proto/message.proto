@@ -77,7 +77,7 @@ enum OpCode {
   OP_AckPacket = 7;
   OP_Action = 8;
   OP_Action2 = 9;
-  OP_AddNimbusEffect = 10;
+  OP_AddNimbusEffect = 10; //supported
   OP_AdventureData = 11;
   OP_AdventureDetails = 12;
   OP_AdventureFinish = 13;
@@ -104,7 +104,7 @@ enum OpCode {
   OP_AltCurrencyReclaim = 34;
   OP_AltCurrencySell = 35;
   OP_AltCurrencySellSelection = 36;
-  OP_Animation = 37;
+  OP_Animation = 37; //supported
   OP_AnnoyingZoneUnknown = 38;
   OP_ApplyPoison = 39;
   OP_ApproveName = 40;
@@ -134,7 +134,7 @@ enum OpCode {
   OP_BuffCreate = 64;
   OP_BuffRemoveRequest = 65;
   OP_Bug = 66;
-  OP_CameraEffect = 67;
+  OP_CameraEffect = 67; //supported
   OP_Camp = 68; //supported
   OP_CancelSneakHide = 69;
   OP_CancelTask = 70;
@@ -159,7 +159,7 @@ enum OpCode {
   OP_ClientError = 89;
   OP_ClientReady = 90;
   OP_ClientTimeStamp = 91;
-  OP_ClientUpdate = 92;
+  OP_ClientUpdate = 92; //supported
   OP_CloseContainer = 93;
   OP_CloseTributeMaster = 94;
   OP_ColoredText = 95;
@@ -188,7 +188,7 @@ enum OpCode {
   OP_DeleteCharge = 118;
   OP_DeleteItem = 119;
   OP_DeletePetition = 120;
-  OP_DeleteSpawn = 121;
+  OP_DeleteSpawn = 121; //supported
   OP_DeleteSpell = 122;
   OP_DenyResponse = 123;
   OP_Disarm = 124;
@@ -350,7 +350,7 @@ enum OpCode {
   OP_LeadershipExpUpdate = 280;
   OP_LeaveAdventure = 281;
   OP_LeaveBoat = 282;
-  OP_LevelAppearance = 283;
+  OP_LevelAppearance = 283; //supported
   OP_LevelUpdate = 284;
   OP_LFGAppearance = 285;
   OP_LFGCommand = 286;
@@ -400,7 +400,7 @@ enum OpCode {
   OP_MobEnduranceUpdate = 330;
   OP_MobHealth = 331; //supported
   OP_MobManaUpdate = 332;
-  OP_MobRename = 333;
+  OP_MobRename = 333; //supported
   OP_MobUpdate = 334; // not used anymore, here for lecacy reasons eqextractor
   OP_MoneyOnCorpse = 335;
   OP_MoneyUpdate = 336;
@@ -411,7 +411,7 @@ enum OpCode {
   OP_MoveLogDisregard = 341;
   OP_MoveLogRequest = 342;
   OP_MultiLineMsg = 343;
-  OP_NewSpawn = 344;
+  OP_NewSpawn = 344; //supported
   OP_NewTitlesAvailable = 345;
   OP_NewZone = 346;
   OP_OnLevelMessage = 347;
@@ -442,8 +442,8 @@ enum OpCode {
   OP_PetitionUpdate = 372;
   OP_PickPocket = 373;
   OP_PlayerProfile = 374;
-  OP_PlayerStateAdd = 375;
-  OP_PlayerStateRemove = 376;
+  OP_PlayerStateAdd = 375; //supported
+  OP_PlayerStateRemove = 376; //supported
   OP_PlayEverquestRequest = 377;
   OP_PlayEverquestResponse = 378;
   OP_PlayMP3 = 379;
@@ -476,7 +476,7 @@ enum OpCode {
   OP_ReloadUI = 406;
   OP_RemoveAllDoors = 407;
   OP_RemoveBlockedBuffs = 408;
-  OP_RemoveNimbusEffect = 409;
+  OP_RemoveNimbusEffect = 409; //supported
   OP_RemoveTrap = 410;
   OP_Report = 411;
   OP_ReqClientSpawn = 412;
@@ -542,11 +542,11 @@ enum OpCode {
   OP_Some6ByteHPUpdate = 472;
   OP_SomeItemPacketMaybe = 473;
   OP_Sound = 474;
-  OP_SpawnAppearance = 475;
+  OP_SpawnAppearance = 475; //supported
   OP_SpawnDoor = 476;
   OP_SpawnPositionUpdate = 477;
   OP_SpecialMesg = 478;
-  OP_SpellEffect = 479;
+  OP_SpellEffect = 479; //supported
   OP_Split = 480;
   OP_Stamina = 481;
   OP_Stun = 482;
@@ -591,7 +591,7 @@ enum OpCode {
   OP_TributeTimer = 521;
   OP_TributeToggle = 522;
   OP_TributeUpdate = 523;
-  OP_Untargetable = 524;
+  OP_Untargetable = 524; //supported
   OP_UpdateAA = 525;
   OP_UpdateAura = 526;
   OP_UpdateLeadershipAA = 527;
