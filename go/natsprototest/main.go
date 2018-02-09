@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -25,7 +26,7 @@ func main() {
 	//go testAsyncSubscriber()
 	//go testBroadcastMessage()
 	//testAsyncSubscriber("EntityEvent")
-	go testAsyncEntityEventSubscriber()
+	go testAsyncEntityEventSubscriber("ecommons")
 	//testZoneMessage("fieldofbone", "hello, world!")
 	time.Sleep(1000 * time.Second)
 }
@@ -39,12 +40,26 @@ func testAsyncSubscriber(channel string) {
 	time.Sleep(500 * time.Second)
 }
 
-func testAsyncEntityEventSubscriber() {
-	nc.Subscribe("EntityEvent", func(m *nats.Msg) {
-		//log.Printf("Received a message: %s\n", string(m.Data))
-		event := &eqproto.EntityEvent{}
+func testAsyncEntityEventSubscriber(zone string) {
+	//First, toggle subscriptions
+	event := &eqproto.EntityEvent{
+		Entity: &eqproto.Entity{
+			Id: 1,
+		},
+	}
+	d, err := proto.Marshal(event)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err = nc.Publish(fmt.Sprintf("zone.%s.entity.event_subscribe.all", zone), d); err != nil {
+		log.Println("Failed to publish event subscribe:", err.Error())
+		return
+	}
+
+	nc.Subscribe(fmt.Sprintf("zone.%s.entity.event.*", zone), func(m *nats.Msg) {
+		//log.Printf("Received a message on %s: %s\n", m.Subject, string(m.Data))
 		proto.Unmarshal(m.Data, event)
-		log.Println(event)
+		log.Println(event.Op.String(), event.Entity, event.Target)
 	})
 	log.Println("Waiting on messages...")
 

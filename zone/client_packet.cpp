@@ -3028,7 +3028,7 @@ void Client::Handle_OP_Assist(const EQApplicationPacket *app)
 			}
 		}
 	}
-
+	nats.OnEntityEvent(OP_Assist, this, NULL);
 	FastQueuePacket(&outapp);
 	return;
 }
@@ -4092,6 +4092,7 @@ void Client::Handle_OP_Camp(const EQApplicationPacket *app)
 	if (IsLFP())
 		worldserver.StopLFP(CharacterID());
 
+	nats.OnEntityEvent(OP_Camp, this, NULL);
 	if (GetGM())
 	{
 		OnDisconnect(true);
@@ -4331,7 +4332,7 @@ void Client::Handle_OP_ChannelMessage(const EQApplicationPacket *app)
 		Message(13, "You try to speak but cant move your mouth!");
 		return;
 	}
-
+	nats.OnEntityEvent(OP_ChannelMessage, this, NULL);
 	ChannelMessageReceived(cm->chan_num, cm->language, cm->skill_in_language, cm->message, cm->targetname);
 	return;
 }

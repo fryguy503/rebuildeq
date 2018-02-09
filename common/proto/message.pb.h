@@ -28,6 +28,7 @@
 #include <google/protobuf/message.h>
 #include <google/protobuf/repeated_field.h>  // IWYU pragma: export
 #include <google/protobuf/extension_set.h>  // IWYU pragma: export
+#include <google/protobuf/generated_enum_reflection.h>
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 namespace eqproto {
@@ -46,6 +47,9 @@ extern EntityDefaultTypeInternal _Entity_default_instance_;
 class EntityEvent;
 class EntityEventDefaultTypeInternal;
 extern EntityEventDefaultTypeInternal _EntityEvent_default_instance_;
+class Position;
+class PositionDefaultTypeInternal;
+extern PositionDefaultTypeInternal _Position_default_instance_;
 }  // namespace eqproto
 
 namespace eqproto {
@@ -65,6 +69,600 @@ void AddDescriptors();
 void InitDefaults();
 }  // namespace protobuf_message_2eproto
 
+enum OpCode {
+  OP_Unknown = 0,
+  OP_ExploreUnknown = 1,
+  OP_0x0193 = 2,
+  OP_0x0347 = 3,
+  OP_AAAction = 4,
+  OP_AAExpUpdate = 5,
+  OP_AcceptNewTask = 6,
+  OP_AckPacket = 7,
+  OP_Action = 8,
+  OP_Action2 = 9,
+  OP_AddNimbusEffect = 10,
+  OP_AdventureData = 11,
+  OP_AdventureDetails = 12,
+  OP_AdventureFinish = 13,
+  OP_AdventureInfo = 14,
+  OP_AdventureInfoRequest = 15,
+  OP_AdventureLeaderboardReply = 16,
+  OP_AdventureLeaderboardRequest = 17,
+  OP_AdventureMerchantPurchase = 18,
+  OP_AdventureMerchantRequest = 19,
+  OP_AdventureMerchantResponse = 20,
+  OP_AdventureMerchantSell = 21,
+  OP_AdventurePointsUpdate = 22,
+  OP_AdventureRequest = 23,
+  OP_AdventureStatsReply = 24,
+  OP_AdventureStatsRequest = 25,
+  OP_AdventureUpdate = 26,
+  OP_AggroMeterLockTarget = 27,
+  OP_AggroMeterTargetInfo = 28,
+  OP_AggroMeterUpdate = 29,
+  OP_AltCurrency = 30,
+  OP_AltCurrencyMerchantReply = 31,
+  OP_AltCurrencyMerchantRequest = 32,
+  OP_AltCurrencyPurchase = 33,
+  OP_AltCurrencyReclaim = 34,
+  OP_AltCurrencySell = 35,
+  OP_AltCurrencySellSelection = 36,
+  OP_Animation = 37,
+  OP_AnnoyingZoneUnknown = 38,
+  OP_ApplyPoison = 39,
+  OP_ApproveName = 40,
+  OP_ApproveWorld = 41,
+  OP_ApproveZone = 42,
+  OP_Assist = 43,
+  OP_AssistGroup = 44,
+  OP_AugmentInfo = 45,
+  OP_AugmentItem = 46,
+  OP_AutoAttack = 47,
+  OP_AutoAttack2 = 48,
+  OP_AutoFire = 49,
+  OP_Bandolier = 50,
+  OP_BankerChange = 51,
+  OP_Barter = 52,
+  OP_Bazaar = 53,
+  OP_BazaarInspect = 54,
+  OP_BazaarSearch = 55,
+  OP_BecomeCorpse = 56,
+  OP_BecomeTrader = 57,
+  OP_Begging = 58,
+  OP_BeginCast = 59,
+  OP_Bind_Wound = 60,
+  OP_BlockedBuffs = 61,
+  OP_BoardBoat = 62,
+  OP_Buff = 63,
+  OP_BuffCreate = 64,
+  OP_BuffRemoveRequest = 65,
+  OP_Bug = 66,
+  OP_CameraEffect = 67,
+  OP_Camp = 68,
+  OP_CancelSneakHide = 69,
+  OP_CancelTask = 70,
+  OP_CancelTrade = 71,
+  OP_CastSpell = 72,
+  OP_ChangeSize = 73,
+  OP_ChannelMessage = 74,
+  OP_CharacterCreate = 75,
+  OP_CharacterCreateRequest = 76,
+  OP_CharInventory = 77,
+  OP_Charm = 78,
+  OP_ChatMessage = 79,
+  OP_ClearAA = 80,
+  OP_ClearBlockedBuffs = 81,
+  OP_ClearLeadershipAbilities = 82,
+  OP_ClearNPCMarks = 83,
+  OP_ClearObject = 84,
+  OP_ClearSurname = 85,
+  OP_ClickDoor = 86,
+  OP_ClickObject = 87,
+  OP_ClickObjectAction = 88,
+  OP_ClientError = 89,
+  OP_ClientReady = 90,
+  OP_ClientTimeStamp = 91,
+  OP_ClientUpdate = 92,
+  OP_CloseContainer = 93,
+  OP_CloseTributeMaster = 94,
+  OP_ColoredText = 95,
+  OP_CombatAbility = 96,
+  OP_Command = 97,
+  OP_CompletedTasks = 98,
+  OP_ConfirmDelete = 99,
+  OP_Consent = 100,
+  OP_ConsentDeny = 101,
+  OP_ConsentResponse = 102,
+  OP_Consider = 103,
+  OP_ConsiderCorpse = 104,
+  OP_Consume = 105,
+  OP_ControlBoat = 106,
+  OP_CorpseDrag = 107,
+  OP_CorpseDrop = 108,
+  OP_CrashDump = 109,
+  OP_CrystalCountUpdate = 110,
+  OP_CrystalCreate = 111,
+  OP_CrystalReclaim = 112,
+  OP_CustomTitles = 113,
+  OP_Damage = 114,
+  OP_Death = 115,
+  OP_DelegateAbility = 116,
+  OP_DeleteCharacter = 117,
+  OP_DeleteCharge = 118,
+  OP_DeleteItem = 119,
+  OP_DeletePetition = 120,
+  OP_DeleteSpawn = 121,
+  OP_DeleteSpell = 122,
+  OP_DenyResponse = 123,
+  OP_Disarm = 124,
+  OP_DisarmTraps = 125,
+  OP_DisciplineTimer = 126,
+  OP_DisciplineUpdate = 127,
+  OP_DiscordMerchantInventory = 128,
+  OP_DoGroupLeadershipAbility = 129,
+  OP_DuelResponse = 130,
+  OP_DuelResponse2 = 131,
+  OP_DumpName = 132,
+  OP_Dye = 133,
+  OP_DynamicWall = 134,
+  OP_DzAddPlayer = 135,
+  OP_DzChooseZone = 136,
+  OP_DzCompass = 137,
+  OP_DzExpeditionEndsWarning = 138,
+  OP_DzExpeditionInfo = 139,
+  OP_DzExpeditionList = 140,
+  OP_DzJoinExpeditionConfirm = 141,
+  OP_DzJoinExpeditionReply = 142,
+  OP_DzLeaderStatus = 143,
+  OP_DzListTimers = 144,
+  OP_DzMakeLeader = 145,
+  OP_DzMemberList = 146,
+  OP_DzMemberStatus = 147,
+  OP_DzPlayerList = 148,
+  OP_DzQuit = 149,
+  OP_DzRemovePlayer = 150,
+  OP_DzSwapPlayer = 151,
+  OP_Emote = 152,
+  OP_EndLootRequest = 153,
+  OP_EnduranceUpdate = 154,
+  OP_EnterChat = 155,
+  OP_EnterWorld = 156,
+  OP_EnvDamage = 157,
+  OP_ExpansionInfo = 158,
+  OP_ExpUpdate = 159,
+  OP_FaceChange = 160,
+  OP_Feedback = 161,
+  OP_FeignDeath = 162,
+  OP_FellowshipUpdate = 163,
+  OP_FindPersonReply = 164,
+  OP_FindPersonRequest = 165,
+  OP_FinishTrade = 166,
+  OP_FinishWindow = 167,
+  OP_FinishWindow2 = 168,
+  OP_Fishing = 169,
+  OP_Fling = 170,
+  OP_FloatListThing = 171,
+  OP_Forage = 172,
+  OP_ForceFindPerson = 173,
+  OP_FormattedMessage = 174,
+  OP_FriendsWho = 175,
+  OP_GetGuildMOTD = 176,
+  OP_GetGuildMOTDReply = 177,
+  OP_GetGuildsList = 178,
+  OP_GiveMoney = 179,
+  OP_GMApproval = 180,
+  OP_GMBecomeNPC = 181,
+  OP_GMDelCorpse = 182,
+  OP_GMEmoteZone = 183,
+  OP_GMEndTraining = 184,
+  OP_GMEndTrainingResponse = 185,
+  OP_GMFind = 186,
+  OP_GMGoto = 187,
+  OP_GMHideMe = 188,
+  OP_GMKick = 189,
+  OP_GMKill = 190,
+  OP_GMLastName = 191,
+  OP_GMNameChange = 192,
+  OP_GMSearchCorpse = 193,
+  OP_GMServers = 194,
+  OP_GMSummon = 195,
+  OP_GMToggle = 196,
+  OP_GMTraining = 197,
+  OP_GMTrainSkill = 198,
+  OP_GMTrainSkillConfirm = 199,
+  OP_GMZoneRequest = 200,
+  OP_GMZoneRequest2 = 201,
+  OP_GroundSpawn = 202,
+  OP_GroupAcknowledge = 203,
+  OP_GroupCancelInvite = 204,
+  OP_GroupDelete = 205,
+  OP_GroupDisband = 206,
+  OP_GroupDisbandOther = 207,
+  OP_GroupDisbandYou = 208,
+  OP_GroupFollow = 209,
+  OP_GroupFollow2 = 210,
+  OP_GroupInvite = 211,
+  OP_GroupInvite2 = 212,
+  OP_GroupLeaderChange = 213,
+  OP_GroupLeadershipAAUpdate = 214,
+  OP_GroupMakeLeader = 215,
+  OP_GroupMentor = 216,
+  OP_GroupRoles = 217,
+  OP_GroupUpdate = 218,
+  OP_GroupUpdateB = 219,
+  OP_GroupUpdateLeaderAA = 220,
+  OP_GuildBank = 221,
+  OP_GuildBankItemList = 222,
+  OP_GuildCreate = 223,
+  OP_GuildDelete = 224,
+  OP_GuildDemote = 225,
+  OP_GuildInvite = 226,
+  OP_GuildInviteAccept = 227,
+  OP_GuildLeader = 228,
+  OP_GuildManageAdd = 229,
+  OP_GuildManageBanker = 230,
+  OP_GuildManageRemove = 231,
+  OP_GuildManageStatus = 232,
+  OP_GuildMemberLevelUpdate = 233,
+  OP_GuildMemberList = 234,
+  OP_GuildMemberUpdate = 235,
+  OP_GuildMOTD = 236,
+  OP_GuildPeace = 237,
+  OP_GuildPromote = 238,
+  OP_GuildPublicNote = 239,
+  OP_GuildRemove = 240,
+  OP_GuildsList = 241,
+  OP_GuildStatus = 242,
+  OP_GuildTributeInfo = 243,
+  OP_GuildUpdateURLAndChannel = 244,
+  OP_GuildWar = 245,
+  OP_Heartbeat = 246,
+  OP_Hide = 247,
+  OP_HideCorpse = 248,
+  OP_HPUpdate = 249,
+  OP_Illusion = 250,
+  OP_IncreaseStats = 251,
+  OP_InitialHPUpdate = 252,
+  OP_InitialMobHealth = 253,
+  OP_InspectAnswer = 254,
+  OP_InspectBuffs = 255,
+  OP_InspectMessageUpdate = 256,
+  OP_InspectRequest = 257,
+  OP_InstillDoubt = 258,
+  OP_InterruptCast = 259,
+  OP_ItemLinkClick = 260,
+  OP_ItemLinkResponse = 261,
+  OP_ItemLinkText = 262,
+  OP_ItemName = 263,
+  OP_ItemPacket = 264,
+  OP_ItemPreview = 265,
+  OP_ItemRecastDelay = 266,
+  OP_ItemVerifyReply = 267,
+  OP_ItemVerifyRequest = 268,
+  OP_ItemViewUnknown = 269,
+  OP_Jump = 270,
+  OP_KeyRing = 271,
+  OP_KnowledgeBase = 272,
+  OP_LDoNButton = 273,
+  OP_LDoNDisarmTraps = 274,
+  OP_LDoNInspect = 275,
+  OP_LDoNOpen = 276,
+  OP_LDoNPickLock = 277,
+  OP_LDoNSenseTraps = 278,
+  OP_LeadershipExpToggle = 279,
+  OP_LeadershipExpUpdate = 280,
+  OP_LeaveAdventure = 281,
+  OP_LeaveBoat = 282,
+  OP_LevelAppearance = 283,
+  OP_LevelUpdate = 284,
+  OP_LFGAppearance = 285,
+  OP_LFGCommand = 286,
+  OP_LFGGetMatchesRequest = 287,
+  OP_LFGGetMatchesResponse = 288,
+  OP_LFGResponse = 289,
+  OP_LFGuild = 290,
+  OP_LFPCommand = 291,
+  OP_LFPGetMatchesRequest = 292,
+  OP_LFPGetMatchesResponse = 293,
+  OP_LinkedReuse = 294,
+  OP_LoadSpellSet = 295,
+  OP_LocInfo = 296,
+  OP_LockoutTimerInfo = 297,
+  OP_Login = 298,
+  OP_LoginAccepted = 299,
+  OP_LoginComplete = 300,
+  OP_LoginUnknown1 = 301,
+  OP_LoginUnknown2 = 302,
+  OP_Logout = 303,
+  OP_LogoutReply = 304,
+  OP_LogServer = 305,
+  OP_LootComplete = 306,
+  OP_LootItem = 307,
+  OP_LootRequest = 308,
+  OP_ManaChange = 309,
+  OP_ManaUpdate = 310,
+  OP_MarkNPC = 311,
+  OP_Marquee = 312,
+  OP_MemorizeSpell = 313,
+  OP_Mend = 314,
+  OP_MendHPUpdate = 315,
+  OP_MercenaryAssign = 316,
+  OP_MercenaryCommand = 317,
+  OP_MercenaryDataRequest = 318,
+  OP_MercenaryDataResponse = 319,
+  OP_MercenaryDataUpdate = 320,
+  OP_MercenaryDataUpdateRequest = 321,
+  OP_MercenaryDismiss = 322,
+  OP_MercenaryHire = 323,
+  OP_MercenarySuspendRequest = 324,
+  OP_MercenarySuspendResponse = 325,
+  OP_MercenaryTimer = 326,
+  OP_MercenaryTimerRequest = 327,
+  OP_MercenaryUnknown1 = 328,
+  OP_MercenaryUnsuspendResponse = 329,
+  OP_MobEnduranceUpdate = 330,
+  OP_MobHealth = 331,
+  OP_MobManaUpdate = 332,
+  OP_MobRename = 333,
+  OP_MobUpdate = 334,
+  OP_MoneyOnCorpse = 335,
+  OP_MoneyUpdate = 336,
+  OP_MOTD = 337,
+  OP_MoveCoin = 338,
+  OP_MoveDoor = 339,
+  OP_MoveItem = 340,
+  OP_MoveLogDisregard = 341,
+  OP_MoveLogRequest = 342,
+  OP_MultiLineMsg = 343,
+  OP_NewSpawn = 344,
+  OP_NewTitlesAvailable = 345,
+  OP_NewZone = 346,
+  OP_OnLevelMessage = 347,
+  OP_OpenContainer = 348,
+  OP_OpenDiscordMerchant = 349,
+  OP_OpenGuildTributeMaster = 350,
+  OP_OpenInventory = 351,
+  OP_OpenNewTasksWindow = 352,
+  OP_OpenTributeMaster = 353,
+  OP_PDeletePetition = 354,
+  OP_PetBuffWindow = 355,
+  OP_PetCommands = 356,
+  OP_PetCommandState = 357,
+  OP_PetHoTT = 358,
+  OP_Petition = 359,
+  OP_PetitionBug = 360,
+  OP_PetitionCheckIn = 361,
+  OP_PetitionCheckout = 362,
+  OP_PetitionCheckout2 = 363,
+  OP_PetitionDelete = 364,
+  OP_PetitionQue = 365,
+  OP_PetitionRefresh = 366,
+  OP_PetitionResolve = 367,
+  OP_PetitionSearch = 368,
+  OP_PetitionSearchResults = 369,
+  OP_PetitionSearchText = 370,
+  OP_PetitionUnCheckout = 371,
+  OP_PetitionUpdate = 372,
+  OP_PickPocket = 373,
+  OP_PlayerProfile = 374,
+  OP_PlayerStateAdd = 375,
+  OP_PlayerStateRemove = 376,
+  OP_PlayEverquestRequest = 377,
+  OP_PlayEverquestResponse = 378,
+  OP_PlayMP3 = 379,
+  OP_Poll = 380,
+  OP_PollResponse = 381,
+  OP_PopupResponse = 382,
+  OP_PostEnterWorld = 383,
+  OP_PotionBelt = 384,
+  OP_PreLogoutReply = 385,
+  OP_PurchaseLeadershipAA = 386,
+  OP_PVPLeaderBoardDetailsReply = 387,
+  OP_PVPLeaderBoardDetailsRequest = 388,
+  OP_PVPLeaderBoardReply = 389,
+  OP_PVPLeaderBoardRequest = 390,
+  OP_PVPStats = 391,
+  OP_QueryResponseThing = 392,
+  OP_RaidInvite = 393,
+  OP_RaidJoin = 394,
+  OP_RaidUpdate = 395,
+  OP_RandomNameGenerator = 396,
+  OP_RandomReply = 397,
+  OP_RandomReq = 398,
+  OP_ReadBook = 399,
+  OP_RecipeAutoCombine = 400,
+  OP_RecipeDetails = 401,
+  OP_RecipeReply = 402,
+  OP_RecipesFavorite = 403,
+  OP_RecipesSearch = 404,
+  OP_ReclaimCrystals = 405,
+  OP_ReloadUI = 406,
+  OP_RemoveAllDoors = 407,
+  OP_RemoveBlockedBuffs = 408,
+  OP_RemoveNimbusEffect = 409,
+  OP_RemoveTrap = 410,
+  OP_Report = 411,
+  OP_ReqClientSpawn = 412,
+  OP_ReqNewZone = 413,
+  OP_RequestClientZoneChange = 414,
+  OP_RequestDuel = 415,
+  OP_RequestKnowledgeBase = 416,
+  OP_RequestTitles = 417,
+  OP_RespawnWindow = 418,
+  OP_RespondAA = 419,
+  OP_RestState = 420,
+  OP_Rewind = 421,
+  OP_RezzAnswer = 422,
+  OP_RezzComplete = 423,
+  OP_RezzRequest = 424,
+  OP_Sacrifice = 425,
+  OP_SafeFallSuccess = 426,
+  OP_SafePoint = 427,
+  OP_Save = 428,
+  OP_SaveOnZoneReq = 429,
+  OP_SelectTribute = 430,
+  OP_SendAAStats = 431,
+  OP_SendAATable = 432,
+  OP_SendCharInfo = 433,
+  OP_SendExpZonein = 434,
+  OP_SendFindableNPCs = 435,
+  OP_SendGuildTributes = 436,
+  OP_SendLoginInfo = 437,
+  OP_SendMaxCharacters = 438,
+  OP_SendMembership = 439,
+  OP_SendMembershipDetails = 440,
+  OP_SendSystemStats = 441,
+  OP_SendTitleList = 442,
+  OP_SendTributes = 443,
+  OP_SendZonepoints = 444,
+  OP_SenseHeading = 445,
+  OP_SenseTraps = 446,
+  OP_ServerListRequest = 447,
+  OP_ServerListResponse = 448,
+  OP_SessionReady = 449,
+  OP_SetChatServer = 450,
+  OP_SetChatServer2 = 451,
+  OP_SetGroupTarget = 452,
+  OP_SetGuildMOTD = 453,
+  OP_SetGuildRank = 454,
+  OP_SetRunMode = 455,
+  OP_SetServerFilter = 456,
+  OP_SetStartCity = 457,
+  OP_SetTitle = 458,
+  OP_SetTitleReply = 459,
+  OP_Shielding = 460,
+  OP_ShopDelItem = 461,
+  OP_ShopEnd = 462,
+  OP_ShopEndConfirm = 463,
+  OP_ShopItem = 464,
+  OP_ShopPlayerBuy = 465,
+  OP_ShopPlayerSell = 466,
+  OP_ShopRequest = 467,
+  OP_SimpleMessage = 468,
+  OP_SkillUpdate = 469,
+  OP_Sneak = 470,
+  OP_Some3ByteHPUpdate = 471,
+  OP_Some6ByteHPUpdate = 472,
+  OP_SomeItemPacketMaybe = 473,
+  OP_Sound = 474,
+  OP_SpawnAppearance = 475,
+  OP_SpawnDoor = 476,
+  OP_SpawnPositionUpdate = 477,
+  OP_SpecialMesg = 478,
+  OP_SpellEffect = 479,
+  OP_Split = 480,
+  OP_Stamina = 481,
+  OP_Stun = 482,
+  OP_Surname = 483,
+  OP_SwapSpell = 484,
+  OP_TargetBuffs = 485,
+  OP_TargetCommand = 486,
+  OP_TargetHoTT = 487,
+  OP_TargetMouse = 488,
+  OP_TargetReject = 489,
+  OP_TaskActivity = 490,
+  OP_TaskActivityComplete = 491,
+  OP_TaskDescription = 492,
+  OP_TaskHistoryReply = 493,
+  OP_TaskHistoryRequest = 494,
+  OP_TaskMemberList = 495,
+  OP_Taunt = 496,
+  OP_TestBuff = 497,
+  OP_TGB = 498,
+  OP_TimeOfDay = 499,
+  OP_Track = 500,
+  OP_TrackTarget = 501,
+  OP_TrackUnknown = 502,
+  OP_TradeAcceptClick = 503,
+  OP_TradeBusy = 504,
+  OP_TradeCoins = 505,
+  OP_TradeMoneyUpdate = 506,
+  OP_Trader = 507,
+  OP_TraderBuy = 508,
+  OP_TraderDelItem = 509,
+  OP_TradeRequest = 510,
+  OP_TradeRequestAck = 511,
+  OP_TraderItemUpdate = 512,
+  OP_TraderShop = 513,
+  OP_TradeSkillCombine = 514,
+  OP_Translocate = 515,
+  OP_TributeInfo = 516,
+  OP_TributeItem = 517,
+  OP_TributeMoney = 518,
+  OP_TributeNPC = 519,
+  OP_TributePointUpdate = 520,
+  OP_TributeTimer = 521,
+  OP_TributeToggle = 522,
+  OP_TributeUpdate = 523,
+  OP_Untargetable = 524,
+  OP_UpdateAA = 525,
+  OP_UpdateAura = 526,
+  OP_UpdateLeadershipAA = 527,
+  OP_VetClaimReply = 528,
+  OP_VetClaimRequest = 529,
+  OP_VetRewardsAvaliable = 530,
+  OP_VoiceMacroIn = 531,
+  OP_VoiceMacroOut = 532,
+  OP_WeaponEquip1 = 533,
+  OP_WearChange = 534,
+  OP_Weather = 535,
+  OP_Weblink = 536,
+  OP_WhoAllRequest = 537,
+  OP_WhoAllResponse = 538,
+  OP_World_Client_CRC1 = 539,
+  OP_World_Client_CRC2 = 540,
+  OP_WorldClientReady = 541,
+  OP_WorldComplete = 542,
+  OP_WorldLogout = 543,
+  OP_WorldObjectsSent = 544,
+  OP_WorldUnknown001 = 545,
+  OP_XTargetAutoAddHaters = 546,
+  OP_XTargetOpen = 547,
+  OP_XTargetOpenResponse = 548,
+  OP_XTargetRequest = 549,
+  OP_XTargetResponse = 550,
+  OP_YellForHelp = 551,
+  OP_ZoneChange = 552,
+  OP_ZoneComplete = 553,
+  OP_ZoneEntry = 554,
+  OP_ZoneGuildList = 555,
+  OP_ZoneInUnknown = 556,
+  OP_ZonePlayerToBind = 557,
+  OP_ZoneServerInfo = 558,
+  OP_ZoneServerReady = 559,
+  OP_ZoneSpawns = 560,
+  OP_ZoneUnavail = 561,
+  OP_ResetAA = 562,
+  OP_Buddy = 563,
+  OP_ChannelAnnounceJoin = 564,
+  OP_ChannelAnnounceLeave = 565,
+  OP_Ignore = 566,
+  OP_Mail = 567,
+  OP_MailboxChange = 568,
+  OP_MailDeliveryStatus = 569,
+  OP_MailHeader = 570,
+  OP_MailHeaderCount = 571,
+  OP_MailLogin = 572,
+  OP_MailNew = 573,
+  OP_MailSendBody = 574,
+  OpCode_INT_MIN_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32min,
+  OpCode_INT_MAX_SENTINEL_DO_NOT_USE_ = ::google::protobuf::kint32max
+};
+bool OpCode_IsValid(int value);
+const OpCode OpCode_MIN = OP_Unknown;
+const OpCode OpCode_MAX = OP_MailSendBody;
+const int OpCode_ARRAYSIZE = OpCode_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* OpCode_descriptor();
+inline const ::std::string& OpCode_Name(OpCode value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    OpCode_descriptor(), value);
+}
+inline bool OpCode_Parse(
+    const ::std::string& name, OpCode* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<OpCode>(
+    OpCode_descriptor(), name, value);
+}
 // ===================================================================
 
 class ChannelMessage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:eqproto.ChannelMessage) */ {
@@ -680,6 +1278,15 @@ class Entity : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::std::string* release_name();
   void set_allocated_name(::std::string* name);
 
+  // .eqproto.Position position = 6;
+  bool has_position() const;
+  void clear_position();
+  static const int kPositionFieldNumber = 6;
+  const ::eqproto::Position& position() const;
+  ::eqproto::Position* mutable_position();
+  ::eqproto::Position* release_position();
+  void set_allocated_position(::eqproto::Position* position);
+
   // int32 id = 1;
   void clear_id();
   static const int kIdFieldNumber = 1;
@@ -704,15 +1311,148 @@ class Entity : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::int32 level() const;
   void set_level(::google::protobuf::int32 value);
 
+  // int32 race = 7;
+  void clear_race();
+  static const int kRaceFieldNumber = 7;
+  ::google::protobuf::int32 race() const;
+  void set_race(::google::protobuf::int32 value);
+
+  // int32 class = 8;
+  void clear_class_();
+  static const int kClassFieldNumber = 8;
+  ::google::protobuf::int32 class_() const;
+  void set_class_(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:eqproto.Entity)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr name_;
+  ::eqproto::Position* position_;
   ::google::protobuf::int32 id_;
   ::google::protobuf::int32 type_;
   ::google::protobuf::int32 hp_;
   ::google::protobuf::int32 level_;
+  ::google::protobuf::int32 race_;
+  ::google::protobuf::int32 class__;
+  mutable int _cached_size_;
+  friend struct protobuf_message_2eproto::TableStruct;
+};
+// -------------------------------------------------------------------
+
+class Position : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:eqproto.Position) */ {
+ public:
+  Position();
+  virtual ~Position();
+
+  Position(const Position& from);
+
+  inline Position& operator=(const Position& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Position(Position&& from) noexcept
+    : Position() {
+    *this = ::std::move(from);
+  }
+
+  inline Position& operator=(Position&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Position& default_instance();
+
+  static inline const Position* internal_default_instance() {
+    return reinterpret_cast<const Position*>(
+               &_Position_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    4;
+
+  void Swap(Position* other);
+  friend void swap(Position& a, Position& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Position* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  Position* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const Position& from);
+  void MergeFrom(const Position& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(Position* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // float x = 1;
+  void clear_x();
+  static const int kXFieldNumber = 1;
+  float x() const;
+  void set_x(float value);
+
+  // float y = 2;
+  void clear_y();
+  static const int kYFieldNumber = 2;
+  float y() const;
+  void set_y(float value);
+
+  // float z = 3;
+  void clear_z();
+  static const int kZFieldNumber = 3;
+  float z() const;
+  void set_z(float value);
+
+  // float h = 4;
+  void clear_h();
+  static const int kHFieldNumber = 4;
+  float h() const;
+  void set_h(float value);
+
+  // @@protoc_insertion_point(class_scope:eqproto.Position)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  float x_;
+  float y_;
+  float z_;
+  float h_;
   mutable int _cached_size_;
   friend struct protobuf_message_2eproto::TableStruct;
 };
@@ -752,7 +1492,7 @@ class EntityEvent : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_EntityEvent_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    4;
+    5;
 
   void Swap(EntityEvent* other);
   friend void swap(EntityEvent& a, EntityEvent& b) {
@@ -808,18 +1548,28 @@ class EntityEvent : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::eqproto::Entity* release_entity();
   void set_allocated_entity(::eqproto::Entity* entity);
 
-  // int32 event = 2;
-  void clear_event();
-  static const int kEventFieldNumber = 2;
-  ::google::protobuf::int32 event() const;
-  void set_event(::google::protobuf::int32 value);
+  // .eqproto.Entity target = 3;
+  bool has_target() const;
+  void clear_target();
+  static const int kTargetFieldNumber = 3;
+  const ::eqproto::Entity& target() const;
+  ::eqproto::Entity* mutable_target();
+  ::eqproto::Entity* release_target();
+  void set_allocated_target(::eqproto::Entity* target);
+
+  // .eqproto.OpCode op = 2;
+  void clear_op();
+  static const int kOpFieldNumber = 2;
+  ::eqproto::OpCode op() const;
+  void set_op(::eqproto::OpCode value);
 
   // @@protoc_insertion_point(class_scope:eqproto.EntityEvent)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::eqproto::Entity* entity_;
-  ::google::protobuf::int32 event_;
+  ::eqproto::Entity* target_;
+  int op_;
   mutable int _cached_size_;
   friend struct protobuf_message_2eproto::TableStruct;
 };
@@ -1659,6 +2409,134 @@ inline void Entity::set_level(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:eqproto.Entity.level)
 }
 
+// .eqproto.Position position = 6;
+inline bool Entity::has_position() const {
+  return this != internal_default_instance() && position_ != NULL;
+}
+inline void Entity::clear_position() {
+  if (GetArenaNoVirtual() == NULL && position_ != NULL) delete position_;
+  position_ = NULL;
+}
+inline const ::eqproto::Position& Entity::position() const {
+  const ::eqproto::Position* p = position_;
+  // @@protoc_insertion_point(field_get:eqproto.Entity.position)
+  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Position*>(
+      &::eqproto::_Position_default_instance_);
+}
+inline ::eqproto::Position* Entity::mutable_position() {
+  
+  if (position_ == NULL) {
+    position_ = new ::eqproto::Position;
+  }
+  // @@protoc_insertion_point(field_mutable:eqproto.Entity.position)
+  return position_;
+}
+inline ::eqproto::Position* Entity::release_position() {
+  // @@protoc_insertion_point(field_release:eqproto.Entity.position)
+  
+  ::eqproto::Position* temp = position_;
+  position_ = NULL;
+  return temp;
+}
+inline void Entity::set_allocated_position(::eqproto::Position* position) {
+  delete position_;
+  position_ = position;
+  if (position) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:eqproto.Entity.position)
+}
+
+// int32 race = 7;
+inline void Entity::clear_race() {
+  race_ = 0;
+}
+inline ::google::protobuf::int32 Entity::race() const {
+  // @@protoc_insertion_point(field_get:eqproto.Entity.race)
+  return race_;
+}
+inline void Entity::set_race(::google::protobuf::int32 value) {
+  
+  race_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Entity.race)
+}
+
+// int32 class = 8;
+inline void Entity::clear_class_() {
+  class__ = 0;
+}
+inline ::google::protobuf::int32 Entity::class_() const {
+  // @@protoc_insertion_point(field_get:eqproto.Entity.class)
+  return class__;
+}
+inline void Entity::set_class_(::google::protobuf::int32 value) {
+  
+  class__ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Entity.class)
+}
+
+// -------------------------------------------------------------------
+
+// Position
+
+// float x = 1;
+inline void Position::clear_x() {
+  x_ = 0;
+}
+inline float Position::x() const {
+  // @@protoc_insertion_point(field_get:eqproto.Position.x)
+  return x_;
+}
+inline void Position::set_x(float value) {
+  
+  x_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Position.x)
+}
+
+// float y = 2;
+inline void Position::clear_y() {
+  y_ = 0;
+}
+inline float Position::y() const {
+  // @@protoc_insertion_point(field_get:eqproto.Position.y)
+  return y_;
+}
+inline void Position::set_y(float value) {
+  
+  y_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Position.y)
+}
+
+// float z = 3;
+inline void Position::clear_z() {
+  z_ = 0;
+}
+inline float Position::z() const {
+  // @@protoc_insertion_point(field_get:eqproto.Position.z)
+  return z_;
+}
+inline void Position::set_z(float value) {
+  
+  z_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Position.z)
+}
+
+// float h = 4;
+inline void Position::clear_h() {
+  h_ = 0;
+}
+inline float Position::h() const {
+  // @@protoc_insertion_point(field_get:eqproto.Position.h)
+  return h_;
+}
+inline void Position::set_h(float value) {
+  
+  h_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Position.h)
+}
+
 // -------------------------------------------------------------------
 
 // EntityEvent
@@ -1703,18 +2581,58 @@ inline void EntityEvent::set_allocated_entity(::eqproto::Entity* entity) {
   // @@protoc_insertion_point(field_set_allocated:eqproto.EntityEvent.entity)
 }
 
-// int32 event = 2;
-inline void EntityEvent::clear_event() {
-  event_ = 0;
+// .eqproto.OpCode op = 2;
+inline void EntityEvent::clear_op() {
+  op_ = 0;
 }
-inline ::google::protobuf::int32 EntityEvent::event() const {
-  // @@protoc_insertion_point(field_get:eqproto.EntityEvent.event)
-  return event_;
+inline ::eqproto::OpCode EntityEvent::op() const {
+  // @@protoc_insertion_point(field_get:eqproto.EntityEvent.op)
+  return static_cast< ::eqproto::OpCode >(op_);
 }
-inline void EntityEvent::set_event(::google::protobuf::int32 value) {
+inline void EntityEvent::set_op(::eqproto::OpCode value) {
   
-  event_ = value;
-  // @@protoc_insertion_point(field_set:eqproto.EntityEvent.event)
+  op_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.EntityEvent.op)
+}
+
+// .eqproto.Entity target = 3;
+inline bool EntityEvent::has_target() const {
+  return this != internal_default_instance() && target_ != NULL;
+}
+inline void EntityEvent::clear_target() {
+  if (GetArenaNoVirtual() == NULL && target_ != NULL) delete target_;
+  target_ = NULL;
+}
+inline const ::eqproto::Entity& EntityEvent::target() const {
+  const ::eqproto::Entity* p = target_;
+  // @@protoc_insertion_point(field_get:eqproto.EntityEvent.target)
+  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Entity*>(
+      &::eqproto::_Entity_default_instance_);
+}
+inline ::eqproto::Entity* EntityEvent::mutable_target() {
+  
+  if (target_ == NULL) {
+    target_ = new ::eqproto::Entity;
+  }
+  // @@protoc_insertion_point(field_mutable:eqproto.EntityEvent.target)
+  return target_;
+}
+inline ::eqproto::Entity* EntityEvent::release_target() {
+  // @@protoc_insertion_point(field_release:eqproto.EntityEvent.target)
+  
+  ::eqproto::Entity* temp = target_;
+  target_ = NULL;
+  return temp;
+}
+inline void EntityEvent::set_allocated_target(::eqproto::Entity* target) {
+  delete target_;
+  target_ = target;
+  if (target) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:eqproto.EntityEvent.target)
 }
 
 #ifdef __GNUC__
@@ -1729,11 +2647,25 @@ inline void EntityEvent::set_event(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
 
 }  // namespace eqproto
+
+namespace google {
+namespace protobuf {
+
+template <> struct is_proto_enum< ::eqproto::OpCode> : ::google::protobuf::internal::true_type {};
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::eqproto::OpCode>() {
+  return ::eqproto::OpCode_descriptor();
+}
+
+}  // namespace protobuf
+}  // namespace google
 
 // @@protoc_insertion_point(global_scope)
 

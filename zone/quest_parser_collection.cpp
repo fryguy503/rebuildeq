@@ -23,7 +23,6 @@
 
 #include "quest_parser_collection.h"
 #include "quest_interface.h"
-#include "nats_manager.h"
 #include "zone.h"
 #include "questmgr.h"
 #include "zone_config.h"
@@ -32,7 +31,6 @@
 
 extern Zone* zone;
 extern void MapOpcodes();
-extern NatsManager nats;
 
 QuestParserCollection::QuestParserCollection() {
 	_player_quest_status = QuestUnloaded;
@@ -245,7 +243,6 @@ int QuestParserCollection::EventNPC(QuestEventID evt, NPC *npc, Mob *init, std::
 	int rl = EventNPCLocal(evt, npc, init, data, extra_data, extra_pointers);
 	int rg = EventNPCGlobal(evt, npc, init, data, extra_data, extra_pointers);
 	
-	nats.OnEntityEvent(evt, npc);
 	//Local quests returning non-default values have priority over global quests
     if(rl != 0) {
 		return rl;

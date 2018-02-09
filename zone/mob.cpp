@@ -1271,7 +1271,7 @@ void Mob::CreateHPPacket(EQApplicationPacket* app)
 	app->pBuffer = new uchar[app->size];
 	memset(app->pBuffer, 0, sizeof(SpawnHPUpdate_Struct2));
 	SpawnHPUpdate_Struct2* ds = (SpawnHPUpdate_Struct2*)app->pBuffer;
-
+	if (last_hp != cur_hp) nats.OnEntityEvent(OP_MobHealth, this, NULL);
 	ds->spawn_id = GetID();
 	// they don't need to know the real hp
 	ds->hp = (int)GetHPRatio();
@@ -1305,7 +1305,7 @@ void Mob::CreateHPPacket(EQApplicationPacket* app)
 // sends hp update of this mob to people who might care
 void Mob::SendHPUpdate(bool skip_self /*= false*/, bool force_update_all /*= false*/)
 {
-	
+	if (cur_hp != last_hp) nats.OnEntityEvent(OP_HPUpdate, this, NULL);
 	/* If our HP is different from last HP update call - let's update ourself */
 	if (IsClient()) {
 		if (cur_hp != last_hp || force_update_all) {
@@ -2900,7 +2900,7 @@ void Mob::SendWearChange(uint8 material_slot, Client *one_client)
 {
 	auto outapp = new EQApplicationPacket(OP_WearChange, sizeof(WearChange_Struct));
 	WearChange_Struct* wc = (WearChange_Struct*)outapp->pBuffer;
-
+	nats.OnEntityEvent(OP_WearChange, this, NULL);
 	wc->spawn_id = GetID();
 	wc->material = GetEquipmentMaterial(material_slot);
 	wc->elite_material = IsEliteMaterialItem(material_slot);
@@ -2939,7 +2939,7 @@ void Mob::SendTextureWC(uint8 slot, uint16 texture, uint32 hero_forge_model, uin
 {
 	auto outapp = new EQApplicationPacket(OP_WearChange, sizeof(WearChange_Struct));
 	WearChange_Struct* wc = (WearChange_Struct*)outapp->pBuffer;
-
+	nats.OnEntityEvent(OP_WearChange, this, NULL);
 	wc->spawn_id = this->GetID();
 	wc->material = texture;
 	if (this->IsClient())
@@ -2969,7 +2969,7 @@ void Mob::SetSlotTint(uint8 material_slot, uint8 red_tint, uint8 green_tint, uin
 
 	auto outapp = new EQApplicationPacket(OP_WearChange, sizeof(WearChange_Struct));
 	WearChange_Struct* wc = (WearChange_Struct*)outapp->pBuffer;
-
+	nats.OnEntityEvent(OP_WearChange, this, NULL);
 	wc->spawn_id = this->GetID();
 	wc->material = GetEquipmentMaterial(material_slot);
 	wc->hero_forge_model = GetHerosForgeModel(material_slot);
@@ -2986,7 +2986,7 @@ void Mob::WearChange(uint8 material_slot, uint16 texture, uint32 color, uint32 h
 
 	auto outapp = new EQApplicationPacket(OP_WearChange, sizeof(WearChange_Struct));
 	WearChange_Struct* wc = (WearChange_Struct*)outapp->pBuffer;
-
+	nats.OnEntityEvent(OP_WearChange, this, NULL);
 	wc->spawn_id = this->GetID();
 	wc->material = texture;
 	wc->hero_forge_model = hero_forge_model;

@@ -2444,6 +2444,7 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 		safe_delete(outapp);
 	}
 
+	nats.OnEntityEvent(OP_Death, this, killer);
 	auto app = new EQApplicationPacket(OP_Death, sizeof(Death_Struct));
 	Death_Struct* d = (Death_Struct*)app->pBuffer;
 	d->spawn_id = GetID();
