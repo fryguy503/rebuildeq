@@ -12,7 +12,7 @@ Build_32/
 build_32/
 Build_64/
 build_64/
-
+dependencies/protobuf/build/*
 # eqemu temp files
 *.oldlock
 
