@@ -17,14 +17,22 @@ public:
 	~NatsManager();
 	void Process();
 	void Unregister();
-	bool IsZoneSubscribed() { return (subscribedZonename.length() != 0); };
 	void ZoneSubscribe(const char * zonename);
 	void Load();
 	void DailyGain(int account_id, int character_id, const char * identity, int levels_gained = 0, int experience_gained = 0, int money_earned = 0);
-	void OnEntityEvent(const EmuOpcode op, Entity * ent, Entity * target);
-	bool isEntitySubscribed(const uint16 ID);
+	void OnChannelMessageEvent(uint32 entity_id, ChannelMessage_Struct * cm);
+	void OnEntityEvent(const EmuOpcode op, uint32 entity_id, uint32 target_id);
+	void OnSpawnEvent(const EmuOpcode op, uint32 entity_id, Spawn_Struct * spawn);
+	void OnWearChangeEvent(uint32 entity_id, WearChange_Struct * wc);
+	void OnDeleteSpawnEvent(uint32 entity_id, DeleteSpawn_Struct * ds);
+	void OnHPEvent(const EmuOpcode op, uint32 entity_id, uint32 cur_hp, uint32 max_hp);
+	void OnDamageEvent(uint32 entity_id, CombatDamage_Struct * cd);
+	void OnClientUpdateEvent(uint32 entity_id, PlayerPositionUpdateServer_Struct * spu);
+	void OnAnimationEvent(uint32 entity_id, Animation_Struct * anim);
+	void OnDeathEvent(Death_Struct * d);
 	void SendAdminMessage(std::string adminMessage);
 protected:
+	bool isEntitySubscribed(const uint16 ID);
 	bool isEntityEventAllEnabled = true;
 	natsConnection *conn = NULL;
 	natsStatus      s;

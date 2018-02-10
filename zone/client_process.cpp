@@ -2256,7 +2256,7 @@ void Client::ClearHover()
 
 	auto outapp = new EQApplicationPacket(OP_ZoneEntry, sizeof(ServerZoneEntry_Struct));
 	ServerZoneEntry_Struct* sze = (ServerZoneEntry_Struct*)outapp->pBuffer;
-	nats.OnEntityEvent(OP_ZoneEntry, this, NULL);
+	
 	FillSpawnStruct(&sze->player,CastToMob());
 
 	sze->player.spawn.NPC = 0;
@@ -2270,7 +2270,7 @@ void Client::ClearHover()
 		EQApplicationPacket *outapp = MakeBuffsPacket(false);
 		CastToClient()->FastQueuePacket(&outapp);
 	}
-
+	nats.OnSpawnEvent(OP_ZoneEntry, this->GetID(), &sze->player.spawn);
 	dead = false;
 }
 

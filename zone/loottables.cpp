@@ -241,10 +241,11 @@ void NPC::AddLootDrop(const EQEmu::ItemData *item2, ItemList* itemlist, int16 ch
 	WearChange_Struct* wc = nullptr;
 	if(wearchange) {
 		outapp = new EQApplicationPacket(OP_WearChange, sizeof(WearChange_Struct));
-		nats.OnEntityEvent(OP_WearChange, this, NULL);
+		
 		wc = (WearChange_Struct*)outapp->pBuffer;
 		wc->spawn_id = GetID();
 		wc->material=0;
+		nats.OnWearChangeEvent(this->GetID(), wc);
 	}
 
 	item->item_id = item2->ID;

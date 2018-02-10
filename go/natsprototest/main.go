@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/golang/protobuf/proto"
@@ -41,8 +43,8 @@ func testAsyncSubscriber(channel string) {
 }
 
 func testAsyncEntityEventSubscriber(zone string) {
-	//First, toggle subscriptions
-	event := &eqproto.EntityEvent{
+
+	/*event := &eqproto.EntityEvent{
 		Entity: &eqproto.Entity{
 			Id: 1,
 		},
@@ -54,12 +56,56 @@ func testAsyncEntityEventSubscriber(zone string) {
 	if err = nc.Publish(fmt.Sprintf("zone.%s.entity.event_subscribe.all", zone), d); err != nil {
 		log.Println("Failed to publish event subscribe:", err.Error())
 		return
-	}
+	}*/
 
+	var opCode int64
+	var index int
 	nc.Subscribe(fmt.Sprintf("zone.%s.entity.event.*", zone), func(m *nats.Msg) {
+
+		//Every event is identified by the first chunk. split it to get opcode.
+		index = strings.Index(string(m.Data), "|")
+		if index < 1 {
+			fmt.Println("Invalid data passed (no | delimiter):", m.Data)
+			return
+		}
+
+		opCode, err = strconv.ParseInt(string(m.Data[0:index]), 10, 64)
+		if err != nil {
+			fmt.Println("Invalid opcode passed", m.Data)
+			return
+		}
+
+		var event proto.Message
+		switch eqproto.OpCode(opCode) {
+		case eqproto.OpCode_OP_ClientUpdate:
+			event = &eqproto.PlayerPositionUpdateEvent{}
+		case eqproto.OpCode_OP_Animation:
+			event = &eqproto.AnimationEvent{}
+		case eqproto.OpCode_OP_NewSpawn:
+			event = &eqproto.SpawnEvent{}
+		case eqproto.OpCode_OP_ZoneEntry:
+			event = &eqproto.SpawnEvent{}
+		case eqproto.OpCode_OP_HPUpdate:
+			event = &eqproto.HPEvent{}
+		case eqproto.OpCode_OP_MobHealth:
+			event = &eqproto.HPEvent{}
+		case eqproto.OpCode_OP_DeleteSpawn:
+			event = &eqproto.DeleteSpawnEvent{}
+		case eqproto.OpCode_OP_Damage:
+			event = &eqproto.DamageEvent{}
+		default:
+			return
+		}
+		err = proto.Unmarshal(m.Data[index+1:], event)
+		if err != nil {
+			fmt.Println("Invalid data passed for opcode", eqproto.OpCode(opCode), err.Error(), string(m.Data[index+1:]))
+			return
+		}
+		fmt.Println(eqproto.OpCode(opCode), event)
 		//log.Printf("Received a message on %s: %s\n", m.Subject, string(m.Data))
-		proto.Unmarshal(m.Data, event)
-		log.Println(event.Op.String(), event.Entity, event.Target)
+
+		//proto.Unmarshal(m.Data, event)
+		//log.Println(event.Op.String(), event.Entity, event.Target)
 	})
 	log.Println("Waiting on messages...")
 

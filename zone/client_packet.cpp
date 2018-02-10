@@ -3028,7 +3028,7 @@ void Client::Handle_OP_Assist(const EQApplicationPacket *app)
 			}
 		}
 	}
-	nats.OnEntityEvent(OP_Assist, this, NULL);
+	nats.OnEntityEvent(OP_Assist, this->GetID(), eid->entity_id);	
 	FastQueuePacket(&outapp);
 	return;
 }
@@ -4092,7 +4092,7 @@ void Client::Handle_OP_Camp(const EQApplicationPacket *app)
 	if (IsLFP())
 		worldserver.StopLFP(CharacterID());
 
-	nats.OnEntityEvent(OP_Camp, this, NULL);
+	nats.OnEntityEvent(OP_Camp, this->GetID(), 0);
 	if (GetGM())
 	{
 		OnDisconnect(true);
@@ -4332,7 +4332,7 @@ void Client::Handle_OP_ChannelMessage(const EQApplicationPacket *app)
 		Message(13, "You try to speak but cant move your mouth!");
 		return;
 	}
-	nats.OnEntityEvent(OP_ChannelMessage, this, NULL);
+	nats.OnChannelMessageEvent(this->GetID(), cm);
 	ChannelMessageReceived(cm->chan_num, cm->language, cm->skill_in_language, cm->message, cm->targetname);
 	return;
 }
@@ -5420,6 +5420,7 @@ void Client::Handle_OP_Damage(const EQApplicationPacket *app)
 	CombatDamage_Struct* damage = (CombatDamage_Struct*)app->pBuffer;
 	//dont send to originator of falling damage packets
 	entity_list.QueueClients(this, app, (damage->type == DamageTypeFalling));
+	nats.OnDamageEvent(damage->source, damage);
 	return;
 }
 

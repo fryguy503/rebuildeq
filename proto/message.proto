@@ -58,11 +58,241 @@ message Position {
   float h = 4;
 }
 
-//EntityEvent is triggered for different types of events of an entity
+message TextureProfile {
+  Texture Head = 1;
+  Texture Chest = 2;
+  Texture Arms = 3;
+  Texture Wrist = 4;
+  Texture Hands = 5;
+  Texture Legs = 6;
+  Texture Feet = 7;
+  Texture Primary = 8;
+  Texture Secondary = 9;
+}
+
+message Texture {
+  uint32 material = 1;
+  uint32 unknown1 = 2;
+  uint32 EliteModel = 3;
+  uint32 HerosForgeModel = 4;
+  uint32 Unknown2 = 5;
+}
+
+message TintProfile {
+  Tint Head = 1;
+  Tint Chest = 2;
+  Tint Arms = 3;
+  Tint Wrist = 4;
+  Tint Hands = 5;
+  Tint Legs = 6;
+  Tint Feet = 7;
+  Tint Primary = 8;
+  Tint Secondary = 9;
+}
+
+message Tint {
+  uint32 Blue = 1;
+	uint32 Green = 2;
+	uint32 Red = 3;
+	uint32 UseTint = 4; // if there's a tint, this is FF
+	uint32 Color = 5;
+}
+
+
+//OP_Death
+message DeathEvent {
+  uint32 spawn_id = 1;
+  uint32 killer_id = 2;
+  uint32 corpse_id = 3;
+  uint32 bind_zone_id = 4;
+  uint32 spell_id = 5;
+  uint32 attack_skill_id = 6;
+  uint32 damage = 7;
+  uint32 unknown028 = 8;
+}
+
+//OP_Damage
+message DamageEvent {
+  uint32 target = 1;
+  uint32 source = 2;
+  uint32 type = 3; //slashing, etc. 231 (0xE7) for spells
+  uint32 spellid = 4;
+  uint32 damage = 5;
+  float force = 6;
+  float meleepush_xy = 7;	// see above notes in Action_Struct
+  float meleepush_z = 8;
+}
+
+//OP_Assist OP_Camp
 message EntityEvent {
-  Entity entity = 1;
-  OpCode op = 2;
-  Entity target = 3;
+  uint32 entity_id = 1; //source of event trigger. 
+  uint32 target_id = 2; //target or other/source/target entity
+}
+
+//OP_ChannelMessage
+message ChannelMessageEvent {
+  string target_name = 1; // Tell recipient
+  string sender = 2;			// The senders name (len might be wrong)
+  uint32	language = 3;			// Language
+  uint32	chan_num = 4;			// Channel
+  uint32	cm_unknown4 = 5;		// ***Placeholder
+  uint32	skill_in_language = 6;	// The players skill in this language? might be wrong
+  string	message = 7;			// Variable length message
+}
+
+//OP_WearChange
+message WearChangeEvent {
+  uint32 spawn_id = 1;
+  uint32 material = 2;
+  uint32 unknown06 = 3;
+  uint32 elite_material = 4;  // 1 for Drakkin Elite Material
+  uint32 hero_forge_model = 5; // New to VoA
+  uint32 unknown18 = 6; // New to RoF
+  Tint color = 7;
+  uint32 wear_slot_id = 8;
+}
+
+//OP_DeleteSpawn
+message DeleteSpawnEvent {
+  uint32 spawn_id = 1;		// Spawn ID to delete
+  uint32 decay = 2;			// 0 = vanish immediately, 1 = 'Decay' sparklies for corpses.
+}
+
+//OP_MobHealth, OP_HPUpdate
+message HPEvent {
+  uint32 spawn_id = 1;
+  uint32 cur_hp = 2;
+  uint32 max_hp = 3;
+}
+
+//OP_ClientUpdate
+message PlayerPositionUpdateEvent {
+  uint32 spawn_id = 1;
+  int32 delta_heading = 2;	// change in heading
+  int32 x_pos = 3;			// x coord
+	int32 padding0002 = 4;		// ***Placeholder
+  int32	y_pos = 5;			// y coord
+	int32 animation = 6;		// animation
+  int32 padding0006 = 7;		// ***Placeholder
+  int32 z_pos = 8;			// z coord
+	int32 delta_y = 9;			// change in y
+  int32 delta_x = 10;			// change in x
+	int32 heading = 11;			// heading
+	int32 padding0014 = 12;		// ***Placeholder
+  int32 delta_z = 13;			// change in z
+	int32 padding0018 = 14;		// ***Placeholder
+}
+
+//OP_Animation
+message AnimationEvent {
+  uint32 spawnid = 1;
+	uint32 speed = 2;
+  uint32 action = 3;
+}
+
+//OP_ZoneEntry OP_NewSpawn
+message SpawnEvent {
+  uint32 unknown0000= 1;
+  uint32	gm = 2;					// 0=no, 1=gm
+  uint32	unknown0003 = 3;
+  uint32	aaitle = 4;				// 0=none, 1=general, 2=archtype, 3=class
+  uint32	unknown0004 = 5;
+  uint32	anon = 6;				// 0=normal, 1=anon, 2=roleplay
+  uint32	face = 7;				// Face id for players
+  string	name = 8;			// Player's Name
+  uint32	deity = 9;				// Player's Deity
+  uint32 unknown0073 = 10;
+  float	size = 11;				// Model size
+  uint32	unknown0079 = 12;
+  uint32	NPC = 13;				// 0=player,1=npc,2=pc corpse,3=npc corpse,a
+  uint32 invis = 14;				// Invis (0=not, 1=invis)
+  uint32	haircolor = 15;			// Hair color
+  uint32	curHp = 16;				// Current hp %%% wrong
+  uint32	max_hp = 17;				// (name prolly wrong)takes on the value 100 for players, 100 or 110 for NPCs and 120 for PC corpses...
+  uint32	findable = 18;			// 0=can't be found, 1=can be found
+  uint32	unknown0089 = 19;
+  int32	deltaHeading = 20;	// change in heading
+  int32	x = 21;				// x coord
+  int32	padding0054 = 22;		// ***Placeholder
+  int32	y = 23;				// y coord
+  int32	animation = 24;		// animation
+  int32	padding0058 = 25;		// ***Placeholder
+  int32	z = 26;				// z coord
+  int32	deltaY = 27;			// change in y
+  int32	deltaX = 28;			// change in x
+  uint32	heading = 29;		// heading
+  int32	padding0066 = 30;		// ***Placeholder
+  int32	deltaZ = 31;			// change in z
+  int32	padding0070 = 32;		// ***Placeholder
+  uint32	eyecolor1 = 33;			// Player's left eye color
+  uint32	unknown0115 = 34;	// Was [24]
+  uint32	StandState = 35;	// stand state for SoF+ 0x64 for normal animation
+  uint32	drakkin_heritage = 36;	// Added for SoF
+  uint32	drakkin_tattoo = 37;		// Added for SoF
+  uint32	drakkin_details = 38;	// Added for SoF
+  uint32	showhelm = 39;			// 0=no, 1=yes
+  uint32	unknown0140 = 40;
+  uint32	is_npc = 41;				// 0=no, 1=yes
+  uint32	hairstyle = 42;			// Hair style
+  uint32	beard = 43;				// Beard style (not totally, sure but maybe!)
+  uint32	unknown0147 = 44;
+  uint32	level = 45;				// Spawn Level
+  uint32 PlayerState = 46;           // Controls animation stuff // None = 0, Open = 1, WeaponSheathed = 2, Aggressive = 4, ForcedAggressive = 8, InstrumentEquipped = 16, Stunned = 32, PrimaryWeaponEquipped = 64, SecondaryWeaponEquipped = 128
+  uint32	beardcolor = 47;			// Beard color
+  string suffix = 48;			// Player's suffix (of Veeshan, etc.)
+  uint32	petOwnerId = 49;			// If this is a pet, the spawn id of owner
+  uint32	guildrank = 50;			// 0=normal, 1=officer, 2=leader
+  uint32	unknown0194 = 51;
+  TextureProfile equipment = 52;
+  float	runspeed = 53;		// Speed when running
+  uint32	afk = 54;			// 0=no, 1=afk
+  uint32	guildID = 55;		// Current guild
+  string	title = 56;		// Title
+  uint32	unknown0274 = 57;	// non-zero prefixes name with '!'
+  uint32	set_to_0xFF = 58;	// ***Placeholder (all ff)
+  uint32	helm = 59;			// Helm texture
+  uint32	race = 60;			// Spawn race
+  uint32	unknown0288 = 61;
+  string	lastName = 62;	// Player's Lastname
+  float	walkspeed = 63;		// Speed when walking
+  uint32	unknown0328 = 64;
+  uint32	is_pet = 65;			// 0=no, 1=yes
+  uint32	light = 66;			// Spawn's lightsource %%% wrong
+  uint32	class_ = 67;			// Player's class
+  uint32	eyecolor2 = 68;		// Left eye color
+  uint32	flymode = 69;
+  uint32	gender = 70;			// Gender (0=male, 1=female)
+  uint32	bodytype = 71;		// Bodytype
+  uint32 unknown0336 = 72;
+  //union
+  uint32 equip_chest2 = 73;	// Second place in packet for chest texture (usually 0xFF in live packets) // Not sure why there are 2 of them, but it effects chest texture!
+  uint32 mount_color = 74;		// drogmor: 0=white, 1=black, 2=green, 3=red horse: 0=brown, 1=white, 2=black, 3=tan
+  //endunion                            
+  uint32 spawnId = 75;		// Spawn Id
+  uint32 unknown0344 = 76;
+  uint32 IsMercenary = 77;
+  TintProfile equipment_tint = 78;
+  uint32	lfg = 79;			// 0=off, 1=lfg on
+	bool DestructibleObject = 80;	// Only used to flag as a destrible object
+	string DestructibleModel = 82;	// Model of the Destructible Object - Required - Seen "DEST_TNT_G"
+	string DestructibleName2 = 83;	// Secondary name - Not Required - Seen "a_tent"
+	string DestructibleString = 84;	// Unknown - Not Required - Seen "ZoneActor_01186"
+	uint32 DestructibleAppearance = 85;	// Damage Appearance
+	uint32 DestructibleUnk1 = 86;
+	uint32 DestructibleID1 = 87;
+	uint32 DestructibleID2 = 88;
+	uint32 DestructibleID3 = 89;
+	uint32 DestructibleID4 = 90;
+	uint32 DestructibleUnk2 = 91;
+	uint32 DestructibleUnk3 = 92;
+	uint32 DestructibleUnk4 = 93;
+	uint32 DestructibleUnk5 = 94;
+	uint32 DestructibleUnk6 = 95;
+	uint32 DestructibleUnk7 = 96;
+	uint32 DestructibleUnk8 = 97;
+	uint32 DestructibleUnk9 = 98;
+	bool targetable_with_hotkey = 99;
+	bool show_name= 100;
 }
 
 enum OpCode {
@@ -77,7 +307,7 @@ enum OpCode {
   OP_AckPacket = 7;
   OP_Action = 8;
   OP_Action2 = 9;
-  OP_AddNimbusEffect = 10; //supported
+  OP_AddNimbusEffect = 10;
   OP_AdventureData = 11;
   OP_AdventureDetails = 12;
   OP_AdventureFinish = 13;
@@ -134,7 +364,7 @@ enum OpCode {
   OP_BuffCreate = 64;
   OP_BuffRemoveRequest = 65;
   OP_Bug = 66;
-  OP_CameraEffect = 67; //supported
+  OP_CameraEffect = 67;
   OP_Camp = 68; //supported
   OP_CancelSneakHide = 69;
   OP_CancelTask = 70;
@@ -350,7 +580,7 @@ enum OpCode {
   OP_LeadershipExpUpdate = 280;
   OP_LeaveAdventure = 281;
   OP_LeaveBoat = 282;
-  OP_LevelAppearance = 283; //supported
+  OP_LevelAppearance = 283;
   OP_LevelUpdate = 284;
   OP_LFGAppearance = 285;
   OP_LFGCommand = 286;
@@ -400,7 +630,7 @@ enum OpCode {
   OP_MobEnduranceUpdate = 330;
   OP_MobHealth = 331; //supported
   OP_MobManaUpdate = 332;
-  OP_MobRename = 333; //supported
+  OP_MobRename = 333;
   OP_MobUpdate = 334; // not used anymore, here for lecacy reasons eqextractor
   OP_MoneyOnCorpse = 335;
   OP_MoneyUpdate = 336;
@@ -442,8 +672,8 @@ enum OpCode {
   OP_PetitionUpdate = 372;
   OP_PickPocket = 373;
   OP_PlayerProfile = 374;
-  OP_PlayerStateAdd = 375; //supported
-  OP_PlayerStateRemove = 376; //supported
+  OP_PlayerStateAdd = 375;
+  OP_PlayerStateRemove = 376;
   OP_PlayEverquestRequest = 377;
   OP_PlayEverquestResponse = 378;
   OP_PlayMP3 = 379;
@@ -476,7 +706,7 @@ enum OpCode {
   OP_ReloadUI = 406;
   OP_RemoveAllDoors = 407;
   OP_RemoveBlockedBuffs = 408;
-  OP_RemoveNimbusEffect = 409; //supported
+  OP_RemoveNimbusEffect = 409;
   OP_RemoveTrap = 410;
   OP_Report = 411;
   OP_ReqClientSpawn = 412;
@@ -542,11 +772,11 @@ enum OpCode {
   OP_Some6ByteHPUpdate = 472;
   OP_SomeItemPacketMaybe = 473;
   OP_Sound = 474;
-  OP_SpawnAppearance = 475; //supported
+  OP_SpawnAppearance = 475;
   OP_SpawnDoor = 476;
   OP_SpawnPositionUpdate = 477;
   OP_SpecialMesg = 478;
-  OP_SpellEffect = 479; //supported
+  OP_SpellEffect = 479;
   OP_Split = 480;
   OP_Stamina = 481;
   OP_Stun = 482;
@@ -591,7 +821,7 @@ enum OpCode {
   OP_TributeTimer = 521;
   OP_TributeToggle = 522;
   OP_TributeUpdate = 523;
-  OP_Untargetable = 524; //supported
+  OP_Untargetable = 524;
   OP_UpdateAA = 525;
   OP_UpdateAura = 526;
   OP_UpdateLeadershipAA = 527;

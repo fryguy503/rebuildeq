@@ -945,7 +945,8 @@ void Mob::CreateSpawnPacket(EQApplicationPacket* app, Mob* ForWho) {
 	memset(app->pBuffer, 0, app->size);
 	NewSpawn_Struct* ns = (NewSpawn_Struct*)app->pBuffer;
 	FillSpawnStruct(ns, ForWho);
-	nats.OnEntityEvent(OP_NewSpawn, ForWho, NULL);
+
+	nats.OnSpawnEvent(OP_NewSpawn, ns->spawn.spawnId, &ns->spawn);
 	if(RuleB(NPC, UseClassAsLastName) && strlen(ns->spawn.lastName) == 0)
 	{
 		switch(ns->spawn.class_)
@@ -1253,7 +1254,7 @@ void Mob::FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho)
 
 void Mob::CreateDespawnPacket(EQApplicationPacket* app, bool Decay)
 {
-	nats.OnEntityEvent(OP_DeleteSpawn, this, NULL);
+	
 	app->SetOpcode(OP_DeleteSpawn);
 	app->size = sizeof(DeleteSpawn_Struct);
 	app->pBuffer = new uchar[app->size];
@@ -1262,6 +1263,8 @@ void Mob::CreateDespawnPacket(EQApplicationPacket* app, bool Decay)
 	ds->spawn_id = GetID();
 	// The next field only applies to corpses. If 0, they vanish instantly, otherwise they 'decay'
 	ds->Decay = Decay ? 1 : 0;
+
+	nats.OnDeleteSpawnEvent(this->GetID(), ds);
 }
 
 void Mob::CreateHPPacket(EQApplicationPacket* app)
@@ -1272,7 +1275,7 @@ void Mob::CreateHPPacket(EQApplicationPacket* app)
 	app->pBuffer = new uchar[app->size];
 	memset(app->pBuffer, 0, sizeof(SpawnHPUpdate_Struct2));
 	SpawnHPUpdate_Struct2* ds = (SpawnHPUpdate_Struct2*)app->pBuffer;
-	if (last_hp != cur_hp) nats.OnEntityEvent(OP_MobHealth, this, NULL);
+	if (last_hp != cur_hp) nats.OnHPEvent(OP_MobHealth, this->GetID(), cur_hp, max_hp);
 	ds->spawn_id = GetID();
 	// they don't need to know the real hp
 	ds->hp = (int)GetHPRatio();
@@ -1306,7 +1309,7 @@ void Mob::CreateHPPacket(EQApplicationPacket* app)
 // sends hp update of this mob to people who might care
 void Mob::SendHPUpdate(bool skip_self /*= false*/, bool force_update_all /*= false*/)
 {
-	if (cur_hp != last_hp) nats.OnEntityEvent(OP_HPUpdate, this, NULL);
+	if (cur_hp != last_hp) nats.OnHPEvent(OP_HPUpdate, this->GetID(), cur_hp, max_hp);
 	/* If our HP is different from last HP update call - let's update ourself */
 	if (IsClient()) {
 		if (cur_hp != last_hp || force_update_all) {
@@ -1444,7 +1447,7 @@ void Mob::SendPosition() {
 	auto app = new EQApplicationPacket(OP_ClientUpdate, sizeof(PlayerPositionUpdateServer_Struct));
 	PlayerPositionUpdateServer_Struct* spu = (PlayerPositionUpdateServer_Struct*)app->pBuffer;
 	MakeSpawnUpdateNoDelta(spu);
-	nats.OnEntityEvent(OP_ClientUpdate, this, NULL);
+	
 	/* When an NPC has made a large distance change - we should update all clients to prevent "ghosts" */
 	if (DistanceSquared(last_major_update_position, m_Position) >= (100 * 100)) {
 		entity_list.QueueClients(this, app, true, true);
@@ -1453,21 +1456,21 @@ void Mob::SendPosition() {
 	else {
 		entity_list.QueueCloseClients(this, app, true, RuleI(Range, MobPositionUpdates), nullptr, false);
 	}
-
+	nats.OnClientUpdateEvent(this->GetID(), spu);
 	safe_delete(app);
 }
 
 void Mob::SendPositionUpdateToClient(Client *client) {
 	auto app = new EQApplicationPacket(OP_ClientUpdate, sizeof(PlayerPositionUpdateServer_Struct));
 	PlayerPositionUpdateServer_Struct* spawn_update = (PlayerPositionUpdateServer_Struct*)app->pBuffer;
-	nats.OnEntityEvent(OP_ClientUpdate, this, NULL);
+	
 	if(this->IsMoving())
 		MakeSpawnUpdate(spawn_update);
 	else
 		MakeSpawnUpdateNoDelta(spawn_update);
 
 	client->QueuePacket(app, false);
-
+	nats.OnClientUpdateEvent(this->GetID(), spawn_update);
 	safe_delete(app);
 }
 
@@ -1476,7 +1479,6 @@ void Mob::SendPositionUpdate(uint8 iSendToSelf) {
 	auto app = new EQApplicationPacket(OP_ClientUpdate, sizeof(PlayerPositionUpdateServer_Struct));
 	PlayerPositionUpdateServer_Struct* spu = (PlayerPositionUpdateServer_Struct*)app->pBuffer;
 	MakeSpawnUpdate(spu);
-	nats.OnEntityEvent(OP_ClientUpdate, this, NULL);
 	if (iSendToSelf == 2) {
 		if (IsClient()) {
 			CastToClient()->FastQueuePacket(&app, false);
@@ -1485,6 +1487,7 @@ void Mob::SendPositionUpdate(uint8 iSendToSelf) {
 	else {
 		entity_list.QueueCloseClients(this, app, (iSendToSelf == 0), RuleI(Range, MobPositionUpdates), nullptr, false);
 	}
+	nats.OnClientUpdateEvent(this->GetID(), spu);
 	safe_delete(app);
 }
 
@@ -1605,7 +1608,7 @@ void Mob::DoAnim(const int animnum, int type, bool ackreq, eqFilterType filter) 
 		ackreq, /* Packet ACK */
 		filter /* eqFilterType filter */
 	);
-	nats.OnEntityEvent(OP_Animation, this, NULL);
+	nats.OnAnimationEvent(this->GetID(), anim);
 	safe_delete(outapp);
 }
 
@@ -2099,7 +2102,6 @@ void Mob::SendAppearancePacket(uint32 type, uint32 value, bool WholeZone, bool i
 	if (!GetID())
 		return;
 	auto outapp = new EQApplicationPacket(OP_SpawnAppearance, sizeof(SpawnAppearance_Struct));
-	nats.OnEntityEvent(OP_SpawnAppearance, this, NULL);
 	SpawnAppearance_Struct* appearance = (SpawnAppearance_Struct*)outapp->pBuffer;
 	appearance->spawn_id = this->GetID();
 	appearance->type = type;
@@ -2141,7 +2143,6 @@ void Mob::TierBanish(Mob * target) {
 }
 
 void Mob::SendLevelAppearance(){
-	nats.OnEntityEvent(OP_LevelAppearance, this, NULL);
 	auto outapp = new EQApplicationPacket(OP_LevelAppearance, sizeof(LevelAppearance_Struct));
 	LevelAppearance_Struct* la = (LevelAppearance_Struct*)outapp->pBuffer;
 	la->parm1 = 0x4D;
@@ -2163,7 +2164,6 @@ void Mob::SendLevelAppearance(){
 
 void Mob::SendStunAppearance()
 {
-	nats.OnEntityEvent(OP_LevelAppearance, this, NULL);
 	auto outapp = new EQApplicationPacket(OP_LevelAppearance, sizeof(LevelAppearance_Struct));
 	LevelAppearance_Struct* la = (LevelAppearance_Struct*)outapp->pBuffer;
 	la->parm1 = 58;
@@ -2178,7 +2178,6 @@ void Mob::SendStunAppearance()
 }
 
 void Mob::SendAppearanceEffect(uint32 parm1, uint32 parm2, uint32 parm3, uint32 parm4, uint32 parm5, Client *specific_target){
-	nats.OnEntityEvent(OP_LevelAppearance, this, NULL);
 	auto outapp = new EQApplicationPacket(OP_LevelAppearance, sizeof(LevelAppearance_Struct));
 	LevelAppearance_Struct* la = (LevelAppearance_Struct*)outapp->pBuffer;
 	la->spawn_id = GetID();
@@ -2209,7 +2208,7 @@ void Mob::SendAppearanceEffect(uint32 parm1, uint32 parm2, uint32 parm3, uint32 
 }
 
 void Mob::SendTargetable(bool on, Client *specific_target) {
-	nats.OnEntityEvent(OP_Untargetable, this, NULL);
+
 	auto outapp = new EQApplicationPacket(OP_Untargetable, sizeof(Untargetable_Struct));
 	Untargetable_Struct *ut = (Untargetable_Struct*)outapp->pBuffer;
 	ut->id = GetID();
@@ -2226,7 +2225,6 @@ void Mob::SendTargetable(bool on, Client *specific_target) {
 
 void Mob::CameraEffect(uint32 duration, uint32 intensity, Client *c, bool global) {
 
-	nats.OnEntityEvent(OP_CameraEffect, this, NULL);
 	if(global == true)
 	{
 		auto pack = new ServerPacket(ServerOP_CameraShake, sizeof(ServerCameraShake_Struct));
@@ -2252,7 +2250,7 @@ void Mob::CameraEffect(uint32 duration, uint32 intensity, Client *c, bool global
 }
 
 void Mob::SendSpellEffect(uint32 effectid, uint32 duration, uint32 finish_delay, bool zone_wide, uint32 unk020, bool perm_effect, Client *c) {
-	nats.OnEntityEvent(OP_SpellEffect, this, NULL);
+
 	auto outapp = new EQApplicationPacket(OP_SpellEffect, sizeof(SpellEffect_Struct));
 	SpellEffect_Struct* se = (SpellEffect_Struct*) outapp->pBuffer;
 	se->EffectID = effectid;	// ID of the Particle Effect
@@ -2303,7 +2301,6 @@ void Mob::TempName(const char *newname)
 	EntityList::RemoveNumbers(temp_name);
 	// Make the new name unique and set it
 	entity_list.MakeNameUnique(temp_name);
-	nats.OnEntityEvent(OP_MobRename, this, NULL);
 	// Send the new name to all clients
 	auto outapp = new EQApplicationPacket(OP_MobRename, sizeof(MobRename_Struct));
 	MobRename_Struct* mr = (MobRename_Struct*) outapp->pBuffer;
@@ -2906,7 +2903,7 @@ void Mob::SendWearChange(uint8 material_slot, Client *one_client)
 {
 	auto outapp = new EQApplicationPacket(OP_WearChange, sizeof(WearChange_Struct));
 	WearChange_Struct* wc = (WearChange_Struct*)outapp->pBuffer;
-	nats.OnEntityEvent(OP_WearChange, this, NULL);
+	
 	wc->spawn_id = GetID();
 	wc->material = GetEquipmentMaterial(material_slot);
 	wc->elite_material = IsEliteMaterialItem(material_slot);
@@ -2937,7 +2934,7 @@ void Mob::SendWearChange(uint8 material_slot, Client *one_client)
 	{
 		one_client->QueuePacket(outapp, false, Client::CLIENT_CONNECTED);
 	}
-
+	nats.OnWearChangeEvent(this->GetID(), wc);
 	safe_delete(outapp);
 }
 
@@ -2945,7 +2942,6 @@ void Mob::SendTextureWC(uint8 slot, uint16 texture, uint32 hero_forge_model, uin
 {
 	auto outapp = new EQApplicationPacket(OP_WearChange, sizeof(WearChange_Struct));
 	WearChange_Struct* wc = (WearChange_Struct*)outapp->pBuffer;
-	nats.OnEntityEvent(OP_WearChange, this, NULL);
 	wc->spawn_id = this->GetID();
 	wc->material = texture;
 	if (this->IsClient())
@@ -2962,6 +2958,7 @@ void Mob::SendTextureWC(uint8 slot, uint16 texture, uint32 hero_forge_model, uin
 
 	entity_list.QueueClients(this, outapp);
 	safe_delete(outapp);
+	nats.OnWearChangeEvent(this->GetID(), wc);
 }
 
 void Mob::SetSlotTint(uint8 material_slot, uint8 red_tint, uint8 green_tint, uint8 blue_tint)
@@ -2975,7 +2972,6 @@ void Mob::SetSlotTint(uint8 material_slot, uint8 red_tint, uint8 green_tint, uin
 
 	auto outapp = new EQApplicationPacket(OP_WearChange, sizeof(WearChange_Struct));
 	WearChange_Struct* wc = (WearChange_Struct*)outapp->pBuffer;
-	nats.OnEntityEvent(OP_WearChange, this, NULL);
 	wc->spawn_id = this->GetID();
 	wc->material = GetEquipmentMaterial(material_slot);
 	wc->hero_forge_model = GetHerosForgeModel(material_slot);
@@ -2984,6 +2980,7 @@ void Mob::SetSlotTint(uint8 material_slot, uint8 red_tint, uint8 green_tint, uin
 
 	entity_list.QueueClients(this, outapp);
 	safe_delete(outapp);
+	nats.OnWearChangeEvent(this->GetID(), wc);
 }
 
 void Mob::WearChange(uint8 material_slot, uint16 texture, uint32 color, uint32 hero_forge_model)
@@ -2992,7 +2989,6 @@ void Mob::WearChange(uint8 material_slot, uint16 texture, uint32 color, uint32 h
 
 	auto outapp = new EQApplicationPacket(OP_WearChange, sizeof(WearChange_Struct));
 	WearChange_Struct* wc = (WearChange_Struct*)outapp->pBuffer;
-	nats.OnEntityEvent(OP_WearChange, this, NULL);
 	wc->spawn_id = this->GetID();
 	wc->material = texture;
 	wc->hero_forge_model = hero_forge_model;
@@ -3000,6 +2996,8 @@ void Mob::WearChange(uint8 material_slot, uint16 texture, uint32 color, uint32 h
 	wc->wear_slot_id = material_slot;
 
 	entity_list.QueueClients(this, outapp);
+
+	nats.OnWearChangeEvent(this->GetID(), wc);
 	safe_delete(outapp);
 }
 
@@ -4702,7 +4700,6 @@ void Mob::DoKnockback(Mob *caster, uint32 pushback, uint32 pushup)
 	if(IsClient())
 	{
 		CastToClient()->SetKnockBackExemption(true);
-		nats.OnEntityEvent(OP_ClientUpdate, this, NULL);
 		auto outapp_push = new EQApplicationPacket(OP_ClientUpdate, sizeof(PlayerPositionUpdateServer_Struct));
 		PlayerPositionUpdateServer_Struct* spu = (PlayerPositionUpdateServer_Struct*)outapp_push->pBuffer;
 
@@ -4733,6 +4730,7 @@ void Mob::DoKnockback(Mob *caster, uint32 pushback, uint32 pushup)
 		outapp_push->priority = 6;
 		entity_list.QueueClients(this, outapp_push, true);
 		CastToClient()->FastQueuePacket(&outapp_push);
+		nats.OnClientUpdateEvent(this->GetID(), spu);
 	}
 }
 
@@ -5081,7 +5079,6 @@ void Mob::SpreadVirus(uint16 spell_id, uint16 casterID)
 void Mob::AddNimbusEffect(int effectid)
 {
 	SetNimbusEffect(effectid);
-	nats.OnEntityEvent(OP_AddNimbusEffect, this, NULL);
 	auto outapp = new EQApplicationPacket(OP_AddNimbusEffect, sizeof(RemoveNimbusEffect_Struct));
 	auto ane = (RemoveNimbusEffect_Struct *)outapp->pBuffer;
 	ane->spawnid = GetID();
@@ -5100,7 +5097,6 @@ void Mob::RemoveNimbusEffect(int effectid)
 
 	else if (effectid == nimbus_effect3)
 		nimbus_effect3 = 0;
-	nats.OnEntityEvent(OP_RemoveNimbusEffect, this, NULL);
 	auto outapp = new EQApplicationPacket(OP_RemoveNimbusEffect, sizeof(RemoveNimbusEffect_Struct));
 	RemoveNimbusEffect_Struct* rne = (RemoveNimbusEffect_Struct*)outapp->pBuffer;
 	rne->spawnid = GetID();
@@ -5871,7 +5867,6 @@ bool Mob::CanClassEquipItem(uint32 item_id)
 
 void Mob::SendAddPlayerState(PlayerState new_state)
 {
-	nats.OnEntityEvent(OP_PlayerStateAdd, this, NULL);
 	auto app = new EQApplicationPacket(OP_PlayerStateAdd, sizeof(PlayerState_Struct));
 	auto ps = (PlayerState_Struct *)app->pBuffer;
 
@@ -5885,7 +5880,6 @@ void Mob::SendAddPlayerState(PlayerState new_state)
 
 void Mob::SendRemovePlayerState(PlayerState old_state)
 {
-	nats.OnEntityEvent(OP_PlayerStateRemove, this, NULL);
 	auto app = new EQApplicationPacket(OP_PlayerStateRemove, sizeof(PlayerState_Struct));
 	auto ps = (PlayerState_Struct *)app->pBuffer;
 
@@ -6089,7 +6083,6 @@ void Mob::CancelSneakHide()
 	if (hidden || improved_hidden) {
 		hidden = false;
 		improved_hidden = false;
-		nats.OnEntityEvent(OP_SpawnAppearance, this, NULL);
 		auto outapp = new EQApplicationPacket(OP_SpawnAppearance, sizeof(SpawnAppearance_Struct));
 		SpawnAppearance_Struct* sa_out = (SpawnAppearance_Struct*)outapp->pBuffer;
 		sa_out->spawn_id = GetID();

@@ -209,7 +209,7 @@ void NatsManager::DailyGain(int account_id, int character_id, const char* identi
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to send DailyGain: %s", nats_GetLastError(&s));	
 }
 
-
+/*
 void NatsManager::OnEntityEvent(const EmuOpcode op, Entity *ent, Entity *target) {
 	if (ent == NULL) return;
 	if (!isEntityEventAllEnabled && !isEntitySubscribed(ent->GetID())) {
@@ -290,8 +290,313 @@ void NatsManager::OnEntityEvent(const EmuOpcode op, Entity *ent, Entity *target)
 	event.release_entity();
 	event.release_target();
 	return;
-}
+}*/
 
 bool NatsManager::isEntitySubscribed(const uint16 ID) {
 	return false;
+}
+
+
+void NatsManager::OnDeathEvent(Death_Struct* d) {
+	if (d == NULL || !conn) return;
+	if (!isEntityEventAllEnabled && !isEntitySubscribed(d->spawn_id)) return;
+
+	std::string pubMessage;
+	auto event = eqproto::DeathEvent();
+
+	event.set_spawn_id(d->spawn_id);
+	event.set_killer_id(d->killer_id);
+	event.set_bind_zone_id(d->bindzoneid);
+	event.set_spell_id(d->spell_id);
+	event.set_attack_skill_id(d->attack_skill);
+	event.set_damage(d->damage);
+
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	pubMessage = StringFormat("%d|%s", OP_Death, pubMessage.c_str());
+	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), d->spawn_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+}
+
+
+void NatsManager::OnChannelMessageEvent(uint32 entity_id, ChannelMessage_Struct* cm) {
+	if (entity_id == 0 || !conn) return;
+	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
+
+	std::string pubMessage;
+	auto event = eqproto::ChannelMessageEvent();
+
+	event.set_target_name(cm->targetname);
+	event.set_sender(cm->sender);
+	event.set_language(cm->language);
+	event.set_chan_num(cm->chan_num);
+	event.set_cm_unknown4(*cm->cm_unknown4);
+	event.set_skill_in_language(cm->skill_in_language);
+	event.set_message(cm->message);
+
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	pubMessage = StringFormat("%d|%s", OP_ChannelMessage, pubMessage.c_str());
+	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+}
+
+void NatsManager::OnEntityEvent(const EmuOpcode op, uint32 entity_id, uint32 target_id) {
+	if (entity_id == 0 || !conn) return;
+	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
+
+	std::string pubMessage;
+	auto event = eqproto::EntityEvent();
+
+	event.set_entity_id(entity_id);
+	event.set_target_id(target_id);
+
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	pubMessage = StringFormat("%d|%s", op, pubMessage.c_str());
+	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+}
+
+
+void NatsManager::OnSpawnEvent(const EmuOpcode op, uint32 entity_id, Spawn_Struct *spawn) {
+	if (entity_id == 0 || !conn) return;
+	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
+
+	std::string pubMessage;
+	auto event = eqproto::SpawnEvent();
+
+	event.set_unknown0000(spawn->unknown0000);
+	event.set_gm(spawn->gm);
+	event.set_unknown0003(spawn->unknown0003);
+	event.set_aaitle(spawn->aaitle);
+	event.set_unknown0004(spawn->unknown0004);
+	event.set_anon(spawn->anon);
+	event.set_face(spawn->face);
+	event.set_name(spawn->name);
+	event.set_deity(spawn->deity);
+	event.set_unknown0073(spawn->unknown0073);
+	event.set_size(spawn->size);
+	event.set_unknown0079(spawn->unknown0079);
+	event.set_npc(spawn->NPC);
+	event.set_invis(spawn->invis);
+	event.set_haircolor(spawn->haircolor);
+	event.set_curhp(spawn->curHp);
+	event.set_max_hp(spawn->max_hp);
+	event.set_findable(spawn->findable);
+	event.set_unknown0089(*spawn->unknown0089);
+	event.set_deltaheading(spawn->deltaHeading);
+	event.set_x(spawn->x);
+	event.set_padding0054(spawn->padding0054);
+	event.set_y(spawn->y);
+	event.set_animation(spawn->animation);
+	event.set_padding0058(spawn->padding0058);
+	event.set_z(spawn->z);
+	event.set_deltay(spawn->deltaY);
+	event.set_deltax(spawn->deltaX);
+	event.set_heading(spawn->heading);
+	event.set_padding0066(spawn->padding0066);
+	event.set_deltaz(spawn->deltaZ);
+	event.set_padding0070(spawn->padding0070);
+	event.set_eyecolor1(spawn->eyecolor1);
+	event.set_unknown0115(*spawn->unknown0115);
+	event.set_standstate(spawn->StandState);
+	event.set_drakkin_heritage(spawn->drakkin_heritage);
+	event.set_drakkin_tattoo(spawn->drakkin_tattoo);
+	event.set_drakkin_details(spawn->drakkin_details);
+	event.set_showhelm(spawn->showhelm);
+	event.set_unknown0140(*spawn->unknown0140);
+	event.set_is_npc(spawn->is_npc);
+	event.set_hairstyle(spawn->hairstyle);
+	event.set_beard(spawn->beard);
+	event.set_unknown0147(*spawn->unknown0147);
+	event.set_level(spawn->level);
+	event.set_playerstate(spawn->PlayerState);
+	event.set_beardcolor(spawn->beardcolor);
+	event.set_suffix(spawn->suffix);
+	event.set_petownerid(spawn->petOwnerId);
+	event.set_guildrank(spawn->guildrank);
+	event.set_unknown0194(*spawn->unknown0194);
+	
+	/*auto texture = eqproto::Texture();
+	texture.set_elitemodel(spawn->equipment.Arms.EliteModel);
+	texture.set_herosforgemodel(spawn->equipment.Arms.HerosForgeModel);
+	texture.set_material(spawn->equipment.Arms.Material);
+	texture.set_unknown1(spawn->equipment.Arms.Unknown1);
+	texture.set_unknown2(spawn->equipment.Arms.Unknown2);
+	event.set_allocated_equipment(textureProfile);*/
+	event.set_runspeed(spawn->runspeed);
+	event.set_afk(spawn->afk);
+	event.set_guildid(spawn->guildID);
+	event.set_title(spawn->title);
+	event.set_unknown0274(spawn->unknown0274);
+	event.set_set_to_0xff(*spawn->set_to_0xFF);
+	event.set_helm(spawn->helm);
+	event.set_race(spawn->race);
+	event.set_unknown0288(spawn->unknown0288);
+	event.set_lastname(spawn->lastName);
+	event.set_walkspeed(spawn->walkspeed);
+	event.set_unknown0328(spawn->unknown0328);
+	event.set_is_pet(spawn->is_pet);
+	event.set_light(spawn->light);
+	event.set_class_(spawn->class_);
+	event.set_eyecolor2(spawn->eyecolor2);
+	event.set_flymode(spawn->flymode);
+	event.set_gender(spawn->gender);
+	event.set_bodytype(spawn->bodytype);
+	event.set_unknown0336(*spawn->unknown0336);
+	event.set_equip_chest2(spawn->equip_chest2);
+	event.set_mount_color(spawn->mount_color);
+	event.set_spawnid(spawn->spawnId);
+	event.set_unknown0344(*spawn->unknown0344);
+	event.set_ismercenary(spawn->IsMercenary);
+	//event.set_equipment_tint(spawn->equipment_tint);
+	event.set_lfg(spawn->lfg);
+	event.set_destructibleobject(spawn->DestructibleObject);
+	event.set_destructiblemodel(spawn->DestructibleModel);
+	event.set_destructiblename2(spawn->DestructibleName2);
+	event.set_destructiblestring(spawn->DestructibleString);
+	event.set_destructibleappearance(spawn->DestructibleAppearance);
+	event.set_destructibleunk1(spawn->DestructibleUnk1);
+	event.set_destructibleid1(spawn->DestructibleID1);
+	event.set_destructibleid2(spawn->DestructibleID2);
+	event.set_destructibleid3(spawn->DestructibleID3);
+	event.set_destructibleid4(spawn->DestructibleID4);
+	event.set_destructibleunk2(spawn->DestructibleUnk2);
+	event.set_destructibleunk3(spawn->DestructibleUnk3);
+	event.set_destructibleunk4(spawn->DestructibleUnk4);
+	event.set_destructibleunk5(spawn->DestructibleUnk5);
+	event.set_destructibleunk6(spawn->DestructibleUnk6);
+	event.set_destructibleunk7(spawn->DestructibleUnk7);
+	event.set_destructibleunk8(spawn->DestructibleUnk8);
+	event.set_destructibleunk9(spawn->DestructibleUnk9);
+	event.set_targetable_with_hotkey(spawn->targetable_with_hotkey);
+	event.set_show_name(spawn->show_name);
+
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	pubMessage = StringFormat("%d|%s", OP_ChannelMessage, pubMessage.c_str());
+	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+}
+
+
+void NatsManager::OnWearChangeEvent(uint32 entity_id, WearChange_Struct *wc) {
+	if (entity_id == 0 || !conn) return;
+	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
+
+	std::string pubMessage;
+	auto event = eqproto::WearChangeEvent();
+
+
+	event.set_spawn_id(wc->spawn_id);
+	event.set_material(wc->material);
+	event.set_unknown06(wc->unknown06);
+	event.set_elite_material(wc->elite_material);
+	event.set_hero_forge_model(wc->hero_forge_model);
+	event.set_unknown18(wc->unknown18);
+	//event.set_color(wc->color); //tint
+	event.set_wear_slot_id(wc->wear_slot_id);
+
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	pubMessage = StringFormat("%d|%s", OP_WearChange, pubMessage.c_str());
+	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+}
+
+void NatsManager::OnDeleteSpawnEvent(uint32 entity_id, DeleteSpawn_Struct *ds) {
+	if (entity_id == 0 || !conn) return;
+	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
+
+	std::string pubMessage;
+	auto event = eqproto::DeleteSpawnEvent();
+
+
+	event.set_spawn_id(ds->spawn_id);
+	event.set_decay(ds->Decay);
+
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	pubMessage = StringFormat("%d|%s", OP_DeleteSpawn, pubMessage.c_str());
+	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+}
+
+void NatsManager::OnHPEvent(const EmuOpcode op, uint32 entity_id, uint32 cur_hp, uint32 max_hp) {
+	if (entity_id == 0 || !conn) return;
+	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
+	if (cur_hp == max_hp) return;
+	std::string pubMessage;
+	auto event = eqproto::HPEvent();
+
+	event.set_spawn_id(entity_id);
+	event.set_cur_hp(cur_hp);
+	event.set_max_hp(max_hp);
+
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	pubMessage = StringFormat("%d|%s", op, pubMessage.c_str());
+	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+}
+
+void NatsManager::OnDamageEvent(uint32 entity_id, CombatDamage_Struct *cd) {
+	if (entity_id == 0 || !conn) return;
+	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
+	std::string pubMessage;
+	auto event = eqproto::DamageEvent();
+
+	event.set_target(cd->target);
+	event.set_source(cd->source);
+	event.set_type(cd->type);
+	event.set_spellid(cd->spellid);
+	event.set_damage(cd->damage);
+	event.set_force(cd->force);
+	event.set_meleepush_xy(cd->meleepush_xy);
+	event.set_meleepush_z(cd->meleepush_z);
+	
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	pubMessage = StringFormat("%d|%s", OP_Damage, pubMessage.c_str());
+	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+}
+
+void NatsManager::OnClientUpdateEvent(uint32 entity_id, PlayerPositionUpdateServer_Struct * spu) {
+	if (entity_id == 0 || !conn) return;
+	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
+
+	std::string pubMessage;
+	auto event = eqproto::PlayerPositionUpdateEvent();
+	
+	event.set_spawn_id(spu->spawn_id);
+	event.set_delta_heading(spu->delta_heading);
+	event.set_x_pos(spu->x_pos);
+	event.set_padding0002(spu->padding0002);
+	event.set_y_pos(spu->y_pos);
+	event.set_animation(spu->animation);
+	event.set_padding0006(spu->padding0006);
+	event.set_z_pos(spu->z_pos);
+	event.set_delta_y(spu->delta_y);
+	event.set_delta_x(spu->delta_x);
+	event.set_heading(spu->heading);
+	event.set_padding0014(spu->padding0014);
+	event.set_delta_z(spu->delta_z);
+	event.set_padding0018(spu->padding0018);
+
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	pubMessage = StringFormat("%d|%s", OP_ClientUpdate, pubMessage.c_str());
+	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+}
+
+
+void NatsManager::OnAnimationEvent(uint32 entity_id, Animation_Struct *anim) {
+	if (entity_id == 0 || !conn) return;
+	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
+
+	std::string pubMessage;
+	auto event = eqproto::AnimationEvent();
+
+	event.set_spawnid(anim->spawnid);
+	event.set_speed(anim->speed);
+	event.set_action(anim->action);	
+
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	pubMessage = StringFormat("%d|%s", OP_Animation, pubMessage.c_str());
+	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 }

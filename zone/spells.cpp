@@ -2973,6 +2973,7 @@ void Mob::BardPulse(uint16 spell_id, Mob *caster) {
 			}
 			safe_delete(message_packet);
 			safe_delete(packet);
+			nats.OnDamageEvent(cd->source, cd);
 
 		}
 		//we are done...
@@ -4597,6 +4598,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob *spelltar, bool reflect, bool use_r
 	}
 	safe_delete(action_packet);
 	safe_delete(message_packet);
+	nats.OnDamageEvent(cd->source, cd);
 
 	Log(Logs::Detail, Logs::Spells, "Cast of %d by %s on %s complete successfully.", spell_id, GetName(), spelltar->GetName());
 

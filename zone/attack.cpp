@@ -2444,9 +2444,10 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 		safe_delete(outapp);
 	}
 
-	nats.OnEntityEvent(OP_Death, this, killer);
+	
 	auto app = new EQApplicationPacket(OP_Death, sizeof(Death_Struct));
 	Death_Struct* d = (Death_Struct*)app->pBuffer;
+	
 	d->spawn_id = GetID();
 	d->killer_id = killer_mob ? killer_mob->GetID() : 0;
 	d->bindzoneid = 0;
@@ -2455,9 +2456,8 @@ bool NPC::Death(Mob* killer_mob, int32 damage, uint16 spell, EQEmu::skills::Skil
 	d->damage = damage;
 	app->priority = 6;
 	entity_list.QueueClients(killer_mob, app, false);
-
 	safe_delete(app);
-
+	nats.OnDeathEvent(d);
 	if (respawn2) {
 		respawn2->DeathReset(1);
 	}
@@ -3282,6 +3282,7 @@ void Mob::DamageShield(Mob* attacker, bool spell_ds) {
 		cds->damage = DS;
 		entity_list.QueueCloseClients(this, outapp);
 		safe_delete(outapp);
+		nats.OnDamageEvent(cds->source, cds);
 	} else if (DS > 0 && !spell_ds) {
 		//we are healing the attacker...
 		attacker->HealDamage(DS);
@@ -4521,7 +4522,8 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				CastToClient()->QueuePacket(outapp);
 			}
 		}
-
+		
+		nats.OnDamageEvent(a->source, a);
 		safe_delete(outapp);
 	}
 	else {
