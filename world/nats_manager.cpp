@@ -8,7 +8,10 @@
 
 #include "../common/seperator.h"
 #include "../common/eqemu_logsys.h"
+#ifndef PROTO_H
+#define PROTO_H
 #include "../common/proto/message.pb.h"
+#endif
 #include "../common/servertalk.h"
 #include "../common/string_util.h"
 

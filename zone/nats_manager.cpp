@@ -4,11 +4,15 @@
 #include "nats.h"
 #include "zone_config.h"
 #include "nats_manager.h"
+//#include "guild_mgr.h"
 
 #include "../common/opcodemgr.h"
 #include "../common/eqemu_logsys.h"
 #include "../common/string_util.h"
+#ifndef PROTO_H
+#define PROTO_H
 #include "../common/proto/message.pb.h"
+#endif
 
 const ZoneConfig *zoneConfig;
 
@@ -38,7 +42,7 @@ void NatsManager::Process()
 	natsMsg *msg = NULL;
 
 	s = NATS_OK;
-
+	std::string pubMessage;
 	for (int count = 0; (s == NATS_OK) && count < 100; count++)
 	{
 		s = natsSubscription_NextMsg(&msg, zoneSub, 1);
@@ -46,15 +50,76 @@ void NatsManager::Process()
 		Log(Logs::General, Logs::Zone_Server, "NATS got message '%s'", natsMsg_GetData(msg));
 		natsMsg_Destroy(msg);
 	}
+
+
+	s = NATS_OK;
+	for (int count = 0; (s == NATS_OK) && count < 5; count++)
+	{
+		s = natsSubscription_NextMsg(&msg, commandMessageSub, 1);
+		if (s != NATS_OK) break;
+		Log(Logs::General, Logs::World_Server, "NATS Got Command Message '%s'", natsMsg_GetData(msg));
+		eqproto::CommandMessage message;
+
+		if (message.command().compare("npctypespawn") == 0) {
+			if (message.params_size() < 2) {
+				message.set_result("Usage: !npctypespawn <npctypeid> <factionid> <x> <y> <z> <h>.");
+			} else {
+
+				uint32 npctypeid = atoi(message.params(0).c_str());
+				uint32 factionid = atoi(message.params(1).c_str());
+				float x = atof(message.params(2).c_str());
+				float y = atof(message.params(3).c_str());
+				float z = atof(message.params(4).c_str());
+				float h = atof(message.params(5).c_str());
+				auto position = glm::vec4(x, y, z, h);
+				const NPCType* tmp = 0;				
+				/*if (!(tmp = database.LoadNPCTypesData(npctypeid))) {
+					message.set_result(StringFormat("NPC Type %i not found", npctypeid));
+				} else {
+					//tmp->fixedZ = 1;
+					
+					auto npc = new NPC(tmp, 0, position, FlyMode3);
+					if (npc && factionid >0)
+						npc->SetNPCFactionID(factionid);
+					npc->AddLootTable();
+					entity_list.AddNPC(npc);
+					message.set_result("Created NPC successfully.");
+				}	
+				*/
+			}
+		}
+
+		if (!message.ParseFromString(natsMsg_GetData(msg))) {
+			Log(Logs::General, Logs::World_Server, "Failed to marshal");
+			natsMsg_Destroy(msg);
+			continue;
+		}
+
+		
+		if (message.result().length() <= 1) {
+			message.set_result("Failed to parse command.");
+		}
+
+		if (!message.SerializeToString(&pubMessage)) {
+			Log(Logs::General, Logs::World_Server, "NATS Failed to serialize command message to string");
+			return;
+		}
+
+		s = natsConnection_PublishString(conn, natsMsg_GetReply(msg), pubMessage.c_str());
+		if (s != NATS_OK) {
+			Log(Logs::General, Logs::World_Server, "NATS Failed to send CommandMessageEvent");
+			return;
+		}
+	}
 }
 
 //Unregister is called when a zone is being put to sleep or being swapped
 void NatsManager::Unregister()
 {
-	if (zoneAdminMessageSub != NULL) {
-		s = natsSubscription_Unsubscribe(zoneAdminMessageSub);
-		zoneAdminMessageSub = NULL;
-		if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS unsubscribe from zoneAdminMessageSub failed: %s", nats_GetLastError(&s));
+	if (commandMessageSub != NULL) {
+		s = natsSubscription_Unsubscribe(commandMessageSub);
+		commandMessageSub = NULL;
+		if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS unsubscribe from commandMessageSub failed: %s", nats_GetLastError(&s));
 	}
 
 	if (zoneChannelMessageSub != NULL) {
@@ -103,10 +168,10 @@ void NatsManager::ZoneSubscribe(const char* zonename) {
 	s = natsSubscription_SetPendingLimits(zoneChannelMessageSub, -1, -1);
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits to zoneChannelMessageSub %s", nats_GetLastError(&s));
 
-	s = natsConnection_SubscribeSync(&zoneAdminMessageSub, conn, StringFormat("zone.%s.channel_message", subscribedZonename.c_str()).c_str());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to zoneAdminMessageSub %s", nats_GetLastError(&s));
-	s = natsSubscription_SetPendingLimits(zoneAdminMessageSub, -1, -1);
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits to zoneAdminMessageSub %s", nats_GetLastError(&s));
+	s = natsConnection_SubscribeSync(&commandMessageSub, conn, StringFormat("zone.%s.command_message", subscribedZonename.c_str()).c_str());
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to commandMessageSub %s", nats_GetLastError(&s));
+	s = natsSubscription_SetPendingLimits(commandMessageSub, -1, -1);
+	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits to commandMessageSub %s", nats_GetLastError(&s));
 
 	s = natsConnection_SubscribeSync(&zoneEntityEventSubscribeAllSub, conn, StringFormat("zone.%s.entity.event_subscribe.all", subscribedZonename.c_str()).c_str());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to zoneEntityEventSubscribeAllSub %s", nats_GetLastError(&s));
@@ -163,14 +228,14 @@ void NatsManager::Load()
 		return;
 	}
 
-	s = natsConnection_SubscribeSync(&adminMessageSub, conn, "zone.admin_message");
+	s = natsConnection_SubscribeSync(&commandMessageSub, conn, "zone.command_message");
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to admin message: %s", nats_GetLastError(&s));
+		Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to commandMessageSub: %s", nats_GetLastError(&s));
 		return;
 	}
-	s = natsSubscription_SetPendingLimits(adminMessageSub, -1, -1);
+	s = natsSubscription_SetPendingLimits(commandMessageSub, -1, -1);
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits while subscribed to admin message: %s", nats_GetLastError(&s));
+		Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits while subscribed to commandMessageSub: %s", nats_GetLastError(&s));
 		return;
 	}
 
@@ -208,6 +273,7 @@ void NatsManager::DailyGain(int account_id, int character_id, const char* identi
 	s = natsConnection_PublishString(conn, "DailyGain", pubMessage.c_str());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to send DailyGain: %s", nats_GetLastError(&s));	
 }
+
 
 /*
 void NatsManager::OnEntityEvent(const EmuOpcode op, Entity *ent, Entity *target) {

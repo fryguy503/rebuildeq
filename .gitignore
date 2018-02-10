@@ -16,6 +16,7 @@ build_64/
 # eqemu temp files
 *.oldlock
 
+doxygen/
 
 # deploy/server stuff that needs ignored.
 deploy/server/eqemu_config.xml

@@ -5,7 +5,6 @@
 #include "entity.h";
 #include "mob.h";
 
-
 #include "../common/opcodemgr.h"
 #include "../common/global_define.h"
 #include "../common/types.h"
@@ -29,8 +28,8 @@ public:
 	void OnDamageEvent(uint32 entity_id, CombatDamage_Struct * cd);
 	void OnClientUpdateEvent(uint32 entity_id, PlayerPositionUpdateServer_Struct * spu);
 	void OnAnimationEvent(uint32 entity_id, Animation_Struct * anim);
-	void OnDeathEvent(Death_Struct * d);
-	void SendAdminMessage(std::string adminMessage);
+	void OnDeathEvent(Death_Struct * d);	
+	void SendAdminMessage(std::string adminMessage);	
 protected:
 	bool isEntitySubscribed(const uint16 ID);
 	bool isEntityEventAllEnabled = true;
@@ -41,10 +40,10 @@ protected:
 	//global zone subscriptions
 	natsSubscription *zoneSub = NULL;
 	natsSubscription *channelMessageSub = NULL;
-	natsSubscription *adminMessageSub = NULL;
+	natsSubscription *commandMessageSub = NULL;
 	//zone specific subscriptions
 	natsSubscription *zoneChannelMessageSub = NULL;
-	natsSubscription *zoneAdminMessageSub = NULL;
+	natsSubscription *zoneCommandMessageSub = NULL;
 	natsSubscription *zoneEntityEventSubscribeAllSub = NULL;
 	natsSubscription *zoneEntityEventSubscribeSub = NULL;
 	natsSubscription *zoneEntityEventListSub = NULL;

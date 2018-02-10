@@ -6,7 +6,10 @@
 #include "../common/global_define.h"
 #include "../common/types.h"
 #include "../common/timer.h"
+#ifndef PROTO_H
+#define PROTO_H
 #include "../common/proto/message.pb.h"
+#endif
 #include "../common/servertalk.h"
 
 class NatsManager

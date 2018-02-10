@@ -11089,7 +11089,7 @@ void command_object(Client *c, const Seperator *sep)
 			o->SetHeading(c->GetHeading() * 2.0f); // Compensate for GetHeading() returning half of actual
 
 			// Bump player back to avoid getting stuck inside object
-
+			
 			// GetHeading() returns half of the actual heading, for some reason
 			x2 = 10.0f * sin(c->GetHeading() * 2.0f / 256.0f * 3.14159265f);
 			y2 = 10.0f * cos(c->GetHeading() * 2.0f / 256.0f * 3.14159265f);
