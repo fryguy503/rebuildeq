@@ -5,6 +5,7 @@
 #include "zone_config.h"
 #include "nats_manager.h"
 //#include "guild_mgr.h"
+#include "npc.h"
 
 #include "../common/opcodemgr.h"
 #include "../common/eqemu_logsys.h"
@@ -60,6 +61,11 @@ void NatsManager::Process()
 		Log(Logs::General, Logs::World_Server, "NATS Got Command Message '%s'", natsMsg_GetData(msg));
 		eqproto::CommandMessage message;
 
+		if (!message.ParseFromString(natsMsg_GetData(msg))) {
+			Log(Logs::General, Logs::World_Server, "Failed to marshal");
+			natsMsg_Destroy(msg);
+			continue;
+		}
 		if (message.command().compare("npctypespawn") == 0) {
 			if (message.params_size() < 2) {
 				message.set_result("Usage: !npctypespawn <npctypeid> <factionid> <x> <y> <z> <h>.");
@@ -72,7 +78,8 @@ void NatsManager::Process()
 				float z = atof(message.params(4).c_str());
 				float h = atof(message.params(5).c_str());
 				auto position = glm::vec4(x, y, z, h);
-				const NPCType* tmp = 0;				
+				const NPCType* tmp = 0;		
+
 				/*if (!(tmp = database.LoadNPCTypesData(npctypeid))) {
 					message.set_result(StringFormat("NPC Type %i not found", npctypeid));
 				} else {
@@ -89,14 +96,59 @@ void NatsManager::Process()
 			}
 		}
 
-		if (!message.ParseFromString(natsMsg_GetData(msg))) {
-			Log(Logs::General, Logs::World_Server, "Failed to marshal");
-			natsMsg_Destroy(msg);
-			continue;
+		if (message.command().compare("spawn") == 0) {
+			if (message.params_size() < 5) {
+				message.set_result("Usage: npctypespawn <x> <y> <z> <h> name race  level material hp gender class priweapon secweapon merchantid bodytype.");
+			}
+			else {
+
+				float x = atof(message.params(0).c_str());
+				float y = atof(message.params(1).c_str());
+				float z = atof(message.params(2).c_str());
+				float h = atof(message.params(3).c_str());
+				auto position = glm::vec4(x, y, z, h);
+
+				std::string argumentString;
+				for (int i = 4; i < message.params_size(); i++) {
+					argumentString.append(StringFormat(" %s", message.params(i).c_str()));
+				}
+				
+				NPC* npc = NPC::SpawnNPC(argumentString.c_str(), position, NULL);
+				if (!npc) {
+					message.set_result("Format: #spawn name race level material hp gender class priweapon secweapon merchantid bodytype - spawns a npc those parameters.");
+				}
+				else {
+					message.set_result(StringFormat("%u", npc->GetID()));
+				}
+			}
 		}
 
+		if (message.command().compare("moveto") == 0) {
+			if (message.params_size() < 5) {
+				message.set_result("Usage: moveto <entityid> <x> <y> <z> <h>.");
+			}
+			else {
+				uint16 entityid = atoi(message.params(0).c_str());
+				float x = atof(message.params(1).c_str());
+				float y = atof(message.params(2).c_str());
+				float z = atof(message.params(3).c_str());
+				float h = atof(message.params(4).c_str());
+				auto position = glm::vec4(x, y, z, h);
+
+				auto npc = entity_list.GetNPCByID(entityid);
+				if (!npc) {
+					message.set_result("Invalid entity ID passed, or not an npc, etc");
+				}
+				else {
+					npc->MoveTo(position, false);
+					message.set_result("OK");
+				}
+			}
+		}
+
+
 		
-		if (message.result().length() <= 1) {
+		if (message.result().length() < 1) {
 			message.set_result("Failed to parse command.");
 		}
 

@@ -24,11 +24,23 @@ func main() {
 	}
 	defer nc.Close()
 
+	zone := "pojustice"
 	//testSyncSubscriber()
 	//go testAsyncSubscriber()
 	//go testBroadcastMessage()
 	//testAsyncSubscriber("EntityEvent")
-	go testAsyncEntityEventSubscriber("ecommons")
+	entityID := testZoneCommandEntity(zone, "spawn", []string{
+		"470.32",
+		"765.48",
+		"9.63",
+		"66.8",
+		"GoSpawn",
+	})
+	if entityID == 0 {
+		log.Fatal("failed to get entity ID!")
+	}
+	go testMoveToLoop(zone, entityID)
+	go testAsyncEntityEventSubscriber(zone, entityID)
 	//testZoneMessage("fieldofbone", "hello, world!")
 	time.Sleep(1000 * time.Second)
 }
@@ -42,7 +54,89 @@ func testAsyncSubscriber(channel string) {
 	time.Sleep(500 * time.Second)
 }
 
-func testAsyncEntityEventSubscriber(zone string) {
+func testMoveToLoop(zone string, entityID int64) {
+	params := []string{}
+	positions := []string{
+		"506 744 9.63 214",
+		"446 747 9.63 223",
+		"449 788 9.63 223",
+		"493 780 9.63 223",
+	}
+	command := "moveto"
+	curPos := 0
+	for {
+		curPos++
+		fmt.Println(curPos)
+		if len(positions) < curPos+1 {
+			fmt.Println("Resetting position")
+			curPos = 0
+		}
+
+		params = []string{}
+		params = append(params, fmt.Sprintf("%d", entityID))
+		params = append(params, strings.Split(positions[curPos], " ")...)
+
+		testZoneCommand(zone, command, params)
+		time.Sleep(2 * time.Second)
+	}
+}
+func testZoneCommandEntity(zone string, command string, params []string) (entityID int64) {
+
+	msg := &eqproto.CommandMessage{
+		Author:  "xackery",
+		Command: command,
+		Params:  params,
+	}
+	d, err := proto.Marshal(msg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	reply, err := nc.Request(fmt.Sprintf("zone.%s.command_message", zone), d, 1*time.Second)
+	if err != nil {
+		log.Println("Failed to get request response:", err.Error())
+		return
+	}
+
+	err = proto.Unmarshal(reply.Data, msg)
+	if err != nil {
+		fmt.Println("Failed to unmarshal", err.Error())
+		return
+	}
+	fmt.Println("Response:", msg)
+	entityID, err = strconv.ParseInt(msg.Result, 10, 64)
+	if err != nil {
+		fmt.Println("Failed to parse response", err.Error(), msg.Result)
+		return
+	}
+	return
+}
+
+func testZoneCommand(zone string, command string, params []string) {
+
+	msg := &eqproto.CommandMessage{
+		Author:  "xackery",
+		Command: command,
+		Params:  params,
+	}
+	d, err := proto.Marshal(msg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	reply, err := nc.Request(fmt.Sprintf("zone.%s.command_message", zone), d, 1*time.Second)
+	if err != nil {
+		log.Println("Failed to get request response:", err.Error())
+		return
+	}
+
+	err = proto.Unmarshal(reply.Data, msg)
+	if err != nil {
+		fmt.Println("Failed to unmarshal", err.Error())
+		return
+	}
+	fmt.Println("Response:", msg)
+	return
+}
+func testAsyncEntityEventSubscriber(zone string, entityID int64) {
 
 	/*event := &eqproto.EntityEvent{
 		Entity: &eqproto.Entity{
@@ -60,7 +154,8 @@ func testAsyncEntityEventSubscriber(zone string) {
 
 	var opCode int64
 	var index int
-	nc.Subscribe(fmt.Sprintf("zone.%s.entity.event.*", zone), func(m *nats.Msg) {
+	channel := fmt.Sprintf("zone.%s.entity.event.%d", zone, entityID)
+	nc.Subscribe(channel, func(m *nats.Msg) {
 
 		//Every event is identified by the first chunk. split it to get opcode.
 		index = strings.Index(string(m.Data), "|")
@@ -101,13 +196,13 @@ func testAsyncEntityEventSubscriber(zone string) {
 			fmt.Println("Invalid data passed for opcode", eqproto.OpCode(opCode), err.Error(), string(m.Data[index+1:]))
 			return
 		}
-		fmt.Println(eqproto.OpCode(opCode), event)
+		fmt.Println(m.Subject, eqproto.OpCode(opCode), event)
 		//log.Printf("Received a message on %s: %s\n", m.Subject, string(m.Data))
 
 		//proto.Unmarshal(m.Data, event)
 		//log.Println(event.Op.String(), event.Entity, event.Target)
 	})
-	log.Println("Waiting on messages...")
+	log.Println("Subscribed to", channel, ", waiting on messages...")
 
 	time.Sleep(500 * time.Second)
 }
