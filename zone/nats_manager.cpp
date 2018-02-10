@@ -1,10 +1,11 @@
 #include "entity.h"
 #include "mob.h"
+//#include "client.h" //map error
 #include "event_codes.h"
 #include "nats.h"
 #include "zone_config.h"
 #include "nats_manager.h"
-//#include "guild_mgr.h"
+//#include "guild_mgr.h" //used for database, map error
 #include "npc.h"
 
 #include "../common/opcodemgr.h"
@@ -140,12 +141,85 @@ void NatsManager::Process()
 					message.set_result("Invalid entity ID passed, or not an npc, etc");
 				}
 				else {
-					npc->MoveTo(position, false);
+					npc->MoveTo(position, true);
 					message.set_result("OK");
 				}
 			}
 		}
 
+		if (message.command().compare("attack") == 0) {
+			if (message.params_size() < 3) {
+				message.set_result("Usage: attack <entityid> <targetentityid> <hateamount>.");
+			}
+			else {
+				uint16 entityID = atoi(message.params(0).c_str());
+				uint16 targetEntityID = atoi(message.params(1).c_str());
+				uint32 hateAmount = atoi(message.params(2).c_str());
+				
+				auto npc = entity_list.GetNPCByID(entityID);
+				if (!npc) {
+					message.set_result("Invalid entity ID passed, or not an npc, etc");
+				}
+				else {
+					auto mob = entity_list.GetMobID(targetEntityID);
+					if (!mob) {
+						message.set_result("Invalid target entitiy ID passed, or not a mob, etc");
+					}
+					else {
+						npc->AddToHateList(mob, hateAmount);
+						message.set_result("OK");
+					}					
+				}
+			}
+		}
+
+		if (message.command().compare("entitylist") == 0) {
+			std::string entityPayload;
+			if (message.params_size() < 1) {
+				message.set_result("Usage: entitylist <typeid>.");
+			}
+			else {
+				auto entities = eqproto::Entities();
+				if (message.params(0).compare("npc") == 0) {
+					auto npcs = entity_list.ListNPCs();
+					auto it = npcs.begin();
+					for (const auto &entry : npcs) {
+						auto entity = entities.add_entities();
+						entity->set_id(entry.second->GetID());
+						entity->set_type(1);
+						entity->set_name(entry.second->GetName());
+					}
+
+					if (!entities.SerializeToString(&entityPayload)) {
+						message.set_result("Failed to serialized entitiy result");
+					}
+					else {						
+						message.set_payload(entityPayload.c_str());
+					}
+				}
+				/*else if (message.params(0).compare("client") == 0) {
+					auto clients = entity_list.ListClients();
+					auto it = clients.begin();
+					for (const auto &entry : clients) {
+						auto entity = entities.add_entities();
+						entity->set_id(entry.second->GetID());
+						entity->set_type(0);
+						entity->set_name(entry.second->GetName());
+					}
+
+					if (!entities.SerializeToString(&entityMessage)) {
+						message.set_result("Failed to serialized entitiy result");
+					}
+					else {
+						message.set_result(entityMessage.c_str());
+					}
+				}*/
+				else {
+					message.set_result("Usage: entitylist <typeid>.");
+				}
+				
+			}
+		}
 
 		
 		if (message.result().length() < 1) {
@@ -429,8 +503,13 @@ void NatsManager::OnDeathEvent(Death_Struct* d) {
 	event.set_attack_skill_id(d->attack_skill);
 	event.set_damage(d->damage);
 
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
-	pubMessage = StringFormat("%d|%s", OP_Death, pubMessage.c_str());
+	
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }	
+
+	auto finalEvent = eqproto::Event();
+	finalEvent.set_payload(pubMessage.c_str());
+	finalEvent.set_op(eqproto::OP_Death);
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), d->spawn_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 }
@@ -452,7 +531,10 @@ void NatsManager::OnChannelMessageEvent(uint32 entity_id, ChannelMessage_Struct*
 	event.set_message(cm->message);
 
 	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
-	pubMessage = StringFormat("%d|%s", OP_ChannelMessage, pubMessage.c_str());
+	auto finalEvent = eqproto::Event();
+	finalEvent.set_payload(pubMessage.c_str());
+	finalEvent.set_op(eqproto::OP_ChannelMessage);
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 }
@@ -468,7 +550,12 @@ void NatsManager::OnEntityEvent(const EmuOpcode op, uint32 entity_id, uint32 tar
 	event.set_target_id(target_id);
 
 	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
-	pubMessage = StringFormat("%d|%s", op, pubMessage.c_str());
+	auto finalEvent = eqproto::Event();
+	finalEvent.set_payload(pubMessage.c_str());
+	if (op == OP_Camp) finalEvent.set_op(eqproto::OP_Camp);
+	else if (op == OP_Assist) finalEvent.set_op(eqproto::OP_Assist);
+	else { Log(Logs::General, Logs::Zone_Server, "NATS unhandled op type passed: %i", op); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 }
@@ -588,8 +675,13 @@ void NatsManager::OnSpawnEvent(const EmuOpcode op, uint32 entity_id, Spawn_Struc
 	event.set_targetable_with_hotkey(spawn->targetable_with_hotkey);
 	event.set_show_name(spawn->show_name);
 
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
-	pubMessage = StringFormat("%d|%s", OP_ChannelMessage, pubMessage.c_str());
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }	
+	auto finalEvent = eqproto::Event();
+	finalEvent.set_payload(pubMessage.c_str());
+	if (op == OP_ZoneEntry) finalEvent.set_op(eqproto::OP_ZoneEntry);
+	else if (op == OP_NewSpawn) finalEvent.set_op(eqproto::OP_NewSpawn);
+	else { Log(Logs::General, Logs::Zone_Server, "NATS unhandled op type passed: %i", op); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 }
@@ -613,7 +705,10 @@ void NatsManager::OnWearChangeEvent(uint32 entity_id, WearChange_Struct *wc) {
 	event.set_wear_slot_id(wc->wear_slot_id);
 
 	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
-	pubMessage = StringFormat("%d|%s", OP_WearChange, pubMessage.c_str());
+	auto finalEvent = eqproto::Event();
+	finalEvent.set_payload(pubMessage.c_str());
+	finalEvent.set_op(eqproto::OP_WearChange);
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 }
@@ -630,7 +725,10 @@ void NatsManager::OnDeleteSpawnEvent(uint32 entity_id, DeleteSpawn_Struct *ds) {
 	event.set_decay(ds->Decay);
 
 	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
-	pubMessage = StringFormat("%d|%s", OP_DeleteSpawn, pubMessage.c_str());
+	auto finalEvent = eqproto::Event();
+	finalEvent.set_payload(pubMessage.c_str());
+	finalEvent.set_op(eqproto::OP_DeleteSpawn);
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 }
@@ -647,7 +745,12 @@ void NatsManager::OnHPEvent(const EmuOpcode op, uint32 entity_id, uint32 cur_hp,
 	event.set_max_hp(max_hp);
 
 	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
-	pubMessage = StringFormat("%d|%s", op, pubMessage.c_str());
+	auto finalEvent = eqproto::Event();
+	finalEvent.set_payload(pubMessage.c_str());
+	if (op == OP_MobHealth) finalEvent.set_op(eqproto::OP_MobHealth);
+	else if (op == OP_HPUpdate) finalEvent.set_op(eqproto::OP_HPUpdate);
+	else { Log(Logs::General, Logs::Zone_Server, "NATS unhandled op type passed: %i", op); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 }
@@ -668,7 +771,10 @@ void NatsManager::OnDamageEvent(uint32 entity_id, CombatDamage_Struct *cd) {
 	event.set_meleepush_z(cd->meleepush_z);
 	
 	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
-	pubMessage = StringFormat("%d|%s", OP_Damage, pubMessage.c_str());
+	auto finalEvent = eqproto::Event();
+	finalEvent.set_payload(pubMessage.c_str());
+	finalEvent.set_op(eqproto::OP_Damage);
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 }
@@ -696,7 +802,10 @@ void NatsManager::OnClientUpdateEvent(uint32 entity_id, PlayerPositionUpdateServ
 	event.set_padding0018(spu->padding0018);
 
 	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
-	pubMessage = StringFormat("%d|%s", OP_ClientUpdate, pubMessage.c_str());
+	auto finalEvent = eqproto::Event();
+	finalEvent.set_payload(pubMessage.c_str());
+	finalEvent.set_op(eqproto::OP_ClientUpdate);
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 }
@@ -714,7 +823,10 @@ void NatsManager::OnAnimationEvent(uint32 entity_id, Animation_Struct *anim) {
 	event.set_action(anim->action);	
 
 	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
-	pubMessage = StringFormat("%d|%s", OP_Animation, pubMessage.c_str());
+	auto finalEvent = eqproto::Event();
+	finalEvent.set_payload(pubMessage.c_str());
+	finalEvent.set_op(eqproto::OP_Animation);
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
 	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
 }

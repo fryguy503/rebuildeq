@@ -40,6 +40,11 @@ class EntityDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<Entity>
       _instance;
 } _Entity_default_instance_;
+class EntitiesDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<Entities>
+      _instance;
+} _Entities_default_instance_;
 class PositionDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<Position>
@@ -65,6 +70,11 @@ class TintDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<Tint>
       _instance;
 } _Tint_default_instance_;
+class EventDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<Event>
+      _instance;
+} _Event_default_instance_;
 class DeathEventDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<DeathEvent>
@@ -202,6 +212,28 @@ void InitDefaultsEntity() {
   ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsEntityImpl);
 }
 
+void InitDefaultsEntitiesImpl() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
+  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
+#else
+  ::google::protobuf::internal::InitProtobufDefaults();
+#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
+  protobuf_message_2eproto::InitDefaultsEntity();
+  {
+    void* ptr = &::eqproto::_Entities_default_instance_;
+    new (ptr) ::eqproto::Entities();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::eqproto::Entities::InitAsDefaultInstance();
+}
+
+void InitDefaultsEntities() {
+  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
+  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsEntitiesImpl);
+}
+
 void InitDefaultsPositionImpl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -307,6 +339,27 @@ void InitDefaultsTintImpl() {
 void InitDefaultsTint() {
   static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
   ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsTintImpl);
+}
+
+void InitDefaultsEventImpl() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
+  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
+#else
+  ::google::protobuf::internal::InitProtobufDefaults();
+#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
+  {
+    void* ptr = &::eqproto::_Event_default_instance_;
+    new (ptr) ::eqproto::Event();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::eqproto::Event::InitAsDefaultInstance();
+}
+
+void InitDefaultsEvent() {
+  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
+  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsEventImpl);
 }
 
 void InitDefaultsDeathEventImpl() {
@@ -522,7 +575,7 @@ void InitDefaultsSpawnEvent() {
   ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsSpawnEventImpl);
 }
 
-::google::protobuf::Metadata file_level_metadata[19];
+::google::protobuf::Metadata file_level_metadata[21];
 const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[1];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
@@ -554,6 +607,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::CommandMessage, command_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::CommandMessage, params_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::CommandMessage, result_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::CommandMessage, payload_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DailyGain, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -578,6 +632,12 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, position_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, race_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, class__),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entities, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entities, entities_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Position, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -635,6 +695,13 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Tint, red_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Tint, usetint_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Tint, color_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Event, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Event, op_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Event, payload_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeathEvent, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -843,23 +910,25 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::eqproto::ChannelMessage)},
   { 19, -1, sizeof(::eqproto::CommandMessage)},
-  { 28, -1, sizeof(::eqproto::DailyGain)},
-  { 39, -1, sizeof(::eqproto::Entity)},
-  { 52, -1, sizeof(::eqproto::Position)},
-  { 61, -1, sizeof(::eqproto::TextureProfile)},
-  { 75, -1, sizeof(::eqproto::Texture)},
-  { 85, -1, sizeof(::eqproto::TintProfile)},
-  { 99, -1, sizeof(::eqproto::Tint)},
-  { 109, -1, sizeof(::eqproto::DeathEvent)},
-  { 122, -1, sizeof(::eqproto::DamageEvent)},
-  { 135, -1, sizeof(::eqproto::EntityEvent)},
-  { 142, -1, sizeof(::eqproto::ChannelMessageEvent)},
-  { 154, -1, sizeof(::eqproto::WearChangeEvent)},
-  { 167, -1, sizeof(::eqproto::DeleteSpawnEvent)},
-  { 174, -1, sizeof(::eqproto::HPEvent)},
-  { 182, -1, sizeof(::eqproto::PlayerPositionUpdateEvent)},
-  { 201, -1, sizeof(::eqproto::AnimationEvent)},
-  { 209, -1, sizeof(::eqproto::SpawnEvent)},
+  { 29, -1, sizeof(::eqproto::DailyGain)},
+  { 40, -1, sizeof(::eqproto::Entity)},
+  { 53, -1, sizeof(::eqproto::Entities)},
+  { 59, -1, sizeof(::eqproto::Position)},
+  { 68, -1, sizeof(::eqproto::TextureProfile)},
+  { 82, -1, sizeof(::eqproto::Texture)},
+  { 92, -1, sizeof(::eqproto::TintProfile)},
+  { 106, -1, sizeof(::eqproto::Tint)},
+  { 116, -1, sizeof(::eqproto::Event)},
+  { 123, -1, sizeof(::eqproto::DeathEvent)},
+  { 136, -1, sizeof(::eqproto::DamageEvent)},
+  { 149, -1, sizeof(::eqproto::EntityEvent)},
+  { 156, -1, sizeof(::eqproto::ChannelMessageEvent)},
+  { 168, -1, sizeof(::eqproto::WearChangeEvent)},
+  { 181, -1, sizeof(::eqproto::DeleteSpawnEvent)},
+  { 188, -1, sizeof(::eqproto::HPEvent)},
+  { 196, -1, sizeof(::eqproto::PlayerPositionUpdateEvent)},
+  { 215, -1, sizeof(::eqproto::AnimationEvent)},
+  { 223, -1, sizeof(::eqproto::SpawnEvent)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -867,11 +936,13 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_CommandMessage_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_DailyGain_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Entity_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Entities_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Position_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_TextureProfile_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Texture_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_TintProfile_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Tint_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Event_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_DeathEvent_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_DamageEvent_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_EntityEvent_default_instance_),
@@ -900,7 +971,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 19);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 21);
 }
 
 void AddDescriptorsImpl() {
@@ -913,446 +984,449 @@ void AddDescriptorsImpl() {
       "\022\014\n\004type\030\010 \001(\005\022\021\n\tminstatus\030\t \001(\005\022\021\n\tfro"
       "madmin\030\n \001(\005\022\017\n\007noreply\030\013 \001(\010\022\020\n\010is_emot"
       "e\030\014 \001(\010\022\016\n\006queued\030\r \001(\005\022\017\n\007zone_id\030\016 \001(\005"
-      "\"Q\n\016CommandMessage\022\016\n\006author\030\001 \001(\t\022\017\n\007co"
+      "\"b\n\016CommandMessage\022\016\n\006author\030\001 \001(\t\022\017\n\007co"
       "mmand\030\002 \001(\t\022\016\n\006params\030\003 \003(\t\022\016\n\006result\030\004 "
-      "\001(\t\"\217\001\n\tDailyGain\022\022\n\naccount_id\030\001 \001(\005\022\024\n"
-      "\014character_id\030\002 \001(\005\022\025\n\rlevels_gained\030\003 \001"
-      "(\005\022\031\n\021experience_gained\030\004 \001(\005\022\024\n\014money_e"
-      "arned\030\005 \001(\005\022\020\n\010identity\030\006 \001(\t\"\215\001\n\006Entity"
-      "\022\n\n\002id\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022\014\n\004type\030\003 \001(\005"
-      "\022\n\n\002hp\030\004 \001(\005\022\r\n\005level\030\005 \001(\005\022#\n\010position\030"
-      "\006 \001(\0132\021.eqproto.Position\022\014\n\004race\030\007 \001(\005\022\r"
-      "\n\005class\030\010 \001(\005\"6\n\010Position\022\t\n\001x\030\001 \001(\002\022\t\n\001"
-      "y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\t\n\001h\030\004 \001(\002\"\273\002\n\016Textur"
-      "eProfile\022\036\n\004Head\030\001 \001(\0132\020.eqproto.Texture"
-      "\022\037\n\005Chest\030\002 \001(\0132\020.eqproto.Texture\022\036\n\004Arm"
-      "s\030\003 \001(\0132\020.eqproto.Texture\022\037\n\005Wrist\030\004 \001(\013"
-      "2\020.eqproto.Texture\022\037\n\005Hands\030\005 \001(\0132\020.eqpr"
-      "oto.Texture\022\036\n\004Legs\030\006 \001(\0132\020.eqproto.Text"
-      "ure\022\036\n\004Feet\030\007 \001(\0132\020.eqproto.Texture\022!\n\007P"
-      "rimary\030\010 \001(\0132\020.eqproto.Texture\022#\n\tSecond"
-      "ary\030\t \001(\0132\020.eqproto.Texture\"l\n\007Texture\022\020"
-      "\n\010material\030\001 \001(\r\022\020\n\010unknown1\030\002 \001(\r\022\022\n\nEl"
-      "iteModel\030\003 \001(\r\022\027\n\017HerosForgeModel\030\004 \001(\r\022"
-      "\020\n\010Unknown2\030\005 \001(\r\"\235\002\n\013TintProfile\022\033\n\004Hea"
-      "d\030\001 \001(\0132\r.eqproto.Tint\022\034\n\005Chest\030\002 \001(\0132\r."
-      "eqproto.Tint\022\033\n\004Arms\030\003 \001(\0132\r.eqproto.Tin"
-      "t\022\034\n\005Wrist\030\004 \001(\0132\r.eqproto.Tint\022\034\n\005Hands"
-      "\030\005 \001(\0132\r.eqproto.Tint\022\033\n\004Legs\030\006 \001(\0132\r.eq"
-      "proto.Tint\022\033\n\004Feet\030\007 \001(\0132\r.eqproto.Tint\022"
-      "\036\n\007Primary\030\010 \001(\0132\r.eqproto.Tint\022 \n\tSecon"
-      "dary\030\t \001(\0132\r.eqproto.Tint\"P\n\004Tint\022\014\n\004Blu"
-      "e\030\001 \001(\r\022\r\n\005Green\030\002 \001(\r\022\013\n\003Red\030\003 \001(\r\022\017\n\007U"
-      "seTint\030\004 \001(\r\022\r\n\005Color\030\005 \001(\r\"\251\001\n\nDeathEve"
-      "nt\022\020\n\010spawn_id\030\001 \001(\r\022\021\n\tkiller_id\030\002 \001(\r\022"
-      "\021\n\tcorpse_id\030\003 \001(\r\022\024\n\014bind_zone_id\030\004 \001(\r"
-      "\022\020\n\010spell_id\030\005 \001(\r\022\027\n\017attack_skill_id\030\006 "
-      "\001(\r\022\016\n\006damage\030\007 \001(\r\022\022\n\nunknown028\030\010 \001(\r\""
-      "\226\001\n\013DamageEvent\022\016\n\006target\030\001 \001(\r\022\016\n\006sourc"
-      "e\030\002 \001(\r\022\014\n\004type\030\003 \001(\r\022\017\n\007spellid\030\004 \001(\r\022\016"
-      "\n\006damage\030\005 \001(\r\022\r\n\005force\030\006 \001(\002\022\024\n\014meleepu"
-      "sh_xy\030\007 \001(\002\022\023\n\013meleepush_z\030\010 \001(\002\"3\n\013Enti"
-      "tyEvent\022\021\n\tentity_id\030\001 \001(\r\022\021\n\ttarget_id\030"
-      "\002 \001(\r\"\237\001\n\023ChannelMessageEvent\022\023\n\013target_"
-      "name\030\001 \001(\t\022\016\n\006sender\030\002 \001(\t\022\020\n\010language\030\003"
-      " \001(\r\022\020\n\010chan_num\030\004 \001(\r\022\023\n\013cm_unknown4\030\005 "
-      "\001(\r\022\031\n\021skill_in_language\030\006 \001(\r\022\017\n\007messag"
-      "e\030\007 \001(\t\"\301\001\n\017WearChangeEvent\022\020\n\010spawn_id\030"
-      "\001 \001(\r\022\020\n\010material\030\002 \001(\r\022\021\n\tunknown06\030\003 \001"
-      "(\r\022\026\n\016elite_material\030\004 \001(\r\022\030\n\020hero_forge"
-      "_model\030\005 \001(\r\022\021\n\tunknown18\030\006 \001(\r\022\034\n\005color"
-      "\030\007 \001(\0132\r.eqproto.Tint\022\024\n\014wear_slot_id\030\010 "
-      "\001(\r\"3\n\020DeleteSpawnEvent\022\020\n\010spawn_id\030\001 \001("
-      "\r\022\r\n\005decay\030\002 \001(\r\";\n\007HPEvent\022\020\n\010spawn_id\030"
-      "\001 \001(\r\022\016\n\006cur_hp\030\002 \001(\r\022\016\n\006max_hp\030\003 \001(\r\"\234\002"
-      "\n\031PlayerPositionUpdateEvent\022\020\n\010spawn_id\030"
-      "\001 \001(\r\022\025\n\rdelta_heading\030\002 \001(\005\022\r\n\005x_pos\030\003 "
-      "\001(\005\022\023\n\013padding0002\030\004 \001(\005\022\r\n\005y_pos\030\005 \001(\005\022"
-      "\021\n\tanimation\030\006 \001(\005\022\023\n\013padding0006\030\007 \001(\005\022"
-      "\r\n\005z_pos\030\010 \001(\005\022\017\n\007delta_y\030\t \001(\005\022\017\n\007delta"
-      "_x\030\n \001(\005\022\017\n\007heading\030\013 \001(\005\022\023\n\013padding0014"
-      "\030\014 \001(\005\022\017\n\007delta_z\030\r \001(\005\022\023\n\013padding0018\030\016"
-      " \001(\005\"@\n\016AnimationEvent\022\017\n\007spawnid\030\001 \001(\r\022"
-      "\r\n\005speed\030\002 \001(\r\022\016\n\006action\030\003 \001(\r\"\337\017\n\nSpawn"
-      "Event\022\023\n\013unknown0000\030\001 \001(\r\022\n\n\002gm\030\002 \001(\r\022\023"
-      "\n\013unknown0003\030\003 \001(\r\022\016\n\006aaitle\030\004 \001(\r\022\023\n\013u"
-      "nknown0004\030\005 \001(\r\022\014\n\004anon\030\006 \001(\r\022\014\n\004face\030\007"
-      " \001(\r\022\014\n\004name\030\010 \001(\t\022\r\n\005deity\030\t \001(\r\022\023\n\013unk"
-      "nown0073\030\n \001(\r\022\014\n\004size\030\013 \001(\002\022\023\n\013unknown0"
-      "079\030\014 \001(\r\022\013\n\003NPC\030\r \001(\r\022\r\n\005invis\030\016 \001(\r\022\021\n"
-      "\thaircolor\030\017 \001(\r\022\r\n\005curHp\030\020 \001(\r\022\016\n\006max_h"
-      "p\030\021 \001(\r\022\020\n\010findable\030\022 \001(\r\022\023\n\013unknown0089"
-      "\030\023 \001(\r\022\024\n\014deltaHeading\030\024 \001(\005\022\t\n\001x\030\025 \001(\005\022"
-      "\023\n\013padding0054\030\026 \001(\005\022\t\n\001y\030\027 \001(\005\022\021\n\tanima"
-      "tion\030\030 \001(\005\022\023\n\013padding0058\030\031 \001(\005\022\t\n\001z\030\032 \001"
-      "(\005\022\016\n\006deltaY\030\033 \001(\005\022\016\n\006deltaX\030\034 \001(\005\022\017\n\007he"
-      "ading\030\035 \001(\r\022\023\n\013padding0066\030\036 \001(\005\022\016\n\006delt"
-      "aZ\030\037 \001(\005\022\023\n\013padding0070\030  \001(\005\022\021\n\teyecolo"
-      "r1\030! \001(\r\022\023\n\013unknown0115\030\" \001(\r\022\022\n\nStandSt"
-      "ate\030# \001(\r\022\030\n\020drakkin_heritage\030$ \001(\r\022\026\n\016d"
-      "rakkin_tattoo\030% \001(\r\022\027\n\017drakkin_details\030&"
-      " \001(\r\022\020\n\010showhelm\030\' \001(\r\022\023\n\013unknown0140\030( "
-      "\001(\r\022\016\n\006is_npc\030) \001(\r\022\021\n\thairstyle\030* \001(\r\022\r"
-      "\n\005beard\030+ \001(\r\022\023\n\013unknown0147\030, \001(\r\022\r\n\005le"
-      "vel\030- \001(\r\022\023\n\013PlayerState\030. \001(\r\022\022\n\nbeardc"
-      "olor\030/ \001(\r\022\016\n\006suffix\0300 \001(\t\022\022\n\npetOwnerId"
-      "\0301 \001(\r\022\021\n\tguildrank\0302 \001(\r\022\023\n\013unknown0194"
-      "\0303 \001(\r\022*\n\tequipment\0304 \001(\0132\027.eqproto.Text"
-      "ureProfile\022\020\n\010runspeed\0305 \001(\002\022\013\n\003afk\0306 \001("
-      "\r\022\017\n\007guildID\0307 \001(\r\022\r\n\005title\0308 \001(\t\022\023\n\013unk"
-      "nown0274\0309 \001(\r\022\023\n\013set_to_0xFF\030: \001(\r\022\014\n\004h"
-      "elm\030; \001(\r\022\014\n\004race\030< \001(\r\022\023\n\013unknown0288\030="
-      " \001(\r\022\020\n\010lastName\030> \001(\t\022\021\n\twalkspeed\030\? \001("
-      "\002\022\023\n\013unknown0328\030@ \001(\r\022\016\n\006is_pet\030A \001(\r\022\r"
-      "\n\005light\030B \001(\r\022\016\n\006class_\030C \001(\r\022\021\n\teyecolo"
-      "r2\030D \001(\r\022\017\n\007flymode\030E \001(\r\022\016\n\006gender\030F \001("
-      "\r\022\020\n\010bodytype\030G \001(\r\022\023\n\013unknown0336\030H \001(\r"
-      "\022\024\n\014equip_chest2\030I \001(\r\022\023\n\013mount_color\030J "
-      "\001(\r\022\017\n\007spawnId\030K \001(\r\022\023\n\013unknown0344\030L \001("
-      "\r\022\023\n\013IsMercenary\030M \001(\r\022,\n\016equipment_tint"
-      "\030N \001(\0132\024.eqproto.TintProfile\022\013\n\003lfg\030O \001("
-      "\r\022\032\n\022DestructibleObject\030P \001(\010\022\031\n\021Destruc"
-      "tibleModel\030R \001(\t\022\031\n\021DestructibleName2\030S "
-      "\001(\t\022\032\n\022DestructibleString\030T \001(\t\022\036\n\026Destr"
-      "uctibleAppearance\030U \001(\r\022\030\n\020DestructibleU"
-      "nk1\030V \001(\r\022\027\n\017DestructibleID1\030W \001(\r\022\027\n\017De"
-      "structibleID2\030X \001(\r\022\027\n\017DestructibleID3\030Y"
-      " \001(\r\022\027\n\017DestructibleID4\030Z \001(\r\022\030\n\020Destruc"
-      "tibleUnk2\030[ \001(\r\022\030\n\020DestructibleUnk3\030\\ \001("
-      "\r\022\030\n\020DestructibleUnk4\030] \001(\r\022\030\n\020Destructi"
-      "bleUnk5\030^ \001(\r\022\030\n\020DestructibleUnk6\030_ \001(\r\022"
-      "\030\n\020DestructibleUnk7\030` \001(\r\022\030\n\020Destructibl"
-      "eUnk8\030a \001(\r\022\030\n\020DestructibleUnk9\030b \001(\r\022\036\n"
-      "\026targetable_with_hotkey\030c \001(\010\022\021\n\tshow_na"
-      "me\030d \001(\010*\273e\n\006OpCode\022\016\n\nOP_Unknown\020\000\022\025\n\021O"
-      "P_ExploreUnknown\020\001\022\r\n\tOP_0x0193\020\002\022\r\n\tOP_"
-      "0x0347\020\003\022\017\n\013OP_AAAction\020\004\022\022\n\016OP_AAExpUpd"
-      "ate\020\005\022\024\n\020OP_AcceptNewTask\020\006\022\020\n\014OP_AckPac"
-      "ket\020\007\022\r\n\tOP_Action\020\010\022\016\n\nOP_Action2\020\t\022\026\n\022"
-      "OP_AddNimbusEffect\020\n\022\024\n\020OP_AdventureData"
-      "\020\013\022\027\n\023OP_AdventureDetails\020\014\022\026\n\022OP_Advent"
-      "ureFinish\020\r\022\024\n\020OP_AdventureInfo\020\016\022\033\n\027OP_"
-      "AdventureInfoRequest\020\017\022 \n\034OP_AdventureLe"
-      "aderboardReply\020\020\022\"\n\036OP_AdventureLeaderbo"
-      "ardRequest\020\021\022 \n\034OP_AdventureMerchantPurc"
-      "hase\020\022\022\037\n\033OP_AdventureMerchantRequest\020\023\022"
-      " \n\034OP_AdventureMerchantResponse\020\024\022\034\n\030OP_"
-      "AdventureMerchantSell\020\025\022\034\n\030OP_AdventureP"
-      "ointsUpdate\020\026\022\027\n\023OP_AdventureRequest\020\027\022\032"
-      "\n\026OP_AdventureStatsReply\020\030\022\034\n\030OP_Adventu"
-      "reStatsRequest\020\031\022\026\n\022OP_AdventureUpdate\020\032"
-      "\022\033\n\027OP_AggroMeterLockTarget\020\033\022\033\n\027OP_Aggr"
-      "oMeterTargetInfo\020\034\022\027\n\023OP_AggroMeterUpdat"
-      "e\020\035\022\022\n\016OP_AltCurrency\020\036\022\037\n\033OP_AltCurrenc"
-      "yMerchantReply\020\037\022!\n\035OP_AltCurrencyMercha"
-      "ntRequest\020 \022\032\n\026OP_AltCurrencyPurchase\020!\022"
-      "\031\n\025OP_AltCurrencyReclaim\020\"\022\026\n\022OP_AltCurr"
-      "encySell\020#\022\037\n\033OP_AltCurrencySellSelectio"
-      "n\020$\022\020\n\014OP_Animation\020%\022\032\n\026OP_AnnoyingZone"
-      "Unknown\020&\022\022\n\016OP_ApplyPoison\020\'\022\022\n\016OP_Appr"
-      "oveName\020(\022\023\n\017OP_ApproveWorld\020)\022\022\n\016OP_App"
-      "roveZone\020*\022\r\n\tOP_Assist\020+\022\022\n\016OP_AssistGr"
-      "oup\020,\022\022\n\016OP_AugmentInfo\020-\022\022\n\016OP_AugmentI"
-      "tem\020.\022\021\n\rOP_AutoAttack\020/\022\022\n\016OP_AutoAttac"
-      "k2\0200\022\017\n\013OP_AutoFire\0201\022\020\n\014OP_Bandolier\0202\022"
-      "\023\n\017OP_BankerChange\0203\022\r\n\tOP_Barter\0204\022\r\n\tO"
-      "P_Bazaar\0205\022\024\n\020OP_BazaarInspect\0206\022\023\n\017OP_B"
-      "azaarSearch\0207\022\023\n\017OP_BecomeCorpse\0208\022\023\n\017OP"
-      "_BecomeTrader\0209\022\016\n\nOP_Begging\020:\022\020\n\014OP_Be"
-      "ginCast\020;\022\021\n\rOP_Bind_Wound\020<\022\023\n\017OP_Block"
-      "edBuffs\020=\022\020\n\014OP_BoardBoat\020>\022\013\n\007OP_Buff\020\?"
-      "\022\021\n\rOP_BuffCreate\020@\022\030\n\024OP_BuffRemoveRequ"
-      "est\020A\022\n\n\006OP_Bug\020B\022\023\n\017OP_CameraEffect\020C\022\013"
-      "\n\007OP_Camp\020D\022\026\n\022OP_CancelSneakHide\020E\022\021\n\rO"
-      "P_CancelTask\020F\022\022\n\016OP_CancelTrade\020G\022\020\n\014OP"
-      "_CastSpell\020H\022\021\n\rOP_ChangeSize\020I\022\025\n\021OP_Ch"
-      "annelMessage\020J\022\026\n\022OP_CharacterCreate\020K\022\035"
-      "\n\031OP_CharacterCreateRequest\020L\022\024\n\020OP_Char"
-      "Inventory\020M\022\014\n\010OP_Charm\020N\022\022\n\016OP_ChatMess"
-      "age\020O\022\016\n\nOP_ClearAA\020P\022\030\n\024OP_ClearBlocked"
-      "Buffs\020Q\022\037\n\033OP_ClearLeadershipAbilities\020R"
-      "\022\024\n\020OP_ClearNPCMarks\020S\022\022\n\016OP_ClearObject"
-      "\020T\022\023\n\017OP_ClearSurname\020U\022\020\n\014OP_ClickDoor\020"
-      "V\022\022\n\016OP_ClickObject\020W\022\030\n\024OP_ClickObjectA"
-      "ction\020X\022\022\n\016OP_ClientError\020Y\022\022\n\016OP_Client"
-      "Ready\020Z\022\026\n\022OP_ClientTimeStamp\020[\022\023\n\017OP_Cl"
-      "ientUpdate\020\\\022\025\n\021OP_CloseContainer\020]\022\031\n\025O"
-      "P_CloseTributeMaster\020^\022\022\n\016OP_ColoredText"
-      "\020_\022\024\n\020OP_CombatAbility\020`\022\016\n\nOP_Command\020a"
-      "\022\025\n\021OP_CompletedTasks\020b\022\024\n\020OP_ConfirmDel"
-      "ete\020c\022\016\n\nOP_Consent\020d\022\022\n\016OP_ConsentDeny\020"
-      "e\022\026\n\022OP_ConsentResponse\020f\022\017\n\013OP_Consider"
-      "\020g\022\025\n\021OP_ConsiderCorpse\020h\022\016\n\nOP_Consume\020"
-      "i\022\022\n\016OP_ControlBoat\020j\022\021\n\rOP_CorpseDrag\020k"
-      "\022\021\n\rOP_CorpseDrop\020l\022\020\n\014OP_CrashDump\020m\022\031\n"
-      "\025OP_CrystalCountUpdate\020n\022\024\n\020OP_CrystalCr"
-      "eate\020o\022\025\n\021OP_CrystalReclaim\020p\022\023\n\017OP_Cust"
-      "omTitles\020q\022\r\n\tOP_Damage\020r\022\014\n\010OP_Death\020s\022"
-      "\026\n\022OP_DelegateAbility\020t\022\026\n\022OP_DeleteChar"
-      "acter\020u\022\023\n\017OP_DeleteCharge\020v\022\021\n\rOP_Delet"
-      "eItem\020w\022\025\n\021OP_DeletePetition\020x\022\022\n\016OP_Del"
-      "eteSpawn\020y\022\022\n\016OP_DeleteSpell\020z\022\023\n\017OP_Den"
-      "yResponse\020{\022\r\n\tOP_Disarm\020|\022\022\n\016OP_DisarmT"
-      "raps\020}\022\026\n\022OP_DisciplineTimer\020~\022\027\n\023OP_Dis"
-      "ciplineUpdate\020\177\022 \n\033OP_DiscordMerchantInv"
-      "entory\020\200\001\022 \n\033OP_DoGroupLeadershipAbility"
-      "\020\201\001\022\024\n\017OP_DuelResponse\020\202\001\022\025\n\020OP_DuelResp"
-      "onse2\020\203\001\022\020\n\013OP_DumpName\020\204\001\022\013\n\006OP_Dye\020\205\001\022"
-      "\023\n\016OP_DynamicWall\020\206\001\022\023\n\016OP_DzAddPlayer\020\207"
-      "\001\022\024\n\017OP_DzChooseZone\020\210\001\022\021\n\014OP_DzCompass\020"
-      "\211\001\022\037\n\032OP_DzExpeditionEndsWarning\020\212\001\022\030\n\023O"
-      "P_DzExpeditionInfo\020\213\001\022\030\n\023OP_DzExpedition"
-      "List\020\214\001\022\037\n\032OP_DzJoinExpeditionConfirm\020\215\001"
-      "\022\035\n\030OP_DzJoinExpeditionReply\020\216\001\022\026\n\021OP_Dz"
-      "LeaderStatus\020\217\001\022\024\n\017OP_DzListTimers\020\220\001\022\024\n"
-      "\017OP_DzMakeLeader\020\221\001\022\024\n\017OP_DzMemberList\020\222"
-      "\001\022\026\n\021OP_DzMemberStatus\020\223\001\022\024\n\017OP_DzPlayer"
-      "List\020\224\001\022\016\n\tOP_DzQuit\020\225\001\022\026\n\021OP_DzRemovePl"
-      "ayer\020\226\001\022\024\n\017OP_DzSwapPlayer\020\227\001\022\r\n\010OP_Emot"
-      "e\020\230\001\022\026\n\021OP_EndLootRequest\020\231\001\022\027\n\022OP_Endur"
-      "anceUpdate\020\232\001\022\021\n\014OP_EnterChat\020\233\001\022\022\n\rOP_E"
-      "nterWorld\020\234\001\022\021\n\014OP_EnvDamage\020\235\001\022\025\n\020OP_Ex"
-      "pansionInfo\020\236\001\022\021\n\014OP_ExpUpdate\020\237\001\022\022\n\rOP_"
-      "FaceChange\020\240\001\022\020\n\013OP_Feedback\020\241\001\022\022\n\rOP_Fe"
-      "ignDeath\020\242\001\022\030\n\023OP_FellowshipUpdate\020\243\001\022\027\n"
-      "\022OP_FindPersonReply\020\244\001\022\031\n\024OP_FindPersonR"
-      "equest\020\245\001\022\023\n\016OP_FinishTrade\020\246\001\022\024\n\017OP_Fin"
-      "ishWindow\020\247\001\022\025\n\020OP_FinishWindow2\020\250\001\022\017\n\nO"
-      "P_Fishing\020\251\001\022\r\n\010OP_Fling\020\252\001\022\026\n\021OP_FloatL"
-      "istThing\020\253\001\022\016\n\tOP_Forage\020\254\001\022\027\n\022OP_ForceF"
-      "indPerson\020\255\001\022\030\n\023OP_FormattedMessage\020\256\001\022\022"
-      "\n\rOP_FriendsWho\020\257\001\022\024\n\017OP_GetGuildMOTD\020\260\001"
-      "\022\031\n\024OP_GetGuildMOTDReply\020\261\001\022\025\n\020OP_GetGui"
-      "ldsList\020\262\001\022\021\n\014OP_GiveMoney\020\263\001\022\022\n\rOP_GMAp"
-      "proval\020\264\001\022\023\n\016OP_GMBecomeNPC\020\265\001\022\023\n\016OP_GMD"
-      "elCorpse\020\266\001\022\023\n\016OP_GMEmoteZone\020\267\001\022\025\n\020OP_G"
-      "MEndTraining\020\270\001\022\035\n\030OP_GMEndTrainingRespo"
-      "nse\020\271\001\022\016\n\tOP_GMFind\020\272\001\022\016\n\tOP_GMGoto\020\273\001\022\020"
-      "\n\013OP_GMHideMe\020\274\001\022\016\n\tOP_GMKick\020\275\001\022\016\n\tOP_G"
-      "MKill\020\276\001\022\022\n\rOP_GMLastName\020\277\001\022\024\n\017OP_GMNam"
-      "eChange\020\300\001\022\026\n\021OP_GMSearchCorpse\020\301\001\022\021\n\014OP"
-      "_GMServers\020\302\001\022\020\n\013OP_GMSummon\020\303\001\022\020\n\013OP_GM"
-      "Toggle\020\304\001\022\022\n\rOP_GMTraining\020\305\001\022\024\n\017OP_GMTr"
-      "ainSkill\020\306\001\022\033\n\026OP_GMTrainSkillConfirm\020\307\001"
-      "\022\025\n\020OP_GMZoneRequest\020\310\001\022\026\n\021OP_GMZoneRequ"
-      "est2\020\311\001\022\023\n\016OP_GroundSpawn\020\312\001\022\030\n\023OP_Group"
-      "Acknowledge\020\313\001\022\031\n\024OP_GroupCancelInvite\020\314"
-      "\001\022\023\n\016OP_GroupDelete\020\315\001\022\024\n\017OP_GroupDisban"
-      "d\020\316\001\022\031\n\024OP_GroupDisbandOther\020\317\001\022\027\n\022OP_Gr"
-      "oupDisbandYou\020\320\001\022\023\n\016OP_GroupFollow\020\321\001\022\024\n"
-      "\017OP_GroupFollow2\020\322\001\022\023\n\016OP_GroupInvite\020\323\001"
-      "\022\024\n\017OP_GroupInvite2\020\324\001\022\031\n\024OP_GroupLeader"
-      "Change\020\325\001\022\037\n\032OP_GroupLeadershipAAUpdate\020"
-      "\326\001\022\027\n\022OP_GroupMakeLeader\020\327\001\022\023\n\016OP_GroupM"
-      "entor\020\330\001\022\022\n\rOP_GroupRoles\020\331\001\022\023\n\016OP_Group"
-      "Update\020\332\001\022\024\n\017OP_GroupUpdateB\020\333\001\022\033\n\026OP_Gr"
-      "oupUpdateLeaderAA\020\334\001\022\021\n\014OP_GuildBank\020\335\001\022"
-      "\031\n\024OP_GuildBankItemList\020\336\001\022\023\n\016OP_GuildCr"
-      "eate\020\337\001\022\023\n\016OP_GuildDelete\020\340\001\022\023\n\016OP_Guild"
-      "Demote\020\341\001\022\023\n\016OP_GuildInvite\020\342\001\022\031\n\024OP_Gui"
-      "ldInviteAccept\020\343\001\022\023\n\016OP_GuildLeader\020\344\001\022\026"
-      "\n\021OP_GuildManageAdd\020\345\001\022\031\n\024OP_GuildManage"
-      "Banker\020\346\001\022\031\n\024OP_GuildManageRemove\020\347\001\022\031\n\024"
-      "OP_GuildManageStatus\020\350\001\022\036\n\031OP_GuildMembe"
-      "rLevelUpdate\020\351\001\022\027\n\022OP_GuildMemberList\020\352\001"
-      "\022\031\n\024OP_GuildMemberUpdate\020\353\001\022\021\n\014OP_GuildM"
-      "OTD\020\354\001\022\022\n\rOP_GuildPeace\020\355\001\022\024\n\017OP_GuildPr"
-      "omote\020\356\001\022\027\n\022OP_GuildPublicNote\020\357\001\022\023\n\016OP_"
-      "GuildRemove\020\360\001\022\022\n\rOP_GuildsList\020\361\001\022\023\n\016OP"
-      "_GuildStatus\020\362\001\022\030\n\023OP_GuildTributeInfo\020\363"
-      "\001\022 \n\033OP_GuildUpdateURLAndChannel\020\364\001\022\020\n\013O"
-      "P_GuildWar\020\365\001\022\021\n\014OP_Heartbeat\020\366\001\022\014\n\007OP_H"
-      "ide\020\367\001\022\022\n\rOP_HideCorpse\020\370\001\022\020\n\013OP_HPUpdat"
-      "e\020\371\001\022\020\n\013OP_Illusion\020\372\001\022\025\n\020OP_IncreaseSta"
-      "ts\020\373\001\022\027\n\022OP_InitialHPUpdate\020\374\001\022\030\n\023OP_Ini"
-      "tialMobHealth\020\375\001\022\025\n\020OP_InspectAnswer\020\376\001\022"
-      "\024\n\017OP_InspectBuffs\020\377\001\022\034\n\027OP_InspectMessa"
-      "geUpdate\020\200\002\022\026\n\021OP_InspectRequest\020\201\002\022\024\n\017O"
-      "P_InstillDoubt\020\202\002\022\025\n\020OP_InterruptCast\020\203\002"
-      "\022\025\n\020OP_ItemLinkClick\020\204\002\022\030\n\023OP_ItemLinkRe"
-      "sponse\020\205\002\022\024\n\017OP_ItemLinkText\020\206\002\022\020\n\013OP_It"
-      "emName\020\207\002\022\022\n\rOP_ItemPacket\020\210\002\022\023\n\016OP_Item"
-      "Preview\020\211\002\022\027\n\022OP_ItemRecastDelay\020\212\002\022\027\n\022O"
-      "P_ItemVerifyReply\020\213\002\022\031\n\024OP_ItemVerifyReq"
-      "uest\020\214\002\022\027\n\022OP_ItemViewUnknown\020\215\002\022\014\n\007OP_J"
-      "ump\020\216\002\022\017\n\nOP_KeyRing\020\217\002\022\025\n\020OP_KnowledgeB"
-      "ase\020\220\002\022\022\n\rOP_LDoNButton\020\221\002\022\027\n\022OP_LDoNDis"
-      "armTraps\020\222\002\022\023\n\016OP_LDoNInspect\020\223\002\022\020\n\013OP_L"
-      "DoNOpen\020\224\002\022\024\n\017OP_LDoNPickLock\020\225\002\022\026\n\021OP_L"
-      "DoNSenseTraps\020\226\002\022\033\n\026OP_LeadershipExpTogg"
-      "le\020\227\002\022\033\n\026OP_LeadershipExpUpdate\020\230\002\022\026\n\021OP"
-      "_LeaveAdventure\020\231\002\022\021\n\014OP_LeaveBoat\020\232\002\022\027\n"
-      "\022OP_LevelAppearance\020\233\002\022\023\n\016OP_LevelUpdate"
-      "\020\234\002\022\025\n\020OP_LFGAppearance\020\235\002\022\022\n\rOP_LFGComm"
-      "and\020\236\002\022\034\n\027OP_LFGGetMatchesRequest\020\237\002\022\035\n\030"
-      "OP_LFGGetMatchesResponse\020\240\002\022\023\n\016OP_LFGRes"
-      "ponse\020\241\002\022\017\n\nOP_LFGuild\020\242\002\022\022\n\rOP_LFPComma"
-      "nd\020\243\002\022\034\n\027OP_LFPGetMatchesRequest\020\244\002\022\035\n\030O"
-      "P_LFPGetMatchesResponse\020\245\002\022\023\n\016OP_LinkedR"
-      "euse\020\246\002\022\024\n\017OP_LoadSpellSet\020\247\002\022\017\n\nOP_LocI"
-      "nfo\020\250\002\022\030\n\023OP_LockoutTimerInfo\020\251\002\022\r\n\010OP_L"
-      "ogin\020\252\002\022\025\n\020OP_LoginAccepted\020\253\002\022\025\n\020OP_Log"
-      "inComplete\020\254\002\022\025\n\020OP_LoginUnknown1\020\255\002\022\025\n\020"
-      "OP_LoginUnknown2\020\256\002\022\016\n\tOP_Logout\020\257\002\022\023\n\016O"
-      "P_LogoutReply\020\260\002\022\021\n\014OP_LogServer\020\261\002\022\024\n\017O"
-      "P_LootComplete\020\262\002\022\020\n\013OP_LootItem\020\263\002\022\023\n\016O"
-      "P_LootRequest\020\264\002\022\022\n\rOP_ManaChange\020\265\002\022\022\n\r"
-      "OP_ManaUpdate\020\266\002\022\017\n\nOP_MarkNPC\020\267\002\022\017\n\nOP_"
-      "Marquee\020\270\002\022\025\n\020OP_MemorizeSpell\020\271\002\022\014\n\007OP_"
-      "Mend\020\272\002\022\024\n\017OP_MendHPUpdate\020\273\002\022\027\n\022OP_Merc"
-      "enaryAssign\020\274\002\022\030\n\023OP_MercenaryCommand\020\275\002"
-      "\022\034\n\027OP_MercenaryDataRequest\020\276\002\022\035\n\030OP_Mer"
-      "cenaryDataResponse\020\277\002\022\033\n\026OP_MercenaryDat"
-      "aUpdate\020\300\002\022\"\n\035OP_MercenaryDataUpdateRequ"
-      "est\020\301\002\022\030\n\023OP_MercenaryDismiss\020\302\002\022\025\n\020OP_M"
-      "ercenaryHire\020\303\002\022\037\n\032OP_MercenarySuspendRe"
-      "quest\020\304\002\022 \n\033OP_MercenarySuspendResponse\020"
-      "\305\002\022\026\n\021OP_MercenaryTimer\020\306\002\022\035\n\030OP_Mercena"
-      "ryTimerRequest\020\307\002\022\031\n\024OP_MercenaryUnknown"
-      "1\020\310\002\022\"\n\035OP_MercenaryUnsuspendResponse\020\311\002"
-      "\022\032\n\025OP_MobEnduranceUpdate\020\312\002\022\021\n\014OP_MobHe"
-      "alth\020\313\002\022\025\n\020OP_MobManaUpdate\020\314\002\022\021\n\014OP_Mob"
-      "Rename\020\315\002\022\021\n\014OP_MobUpdate\020\316\002\022\025\n\020OP_Money"
-      "OnCorpse\020\317\002\022\023\n\016OP_MoneyUpdate\020\320\002\022\014\n\007OP_M"
-      "OTD\020\321\002\022\020\n\013OP_MoveCoin\020\322\002\022\020\n\013OP_MoveDoor\020"
-      "\323\002\022\020\n\013OP_MoveItem\020\324\002\022\030\n\023OP_MoveLogDisreg"
-      "ard\020\325\002\022\026\n\021OP_MoveLogRequest\020\326\002\022\024\n\017OP_Mul"
-      "tiLineMsg\020\327\002\022\020\n\013OP_NewSpawn\020\330\002\022\032\n\025OP_New"
-      "TitlesAvailable\020\331\002\022\017\n\nOP_NewZone\020\332\002\022\026\n\021O"
-      "P_OnLevelMessage\020\333\002\022\025\n\020OP_OpenContainer\020"
-      "\334\002\022\033\n\026OP_OpenDiscordMerchant\020\335\002\022\036\n\031OP_Op"
-      "enGuildTributeMaster\020\336\002\022\025\n\020OP_OpenInvent"
-      "ory\020\337\002\022\032\n\025OP_OpenNewTasksWindow\020\340\002\022\031\n\024OP"
-      "_OpenTributeMaster\020\341\002\022\027\n\022OP_PDeletePetit"
-      "ion\020\342\002\022\025\n\020OP_PetBuffWindow\020\343\002\022\023\n\016OP_PetC"
-      "ommands\020\344\002\022\027\n\022OP_PetCommandState\020\345\002\022\017\n\nO"
-      "P_PetHoTT\020\346\002\022\020\n\013OP_Petition\020\347\002\022\023\n\016OP_Pet"
-      "itionBug\020\350\002\022\027\n\022OP_PetitionCheckIn\020\351\002\022\030\n\023"
-      "OP_PetitionCheckout\020\352\002\022\031\n\024OP_PetitionChe"
-      "ckout2\020\353\002\022\026\n\021OP_PetitionDelete\020\354\002\022\023\n\016OP_"
-      "PetitionQue\020\355\002\022\027\n\022OP_PetitionRefresh\020\356\002\022"
-      "\027\n\022OP_PetitionResolve\020\357\002\022\026\n\021OP_PetitionS"
-      "earch\020\360\002\022\035\n\030OP_PetitionSearchResults\020\361\002\022"
-      "\032\n\025OP_PetitionSearchText\020\362\002\022\032\n\025OP_Petiti"
-      "onUnCheckout\020\363\002\022\026\n\021OP_PetitionUpdate\020\364\002\022"
-      "\022\n\rOP_PickPocket\020\365\002\022\025\n\020OP_PlayerProfile\020"
-      "\366\002\022\026\n\021OP_PlayerStateAdd\020\367\002\022\031\n\024OP_PlayerS"
-      "tateRemove\020\370\002\022\034\n\027OP_PlayEverquestRequest"
-      "\020\371\002\022\035\n\030OP_PlayEverquestResponse\020\372\002\022\017\n\nOP"
-      "_PlayMP3\020\373\002\022\014\n\007OP_Poll\020\374\002\022\024\n\017OP_PollResp"
-      "onse\020\375\002\022\025\n\020OP_PopupResponse\020\376\002\022\026\n\021OP_Pos"
-      "tEnterWorld\020\377\002\022\022\n\rOP_PotionBelt\020\200\003\022\026\n\021OP"
-      "_PreLogoutReply\020\201\003\022\034\n\027OP_PurchaseLeaders"
-      "hipAA\020\202\003\022\"\n\035OP_PVPLeaderBoardDetailsRepl"
-      "y\020\203\003\022$\n\037OP_PVPLeaderBoardDetailsRequest\020"
-      "\204\003\022\033\n\026OP_PVPLeaderBoardReply\020\205\003\022\035\n\030OP_PV"
-      "PLeaderBoardRequest\020\206\003\022\020\n\013OP_PVPStats\020\207\003"
-      "\022\032\n\025OP_QueryResponseThing\020\210\003\022\022\n\rOP_RaidI"
-      "nvite\020\211\003\022\020\n\013OP_RaidJoin\020\212\003\022\022\n\rOP_RaidUpd"
-      "ate\020\213\003\022\033\n\026OP_RandomNameGenerator\020\214\003\022\023\n\016O"
-      "P_RandomReply\020\215\003\022\021\n\014OP_RandomReq\020\216\003\022\020\n\013O"
-      "P_ReadBook\020\217\003\022\031\n\024OP_RecipeAutoCombine\020\220\003"
-      "\022\025\n\020OP_RecipeDetails\020\221\003\022\023\n\016OP_RecipeRepl"
-      "y\020\222\003\022\027\n\022OP_RecipesFavorite\020\223\003\022\025\n\020OP_Reci"
-      "pesSearch\020\224\003\022\027\n\022OP_ReclaimCrystals\020\225\003\022\020\n"
-      "\013OP_ReloadUI\020\226\003\022\026\n\021OP_RemoveAllDoors\020\227\003\022"
-      "\032\n\025OP_RemoveBlockedBuffs\020\230\003\022\032\n\025OP_Remove"
-      "NimbusEffect\020\231\003\022\022\n\rOP_RemoveTrap\020\232\003\022\016\n\tO"
-      "P_Report\020\233\003\022\026\n\021OP_ReqClientSpawn\020\234\003\022\022\n\rO"
-      "P_ReqNewZone\020\235\003\022\037\n\032OP_RequestClientZoneC"
-      "hange\020\236\003\022\023\n\016OP_RequestDuel\020\237\003\022\034\n\027OP_Requ"
-      "estKnowledgeBase\020\240\003\022\025\n\020OP_RequestTitles\020"
-      "\241\003\022\025\n\020OP_RespawnWindow\020\242\003\022\021\n\014OP_RespondA"
-      "A\020\243\003\022\021\n\014OP_RestState\020\244\003\022\016\n\tOP_Rewind\020\245\003\022"
-      "\022\n\rOP_RezzAnswer\020\246\003\022\024\n\017OP_RezzComplete\020\247"
-      "\003\022\023\n\016OP_RezzRequest\020\250\003\022\021\n\014OP_Sacrifice\020\251"
-      "\003\022\027\n\022OP_SafeFallSuccess\020\252\003\022\021\n\014OP_SafePoi"
-      "nt\020\253\003\022\014\n\007OP_Save\020\254\003\022\025\n\020OP_SaveOnZoneReq\020"
-      "\255\003\022\025\n\020OP_SelectTribute\020\256\003\022\023\n\016OP_SendAASt"
-      "ats\020\257\003\022\023\n\016OP_SendAATable\020\260\003\022\024\n\017OP_SendCh"
-      "arInfo\020\261\003\022\025\n\020OP_SendExpZonein\020\262\003\022\030\n\023OP_S"
-      "endFindableNPCs\020\263\003\022\031\n\024OP_SendGuildTribut"
-      "es\020\264\003\022\025\n\020OP_SendLoginInfo\020\265\003\022\031\n\024OP_SendM"
-      "axCharacters\020\266\003\022\026\n\021OP_SendMembership\020\267\003\022"
-      "\035\n\030OP_SendMembershipDetails\020\270\003\022\027\n\022OP_Sen"
-      "dSystemStats\020\271\003\022\025\n\020OP_SendTitleList\020\272\003\022\024"
-      "\n\017OP_SendTributes\020\273\003\022\026\n\021OP_SendZonepoint"
-      "s\020\274\003\022\024\n\017OP_SenseHeading\020\275\003\022\022\n\rOP_SenseTr"
-      "aps\020\276\003\022\031\n\024OP_ServerListRequest\020\277\003\022\032\n\025OP_"
-      "ServerListResponse\020\300\003\022\024\n\017OP_SessionReady"
-      "\020\301\003\022\025\n\020OP_SetChatServer\020\302\003\022\026\n\021OP_SetChat"
-      "Server2\020\303\003\022\026\n\021OP_SetGroupTarget\020\304\003\022\024\n\017OP"
-      "_SetGuildMOTD\020\305\003\022\024\n\017OP_SetGuildRank\020\306\003\022\022"
-      "\n\rOP_SetRunMode\020\307\003\022\027\n\022OP_SetServerFilter"
-      "\020\310\003\022\024\n\017OP_SetStartCity\020\311\003\022\020\n\013OP_SetTitle"
-      "\020\312\003\022\025\n\020OP_SetTitleReply\020\313\003\022\021\n\014OP_Shieldi"
-      "ng\020\314\003\022\023\n\016OP_ShopDelItem\020\315\003\022\017\n\nOP_ShopEnd"
-      "\020\316\003\022\026\n\021OP_ShopEndConfirm\020\317\003\022\020\n\013OP_ShopIt"
-      "em\020\320\003\022\025\n\020OP_ShopPlayerBuy\020\321\003\022\026\n\021OP_ShopP"
-      "layerSell\020\322\003\022\023\n\016OP_ShopRequest\020\323\003\022\025\n\020OP_"
-      "SimpleMessage\020\324\003\022\023\n\016OP_SkillUpdate\020\325\003\022\r\n"
-      "\010OP_Sneak\020\326\003\022\031\n\024OP_Some3ByteHPUpdate\020\327\003\022"
-      "\031\n\024OP_Some6ByteHPUpdate\020\330\003\022\033\n\026OP_SomeIte"
-      "mPacketMaybe\020\331\003\022\r\n\010OP_Sound\020\332\003\022\027\n\022OP_Spa"
-      "wnAppearance\020\333\003\022\021\n\014OP_SpawnDoor\020\334\003\022\033\n\026OP"
-      "_SpawnPositionUpdate\020\335\003\022\023\n\016OP_SpecialMes"
-      "g\020\336\003\022\023\n\016OP_SpellEffect\020\337\003\022\r\n\010OP_Split\020\340\003"
-      "\022\017\n\nOP_Stamina\020\341\003\022\014\n\007OP_Stun\020\342\003\022\017\n\nOP_Su"
-      "rname\020\343\003\022\021\n\014OP_SwapSpell\020\344\003\022\023\n\016OP_Target"
-      "Buffs\020\345\003\022\025\n\020OP_TargetCommand\020\346\003\022\022\n\rOP_Ta"
-      "rgetHoTT\020\347\003\022\023\n\016OP_TargetMouse\020\350\003\022\024\n\017OP_T"
-      "argetReject\020\351\003\022\024\n\017OP_TaskActivity\020\352\003\022\034\n\027"
-      "OP_TaskActivityComplete\020\353\003\022\027\n\022OP_TaskDes"
-      "cription\020\354\003\022\030\n\023OP_TaskHistoryReply\020\355\003\022\032\n"
-      "\025OP_TaskHistoryRequest\020\356\003\022\026\n\021OP_TaskMemb"
-      "erList\020\357\003\022\r\n\010OP_Taunt\020\360\003\022\020\n\013OP_TestBuff\020"
-      "\361\003\022\013\n\006OP_TGB\020\362\003\022\021\n\014OP_TimeOfDay\020\363\003\022\r\n\010OP"
-      "_Track\020\364\003\022\023\n\016OP_TrackTarget\020\365\003\022\024\n\017OP_Tra"
-      "ckUnknown\020\366\003\022\030\n\023OP_TradeAcceptClick\020\367\003\022\021"
-      "\n\014OP_TradeBusy\020\370\003\022\022\n\rOP_TradeCoins\020\371\003\022\030\n"
-      "\023OP_TradeMoneyUpdate\020\372\003\022\016\n\tOP_Trader\020\373\003\022"
-      "\021\n\014OP_TraderBuy\020\374\003\022\025\n\020OP_TraderDelItem\020\375"
-      "\003\022\024\n\017OP_TradeRequest\020\376\003\022\027\n\022OP_TradeReque"
-      "stAck\020\377\003\022\030\n\023OP_TraderItemUpdate\020\200\004\022\022\n\rOP"
-      "_TraderShop\020\201\004\022\031\n\024OP_TradeSkillCombine\020\202"
-      "\004\022\023\n\016OP_Translocate\020\203\004\022\023\n\016OP_TributeInfo"
-      "\020\204\004\022\023\n\016OP_TributeItem\020\205\004\022\024\n\017OP_TributeMo"
-      "ney\020\206\004\022\022\n\rOP_TributeNPC\020\207\004\022\032\n\025OP_Tribute"
-      "PointUpdate\020\210\004\022\024\n\017OP_TributeTimer\020\211\004\022\025\n\020"
-      "OP_TributeToggle\020\212\004\022\025\n\020OP_TributeUpdate\020"
-      "\213\004\022\024\n\017OP_Untargetable\020\214\004\022\020\n\013OP_UpdateAA\020"
-      "\215\004\022\022\n\rOP_UpdateAura\020\216\004\022\032\n\025OP_UpdateLeade"
-      "rshipAA\020\217\004\022\025\n\020OP_VetClaimReply\020\220\004\022\027\n\022OP_"
-      "VetClaimRequest\020\221\004\022\033\n\026OP_VetRewardsAvali"
-      "able\020\222\004\022\024\n\017OP_VoiceMacroIn\020\223\004\022\025\n\020OP_Voic"
-      "eMacroOut\020\224\004\022\024\n\017OP_WeaponEquip1\020\225\004\022\022\n\rOP"
-      "_WearChange\020\226\004\022\017\n\nOP_Weather\020\227\004\022\017\n\nOP_We"
-      "blink\020\230\004\022\025\n\020OP_WhoAllRequest\020\231\004\022\026\n\021OP_Wh"
-      "oAllResponse\020\232\004\022\031\n\024OP_World_Client_CRC1\020"
-      "\233\004\022\031\n\024OP_World_Client_CRC2\020\234\004\022\030\n\023OP_Worl"
-      "dClientReady\020\235\004\022\025\n\020OP_WorldComplete\020\236\004\022\023"
-      "\n\016OP_WorldLogout\020\237\004\022\030\n\023OP_WorldObjectsSe"
-      "nt\020\240\004\022\027\n\022OP_WorldUnknown001\020\241\004\022\034\n\027OP_XTa"
-      "rgetAutoAddHaters\020\242\004\022\023\n\016OP_XTargetOpen\020\243"
-      "\004\022\033\n\026OP_XTargetOpenResponse\020\244\004\022\026\n\021OP_XTa"
-      "rgetRequest\020\245\004\022\027\n\022OP_XTargetResponse\020\246\004\022"
-      "\023\n\016OP_YellForHelp\020\247\004\022\022\n\rOP_ZoneChange\020\250\004"
-      "\022\024\n\017OP_ZoneComplete\020\251\004\022\021\n\014OP_ZoneEntry\020\252"
-      "\004\022\025\n\020OP_ZoneGuildList\020\253\004\022\025\n\020OP_ZoneInUnk"
-      "nown\020\254\004\022\030\n\023OP_ZonePlayerToBind\020\255\004\022\026\n\021OP_"
-      "ZoneServerInfo\020\256\004\022\027\n\022OP_ZoneServerReady\020"
-      "\257\004\022\022\n\rOP_ZoneSpawns\020\260\004\022\023\n\016OP_ZoneUnavail"
-      "\020\261\004\022\017\n\nOP_ResetAA\020\262\004\022\r\n\010OP_Buddy\020\263\004\022\033\n\026O"
-      "P_ChannelAnnounceJoin\020\264\004\022\034\n\027OP_ChannelAn"
-      "nounceLeave\020\265\004\022\016\n\tOP_Ignore\020\266\004\022\014\n\007OP_Mai"
-      "l\020\267\004\022\025\n\020OP_MailboxChange\020\270\004\022\032\n\025OP_MailDe"
-      "liveryStatus\020\271\004\022\022\n\rOP_MailHeader\020\272\004\022\027\n\022O"
-      "P_MailHeaderCount\020\273\004\022\021\n\014OP_MailLogin\020\274\004\022"
-      "\017\n\nOP_MailNew\020\275\004\022\024\n\017OP_MailSendBody\020\276\004b\006"
-      "proto3"
+      "\001(\t\022\017\n\007payload\030\005 \001(\014\"\217\001\n\tDailyGain\022\022\n\nac"
+      "count_id\030\001 \001(\005\022\024\n\014character_id\030\002 \001(\005\022\025\n\r"
+      "levels_gained\030\003 \001(\005\022\031\n\021experience_gained"
+      "\030\004 \001(\005\022\024\n\014money_earned\030\005 \001(\005\022\020\n\010identity"
+      "\030\006 \001(\t\"\215\001\n\006Entity\022\n\n\002id\030\001 \001(\005\022\014\n\004name\030\002 "
+      "\001(\t\022\014\n\004type\030\003 \001(\005\022\n\n\002hp\030\004 \001(\005\022\r\n\005level\030\005"
+      " \001(\005\022#\n\010position\030\006 \001(\0132\021.eqproto.Positio"
+      "n\022\014\n\004race\030\007 \001(\005\022\r\n\005class\030\010 \001(\005\"-\n\010Entiti"
+      "es\022!\n\010entities\030\001 \003(\0132\017.eqproto.Entity\"6\n"
+      "\010Position\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001"
+      "(\002\022\t\n\001h\030\004 \001(\002\"\273\002\n\016TextureProfile\022\036\n\004Head"
+      "\030\001 \001(\0132\020.eqproto.Texture\022\037\n\005Chest\030\002 \001(\0132"
+      "\020.eqproto.Texture\022\036\n\004Arms\030\003 \001(\0132\020.eqprot"
+      "o.Texture\022\037\n\005Wrist\030\004 \001(\0132\020.eqproto.Textu"
+      "re\022\037\n\005Hands\030\005 \001(\0132\020.eqproto.Texture\022\036\n\004L"
+      "egs\030\006 \001(\0132\020.eqproto.Texture\022\036\n\004Feet\030\007 \001("
+      "\0132\020.eqproto.Texture\022!\n\007Primary\030\010 \001(\0132\020.e"
+      "qproto.Texture\022#\n\tSecondary\030\t \001(\0132\020.eqpr"
+      "oto.Texture\"l\n\007Texture\022\020\n\010material\030\001 \001(\r"
+      "\022\020\n\010unknown1\030\002 \001(\r\022\022\n\nEliteModel\030\003 \001(\r\022\027"
+      "\n\017HerosForgeModel\030\004 \001(\r\022\020\n\010Unknown2\030\005 \001("
+      "\r\"\235\002\n\013TintProfile\022\033\n\004Head\030\001 \001(\0132\r.eqprot"
+      "o.Tint\022\034\n\005Chest\030\002 \001(\0132\r.eqproto.Tint\022\033\n\004"
+      "Arms\030\003 \001(\0132\r.eqproto.Tint\022\034\n\005Wrist\030\004 \001(\013"
+      "2\r.eqproto.Tint\022\034\n\005Hands\030\005 \001(\0132\r.eqproto"
+      ".Tint\022\033\n\004Legs\030\006 \001(\0132\r.eqproto.Tint\022\033\n\004Fe"
+      "et\030\007 \001(\0132\r.eqproto.Tint\022\036\n\007Primary\030\010 \001(\013"
+      "2\r.eqproto.Tint\022 \n\tSecondary\030\t \001(\0132\r.eqp"
+      "roto.Tint\"P\n\004Tint\022\014\n\004Blue\030\001 \001(\r\022\r\n\005Green"
+      "\030\002 \001(\r\022\013\n\003Red\030\003 \001(\r\022\017\n\007UseTint\030\004 \001(\r\022\r\n\005"
+      "Color\030\005 \001(\r\"5\n\005Event\022\033\n\002op\030\001 \001(\0162\017.eqpro"
+      "to.OpCode\022\017\n\007payload\030\002 \001(\014\"\251\001\n\nDeathEven"
+      "t\022\020\n\010spawn_id\030\001 \001(\r\022\021\n\tkiller_id\030\002 \001(\r\022\021"
+      "\n\tcorpse_id\030\003 \001(\r\022\024\n\014bind_zone_id\030\004 \001(\r\022"
+      "\020\n\010spell_id\030\005 \001(\r\022\027\n\017attack_skill_id\030\006 \001"
+      "(\r\022\016\n\006damage\030\007 \001(\r\022\022\n\nunknown028\030\010 \001(\r\"\226"
+      "\001\n\013DamageEvent\022\016\n\006target\030\001 \001(\r\022\016\n\006source"
+      "\030\002 \001(\r\022\014\n\004type\030\003 \001(\r\022\017\n\007spellid\030\004 \001(\r\022\016\n"
+      "\006damage\030\005 \001(\r\022\r\n\005force\030\006 \001(\002\022\024\n\014meleepus"
+      "h_xy\030\007 \001(\002\022\023\n\013meleepush_z\030\010 \001(\002\"3\n\013Entit"
+      "yEvent\022\021\n\tentity_id\030\001 \001(\r\022\021\n\ttarget_id\030\002"
+      " \001(\r\"\237\001\n\023ChannelMessageEvent\022\023\n\013target_n"
+      "ame\030\001 \001(\t\022\016\n\006sender\030\002 \001(\t\022\020\n\010language\030\003 "
+      "\001(\r\022\020\n\010chan_num\030\004 \001(\r\022\023\n\013cm_unknown4\030\005 \001"
+      "(\r\022\031\n\021skill_in_language\030\006 \001(\r\022\017\n\007message"
+      "\030\007 \001(\t\"\301\001\n\017WearChangeEvent\022\020\n\010spawn_id\030\001"
+      " \001(\r\022\020\n\010material\030\002 \001(\r\022\021\n\tunknown06\030\003 \001("
+      "\r\022\026\n\016elite_material\030\004 \001(\r\022\030\n\020hero_forge_"
+      "model\030\005 \001(\r\022\021\n\tunknown18\030\006 \001(\r\022\034\n\005color\030"
+      "\007 \001(\0132\r.eqproto.Tint\022\024\n\014wear_slot_id\030\010 \001"
+      "(\r\"3\n\020DeleteSpawnEvent\022\020\n\010spawn_id\030\001 \001(\r"
+      "\022\r\n\005decay\030\002 \001(\r\";\n\007HPEvent\022\020\n\010spawn_id\030\001"
+      " \001(\r\022\016\n\006cur_hp\030\002 \001(\r\022\016\n\006max_hp\030\003 \001(\r\"\234\002\n"
+      "\031PlayerPositionUpdateEvent\022\020\n\010spawn_id\030\001"
+      " \001(\r\022\025\n\rdelta_heading\030\002 \001(\005\022\r\n\005x_pos\030\003 \001"
+      "(\005\022\023\n\013padding0002\030\004 \001(\005\022\r\n\005y_pos\030\005 \001(\005\022\021"
+      "\n\tanimation\030\006 \001(\005\022\023\n\013padding0006\030\007 \001(\005\022\r"
+      "\n\005z_pos\030\010 \001(\005\022\017\n\007delta_y\030\t \001(\005\022\017\n\007delta_"
+      "x\030\n \001(\005\022\017\n\007heading\030\013 \001(\005\022\023\n\013padding0014\030"
+      "\014 \001(\005\022\017\n\007delta_z\030\r \001(\005\022\023\n\013padding0018\030\016 "
+      "\001(\005\"@\n\016AnimationEvent\022\017\n\007spawnid\030\001 \001(\r\022\r"
+      "\n\005speed\030\002 \001(\r\022\016\n\006action\030\003 \001(\r\"\337\017\n\nSpawnE"
+      "vent\022\023\n\013unknown0000\030\001 \001(\r\022\n\n\002gm\030\002 \001(\r\022\023\n"
+      "\013unknown0003\030\003 \001(\r\022\016\n\006aaitle\030\004 \001(\r\022\023\n\013un"
+      "known0004\030\005 \001(\r\022\014\n\004anon\030\006 \001(\r\022\014\n\004face\030\007 "
+      "\001(\r\022\014\n\004name\030\010 \001(\t\022\r\n\005deity\030\t \001(\r\022\023\n\013unkn"
+      "own0073\030\n \001(\r\022\014\n\004size\030\013 \001(\002\022\023\n\013unknown00"
+      "79\030\014 \001(\r\022\013\n\003NPC\030\r \001(\r\022\r\n\005invis\030\016 \001(\r\022\021\n\t"
+      "haircolor\030\017 \001(\r\022\r\n\005curHp\030\020 \001(\r\022\016\n\006max_hp"
+      "\030\021 \001(\r\022\020\n\010findable\030\022 \001(\r\022\023\n\013unknown0089\030"
+      "\023 \001(\r\022\024\n\014deltaHeading\030\024 \001(\005\022\t\n\001x\030\025 \001(\005\022\023"
+      "\n\013padding0054\030\026 \001(\005\022\t\n\001y\030\027 \001(\005\022\021\n\tanimat"
+      "ion\030\030 \001(\005\022\023\n\013padding0058\030\031 \001(\005\022\t\n\001z\030\032 \001("
+      "\005\022\016\n\006deltaY\030\033 \001(\005\022\016\n\006deltaX\030\034 \001(\005\022\017\n\007hea"
+      "ding\030\035 \001(\r\022\023\n\013padding0066\030\036 \001(\005\022\016\n\006delta"
+      "Z\030\037 \001(\005\022\023\n\013padding0070\030  \001(\005\022\021\n\teyecolor"
+      "1\030! \001(\r\022\023\n\013unknown0115\030\" \001(\r\022\022\n\nStandSta"
+      "te\030# \001(\r\022\030\n\020drakkin_heritage\030$ \001(\r\022\026\n\016dr"
+      "akkin_tattoo\030% \001(\r\022\027\n\017drakkin_details\030& "
+      "\001(\r\022\020\n\010showhelm\030\' \001(\r\022\023\n\013unknown0140\030( \001"
+      "(\r\022\016\n\006is_npc\030) \001(\r\022\021\n\thairstyle\030* \001(\r\022\r\n"
+      "\005beard\030+ \001(\r\022\023\n\013unknown0147\030, \001(\r\022\r\n\005lev"
+      "el\030- \001(\r\022\023\n\013PlayerState\030. \001(\r\022\022\n\nbeardco"
+      "lor\030/ \001(\r\022\016\n\006suffix\0300 \001(\t\022\022\n\npetOwnerId\030"
+      "1 \001(\r\022\021\n\tguildrank\0302 \001(\r\022\023\n\013unknown0194\030"
+      "3 \001(\r\022*\n\tequipment\0304 \001(\0132\027.eqproto.Textu"
+      "reProfile\022\020\n\010runspeed\0305 \001(\002\022\013\n\003afk\0306 \001(\r"
+      "\022\017\n\007guildID\0307 \001(\r\022\r\n\005title\0308 \001(\t\022\023\n\013unkn"
+      "own0274\0309 \001(\r\022\023\n\013set_to_0xFF\030: \001(\r\022\014\n\004he"
+      "lm\030; \001(\r\022\014\n\004race\030< \001(\r\022\023\n\013unknown0288\030= "
+      "\001(\r\022\020\n\010lastName\030> \001(\t\022\021\n\twalkspeed\030\? \001(\002"
+      "\022\023\n\013unknown0328\030@ \001(\r\022\016\n\006is_pet\030A \001(\r\022\r\n"
+      "\005light\030B \001(\r\022\016\n\006class_\030C \001(\r\022\021\n\teyecolor"
+      "2\030D \001(\r\022\017\n\007flymode\030E \001(\r\022\016\n\006gender\030F \001(\r"
+      "\022\020\n\010bodytype\030G \001(\r\022\023\n\013unknown0336\030H \001(\r\022"
+      "\024\n\014equip_chest2\030I \001(\r\022\023\n\013mount_color\030J \001"
+      "(\r\022\017\n\007spawnId\030K \001(\r\022\023\n\013unknown0344\030L \001(\r"
+      "\022\023\n\013IsMercenary\030M \001(\r\022,\n\016equipment_tint\030"
+      "N \001(\0132\024.eqproto.TintProfile\022\013\n\003lfg\030O \001(\r"
+      "\022\032\n\022DestructibleObject\030P \001(\010\022\031\n\021Destruct"
+      "ibleModel\030R \001(\t\022\031\n\021DestructibleName2\030S \001"
+      "(\t\022\032\n\022DestructibleString\030T \001(\t\022\036\n\026Destru"
+      "ctibleAppearance\030U \001(\r\022\030\n\020DestructibleUn"
+      "k1\030V \001(\r\022\027\n\017DestructibleID1\030W \001(\r\022\027\n\017Des"
+      "tructibleID2\030X \001(\r\022\027\n\017DestructibleID3\030Y "
+      "\001(\r\022\027\n\017DestructibleID4\030Z \001(\r\022\030\n\020Destruct"
+      "ibleUnk2\030[ \001(\r\022\030\n\020DestructibleUnk3\030\\ \001(\r"
+      "\022\030\n\020DestructibleUnk4\030] \001(\r\022\030\n\020Destructib"
+      "leUnk5\030^ \001(\r\022\030\n\020DestructibleUnk6\030_ \001(\r\022\030"
+      "\n\020DestructibleUnk7\030` \001(\r\022\030\n\020Destructible"
+      "Unk8\030a \001(\r\022\030\n\020DestructibleUnk9\030b \001(\r\022\036\n\026"
+      "targetable_with_hotkey\030c \001(\010\022\021\n\tshow_nam"
+      "e\030d \001(\010*\273e\n\006OpCode\022\016\n\nOP_Unknown\020\000\022\025\n\021OP"
+      "_ExploreUnknown\020\001\022\r\n\tOP_0x0193\020\002\022\r\n\tOP_0"
+      "x0347\020\003\022\017\n\013OP_AAAction\020\004\022\022\n\016OP_AAExpUpda"
+      "te\020\005\022\024\n\020OP_AcceptNewTask\020\006\022\020\n\014OP_AckPack"
+      "et\020\007\022\r\n\tOP_Action\020\010\022\016\n\nOP_Action2\020\t\022\026\n\022O"
+      "P_AddNimbusEffect\020\n\022\024\n\020OP_AdventureData\020"
+      "\013\022\027\n\023OP_AdventureDetails\020\014\022\026\n\022OP_Adventu"
+      "reFinish\020\r\022\024\n\020OP_AdventureInfo\020\016\022\033\n\027OP_A"
+      "dventureInfoRequest\020\017\022 \n\034OP_AdventureLea"
+      "derboardReply\020\020\022\"\n\036OP_AdventureLeaderboa"
+      "rdRequest\020\021\022 \n\034OP_AdventureMerchantPurch"
+      "ase\020\022\022\037\n\033OP_AdventureMerchantRequest\020\023\022 "
+      "\n\034OP_AdventureMerchantResponse\020\024\022\034\n\030OP_A"
+      "dventureMerchantSell\020\025\022\034\n\030OP_AdventurePo"
+      "intsUpdate\020\026\022\027\n\023OP_AdventureRequest\020\027\022\032\n"
+      "\026OP_AdventureStatsReply\020\030\022\034\n\030OP_Adventur"
+      "eStatsRequest\020\031\022\026\n\022OP_AdventureUpdate\020\032\022"
+      "\033\n\027OP_AggroMeterLockTarget\020\033\022\033\n\027OP_Aggro"
+      "MeterTargetInfo\020\034\022\027\n\023OP_AggroMeterUpdate"
+      "\020\035\022\022\n\016OP_AltCurrency\020\036\022\037\n\033OP_AltCurrency"
+      "MerchantReply\020\037\022!\n\035OP_AltCurrencyMerchan"
+      "tRequest\020 \022\032\n\026OP_AltCurrencyPurchase\020!\022\031"
+      "\n\025OP_AltCurrencyReclaim\020\"\022\026\n\022OP_AltCurre"
+      "ncySell\020#\022\037\n\033OP_AltCurrencySellSelection"
+      "\020$\022\020\n\014OP_Animation\020%\022\032\n\026OP_AnnoyingZoneU"
+      "nknown\020&\022\022\n\016OP_ApplyPoison\020\'\022\022\n\016OP_Appro"
+      "veName\020(\022\023\n\017OP_ApproveWorld\020)\022\022\n\016OP_Appr"
+      "oveZone\020*\022\r\n\tOP_Assist\020+\022\022\n\016OP_AssistGro"
+      "up\020,\022\022\n\016OP_AugmentInfo\020-\022\022\n\016OP_AugmentIt"
+      "em\020.\022\021\n\rOP_AutoAttack\020/\022\022\n\016OP_AutoAttack"
+      "2\0200\022\017\n\013OP_AutoFire\0201\022\020\n\014OP_Bandolier\0202\022\023"
+      "\n\017OP_BankerChange\0203\022\r\n\tOP_Barter\0204\022\r\n\tOP"
+      "_Bazaar\0205\022\024\n\020OP_BazaarInspect\0206\022\023\n\017OP_Ba"
+      "zaarSearch\0207\022\023\n\017OP_BecomeCorpse\0208\022\023\n\017OP_"
+      "BecomeTrader\0209\022\016\n\nOP_Begging\020:\022\020\n\014OP_Beg"
+      "inCast\020;\022\021\n\rOP_Bind_Wound\020<\022\023\n\017OP_Blocke"
+      "dBuffs\020=\022\020\n\014OP_BoardBoat\020>\022\013\n\007OP_Buff\020\?\022"
+      "\021\n\rOP_BuffCreate\020@\022\030\n\024OP_BuffRemoveReque"
+      "st\020A\022\n\n\006OP_Bug\020B\022\023\n\017OP_CameraEffect\020C\022\013\n"
+      "\007OP_Camp\020D\022\026\n\022OP_CancelSneakHide\020E\022\021\n\rOP"
+      "_CancelTask\020F\022\022\n\016OP_CancelTrade\020G\022\020\n\014OP_"
+      "CastSpell\020H\022\021\n\rOP_ChangeSize\020I\022\025\n\021OP_Cha"
+      "nnelMessage\020J\022\026\n\022OP_CharacterCreate\020K\022\035\n"
+      "\031OP_CharacterCreateRequest\020L\022\024\n\020OP_CharI"
+      "nventory\020M\022\014\n\010OP_Charm\020N\022\022\n\016OP_ChatMessa"
+      "ge\020O\022\016\n\nOP_ClearAA\020P\022\030\n\024OP_ClearBlockedB"
+      "uffs\020Q\022\037\n\033OP_ClearLeadershipAbilities\020R\022"
+      "\024\n\020OP_ClearNPCMarks\020S\022\022\n\016OP_ClearObject\020"
+      "T\022\023\n\017OP_ClearSurname\020U\022\020\n\014OP_ClickDoor\020V"
+      "\022\022\n\016OP_ClickObject\020W\022\030\n\024OP_ClickObjectAc"
+      "tion\020X\022\022\n\016OP_ClientError\020Y\022\022\n\016OP_ClientR"
+      "eady\020Z\022\026\n\022OP_ClientTimeStamp\020[\022\023\n\017OP_Cli"
+      "entUpdate\020\\\022\025\n\021OP_CloseContainer\020]\022\031\n\025OP"
+      "_CloseTributeMaster\020^\022\022\n\016OP_ColoredText\020"
+      "_\022\024\n\020OP_CombatAbility\020`\022\016\n\nOP_Command\020a\022"
+      "\025\n\021OP_CompletedTasks\020b\022\024\n\020OP_ConfirmDele"
+      "te\020c\022\016\n\nOP_Consent\020d\022\022\n\016OP_ConsentDeny\020e"
+      "\022\026\n\022OP_ConsentResponse\020f\022\017\n\013OP_Consider\020"
+      "g\022\025\n\021OP_ConsiderCorpse\020h\022\016\n\nOP_Consume\020i"
+      "\022\022\n\016OP_ControlBoat\020j\022\021\n\rOP_CorpseDrag\020k\022"
+      "\021\n\rOP_CorpseDrop\020l\022\020\n\014OP_CrashDump\020m\022\031\n\025"
+      "OP_CrystalCountUpdate\020n\022\024\n\020OP_CrystalCre"
+      "ate\020o\022\025\n\021OP_CrystalReclaim\020p\022\023\n\017OP_Custo"
+      "mTitles\020q\022\r\n\tOP_Damage\020r\022\014\n\010OP_Death\020s\022\026"
+      "\n\022OP_DelegateAbility\020t\022\026\n\022OP_DeleteChara"
+      "cter\020u\022\023\n\017OP_DeleteCharge\020v\022\021\n\rOP_Delete"
+      "Item\020w\022\025\n\021OP_DeletePetition\020x\022\022\n\016OP_Dele"
+      "teSpawn\020y\022\022\n\016OP_DeleteSpell\020z\022\023\n\017OP_Deny"
+      "Response\020{\022\r\n\tOP_Disarm\020|\022\022\n\016OP_DisarmTr"
+      "aps\020}\022\026\n\022OP_DisciplineTimer\020~\022\027\n\023OP_Disc"
+      "iplineUpdate\020\177\022 \n\033OP_DiscordMerchantInve"
+      "ntory\020\200\001\022 \n\033OP_DoGroupLeadershipAbility\020"
+      "\201\001\022\024\n\017OP_DuelResponse\020\202\001\022\025\n\020OP_DuelRespo"
+      "nse2\020\203\001\022\020\n\013OP_DumpName\020\204\001\022\013\n\006OP_Dye\020\205\001\022\023"
+      "\n\016OP_DynamicWall\020\206\001\022\023\n\016OP_DzAddPlayer\020\207\001"
+      "\022\024\n\017OP_DzChooseZone\020\210\001\022\021\n\014OP_DzCompass\020\211"
+      "\001\022\037\n\032OP_DzExpeditionEndsWarning\020\212\001\022\030\n\023OP"
+      "_DzExpeditionInfo\020\213\001\022\030\n\023OP_DzExpeditionL"
+      "ist\020\214\001\022\037\n\032OP_DzJoinExpeditionConfirm\020\215\001\022"
+      "\035\n\030OP_DzJoinExpeditionReply\020\216\001\022\026\n\021OP_DzL"
+      "eaderStatus\020\217\001\022\024\n\017OP_DzListTimers\020\220\001\022\024\n\017"
+      "OP_DzMakeLeader\020\221\001\022\024\n\017OP_DzMemberList\020\222\001"
+      "\022\026\n\021OP_DzMemberStatus\020\223\001\022\024\n\017OP_DzPlayerL"
+      "ist\020\224\001\022\016\n\tOP_DzQuit\020\225\001\022\026\n\021OP_DzRemovePla"
+      "yer\020\226\001\022\024\n\017OP_DzSwapPlayer\020\227\001\022\r\n\010OP_Emote"
+      "\020\230\001\022\026\n\021OP_EndLootRequest\020\231\001\022\027\n\022OP_Endura"
+      "nceUpdate\020\232\001\022\021\n\014OP_EnterChat\020\233\001\022\022\n\rOP_En"
+      "terWorld\020\234\001\022\021\n\014OP_EnvDamage\020\235\001\022\025\n\020OP_Exp"
+      "ansionInfo\020\236\001\022\021\n\014OP_ExpUpdate\020\237\001\022\022\n\rOP_F"
+      "aceChange\020\240\001\022\020\n\013OP_Feedback\020\241\001\022\022\n\rOP_Fei"
+      "gnDeath\020\242\001\022\030\n\023OP_FellowshipUpdate\020\243\001\022\027\n\022"
+      "OP_FindPersonReply\020\244\001\022\031\n\024OP_FindPersonRe"
+      "quest\020\245\001\022\023\n\016OP_FinishTrade\020\246\001\022\024\n\017OP_Fini"
+      "shWindow\020\247\001\022\025\n\020OP_FinishWindow2\020\250\001\022\017\n\nOP"
+      "_Fishing\020\251\001\022\r\n\010OP_Fling\020\252\001\022\026\n\021OP_FloatLi"
+      "stThing\020\253\001\022\016\n\tOP_Forage\020\254\001\022\027\n\022OP_ForceFi"
+      "ndPerson\020\255\001\022\030\n\023OP_FormattedMessage\020\256\001\022\022\n"
+      "\rOP_FriendsWho\020\257\001\022\024\n\017OP_GetGuildMOTD\020\260\001\022"
+      "\031\n\024OP_GetGuildMOTDReply\020\261\001\022\025\n\020OP_GetGuil"
+      "dsList\020\262\001\022\021\n\014OP_GiveMoney\020\263\001\022\022\n\rOP_GMApp"
+      "roval\020\264\001\022\023\n\016OP_GMBecomeNPC\020\265\001\022\023\n\016OP_GMDe"
+      "lCorpse\020\266\001\022\023\n\016OP_GMEmoteZone\020\267\001\022\025\n\020OP_GM"
+      "EndTraining\020\270\001\022\035\n\030OP_GMEndTrainingRespon"
+      "se\020\271\001\022\016\n\tOP_GMFind\020\272\001\022\016\n\tOP_GMGoto\020\273\001\022\020\n"
+      "\013OP_GMHideMe\020\274\001\022\016\n\tOP_GMKick\020\275\001\022\016\n\tOP_GM"
+      "Kill\020\276\001\022\022\n\rOP_GMLastName\020\277\001\022\024\n\017OP_GMName"
+      "Change\020\300\001\022\026\n\021OP_GMSearchCorpse\020\301\001\022\021\n\014OP_"
+      "GMServers\020\302\001\022\020\n\013OP_GMSummon\020\303\001\022\020\n\013OP_GMT"
+      "oggle\020\304\001\022\022\n\rOP_GMTraining\020\305\001\022\024\n\017OP_GMTra"
+      "inSkill\020\306\001\022\033\n\026OP_GMTrainSkillConfirm\020\307\001\022"
+      "\025\n\020OP_GMZoneRequest\020\310\001\022\026\n\021OP_GMZoneReque"
+      "st2\020\311\001\022\023\n\016OP_GroundSpawn\020\312\001\022\030\n\023OP_GroupA"
+      "cknowledge\020\313\001\022\031\n\024OP_GroupCancelInvite\020\314\001"
+      "\022\023\n\016OP_GroupDelete\020\315\001\022\024\n\017OP_GroupDisband"
+      "\020\316\001\022\031\n\024OP_GroupDisbandOther\020\317\001\022\027\n\022OP_Gro"
+      "upDisbandYou\020\320\001\022\023\n\016OP_GroupFollow\020\321\001\022\024\n\017"
+      "OP_GroupFollow2\020\322\001\022\023\n\016OP_GroupInvite\020\323\001\022"
+      "\024\n\017OP_GroupInvite2\020\324\001\022\031\n\024OP_GroupLeaderC"
+      "hange\020\325\001\022\037\n\032OP_GroupLeadershipAAUpdate\020\326"
+      "\001\022\027\n\022OP_GroupMakeLeader\020\327\001\022\023\n\016OP_GroupMe"
+      "ntor\020\330\001\022\022\n\rOP_GroupRoles\020\331\001\022\023\n\016OP_GroupU"
+      "pdate\020\332\001\022\024\n\017OP_GroupUpdateB\020\333\001\022\033\n\026OP_Gro"
+      "upUpdateLeaderAA\020\334\001\022\021\n\014OP_GuildBank\020\335\001\022\031"
+      "\n\024OP_GuildBankItemList\020\336\001\022\023\n\016OP_GuildCre"
+      "ate\020\337\001\022\023\n\016OP_GuildDelete\020\340\001\022\023\n\016OP_GuildD"
+      "emote\020\341\001\022\023\n\016OP_GuildInvite\020\342\001\022\031\n\024OP_Guil"
+      "dInviteAccept\020\343\001\022\023\n\016OP_GuildLeader\020\344\001\022\026\n"
+      "\021OP_GuildManageAdd\020\345\001\022\031\n\024OP_GuildManageB"
+      "anker\020\346\001\022\031\n\024OP_GuildManageRemove\020\347\001\022\031\n\024O"
+      "P_GuildManageStatus\020\350\001\022\036\n\031OP_GuildMember"
+      "LevelUpdate\020\351\001\022\027\n\022OP_GuildMemberList\020\352\001\022"
+      "\031\n\024OP_GuildMemberUpdate\020\353\001\022\021\n\014OP_GuildMO"
+      "TD\020\354\001\022\022\n\rOP_GuildPeace\020\355\001\022\024\n\017OP_GuildPro"
+      "mote\020\356\001\022\027\n\022OP_GuildPublicNote\020\357\001\022\023\n\016OP_G"
+      "uildRemove\020\360\001\022\022\n\rOP_GuildsList\020\361\001\022\023\n\016OP_"
+      "GuildStatus\020\362\001\022\030\n\023OP_GuildTributeInfo\020\363\001"
+      "\022 \n\033OP_GuildUpdateURLAndChannel\020\364\001\022\020\n\013OP"
+      "_GuildWar\020\365\001\022\021\n\014OP_Heartbeat\020\366\001\022\014\n\007OP_Hi"
+      "de\020\367\001\022\022\n\rOP_HideCorpse\020\370\001\022\020\n\013OP_HPUpdate"
+      "\020\371\001\022\020\n\013OP_Illusion\020\372\001\022\025\n\020OP_IncreaseStat"
+      "s\020\373\001\022\027\n\022OP_InitialHPUpdate\020\374\001\022\030\n\023OP_Init"
+      "ialMobHealth\020\375\001\022\025\n\020OP_InspectAnswer\020\376\001\022\024"
+      "\n\017OP_InspectBuffs\020\377\001\022\034\n\027OP_InspectMessag"
+      "eUpdate\020\200\002\022\026\n\021OP_InspectRequest\020\201\002\022\024\n\017OP"
+      "_InstillDoubt\020\202\002\022\025\n\020OP_InterruptCast\020\203\002\022"
+      "\025\n\020OP_ItemLinkClick\020\204\002\022\030\n\023OP_ItemLinkRes"
+      "ponse\020\205\002\022\024\n\017OP_ItemLinkText\020\206\002\022\020\n\013OP_Ite"
+      "mName\020\207\002\022\022\n\rOP_ItemPacket\020\210\002\022\023\n\016OP_ItemP"
+      "review\020\211\002\022\027\n\022OP_ItemRecastDelay\020\212\002\022\027\n\022OP"
+      "_ItemVerifyReply\020\213\002\022\031\n\024OP_ItemVerifyRequ"
+      "est\020\214\002\022\027\n\022OP_ItemViewUnknown\020\215\002\022\014\n\007OP_Ju"
+      "mp\020\216\002\022\017\n\nOP_KeyRing\020\217\002\022\025\n\020OP_KnowledgeBa"
+      "se\020\220\002\022\022\n\rOP_LDoNButton\020\221\002\022\027\n\022OP_LDoNDisa"
+      "rmTraps\020\222\002\022\023\n\016OP_LDoNInspect\020\223\002\022\020\n\013OP_LD"
+      "oNOpen\020\224\002\022\024\n\017OP_LDoNPickLock\020\225\002\022\026\n\021OP_LD"
+      "oNSenseTraps\020\226\002\022\033\n\026OP_LeadershipExpToggl"
+      "e\020\227\002\022\033\n\026OP_LeadershipExpUpdate\020\230\002\022\026\n\021OP_"
+      "LeaveAdventure\020\231\002\022\021\n\014OP_LeaveBoat\020\232\002\022\027\n\022"
+      "OP_LevelAppearance\020\233\002\022\023\n\016OP_LevelUpdate\020"
+      "\234\002\022\025\n\020OP_LFGAppearance\020\235\002\022\022\n\rOP_LFGComma"
+      "nd\020\236\002\022\034\n\027OP_LFGGetMatchesRequest\020\237\002\022\035\n\030O"
+      "P_LFGGetMatchesResponse\020\240\002\022\023\n\016OP_LFGResp"
+      "onse\020\241\002\022\017\n\nOP_LFGuild\020\242\002\022\022\n\rOP_LFPComman"
+      "d\020\243\002\022\034\n\027OP_LFPGetMatchesRequest\020\244\002\022\035\n\030OP"
+      "_LFPGetMatchesResponse\020\245\002\022\023\n\016OP_LinkedRe"
+      "use\020\246\002\022\024\n\017OP_LoadSpellSet\020\247\002\022\017\n\nOP_LocIn"
+      "fo\020\250\002\022\030\n\023OP_LockoutTimerInfo\020\251\002\022\r\n\010OP_Lo"
+      "gin\020\252\002\022\025\n\020OP_LoginAccepted\020\253\002\022\025\n\020OP_Logi"
+      "nComplete\020\254\002\022\025\n\020OP_LoginUnknown1\020\255\002\022\025\n\020O"
+      "P_LoginUnknown2\020\256\002\022\016\n\tOP_Logout\020\257\002\022\023\n\016OP"
+      "_LogoutReply\020\260\002\022\021\n\014OP_LogServer\020\261\002\022\024\n\017OP"
+      "_LootComplete\020\262\002\022\020\n\013OP_LootItem\020\263\002\022\023\n\016OP"
+      "_LootRequest\020\264\002\022\022\n\rOP_ManaChange\020\265\002\022\022\n\rO"
+      "P_ManaUpdate\020\266\002\022\017\n\nOP_MarkNPC\020\267\002\022\017\n\nOP_M"
+      "arquee\020\270\002\022\025\n\020OP_MemorizeSpell\020\271\002\022\014\n\007OP_M"
+      "end\020\272\002\022\024\n\017OP_MendHPUpdate\020\273\002\022\027\n\022OP_Merce"
+      "naryAssign\020\274\002\022\030\n\023OP_MercenaryCommand\020\275\002\022"
+      "\034\n\027OP_MercenaryDataRequest\020\276\002\022\035\n\030OP_Merc"
+      "enaryDataResponse\020\277\002\022\033\n\026OP_MercenaryData"
+      "Update\020\300\002\022\"\n\035OP_MercenaryDataUpdateReque"
+      "st\020\301\002\022\030\n\023OP_MercenaryDismiss\020\302\002\022\025\n\020OP_Me"
+      "rcenaryHire\020\303\002\022\037\n\032OP_MercenarySuspendReq"
+      "uest\020\304\002\022 \n\033OP_MercenarySuspendResponse\020\305"
+      "\002\022\026\n\021OP_MercenaryTimer\020\306\002\022\035\n\030OP_Mercenar"
+      "yTimerRequest\020\307\002\022\031\n\024OP_MercenaryUnknown1"
+      "\020\310\002\022\"\n\035OP_MercenaryUnsuspendResponse\020\311\002\022"
+      "\032\n\025OP_MobEnduranceUpdate\020\312\002\022\021\n\014OP_MobHea"
+      "lth\020\313\002\022\025\n\020OP_MobManaUpdate\020\314\002\022\021\n\014OP_MobR"
+      "ename\020\315\002\022\021\n\014OP_MobUpdate\020\316\002\022\025\n\020OP_MoneyO"
+      "nCorpse\020\317\002\022\023\n\016OP_MoneyUpdate\020\320\002\022\014\n\007OP_MO"
+      "TD\020\321\002\022\020\n\013OP_MoveCoin\020\322\002\022\020\n\013OP_MoveDoor\020\323"
+      "\002\022\020\n\013OP_MoveItem\020\324\002\022\030\n\023OP_MoveLogDisrega"
+      "rd\020\325\002\022\026\n\021OP_MoveLogRequest\020\326\002\022\024\n\017OP_Mult"
+      "iLineMsg\020\327\002\022\020\n\013OP_NewSpawn\020\330\002\022\032\n\025OP_NewT"
+      "itlesAvailable\020\331\002\022\017\n\nOP_NewZone\020\332\002\022\026\n\021OP"
+      "_OnLevelMessage\020\333\002\022\025\n\020OP_OpenContainer\020\334"
+      "\002\022\033\n\026OP_OpenDiscordMerchant\020\335\002\022\036\n\031OP_Ope"
+      "nGuildTributeMaster\020\336\002\022\025\n\020OP_OpenInvento"
+      "ry\020\337\002\022\032\n\025OP_OpenNewTasksWindow\020\340\002\022\031\n\024OP_"
+      "OpenTributeMaster\020\341\002\022\027\n\022OP_PDeletePetiti"
+      "on\020\342\002\022\025\n\020OP_PetBuffWindow\020\343\002\022\023\n\016OP_PetCo"
+      "mmands\020\344\002\022\027\n\022OP_PetCommandState\020\345\002\022\017\n\nOP"
+      "_PetHoTT\020\346\002\022\020\n\013OP_Petition\020\347\002\022\023\n\016OP_Peti"
+      "tionBug\020\350\002\022\027\n\022OP_PetitionCheckIn\020\351\002\022\030\n\023O"
+      "P_PetitionCheckout\020\352\002\022\031\n\024OP_PetitionChec"
+      "kout2\020\353\002\022\026\n\021OP_PetitionDelete\020\354\002\022\023\n\016OP_P"
+      "etitionQue\020\355\002\022\027\n\022OP_PetitionRefresh\020\356\002\022\027"
+      "\n\022OP_PetitionResolve\020\357\002\022\026\n\021OP_PetitionSe"
+      "arch\020\360\002\022\035\n\030OP_PetitionSearchResults\020\361\002\022\032"
+      "\n\025OP_PetitionSearchText\020\362\002\022\032\n\025OP_Petitio"
+      "nUnCheckout\020\363\002\022\026\n\021OP_PetitionUpdate\020\364\002\022\022"
+      "\n\rOP_PickPocket\020\365\002\022\025\n\020OP_PlayerProfile\020\366"
+      "\002\022\026\n\021OP_PlayerStateAdd\020\367\002\022\031\n\024OP_PlayerSt"
+      "ateRemove\020\370\002\022\034\n\027OP_PlayEverquestRequest\020"
+      "\371\002\022\035\n\030OP_PlayEverquestResponse\020\372\002\022\017\n\nOP_"
+      "PlayMP3\020\373\002\022\014\n\007OP_Poll\020\374\002\022\024\n\017OP_PollRespo"
+      "nse\020\375\002\022\025\n\020OP_PopupResponse\020\376\002\022\026\n\021OP_Post"
+      "EnterWorld\020\377\002\022\022\n\rOP_PotionBelt\020\200\003\022\026\n\021OP_"
+      "PreLogoutReply\020\201\003\022\034\n\027OP_PurchaseLeadersh"
+      "ipAA\020\202\003\022\"\n\035OP_PVPLeaderBoardDetailsReply"
+      "\020\203\003\022$\n\037OP_PVPLeaderBoardDetailsRequest\020\204"
+      "\003\022\033\n\026OP_PVPLeaderBoardReply\020\205\003\022\035\n\030OP_PVP"
+      "LeaderBoardRequest\020\206\003\022\020\n\013OP_PVPStats\020\207\003\022"
+      "\032\n\025OP_QueryResponseThing\020\210\003\022\022\n\rOP_RaidIn"
+      "vite\020\211\003\022\020\n\013OP_RaidJoin\020\212\003\022\022\n\rOP_RaidUpda"
+      "te\020\213\003\022\033\n\026OP_RandomNameGenerator\020\214\003\022\023\n\016OP"
+      "_RandomReply\020\215\003\022\021\n\014OP_RandomReq\020\216\003\022\020\n\013OP"
+      "_ReadBook\020\217\003\022\031\n\024OP_RecipeAutoCombine\020\220\003\022"
+      "\025\n\020OP_RecipeDetails\020\221\003\022\023\n\016OP_RecipeReply"
+      "\020\222\003\022\027\n\022OP_RecipesFavorite\020\223\003\022\025\n\020OP_Recip"
+      "esSearch\020\224\003\022\027\n\022OP_ReclaimCrystals\020\225\003\022\020\n\013"
+      "OP_ReloadUI\020\226\003\022\026\n\021OP_RemoveAllDoors\020\227\003\022\032"
+      "\n\025OP_RemoveBlockedBuffs\020\230\003\022\032\n\025OP_RemoveN"
+      "imbusEffect\020\231\003\022\022\n\rOP_RemoveTrap\020\232\003\022\016\n\tOP"
+      "_Report\020\233\003\022\026\n\021OP_ReqClientSpawn\020\234\003\022\022\n\rOP"
+      "_ReqNewZone\020\235\003\022\037\n\032OP_RequestClientZoneCh"
+      "ange\020\236\003\022\023\n\016OP_RequestDuel\020\237\003\022\034\n\027OP_Reque"
+      "stKnowledgeBase\020\240\003\022\025\n\020OP_RequestTitles\020\241"
+      "\003\022\025\n\020OP_RespawnWindow\020\242\003\022\021\n\014OP_RespondAA"
+      "\020\243\003\022\021\n\014OP_RestState\020\244\003\022\016\n\tOP_Rewind\020\245\003\022\022"
+      "\n\rOP_RezzAnswer\020\246\003\022\024\n\017OP_RezzComplete\020\247\003"
+      "\022\023\n\016OP_RezzRequest\020\250\003\022\021\n\014OP_Sacrifice\020\251\003"
+      "\022\027\n\022OP_SafeFallSuccess\020\252\003\022\021\n\014OP_SafePoin"
+      "t\020\253\003\022\014\n\007OP_Save\020\254\003\022\025\n\020OP_SaveOnZoneReq\020\255"
+      "\003\022\025\n\020OP_SelectTribute\020\256\003\022\023\n\016OP_SendAASta"
+      "ts\020\257\003\022\023\n\016OP_SendAATable\020\260\003\022\024\n\017OP_SendCha"
+      "rInfo\020\261\003\022\025\n\020OP_SendExpZonein\020\262\003\022\030\n\023OP_Se"
+      "ndFindableNPCs\020\263\003\022\031\n\024OP_SendGuildTribute"
+      "s\020\264\003\022\025\n\020OP_SendLoginInfo\020\265\003\022\031\n\024OP_SendMa"
+      "xCharacters\020\266\003\022\026\n\021OP_SendMembership\020\267\003\022\035"
+      "\n\030OP_SendMembershipDetails\020\270\003\022\027\n\022OP_Send"
+      "SystemStats\020\271\003\022\025\n\020OP_SendTitleList\020\272\003\022\024\n"
+      "\017OP_SendTributes\020\273\003\022\026\n\021OP_SendZonepoints"
+      "\020\274\003\022\024\n\017OP_SenseHeading\020\275\003\022\022\n\rOP_SenseTra"
+      "ps\020\276\003\022\031\n\024OP_ServerListRequest\020\277\003\022\032\n\025OP_S"
+      "erverListResponse\020\300\003\022\024\n\017OP_SessionReady\020"
+      "\301\003\022\025\n\020OP_SetChatServer\020\302\003\022\026\n\021OP_SetChatS"
+      "erver2\020\303\003\022\026\n\021OP_SetGroupTarget\020\304\003\022\024\n\017OP_"
+      "SetGuildMOTD\020\305\003\022\024\n\017OP_SetGuildRank\020\306\003\022\022\n"
+      "\rOP_SetRunMode\020\307\003\022\027\n\022OP_SetServerFilter\020"
+      "\310\003\022\024\n\017OP_SetStartCity\020\311\003\022\020\n\013OP_SetTitle\020"
+      "\312\003\022\025\n\020OP_SetTitleReply\020\313\003\022\021\n\014OP_Shieldin"
+      "g\020\314\003\022\023\n\016OP_ShopDelItem\020\315\003\022\017\n\nOP_ShopEnd\020"
+      "\316\003\022\026\n\021OP_ShopEndConfirm\020\317\003\022\020\n\013OP_ShopIte"
+      "m\020\320\003\022\025\n\020OP_ShopPlayerBuy\020\321\003\022\026\n\021OP_ShopPl"
+      "ayerSell\020\322\003\022\023\n\016OP_ShopRequest\020\323\003\022\025\n\020OP_S"
+      "impleMessage\020\324\003\022\023\n\016OP_SkillUpdate\020\325\003\022\r\n\010"
+      "OP_Sneak\020\326\003\022\031\n\024OP_Some3ByteHPUpdate\020\327\003\022\031"
+      "\n\024OP_Some6ByteHPUpdate\020\330\003\022\033\n\026OP_SomeItem"
+      "PacketMaybe\020\331\003\022\r\n\010OP_Sound\020\332\003\022\027\n\022OP_Spaw"
+      "nAppearance\020\333\003\022\021\n\014OP_SpawnDoor\020\334\003\022\033\n\026OP_"
+      "SpawnPositionUpdate\020\335\003\022\023\n\016OP_SpecialMesg"
+      "\020\336\003\022\023\n\016OP_SpellEffect\020\337\003\022\r\n\010OP_Split\020\340\003\022"
+      "\017\n\nOP_Stamina\020\341\003\022\014\n\007OP_Stun\020\342\003\022\017\n\nOP_Sur"
+      "name\020\343\003\022\021\n\014OP_SwapSpell\020\344\003\022\023\n\016OP_TargetB"
+      "uffs\020\345\003\022\025\n\020OP_TargetCommand\020\346\003\022\022\n\rOP_Tar"
+      "getHoTT\020\347\003\022\023\n\016OP_TargetMouse\020\350\003\022\024\n\017OP_Ta"
+      "rgetReject\020\351\003\022\024\n\017OP_TaskActivity\020\352\003\022\034\n\027O"
+      "P_TaskActivityComplete\020\353\003\022\027\n\022OP_TaskDesc"
+      "ription\020\354\003\022\030\n\023OP_TaskHistoryReply\020\355\003\022\032\n\025"
+      "OP_TaskHistoryRequest\020\356\003\022\026\n\021OP_TaskMembe"
+      "rList\020\357\003\022\r\n\010OP_Taunt\020\360\003\022\020\n\013OP_TestBuff\020\361"
+      "\003\022\013\n\006OP_TGB\020\362\003\022\021\n\014OP_TimeOfDay\020\363\003\022\r\n\010OP_"
+      "Track\020\364\003\022\023\n\016OP_TrackTarget\020\365\003\022\024\n\017OP_Trac"
+      "kUnknown\020\366\003\022\030\n\023OP_TradeAcceptClick\020\367\003\022\021\n"
+      "\014OP_TradeBusy\020\370\003\022\022\n\rOP_TradeCoins\020\371\003\022\030\n\023"
+      "OP_TradeMoneyUpdate\020\372\003\022\016\n\tOP_Trader\020\373\003\022\021"
+      "\n\014OP_TraderBuy\020\374\003\022\025\n\020OP_TraderDelItem\020\375\003"
+      "\022\024\n\017OP_TradeRequest\020\376\003\022\027\n\022OP_TradeReques"
+      "tAck\020\377\003\022\030\n\023OP_TraderItemUpdate\020\200\004\022\022\n\rOP_"
+      "TraderShop\020\201\004\022\031\n\024OP_TradeSkillCombine\020\202\004"
+      "\022\023\n\016OP_Translocate\020\203\004\022\023\n\016OP_TributeInfo\020"
+      "\204\004\022\023\n\016OP_TributeItem\020\205\004\022\024\n\017OP_TributeMon"
+      "ey\020\206\004\022\022\n\rOP_TributeNPC\020\207\004\022\032\n\025OP_TributeP"
+      "ointUpdate\020\210\004\022\024\n\017OP_TributeTimer\020\211\004\022\025\n\020O"
+      "P_TributeToggle\020\212\004\022\025\n\020OP_TributeUpdate\020\213"
+      "\004\022\024\n\017OP_Untargetable\020\214\004\022\020\n\013OP_UpdateAA\020\215"
+      "\004\022\022\n\rOP_UpdateAura\020\216\004\022\032\n\025OP_UpdateLeader"
+      "shipAA\020\217\004\022\025\n\020OP_VetClaimReply\020\220\004\022\027\n\022OP_V"
+      "etClaimRequest\020\221\004\022\033\n\026OP_VetRewardsAvalia"
+      "ble\020\222\004\022\024\n\017OP_VoiceMacroIn\020\223\004\022\025\n\020OP_Voice"
+      "MacroOut\020\224\004\022\024\n\017OP_WeaponEquip1\020\225\004\022\022\n\rOP_"
+      "WearChange\020\226\004\022\017\n\nOP_Weather\020\227\004\022\017\n\nOP_Web"
+      "link\020\230\004\022\025\n\020OP_WhoAllRequest\020\231\004\022\026\n\021OP_Who"
+      "AllResponse\020\232\004\022\031\n\024OP_World_Client_CRC1\020\233"
+      "\004\022\031\n\024OP_World_Client_CRC2\020\234\004\022\030\n\023OP_World"
+      "ClientReady\020\235\004\022\025\n\020OP_WorldComplete\020\236\004\022\023\n"
+      "\016OP_WorldLogout\020\237\004\022\030\n\023OP_WorldObjectsSen"
+      "t\020\240\004\022\027\n\022OP_WorldUnknown001\020\241\004\022\034\n\027OP_XTar"
+      "getAutoAddHaters\020\242\004\022\023\n\016OP_XTargetOpen\020\243\004"
+      "\022\033\n\026OP_XTargetOpenResponse\020\244\004\022\026\n\021OP_XTar"
+      "getRequest\020\245\004\022\027\n\022OP_XTargetResponse\020\246\004\022\023"
+      "\n\016OP_YellForHelp\020\247\004\022\022\n\rOP_ZoneChange\020\250\004\022"
+      "\024\n\017OP_ZoneComplete\020\251\004\022\021\n\014OP_ZoneEntry\020\252\004"
+      "\022\025\n\020OP_ZoneGuildList\020\253\004\022\025\n\020OP_ZoneInUnkn"
+      "own\020\254\004\022\030\n\023OP_ZonePlayerToBind\020\255\004\022\026\n\021OP_Z"
+      "oneServerInfo\020\256\004\022\027\n\022OP_ZoneServerReady\020\257"
+      "\004\022\022\n\rOP_ZoneSpawns\020\260\004\022\023\n\016OP_ZoneUnavail\020"
+      "\261\004\022\017\n\nOP_ResetAA\020\262\004\022\r\n\010OP_Buddy\020\263\004\022\033\n\026OP"
+      "_ChannelAnnounceJoin\020\264\004\022\034\n\027OP_ChannelAnn"
+      "ounceLeave\020\265\004\022\016\n\tOP_Ignore\020\266\004\022\014\n\007OP_Mail"
+      "\020\267\004\022\025\n\020OP_MailboxChange\020\270\004\022\032\n\025OP_MailDel"
+      "iveryStatus\020\271\004\022\022\n\rOP_MailHeader\020\272\004\022\027\n\022OP"
+      "_MailHeaderCount\020\273\004\022\021\n\014OP_MailLogin\020\274\004\022\017"
+      "\n\nOP_MailNew\020\275\004\022\024\n\017OP_MailSendBody\020\276\004b\006p"
+      "roto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 17726);
+      descriptor, 17845);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "message.proto", &protobuf_RegisterTypes);
 }
@@ -2758,6 +2832,7 @@ const int CommandMessage::kAuthorFieldNumber;
 const int CommandMessage::kCommandFieldNumber;
 const int CommandMessage::kParamsFieldNumber;
 const int CommandMessage::kResultFieldNumber;
+const int CommandMessage::kPayloadFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 CommandMessage::CommandMessage()
@@ -2786,6 +2861,10 @@ CommandMessage::CommandMessage(const CommandMessage& from)
   if (from.result().size() > 0) {
     result_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.result_);
   }
+  payload_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.payload().size() > 0) {
+    payload_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.payload_);
+  }
   // @@protoc_insertion_point(copy_constructor:eqproto.CommandMessage)
 }
 
@@ -2793,6 +2872,7 @@ void CommandMessage::SharedCtor() {
   author_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   command_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   result_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  payload_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   _cached_size_ = 0;
 }
 
@@ -2805,6 +2885,7 @@ void CommandMessage::SharedDtor() {
   author_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   command_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   result_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  payload_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void CommandMessage::SetCachedSize(int size) const {
@@ -2840,6 +2921,7 @@ void CommandMessage::Clear() {
   author_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   command_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   result_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  payload_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   _internal_metadata_.Clear();
 }
 
@@ -2918,6 +3000,18 @@ bool CommandMessage::MergePartialFromCodedStream(
         break;
       }
 
+      // bytes payload = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(42u /* 42 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_payload()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -2984,6 +3078,12 @@ void CommandMessage::SerializeWithCachedSizes(
       4, this->result(), output);
   }
 
+  // bytes payload = 5;
+  if (this->payload().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      5, this->payload(), output);
+  }
+
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
@@ -3041,6 +3141,13 @@ void CommandMessage::SerializeWithCachedSizes(
         4, this->result(), target);
   }
 
+  // bytes payload = 5;
+  if (this->payload().size() > 0) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        5, this->payload(), target);
+  }
+
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
@@ -3087,6 +3194,13 @@ size_t CommandMessage::ByteSizeLong() const {
         this->result());
   }
 
+  // bytes payload = 5;
+  if (this->payload().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
+        this->payload());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = cached_size;
@@ -3129,6 +3243,10 @@ void CommandMessage::MergeFrom(const CommandMessage& from) {
 
     result_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.result_);
   }
+  if (from.payload().size() > 0) {
+
+    payload_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.payload_);
+  }
 }
 
 void CommandMessage::CopyFrom(const ::google::protobuf::Message& from) {
@@ -3159,6 +3277,7 @@ void CommandMessage::InternalSwap(CommandMessage* other) {
   author_.Swap(&other->author_);
   command_.Swap(&other->command_);
   result_.Swap(&other->result_);
+  payload_.Swap(&other->payload_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
 }
@@ -4139,6 +4258,247 @@ void Entity::InternalSwap(Entity* other) {
 }
 
 ::google::protobuf::Metadata Entity::GetMetadata() const {
+  protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_message_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void Entities::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Entities::kEntitiesFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Entities::Entities()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    ::protobuf_message_2eproto::InitDefaultsEntities();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:eqproto.Entities)
+}
+Entities::Entities(const Entities& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      entities_(from.entities_),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:eqproto.Entities)
+}
+
+void Entities::SharedCtor() {
+  _cached_size_ = 0;
+}
+
+Entities::~Entities() {
+  // @@protoc_insertion_point(destructor:eqproto.Entities)
+  SharedDtor();
+}
+
+void Entities::SharedDtor() {
+}
+
+void Entities::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Entities::descriptor() {
+  ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_message_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const Entities& Entities::default_instance() {
+  ::protobuf_message_2eproto::InitDefaultsEntities();
+  return *internal_default_instance();
+}
+
+Entities* Entities::New(::google::protobuf::Arena* arena) const {
+  Entities* n = new Entities;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void Entities::Clear() {
+// @@protoc_insertion_point(message_clear_start:eqproto.Entities)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  entities_.Clear();
+  _internal_metadata_.Clear();
+}
+
+bool Entities::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:eqproto.Entities)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .eqproto.Entity entities = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(input, add_entities()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:eqproto.Entities)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:eqproto.Entities)
+  return false;
+#undef DO_
+}
+
+void Entities::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:eqproto.Entities)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated .eqproto.Entity entities = 1;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->entities_size()); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->entities(static_cast<int>(i)), output);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:eqproto.Entities)
+}
+
+::google::protobuf::uint8* Entities::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:eqproto.Entities)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated .eqproto.Entity entities = 1;
+  for (unsigned int i = 0,
+      n = static_cast<unsigned int>(this->entities_size()); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        1, this->entities(static_cast<int>(i)), deterministic, target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:eqproto.Entities)
+  return target;
+}
+
+size_t Entities::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:eqproto.Entities)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  // repeated .eqproto.Entity entities = 1;
+  {
+    unsigned int count = static_cast<unsigned int>(this->entities_size());
+    total_size += 1UL * count;
+    for (unsigned int i = 0; i < count; i++) {
+      total_size +=
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          this->entities(static_cast<int>(i)));
+    }
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Entities::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:eqproto.Entities)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Entities* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Entities>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:eqproto.Entities)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:eqproto.Entities)
+    MergeFrom(*source);
+  }
+}
+
+void Entities::MergeFrom(const Entities& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:eqproto.Entities)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  entities_.MergeFrom(from.entities_);
+}
+
+void Entities::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:eqproto.Entities)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Entities::CopyFrom(const Entities& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:eqproto.Entities)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Entities::IsInitialized() const {
+  return true;
+}
+
+void Entities::Swap(Entities* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Entities::InternalSwap(Entities* other) {
+  using std::swap;
+  entities_.InternalSwap(&other->entities_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata Entities::GetMetadata() const {
   protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_message_2eproto::file_level_metadata[kIndexInFileMessages];
 }
@@ -6545,6 +6905,291 @@ void Tint::InternalSwap(Tint* other) {
 }
 
 ::google::protobuf::Metadata Tint::GetMetadata() const {
+  protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_message_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void Event::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Event::kOpFieldNumber;
+const int Event::kPayloadFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Event::Event()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
+    ::protobuf_message_2eproto::InitDefaultsEvent();
+  }
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:eqproto.Event)
+}
+Event::Event(const Event& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL),
+      _cached_size_(0) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  payload_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.payload().size() > 0) {
+    payload_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.payload_);
+  }
+  op_ = from.op_;
+  // @@protoc_insertion_point(copy_constructor:eqproto.Event)
+}
+
+void Event::SharedCtor() {
+  payload_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  op_ = 0;
+  _cached_size_ = 0;
+}
+
+Event::~Event() {
+  // @@protoc_insertion_point(destructor:eqproto.Event)
+  SharedDtor();
+}
+
+void Event::SharedDtor() {
+  payload_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+void Event::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Event::descriptor() {
+  ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_message_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const Event& Event::default_instance() {
+  ::protobuf_message_2eproto::InitDefaultsEvent();
+  return *internal_default_instance();
+}
+
+Event* Event::New(::google::protobuf::Arena* arena) const {
+  Event* n = new Event;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void Event::Clear() {
+// @@protoc_insertion_point(message_clear_start:eqproto.Event)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  payload_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  op_ = 0;
+  _internal_metadata_.Clear();
+}
+
+bool Event::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:eqproto.Event)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // .eqproto.OpCode op = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_op(static_cast< ::eqproto::OpCode >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // bytes payload = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_payload()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:eqproto.Event)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:eqproto.Event)
+  return false;
+#undef DO_
+}
+
+void Event::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:eqproto.Event)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .eqproto.OpCode op = 1;
+  if (this->op() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->op(), output);
+  }
+
+  // bytes payload = 2;
+  if (this->payload().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
+      2, this->payload(), output);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:eqproto.Event)
+}
+
+::google::protobuf::uint8* Event::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:eqproto.Event)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .eqproto.OpCode op = 1;
+  if (this->op() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->op(), target);
+  }
+
+  // bytes payload = 2;
+  if (this->payload().size() > 0) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        2, this->payload(), target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:eqproto.Event)
+  return target;
+}
+
+size_t Event::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:eqproto.Event)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  // bytes payload = 2;
+  if (this->payload().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
+        this->payload());
+  }
+
+  // .eqproto.OpCode op = 1;
+  if (this->op() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->op());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = cached_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Event::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:eqproto.Event)
+  GOOGLE_DCHECK_NE(&from, this);
+  const Event* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const Event>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:eqproto.Event)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:eqproto.Event)
+    MergeFrom(*source);
+  }
+}
+
+void Event::MergeFrom(const Event& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:eqproto.Event)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.payload().size() > 0) {
+
+    payload_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.payload_);
+  }
+  if (from.op() != 0) {
+    set_op(from.op());
+  }
+}
+
+void Event::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:eqproto.Event)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Event::CopyFrom(const Event& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:eqproto.Event)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Event::IsInitialized() const {
+  return true;
+}
+
+void Event::Swap(Event* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Event::InternalSwap(Event* other) {
+  using std::swap;
+  payload_.Swap(&other->payload_);
+  swap(op_, other->op_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata Event::GetMetadata() const {
   protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
   return ::protobuf_message_2eproto::file_level_metadata[kIndexInFileMessages];
 }

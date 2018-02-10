@@ -37,7 +37,7 @@ namespace protobuf_message_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[19];
+  static const ::google::protobuf::internal::ParseTable schema[21];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -51,6 +51,8 @@ void InitDefaultsDailyGainImpl();
 void InitDefaultsDailyGain();
 void InitDefaultsEntityImpl();
 void InitDefaultsEntity();
+void InitDefaultsEntitiesImpl();
+void InitDefaultsEntities();
 void InitDefaultsPositionImpl();
 void InitDefaultsPosition();
 void InitDefaultsTextureProfileImpl();
@@ -61,6 +63,8 @@ void InitDefaultsTintProfileImpl();
 void InitDefaultsTintProfile();
 void InitDefaultsTintImpl();
 void InitDefaultsTint();
+void InitDefaultsEventImpl();
+void InitDefaultsEvent();
 void InitDefaultsDeathEventImpl();
 void InitDefaultsDeathEvent();
 void InitDefaultsDamageEventImpl();
@@ -86,11 +90,13 @@ inline void InitDefaults() {
   InitDefaultsCommandMessage();
   InitDefaultsDailyGain();
   InitDefaultsEntity();
+  InitDefaultsEntities();
   InitDefaultsPosition();
   InitDefaultsTextureProfile();
   InitDefaultsTexture();
   InitDefaultsTintProfile();
   InitDefaultsTint();
+  InitDefaultsEvent();
   InitDefaultsDeathEvent();
   InitDefaultsDamageEvent();
   InitDefaultsEntityEvent();
@@ -128,12 +134,18 @@ extern DeathEventDefaultTypeInternal _DeathEvent_default_instance_;
 class DeleteSpawnEvent;
 class DeleteSpawnEventDefaultTypeInternal;
 extern DeleteSpawnEventDefaultTypeInternal _DeleteSpawnEvent_default_instance_;
+class Entities;
+class EntitiesDefaultTypeInternal;
+extern EntitiesDefaultTypeInternal _Entities_default_instance_;
 class Entity;
 class EntityDefaultTypeInternal;
 extern EntityDefaultTypeInternal _Entity_default_instance_;
 class EntityEvent;
 class EntityEventDefaultTypeInternal;
 extern EntityEventDefaultTypeInternal _EntityEvent_default_instance_;
+class Event;
+class EventDefaultTypeInternal;
+extern EventDefaultTypeInternal _Event_default_instance_;
 class HPEvent;
 class HPEventDefaultTypeInternal;
 extern HPEventDefaultTypeInternal _HPEvent_default_instance_;
@@ -1128,6 +1140,20 @@ class CommandMessage : public ::google::protobuf::Message /* @@protoc_insertion_
   ::std::string* release_result();
   void set_allocated_result(::std::string* result);
 
+  // bytes payload = 5;
+  void clear_payload();
+  static const int kPayloadFieldNumber = 5;
+  const ::std::string& payload() const;
+  void set_payload(const ::std::string& value);
+  #if LANG_CXX11
+  void set_payload(::std::string&& value);
+  #endif
+  void set_payload(const char* value);
+  void set_payload(const void* value, size_t size);
+  ::std::string* mutable_payload();
+  ::std::string* release_payload();
+  void set_allocated_payload(::std::string* payload);
+
   // @@protoc_insertion_point(class_scope:eqproto.CommandMessage)
  private:
 
@@ -1136,6 +1162,7 @@ class CommandMessage : public ::google::protobuf::Message /* @@protoc_insertion_
   ::google::protobuf::internal::ArenaStringPtr author_;
   ::google::protobuf::internal::ArenaStringPtr command_;
   ::google::protobuf::internal::ArenaStringPtr result_;
+  ::google::protobuf::internal::ArenaStringPtr payload_;
   mutable int _cached_size_;
   friend struct ::protobuf_message_2eproto::TableStruct;
   friend void ::protobuf_message_2eproto::InitDefaultsCommandMessageImpl();
@@ -1443,6 +1470,111 @@ class Entity : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
 };
 // -------------------------------------------------------------------
 
+class Entities : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:eqproto.Entities) */ {
+ public:
+  Entities();
+  virtual ~Entities();
+
+  Entities(const Entities& from);
+
+  inline Entities& operator=(const Entities& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Entities(Entities&& from) noexcept
+    : Entities() {
+    *this = ::std::move(from);
+  }
+
+  inline Entities& operator=(Entities&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Entities& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Entities* internal_default_instance() {
+    return reinterpret_cast<const Entities*>(
+               &_Entities_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    4;
+
+  void Swap(Entities* other);
+  friend void swap(Entities& a, Entities& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Entities* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  Entities* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const Entities& from);
+  void MergeFrom(const Entities& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(Entities* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .eqproto.Entity entities = 1;
+  int entities_size() const;
+  void clear_entities();
+  static const int kEntitiesFieldNumber = 1;
+  const ::eqproto::Entity& entities(int index) const;
+  ::eqproto::Entity* mutable_entities(int index);
+  ::eqproto::Entity* add_entities();
+  ::google::protobuf::RepeatedPtrField< ::eqproto::Entity >*
+      mutable_entities();
+  const ::google::protobuf::RepeatedPtrField< ::eqproto::Entity >&
+      entities() const;
+
+  // @@protoc_insertion_point(class_scope:eqproto.Entities)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::RepeatedPtrField< ::eqproto::Entity > entities_;
+  mutable int _cached_size_;
+  friend struct ::protobuf_message_2eproto::TableStruct;
+  friend void ::protobuf_message_2eproto::InitDefaultsEntitiesImpl();
+};
+// -------------------------------------------------------------------
+
 class Position : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:eqproto.Position) */ {
  public:
   Position();
@@ -1478,7 +1610,7 @@ class Position : public ::google::protobuf::Message /* @@protoc_insertion_point(
                &_Position_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    4;
+    5;
 
   void Swap(Position* other);
   friend void swap(Position& a, Position& b) {
@@ -1598,7 +1730,7 @@ class TextureProfile : public ::google::protobuf::Message /* @@protoc_insertion_
                &_TextureProfile_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    5;
+    6;
 
   void Swap(TextureProfile* other);
   friend void swap(TextureProfile& a, TextureProfile& b) {
@@ -1780,7 +1912,7 @@ class Texture : public ::google::protobuf::Message /* @@protoc_insertion_point(c
                &_Texture_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    6;
+    7;
 
   void Swap(Texture* other);
   friend void swap(Texture& a, Texture& b) {
@@ -1907,7 +2039,7 @@ class TintProfile : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_TintProfile_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    7;
+    8;
 
   void Swap(TintProfile* other);
   friend void swap(TintProfile& a, TintProfile& b) {
@@ -2089,7 +2221,7 @@ class Tint : public ::google::protobuf::Message /* @@protoc_insertion_point(clas
                &_Tint_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    8;
+    9;
 
   void Swap(Tint* other);
   friend void swap(Tint& a, Tint& b) {
@@ -2181,6 +2313,120 @@ class Tint : public ::google::protobuf::Message /* @@protoc_insertion_point(clas
 };
 // -------------------------------------------------------------------
 
+class Event : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:eqproto.Event) */ {
+ public:
+  Event();
+  virtual ~Event();
+
+  Event(const Event& from);
+
+  inline Event& operator=(const Event& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  Event(Event&& from) noexcept
+    : Event() {
+    *this = ::std::move(from);
+  }
+
+  inline Event& operator=(Event&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Event& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const Event* internal_default_instance() {
+    return reinterpret_cast<const Event*>(
+               &_Event_default_instance_);
+  }
+  static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
+    10;
+
+  void Swap(Event* other);
+  friend void swap(Event& a, Event& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline Event* New() const PROTOBUF_FINAL { return New(NULL); }
+
+  Event* New(::google::protobuf::Arena* arena) const PROTOBUF_FINAL;
+  void CopyFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void MergeFrom(const ::google::protobuf::Message& from) PROTOBUF_FINAL;
+  void CopyFrom(const Event& from);
+  void MergeFrom(const Event& from);
+  void Clear() PROTOBUF_FINAL;
+  bool IsInitialized() const PROTOBUF_FINAL;
+
+  size_t ByteSizeLong() const PROTOBUF_FINAL;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) PROTOBUF_FINAL;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const PROTOBUF_FINAL;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const PROTOBUF_FINAL;
+  int GetCachedSize() const PROTOBUF_FINAL { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const PROTOBUF_FINAL;
+  void InternalSwap(Event* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const PROTOBUF_FINAL;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // bytes payload = 2;
+  void clear_payload();
+  static const int kPayloadFieldNumber = 2;
+  const ::std::string& payload() const;
+  void set_payload(const ::std::string& value);
+  #if LANG_CXX11
+  void set_payload(::std::string&& value);
+  #endif
+  void set_payload(const char* value);
+  void set_payload(const void* value, size_t size);
+  ::std::string* mutable_payload();
+  ::std::string* release_payload();
+  void set_allocated_payload(::std::string* payload);
+
+  // .eqproto.OpCode op = 1;
+  void clear_op();
+  static const int kOpFieldNumber = 1;
+  ::eqproto::OpCode op() const;
+  void set_op(::eqproto::OpCode value);
+
+  // @@protoc_insertion_point(class_scope:eqproto.Event)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::internal::ArenaStringPtr payload_;
+  int op_;
+  mutable int _cached_size_;
+  friend struct ::protobuf_message_2eproto::TableStruct;
+  friend void ::protobuf_message_2eproto::InitDefaultsEventImpl();
+};
+// -------------------------------------------------------------------
+
 class DeathEvent : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:eqproto.DeathEvent) */ {
  public:
   DeathEvent();
@@ -2216,7 +2462,7 @@ class DeathEvent : public ::google::protobuf::Message /* @@protoc_insertion_poin
                &_DeathEvent_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    9;
+    11;
 
   void Swap(DeathEvent* other);
   friend void swap(DeathEvent& a, DeathEvent& b) {
@@ -2364,7 +2610,7 @@ class DamageEvent : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_DamageEvent_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    10;
+    12;
 
   void Swap(DamageEvent* other);
   friend void swap(DamageEvent& a, DamageEvent& b) {
@@ -2512,7 +2758,7 @@ class EntityEvent : public ::google::protobuf::Message /* @@protoc_insertion_poi
                &_EntityEvent_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    11;
+    13;
 
   void Swap(EntityEvent* other);
   friend void swap(EntityEvent& a, EntityEvent& b) {
@@ -2618,7 +2864,7 @@ class ChannelMessageEvent : public ::google::protobuf::Message /* @@protoc_inser
                &_ChannelMessageEvent_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    12;
+    14;
 
   void Swap(ChannelMessageEvent* other);
   friend void swap(ChannelMessageEvent& a, ChannelMessageEvent& b) {
@@ -2783,7 +3029,7 @@ class WearChangeEvent : public ::google::protobuf::Message /* @@protoc_insertion
                &_WearChangeEvent_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    13;
+    15;
 
   void Swap(WearChangeEvent* other);
   friend void swap(WearChangeEvent& a, WearChangeEvent& b) {
@@ -2934,7 +3180,7 @@ class DeleteSpawnEvent : public ::google::protobuf::Message /* @@protoc_insertio
                &_DeleteSpawnEvent_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    14;
+    16;
 
   void Swap(DeleteSpawnEvent* other);
   friend void swap(DeleteSpawnEvent& a, DeleteSpawnEvent& b) {
@@ -3040,7 +3286,7 @@ class HPEvent : public ::google::protobuf::Message /* @@protoc_insertion_point(c
                &_HPEvent_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    15;
+    17;
 
   void Swap(HPEvent* other);
   friend void swap(HPEvent& a, HPEvent& b) {
@@ -3153,7 +3399,7 @@ class PlayerPositionUpdateEvent : public ::google::protobuf::Message /* @@protoc
                &_PlayerPositionUpdateEvent_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    16;
+    18;
 
   void Swap(PlayerPositionUpdateEvent* other);
   friend void swap(PlayerPositionUpdateEvent& a, PlayerPositionUpdateEvent& b) {
@@ -3343,7 +3589,7 @@ class AnimationEvent : public ::google::protobuf::Message /* @@protoc_insertion_
                &_AnimationEvent_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    17;
+    19;
 
   void Swap(AnimationEvent* other);
   friend void swap(AnimationEvent& a, AnimationEvent& b) {
@@ -3456,7 +3702,7 @@ class SpawnEvent : public ::google::protobuf::Message /* @@protoc_insertion_poin
                &_SpawnEvent_default_instance_);
   }
   static PROTOBUF_CONSTEXPR int const kIndexInFileMessages =
-    18;
+    20;
 
   void Swap(SpawnEvent* other);
   friend void swap(SpawnEvent& a, SpawnEvent& b) {
@@ -4861,6 +5107,59 @@ inline void CommandMessage::set_allocated_result(::std::string* result) {
   // @@protoc_insertion_point(field_set_allocated:eqproto.CommandMessage.result)
 }
 
+// bytes payload = 5;
+inline void CommandMessage::clear_payload() {
+  payload_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& CommandMessage::payload() const {
+  // @@protoc_insertion_point(field_get:eqproto.CommandMessage.payload)
+  return payload_.GetNoArena();
+}
+inline void CommandMessage::set_payload(const ::std::string& value) {
+  
+  payload_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:eqproto.CommandMessage.payload)
+}
+#if LANG_CXX11
+inline void CommandMessage::set_payload(::std::string&& value) {
+  
+  payload_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:eqproto.CommandMessage.payload)
+}
+#endif
+inline void CommandMessage::set_payload(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  payload_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:eqproto.CommandMessage.payload)
+}
+inline void CommandMessage::set_payload(const void* value, size_t size) {
+  
+  payload_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:eqproto.CommandMessage.payload)
+}
+inline ::std::string* CommandMessage::mutable_payload() {
+  
+  // @@protoc_insertion_point(field_mutable:eqproto.CommandMessage.payload)
+  return payload_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* CommandMessage::release_payload() {
+  // @@protoc_insertion_point(field_release:eqproto.CommandMessage.payload)
+  
+  return payload_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void CommandMessage::set_allocated_payload(::std::string* payload) {
+  if (payload != NULL) {
+    
+  } else {
+    
+  }
+  payload_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), payload);
+  // @@protoc_insertion_point(field_set_allocated:eqproto.CommandMessage.payload)
+}
+
 // -------------------------------------------------------------------
 
 // DailyGain
@@ -5177,6 +5476,40 @@ inline void Entity::set_class_(::google::protobuf::int32 value) {
   
   class__ = value;
   // @@protoc_insertion_point(field_set:eqproto.Entity.class)
+}
+
+// -------------------------------------------------------------------
+
+// Entities
+
+// repeated .eqproto.Entity entities = 1;
+inline int Entities::entities_size() const {
+  return entities_.size();
+}
+inline void Entities::clear_entities() {
+  entities_.Clear();
+}
+inline const ::eqproto::Entity& Entities::entities(int index) const {
+  // @@protoc_insertion_point(field_get:eqproto.Entities.entities)
+  return entities_.Get(index);
+}
+inline ::eqproto::Entity* Entities::mutable_entities(int index) {
+  // @@protoc_insertion_point(field_mutable:eqproto.Entities.entities)
+  return entities_.Mutable(index);
+}
+inline ::eqproto::Entity* Entities::add_entities() {
+  // @@protoc_insertion_point(field_add:eqproto.Entities.entities)
+  return entities_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::eqproto::Entity >*
+Entities::mutable_entities() {
+  // @@protoc_insertion_point(field_mutable_list:eqproto.Entities.entities)
+  return &entities_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::eqproto::Entity >&
+Entities::entities() const {
+  // @@protoc_insertion_point(field_list:eqproto.Entities.entities)
+  return entities_;
 }
 
 // -------------------------------------------------------------------
@@ -6293,6 +6626,77 @@ inline void Tint::set_color(::google::protobuf::uint32 value) {
   
   color_ = value;
   // @@protoc_insertion_point(field_set:eqproto.Tint.Color)
+}
+
+// -------------------------------------------------------------------
+
+// Event
+
+// .eqproto.OpCode op = 1;
+inline void Event::clear_op() {
+  op_ = 0;
+}
+inline ::eqproto::OpCode Event::op() const {
+  // @@protoc_insertion_point(field_get:eqproto.Event.op)
+  return static_cast< ::eqproto::OpCode >(op_);
+}
+inline void Event::set_op(::eqproto::OpCode value) {
+  
+  op_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.Event.op)
+}
+
+// bytes payload = 2;
+inline void Event::clear_payload() {
+  payload_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Event::payload() const {
+  // @@protoc_insertion_point(field_get:eqproto.Event.payload)
+  return payload_.GetNoArena();
+}
+inline void Event::set_payload(const ::std::string& value) {
+  
+  payload_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:eqproto.Event.payload)
+}
+#if LANG_CXX11
+inline void Event::set_payload(::std::string&& value) {
+  
+  payload_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:eqproto.Event.payload)
+}
+#endif
+inline void Event::set_payload(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  payload_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:eqproto.Event.payload)
+}
+inline void Event::set_payload(const void* value, size_t size) {
+  
+  payload_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:eqproto.Event.payload)
+}
+inline ::std::string* Event::mutable_payload() {
+  
+  // @@protoc_insertion_point(field_mutable:eqproto.Event.payload)
+  return payload_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Event::release_payload() {
+  // @@protoc_insertion_point(field_release:eqproto.Event.payload)
+  
+  return payload_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Event::set_allocated_payload(::std::string* payload) {
+  if (payload != NULL) {
+    
+  } else {
+    
+  }
+  payload_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), payload);
+  // @@protoc_insertion_point(field_set_allocated:eqproto.Event.payload)
 }
 
 // -------------------------------------------------------------------
@@ -8992,6 +9396,10 @@ inline void SpawnEvent::set_show_name(bool value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

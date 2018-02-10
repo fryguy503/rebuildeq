@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	nc  *nats.Conn
-	err error
+	nc       *nats.Conn
+	err      error
+	entities []*eqproto.Entity
 )
 
 func main() {
@@ -24,22 +25,39 @@ func main() {
 	}
 	defer nc.Close()
 
-	zone := "pojustice"
+	zone := "ecommons"
+	entities = testZoneCommandEntityList(zone, "entitylist", []string{"npc"})
+	//entities.Entities = append(entities.Entities, testZoneCommandEntityList(zone, "entitylist", []string{"client"})...)
+	fmt.Println(len(entities), "entities known")
+	var attackEntityID int64
+	for _, entity := range entities {
+		if entity.Name == "Guard_Reskin000" {
+			fmt.Println("Found ping as ID", entity.Id)
+			attackEntityID = int64(entity.Id)
+			break
+		}
+	}
+	if attackEntityID == 0 {
+		log.Fatal("Can't find guard to attack!")
+	}
+	//return
 	//testSyncSubscriber()
 	//go testAsyncSubscriber()
 	//go testBroadcastMessage()
 	//testAsyncSubscriber("EntityEvent")
+
 	entityID := testZoneCommandEntity(zone, "spawn", []string{
-		"470.32",
-		"765.48",
-		"9.63",
-		"66.8",
+		"146.17",
+		"-112.51",
+		"-52.01",
+		"109.6",
 		"GoSpawn",
 	})
 	if entityID == 0 {
 		log.Fatal("failed to get entity ID!")
 	}
 	go testMoveToLoop(zone, entityID)
+	go testAttack(zone, entityID, attackEntityID)
 	go testAsyncEntityEventSubscriber(zone, entityID)
 	//testZoneMessage("fieldofbone", "hello, world!")
 	time.Sleep(1000 * time.Second)
@@ -54,19 +72,19 @@ func testAsyncSubscriber(channel string) {
 	time.Sleep(500 * time.Second)
 }
 
+//testMoveToLoop causes an npc to go in a circle in pojustice
 func testMoveToLoop(zone string, entityID int64) {
 	params := []string{}
 	positions := []string{
-		"506 744 9.63 214",
-		"446 747 9.63 223",
-		"449 788 9.63 223",
-		"493 780 9.63 223",
+		"156.72 -136.71 -52.02 112.8",
+		"116.18 -101.56 -51.56 228.8",
+		"151.37 -102.54 -52.01 228.8",
 	}
 	command := "moveto"
 	curPos := 0
 	for {
 		curPos++
-		fmt.Println(curPos)
+		fmt.Println("Moving to position", curPos)
 		if len(positions) < curPos+1 {
 			fmt.Println("Resetting position")
 			curPos = 0
@@ -77,9 +95,55 @@ func testMoveToLoop(zone string, entityID int64) {
 		params = append(params, strings.Split(positions[curPos], " ")...)
 
 		testZoneCommand(zone, command, params)
-		time.Sleep(2 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 }
+
+func testAttack(zone string, entityID int64, targetID int64) {
+
+	time.Sleep(10 * time.Second)
+	fmt.Println("10 seconds, Having", entityID, "attack", targetID)
+	params := []string{
+		fmt.Sprintf("%d", entityID),
+		fmt.Sprintf("%d", entities[0].Id), //attack first element
+		"1",
+	}
+	command := "attack"
+	testZoneCommand(zone, command, params)
+}
+
+func testZoneCommandEntityList(zone string, command string, params []string) (entities []*eqproto.Entity) {
+
+	msg := &eqproto.CommandMessage{
+		Author:  "xackery",
+		Command: command,
+		Params:  params,
+	}
+	d, err := proto.Marshal(msg)
+	if err != nil {
+		log.Fatal(err)
+	}
+	reply, err := nc.Request(fmt.Sprintf("zone.%s.command_message", zone), d, 1*time.Second)
+	if err != nil {
+		log.Println("Failed to get request response:", err.Error())
+		return
+	}
+
+	err = proto.Unmarshal(reply.Data, msg)
+	if err != nil {
+		fmt.Println("Failed to unmarshal", err.Error())
+		return
+	}
+	rootEntities := &eqproto.Entities{}
+	err = proto.Unmarshal([]byte(msg.Payload), rootEntities)
+	if err != nil {
+		fmt.Println("failed to unmarshal entities", err.Error(), msg)
+		return
+	}
+	entities = rootEntities.Entities
+	return
+}
+
 func testZoneCommandEntity(zone string, command string, params []string) (entityID int64) {
 
 	msg := &eqproto.CommandMessage{
@@ -156,47 +220,39 @@ func testAsyncEntityEventSubscriber(zone string, entityID int64) {
 	var index int
 	channel := fmt.Sprintf("zone.%s.entity.event.%d", zone, entityID)
 	nc.Subscribe(channel, func(m *nats.Msg) {
-
-		//Every event is identified by the first chunk. split it to get opcode.
-		index = strings.Index(string(m.Data), "|")
-		if index < 1 {
-			fmt.Println("Invalid data passed (no | delimiter):", m.Data)
-			return
-		}
-
-		opCode, err = strconv.ParseInt(string(m.Data[0:index]), 10, 64)
+		event := &eqproto.Event{}
+		err = proto.Unmarshal(m.Data, event)
 		if err != nil {
-			fmt.Println("Invalid opcode passed", m.Data)
-			return
+			fmt.Println("invalid event data passed", m.Data)
 		}
 
-		var event proto.Message
-		switch eqproto.OpCode(opCode) {
+		var eventPayload proto.Message
+		switch event.Op {
 		case eqproto.OpCode_OP_ClientUpdate:
-			event = &eqproto.PlayerPositionUpdateEvent{}
+			eventPayload = &eqproto.PlayerPositionUpdateEvent{}
 		case eqproto.OpCode_OP_Animation:
-			event = &eqproto.AnimationEvent{}
+			eventPayload = &eqproto.AnimationEvent{}
 		case eqproto.OpCode_OP_NewSpawn:
-			event = &eqproto.SpawnEvent{}
+			eventPayload = &eqproto.SpawnEvent{}
 		case eqproto.OpCode_OP_ZoneEntry:
-			event = &eqproto.SpawnEvent{}
+			eventPayload = &eqproto.SpawnEvent{}
 		case eqproto.OpCode_OP_HPUpdate:
-			event = &eqproto.HPEvent{}
+			eventPayload = &eqproto.HPEvent{}
 		case eqproto.OpCode_OP_MobHealth:
-			event = &eqproto.HPEvent{}
+			eventPayload = &eqproto.HPEvent{}
 		case eqproto.OpCode_OP_DeleteSpawn:
-			event = &eqproto.DeleteSpawnEvent{}
+			eventPayload = &eqproto.DeleteSpawnEvent{}
 		case eqproto.OpCode_OP_Damage:
-			event = &eqproto.DamageEvent{}
+			eventPayload = &eqproto.DamageEvent{}
 		default:
 			return
 		}
-		err = proto.Unmarshal(m.Data[index+1:], event)
+		err = proto.Unmarshal(event.Payload, eventPayload)
 		if err != nil {
 			fmt.Println("Invalid data passed for opcode", eqproto.OpCode(opCode), err.Error(), string(m.Data[index+1:]))
 			return
 		}
-		fmt.Println(m.Subject, eqproto.OpCode(opCode), event)
+		fmt.Println(m.Subject, event.Op, eventPayload)
 		//log.Printf("Received a message on %s: %s\n", m.Subject, string(m.Data))
 
 		//proto.Unmarshal(m.Data, event)

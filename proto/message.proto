@@ -27,6 +27,7 @@ message CommandMessage {
   string command = 2;
   repeated string params = 3;
   string result = 4;
+  bytes payload = 5;
 }
 
 //Daily Gain is a special system for tracking players progression in a daily snapshot.
@@ -49,6 +50,10 @@ message Entity {
   Position position = 6;
   int32 race = 7;
   int32 class = 8;
+}
+
+message Entities {
+  repeated Entity entities = 1;
 }
 
 message Position {
@@ -98,6 +103,10 @@ message Tint {
 	uint32 Color = 5;
 }
 
+message Event {
+  OpCode op = 1;
+  bytes payload = 2;
+}
 
 //OP_Death
 message DeathEvent {

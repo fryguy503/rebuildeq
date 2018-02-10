@@ -4932,3 +4932,29 @@ void EntityList::SendAlternateAdvancementStats() {
 	}
 }
 
+
+std::map<uint16, NPC *> EntityList::ListNPCs()
+{	
+	std::map<uint16, NPC*> npcs;
+	auto it = npc_list.begin();
+	while (it != npc_list.end()) {
+		NPC *n = it->second;
+		npcs[n->id] = n;
+		++it;
+	}
+	return npcs;
+}
+
+std::map<uint16, Client *> EntityList::ListClients()
+{
+	std::map<uint16, Client*> clients;
+	
+	auto it = client_list.begin();
+	while (it != client_list.end()) {
+		Client *c = it->second;
+		clients[c->id] = c;
+		++it;
+	}
+	return clients;
+}
+
