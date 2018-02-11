@@ -1,7 +1,6 @@
 #include "nats_manager.h"
 #include "nats.h"
 #include "zonelist.h"
-#include "world_config.h"
 #include "login_server_list.h"
 #include "clientlist.h"
 #include "worlddb.h"
@@ -37,21 +36,48 @@ NatsManager::~NatsManager()
 	nats_Close();
 }
 
+bool NatsManager::connect() {
+	auto ncs = natsConnection_Status(conn);
+	if (ncs == CONNECTED) return true;
+	if (nats_timer.Enabled() && !nats_timer.Check()) return false;
+	natsOptions *opts = NULL;
+	natsOptions_Create(&opts);
+	natsOptions_SetMaxReconnect(opts, 0);
+	natsOptions_SetReconnectWait(opts, 0);
+	natsOptions_SetAllowReconnect(opts, false);
+	//The timeout is going to cause a 100ms delay on all connected clients every X seconds (20s)
+	//since this blocks the connection. It can be set lower or higher delay, 
+	//but since NATS is a second priority I wanted server impact minimum.
+	natsOptions_SetTimeout(opts, 100);
+	natsOptions_SetURL(opts, StringFormat("nats://%s:%d", worldConfig->NATSHost.c_str(), worldConfig->NATSPort).c_str());
+	s = natsConnection_Connect(&conn, opts);
+	natsOptions_Destroy(opts);
+	if (s != NATS_OK) {
+		Log(Logs::General, Logs::NATS, "failed to connect to %s:%d: %s, retrying in 20s", worldConfig->NATSHost.c_str(), worldConfig->NATSPort, nats_GetLastError(&s));
+		conn = NULL;
+		nats_timer.Enable();
+		nats_timer.SetTimer(20000);
+		return false;
+	}
+	Log(Logs::General, Logs::NATS, "connected to %s:%d", worldConfig->NATSHost.c_str(), worldConfig->NATSPort);
+	nats_timer.Disable();
+	return true;
+}
 
-//This doesn't work. It seems to loop once or twice then stop.
+
 void NatsManager::Process()
 {	
 	natsMsg *msg = NULL;
-	
+	if (!connect()) return;
 	s = NATS_OK;
 	for (int count = 0; (s == NATS_OK) && count < 5; count++)
 	{
 		s = natsSubscription_NextMsg(&msg, channelMessageSub, 1);
 		if (s != NATS_OK) break;
-		Log(Logs::General, Logs::World_Server, "NATS Got Broadcast Message '%s'", natsMsg_GetData(msg));
+		Log(Logs::General, Logs::NATS, "Got Broadcast Message '%s'", natsMsg_GetData(msg));
 		eqproto::ChannelMessage message;
 		if (!message.ParseFromString(natsMsg_GetData(msg))) {
-			Log(Logs::General, Logs::World_Server, "Failed to marshal");
+			Log(Logs::General, Logs::NATS, "Failed to marshal");
 			natsMsg_Destroy(msg);
 			continue;
 		}
@@ -63,12 +89,12 @@ void NatsManager::Process()
 	{
 		s = natsSubscription_NextMsg(&msg, commandMessageSub, 1);
 		if (s != NATS_OK) break;
-		Log(Logs::General, Logs::World_Server, "NATS Got Command Message '%s'", natsMsg_GetData(msg));
+		Log(Logs::General, Logs::NATS, "Got Command Message '%s'", natsMsg_GetData(msg));
 		eqproto::CommandMessage message;
 		
 			
 		if (!message.ParseFromString(natsMsg_GetData(msg))) {
-			Log(Logs::General, Logs::World_Server, "Failed to marshal");
+			Log(Logs::General, Logs::NATS, "Failed to marshal");
 			natsMsg_Destroy(msg);
 			continue;
 		}		
@@ -77,11 +103,8 @@ void NatsManager::Process()
 }
 
 void NatsManager::OnChannelMessage(ServerChannelMessage_Struct* msg) {
-	if (!conn) {
-		Log(Logs::General, Logs::World_Server, "OnChannelMessage failed, no connection to NATS");
-		return;
-	}
-
+	if (!connect()) return;
+	
 	eqproto::ChannelMessage message;
 	
 	message.set_fromadmin(msg->fromadmin);
@@ -99,10 +122,7 @@ void NatsManager::OnChannelMessage(ServerChannelMessage_Struct* msg) {
 }
 
 void NatsManager::OnEmoteMessage(ServerEmoteMessage_Struct* msg) {
-	if (!conn) {
-		Log(Logs::General, Logs::World_Server, "OnEmoteMessage failed, no connection to NATS");
-		return;
-	}
+	if (!connect()) return;
 	
 	eqproto::ChannelMessage message;
 	message.set_guilddbid(msg->guilddbid);
@@ -116,50 +136,41 @@ void NatsManager::OnEmoteMessage(ServerEmoteMessage_Struct* msg) {
 }
 
 void NatsManager::SendAdminMessage(std::string adminMessage) {
-	if (!conn) {
-		Log(Logs::General, Logs::World_Server, "NATS Send channel message failed, no connection to NATS");
-		return;
-	}
+	if (!connect()) return;
 
 	eqproto::ChannelMessage message;
 	message.set_message(adminMessage.c_str());
 	std::string pubMessage;
 	if (!message.SerializeToString(&pubMessage)) {
-		Log(Logs::General, Logs::World_Server, "NATS Failed to serialize message to string");
+		Log(Logs::General, Logs::NATS, "Failed to serialize message to string");
 		return;
 	}
 	s = natsConnection_PublishString(conn, "AdminMessage", pubMessage.c_str());
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::World_Server, "NATS Failed to SendAdminMessage");
+		Log(Logs::General, Logs::NATS, "Failed to SendAdminMessage");
 	}
-	Log(Logs::General, Logs::World_Server, "NATS AdminMessage: %s", adminMessage.c_str());
+	Log(Logs::General, Logs::NATS, "AdminMessage: %s", adminMessage.c_str());
 }
 
 //Send (publish) message to NATS
 void NatsManager::SendChannelMessage(eqproto::ChannelMessage* message) {
-	if (!conn) {
-		Log(Logs::General, Logs::World_Server, "NATS Send channel message failed, no connection to NATS");
-		return;
-	}
+	if (!connect()) return;
 
 	std::string pubMessage;
 	if (!message->SerializeToString(&pubMessage)) {
-		Log(Logs::General, Logs::World_Server, "NATS Failed to serialize message to string");
+		Log(Logs::General, Logs::NATS, "Failed to serialize message to string");
 		return;
 	}
 	s = natsConnection_PublishString(conn, "ChannelMessage", pubMessage.c_str());
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::World_Server, "NATS Failed to send ChannelMessageEvent");
+		Log(Logs::General, Logs::NATS, "Failed to send ChannelMessageEvent");
 	}
 }
 
 void NatsManager::CommandMessageEvent(eqproto::CommandMessage* message, const char* reply) {
-	if (!conn) {
-		Log(Logs::General, Logs::World_Server, "NATS Command Message failed, no connection to NATS");
-		return;
-	}
+	if (!connect()) return;
 	std::string pubMessage;
-	//Log(Logs::General, Logs::World_Server, "Command: %s", message->command().c_str());
+	//Log(Logs::General, Logs::NATS, "Command: %s", message->command().c_str());
 	// message->params()
 	
 	
@@ -224,25 +235,22 @@ void NatsManager::CommandMessageEvent(eqproto::CommandMessage* message, const ch
 	}
 
 	if (!message->SerializeToString(&pubMessage)) {
-		Log(Logs::General, Logs::World_Server, "NATS Failed to serialize command message to string");
+		Log(Logs::General, Logs::NATS, "Failed to serialize command message to string");
 		return;
 	}
 
 	s = natsConnection_PublishString(conn, reply, pubMessage.c_str());
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::World_Server, "NATS Failed to send CommandMessageEvent");
+		Log(Logs::General, Logs::NATS, "Failed to send CommandMessageEvent");
 		return;
 	}	
 }
 
 //Send a message to all zone servers.
 void NatsManager::ChannelMessageEvent(eqproto::ChannelMessage* message) {
-	if (!conn) {
-		Log(Logs::General, Logs::World_Server, "NATS Broadcasting Message failed, no connection to NATS");
-		return;
-	}
+	if (!connect()) return;
 	if (message->zone_id() > 0) return; //do'nt process non-zero messages
-	Log(Logs::General, Logs::World_Server, "NATS Broadcasting Message");
+	Log(Logs::General, Logs::NATS, "Broadcasting Message");
 	if (message->is_emote()) { //emote message
 		zoneserver_list.SendEmoteMessage(message->to().c_str(), message->guilddbid(), message->minstatus(), message->type(), message->message().c_str());
 		return;
@@ -265,17 +273,12 @@ void NatsManager::Save()
 
 void NatsManager::Load()
 {	
-	s = natsConnection_ConnectTo(&conn, StringFormat("nats://%s:%d", worldConfig->NATSHost.c_str(), worldConfig->NATSPort).c_str());
-	if (s != NATS_OK) {
-		Log(Logs::General, Logs::World_Server, "NATS failed to connect.");
-		conn = NULL;
-		return;
-	}
+	if (!connect()) return;
 
 	s = natsConnection_SubscribeSync(&channelMessageSub, conn, "ChannelMessageWorld");
 	s = natsConnection_SubscribeSync(&commandMessageSub, conn, "CommandMessageWorld");
 
 
-	Log(Logs::General, Logs::World_Server, "NATS Connected.");
+	Log(Logs::General, Logs::NATS, "Connected.");
 	return;
 }

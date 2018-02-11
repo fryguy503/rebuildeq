@@ -27,6 +27,7 @@ NatsManager::NatsManager()
 
 NatsManager::~NatsManager()
 {
+	nats_timer.Disable();
 	// Destroy all our objects to avoid report of memory leak
 	natsConnection_Destroy(conn);
 	natsOptions_Destroy(opts);
@@ -40,7 +41,7 @@ void NatsManager::Process()
 	if (zoneSub == NULL) {
 		return;
 	}
-	
+	if (!connect()) return;
 	natsMsg *msg = NULL;
 
 	s = NATS_OK;
@@ -49,7 +50,7 @@ void NatsManager::Process()
 	{
 		s = natsSubscription_NextMsg(&msg, zoneSub, 1);
 		if (s != NATS_OK) break;
-		Log(Logs::General, Logs::Zone_Server, "NATS got message '%s'", natsMsg_GetData(msg));
+		Log(Logs::General, Logs::NATS, "got message '%s'", natsMsg_GetData(msg));
 		natsMsg_Destroy(msg);
 	}
 
@@ -242,147 +243,175 @@ void NatsManager::Process()
 //Unregister is called when a zone is being put to sleep or being swapped
 void NatsManager::Unregister()
 {
+	if (!connect()) return;
 	if (commandMessageSub != NULL) {
 		s = natsSubscription_Unsubscribe(commandMessageSub);
 		commandMessageSub = NULL;
-		if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS unsubscribe from commandMessageSub failed: %s", nats_GetLastError(&s));
+		if (s != NATS_OK) Log(Logs::General, Logs::NATS, "unsubscribe from commandMessageSub failed: %s", nats_GetLastError(&s));
 	}
 
 	if (zoneChannelMessageSub != NULL) {
 		s = natsSubscription_Unsubscribe(zoneChannelMessageSub);
 		zoneChannelMessageSub = NULL;
-		if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS unsubscribe from zoneChannelMessageSub failed: %s", nats_GetLastError(&s));
+		if (s != NATS_OK) Log(Logs::General, Logs::NATS, "unsubscribe from zoneChannelMessageSub failed: %s", nats_GetLastError(&s));
 	}
 
 	if (zoneEntityEventSubscribeAllSub != NULL) {
 		s = natsSubscription_Unsubscribe(zoneEntityEventSubscribeAllSub);
 		zoneEntityEventSubscribeAllSub = NULL;
-		if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS unsubscribe from zoneEntityEventSubscribeAllSub failed: %s", nats_GetLastError(&s));
+		if (s != NATS_OK) Log(Logs::General, Logs::NATS, "unsubscribe from zoneEntityEventSubscribeAllSub failed: %s", nats_GetLastError(&s));
 	}
 	if (zoneEntityEventSubscribeSub != NULL) {
 		s = natsSubscription_Unsubscribe(zoneEntityEventSubscribeSub);
 		zoneEntityEventSubscribeSub = NULL;
-		if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS unsubscribe from zoneEntityEventSubscribeSub failed: %s", nats_GetLastError(&s));
+		if (s != NATS_OK) Log(Logs::General, Logs::NATS, "unsubscribe from zoneEntityEventSubscribeSub failed: %s", nats_GetLastError(&s));
 	}
 
 	if (zoneEntityEventListSub != NULL) {
 		s = natsSubscription_Unsubscribe(zoneEntityEventListSub);
 		zoneEntityEventListSub = NULL;
-		if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS unsubscribe from zoneEntityEventListSub failed: %s", nats_GetLastError(&s));
+		if (s != NATS_OK) Log(Logs::General, Logs::NATS, "unsubscribe from zoneEntityEventListSub failed: %s", nats_GetLastError(&s));
 	}
 
 	if (zoneEntityEventSub != NULL) {
 		s = natsSubscription_Unsubscribe(zoneEntityEventSub);
 		zoneEntityEventSub = NULL;
-		if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS unsubscribe from zoneEntityEventSub failed: %s", nats_GetLastError(&s));
+		if (s != NATS_OK) Log(Logs::General, Logs::NATS, "unsubscribe from zoneEntityEventSub failed: %s", nats_GetLastError(&s));
 	}
 
-	Log(Logs::General, Logs::Zone_Server, "NATS unsubscribed from %s", subscribedZonename.c_str());	
+	Log(Logs::General, Logs::NATS, "unsubscribed from %s", subscribedZonename.c_str());	
 	subscribedZonename.clear();
 	return;
 }
 
 void NatsManager::ZoneSubscribe(const char* zonename) {
 	if (strcmp(subscribedZonename.c_str(), zonename) == 0) return;
-	if (!conn) return;
+	if (!connect()) return;
 	Unregister();
 	
 	subscribedZonename = std::string(zonename);
 	
 	s = natsConnection_SubscribeSync(&zoneChannelMessageSub, conn,  StringFormat("zone.%s.channel_message", subscribedZonename.c_str()).c_str());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to zoneChannelMessageSub %s", nats_GetLastError(&s));
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "failed to subscribe to zoneChannelMessageSub %s", nats_GetLastError(&s));
 	s = natsSubscription_SetPendingLimits(zoneChannelMessageSub, -1, -1);
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits to zoneChannelMessageSub %s", nats_GetLastError(&s));
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "failed to set pending limits to zoneChannelMessageSub %s", nats_GetLastError(&s));
 
 	s = natsConnection_SubscribeSync(&commandMessageSub, conn, StringFormat("zone.%s.command_message", subscribedZonename.c_str()).c_str());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to commandMessageSub %s", nats_GetLastError(&s));
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "failed to subscribe to commandMessageSub %s", nats_GetLastError(&s));
 	s = natsSubscription_SetPendingLimits(commandMessageSub, -1, -1);
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits to commandMessageSub %s", nats_GetLastError(&s));
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "failed to set pending limits to commandMessageSub %s", nats_GetLastError(&s));
 
 	s = natsConnection_SubscribeSync(&zoneEntityEventSubscribeAllSub, conn, StringFormat("zone.%s.entity.event_subscribe.all", subscribedZonename.c_str()).c_str());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to zoneEntityEventSubscribeAllSub %s", nats_GetLastError(&s));
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "failed to subscribe to zoneEntityEventSubscribeAllSub %s", nats_GetLastError(&s));
 	s = natsSubscription_SetPendingLimits(zoneEntityEventSubscribeAllSub, -1, -1);
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits to zoneEntityEventSubscribeAllSub %s", nats_GetLastError(&s));
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "failed to set pending limits to zoneEntityEventSubscribeAllSub %s", nats_GetLastError(&s));
 
 	s = natsConnection_SubscribeSync(&zoneEntityEventSubscribeAllSub, conn, StringFormat("zone.%s.entity.event_subscribe.all", subscribedZonename.c_str()).c_str());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to zoneEntityEventSubscribeAllSub %s", nats_GetLastError(&s));
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "failed to subscribe to zoneEntityEventSubscribeAllSub %s", nats_GetLastError(&s));
 	s = natsSubscription_SetPendingLimits(zoneEntityEventSubscribeAllSub, -1, -1);
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits to zoneEntityEventSubscribeAllSub %s", nats_GetLastError(&s));
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "failed to set pending limits to zoneEntityEventSubscribeAllSub %s", nats_GetLastError(&s));
 
-	Log(Logs::General, Logs::Zone_Server, "NATS subscribed to %s", subscribedZonename.c_str());
+	Log(Logs::General, Logs::NATS, "subscribed to %s", subscribedZonename.c_str());
 }
 
 
 void NatsManager::SendAdminMessage(std::string adminMessage) {
-	if (!conn) {
-		Log(Logs::General, Logs::Zone_Server, "NATS Send channel message failed, no connection to NATS");
-		return;
-	}
+	if (!connect()) return;
 
 	eqproto::ChannelMessage message;
 	message.set_message(adminMessage.c_str());
 	std::string pubMessage;
 	if (!message.SerializeToString(&pubMessage)) {
-		Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string");
+		Log(Logs::General, Logs::NATS, "Failed to serialize message to string");
 		return;
 	}
 	s = natsConnection_PublishString(conn, "NATS AdminMessage", pubMessage.c_str());
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "NATS Failed to SendAdminMessage");
+		Log(Logs::General, Logs::NATS, "Failed to SendAdminMessage");
 	}
-	Log(Logs::General, Logs::Zone_Server, "NATS AdminMessage: %s", adminMessage.c_str());
+	Log(Logs::General, Logs::NATS, "AdminMessage: %s", adminMessage.c_str());
 }
 
 
+bool NatsManager::connect() {
+
+	auto ncs = natsConnection_Status(conn);
+	if (ncs == CONNECTED) return true;
+	if (nats_timer.Enabled() && !nats_timer.Check()) return false;
+	natsOptions *opts = NULL;
+	natsOptions_Create(&opts);
+	natsOptions_SetMaxReconnect(opts, 0);
+	natsOptions_SetReconnectWait(opts, 0);
+	natsOptions_SetAllowReconnect(opts, false);
+	//The timeout is going to cause a 100ms delay on all connected clients every X seconds (20s)
+	//since this blocks the connection. It can be set lower or higher delay, 
+	//but since NATS is a second priority I wanted server impact minimum.
+	natsOptions_SetTimeout(opts, 100);
+	natsOptions_SetURL(opts, StringFormat("nats://%s:%d", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort).c_str());
+	s = natsConnection_Connect(&conn, opts);
+	natsOptions_Destroy(opts);
+	if (s != NATS_OK) {
+		Log(Logs::General, Logs::NATS, "failed to connect to %s:%d: %s, retrying in 20s", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort, nats_GetLastError(&s));
+		conn = NULL;
+		nats_timer.Enable();
+		nats_timer.SetTimer(20000);
+		return false;
+	}
+	Log(Logs::General, Logs::NATS, "connected to %s:%d", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort);
+	nats_timer.Disable();	
+	return true;
+}
+
 void NatsManager::Load()
-{
+{	
+	Log(Logs::General, Logs::NATS, "loading");
+	if (!connect()) return;
 	s = natsConnection_ConnectTo(&conn, StringFormat("nats://%s:%d", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort).c_str());
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "NATS failed to load: %s", nats_GetLastError(&s));
+		Log(Logs::General, Logs::NATS, "failed to load: %s", nats_GetLastError(&s));
 		conn = NULL;
 		return;
 	}
 
 	s = natsConnection_SubscribeSync(&zoneSub, conn, "zone");
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to zone: %s", nats_GetLastError(&s));
+		Log(Logs::General, Logs::NATS, "failed to subscribe to zone: %s", nats_GetLastError(&s));
 		return;
 	}
 	s = natsSubscription_SetPendingLimits(zoneSub, -1, -1);
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits while subscribed to zone %s", nats_GetLastError(&s));
+		Log(Logs::General, Logs::NATS, "failed to set pending limits while subscribed to zone %s", nats_GetLastError(&s));
 		return;
 	}
 
 	s = natsConnection_SubscribeSync(&commandMessageSub, conn, "zone.command_message");
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to commandMessageSub: %s", nats_GetLastError(&s));
+		Log(Logs::General, Logs::NATS, "failed to subscribe to commandMessageSub: %s", nats_GetLastError(&s));
 		return;
 	}
 	s = natsSubscription_SetPendingLimits(commandMessageSub, -1, -1);
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits while subscribed to commandMessageSub: %s", nats_GetLastError(&s));
+		Log(Logs::General, Logs::NATS, "failed to set pending limits while subscribed to commandMessageSub: %s", nats_GetLastError(&s));
 		return;
 	}
 
 	s = natsConnection_SubscribeSync(&channelMessageSub, conn, "zone.channel_message");
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "NATS failed to subscribe to channel message: %s", nats_GetLastError(&s));
+		Log(Logs::General, Logs::NATS, "failed to subscribe to channel message: %s", nats_GetLastError(&s));
 		return;
 	}
 	s = natsSubscription_SetPendingLimits(channelMessageSub, -1, -1);
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::Zone_Server, "NATS failed to set pending limits while subscribed to channel message: %s", nats_GetLastError(&s));
+		Log(Logs::General, Logs::NATS, "failed to set pending limits while subscribed to channel message: %s", nats_GetLastError(&s));
 		return;
 	}
 
-	Log(Logs::General, Logs::Zone_Server, "NATS Connected.");
 	return;
 }
 
 void NatsManager::DailyGain(int account_id, int character_id, const char* identity, int levels_gained, int experience_gained, int money_earned)
 {	
-	if (!conn) return;
+	if (!connect()) return;
 	eqproto::DailyGain daily;
 	daily.set_account_id(account_id);
 	daily.set_character_id(character_id);
@@ -392,12 +421,12 @@ void NatsManager::DailyGain(int account_id, int character_id, const char* identi
 	daily.set_money_earned(money_earned);
 	std::string pubMessage;
 	if (!daily.SerializeToString(&pubMessage)) {
-		Log(Logs::General, Logs::Zone_Server, "NATS failed to serialize dailygain to string");
+		Log(Logs::General, Logs::NATS, "failed to serialize dailygain to string");
 		return;
 	}
 
 	s = natsConnection_PublishString(conn, "DailyGain", pubMessage.c_str());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS failed to send DailyGain: %s", nats_GetLastError(&s));	
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "failed to send DailyGain: %s", nats_GetLastError(&s));	
 }
 
 
@@ -410,7 +439,7 @@ void NatsManager::OnEntityEvent(const EmuOpcode op, Entity *ent, Entity *target)
 
 
 	if (!conn) {
-		Log(Logs::General, Logs::Zone_Server, "OnChannelMessage failed, no connection to NATS");
+		Log(Logs::General, Logs::NATS, "OnChannelMessage failed, no connection to NATS");
 		return;
 	}
 
@@ -470,11 +499,11 @@ void NatsManager::OnEntityEvent(const EmuOpcode op, Entity *ent, Entity *target)
 	
 	std::string pubMessage;
 	bool isSerialized = event.SerializeToString(&pubMessage);	
-	if (!isSerialized) Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string");
-	Log(Logs::General, Logs::Zone_Server, "NATS Event: %d", op);
+	if (!isSerialized) Log(Logs::General, Logs::NATS, "Failed to serialize message to string");
+	Log(Logs::General, Logs::NATS, "Event: %d", op);
 	
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), ent->GetID()).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "Failed to send EntityEvent");
 	entity.release_name();
 	targetEntity.release_name();
 	entity.release_position();
@@ -485,12 +514,14 @@ void NatsManager::OnEntityEvent(const EmuOpcode op, Entity *ent, Entity *target)
 }*/
 
 bool NatsManager::isEntitySubscribed(const uint16 ID) {
+	if (!connect()) return false;
 	return false;
 }
 
 
 void NatsManager::OnDeathEvent(Death_Struct* d) {
-	if (d == NULL || !conn) return;
+	if (!connect()) return;
+	if (d == NULL) return;
 	if (!isEntityEventAllEnabled && !isEntitySubscribed(d->spawn_id)) return;
 
 	std::string pubMessage;
@@ -504,19 +535,20 @@ void NatsManager::OnDeathEvent(Death_Struct* d) {
 	event.set_damage(d->damage);
 
 	
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }	
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }	
 
 	auto finalEvent = eqproto::Event();
 	finalEvent.set_payload(pubMessage.c_str());
 	finalEvent.set_op(eqproto::OP_Death);
-	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), d->spawn_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "Failed to send EntityEvent");
 }
 
 
 void NatsManager::OnChannelMessageEvent(uint32 entity_id, ChannelMessage_Struct* cm) {
-	if (entity_id == 0 || !conn) return;
+	if (!connect()) return;
+	if (entity_id == 0) return;
 	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
 
 	std::string pubMessage;
@@ -530,17 +562,19 @@ void NatsManager::OnChannelMessageEvent(uint32 entity_id, ChannelMessage_Struct*
 	event.set_skill_in_language(cm->skill_in_language);
 	event.set_message(cm->message);
 
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	auto finalEvent = eqproto::Event();
 	finalEvent.set_payload(pubMessage.c_str());
 	finalEvent.set_op(eqproto::OP_ChannelMessage);
-	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "Failed to send EntityEvent");
 }
 
 void NatsManager::OnEntityEvent(const EmuOpcode op, uint32 entity_id, uint32 target_id) {
-	if (entity_id == 0 || !conn) return;
+	if (!connect()) return;
+	if (entity_id == 0) return;
+
 	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
 
 	std::string pubMessage;
@@ -549,20 +583,21 @@ void NatsManager::OnEntityEvent(const EmuOpcode op, uint32 entity_id, uint32 tar
 	event.set_entity_id(entity_id);
 	event.set_target_id(target_id);
 
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	auto finalEvent = eqproto::Event();
 	finalEvent.set_payload(pubMessage.c_str());
 	if (op == OP_Camp) finalEvent.set_op(eqproto::OP_Camp);
 	else if (op == OP_Assist) finalEvent.set_op(eqproto::OP_Assist);
-	else { Log(Logs::General, Logs::Zone_Server, "NATS unhandled op type passed: %i", op); return; }
-	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	else { Log(Logs::General, Logs::NATS, "unhandled op type passed: %i", op); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "Failed to send EntityEvent");
 }
 
 
 void NatsManager::OnSpawnEvent(const EmuOpcode op, uint32 entity_id, Spawn_Struct *spawn) {
-	if (entity_id == 0 || !conn) return;
+	if (!connect()) return;
+	if (entity_id == 0) return;
 	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
 
 	std::string pubMessage;
@@ -675,20 +710,21 @@ void NatsManager::OnSpawnEvent(const EmuOpcode op, uint32 entity_id, Spawn_Struc
 	event.set_targetable_with_hotkey(spawn->targetable_with_hotkey);
 	event.set_show_name(spawn->show_name);
 
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }	
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }	
 	auto finalEvent = eqproto::Event();
 	finalEvent.set_payload(pubMessage.c_str());
 	if (op == OP_ZoneEntry) finalEvent.set_op(eqproto::OP_ZoneEntry);
 	else if (op == OP_NewSpawn) finalEvent.set_op(eqproto::OP_NewSpawn);
-	else { Log(Logs::General, Logs::Zone_Server, "NATS unhandled op type passed: %i", op); return; }
-	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	else { Log(Logs::General, Logs::NATS, "unhandled op type passed: %i", op); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "Failed to send EntityEvent");
 }
 
 
 void NatsManager::OnWearChangeEvent(uint32 entity_id, WearChange_Struct *wc) {
-	if (entity_id == 0 || !conn) return;
+	if (!connect()) return;
+	if (entity_id == 0) return;
 	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
 
 	std::string pubMessage;
@@ -704,17 +740,18 @@ void NatsManager::OnWearChangeEvent(uint32 entity_id, WearChange_Struct *wc) {
 	//event.set_color(wc->color); //tint
 	event.set_wear_slot_id(wc->wear_slot_id);
 
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	auto finalEvent = eqproto::Event();
 	finalEvent.set_payload(pubMessage.c_str());
 	finalEvent.set_op(eqproto::OP_WearChange);
-	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "Failed to send EntityEvent");
 }
 
 void NatsManager::OnDeleteSpawnEvent(uint32 entity_id, DeleteSpawn_Struct *ds) {
-	if (entity_id == 0 || !conn) return;
+	if (!connect()) return;
+	if (entity_id == 0) return;
 	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
 
 	std::string pubMessage;
@@ -724,17 +761,18 @@ void NatsManager::OnDeleteSpawnEvent(uint32 entity_id, DeleteSpawn_Struct *ds) {
 	event.set_spawn_id(ds->spawn_id);
 	event.set_decay(ds->Decay);
 
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	auto finalEvent = eqproto::Event();
 	finalEvent.set_payload(pubMessage.c_str());
 	finalEvent.set_op(eqproto::OP_DeleteSpawn);
-	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "Failed to send EntityEvent");
 }
 
 void NatsManager::OnHPEvent(const EmuOpcode op, uint32 entity_id, uint32 cur_hp, uint32 max_hp) {
-	if (entity_id == 0 || !conn) return;
+	if (!connect()) return;
+	if (entity_id == 0) return;
 	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
 	if (cur_hp == max_hp) return;
 	std::string pubMessage;
@@ -744,19 +782,20 @@ void NatsManager::OnHPEvent(const EmuOpcode op, uint32 entity_id, uint32 cur_hp,
 	event.set_cur_hp(cur_hp);
 	event.set_max_hp(max_hp);
 
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	auto finalEvent = eqproto::Event();
 	finalEvent.set_payload(pubMessage.c_str());
 	if (op == OP_MobHealth) finalEvent.set_op(eqproto::OP_MobHealth);
 	else if (op == OP_HPUpdate) finalEvent.set_op(eqproto::OP_HPUpdate);
-	else { Log(Logs::General, Logs::Zone_Server, "NATS unhandled op type passed: %i", op); return; }
-	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	else { Log(Logs::General, Logs::NATS, "unhandled op type passed: %i", op); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "Failed to send EntityEvent");
 }
 
 void NatsManager::OnDamageEvent(uint32 entity_id, CombatDamage_Struct *cd) {
-	if (entity_id == 0 || !conn) return;
+	if (!connect()) return;
+	if (entity_id == 0) return;
 	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
 	std::string pubMessage;
 	auto event = eqproto::DamageEvent();
@@ -770,17 +809,18 @@ void NatsManager::OnDamageEvent(uint32 entity_id, CombatDamage_Struct *cd) {
 	event.set_meleepush_xy(cd->meleepush_xy);
 	event.set_meleepush_z(cd->meleepush_z);
 	
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	auto finalEvent = eqproto::Event();
 	finalEvent.set_payload(pubMessage.c_str());
 	finalEvent.set_op(eqproto::OP_Damage);
-	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "Failed to send EntityEvent");
 }
 
 void NatsManager::OnClientUpdateEvent(uint32 entity_id, PlayerPositionUpdateServer_Struct * spu) {
-	if (entity_id == 0 || !conn) return;
+	if (!connect()) return;
+	if (entity_id == 0) return;
 	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
 
 	std::string pubMessage;
@@ -801,18 +841,19 @@ void NatsManager::OnClientUpdateEvent(uint32 entity_id, PlayerPositionUpdateServ
 	event.set_delta_z(spu->delta_z);
 	event.set_padding0018(spu->padding0018);
 
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	auto finalEvent = eqproto::Event();
 	finalEvent.set_payload(pubMessage.c_str());
 	finalEvent.set_op(eqproto::OP_ClientUpdate);
-	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "Failed to send EntityEvent");
 }
 
 
 void NatsManager::OnAnimationEvent(uint32 entity_id, Animation_Struct *anim) {
-	if (entity_id == 0 || !conn) return;
+	if (!connect()) return;
+	if (entity_id == 0) return;
 	if (!isEntityEventAllEnabled && !isEntitySubscribed(entity_id)) return;
 
 	std::string pubMessage;
@@ -822,11 +863,11 @@ void NatsManager::OnAnimationEvent(uint32 entity_id, Animation_Struct *anim) {
 	event.set_speed(anim->speed);
 	event.set_action(anim->action);	
 
-	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	auto finalEvent = eqproto::Event();
 	finalEvent.set_payload(pubMessage.c_str());
 	finalEvent.set_op(eqproto::OP_Animation);
-	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::Zone_Server, "NATS Failed to serialize message to string"); return; }
+	if (!finalEvent.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	s = natsConnection_Publish(conn, StringFormat("zone.%s.entity.event.%d", subscribedZonename.c_str(), entity_id).c_str(), (const void*)pubMessage.c_str(), pubMessage.length());
-	if (s != NATS_OK) Log(Logs::General, Logs::Zone_Server, "NATS Failed to send EntityEvent");
+	if (s != NATS_OK) Log(Logs::General, Logs::NATS, "Failed to send EntityEvent");
 }

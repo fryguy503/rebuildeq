@@ -31,6 +31,8 @@ public:
 	void OnDeathEvent(Death_Struct * d);	
 	void SendAdminMessage(std::string adminMessage);	
 protected:
+	bool connect();
+	Timer nats_timer;
 	bool isEntitySubscribed(const uint16 ID);
 	bool isEntityEventAllEnabled = true;
 	natsConnection *conn = NULL;

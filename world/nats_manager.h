@@ -3,6 +3,7 @@
 
 #include "nats.h"
 
+#include "world_config.h"
 #include "../common/global_define.h"
 #include "../common/types.h"
 #include "../common/timer.h"
@@ -28,6 +29,8 @@ public:
 	void Save();
 	void Load();
 protected:
+	bool connect();
+	Timer nats_timer;
 	natsConnection *conn = NULL;
 	natsStatus      s;
 	natsStatistics *stats = NULL;
