@@ -347,31 +347,26 @@ bool NatsManager::connect() {
 	//since this blocks the connection. It can be set lower or higher delay, 
 	//but since NATS is a second priority I wanted server impact minimum.
 	natsOptions_SetTimeout(opts, 100);
-	natsOptions_SetURL(opts, StringFormat("nats://%s:%d", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort).c_str());
+	std::string connection = StringFormat("nats://%s:%d", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort);
+	if (zoneConfig->NATSHost.length() == 0) connection = "nats://127.0.0.1:4222";
+	natsOptions_SetURL(opts, connection.c_str());
 	s = natsConnection_Connect(&conn, opts);
 	natsOptions_Destroy(opts);
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::NATS, "failed to connect to %s:%d: %s, retrying in 20s", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort, nats_GetLastError(&s));
+		Log(Logs::General, Logs::NATS, "failed to connect to %s: %s, retrying in 20s", connection.c_str(), nats_GetLastError(&s));
 		conn = NULL;
 		nats_timer.Enable();
 		nats_timer.SetTimer(20000);
 		return false;
 	}
-	Log(Logs::General, Logs::NATS, "connected to %s:%d", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort);
+	Log(Logs::General, Logs::NATS, "connected to %s", connection.c_str());
 	nats_timer.Disable();	
 	return true;
 }
 
 void NatsManager::Load()
 {	
-	Log(Logs::General, Logs::NATS, "loading");
 	if (!connect()) return;
-	s = natsConnection_ConnectTo(&conn, StringFormat("nats://%s:%d", zoneConfig->NATSHost.c_str(), zoneConfig->NATSPort).c_str());
-	if (s != NATS_OK) {
-		Log(Logs::General, Logs::NATS, "failed to load: %s", nats_GetLastError(&s));
-		conn = NULL;
-		return;
-	}
 
 	s = natsConnection_SubscribeSync(&zoneSub, conn, "zone");
 	if (s != NATS_OK) {

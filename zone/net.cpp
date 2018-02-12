@@ -606,7 +606,6 @@ void CatchSignal(int sig_num) {
 void Shutdown()
 {
 	nats.Unregister();
-//	google::protobuf::ShutdownProtobufLibrary();
 	Zone::Shutdown(true);
 	RunLoops = false;
 	Log(Logs::General, Logs::Zone_Server, "Shutting down...");

@@ -49,17 +49,19 @@ bool NatsManager::connect() {
 	//since this blocks the connection. It can be set lower or higher delay, 
 	//but since NATS is a second priority I wanted server impact minimum.
 	natsOptions_SetTimeout(opts, 100);
-	natsOptions_SetURL(opts, StringFormat("nats://%s:%d", worldConfig->NATSHost.c_str(), worldConfig->NATSPort).c_str());
+	std::string connection = StringFormat("nats://%s:%d", worldConfig->NATSHost.c_str(), worldConfig->NATSPort);
+	if (worldConfig->NATSHost.length() == 0) connection = "nats://127.0.0.1:4222";
+	natsOptions_SetURL(opts, connection.c_str());
 	s = natsConnection_Connect(&conn, opts);
 	natsOptions_Destroy(opts);
 	if (s != NATS_OK) {
-		Log(Logs::General, Logs::NATS, "failed to connect to %s:%d: %s, retrying in 20s", worldConfig->NATSHost.c_str(), worldConfig->NATSPort, nats_GetLastError(&s));
+		Log(Logs::General, Logs::NATS, "failed to connect to %s: %s, retrying in 20s", connection.c_str(), nats_GetLastError(&s));
 		conn = NULL;
 		nats_timer.Enable();
 		nats_timer.SetTimer(20000);
 		return false;
 	}
-	Log(Logs::General, Logs::NATS, "connected to %s:%d", worldConfig->NATSHost.c_str(), worldConfig->NATSPort);
+	Log(Logs::General, Logs::NATS, "connected to %s", connection.c_str());
 	nats_timer.Disable();
 	return true;
 }
@@ -277,8 +279,5 @@ void NatsManager::Load()
 
 	s = natsConnection_SubscribeSync(&channelMessageSub, conn, "ChannelMessageWorld");
 	s = natsConnection_SubscribeSync(&commandMessageSub, conn, "CommandMessageWorld");
-
-
-	Log(Logs::General, Logs::NATS, "Connected.");
 	return;
 }
