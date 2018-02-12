@@ -10857,6 +10857,14 @@ std::string Client::GetBuildName(uint32 id) {
 		if (id == RB_NEC_SPIRITFOCUS) return "Spirit Focus";
 		if (id == RB_NEC_DYINGGRASP) return "Dying Grasp";
 		if (id == RB_NEC_SERVANTOFBLOOD) return "Servant of Blood";
+		if (id == RB_NEC_ARMOROFDEATH) return "Armor of Death";
+		if (id == RB_NEC_BLOODREALM) return "Blood Realm";		
+		if (id == RB_NEC_DEATHLYAURA) return "Deathly Aura";
+		if (id == RB_NEC_BURDENOFUNDEAD) return "Burden of Undead";
+		if (id == RB_NEC_DEATHBLOOM) return "Death Bloom";
+		if (id == RB_NEC_ETERNITYOFUNDEATH) return "Eternity of Undeath";		
+		if (id == RB_NEC_GHOULCLAWS) return "Ghoul Claws";
+		if (id == RB_NEC_LICHKING) return "Lich King";
 		break;
 	case PALADIN:		
 		if (id == RB_PAL_RODCETSGIFT) return "Rodcet's Gift";
