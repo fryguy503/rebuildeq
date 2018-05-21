@@ -659,7 +659,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		npc_type->hairstyle = GetHairStyle();
 		npc_type->luclinface = GetLuclinFace();
 		npc_type->race = GetRace();
-		npc_type->gender = (GetGender() == 0 ? 0 : 1);
+		npc_type->gender = (GetGender() == 1 ? 0 : 1);
 
 		npc_type->beard = GetBeard();
 		npc_type->drakkin_heritage = GetDrakkinHeritage();
