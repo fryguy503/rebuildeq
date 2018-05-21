@@ -4975,7 +4975,17 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 		}
 		//else if (tmob->GetLevel() > GetLevel()) {
 		else if (con->level == CON_YELLOW) {
-			level_text = "looks like he would wipe the floor with you!";
+			switch (tmob->GetGender()) {
+				case 0:
+					level_text = "looks like he would wipe the floor with you!";
+					break;
+				case 1:
+					level_text = "looks like she would wipe the floor with you!";
+					break;
+				default:
+					level_text = "looks like it would wipe the floor with you!";
+					break;
+			}
 			color = 15;
 		}
 		else if ((con->level == CON_WHITE || con->level == CON_WHITE_TITANIUM)|| tmob->GetLevel() == GetLevel()) { //CON_WHITE doesn't work always for some reason
@@ -4984,7 +4994,17 @@ void Client::Handle_OP_Consider(const EQApplicationPacket *app)
 		}
 		//else if (tmob->GetLevel() > GetLevel() - 6) {
 		else if (con->level == CON_BLUE) {
-			level_text = "he appears to be quite formiddable.";
+			switch (tmob->GetGender()) {
+				case 0:
+					level_text = "he appears to be quite formiddable.";
+					break;
+				case 1:
+					level_text = "she appears to be quite formiddable.";
+					break;
+				default:
+					level_text = "it appears to be quite formiddable.";
+					break;
+			}
 			color = 4;
 		}
 		//else if (tmob->GetLevel() > GetLevel() - 11) {
