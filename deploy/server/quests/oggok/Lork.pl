@@ -17,10 +17,12 @@ sub EVENT_SAY {
 }
 
 sub EVENT_ITEM {
+
+#Begin experience bottle turn in code.
   my $task_id = 303;
   my $activity_id = 1;
   my $bottle_goal = 20;
-  my $bottle_message = "Ay danks. Dis show you strong.";
+  my $bottle_message = "Ay danks. Dis show you strong, $name.";
   my $bottle_task_active = quest::istaskactivityactive($task_id, $activity_id);
   my $bottles_previously_turned_in = quest::gettaskactivitydonecount($task_id, $activity_id);
   my $bottles_turned_in = 0;
@@ -65,7 +67,8 @@ sub EVENT_ITEM {
 	  return;
 	}
   }
-	
+#End experience bottle turn in code.
+  
   if(plugin::check_handin(\%itemcount, 100041 => 1, 100042 => 1, 100043 => 1, 100044 => 1)) {
     quest::say("Ay danks. Doctrine all yours.");    
     quest::exp(1000);
