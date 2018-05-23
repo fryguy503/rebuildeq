@@ -19,38 +19,39 @@ sub EVENT_SAY {
 sub EVENT_ITEM {
   my $task_id = 303;
   my $activity_id = 1;
-  my $BottleTaskActive = quest::istaskactivityactive($task_id, $activity_id);
-  my $BottlesTurnedIn = quest::gettaskactivitydonecount($task_id, $activity_id);
-  my $TotalBottles = $BottlesTurnedIn + $itemcount{100001};
-  my $BottleMessage = "Ay danks. Dis show you strong.";
-  if($BottleTaskActive == 1 && $TotalBottles <= 20) {
+  my $bottle_goal = 20;
+  my $bottle_message = "Ay danks. Dis show you strong.";
+  my $bottle_task_active = quest::istaskactivityactive($task_id, $activity_id);
+  my $bottles_already_turned_in = quest::gettaskactivitydonecount($task_id, $activity_id);
+  my $bottle_new_total = $bottles_already_turned_in + $itemcount{100001};
+  if($bottle_task_active == 1 && $bottle_new_total <= $bottle_goal) {
 	if(plugin::check_handin(\%itemcount, 100001 => 1)) {
-	  quest::say($BottleMessage);
+	  quest::say($bottle_message);
 	  quest::updatetaskactivity($task_id, $activity_id, 1);
 	  return;
-	  }
+	}
 	if(plugin::check_handin(\%itemcount, 100001 => 2)) {
-	  quest::say($BottleMessage);
-	  quest::say($BottleMessage);
+	  quest::say($bottle_message);
+	  quest::say($bottle_message);
 	  quest::updatetaskactivity($task_id, $activity_id, 2);
 	  return;
-	  }
+	}
 	if(plugin::check_handin(\%itemcount, 100001 => 3)) {
-	  quest::say($BottleMessage);
-	  quest::say($BottleMessage);
-	  quest::say($BottleMessage);
+	  quest::say($bottle_message);
+	  quest::say($bottle_message);
+	  quest::say($bottle_message);
 	  quest::updatetaskactivity($task_id, $activity_id, 3);
 	  return;
-	  }
+	}
 	if(plugin::check_handin(\%itemcount, 100001 => 4)) {
-	  quest::say($BottleMessage);
-	  quest::say($BottleMessage);
-	  quest::say($BottleMessage);
-	  quest::say($BottleMessage);
+	  quest::say($bottle_message);
+	  quest::say($bottle_message);
+	  quest::say($bottle_message);
+	  quest::say($bottle_message);
 	  quest::updatetaskactivity($task_id, $activity_id, 4);
 	  return;
-	  }
 	}
+  }
 	
   if(plugin::check_handin(\%itemcount, 100041 => 1, 100042 => 1, 100043 => 1, 100044 => 1)) {
     quest::say("Ay danks. Doctrine all yours.");    
