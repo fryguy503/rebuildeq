@@ -1,0 +1,2 @@
+# Update the task activities to method 2 (perl script) instead of method 1 (goal list) for all tasks involving experience bottles
+UPDATE activities SET goalmethod = 2 WHERE taskid IN (301, 302, 303, 305, 308, 501) AND goalid = 100001 AND goalmethod = 0;

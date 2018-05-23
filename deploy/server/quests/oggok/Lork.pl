@@ -1,7 +1,7 @@
 sub EVENT_SAY {
   if($text=~/hail/i) {
     quest::say("You $name. We hear of you. We need help. You [ ". quest::saylink("help Crakneks"). " ] or you [ ".quest::saylink("help self") ." ]?");
-  }
+	}
   if($text=~/help crakneks/i) {
     quest::say("Ha!! We hear of great adventurer. You?!! Me no think so. You prove self to Crakneks before you help us. Go to Innoth.. Innotu.. Innooth.. Arghh!! You go to outside Oggok. Find fat alligator bit Lork brother in two. Bring brother, Nork, body back. Then me know you strong.");
   }
@@ -17,15 +17,46 @@ sub EVENT_SAY {
 }
 
 sub EVENT_ITEM {
+  my $task_id = 303;
+  my $activity_id = 1;
+  my $BottleTaskActive = quest::istaskactivityactive($task_id, $activity_id);
+  my $BottlesTurnedIn = quest::gettaskactivitydonecount($task_id, $activity_id);
+  my $TotalBottles = $BottlesTurnedIn + $itemcount{100001};
+  if($BottleTaskActive == 1 && $TotalBottles <= 20) {
+	if(plugin::check_handin(\%itemcount, 100001 => 1)) {
+		quest::say("Ay danks. Dis show you strong.");
+		quest::updatetaskactivity(303, 1, 1);
+		return;
+		}
+	if(plugin::check_handin(\%itemcount, 100001 => 2)) {
+		quest::say("Ay danks. Dis show you strong.");
+		quest::say("Ay danks. Dis show you strong.");
+		quest::updatetaskactivity(303, 1, 2);
+		return;
+		}
+	if(plugin::check_handin(\%itemcount, 100001 => 3)) {
+		quest::say("Ay danks. Dis show you strong.");
+		quest::say("Ay danks. Dis show you strong.");
+		quest::say("Ay danks. Dis show you strong.");
+		quest::updatetaskactivity(303, 1, 3);
+		return;
+		}
+	if(plugin::check_handin(\%itemcount, 100001 => 4)) {
+		quest::say("Ay danks. Dis show you strong.");
+		quest::say("Ay danks. Dis show you strong.");
+		quest::say("Ay danks. Dis show you strong.");
+		quest::say("Ay danks. Dis show you strong.");
+		quest::updatetaskactivity(303, 1, 4);
+		return;
+		}
+	}
+	
   if(plugin::check_handin(\%itemcount, 100041 => 1, 100042 => 1, 100043 => 1, 100044 => 1)) {
     quest::say("Ay danks. Doctrine all yours.");    
     quest::exp(1000);
     quest::summonitem(100040);
   }
-
-  if(plugin::check_handin(\%itemcount, 100001 => 1)) {
-    return;
-  }
+	
   if(plugin::check_handin(\%itemcount, 100040 => 1)) {
     return;
   }
