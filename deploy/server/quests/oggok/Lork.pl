@@ -76,6 +76,8 @@ sub EVENT_ITEM {
   }
 	
   if(plugin::check_handin(\%itemcount, 100040 => 1)) {
+	quest::say("Me gonna teach you sumthin' gud from dis book!");
+	quest::updatetaskactivity($task_id, 0, 1);
     return;
   }
 

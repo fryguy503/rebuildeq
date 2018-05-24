@@ -71,6 +71,21 @@ sub EVENT_ITEM {
   }
 #End experience bottle turn in code.
 
+  if(plugin::check_handin(\%itemcount, 2300 => 1)) {
+	  quest::say("Those are some fine boots, $name. Now get running!");
+	  quest::updatetaskactivity($task_id, 0, 1);
+      quest::summonitem(2300);
+
+	  return;
+  }
+  if(plugin::check_handin(\%itemcount, 101015 => 1)) {
+	  quest::say("Those are some fine boots, $name. Now get running!");
+	  quest::updatetaskactivity($task_id, 0, 1);
+      quest::summonitem(101015);
+
+	  return;
+  }
+
   my $cash = (($platinum * 10) + $gold); #Only accept platinum and gold 
 
   if ($cash >= 3250) { #Gold/platinum equivalent of 325pp

@@ -1,3 +1,6 @@
+sub EVENT_SAY {
+}
+
 sub EVENT_ITEM {
 
 #Begin experience bottle turn in code.
