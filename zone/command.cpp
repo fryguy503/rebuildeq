@@ -4802,8 +4802,8 @@ void command_buff(Client *c, const Seperator *sep) {
 		Mob* target = c;
 		uint8 level = target->GetLevel();
 		int duration = level;
-		if (duration < 10) {
-			duration = 10;
+		if (duration < 60) {
+			duration = 60;
 		}
 		duration *= 10;
 
