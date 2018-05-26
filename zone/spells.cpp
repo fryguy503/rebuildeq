@@ -6498,7 +6498,12 @@ void Mob::ConeDirectional(uint16 spell_id, int16 resist_adjust)
 }
 
 void Mob::QuickBuff(Mob *spelltar, uint16 spell_id, int duration_override) {
-	SpellOnTarget(spell_id, spelltar, false, false, 0, false, -1, duration_override);
+	if (spell_id == 278 && spelltar->GetLevel() < 21) { //Set minimum level for Spirit of Wolf buff
+		SpellOnTarget(spell_id, spelltar, false, false, 0, false, 20, duration_override);
+	}
+	else {
+		SpellOnTarget(spell_id, spelltar, false, false, 0, false, -1, duration_override);
+	}
 }
 
 // duration in seconds

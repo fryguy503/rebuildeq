@@ -4801,11 +4801,7 @@ void command_buff(Client *c, const Seperator *sep) {
 
 		Mob* target = c;
 		uint8 level = target->GetLevel();
-		int duration = level;
-		if (duration < 10) {
-			duration = 10;
-		}
-		duration *= 10;
+		int duration = 600; // 1 hour
 
 		if (level < 39) target->QuickBuff(target, 144, duration); //regeneration 38
 		else if (level < 52) target->QuickBuff(target, 145, duration); //chloro 51
