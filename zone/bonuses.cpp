@@ -1692,6 +1692,13 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 						caster->BuildEcho(StringFormat("Instill Purpose added %u extra HP, per tick", bonus_effect));
 						effect_value += bonus_effect;
 					}
+					
+					rank = caster->GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT);
+					if (rank > 0 && (spell_id == 3291)) {
+						int bonus_effect = int(effect_value * 0.2f * rank);
+						BuildEcho(StringFormat("Paragon of Spirit regenerating %i HP per tick.", bonus_effect));
+						effect_value = bonus_effect;
+					}
 				}
 				if(effect_value > 0) {
 					new_bonus->HPRegen += effect_value;
@@ -1835,6 +1842,13 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 					BuildEcho(StringFormat("Instill Purpose is removing %i mana, per tick", -effect_value));
 				}
 				
+				rank = caster->GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT);
+				if (rank > 0 && (spell_id == 3291)) {
+					int bonus_effect = int(effect_value * 0.2f * rank);
+					BuildEcho(StringFormat("Paragon of Spirit regenerating %i MP per tick.", bonus_effect));
+					effect_value = bonus_effect;
+				}
+
 				new_bonus->ManaRegen += effect_value;
 				break;
 			}
