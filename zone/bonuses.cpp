@@ -1828,29 +1828,30 @@ void Mob::ApplySpellsBonuses(uint16 spell_id, uint8 casterlevel, StatBonuses *ne
 
 			case SE_CurrentMana:
 			{
-				if (caster != nullptr && (spell_id == 1287 || spell_id == 723 || spell_id == 1448 || spell_id == 1759 || spell_id == 2609 || spell_id == 1196)) {
+				if (caster != nullptr) {
 					rank = caster->GetBuildRank(BARD, RB_BRD_CASSINDRASCHORUS);
-					if (rank > 0) {
+					if (rank > 0 && (spell_id == 1287 || spell_id == 723 || spell_id == 1448 || spell_id == 1759 || spell_id == 2609 || spell_id == 1196)) {
 						int with_build = effect_value + floor(rank * 0.26f * effect_value);
 						if (this == caster) BuildEcho(StringFormat("Cassindra's Chorus %i increased ManaRegen from %i to %i.", rank, effect_value, with_build));
 						effect_value += floor(rank * 0.26f * effect_value);
 					}
-				}
 
-				rank = GetBuildRank(PALADIN, RB_PAL_INSTILLPURPOSE);
-				if (rank > 0 && (spell_id == 1453 || spell_id == 2588)) {
-					BuildEcho(StringFormat("Instill Purpose is removing %i mana, per tick", -effect_value));
-				}
-				
-				rank = caster->GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT);
-				if (rank > 0 && (spell_id == 3291)) {
-					int bonus_effect = int(effect_value * 0.2f * rank);
-					BuildEcho(StringFormat("Paragon of Spirit regenerating %i MP per tick.", bonus_effect));
-					effect_value = bonus_effect;
-				}
+					rank = GetBuildRank(PALADIN, RB_PAL_INSTILLPURPOSE);
+					if (rank > 0 && (spell_id == 1453 || spell_id == 2588)) {
+						BuildEcho(StringFormat("Instill Purpose is removing %i mana, per tick", -effect_value));
+					}
 
-				new_bonus->ManaRegen += effect_value;
-				break;
+					rank = caster->GetBuildRank(SHAMAN, RB_SHM_PARAGONOFSPIRIT);
+					if (rank > 0 && (spell_id == 3291)) {
+						int bonus_effect = int(effect_value * 0.2f * rank);
+						BuildEcho(StringFormat("Paragon of Spirit regenerating %i MP per tick.", bonus_effect));
+						effect_value = bonus_effect;
+					}
+
+
+					new_bonus->ManaRegen += effect_value;
+					break;
+				}
 			}
 
 			case SE_ManaPool:
