@@ -4691,14 +4691,14 @@ void command_teleport(Client *c, const Seperator *sep) {
 			return;
 		}
 		
-		bool portisfree = FALSE;
-		if (location->ZoneID == 201) portisfree = TRUE;
+		bool portisfree = false;
+		if (location->ZoneID == 201) portisfree = true;
 
 		// Calculate cost.
 		const auto cost = calculateCost(c);
 		
 		// Handle: Payment.
-		if (cost > 0 && portisfree == FALSE) {
+		if (cost > 0 && portisfree == false) {
 			// Handle: Not enough money.
 			if (!c->HasMoneyInInvOrBank(cost)) {
 				c->Message(0, "Not enough money to teleport.");
@@ -4725,7 +4725,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 			c->Message(0, "You paid %s to teleport to %s.", StringFormat("%u platinum", (cost / 1000)).c_str(), location->ZoneName.c_str());
 		}
 		else {
-			if (portisfree == FALSE) {
+			if (portisfree == false) {
 				c->Message(0, "You are being teleported and bound to %s for free due to being level %i or under.", location->ZoneName.c_str(), FreeLevel);
 				c->SetBindPoint(0, location->ZoneID, 0, glm::vec3(location->X, location->Y, location->Z));
 			}
