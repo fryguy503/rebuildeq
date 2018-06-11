@@ -859,6 +859,7 @@ void Mob::MakePoweredPet(uint16 spell_id, const char* pettype, int16 petpower,
 		Mob *target = GetTarget();
 		npc->GMMove(target->GetX(), target->GetY(), target->GetZ(), target->GetHeading(), true);	
 		target->Depop();
+		SetTarget(npc);		
 	}
 }
 /* This is why the pets ghost - pets were being spawned too far away from its npc owner and some
