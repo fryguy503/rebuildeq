@@ -1,10 +1,6 @@
 #located near bank
 
 sub EVENT_SAY { 
-	if ($faction > 6) { # Requires indiff+
-		quest::say("I do not wish to speak to you.");
-		return;
-	}
 	if($text=~/hail/i){
 		quest::say("Do you wish to [ ". quest::saylink("bind origin")." ], or [ ". quest::saylink("bind affinity")." ] yourself here?");
 	} elsif($text=~/bind origin/i) {
