@@ -7941,7 +7941,8 @@ int Mob::ModifyManaUsage(int mana_cost, uint16 spell_id, Mob* spell_target, bool
 	rank = GetBuildRank(DRUID, RB_DRU_TELEPORTBIND);
 	if (rank > 0 && spell_id == 5953) {
 		// 85% Mana at Rank 1, minus 15% per rank: 85,70,55,40,25
-		int redux = floor(GetMaxMana() * floor(1 - rank * 0.15f));
+		int mana_cost = floor(GetMaxMana());
+		int redux = floor(GetMaxMana() * floor(rank * 0.15f));
 		
 		BuildEcho(StringFormat("Teleport Bind %i reduced mana cost by %i.", rank, redux));
 		mana_cost -= redux;
