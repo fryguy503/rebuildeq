@@ -1545,7 +1545,11 @@ void NPC::PickPocket(Client* thief)
 	}
 
 	rank = thief->GetBuildRank(ROGUE, RB_ROG_HIDDENSTASH);
-	if (!is_hidden_stash_used && steal_chance > steal_skill && rank > 0) {
+	if (!is_hidden_stash_used && steal_chance > 5 && rank > 0) {
+		int hiddenstashroll = zone->random.Int(1, 100);
+		if (hiddenstashroll > floor(steal_chance / 5)) {
+			return; //Hidden stash roll failed. Chance is 20% of steal_chance.
+		}
 		is_hidden_stash_used = true;
 		int amount = 1;
 		int maxAmount = 1;
@@ -1555,7 +1559,7 @@ void NPC::PickPocket(Client* thief)
 		else if (GetLevel() > 20) maxAmount = 2 * rank;
 		else if (GetLevel() > 10) maxAmount = rank;
 		amount = zone->random.Int(amount, maxAmount);
-		thief->Message(MT_Skills, "You have found a hidden stash (%i).", rank, amount);
+		thief->Message(MT_Skills, "You have found a hidden stash (%i).", amount);
 		DailyGain(thief->AccountID(), thief->CharacterID(), thief->Identity(),0,0,amount);
 		thief->AddMoneyToPP(0, 0, 0, amount, false);
 		thief->SendPickPocketResponse(this, amount, PickPocketPlatinum);
