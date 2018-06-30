@@ -23,6 +23,9 @@ images: ## Builds docker images needed to run dockerized eqemu
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu buildeq /bin/bash -c "dpkg -i /eqemu/libsodium*.deb"
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu buildeq /bin/bash -c "rm -f /eqemu/libsodium-dev.deb"
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu buildeq /bin/bash -c "rm -f /eqemu/libsodium18.deb"
+purge: ## Purge containers and images made by this system.
+	docker rm $(shell docker ps -a -q)
+	docker rmi rebuildeq_web buildeq
 cmake: ## Runs cmake inside build image to prepare for build
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu buildeq /bin/bash -c "/usr/bin/cmake ~/."
 build: ## Builds binaries using build image for eqemu image
