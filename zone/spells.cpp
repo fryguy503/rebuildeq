@@ -2282,6 +2282,7 @@ bool Mob::SpellFinished(uint16 spell_id, Mob *spell_target, CastingSlot slot, ui
 		spell_target && 
 		!spell_target->IsPetOwnerClient() && 
 		!spell_target->IsClient() && 
+		!spell_target->IsCharmed() &&
 		!IsEffectInSpell(spell_id, SE_Revive) //Rezzes are beneficial spells, but need to target self.
 		) {
 		if (IsClient() && 
@@ -3356,9 +3357,10 @@ int Mob::CheckStackConflict(uint16 spellid1, int caster_level1, uint16 spellid2,
 
 		/*
 		If the spells aren't the same
-		and the effect is a dot we can go ahead and stack it
+		and the effect is a dot we can go ahead and stack it.
+		Include bard AE DoT
 		*/
-		if(effect1 == SE_CurrentHP && spellid1 != spellid2 && sp1_detrimental && sp2_detrimental) {
+		if((effect1 == SE_CurrentHP || effect1 == SE_BardAEDot) && spellid1 != spellid2 && sp1_detrimental && sp2_detrimental) {
 			Log(Logs::Detail, Logs::Spells, "The spells are not the same and it is a detrimental dot, passing");
 			continue;
 		}

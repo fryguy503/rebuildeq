@@ -1288,6 +1288,8 @@ bool Mob::SpellEffect(Mob* caster, uint16 spell_id, float partial, int level_ove
 				InterruptSpell();
 				entity_list.RemoveDebuffs(this);
 				entity_list.RemoveFromTargets(this);
+				// Set target to this again, if the caster is a client so that spells can be cast without retargeting in the client
+				if(caster->IsClient()) caster->SetTarget(this);
 				WipeHateList();
 
 				if (IsClient() && caster->IsClient()) {
