@@ -2551,7 +2551,7 @@ void TaskManager::SendTaskActivityLong(Client *c, int TaskID, int ActivityID, in
 	else
 		buf.WriteUInt32(ActivityCastOn); // w/e!
 
-	buf.WriteUInt8(Optional);
+	buf.WriteUInt32(Optional);
 	buf.WriteUInt32(0);		// solo, group, raid
 
 	buf.WriteString(Tasks[TaskID]->Activity[ActivityID].target_name); // target name string
