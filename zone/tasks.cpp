@@ -2732,39 +2732,39 @@ void TaskManager::SendTaskActivityNew(Client *c, int TaskID, int ActivityID, int
 
 void TaskManager::SendActiveTasksToClient(Client *c, bool TaskComplete)
 {
-    auto state = c->GetTaskState();
-    if (!state)
-        return;
+	auto state = c->GetTaskState();
+	if (!state)
+		return;
 
-    for(int TaskIndex=0; TaskIndex<MAXACTIVEQUESTS; TaskIndex++) {
-        int TaskID = c->GetActiveTaskID(TaskIndex);
-        if((TaskID==0) || (Tasks[TaskID] ==0)) continue;
-        int StartTime = c->GetTaskStartTime(TaskIndex);
+	for (int TaskIndex=0; TaskIndex<MAXACTIVEQUESTS; TaskIndex++) {
+		int TaskID = c->GetActiveTaskID(TaskIndex);
+		if((TaskID==0) || (Tasks[TaskID] ==0)) continue;
+		int StartTime = c->GetTaskStartTime(Tasks[TaskID]->type, TaskIndex);
 
-        SendActiveTaskDescription(c, TaskID, state->ActiveQuests[TaskIndex], StartTime, Tasks[TaskID]->Duration, false);
-        Log(Logs::General, Logs::Tasks, "[UPDATE] SendActiveTasksToClient: Task %i, Activities: %i", TaskID, GetActivityCount(TaskID));
+		SendActiveTaskDescription(c, TaskID, state->ActiveQuests[TaskIndex], StartTime, Tasks[TaskID]->Duration, false);
+		Log(Logs::General, Logs::Tasks, "[UPDATE] SendActiveTasksToClient: Task %i, Activities: %i", TaskID, GetActivityCount(TaskID));
 
-        int Sequence = 0;
-        for(int Activity=0; Activity<GetActivityCount(TaskID); Activity++) {
-            if(c->GetTaskActivityState(Tasks[TaskID]->type, TaskIndex, Activity) != ActivityHidden) {
-                Log(Logs::General, Logs::Tasks, "[UPDATE]   Long: %i, %i, %i Complete=%i", TaskID, Activity, TaskIndex, TaskComplete);
-                if(Activity==GetActivityCount(TaskID)-1)
-                    SendTaskActivityLong(c, TaskID, Activity, TaskIndex,
-                                         Tasks[TaskID]->Activity[Activity].Optional,
-                                         TaskComplete);
-                else
-                    SendTaskActivityLong(c, TaskID, Activity, TaskIndex,
-                                         Tasks[TaskID]->Activity[Activity].Optional, 0);
-            }
-            else {
-                Log(Logs::General, Logs::Tasks, "[UPDATE]   Short: %i, %i, %i", TaskID, Activity, TaskIndex);
-                SendTaskActivityShort(c, TaskID, Activity, TaskIndex);
-            }
-            Sequence++;
-        }
+		int Sequence = 0;
+		for(int Activity=0; Activity<GetActivityCount(TaskID); Activity++) {
+			if(c->GetTaskActivityState(Tasks[TaskID]->type, TaskIndex, Activity) != ActivityHidden) {
+				Log(Logs::General, Logs::Tasks, "[UPDATE]   Long: %i, %i, %i Complete=%i", TaskID, Activity, TaskIndex, TaskComplete);
+				if(Activity==GetActivityCount(TaskID)-1)
+					SendTaskActivityLong(c, TaskID, Activity, TaskIndex,
+								Tasks[TaskID]->Activity[Activity].Optional,
+								TaskComplete);
+				else
+					SendTaskActivityLong(c, TaskID, Activity, TaskIndex,
+								Tasks[TaskID]->Activity[Activity].Optional, 0);
+			}
+			else {
+				Log(Logs::General, Logs::Tasks, "[UPDATE]   Short: %i, %i, %i", TaskID, Activity, TaskIndex);
+				SendTaskActivityShort(c, TaskID, Activity, TaskIndex);
+			}
+			Sequence++;
+		}
 
 
-    }
+	}
 }
 
 void TaskManager::SendSingleActiveTaskToClient(Client *c, ClientTaskInformation &task_info, bool TaskComplete,
@@ -2946,14 +2946,20 @@ int ClientTaskState::GetTaskActivityDoneCount(TaskType type, int index, int Acti
     }
 }
 
-int ClientTaskState::GetTaskActivityDoneCountFromTaskID(int TaskID, int ActivityID){
-    int ActiveTaskIndex = -1;
-    for(int i=0; i<MAXACTIVEQUESTS; i++) {
-        if(ActiveQuests[i].TaskID==TaskID) {
-            ActiveTaskIndex = i;
-            break;
-        }
-    }
+int ClientTaskState::GetTaskActivityDoneCountFromTaskID(int TaskID, int ActivityID)
+{
+	if (ActiveTask.TaskID == TaskID)
+		return ActiveTask.Activity[ActivityID].DoneCount;
+
+	// TODO: shared tasks
+
+	int ActiveTaskIndex = -1;
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
+		if(ActiveQuests[i].TaskID==TaskID) {
+			ActiveTaskIndex = i;
+			break;
+		}
+	}
 
     if (ActiveTaskIndex == -1)
         return 0;
@@ -2966,10 +2972,17 @@ int ClientTaskState::GetTaskActivityDoneCountFromTaskID(int TaskID, int Activity
     }
 }
 
-int ClientTaskState::GetTaskStartTime(int index) {
-
-    return ActiveQuests[index].AcceptedTime;
-
+int ClientTaskState::GetTaskStartTime(TaskType type, int index)
+{
+	switch (type) {
+	case TaskType::Task:
+		return ActiveTask.AcceptedTime;
+	case TaskType::Quest:
+		return ActiveQuests[index].AcceptedTime;
+	case TaskType::Shared: // TODO
+	default:
+		return -1;
+	}
 }
 
 void ClientTaskState::CancelAllTasks(Client *c) {
