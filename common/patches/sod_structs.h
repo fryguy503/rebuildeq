@@ -713,11 +713,11 @@ sed -e 's/_t//g' -e 's/seto_0xFF/set_to_0xFF/g'
 		};
 
 //len = 320
-		struct Bandolier_Struct
-		{
-			char Name[32];
-			BandolierItem_Struct Items[profile::BandolierItemCount];
-		};
+struct Bandolier_Struct
+{
+	char Name[32];
+	BandolierItem_Struct Items[profile::BANDOLIER_ITEM_COUNT];
+};
 
 //len = 72
 		struct PotionBeltItem_Struct
@@ -728,10 +728,10 @@ sed -e 's/_t//g' -e 's/seto_0xFF/set_to_0xFF/g'
 		};
 
 //len = 288
-		struct PotionBelt_Struct
-		{
-			PotionBeltItem_Struct Items[profile::PotionBeltSize];
-		};
+struct PotionBelt_Struct
+{
+	PotionBeltItem_Struct Items[profile::POTION_BELT_SIZE];
+};
 
 		static const uint32 MAX_GROUP_LEADERSHIP_AA_ARRAY = 16;
 		static const uint32 MAX_RAID_LEADERSHIP_AA_ARRAY = 16;
@@ -937,7 +937,7 @@ sed -e 's/_t//g' -e 's/MAX_AA/MAX_PP_AA_ARRAY/g' \
 /*08288*/ uint32  aapoints_spent;		// Number of spent AA points
 /*08292*/ uint32  aapoints;				// Unspent AA points
 /*08296*/ uint8 unknown06160[4];
-/*08300*/ Bandolier_Struct bandoliers[profile::BandoliersSize]; // [6400] bandolier contents
+/*08300*/ Bandolier_Struct bandoliers[profile::BANDOLIERS_SIZE]; // [6400] bandolier contents
 /*14700*/ PotionBelt_Struct  potionbelt;	// [360] potion belt 72 extra octets by adding 1 more belt slot
 /*15060*/ uint8 unknown12852[8];
 /*15068*/ uint32 available_slots;

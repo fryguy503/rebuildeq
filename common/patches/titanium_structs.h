@@ -652,11 +652,11 @@ sed -e 's/_t//g' -e 's/seto_0xFF/set_to_0xFF/g'
 		};
 
 //len = 320
-		struct Bandolier_Struct
-		{
-			char Name[32];
-			BandolierItem_Struct Items[profile::BandolierItemCount];
-		};
+struct Bandolier_Struct
+{
+	char Name[32];
+	BandolierItem_Struct Items[profile::BANDOLIER_ITEM_COUNT];
+};
 
 //len = 72
 		struct PotionBeltItem_Struct
@@ -667,84 +667,84 @@ sed -e 's/_t//g' -e 's/seto_0xFF/set_to_0xFF/g'
 		};
 
 //len = 288
-		struct PotionBelt_Struct
-		{
-			PotionBeltItem_Struct Items[profile::PotionBeltSize];
-		};
+struct PotionBelt_Struct
+{
+	PotionBeltItem_Struct Items[profile::POTION_BELT_SIZE];
+};
 
-		static const uint32 MAX_GROUP_LEADERSHIP_AA_ARRAY = 16;
-		static const uint32 MAX_RAID_LEADERSHIP_AA_ARRAY = 16;
-		static const uint32 MAX_LEADERSHIP_AA_ARRAY = (MAX_GROUP_LEADERSHIP_AA_ARRAY+MAX_RAID_LEADERSHIP_AA_ARRAY);
-		struct GroupLeadershipAA_Struct {
-			union {
-				struct {
-					uint32 groupAAMarkNPC;
-					uint32 groupAANPCHealth;
-					uint32 groupAADelegateMainAssist;
-					uint32 groupAADelegateMarkNPC;
-					uint32 groupAA4;
-					uint32 groupAA5;
-					uint32 groupAAInspectBuffs;
-					uint32 groupAA7;
-					uint32 groupAASpellAwareness;
-					uint32 groupAAOffenseEnhancement;
-					uint32 groupAAManaEnhancement;
-					uint32 groupAAHealthEnhancement;
-					uint32 groupAAHealthRegeneration;
-					uint32 groupAAFindPathToPC;
-					uint32 groupAAHealthOfTargetsTarget;
-					uint32 groupAA15;
-				};
-				uint32 ranks[MAX_GROUP_LEADERSHIP_AA_ARRAY];
-			};
+static const uint32 MAX_GROUP_LEADERSHIP_AA_ARRAY = 16;
+static const uint32 MAX_RAID_LEADERSHIP_AA_ARRAY = 16;
+static const uint32 MAX_LEADERSHIP_AA_ARRAY = (MAX_GROUP_LEADERSHIP_AA_ARRAY+MAX_RAID_LEADERSHIP_AA_ARRAY);
+struct GroupLeadershipAA_Struct {
+	union {
+		struct {
+			uint32 groupAAMarkNPC;
+			uint32 groupAANPCHealth;
+			uint32 groupAADelegateMainAssist;
+			uint32 groupAADelegateMarkNPC;
+			uint32 groupAA4;
+			uint32 groupAA5;
+			uint32 groupAAInspectBuffs;
+			uint32 groupAA7;
+			uint32 groupAASpellAwareness;
+			uint32 groupAAOffenseEnhancement;
+			uint32 groupAAManaEnhancement;
+			uint32 groupAAHealthEnhancement;
+			uint32 groupAAHealthRegeneration;
+			uint32 groupAAFindPathToPC;
+			uint32 groupAAHealthOfTargetsTarget;
+			uint32 groupAA15;
 		};
+		uint32 ranks[MAX_GROUP_LEADERSHIP_AA_ARRAY];
+	};
+};
 
-		struct RaidLeadershipAA_Struct {
-			union {
-				struct {
-					uint32 raidAAMarkNPC;
-					uint32 raidAANPCHealth;
-					uint32 raidAADelegateMainAssist;
-					uint32 raidAADelegateMarkNPC;
-					uint32 raidAA4;
-					uint32 raidAA5;
-					uint32 raidAA6;
-					uint32 raidAASpellAwareness;
-					uint32 raidAAOffenseEnhancement;
-					uint32 raidAAManaEnhancement;
-					uint32 raidAAHealthEnhancement;
-					uint32 raidAAHealthRegeneration;
-					uint32 raidAAFindPathToPC;
-					uint32 raidAAHealthOfTargetsTarget;
-					uint32 raidAA14;
-					uint32 raidAA15;
-				};
-				uint32 ranks[MAX_RAID_LEADERSHIP_AA_ARRAY];
-			};
+struct RaidLeadershipAA_Struct {
+	union {
+		struct {
+			uint32 raidAAMarkNPC;
+			uint32 raidAANPCHealth;
+			uint32 raidAADelegateMainAssist;
+			uint32 raidAADelegateMarkNPC;
+			uint32 raidAA4;
+			uint32 raidAA5;
+			uint32 raidAA6;
+			uint32 raidAASpellAwareness;
+			uint32 raidAAOffenseEnhancement;
+			uint32 raidAAManaEnhancement;
+			uint32 raidAAHealthEnhancement;
+			uint32 raidAAHealthRegeneration;
+			uint32 raidAAFindPathToPC;
+			uint32 raidAAHealthOfTargetsTarget;
+			uint32 raidAA14;
+			uint32 raidAA15;
 		};
+		uint32 ranks[MAX_RAID_LEADERSHIP_AA_ARRAY];
+	};
+};
 
-		struct LeadershipAA_Struct {
-			union {
-				struct {
-					GroupLeadershipAA_Struct group;
-					RaidLeadershipAA_Struct raid;
-				};
-				uint32 ranks[MAX_LEADERSHIP_AA_ARRAY];
-			};
+struct LeadershipAA_Struct {
+	union {
+		struct {
+			GroupLeadershipAA_Struct group;
+			RaidLeadershipAA_Struct raid;
 		};
+		uint32 ranks[MAX_LEADERSHIP_AA_ARRAY];
+	};
+};
 
-		/**
-       * A bind point.
-       * Size: 20 Octets
-       */
-		struct BindStruct {
-			/*000*/ uint32 zoneId;
-			/*004*/ float x;
-			/*008*/ float y;
-			/*012*/ float z;
-			/*016*/ float heading;
-			/*020*/
-		};
+ /**
+* A bind point.
+* Size: 20 Octets
+*/
+struct BindStruct {
+   /*000*/ uint32 zoneId;
+   /*004*/ float x;
+   /*008*/ float y;
+   /*012*/ float z;
+   /*016*/ float heading;
+   /*020*/
+};
 
 
 /*
@@ -875,7 +875,7 @@ sed -e 's/_t//g' -e 's/MAX_AA/MAX_PP_AA_ARRAY/g' \
 /*06152*/ uint32  aapoints_spent;           // Number of spent AA points
 /*06156*/ uint32  aapoints;         // Unspent AA points
 /*06160*/ uint8 unknown06160[4];
-/*06164*/ Bandolier_Struct bandoliers[profile::BandoliersSize]; // bandolier contents
+/*06164*/ Bandolier_Struct bandoliers[profile::BANDOLIERS_SIZE]; // bandolier contents
 /*07444*/ uint8 unknown07444[5120];
 /*12564*/ PotionBelt_Struct  potionbelt; // potion belt
 /*12852*/ uint8 unknown12852[8];
