@@ -204,6 +204,17 @@ sub EVENT_SAY {
 				return;
 			}
 		}
+		if (!quest::istaskcompleted(503)) { #tier 3 task
+			if (quest::istaskactive(503)) { #ongoing
+				quest::say("You appear to be working on your tier 3 task. You can do it!");
+				return;
+			}
+			if (!quest::istaskactive(503)) { #not done yet
+				quest::say("Very well. Here is the path to unlock Tier 3.");
+				quest::assigntask(503);
+				return;
+			}
+		}
 		quest::say("You have unlocked all tiers available at this time. Good job!");
 		return;
     }
