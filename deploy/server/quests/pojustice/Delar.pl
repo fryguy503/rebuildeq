@@ -199,8 +199,8 @@ sub EVENT_SAY {
 				return;
 			}
 			if (!quest::istaskactive(502)) { #not done yet
-				quest::say("Tier 2 is not yet implemented. Come back at a later time!");
-				#quest::assigntask(501);
+				quest::say("Very well. Here is the path to unlock Tier 2.");
+				quest::assigntask(502);
 				return;
 			}
 		}
