@@ -204,6 +204,17 @@ sub EVENT_SAY {
 				return;
 			}
 		}
+		if (!quest::istaskcompleted(503)) { #tier 3 task
+			if (quest::istaskactive(503)) { #ongoing
+				quest::say("You appear to be working on your tier 3 task. You can do it!");
+				return;
+			}
+			if (!quest::istaskactive(503)) { #not done yet
+				quest::say("Very well. Here is the path to unlock Tier 3.");
+				quest::assigntask(503);
+				return;
+			}
+		}
 		quest::say("You have unlocked all tiers available at this time. Good job!");
 		return;
     }
@@ -260,10 +271,22 @@ sub EVENT_SAY {
 sub EVENT_ITEM {
 
 #Begin experience bottle turn in code.
-  my $task_id = 501;
-  my $activity_id = 5;
-  my $bottle_goal = 10;
-  my $bottle_message = "Thank you for your potion of experience for tier 1 progression, $name.";
+  my $tier = 0;
+  my $task_id = 0;
+  my $activity_id = 0;
+  my $bottle_goal = 0;
+
+  if (quest::istaskactive(501)) { $tier = 1; $task_id = 501; $activity_id = 5; $bottle_goal = 1; }
+  if (quest::istaskactive(502)) { $tier = 2; $task_id = 502; $activity_id = 9; $bottle_goal = 2; }
+  if (quest::istaskactive(503)) { $tier = 3; $task_id = 503; $activity_id = 7; $bottle_goal = 3; }
+   # TODOif (quest::istaskactive(504)) { $tier = 4; $task_id = 504; $activity_id = 0; $bottle_goal = 4; }
+   # TODOif (quest::istaskactive(505)) { $tier = 5; $task_id = 505; $activity_id = 0; $bottle_goal = 5; }
+   # TODOif (quest::istaskactive(506)) { $tier = 6; $task_id = 506; $activity_id = 0; $bottle_goal = 6; }
+   # TODOif (quest::istaskactive(507)) { $tier = 7; $task_id = 507; $activity_id = 0; $bottle_goal = 7; }
+   # TODOif (quest::istaskactive(508)) { $tier = 8; $task_id = 508; $activity_id = 0; $bottle_goal = 8; }
+   # TODOif (quest::istaskactive(509)) { $tier = 9; $task_id = 509; $activity_id = 0; $bottle_goal = 9; }
+
+  my $bottle_message = "Thank you for your potion of experience for tier $tier progression, $name.";
   my $bottle_task_active = quest::istaskactivityactive($task_id, $activity_id);
   my $bottles_previously_turned_in = quest::gettaskactivitydonecount($task_id, $activity_id);
   my $bottles_turned_in = 0;
