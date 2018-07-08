@@ -86,6 +86,7 @@ union semun {
 #include "console.h"
 
 #include "../common/net/servertalk_server.h"
+#include "../zone/data_bucket.h"
 
 ClientList client_list;
 GroupLFPList LFPGroupList;
@@ -299,6 +300,9 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	Log(Logs::General, Logs::World_Server, "Purging expired data buckets...");
+	database.PurgeAllDeletedDataBuckets();
+
 	Log(Logs::General, Logs::World_Server, "Loading zones..");
 	database.LoadZoneNames();
 	Log(Logs::General, Logs::World_Server, "Clearing groups..");
@@ -380,6 +384,7 @@ int main(int argc, char** argv) {
 	nats.Load();
 	Log(Logs::General, Logs::World_Server, "Purging expired instances");
 	database.PurgeExpiredInstances();
+
 	Timer PurgeInstanceTimer(450000);
 	PurgeInstanceTimer.Start(450000);
 
@@ -536,9 +541,9 @@ int main(int argc, char** argv) {
 
 		client_list.Process();
 
-		if (PurgeInstanceTimer.Check())
-		{
+		if (PurgeInstanceTimer.Check()) {
 			database.PurgeExpiredInstances();
+			database.PurgeAllDeletedDataBuckets();
 		}
 
 		if (EQTimeTimer.Check()) {
