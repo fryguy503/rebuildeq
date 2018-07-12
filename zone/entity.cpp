@@ -4330,7 +4330,7 @@ void EntityList::ZoneWho(Client *c, Who_All_Struct *Who)
 			WhoAllPlayerPart1* WAPP1 = (WhoAllPlayerPart1*)Buffer;
 			WAPP1->FormatMSGID = FormatMSGID;
 			WAPP1->PIDMSGID = 0xFFFFFFFF;
-			if (c->Admin() >= 100 || (ClientEntry->GetAnon() == 0) {
+			if (c->Admin() >= 100 || (ClientEntry->GetAnon()) == 0) {
 				ss << ClientEntry->GetName() << " [" << ClientEntry->Identity() << "]";
 			}
 			strcpy(WAPP1->Name, ss.str().c_str());
