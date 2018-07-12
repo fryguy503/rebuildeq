@@ -517,6 +517,7 @@
 #define TIER_7 507
 #define TIER_8 508
 #define TIER_9 509
+#define TIER_10 510
 
 
 //Build Skills
