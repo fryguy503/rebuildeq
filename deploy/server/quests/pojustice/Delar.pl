@@ -215,6 +215,83 @@ sub EVENT_SAY {
 				return;
 			}
 		}
+		if (!quest::istaskcompleted(504)) { #tier 4 task
+			if (quest::istaskactive(504)) { #ongoing
+				quest::say("You appear to be working on your tier 4 task. You can do it!");
+				return;
+			}
+			if (!quest::istaskactive(504)) { #not done yet
+				quest::say("Very well. Here is the path to unlock Tier 4.");
+				quest::assigntask(504);
+				return;
+			}
+		}
+		if (!quest::istaskcompleted(505)) { #tier 5 task
+			if (quest::istaskactive(505)) { #ongoing
+				quest::say("You appear to be working on your tier 5 task. You can do it!");
+				return;
+			}
+			if (!quest::istaskactive(505)) { #not done yet
+				quest::say("Very well. Here is the path to unlock Tier 5.");
+				quest::assigntask(505);
+				return;
+			}
+		}
+		if (!quest::istaskcompleted(506)) { #tier 6 task
+			if (quest::istaskactive(506)) { #ongoing
+				quest::say("You appear to be working on your tier 6 task. You can do it!");
+				return;
+			}
+			if (!quest::istaskactive(506)) { #not done yet
+				quest::say("Very well. Here is the path to unlock Tier 6.");
+				quest::assigntask(506);
+				return;
+			}
+		}
+		if (!quest::istaskcompleted(507)) { #tier 7 task
+			if (quest::istaskactive(507)) { #ongoing
+				quest::say("You appear to be working on your tier 7 task. You can do it!");
+				return;
+			}
+			if (!quest::istaskactive(507)) { #not done yet
+				quest::say("Very well. Here is the path to unlock Tier 7.");
+				quest::assigntask(507);
+				return;
+			}
+		}
+		if (!quest::istaskcompleted(508)) { #tier 8 task
+			if (quest::istaskactive(508)) { #ongoing
+				quest::say("You appear to be working on your tier 8 task. You can do it!");
+				return;
+			}
+			if (!quest::istaskactive(508)) { #not done yet
+				quest::say("Very well. Here is the path to unlock Tier 8.");
+				quest::assigntask(508);
+				return;
+			}
+		}
+		if (!quest::istaskcompleted(509)) { #tier 9 task
+			if (quest::istaskactive(509)) { #ongoing
+				quest::say("You appear to be working on your tier 9 task. You can do it!");
+				return;
+			}
+			if (!quest::istaskactive(509)) { #not done yet
+				quest::say("Very well. Here is the path to unlock Tier 9.");
+				quest::assigntask(509);
+				return;
+			}
+		}
+		if (!quest::istaskcompleted(510)) { #tier 10 task
+			if (quest::istaskactive(510)) { #ongoing
+				quest::say("You appear to be working on your tier 10 task. You can do it!");
+				return;
+			}
+			if (!quest::istaskactive(510)) { #not done yet
+				quest::say("Very well. Here is the path to unlock Tier 10.");
+				quest::assigntask(510);
+				return;
+			}
+		}
 		quest::say("You have unlocked all tiers available at this time. Good job!");
 		return;
     }
@@ -276,15 +353,16 @@ sub EVENT_ITEM {
   my $activity_id = 0;
   my $bottle_goal = 0;
 
-  if (quest::istaskactive(501)) { $tier = 1; $task_id = 501; $activity_id = 5; $bottle_goal = 1; }
-  if (quest::istaskactive(502)) { $tier = 2; $task_id = 502; $activity_id = 9; $bottle_goal = 2; }
-  if (quest::istaskactive(503)) { $tier = 3; $task_id = 503; $activity_id = 7; $bottle_goal = 3; }
-   # TODOif (quest::istaskactive(504)) { $tier = 4; $task_id = 504; $activity_id = 0; $bottle_goal = 4; }
-   # TODOif (quest::istaskactive(505)) { $tier = 5; $task_id = 505; $activity_id = 0; $bottle_goal = 5; }
-   # TODOif (quest::istaskactive(506)) { $tier = 6; $task_id = 506; $activity_id = 0; $bottle_goal = 6; }
-   # TODOif (quest::istaskactive(507)) { $tier = 7; $task_id = 507; $activity_id = 0; $bottle_goal = 7; }
-   # TODOif (quest::istaskactive(508)) { $tier = 8; $task_id = 508; $activity_id = 0; $bottle_goal = 8; }
-   # TODOif (quest::istaskactive(509)) { $tier = 9; $task_id = 509; $activity_id = 0; $bottle_goal = 9; }
+  if (quest::istaskactive(501)) { $tier = 1; $task_id = 501; $activity_id = 8; $bottle_goal = 1; }
+  if (quest::istaskactive(502)) { $tier = 2; $task_id = 502; $activity_id = 10; $bottle_goal = 2; }
+  if (quest::istaskactive(503)) { $tier = 3; $task_id = 503; $activity_id = 9; $bottle_goal = 3; }
+  if (quest::istaskactive(504)) { $tier = 4; $task_id = 504; $activity_id = 6; $bottle_goal = 4; }
+  if (quest::istaskactive(505)) { $tier = 5; $task_id = 505; $activity_id = 8; $bottle_goal = 5; }
+  if (quest::istaskactive(506)) { $tier = 6; $task_id = 506; $activity_id = 8; $bottle_goal = 6; }
+  if (quest::istaskactive(507)) { $tier = 7; $task_id = 507; $activity_id = 3; $bottle_goal = 7; }
+  if (quest::istaskactive(508)) { $tier = 8; $task_id = 508; $activity_id = 7; $bottle_goal = 8; }
+  if (quest::istaskactive(509)) { $tier = 9; $task_id = 509; $activity_id = 5; $bottle_goal = 9; }
+  if (quest::istaskactive(510)) { $tier = 10; $task_id = 510; $activity_id = 8; $bottle_goal = 10; }
 
   my $bottle_message = "Thank you for your potion of experience for tier $tier progression, $name.";
   my $bottle_task_active = quest::istaskactivityactive($task_id, $activity_id);
