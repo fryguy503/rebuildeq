@@ -4600,7 +4600,7 @@ void command_teleport(Client *c, const Seperator *sep) {
 		Location("dreadlands", 86, 9565.0, 2806.0, 1045.19, 0.0, 10, 100016),
 		Location("ecommons", 22, -73.06, -1787.51, 3.13, 51.8, 1, 0),
 		Location("emeraldjungle", 94, 3474.83, -3123.34, -341.34, 1.5, 10, 100013),
-		Location("fieldofbone", 78, 2395.95, -2216.75, 30.63, 227.6, 1, 0),
+		Location("fieldofbone", 78, 1447, -1692.32, -62.08, 190, 1, 0),
 		Location("gfaydark", 54, -411, -2023, -0.28, 47.8, 1, 0),
 		Location("greatdivide", 118, 3654.25, -3826.56, -242.37, 136.3, 10, 100008),
 		Location("hateplane", 76, -353, -374, 3.75, 128, 46, 10092),
