@@ -53,9 +53,9 @@ zone2: ## Starts zone binary using eqemu image on port 7002
 zone3: ## Starts zone binary using eqemu image on port 7003
 	docker run -v $(shell pwd)/../deploy/server:/eqemu --network="rebuildeq_default"  -p 7003:7003/udp -it eqemu /eqemu/zone pojustice:7003
 proto: ## Removes proto compiled files and generates new ones based on proto folder
-	rm -rf ../common/proto/*
+	rm -rf ../common/*.pb.*
 	rm -rf ../go/eqproto/*
-	protoc --cpp_out=../common/proto --go_out=../go/eqproto -I ../proto ../proto/message.
+	protoc --cpp_out=../common --go_out=../go/eqproto -I ../common ../common/message.proto
 discordeq: ## Run discordeq in developer mode
 	cd ../go/discordnats
 	go run main.go
