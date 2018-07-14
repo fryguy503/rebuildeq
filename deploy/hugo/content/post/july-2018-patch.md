@@ -2,8 +2,8 @@
 banner = "post/images/june-2018-patch.png"
 date = "2018-07-13T13:28:18-07:00"
 description = "Tier Unlock Tasks Revamp"
-images = ["post/images/june-2018-patch.png"]
-tags = ["bard", "druid", "zone"]
+images = ["post/images/tier-adjustments.png"]
+tags = ["tier", "tasks", "feats", "quests"]
 title = "Tier Unlock Tasks Revamp"
 +++
 * Tuned Venril Sathir 
