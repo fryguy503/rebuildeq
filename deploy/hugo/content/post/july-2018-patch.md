@@ -1,5 +1,5 @@
 +++
-banner = "post/images/june-2018-patch.png"
+banner = "post/images/tier-adjustments.png"
 date = "2018-07-13T13:28:18-07:00"
 description = "Tier Unlock Tasks Revamp"
 images = ["post/images/tier-adjustments.png"]
