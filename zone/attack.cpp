@@ -4307,7 +4307,7 @@ void Mob::CommonDamage(Mob* attacker, int &damage, const uint16 spell_id, const 
 				can_stun = true;
 			}
 
-			if ((GetBaseRace() == OGRE || GetBaseRace() == OGGOK_CITIZEN || CastToClient()->IsTaskCompleted(FEAT_FRONTSTUN)) &&
+			if ((GetBaseRace() == OGRE || GetBaseRace() == OGGOK_CITIZEN || (IsClient() && CastToClient()->IsTaskCompleted(FEAT_FRONTSTUN))) &&
 				!attacker->BehindMob(this, attacker->GetX(), attacker->GetY()))
 				can_stun = false;
 			if (GetSpecialAbility(UNSTUNABLE))
