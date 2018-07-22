@@ -7,7 +7,6 @@
 
 #include <google/protobuf/stubs/common.h>
 #include <google/protobuf/stubs/port.h>
-#include <google/protobuf/stubs/once.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/wire_format_lite_inl.h>
 #include <google/protobuf/descriptor.h>
@@ -19,6 +18,15 @@
 #include "third_party/protobuf/version.h"
 #endif
 // @@protoc_insertion_point(includes)
+
+namespace protobuf_message_2eproto {
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_message_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_Position;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_message_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_Texture;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_message_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_Tint;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_message_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_Entity;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_message_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_TextureProfile;
+extern PROTOBUF_INTERNAL_EXPORT_protobuf_message_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_TintProfile;
+}  // namespace protobuf_message_2eproto
 namespace eqproto {
 class ChannelMessageDefaultTypeInternal {
  public:
@@ -127,14 +135,9 @@ class SpawnEventDefaultTypeInternal {
 } _SpawnEvent_default_instance_;
 }  // namespace eqproto
 namespace protobuf_message_2eproto {
-void InitDefaultsChannelMessageImpl() {
+static void InitDefaultsChannelMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_ChannelMessage_default_instance_;
     new (ptr) ::eqproto::ChannelMessage();
@@ -143,19 +146,12 @@ void InitDefaultsChannelMessageImpl() {
   ::eqproto::ChannelMessage::InitAsDefaultInstance();
 }
 
-void InitDefaultsChannelMessage() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsChannelMessageImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_ChannelMessage =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsChannelMessage}, {}};
 
-void InitDefaultsCommandMessageImpl() {
+static void InitDefaultsCommandMessage() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_CommandMessage_default_instance_;
     new (ptr) ::eqproto::CommandMessage();
@@ -164,19 +160,12 @@ void InitDefaultsCommandMessageImpl() {
   ::eqproto::CommandMessage::InitAsDefaultInstance();
 }
 
-void InitDefaultsCommandMessage() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsCommandMessageImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_CommandMessage =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsCommandMessage}, {}};
 
-void InitDefaultsDailyGainImpl() {
+static void InitDefaultsDailyGain() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_DailyGain_default_instance_;
     new (ptr) ::eqproto::DailyGain();
@@ -185,20 +174,12 @@ void InitDefaultsDailyGainImpl() {
   ::eqproto::DailyGain::InitAsDefaultInstance();
 }
 
-void InitDefaultsDailyGain() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsDailyGainImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_DailyGain =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsDailyGain}, {}};
 
-void InitDefaultsEntityImpl() {
+static void InitDefaultsEntity() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  protobuf_message_2eproto::InitDefaultsPosition();
   {
     void* ptr = &::eqproto::_Entity_default_instance_;
     new (ptr) ::eqproto::Entity();
@@ -207,20 +188,13 @@ void InitDefaultsEntityImpl() {
   ::eqproto::Entity::InitAsDefaultInstance();
 }
 
-void InitDefaultsEntity() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsEntityImpl);
-}
+::google::protobuf::internal::SCCInfo<1> scc_info_Entity =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsEntity}, {
+      &protobuf_message_2eproto::scc_info_Position.base,}};
 
-void InitDefaultsEntitiesImpl() {
+static void InitDefaultsEntities() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  protobuf_message_2eproto::InitDefaultsEntity();
   {
     void* ptr = &::eqproto::_Entities_default_instance_;
     new (ptr) ::eqproto::Entities();
@@ -229,19 +203,13 @@ void InitDefaultsEntitiesImpl() {
   ::eqproto::Entities::InitAsDefaultInstance();
 }
 
-void InitDefaultsEntities() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsEntitiesImpl);
-}
+::google::protobuf::internal::SCCInfo<1> scc_info_Entities =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsEntities}, {
+      &protobuf_message_2eproto::scc_info_Entity.base,}};
 
-void InitDefaultsPositionImpl() {
+static void InitDefaultsPosition() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_Position_default_instance_;
     new (ptr) ::eqproto::Position();
@@ -250,20 +218,12 @@ void InitDefaultsPositionImpl() {
   ::eqproto::Position::InitAsDefaultInstance();
 }
 
-void InitDefaultsPosition() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsPositionImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_Position =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPosition}, {}};
 
-void InitDefaultsTextureProfileImpl() {
+static void InitDefaultsTextureProfile() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  protobuf_message_2eproto::InitDefaultsTexture();
   {
     void* ptr = &::eqproto::_TextureProfile_default_instance_;
     new (ptr) ::eqproto::TextureProfile();
@@ -272,19 +232,13 @@ void InitDefaultsTextureProfileImpl() {
   ::eqproto::TextureProfile::InitAsDefaultInstance();
 }
 
-void InitDefaultsTextureProfile() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsTextureProfileImpl);
-}
+::google::protobuf::internal::SCCInfo<1> scc_info_TextureProfile =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsTextureProfile}, {
+      &protobuf_message_2eproto::scc_info_Texture.base,}};
 
-void InitDefaultsTextureImpl() {
+static void InitDefaultsTexture() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_Texture_default_instance_;
     new (ptr) ::eqproto::Texture();
@@ -293,20 +247,12 @@ void InitDefaultsTextureImpl() {
   ::eqproto::Texture::InitAsDefaultInstance();
 }
 
-void InitDefaultsTexture() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsTextureImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_Texture =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsTexture}, {}};
 
-void InitDefaultsTintProfileImpl() {
+static void InitDefaultsTintProfile() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  protobuf_message_2eproto::InitDefaultsTint();
   {
     void* ptr = &::eqproto::_TintProfile_default_instance_;
     new (ptr) ::eqproto::TintProfile();
@@ -315,19 +261,13 @@ void InitDefaultsTintProfileImpl() {
   ::eqproto::TintProfile::InitAsDefaultInstance();
 }
 
-void InitDefaultsTintProfile() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsTintProfileImpl);
-}
+::google::protobuf::internal::SCCInfo<1> scc_info_TintProfile =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsTintProfile}, {
+      &protobuf_message_2eproto::scc_info_Tint.base,}};
 
-void InitDefaultsTintImpl() {
+static void InitDefaultsTint() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_Tint_default_instance_;
     new (ptr) ::eqproto::Tint();
@@ -336,19 +276,12 @@ void InitDefaultsTintImpl() {
   ::eqproto::Tint::InitAsDefaultInstance();
 }
 
-void InitDefaultsTint() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsTintImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_Tint =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsTint}, {}};
 
-void InitDefaultsEventImpl() {
+static void InitDefaultsEvent() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_Event_default_instance_;
     new (ptr) ::eqproto::Event();
@@ -357,19 +290,12 @@ void InitDefaultsEventImpl() {
   ::eqproto::Event::InitAsDefaultInstance();
 }
 
-void InitDefaultsEvent() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsEventImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_Event =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsEvent}, {}};
 
-void InitDefaultsDeathEventImpl() {
+static void InitDefaultsDeathEvent() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_DeathEvent_default_instance_;
     new (ptr) ::eqproto::DeathEvent();
@@ -378,19 +304,12 @@ void InitDefaultsDeathEventImpl() {
   ::eqproto::DeathEvent::InitAsDefaultInstance();
 }
 
-void InitDefaultsDeathEvent() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsDeathEventImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_DeathEvent =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsDeathEvent}, {}};
 
-void InitDefaultsDamageEventImpl() {
+static void InitDefaultsDamageEvent() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_DamageEvent_default_instance_;
     new (ptr) ::eqproto::DamageEvent();
@@ -399,19 +318,12 @@ void InitDefaultsDamageEventImpl() {
   ::eqproto::DamageEvent::InitAsDefaultInstance();
 }
 
-void InitDefaultsDamageEvent() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsDamageEventImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_DamageEvent =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsDamageEvent}, {}};
 
-void InitDefaultsEntityEventImpl() {
+static void InitDefaultsEntityEvent() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_EntityEvent_default_instance_;
     new (ptr) ::eqproto::EntityEvent();
@@ -420,19 +332,12 @@ void InitDefaultsEntityEventImpl() {
   ::eqproto::EntityEvent::InitAsDefaultInstance();
 }
 
-void InitDefaultsEntityEvent() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsEntityEventImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_EntityEvent =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsEntityEvent}, {}};
 
-void InitDefaultsChannelMessageEventImpl() {
+static void InitDefaultsChannelMessageEvent() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_ChannelMessageEvent_default_instance_;
     new (ptr) ::eqproto::ChannelMessageEvent();
@@ -441,20 +346,12 @@ void InitDefaultsChannelMessageEventImpl() {
   ::eqproto::ChannelMessageEvent::InitAsDefaultInstance();
 }
 
-void InitDefaultsChannelMessageEvent() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsChannelMessageEventImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_ChannelMessageEvent =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsChannelMessageEvent}, {}};
 
-void InitDefaultsWearChangeEventImpl() {
+static void InitDefaultsWearChangeEvent() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  protobuf_message_2eproto::InitDefaultsTint();
   {
     void* ptr = &::eqproto::_WearChangeEvent_default_instance_;
     new (ptr) ::eqproto::WearChangeEvent();
@@ -463,19 +360,13 @@ void InitDefaultsWearChangeEventImpl() {
   ::eqproto::WearChangeEvent::InitAsDefaultInstance();
 }
 
-void InitDefaultsWearChangeEvent() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsWearChangeEventImpl);
-}
+::google::protobuf::internal::SCCInfo<1> scc_info_WearChangeEvent =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsWearChangeEvent}, {
+      &protobuf_message_2eproto::scc_info_Tint.base,}};
 
-void InitDefaultsDeleteSpawnEventImpl() {
+static void InitDefaultsDeleteSpawnEvent() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_DeleteSpawnEvent_default_instance_;
     new (ptr) ::eqproto::DeleteSpawnEvent();
@@ -484,19 +375,12 @@ void InitDefaultsDeleteSpawnEventImpl() {
   ::eqproto::DeleteSpawnEvent::InitAsDefaultInstance();
 }
 
-void InitDefaultsDeleteSpawnEvent() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsDeleteSpawnEventImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_DeleteSpawnEvent =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsDeleteSpawnEvent}, {}};
 
-void InitDefaultsHPEventImpl() {
+static void InitDefaultsHPEvent() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_HPEvent_default_instance_;
     new (ptr) ::eqproto::HPEvent();
@@ -505,19 +389,12 @@ void InitDefaultsHPEventImpl() {
   ::eqproto::HPEvent::InitAsDefaultInstance();
 }
 
-void InitDefaultsHPEvent() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsHPEventImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_HPEvent =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsHPEvent}, {}};
 
-void InitDefaultsPlayerPositionUpdateEventImpl() {
+static void InitDefaultsPlayerPositionUpdateEvent() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_PlayerPositionUpdateEvent_default_instance_;
     new (ptr) ::eqproto::PlayerPositionUpdateEvent();
@@ -526,19 +403,12 @@ void InitDefaultsPlayerPositionUpdateEventImpl() {
   ::eqproto::PlayerPositionUpdateEvent::InitAsDefaultInstance();
 }
 
-void InitDefaultsPlayerPositionUpdateEvent() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsPlayerPositionUpdateEventImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_PlayerPositionUpdateEvent =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPlayerPositionUpdateEvent}, {}};
 
-void InitDefaultsAnimationEventImpl() {
+static void InitDefaultsAnimationEvent() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
     void* ptr = &::eqproto::_AnimationEvent_default_instance_;
     new (ptr) ::eqproto::AnimationEvent();
@@ -547,21 +417,12 @@ void InitDefaultsAnimationEventImpl() {
   ::eqproto::AnimationEvent::InitAsDefaultInstance();
 }
 
-void InitDefaultsAnimationEvent() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsAnimationEventImpl);
-}
+::google::protobuf::internal::SCCInfo<0> scc_info_AnimationEvent =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsAnimationEvent}, {}};
 
-void InitDefaultsSpawnEventImpl() {
+static void InitDefaultsSpawnEvent() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-#ifdef GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  ::google::protobuf::internal::InitProtobufDefaultsForceUnique();
-#else
-  ::google::protobuf::internal::InitProtobufDefaults();
-#endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
-  protobuf_message_2eproto::InitDefaultsTextureProfile();
-  protobuf_message_2eproto::InitDefaultsTintProfile();
   {
     void* ptr = &::eqproto::_SpawnEvent_default_instance_;
     new (ptr) ::eqproto::SpawnEvent();
@@ -570,9 +431,33 @@ void InitDefaultsSpawnEventImpl() {
   ::eqproto::SpawnEvent::InitAsDefaultInstance();
 }
 
-void InitDefaultsSpawnEvent() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &InitDefaultsSpawnEventImpl);
+::google::protobuf::internal::SCCInfo<2> scc_info_SpawnEvent =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 2, InitDefaultsSpawnEvent}, {
+      &protobuf_message_2eproto::scc_info_TextureProfile.base,
+      &protobuf_message_2eproto::scc_info_TintProfile.base,}};
+
+void InitDefaults() {
+  ::google::protobuf::internal::InitSCC(&scc_info_ChannelMessage.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_CommandMessage.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_DailyGain.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Entity.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Entities.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Position.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_TextureProfile.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Texture.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_TintProfile.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Tint.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_Event.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_DeathEvent.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_DamageEvent.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_EntityEvent.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_ChannelMessageEvent.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_WearChangeEvent.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_DeleteSpawnEvent.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_HPEvent.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_PlayerPositionUpdateEvent.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_AnimationEvent.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_SpawnEvent.base);
 }
 
 ::google::protobuf::Metadata file_level_metadata[21];
@@ -957,15 +842,14 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
 
 void protobuf_AssignDescriptors() {
   AddDescriptors();
-  ::google::protobuf::MessageFactory* factory = NULL;
   AssignDescriptors(
-      "message.proto", schemas, file_default_instances, TableStruct::offsets, factory,
+      "message.proto", schemas, file_default_instances, TableStruct::offsets,
       file_level_metadata, file_level_enum_descriptors, NULL);
 }
 
 void protobuf_AssignDescriptorsOnce() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &protobuf_AssignDescriptors);
+  static ::google::protobuf::internal::once_flag once;
+  ::google::protobuf::internal::call_once(once, protobuf_AssignDescriptors);
 }
 
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
@@ -1432,8 +1316,8 @@ void AddDescriptorsImpl() {
 }
 
 void AddDescriptors() {
-  static GOOGLE_PROTOBUF_DECLARE_ONCE(once);
-  ::google::protobuf::GoogleOnceInit(&once, &AddDescriptorsImpl);
+  static ::google::protobuf::internal::once_flag once;
+  ::google::protobuf::internal::call_once(once, AddDescriptorsImpl);
 }
 // Force AddDescriptors() to be called at dynamic initialization time.
 struct StaticDescriptorInitializer {
@@ -2054,16 +1938,14 @@ const int ChannelMessage::kZoneIdFieldNumber;
 
 ChannelMessage::ChannelMessage()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsChannelMessage();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_ChannelMessage.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.ChannelMessage)
 }
 ChannelMessage::ChannelMessage(const ChannelMessage& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   from_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.from().size() > 0) {
@@ -2095,7 +1977,6 @@ void ChannelMessage::SharedCtor() {
   ::memset(&chan_num_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&zone_id_) -
       reinterpret_cast<char*>(&chan_num_)) + sizeof(zone_id_));
-  _cached_size_ = 0;
 }
 
 ChannelMessage::~ChannelMessage() {
@@ -2111,9 +1992,7 @@ void ChannelMessage::SharedDtor() {
 }
 
 void ChannelMessage::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* ChannelMessage::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -2121,17 +2000,10 @@ const ::google::protobuf::Descriptor* ChannelMessage::descriptor() {
 }
 
 const ChannelMessage& ChannelMessage::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsChannelMessage();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_ChannelMessage.base);
   return *internal_default_instance();
 }
 
-ChannelMessage* ChannelMessage::New(::google::protobuf::Arena* arena) const {
-  ChannelMessage* n = new ChannelMessage;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void ChannelMessage::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.ChannelMessage)
@@ -2155,7 +2027,7 @@ bool ChannelMessage::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.ChannelMessage)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -2699,9 +2571,7 @@ size_t ChannelMessage::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -2799,10 +2669,14 @@ void ChannelMessage::Swap(ChannelMessage* other) {
 }
 void ChannelMessage::InternalSwap(ChannelMessage* other) {
   using std::swap;
-  from_.Swap(&other->from_);
-  to_.Swap(&other->to_);
-  message_.Swap(&other->message_);
-  deliverto_.Swap(&other->deliverto_);
+  from_.Swap(&other->from_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  to_.Swap(&other->to_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  message_.Swap(&other->message_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  deliverto_.Swap(&other->deliverto_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(chan_num_, other->chan_num_);
   swap(language_, other->language_);
   swap(guilddbid_, other->guilddbid_);
@@ -2814,7 +2688,6 @@ void ChannelMessage::InternalSwap(ChannelMessage* other) {
   swap(queued_, other->queued_);
   swap(zone_id_, other->zone_id_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata ChannelMessage::GetMetadata() const {
@@ -2837,17 +2710,15 @@ const int CommandMessage::kPayloadFieldNumber;
 
 CommandMessage::CommandMessage()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsCommandMessage();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_CommandMessage.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.CommandMessage)
 }
 CommandMessage::CommandMessage(const CommandMessage& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
-      params_(from.params_),
-      _cached_size_(0) {
+      params_(from.params_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   author_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.author().size() > 0) {
@@ -2873,7 +2744,6 @@ void CommandMessage::SharedCtor() {
   command_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   result_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   payload_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  _cached_size_ = 0;
 }
 
 CommandMessage::~CommandMessage() {
@@ -2889,9 +2759,7 @@ void CommandMessage::SharedDtor() {
 }
 
 void CommandMessage::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* CommandMessage::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -2899,17 +2767,10 @@ const ::google::protobuf::Descriptor* CommandMessage::descriptor() {
 }
 
 const CommandMessage& CommandMessage::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsCommandMessage();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_CommandMessage.base);
   return *internal_default_instance();
 }
 
-CommandMessage* CommandMessage::New(::google::protobuf::Arena* arena) const {
-  CommandMessage* n = new CommandMessage;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void CommandMessage::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.CommandMessage)
@@ -2931,7 +2792,7 @@ bool CommandMessage::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.CommandMessage)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -3202,9 +3063,7 @@ size_t CommandMessage::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -3273,13 +3132,16 @@ void CommandMessage::Swap(CommandMessage* other) {
 }
 void CommandMessage::InternalSwap(CommandMessage* other) {
   using std::swap;
-  params_.InternalSwap(&other->params_);
-  author_.Swap(&other->author_);
-  command_.Swap(&other->command_);
-  result_.Swap(&other->result_);
-  payload_.Swap(&other->payload_);
+  params_.InternalSwap(CastToBase(&other->params_));
+  author_.Swap(&other->author_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  command_.Swap(&other->command_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  result_.Swap(&other->result_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  payload_.Swap(&other->payload_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata CommandMessage::GetMetadata() const {
@@ -3303,16 +3165,14 @@ const int DailyGain::kIdentityFieldNumber;
 
 DailyGain::DailyGain()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsDailyGain();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_DailyGain.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.DailyGain)
 }
 DailyGain::DailyGain(const DailyGain& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   identity_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.identity().size() > 0) {
@@ -3329,7 +3189,6 @@ void DailyGain::SharedCtor() {
   ::memset(&account_id_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&money_earned_) -
       reinterpret_cast<char*>(&account_id_)) + sizeof(money_earned_));
-  _cached_size_ = 0;
 }
 
 DailyGain::~DailyGain() {
@@ -3342,9 +3201,7 @@ void DailyGain::SharedDtor() {
 }
 
 void DailyGain::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* DailyGain::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -3352,17 +3209,10 @@ const ::google::protobuf::Descriptor* DailyGain::descriptor() {
 }
 
 const DailyGain& DailyGain::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsDailyGain();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_DailyGain.base);
   return *internal_default_instance();
 }
 
-DailyGain* DailyGain::New(::google::protobuf::Arena* arena) const {
-  DailyGain* n = new DailyGain;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void DailyGain::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.DailyGain)
@@ -3383,7 +3233,7 @@ bool DailyGain::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.DailyGain)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -3644,9 +3494,7 @@ size_t DailyGain::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -3717,14 +3565,14 @@ void DailyGain::Swap(DailyGain* other) {
 }
 void DailyGain::InternalSwap(DailyGain* other) {
   using std::swap;
-  identity_.Swap(&other->identity_);
+  identity_.Swap(&other->identity_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(account_id_, other->account_id_);
   swap(character_id_, other->character_id_);
   swap(levels_gained_, other->levels_gained_);
   swap(experience_gained_, other->experience_gained_);
   swap(money_earned_, other->money_earned_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata DailyGain::GetMetadata() const {
@@ -3752,16 +3600,14 @@ const int Entity::kClassFieldNumber;
 
 Entity::Entity()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsEntity();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_Entity.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.Entity)
 }
 Entity::Entity(const Entity& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.name().size() > 0) {
@@ -3783,7 +3629,6 @@ void Entity::SharedCtor() {
   ::memset(&position_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&class__) -
       reinterpret_cast<char*>(&position_)) + sizeof(class__));
-  _cached_size_ = 0;
 }
 
 Entity::~Entity() {
@@ -3797,9 +3642,7 @@ void Entity::SharedDtor() {
 }
 
 void Entity::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* Entity::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -3807,17 +3650,10 @@ const ::google::protobuf::Descriptor* Entity::descriptor() {
 }
 
 const Entity& Entity::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsEntity();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_Entity.base);
   return *internal_default_instance();
 }
 
-Entity* Entity::New(::google::protobuf::Arena* arena) const {
-  Entity* n = new Entity;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void Entity::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.Entity)
@@ -3842,7 +3678,7 @@ bool Entity::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.Entity)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -4017,7 +3853,7 @@ void Entity::SerializeWithCachedSizes(
   // .eqproto.Position position = 6;
   if (this->has_position()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, *this->position_, output);
+      6, this->_internal_position(), output);
   }
 
   // int32 race = 7;
@@ -4079,7 +3915,7 @@ void Entity::SerializeWithCachedSizes(
   if (this->has_position()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        6, *this->position_, deterministic, target);
+        6, this->_internal_position(), deterministic, target);
   }
 
   // int32 race = 7;
@@ -4120,7 +3956,7 @@ size_t Entity::ByteSizeLong() const {
   if (this->has_position()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->position_);
+        *position_);
   }
 
   // int32 id = 1;
@@ -4166,9 +4002,7 @@ size_t Entity::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -4245,7 +4079,8 @@ void Entity::Swap(Entity* other) {
 }
 void Entity::InternalSwap(Entity* other) {
   using std::swap;
-  name_.Swap(&other->name_);
+  name_.Swap(&other->name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(position_, other->position_);
   swap(id_, other->id_);
   swap(type_, other->type_);
@@ -4254,7 +4089,6 @@ void Entity::InternalSwap(Entity* other) {
   swap(race_, other->race_);
   swap(class__, other->class__);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata Entity::GetMetadata() const {
@@ -4273,23 +4107,20 @@ const int Entities::kEntitiesFieldNumber;
 
 Entities::Entities()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsEntities();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_Entities.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.Entities)
 }
 Entities::Entities(const Entities& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
-      entities_(from.entities_),
-      _cached_size_(0) {
+      entities_(from.entities_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:eqproto.Entities)
 }
 
 void Entities::SharedCtor() {
-  _cached_size_ = 0;
 }
 
 Entities::~Entities() {
@@ -4301,9 +4132,7 @@ void Entities::SharedDtor() {
 }
 
 void Entities::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* Entities::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -4311,17 +4140,10 @@ const ::google::protobuf::Descriptor* Entities::descriptor() {
 }
 
 const Entities& Entities::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsEntities();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_Entities.base);
   return *internal_default_instance();
 }
 
-Entities* Entities::New(::google::protobuf::Arena* arena) const {
-  Entities* n = new Entities;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void Entities::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.Entities)
@@ -4339,7 +4161,7 @@ bool Entities::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.Entities)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -4347,7 +4169,8 @@ bool Entities::MergePartialFromCodedStream(
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(input, add_entities()));
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+                input, add_entities()));
         } else {
           goto handle_unusual;
         }
@@ -4384,7 +4207,9 @@ void Entities::SerializeWithCachedSizes(
   for (unsigned int i = 0,
       n = static_cast<unsigned int>(this->entities_size()); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->entities(static_cast<int>(i)), output);
+      1,
+      this->entities(static_cast<int>(i)),
+      output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -4438,9 +4263,7 @@ size_t Entities::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -4493,9 +4316,8 @@ void Entities::Swap(Entities* other) {
 }
 void Entities::InternalSwap(Entities* other) {
   using std::swap;
-  entities_.InternalSwap(&other->entities_);
+  CastToBase(&entities_)->InternalSwap(CastToBase(&other->entities_));
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata Entities::GetMetadata() const {
@@ -4517,16 +4339,14 @@ const int Position::kHFieldNumber;
 
 Position::Position()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsPosition();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_Position.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.Position)
 }
 Position::Position(const Position& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&x_, &from.x_,
     static_cast<size_t>(reinterpret_cast<char*>(&h_) -
@@ -4538,7 +4358,6 @@ void Position::SharedCtor() {
   ::memset(&x_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&h_) -
       reinterpret_cast<char*>(&x_)) + sizeof(h_));
-  _cached_size_ = 0;
 }
 
 Position::~Position() {
@@ -4550,9 +4369,7 @@ void Position::SharedDtor() {
 }
 
 void Position::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* Position::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -4560,17 +4377,10 @@ const ::google::protobuf::Descriptor* Position::descriptor() {
 }
 
 const Position& Position::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsPosition();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_Position.base);
   return *internal_default_instance();
 }
 
-Position* Position::New(::google::protobuf::Arena* arena) const {
-  Position* n = new Position;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void Position::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.Position)
@@ -4590,7 +4400,7 @@ bool Position::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.Position)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -4768,9 +4578,7 @@ size_t Position::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -4839,7 +4647,6 @@ void Position::InternalSwap(Position* other) {
   swap(z_, other->z_);
   swap(h_, other->h_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata Position::GetMetadata() const {
@@ -4884,16 +4691,14 @@ const int TextureProfile::kSecondaryFieldNumber;
 
 TextureProfile::TextureProfile()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsTextureProfile();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_TextureProfile.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.TextureProfile)
 }
 TextureProfile::TextureProfile(const TextureProfile& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.has_head()) {
     head_ = new ::eqproto::Texture(*from.head_);
@@ -4947,7 +4752,6 @@ void TextureProfile::SharedCtor() {
   ::memset(&head_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&secondary_) -
       reinterpret_cast<char*>(&head_)) + sizeof(secondary_));
-  _cached_size_ = 0;
 }
 
 TextureProfile::~TextureProfile() {
@@ -4968,9 +4772,7 @@ void TextureProfile::SharedDtor() {
 }
 
 void TextureProfile::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* TextureProfile::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -4978,17 +4780,10 @@ const ::google::protobuf::Descriptor* TextureProfile::descriptor() {
 }
 
 const TextureProfile& TextureProfile::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsTextureProfile();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_TextureProfile.base);
   return *internal_default_instance();
 }
 
-TextureProfile* TextureProfile::New(::google::protobuf::Arena* arena) const {
-  TextureProfile* n = new TextureProfile;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void TextureProfile::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.TextureProfile)
@@ -5041,7 +4836,7 @@ bool TextureProfile::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.TextureProfile)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -5182,55 +4977,55 @@ void TextureProfile::SerializeWithCachedSizes(
   // .eqproto.Texture Head = 1;
   if (this->has_head()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, *this->head_, output);
+      1, this->_internal_head(), output);
   }
 
   // .eqproto.Texture Chest = 2;
   if (this->has_chest()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, *this->chest_, output);
+      2, this->_internal_chest(), output);
   }
 
   // .eqproto.Texture Arms = 3;
   if (this->has_arms()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, *this->arms_, output);
+      3, this->_internal_arms(), output);
   }
 
   // .eqproto.Texture Wrist = 4;
   if (this->has_wrist()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, *this->wrist_, output);
+      4, this->_internal_wrist(), output);
   }
 
   // .eqproto.Texture Hands = 5;
   if (this->has_hands()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, *this->hands_, output);
+      5, this->_internal_hands(), output);
   }
 
   // .eqproto.Texture Legs = 6;
   if (this->has_legs()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, *this->legs_, output);
+      6, this->_internal_legs(), output);
   }
 
   // .eqproto.Texture Feet = 7;
   if (this->has_feet()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      7, *this->feet_, output);
+      7, this->_internal_feet(), output);
   }
 
   // .eqproto.Texture Primary = 8;
   if (this->has_primary()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      8, *this->primary_, output);
+      8, this->_internal_primary(), output);
   }
 
   // .eqproto.Texture Secondary = 9;
   if (this->has_secondary()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      9, *this->secondary_, output);
+      9, this->_internal_secondary(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -5251,63 +5046,63 @@ void TextureProfile::SerializeWithCachedSizes(
   if (this->has_head()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        1, *this->head_, deterministic, target);
+        1, this->_internal_head(), deterministic, target);
   }
 
   // .eqproto.Texture Chest = 2;
   if (this->has_chest()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        2, *this->chest_, deterministic, target);
+        2, this->_internal_chest(), deterministic, target);
   }
 
   // .eqproto.Texture Arms = 3;
   if (this->has_arms()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        3, *this->arms_, deterministic, target);
+        3, this->_internal_arms(), deterministic, target);
   }
 
   // .eqproto.Texture Wrist = 4;
   if (this->has_wrist()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        4, *this->wrist_, deterministic, target);
+        4, this->_internal_wrist(), deterministic, target);
   }
 
   // .eqproto.Texture Hands = 5;
   if (this->has_hands()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        5, *this->hands_, deterministic, target);
+        5, this->_internal_hands(), deterministic, target);
   }
 
   // .eqproto.Texture Legs = 6;
   if (this->has_legs()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        6, *this->legs_, deterministic, target);
+        6, this->_internal_legs(), deterministic, target);
   }
 
   // .eqproto.Texture Feet = 7;
   if (this->has_feet()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        7, *this->feet_, deterministic, target);
+        7, this->_internal_feet(), deterministic, target);
   }
 
   // .eqproto.Texture Primary = 8;
   if (this->has_primary()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        8, *this->primary_, deterministic, target);
+        8, this->_internal_primary(), deterministic, target);
   }
 
   // .eqproto.Texture Secondary = 9;
   if (this->has_secondary()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        9, *this->secondary_, deterministic, target);
+        9, this->_internal_secondary(), deterministic, target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -5331,69 +5126,67 @@ size_t TextureProfile::ByteSizeLong() const {
   if (this->has_head()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->head_);
+        *head_);
   }
 
   // .eqproto.Texture Chest = 2;
   if (this->has_chest()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->chest_);
+        *chest_);
   }
 
   // .eqproto.Texture Arms = 3;
   if (this->has_arms()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->arms_);
+        *arms_);
   }
 
   // .eqproto.Texture Wrist = 4;
   if (this->has_wrist()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->wrist_);
+        *wrist_);
   }
 
   // .eqproto.Texture Hands = 5;
   if (this->has_hands()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->hands_);
+        *hands_);
   }
 
   // .eqproto.Texture Legs = 6;
   if (this->has_legs()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->legs_);
+        *legs_);
   }
 
   // .eqproto.Texture Feet = 7;
   if (this->has_feet()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->feet_);
+        *feet_);
   }
 
   // .eqproto.Texture Primary = 8;
   if (this->has_primary()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->primary_);
+        *primary_);
   }
 
   // .eqproto.Texture Secondary = 9;
   if (this->has_secondary()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->secondary_);
+        *secondary_);
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -5482,7 +5275,6 @@ void TextureProfile::InternalSwap(TextureProfile* other) {
   swap(primary_, other->primary_);
   swap(secondary_, other->secondary_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata TextureProfile::GetMetadata() const {
@@ -5505,16 +5297,14 @@ const int Texture::kUnknown2FieldNumber;
 
 Texture::Texture()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsTexture();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_Texture.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.Texture)
 }
 Texture::Texture(const Texture& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&material_, &from.material_,
     static_cast<size_t>(reinterpret_cast<char*>(&unknown2_) -
@@ -5526,7 +5316,6 @@ void Texture::SharedCtor() {
   ::memset(&material_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&unknown2_) -
       reinterpret_cast<char*>(&material_)) + sizeof(unknown2_));
-  _cached_size_ = 0;
 }
 
 Texture::~Texture() {
@@ -5538,9 +5327,7 @@ void Texture::SharedDtor() {
 }
 
 void Texture::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* Texture::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -5548,17 +5335,10 @@ const ::google::protobuf::Descriptor* Texture::descriptor() {
 }
 
 const Texture& Texture::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsTexture();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_Texture.base);
   return *internal_default_instance();
 }
 
-Texture* Texture::New(::google::protobuf::Arena* arena) const {
-  Texture* n = new Texture;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void Texture::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.Texture)
@@ -5578,7 +5358,7 @@ bool Texture::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.Texture)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -5795,9 +5575,7 @@ size_t Texture::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -5870,7 +5648,6 @@ void Texture::InternalSwap(Texture* other) {
   swap(herosforgemodel_, other->herosforgemodel_);
   swap(unknown2_, other->unknown2_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata Texture::GetMetadata() const {
@@ -5915,16 +5692,14 @@ const int TintProfile::kSecondaryFieldNumber;
 
 TintProfile::TintProfile()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsTintProfile();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_TintProfile.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.TintProfile)
 }
 TintProfile::TintProfile(const TintProfile& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.has_head()) {
     head_ = new ::eqproto::Tint(*from.head_);
@@ -5978,7 +5753,6 @@ void TintProfile::SharedCtor() {
   ::memset(&head_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&secondary_) -
       reinterpret_cast<char*>(&head_)) + sizeof(secondary_));
-  _cached_size_ = 0;
 }
 
 TintProfile::~TintProfile() {
@@ -5999,9 +5773,7 @@ void TintProfile::SharedDtor() {
 }
 
 void TintProfile::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* TintProfile::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -6009,17 +5781,10 @@ const ::google::protobuf::Descriptor* TintProfile::descriptor() {
 }
 
 const TintProfile& TintProfile::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsTintProfile();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_TintProfile.base);
   return *internal_default_instance();
 }
 
-TintProfile* TintProfile::New(::google::protobuf::Arena* arena) const {
-  TintProfile* n = new TintProfile;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void TintProfile::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.TintProfile)
@@ -6072,7 +5837,7 @@ bool TintProfile::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.TintProfile)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -6213,55 +5978,55 @@ void TintProfile::SerializeWithCachedSizes(
   // .eqproto.Tint Head = 1;
   if (this->has_head()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, *this->head_, output);
+      1, this->_internal_head(), output);
   }
 
   // .eqproto.Tint Chest = 2;
   if (this->has_chest()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, *this->chest_, output);
+      2, this->_internal_chest(), output);
   }
 
   // .eqproto.Tint Arms = 3;
   if (this->has_arms()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, *this->arms_, output);
+      3, this->_internal_arms(), output);
   }
 
   // .eqproto.Tint Wrist = 4;
   if (this->has_wrist()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      4, *this->wrist_, output);
+      4, this->_internal_wrist(), output);
   }
 
   // .eqproto.Tint Hands = 5;
   if (this->has_hands()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, *this->hands_, output);
+      5, this->_internal_hands(), output);
   }
 
   // .eqproto.Tint Legs = 6;
   if (this->has_legs()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      6, *this->legs_, output);
+      6, this->_internal_legs(), output);
   }
 
   // .eqproto.Tint Feet = 7;
   if (this->has_feet()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      7, *this->feet_, output);
+      7, this->_internal_feet(), output);
   }
 
   // .eqproto.Tint Primary = 8;
   if (this->has_primary()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      8, *this->primary_, output);
+      8, this->_internal_primary(), output);
   }
 
   // .eqproto.Tint Secondary = 9;
   if (this->has_secondary()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      9, *this->secondary_, output);
+      9, this->_internal_secondary(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -6282,63 +6047,63 @@ void TintProfile::SerializeWithCachedSizes(
   if (this->has_head()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        1, *this->head_, deterministic, target);
+        1, this->_internal_head(), deterministic, target);
   }
 
   // .eqproto.Tint Chest = 2;
   if (this->has_chest()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        2, *this->chest_, deterministic, target);
+        2, this->_internal_chest(), deterministic, target);
   }
 
   // .eqproto.Tint Arms = 3;
   if (this->has_arms()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        3, *this->arms_, deterministic, target);
+        3, this->_internal_arms(), deterministic, target);
   }
 
   // .eqproto.Tint Wrist = 4;
   if (this->has_wrist()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        4, *this->wrist_, deterministic, target);
+        4, this->_internal_wrist(), deterministic, target);
   }
 
   // .eqproto.Tint Hands = 5;
   if (this->has_hands()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        5, *this->hands_, deterministic, target);
+        5, this->_internal_hands(), deterministic, target);
   }
 
   // .eqproto.Tint Legs = 6;
   if (this->has_legs()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        6, *this->legs_, deterministic, target);
+        6, this->_internal_legs(), deterministic, target);
   }
 
   // .eqproto.Tint Feet = 7;
   if (this->has_feet()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        7, *this->feet_, deterministic, target);
+        7, this->_internal_feet(), deterministic, target);
   }
 
   // .eqproto.Tint Primary = 8;
   if (this->has_primary()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        8, *this->primary_, deterministic, target);
+        8, this->_internal_primary(), deterministic, target);
   }
 
   // .eqproto.Tint Secondary = 9;
   if (this->has_secondary()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        9, *this->secondary_, deterministic, target);
+        9, this->_internal_secondary(), deterministic, target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -6362,69 +6127,67 @@ size_t TintProfile::ByteSizeLong() const {
   if (this->has_head()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->head_);
+        *head_);
   }
 
   // .eqproto.Tint Chest = 2;
   if (this->has_chest()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->chest_);
+        *chest_);
   }
 
   // .eqproto.Tint Arms = 3;
   if (this->has_arms()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->arms_);
+        *arms_);
   }
 
   // .eqproto.Tint Wrist = 4;
   if (this->has_wrist()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->wrist_);
+        *wrist_);
   }
 
   // .eqproto.Tint Hands = 5;
   if (this->has_hands()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->hands_);
+        *hands_);
   }
 
   // .eqproto.Tint Legs = 6;
   if (this->has_legs()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->legs_);
+        *legs_);
   }
 
   // .eqproto.Tint Feet = 7;
   if (this->has_feet()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->feet_);
+        *feet_);
   }
 
   // .eqproto.Tint Primary = 8;
   if (this->has_primary()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->primary_);
+        *primary_);
   }
 
   // .eqproto.Tint Secondary = 9;
   if (this->has_secondary()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->secondary_);
+        *secondary_);
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -6513,7 +6276,6 @@ void TintProfile::InternalSwap(TintProfile* other) {
   swap(primary_, other->primary_);
   swap(secondary_, other->secondary_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata TintProfile::GetMetadata() const {
@@ -6536,16 +6298,14 @@ const int Tint::kColorFieldNumber;
 
 Tint::Tint()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsTint();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_Tint.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.Tint)
 }
 Tint::Tint(const Tint& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&blue_, &from.blue_,
     static_cast<size_t>(reinterpret_cast<char*>(&color_) -
@@ -6557,7 +6317,6 @@ void Tint::SharedCtor() {
   ::memset(&blue_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&color_) -
       reinterpret_cast<char*>(&blue_)) + sizeof(color_));
-  _cached_size_ = 0;
 }
 
 Tint::~Tint() {
@@ -6569,9 +6328,7 @@ void Tint::SharedDtor() {
 }
 
 void Tint::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* Tint::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -6579,17 +6336,10 @@ const ::google::protobuf::Descriptor* Tint::descriptor() {
 }
 
 const Tint& Tint::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsTint();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_Tint.base);
   return *internal_default_instance();
 }
 
-Tint* Tint::New(::google::protobuf::Arena* arena) const {
-  Tint* n = new Tint;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void Tint::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.Tint)
@@ -6609,7 +6359,7 @@ bool Tint::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.Tint)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -6826,9 +6576,7 @@ size_t Tint::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -6901,7 +6649,6 @@ void Tint::InternalSwap(Tint* other) {
   swap(usetint_, other->usetint_);
   swap(color_, other->color_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata Tint::GetMetadata() const {
@@ -6921,16 +6668,14 @@ const int Event::kPayloadFieldNumber;
 
 Event::Event()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsEvent();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_Event.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.Event)
 }
 Event::Event(const Event& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   payload_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.payload().size() > 0) {
@@ -6943,7 +6688,6 @@ Event::Event(const Event& from)
 void Event::SharedCtor() {
   payload_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   op_ = 0;
-  _cached_size_ = 0;
 }
 
 Event::~Event() {
@@ -6956,9 +6700,7 @@ void Event::SharedDtor() {
 }
 
 void Event::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* Event::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -6966,17 +6708,10 @@ const ::google::protobuf::Descriptor* Event::descriptor() {
 }
 
 const Event& Event::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsEvent();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_Event.base);
   return *internal_default_instance();
 }
 
-Event* Event::New(::google::protobuf::Arena* arena) const {
-  Event* n = new Event;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void Event::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.Event)
@@ -6995,7 +6730,7 @@ bool Event::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.Event)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -7122,9 +6857,7 @@ size_t Event::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -7183,10 +6916,10 @@ void Event::Swap(Event* other) {
 }
 void Event::InternalSwap(Event* other) {
   using std::swap;
-  payload_.Swap(&other->payload_);
+  payload_.Swap(&other->payload_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(op_, other->op_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata Event::GetMetadata() const {
@@ -7212,16 +6945,14 @@ const int DeathEvent::kUnknown028FieldNumber;
 
 DeathEvent::DeathEvent()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsDeathEvent();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_DeathEvent.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.DeathEvent)
 }
 DeathEvent::DeathEvent(const DeathEvent& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&spawn_id_, &from.spawn_id_,
     static_cast<size_t>(reinterpret_cast<char*>(&unknown028_) -
@@ -7233,7 +6964,6 @@ void DeathEvent::SharedCtor() {
   ::memset(&spawn_id_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&unknown028_) -
       reinterpret_cast<char*>(&spawn_id_)) + sizeof(unknown028_));
-  _cached_size_ = 0;
 }
 
 DeathEvent::~DeathEvent() {
@@ -7245,9 +6975,7 @@ void DeathEvent::SharedDtor() {
 }
 
 void DeathEvent::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* DeathEvent::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -7255,17 +6983,10 @@ const ::google::protobuf::Descriptor* DeathEvent::descriptor() {
 }
 
 const DeathEvent& DeathEvent::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsDeathEvent();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_DeathEvent.base);
   return *internal_default_instance();
 }
 
-DeathEvent* DeathEvent::New(::google::protobuf::Arena* arena) const {
-  DeathEvent* n = new DeathEvent;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void DeathEvent::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.DeathEvent)
@@ -7285,7 +7006,7 @@ bool DeathEvent::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.DeathEvent)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -7595,9 +7316,7 @@ size_t DeathEvent::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -7682,7 +7401,6 @@ void DeathEvent::InternalSwap(DeathEvent* other) {
   swap(damage_, other->damage_);
   swap(unknown028_, other->unknown028_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata DeathEvent::GetMetadata() const {
@@ -7708,16 +7426,14 @@ const int DamageEvent::kMeleepushZFieldNumber;
 
 DamageEvent::DamageEvent()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsDamageEvent();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_DamageEvent.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.DamageEvent)
 }
 DamageEvent::DamageEvent(const DamageEvent& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&target_, &from.target_,
     static_cast<size_t>(reinterpret_cast<char*>(&meleepush_z_) -
@@ -7729,7 +7445,6 @@ void DamageEvent::SharedCtor() {
   ::memset(&target_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&meleepush_z_) -
       reinterpret_cast<char*>(&target_)) + sizeof(meleepush_z_));
-  _cached_size_ = 0;
 }
 
 DamageEvent::~DamageEvent() {
@@ -7741,9 +7456,7 @@ void DamageEvent::SharedDtor() {
 }
 
 void DamageEvent::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* DamageEvent::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -7751,17 +7464,10 @@ const ::google::protobuf::Descriptor* DamageEvent::descriptor() {
 }
 
 const DamageEvent& DamageEvent::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsDamageEvent();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_DamageEvent.base);
   return *internal_default_instance();
 }
 
-DamageEvent* DamageEvent::New(::google::protobuf::Arena* arena) const {
-  DamageEvent* n = new DamageEvent;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void DamageEvent::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.DamageEvent)
@@ -7781,7 +7487,7 @@ bool DamageEvent::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.DamageEvent)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -8085,9 +7791,7 @@ size_t DamageEvent::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -8172,7 +7876,6 @@ void DamageEvent::InternalSwap(DamageEvent* other) {
   swap(meleepush_xy_, other->meleepush_xy_);
   swap(meleepush_z_, other->meleepush_z_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata DamageEvent::GetMetadata() const {
@@ -8192,16 +7895,14 @@ const int EntityEvent::kTargetIdFieldNumber;
 
 EntityEvent::EntityEvent()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsEntityEvent();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_EntityEvent.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.EntityEvent)
 }
 EntityEvent::EntityEvent(const EntityEvent& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&entity_id_, &from.entity_id_,
     static_cast<size_t>(reinterpret_cast<char*>(&target_id_) -
@@ -8213,7 +7914,6 @@ void EntityEvent::SharedCtor() {
   ::memset(&entity_id_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&target_id_) -
       reinterpret_cast<char*>(&entity_id_)) + sizeof(target_id_));
-  _cached_size_ = 0;
 }
 
 EntityEvent::~EntityEvent() {
@@ -8225,9 +7925,7 @@ void EntityEvent::SharedDtor() {
 }
 
 void EntityEvent::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* EntityEvent::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -8235,17 +7933,10 @@ const ::google::protobuf::Descriptor* EntityEvent::descriptor() {
 }
 
 const EntityEvent& EntityEvent::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsEntityEvent();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_EntityEvent.base);
   return *internal_default_instance();
 }
 
-EntityEvent* EntityEvent::New(::google::protobuf::Arena* arena) const {
-  EntityEvent* n = new EntityEvent;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void EntityEvent::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.EntityEvent)
@@ -8265,7 +7956,7 @@ bool EntityEvent::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.EntityEvent)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -8389,9 +8080,7 @@ size_t EntityEvent::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -8452,7 +8141,6 @@ void EntityEvent::InternalSwap(EntityEvent* other) {
   swap(entity_id_, other->entity_id_);
   swap(target_id_, other->target_id_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata EntityEvent::GetMetadata() const {
@@ -8477,16 +8165,14 @@ const int ChannelMessageEvent::kMessageFieldNumber;
 
 ChannelMessageEvent::ChannelMessageEvent()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsChannelMessageEvent();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_ChannelMessageEvent.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.ChannelMessageEvent)
 }
 ChannelMessageEvent::ChannelMessageEvent(const ChannelMessageEvent& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   target_name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.target_name().size() > 0) {
@@ -8513,7 +8199,6 @@ void ChannelMessageEvent::SharedCtor() {
   ::memset(&language_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&skill_in_language_) -
       reinterpret_cast<char*>(&language_)) + sizeof(skill_in_language_));
-  _cached_size_ = 0;
 }
 
 ChannelMessageEvent::~ChannelMessageEvent() {
@@ -8528,9 +8213,7 @@ void ChannelMessageEvent::SharedDtor() {
 }
 
 void ChannelMessageEvent::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* ChannelMessageEvent::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -8538,17 +8221,10 @@ const ::google::protobuf::Descriptor* ChannelMessageEvent::descriptor() {
 }
 
 const ChannelMessageEvent& ChannelMessageEvent::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsChannelMessageEvent();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_ChannelMessageEvent.base);
   return *internal_default_instance();
 }
 
-ChannelMessageEvent* ChannelMessageEvent::New(::google::protobuf::Arena* arena) const {
-  ChannelMessageEvent* n = new ChannelMessageEvent;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void ChannelMessageEvent::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.ChannelMessageEvent)
@@ -8571,7 +8247,7 @@ bool ChannelMessageEvent::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.ChannelMessageEvent)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -8889,9 +8565,7 @@ size_t ChannelMessageEvent::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -8967,15 +8641,17 @@ void ChannelMessageEvent::Swap(ChannelMessageEvent* other) {
 }
 void ChannelMessageEvent::InternalSwap(ChannelMessageEvent* other) {
   using std::swap;
-  target_name_.Swap(&other->target_name_);
-  sender_.Swap(&other->sender_);
-  message_.Swap(&other->message_);
+  target_name_.Swap(&other->target_name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  sender_.Swap(&other->sender_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  message_.Swap(&other->message_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(language_, other->language_);
   swap(chan_num_, other->chan_num_);
   swap(cm_unknown4_, other->cm_unknown4_);
   swap(skill_in_language_, other->skill_in_language_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata ChannelMessageEvent::GetMetadata() const {
@@ -9003,16 +8679,14 @@ const int WearChangeEvent::kWearSlotIdFieldNumber;
 
 WearChangeEvent::WearChangeEvent()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsWearChangeEvent();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_WearChangeEvent.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.WearChangeEvent)
 }
 WearChangeEvent::WearChangeEvent(const WearChangeEvent& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.has_color()) {
     color_ = new ::eqproto::Tint(*from.color_);
@@ -9029,7 +8703,6 @@ void WearChangeEvent::SharedCtor() {
   ::memset(&color_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&wear_slot_id_) -
       reinterpret_cast<char*>(&color_)) + sizeof(wear_slot_id_));
-  _cached_size_ = 0;
 }
 
 WearChangeEvent::~WearChangeEvent() {
@@ -9042,9 +8715,7 @@ void WearChangeEvent::SharedDtor() {
 }
 
 void WearChangeEvent::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* WearChangeEvent::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -9052,17 +8723,10 @@ const ::google::protobuf::Descriptor* WearChangeEvent::descriptor() {
 }
 
 const WearChangeEvent& WearChangeEvent::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsWearChangeEvent();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_WearChangeEvent.base);
   return *internal_default_instance();
 }
 
-WearChangeEvent* WearChangeEvent::New(::google::protobuf::Arena* arena) const {
-  WearChangeEvent* n = new WearChangeEvent;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void WearChangeEvent::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.WearChangeEvent)
@@ -9086,7 +8750,7 @@ bool WearChangeEvent::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.WearChangeEvent)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -9259,7 +8923,7 @@ void WearChangeEvent::SerializeWithCachedSizes(
   // .eqproto.Tint color = 7;
   if (this->has_color()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      7, *this->color_, output);
+      7, this->_internal_color(), output);
   }
 
   // uint32 wear_slot_id = 8;
@@ -9315,7 +8979,7 @@ void WearChangeEvent::SerializeWithCachedSizes(
   if (this->has_color()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        7, *this->color_, deterministic, target);
+        7, this->_internal_color(), deterministic, target);
   }
 
   // uint32 wear_slot_id = 8;
@@ -9344,7 +9008,7 @@ size_t WearChangeEvent::ByteSizeLong() const {
   if (this->has_color()) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->color_);
+        *color_);
   }
 
   // uint32 spawn_id = 1;
@@ -9397,9 +9061,7 @@ size_t WearChangeEvent::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -9484,7 +9146,6 @@ void WearChangeEvent::InternalSwap(WearChangeEvent* other) {
   swap(unknown18_, other->unknown18_);
   swap(wear_slot_id_, other->wear_slot_id_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata WearChangeEvent::GetMetadata() const {
@@ -9504,16 +9165,14 @@ const int DeleteSpawnEvent::kDecayFieldNumber;
 
 DeleteSpawnEvent::DeleteSpawnEvent()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsDeleteSpawnEvent();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_DeleteSpawnEvent.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.DeleteSpawnEvent)
 }
 DeleteSpawnEvent::DeleteSpawnEvent(const DeleteSpawnEvent& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&spawn_id_, &from.spawn_id_,
     static_cast<size_t>(reinterpret_cast<char*>(&decay_) -
@@ -9525,7 +9184,6 @@ void DeleteSpawnEvent::SharedCtor() {
   ::memset(&spawn_id_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&decay_) -
       reinterpret_cast<char*>(&spawn_id_)) + sizeof(decay_));
-  _cached_size_ = 0;
 }
 
 DeleteSpawnEvent::~DeleteSpawnEvent() {
@@ -9537,9 +9195,7 @@ void DeleteSpawnEvent::SharedDtor() {
 }
 
 void DeleteSpawnEvent::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* DeleteSpawnEvent::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -9547,17 +9203,10 @@ const ::google::protobuf::Descriptor* DeleteSpawnEvent::descriptor() {
 }
 
 const DeleteSpawnEvent& DeleteSpawnEvent::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsDeleteSpawnEvent();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_DeleteSpawnEvent.base);
   return *internal_default_instance();
 }
 
-DeleteSpawnEvent* DeleteSpawnEvent::New(::google::protobuf::Arena* arena) const {
-  DeleteSpawnEvent* n = new DeleteSpawnEvent;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void DeleteSpawnEvent::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.DeleteSpawnEvent)
@@ -9577,7 +9226,7 @@ bool DeleteSpawnEvent::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.DeleteSpawnEvent)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -9701,9 +9350,7 @@ size_t DeleteSpawnEvent::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -9764,7 +9411,6 @@ void DeleteSpawnEvent::InternalSwap(DeleteSpawnEvent* other) {
   swap(spawn_id_, other->spawn_id_);
   swap(decay_, other->decay_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata DeleteSpawnEvent::GetMetadata() const {
@@ -9785,16 +9431,14 @@ const int HPEvent::kMaxHpFieldNumber;
 
 HPEvent::HPEvent()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsHPEvent();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_HPEvent.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.HPEvent)
 }
 HPEvent::HPEvent(const HPEvent& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&spawn_id_, &from.spawn_id_,
     static_cast<size_t>(reinterpret_cast<char*>(&max_hp_) -
@@ -9806,7 +9450,6 @@ void HPEvent::SharedCtor() {
   ::memset(&spawn_id_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&max_hp_) -
       reinterpret_cast<char*>(&spawn_id_)) + sizeof(max_hp_));
-  _cached_size_ = 0;
 }
 
 HPEvent::~HPEvent() {
@@ -9818,9 +9461,7 @@ void HPEvent::SharedDtor() {
 }
 
 void HPEvent::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* HPEvent::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -9828,17 +9469,10 @@ const ::google::protobuf::Descriptor* HPEvent::descriptor() {
 }
 
 const HPEvent& HPEvent::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsHPEvent();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_HPEvent.base);
   return *internal_default_instance();
 }
 
-HPEvent* HPEvent::New(::google::protobuf::Arena* arena) const {
-  HPEvent* n = new HPEvent;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void HPEvent::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.HPEvent)
@@ -9858,7 +9492,7 @@ bool HPEvent::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.HPEvent)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -10013,9 +9647,7 @@ size_t HPEvent::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -10080,7 +9712,6 @@ void HPEvent::InternalSwap(HPEvent* other) {
   swap(cur_hp_, other->cur_hp_);
   swap(max_hp_, other->max_hp_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata HPEvent::GetMetadata() const {
@@ -10112,16 +9743,14 @@ const int PlayerPositionUpdateEvent::kPadding0018FieldNumber;
 
 PlayerPositionUpdateEvent::PlayerPositionUpdateEvent()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsPlayerPositionUpdateEvent();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_PlayerPositionUpdateEvent.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.PlayerPositionUpdateEvent)
 }
 PlayerPositionUpdateEvent::PlayerPositionUpdateEvent(const PlayerPositionUpdateEvent& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&spawn_id_, &from.spawn_id_,
     static_cast<size_t>(reinterpret_cast<char*>(&padding0018_) -
@@ -10133,7 +9762,6 @@ void PlayerPositionUpdateEvent::SharedCtor() {
   ::memset(&spawn_id_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&padding0018_) -
       reinterpret_cast<char*>(&spawn_id_)) + sizeof(padding0018_));
-  _cached_size_ = 0;
 }
 
 PlayerPositionUpdateEvent::~PlayerPositionUpdateEvent() {
@@ -10145,9 +9773,7 @@ void PlayerPositionUpdateEvent::SharedDtor() {
 }
 
 void PlayerPositionUpdateEvent::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* PlayerPositionUpdateEvent::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -10155,17 +9781,10 @@ const ::google::protobuf::Descriptor* PlayerPositionUpdateEvent::descriptor() {
 }
 
 const PlayerPositionUpdateEvent& PlayerPositionUpdateEvent::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsPlayerPositionUpdateEvent();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_PlayerPositionUpdateEvent.base);
   return *internal_default_instance();
 }
 
-PlayerPositionUpdateEvent* PlayerPositionUpdateEvent::New(::google::protobuf::Arena* arena) const {
-  PlayerPositionUpdateEvent* n = new PlayerPositionUpdateEvent;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void PlayerPositionUpdateEvent::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.PlayerPositionUpdateEvent)
@@ -10185,7 +9804,7 @@ bool PlayerPositionUpdateEvent::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.PlayerPositionUpdateEvent)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -10681,9 +10300,7 @@ size_t PlayerPositionUpdateEvent::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -10792,7 +10409,6 @@ void PlayerPositionUpdateEvent::InternalSwap(PlayerPositionUpdateEvent* other) {
   swap(delta_z_, other->delta_z_);
   swap(padding0018_, other->padding0018_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata PlayerPositionUpdateEvent::GetMetadata() const {
@@ -10813,16 +10429,14 @@ const int AnimationEvent::kActionFieldNumber;
 
 AnimationEvent::AnimationEvent()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsAnimationEvent();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_AnimationEvent.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.AnimationEvent)
 }
 AnimationEvent::AnimationEvent(const AnimationEvent& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&spawnid_, &from.spawnid_,
     static_cast<size_t>(reinterpret_cast<char*>(&action_) -
@@ -10834,7 +10448,6 @@ void AnimationEvent::SharedCtor() {
   ::memset(&spawnid_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&action_) -
       reinterpret_cast<char*>(&spawnid_)) + sizeof(action_));
-  _cached_size_ = 0;
 }
 
 AnimationEvent::~AnimationEvent() {
@@ -10846,9 +10459,7 @@ void AnimationEvent::SharedDtor() {
 }
 
 void AnimationEvent::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* AnimationEvent::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -10856,17 +10467,10 @@ const ::google::protobuf::Descriptor* AnimationEvent::descriptor() {
 }
 
 const AnimationEvent& AnimationEvent::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsAnimationEvent();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_AnimationEvent.base);
   return *internal_default_instance();
 }
 
-AnimationEvent* AnimationEvent::New(::google::protobuf::Arena* arena) const {
-  AnimationEvent* n = new AnimationEvent;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void AnimationEvent::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.AnimationEvent)
@@ -10886,7 +10490,7 @@ bool AnimationEvent::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.AnimationEvent)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -11041,9 +10645,7 @@ size_t AnimationEvent::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -11108,7 +10710,6 @@ void AnimationEvent::InternalSwap(AnimationEvent* other) {
   swap(speed_, other->speed_);
   swap(action_, other->action_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata AnimationEvent::GetMetadata() const {
@@ -11229,16 +10830,14 @@ const int SpawnEvent::kShowNameFieldNumber;
 
 SpawnEvent::SpawnEvent()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
-  if (GOOGLE_PREDICT_TRUE(this != internal_default_instance())) {
-    ::protobuf_message_2eproto::InitDefaultsSpawnEvent();
-  }
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_message_2eproto::scc_info_SpawnEvent.base);
   SharedCtor();
   // @@protoc_insertion_point(constructor:eqproto.SpawnEvent)
 }
 SpawnEvent::SpawnEvent(const SpawnEvent& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _cached_size_(0) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (from.name().size() > 0) {
@@ -11295,7 +10894,6 @@ void SpawnEvent::SharedCtor() {
   ::memset(&equipment_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&destructibleunk9_) -
       reinterpret_cast<char*>(&equipment_)) + sizeof(destructibleunk9_));
-  _cached_size_ = 0;
 }
 
 SpawnEvent::~SpawnEvent() {
@@ -11316,9 +10914,7 @@ void SpawnEvent::SharedDtor() {
 }
 
 void SpawnEvent::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  _cached_size_.Set(size);
 }
 const ::google::protobuf::Descriptor* SpawnEvent::descriptor() {
   ::protobuf_message_2eproto::protobuf_AssignDescriptorsOnce();
@@ -11326,17 +10922,10 @@ const ::google::protobuf::Descriptor* SpawnEvent::descriptor() {
 }
 
 const SpawnEvent& SpawnEvent::default_instance() {
-  ::protobuf_message_2eproto::InitDefaultsSpawnEvent();
+  ::google::protobuf::internal::InitSCC(&protobuf_message_2eproto::scc_info_SpawnEvent.base);
   return *internal_default_instance();
 }
 
-SpawnEvent* SpawnEvent::New(::google::protobuf::Arena* arena) const {
-  SpawnEvent* n = new SpawnEvent;
-  if (arena != NULL) {
-    arena->Own(n);
-  }
-  return n;
-}
 
 void SpawnEvent::Clear() {
 // @@protoc_insertion_point(message_clear_start:eqproto.SpawnEvent)
@@ -11371,7 +10960,7 @@ bool SpawnEvent::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:eqproto.SpawnEvent)
   for (;;) {
-    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(16383u);
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(16383u);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
@@ -13065,7 +12654,7 @@ void SpawnEvent::SerializeWithCachedSizes(
   // .eqproto.TextureProfile equipment = 52;
   if (this->has_equipment()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      52, *this->equipment_, output);
+      52, this->_internal_equipment(), output);
   }
 
   // float runspeed = 53;
@@ -13206,7 +12795,7 @@ void SpawnEvent::SerializeWithCachedSizes(
   // .eqproto.TintProfile equipment_tint = 78;
   if (this->has_equipment_tint()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      78, *this->equipment_tint_, output);
+      78, this->_internal_equipment_tint(), output);
   }
 
   // uint32 lfg = 79;
@@ -13614,7 +13203,7 @@ void SpawnEvent::SerializeWithCachedSizes(
   if (this->has_equipment()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        52, *this->equipment_, deterministic, target);
+        52, this->_internal_equipment(), deterministic, target);
   }
 
   // float runspeed = 53;
@@ -13758,7 +13347,7 @@ void SpawnEvent::SerializeWithCachedSizes(
   if (this->has_equipment_tint()) {
     target = ::google::protobuf::internal::WireFormatLite::
       InternalWriteMessageToArray(
-        78, *this->equipment_tint_, deterministic, target);
+        78, this->_internal_equipment_tint(), deterministic, target);
   }
 
   // uint32 lfg = 79;
@@ -13954,14 +13543,14 @@ size_t SpawnEvent::ByteSizeLong() const {
   if (this->has_equipment()) {
     total_size += 2 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->equipment_);
+        *equipment_);
   }
 
   // .eqproto.TintProfile equipment_tint = 78;
   if (this->has_equipment_tint()) {
     total_size += 2 +
       ::google::protobuf::internal::WireFormatLite::MessageSize(
-        *this->equipment_tint_);
+        *equipment_tint_);
   }
 
   // uint32 unknown0000 = 1;
@@ -14583,9 +14172,7 @@ size_t SpawnEvent::ByteSizeLong() const {
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = cached_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  SetCachedSize(cached_size);
   return total_size;
 }
 
@@ -14941,13 +14528,20 @@ void SpawnEvent::Swap(SpawnEvent* other) {
 }
 void SpawnEvent::InternalSwap(SpawnEvent* other) {
   using std::swap;
-  name_.Swap(&other->name_);
-  suffix_.Swap(&other->suffix_);
-  title_.Swap(&other->title_);
-  lastname_.Swap(&other->lastname_);
-  destructiblemodel_.Swap(&other->destructiblemodel_);
-  destructiblename2_.Swap(&other->destructiblename2_);
-  destructiblestring_.Swap(&other->destructiblestring_);
+  name_.Swap(&other->name_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  suffix_.Swap(&other->suffix_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  title_.Swap(&other->title_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  lastname_.Swap(&other->lastname_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  destructiblemodel_.Swap(&other->destructiblemodel_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  destructiblename2_.Swap(&other->destructiblename2_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
+  destructiblestring_.Swap(&other->destructiblestring_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   swap(equipment_, other->equipment_);
   swap(equipment_tint_, other->equipment_tint_);
   swap(unknown0000_, other->unknown0000_);
@@ -15041,7 +14635,6 @@ void SpawnEvent::InternalSwap(SpawnEvent* other) {
   swap(destructibleunk8_, other->destructibleunk8_);
   swap(destructibleunk9_, other->destructibleunk9_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata SpawnEvent::GetMetadata() const {
@@ -15052,5 +14645,72 @@ void SpawnEvent::InternalSwap(SpawnEvent* other) {
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace eqproto
+namespace google {
+namespace protobuf {
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::ChannelMessage* Arena::CreateMaybeMessage< ::eqproto::ChannelMessage >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::ChannelMessage >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::CommandMessage* Arena::CreateMaybeMessage< ::eqproto::CommandMessage >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::CommandMessage >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::DailyGain* Arena::CreateMaybeMessage< ::eqproto::DailyGain >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::DailyGain >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::Entity* Arena::CreateMaybeMessage< ::eqproto::Entity >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::Entity >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::Entities* Arena::CreateMaybeMessage< ::eqproto::Entities >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::Entities >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::Position* Arena::CreateMaybeMessage< ::eqproto::Position >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::Position >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::TextureProfile* Arena::CreateMaybeMessage< ::eqproto::TextureProfile >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::TextureProfile >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::Texture* Arena::CreateMaybeMessage< ::eqproto::Texture >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::Texture >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::TintProfile* Arena::CreateMaybeMessage< ::eqproto::TintProfile >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::TintProfile >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::Tint* Arena::CreateMaybeMessage< ::eqproto::Tint >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::Tint >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::Event* Arena::CreateMaybeMessage< ::eqproto::Event >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::Event >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::DeathEvent* Arena::CreateMaybeMessage< ::eqproto::DeathEvent >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::DeathEvent >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::DamageEvent* Arena::CreateMaybeMessage< ::eqproto::DamageEvent >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::DamageEvent >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::EntityEvent* Arena::CreateMaybeMessage< ::eqproto::EntityEvent >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::EntityEvent >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::ChannelMessageEvent* Arena::CreateMaybeMessage< ::eqproto::ChannelMessageEvent >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::ChannelMessageEvent >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::WearChangeEvent* Arena::CreateMaybeMessage< ::eqproto::WearChangeEvent >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::WearChangeEvent >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::DeleteSpawnEvent* Arena::CreateMaybeMessage< ::eqproto::DeleteSpawnEvent >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::DeleteSpawnEvent >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::HPEvent* Arena::CreateMaybeMessage< ::eqproto::HPEvent >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::HPEvent >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::PlayerPositionUpdateEvent* Arena::CreateMaybeMessage< ::eqproto::PlayerPositionUpdateEvent >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::PlayerPositionUpdateEvent >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::AnimationEvent* Arena::CreateMaybeMessage< ::eqproto::AnimationEvent >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::AnimationEvent >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::eqproto::SpawnEvent* Arena::CreateMaybeMessage< ::eqproto::SpawnEvent >(Arena* arena) {
+  return Arena::CreateInternal< ::eqproto::SpawnEvent >(arena);
+}
+}  // namespace protobuf
+}  // namespace google
 
 // @@protoc_insertion_point(global_scope)

@@ -11,5 +11,3 @@ cd protobuf-3.6.0
 make
 make check
 sudo make install
-
-Search for the /usr/local/lib/libprotobufd.so.16 file and copy it into the dependencies/protobuf/linux/x64/lib directory.
