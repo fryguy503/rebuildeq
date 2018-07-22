@@ -99,7 +99,7 @@ Mob::Mob(const char* in_name,
 		tic_timer(6000),
 		mana_timer(2000),
 		spellend_timer(0),
-		rewind_timer(30000), //Timer used for determining amount of time between actual player position updates for /rewind.
+		rewind_timer(30000),
 		bindwound_timer(10000),
 		stunned_timer(0),
 		spun_timer(0),
@@ -125,6 +125,7 @@ Mob::Mob(const char* in_name,
 	currently_fleeing = false;
 
 	last_major_update_position = m_Position;
+	is_distance_roamer = false;
 
 	AI_Init();
 	SetMoving(false);
@@ -1450,6 +1451,7 @@ void Mob::SendPosition() {
 	if (DistanceSquared(last_major_update_position, m_Position) >= (100 * 100)) {
 		entity_list.QueueClients(this, app, true, true);
 		last_major_update_position = m_Position;
+		is_distance_roamer = true;
 	}
 	else {
 		entity_list.QueueCloseClients(this, app, true, RuleI(Range, MobPositionUpdates), nullptr, false);

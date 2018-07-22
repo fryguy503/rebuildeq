@@ -259,6 +259,8 @@ public:
 	inline virtual bool IsMob() const { return true; }
 	inline virtual bool InZone() const { return true; }
 
+	bool is_distance_roamer;
+
 	//Somewhat sorted: needs documenting!
 	void AddHPEvent(Mob *other, int total, int net, bool is_dealer);
 	void AddManaEvent(Mob *other, int total, int net, bool is_dealer);
