@@ -315,6 +315,7 @@ void command_task(Client *c, const Seperator *sep);
 void command_tattoo(Client *c, const Seperator *sep);
 void command_teleport(Client *c, const Seperator *sep);
 void command_tempname(Client *c, const Seperator *sep);
+void command_petname(Client *c, const Seperator *sep);
 void command_testspawn(Client *c, const Seperator *sep);
 void command_testspawnkill(Client *c, const Seperator *sep);
 void command_texture(Client *c, const Seperator *sep);
