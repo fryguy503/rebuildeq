@@ -224,6 +224,7 @@ public:
 	void	LoadAlternateCurrencies();
 	void	LoadNPCEmotes(LinkedList<NPC_Emote_Struct*>* NPCEmoteList);
 	void	ReloadWorld(uint32 Option);
+	void	ReloadMerchants();
 
 	EQEmu::Map*	zonemap;
 	WaterMap* watermap;
