@@ -159,10 +159,12 @@ RULE_BOOL(Character, UseOldBindWound, false) // Uses the original bind wound beh
 RULE_BOOL(Character, GrantHoTTOnCreate, false) // Grant Health of Target's Target leadership AA on character creation
 RULE_BOOL(Character, UseOldConSystem, false) // Grant Health of Target's Target leadership AA on character creation
 RULE_BOOL(Character, OPClientUpdateVisualDebug, false) // Shows a pulse and forward directional particle each time the client sends its position to server
-RULE_BOOL(Character, ModernAAScalingEnabled, false) // Uses the newer approach to AA scaling based on total earned AA
-RULE_REAL(Character, ModernAAScalingStartPercent, 1000) // 1000% or 10x AA XP at the start of the scaling range
-RULE_INT(Character, ModernAAScalingAAMinimum, 0) // The minimum number of earned AA before AA XP scaling begins.
-RULE_INT(Character, ModernAAScalingAALimit, 4000) // The number of earned AA when AA XP scaling ends.
+RULE_BOOL(AA, NormalizedAAEnabled, false) // TSS+ change to AA that normalizes AA XP to a fixed # of white con kills independent of level.
+RULE_INT(AA, NormalizedAANumberOfWhiteConPerAA, 25) // The number of white con kills per AA point.
+RULE_BOOL(AA, ModernAAScalingEnabled, false) // Are we linearly scaling AA XP based on total # of earned AA?
+RULE_REAL(AA, ModernAAScalingStartPercent, 1000) // 1000% or 10x AA XP at the start of the scaling range
+RULE_INT(AA, ModernAAScalingAAMinimum, 0) // The minimum number of earned AA before AA XP scaling begins.
+RULE_INT(AA, ModernAAScalingAALimit, 4000) // The number of earned AA when AA XP scaling ends
 RULE_CATEGORY_END()
 
 RULE_CATEGORY(Mercs)
