@@ -2374,8 +2374,8 @@ XS(XS__resettaskactivity)
 	dXSARGS;
 	unsigned int task_id, activity_id;
 	if(items == 2) {
-		task_id = (int)SvIV(ST(0));
-		activity_id = (int)SvIV(ST(1));
+		int task_id = (int)SvIV(ST(0));
+		int activity_id = (int)SvIV(ST(1));
 		quest_manager.resettaskactivity(task_id, activity_id);
 	} else {
 		Perl_croak(aTHX_ "Usage: resettaskactivity(task_id, activity_id)");
