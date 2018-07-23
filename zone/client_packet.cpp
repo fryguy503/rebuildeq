@@ -12067,7 +12067,14 @@ void Client::Handle_OP_RecipesFavorite(const EQApplicationPacket *app) {
 		combineObjectSlots = 10;
 	} else {
 		containers += StringFormat(" in (%u, %u) ", tsf->object_type, tsf->some_id); // container in inventory
-		combineObjectSlots = database.GetItem(tsf->some_id)->BagSlots;
+        auto item = database.GetItem(tsf->some_id);
+        if (!item)
+        {
+            Log(Logs::General, Logs::Error, "Invalid container ID: %d.  GetItem returned null.\n", tsf->some_id);
+            return;
+        }
+
+        combineObjectSlots = item->BagSlots;
 	}
 
 	std::string favoriteIDs; //gotta be big enough for 500 IDs
@@ -12128,10 +12135,16 @@ void Client::Handle_OP_RecipesSearch(const EQApplicationPacket *app) {
 		snprintf(containers, 29, "= %u", rss->object_type);
 		combineObjectSlots = 10;
 	} else {
-		// container in inventory
-		snprintf(containers, 29, "in (%u,%u)", rss->object_type, rss->some_id);
-		combineObjectSlots = database.GetItem(rss->some_id)->BagSlots;
-	}
+        // container in inventory
+        snprintf(containers, 29, "in (%u,%u)", rss->object_type, rss->some_id);
+        auto item = database.GetItem(rss->some_id);
+        if (!item) {
+            Log(Logs::General, Logs::Error, "Invalid container ID: %d.  GetItem returned null.\n", rss->some_id);
+            return;
+        }
+
+        combineObjectSlots = item->BagSlots;
+    }
 
 	std::string searchClause;
 
