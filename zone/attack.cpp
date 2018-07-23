@@ -3162,7 +3162,7 @@ void Mob::AddToHateList(Mob* other, uint32 hate /*= 0*/, int32 damage /*= 0*/, b
 	hate_list.AddEntToHateList(other, hate, damage, bFrenzy, !iBuffTic);
 	other->hate_list.AddEntToHateList(this);
 
-	if (other->IsClient() && !on_hatelist)
+	if (other->IsClient() && !on_hatelist && !IsOnFeignMemory(other->CastToClient()))
 		other->CastToClient()->AddAutoXTarget(this);
 
 #ifdef BOTS
