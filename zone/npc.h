@@ -432,6 +432,9 @@ public:
 	std::vector<SpecialLoot_Struct> SpecialLoot(bool card_only);
 
 	bool IgnoreDespawn() { return ignore_despawn; }
+
+	std::unique_ptr<Timer> AIautocastspell_timer;
+
 	bool is_hidden_stash_used;
 
 protected:
@@ -467,7 +470,7 @@ protected:
 
 	uint32	npc_spells_id;
 	uint8	casting_spell_AIindex;
-	std::unique_ptr<Timer> AIautocastspell_timer;
+
 	uint32*	pDontCastBefore_casting_spell;
 	std::vector<AISpells_Struct> AIspells;
 	bool HasAISpell;
