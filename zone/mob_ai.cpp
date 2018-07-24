@@ -207,12 +207,14 @@ bool NPC::AICastSpell(Mob* tar, uint8 iChance, uint32 iSpellTypes, bool bInnates
 					}
 					case SpellType_Nuke: {
 						if (
-								manaR >= 10 && (bInnates || zone->random.Roll(70))
-								&& tar->CanBuffStack(AIspells[i].spellid, GetLevel(), false) >= 0 // saying it's a nuke here, AI shouldn't care too much if overwriting
-							) {
-							if(!checked_los) {
-								if(!CheckLosFN(tar))
-									return(false);	//cannot see target... we assume that no spell is going to work since we will only be casting detrimental spells in this call
+								manaR >= 10 && (bInnates || (zone->random.Roll(70)
+															 && tar->CanBuffStack(AIspells[i].spellid, GetLevel(),
+																				  false) >=
+																0)) // saying it's a nuke here, AI shouldn't care too much if overwriting
+								) {
+							if (!checked_los) {
+								if (!CheckLosFN(tar))
+									return (false);    //cannot see target... we assume that no spell is going to work since we will only be casting detrimental spells in this call
 								checked_los = true;
 							}
 							AIDoSpellCast(i, tar, mana_cost);
