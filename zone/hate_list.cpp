@@ -678,6 +678,8 @@ void HateList::RemoveStaleEntries(int time_ms, float dist)
 
 	auto cur_time = Timer::GetCurrentTime();
 
+	auto dist2 = dist * dist;
+
 	while (it != list.end()) {
 		auto m = (*it)->entity_on_hatelist;
 		if (m) {
@@ -686,7 +688,7 @@ void HateList::RemoveStaleEntries(int time_ms, float dist)
 			if (cur_time - (*it)->last_modified > time_ms)
 				remove = true;
 
-			if (!remove && hate_owner->CalculateDistance(m->GetX(), m->GetY(), m->GetZ()) > dist) {
+			if (!remove && DistanceSquaredNoZ(hate_owner->GetPosition(), m->GetPosition()) > dist2) {
 				(*it)->oor_count++;
 				if ((*it)->oor_count == 2)
 					remove = true;
