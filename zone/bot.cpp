@@ -2041,18 +2041,6 @@ void Bot::SetTarget(Mob* mob) {
 	}
 }
 
-void Bot::ForceMovementEnd() {
-	FixZ();
-	SetCurrentSpeed(0);
-	if (moved)
-		moved = false;
-}
-
-void Bot::ForceMovementEnd(float new_heading) {
-	SetHeading(new_heading);
-	ForceMovementEnd();
-}
-
 // AI Processing for the Bot object
 void Bot::AI_Process() {
 
@@ -2135,7 +2123,7 @@ return;
 
 	// Can't move if rooted...
 	if (IsRooted() && IsMoving()) {
-		ForceMovementEnd();
+		StopMoving();
 		return;
 	}
 
@@ -2264,7 +2252,7 @@ return;
 			RemoveFromHateList(tar);
 			SetTarget(nullptr);
 			if (IsMoving())
-				ForceMovementEnd();
+				StopMoving();
 
 			return;
 			}
@@ -2419,7 +2407,7 @@ melee_distance = melee_distance_max * 0.75f;
 		// We can fight
 		if(atCombatRange) {
 			if(IsMoving()) {
-				ForceMovementEnd(CalculateHeadingToTarget(tar->GetX(), tar->GetY()));
+				StopMoving(CalculateHeadingToTarget(tar->GetX(), tar->GetY()));
 				return;
 			}
 
@@ -2648,7 +2636,7 @@ melee_distance = melee_distance_max * 0.75f;
 				else {
 
 				if(IsMoving())
-						ForceMovementEnd();
+						StopMoving();
 				else
 					SendPosition();
 
@@ -2702,7 +2690,7 @@ melee_distance = melee_distance_max * 0.75f;
 		// Leash the bot
 		if (lo_distance > BOT_LEASH_DISTANCE) {
 			if (IsMoving())
-				ForceMovementEnd();
+				StopMoving();
 
 			Warp(glm::vec3(leash_owner->GetPosition()));
 
@@ -2758,7 +2746,7 @@ melee_distance = melee_distance_max * 0.75f;
 			}
 			else {
 				if (IsMoving()) {
-					ForceMovementEnd();
+					StopMoving();
 					return;
 				}
 			}
