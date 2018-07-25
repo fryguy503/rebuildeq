@@ -2269,6 +2269,16 @@ return;
 
 		bool atCombatRange = false;
 
+				const auto* p_item = GetBotItem(EQEmu::inventory::slotPrimary);
+		const auto* s_item = GetBotItem(EQEmu::inventory::slotSecondary);
+
+		bool behind_mob = false;
+		bool backstab_weapon = false;
+		if (GetClass() == ROGUE) {
+			behind_mob = BehindMob(tar, GetX(), GetY()); // can be separated for other future use
+			backstab_weapon = p_item && p_item->GetItemBackstabDamage();
+		}
+
 		// Calculate melee distance
 		float melee_distance_max = 0.0f;
 		{
@@ -2304,9 +2314,6 @@ return;
 
 		float melee_distance = 0.0f;
 
-		const auto* p_item = GetBotItem(EQEmu::inventory::slotPrimary);
-		const auto* s_item = GetBotItem(EQEmu::inventory::slotSecondary);
-
 		switch (GetClass()) {
 		case WARRIOR:
 		case PALADIN:
@@ -2329,7 +2336,17 @@ return;
 melee_distance = melee_distance_max * 0.75f;
 
 			break;
-		default:
+				case ROGUE:
+			if (behind_mob && backstab_weapon) {
+				if (p_item->GetItem()->IsType2HWeapon()) // p_item tested above
+					melee_distance = melee_distance_max * 0.30f;
+				else
+					melee_distance = melee_distance_max * 0.25f;
+
+				break;
+			}
+			// Fall-through
+			default:
 			if (p_item && p_item->GetItem()->IsType2HWeapon())
 				melee_distance = melee_distance_max * 0.70f;
 			else
@@ -2464,13 +2481,11 @@ melee_distance = melee_distance_max * 0.75f;
 								return;
 							}
 						}
-						else if (GetClass() == ROGUE) {
-							if (!BehindMob(tar, GetX(), GetY())) { // Move the rogue to behind the mob
-								if (PlotPositionAroundTarget(tar, Goal.x, Goal.y, Goal.z)) {
-									if (DistanceSquared(Goal, tar->GetPosition()) <= melee_distance_max) {
-										CalculateNewPosition2(Goal.x, Goal.y, Goal.z, GetBotRunspeed()); // rogues are agile enough to run in melee range
-										return;
-									}
+						else if (backstab_weapon && !behind_mob) { // Move the rogue to behind the mob
+							if (PlotPositionAroundTarget(tar, Goal.x, Goal.y, Goal.z)) {
+								if (DistanceSquared(Goal, tar->GetPosition()) <= melee_distance_max) {
+									CalculateNewPosition2(Goal.x, Goal.y, Goal.z, GetBotRunspeed()); // rogues are agile enough to run in melee range
+									return;
 								}
 							}
 						}
