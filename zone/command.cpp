@@ -2701,7 +2701,7 @@ void command_peekinv(Client *c, const Seperator *sep)
 	const EQEmu::ItemInstance* inst_main = nullptr;
 	const EQEmu::ItemInstance* inst_sub = nullptr;
 	const EQEmu::ItemData* item_data = nullptr;
-	std::string item_link;
+
 	EQEmu::SayLinkEngine linker;
 	linker.SetLinkType(EQEmu::saylink::SayLinkItemInst);
 
@@ -2713,10 +2713,8 @@ void command_peekinv(Client *c, const Seperator *sep)
 		item_data = (inst_main == nullptr) ? nullptr : inst_main->GetItem();
 		linker.SetItemInst(inst_main);
 
-		item_link = linker.GenerateLink();
-
 		c->Message((item_data == nullptr), "WornSlot: %i, Item: %i (%s), Charges: %i",
-			indexMain, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
+				   indexMain, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 	}
 
 	if ((scopeWhere & peekWorn) && (targetClient->ClientVersion() >= EQEmu::versions::ClientVersion::SoF)) {
@@ -2724,10 +2722,8 @@ void command_peekinv(Client *c, const Seperator *sep)
 		item_data = (inst_main == nullptr) ? nullptr : inst_main->GetItem();
 		linker.SetItemInst(inst_main);
 
-		item_link = linker.GenerateLink();
-
 		c->Message((item_data == nullptr), "WornSlot: %i, Item: %i (%s), Charges: %i",
-			EQEmu::inventory::slotPowerSource, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
+				   EQEmu::inventory::slotPowerSource, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 	}
 
 	// inv
@@ -2736,20 +2732,16 @@ void command_peekinv(Client *c, const Seperator *sep)
 		item_data = (inst_main == nullptr) ? nullptr : inst_main->GetItem();
 		linker.SetItemInst(inst_main);
 
-		item_link = linker.GenerateLink();
-
 		c->Message((item_data == nullptr), "InvSlot: %i, Item: %i (%s), Charges: %i",
-			indexMain, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
+				   indexMain, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
 		for (uint8 indexSub = EQEmu::inventory::containerBegin; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 			inst_sub = inst_main->GetItem(indexSub);
 			item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 			linker.SetItemInst(inst_sub);
 
-			item_link = linker.GenerateLink();
-
 			c->Message((item_data == nullptr), "  InvBagSlot: %i (Slot #%i, Bag #%i), Item: %i (%s), Charges: %i",
-				EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
+					   EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
 		}
 	}
 
@@ -2758,10 +2750,8 @@ void command_peekinv(Client *c, const Seperator *sep)
 		if (targetClient->GetInv().CursorEmpty()) {
 			linker.SetItemInst(nullptr);
 
-			item_link = linker.GenerateLink();
-
 			c->Message(1, "CursorSlot: %i, Item: %i (%s), Charges: %i",
-				EQEmu::inventory::slotCursor, 0, item_link.c_str(), 0);
+					   EQEmu::inventory::slotCursor, 0, linker.GenerateLink().c_str(), 0);
 		}
 		else {
 			int cursorDepth = 0;
@@ -2770,20 +2760,16 @@ void command_peekinv(Client *c, const Seperator *sep)
 				item_data = (inst_main == nullptr) ? nullptr : inst_main->GetItem();
 				linker.SetItemInst(inst_main);
 
-				item_link = linker.GenerateLink();
-
 				c->Message((item_data == nullptr), "CursorSlot: %i, Depth: %i, Item: %i (%s), Charges: %i",
-					EQEmu::inventory::slotCursor, cursorDepth, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
+						   EQEmu::inventory::slotCursor, cursorDepth, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
 				for (uint8 indexSub = EQEmu::inventory::containerBegin; (cursorDepth == 0) && inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 					inst_sub = inst_main->GetItem(indexSub);
 					item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 					linker.SetItemInst(inst_sub);
 
-					item_link = linker.GenerateLink();
-
 					c->Message((item_data == nullptr), "  CursorBagSlot: %i (Slot #%i, Bag #%i), Item: %i (%s), Charges: %i",
-						EQEmu::InventoryProfile::CalcSlotId(EQEmu::inventory::slotCursor, indexSub), EQEmu::inventory::slotCursor, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
+							   EQEmu::InventoryProfile::CalcSlotId(EQEmu::inventory::slotCursor, indexSub), EQEmu::inventory::slotCursor, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
 				}
 			}
 		}
@@ -2795,10 +2781,8 @@ void command_peekinv(Client *c, const Seperator *sep)
 		item_data = (inst_main == nullptr) ? nullptr : inst_main->GetItem();
 		linker.SetItemInst(inst_main);
 
-		item_link = linker.GenerateLink();
-
 		c->Message((item_data == nullptr), "TributeSlot: %i, Item: %i (%s), Charges: %i",
-			indexMain, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
+				   indexMain, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 	}
 
 	// bank
@@ -2807,20 +2791,16 @@ void command_peekinv(Client *c, const Seperator *sep)
 		item_data = (inst_main == nullptr) ? nullptr : inst_main->GetItem();
 		linker.SetItemInst(inst_main);
 
-		item_link = linker.GenerateLink();
-
 		c->Message((item_data == nullptr), "BankSlot: %i, Item: %i (%s), Charges: %i",
-			indexMain, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
+				   indexMain, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
 		for (uint8 indexSub = EQEmu::inventory::containerBegin; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 			inst_sub = inst_main->GetItem(indexSub);
 			item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 			linker.SetItemInst(inst_sub);
 
-			item_link = linker.GenerateLink();
-
 			c->Message((item_data == nullptr), "  BankBagSlot: %i (Slot #%i, Bag #%i), Item: %i (%s), Charges: %i",
-				EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
+					   EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
 		}
 	}
 
@@ -2829,20 +2809,18 @@ void command_peekinv(Client *c, const Seperator *sep)
 		item_data = (inst_main == nullptr) ? nullptr : inst_main->GetItem();
 		linker.SetItemInst(inst_main);
 
-		item_link = linker.GenerateLink();
 
 		c->Message((item_data == nullptr), "SharedBankSlot: %i, Item: %i (%s), Charges: %i",
-			indexMain, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
+				   indexMain, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
 		for (uint8 indexSub = EQEmu::inventory::containerBegin; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 			inst_sub = inst_main->GetItem(indexSub);
 			item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 			linker.SetItemInst(inst_sub);
 
-			item_link = linker.GenerateLink();
 
 			c->Message((item_data == nullptr), "  SharedBankBagSlot: %i (Slot #%i, Bag #%i), Item: %i (%s), Charges: %i",
-				EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
+					   EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
 		}
 	}
 
@@ -2852,20 +2830,18 @@ void command_peekinv(Client *c, const Seperator *sep)
 		item_data = (inst_main == nullptr) ? nullptr : inst_main->GetItem();
 		linker.SetItemInst(inst_main);
 
-		item_link = linker.GenerateLink();
 
 		c->Message((item_data == nullptr), "TradeSlot: %i, Item: %i (%s), Charges: %i",
-			indexMain, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
+				   indexMain, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
 		for (uint8 indexSub = EQEmu::inventory::containerBegin; inst_main && inst_main->IsClassBag() && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 			inst_sub = inst_main->GetItem(indexSub);
 			item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 			linker.SetItemInst(inst_sub);
 
-			item_link = linker.GenerateLink();
 
 			c->Message((item_data == nullptr), "  TradeBagSlot: %i (Slot #%i, Bag #%i), Item: %i (%s), Charges: %i",
-				EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
+					   EQEmu::InventoryProfile::CalcSlotId(indexMain, indexSub), indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
 		}
 	}
 
@@ -2884,25 +2860,24 @@ void command_peekinv(Client *c, const Seperator *sep)
 				item_data = (inst_main == nullptr) ? nullptr : inst_main->GetItem();
 				linker.SetItemInst(inst_main);
 
-				item_link = linker.GenerateLink();
 
 				c->Message((item_data == nullptr), "WorldSlot: %i, Item: %i (%s), Charges: %i",
-					(EQEmu::legacy::WORLD_BEGIN + indexMain), ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
+						   (EQEmu::legacy::WORLD_BEGIN + indexMain), ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_main == nullptr) ? 0 : inst_main->GetCharges()));
 
 				for (uint8 indexSub = EQEmu::inventory::containerBegin; inst_main && inst_main->IsType(EQEmu::item::ItemClassBag) && (indexSub < EQEmu::inventory::ContainerCount); ++indexSub) {
 					inst_sub = inst_main->GetItem(indexSub);
 					item_data = (inst_sub == nullptr) ? nullptr : inst_sub->GetItem();
 					linker.SetItemInst(inst_sub);
 
-					item_link = linker.GenerateLink();
 
 					c->Message((item_data == nullptr), "  WorldBagSlot: %i (Slot #%i, Bag #%i), Item: %i (%s), Charges: %i",
-						INVALID_INDEX, indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), item_link.c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
+							   INVALID_INDEX, indexMain, indexSub, ((item_data == nullptr) ? 0 : item_data->ID), linker.GenerateLink().c_str(), ((inst_sub == nullptr) ? 0 : inst_sub->GetCharges()));
 				}
 			}
 		}
 	}
 }
+
 
 void command_interrogateinv(Client *c, const Seperator *sep)
 {
@@ -5755,16 +5730,15 @@ void command_iteminfo(Client *c, const Seperator *sep)
 	linker.SetLinkType(EQEmu::saylink::SayLinkItemInst);
 	linker.SetItemInst(inst);
 
-	auto item_link = linker.GenerateLink();
 
-	c->Message(0, "*** Item Info for [%s] ***", item_link.c_str());
+	c->Message(0, "*** Item Info for [%s] ***", linker.GenerateLink().c_str());
 	c->Message(0, ">> ID: %u, ItemUseType: %u, ItemClassType: %u", item->ID, item->ItemType, item->ItemClass);
 	c->Message(0, ">> IDFile: '%s', IconID: %u", item->IDFile, item->Icon);
 	c->Message(0, ">> Size: %u, Weight: %u, Price: %u, LDoNPrice: %u", item->Size, item->Weight, item->Price, item->LDoNPrice);
 	c->Message(0, ">> Material: 0x%02X, Color: 0x%08X, Tint: 0x%08X, Light: 0x%02X", item->Material, item->Color, inst->GetColor(), item->Light);
 	c->Message(0, ">> IsLore: %s, LoreGroup: %u, Lore: '%s'", (item->LoreFlag ? "TRUE" : "FALSE"), item->LoreGroup, item->Lore);
 	c->Message(0, ">> NoDrop: %u, NoRent: %u, NoPet: %u, NoTransfer: %u, FVNoDrop: %u",
-		item->NoDrop, item->NoRent, (uint8)item->NoPet, (uint8)item->NoTransfer, item->FVNoDrop);
+			   item->NoDrop, item->NoRent, (uint8)item->NoPet, (uint8)item->NoTransfer, item->FVNoDrop);
 
 	if (item->IsClassBook()) {
 		c->Message(0, "*** This item is a Book (filename:'%s') ***", item->Filename);
@@ -5778,15 +5752,16 @@ void command_iteminfo(Client *c, const Seperator *sep)
 		c->Message(0, ">> ReqSkill: %u, ReqLevel: %u, RecLevel: %u", item->RecSkill, item->ReqLevel, item->RecLevel);
 		c->Message(0, ">> SkillModType: %u, SkillModValue: %i", item->SkillModType, item->SkillModValue);
 		c->Message(0, ">> BaneRaceType: %u, BaneRaceDamage: %u, BaneBodyType: %u, BaneBodyDamage: %i",
-			item->BaneDmgRace, item->BaneDmgRaceAmt, item->BaneDmgBody, item->BaneDmgAmt);
+				   item->BaneDmgRace, item->BaneDmgRaceAmt, item->BaneDmgBody, item->BaneDmgAmt);
 		c->Message(0, ">> Magic: %s, SpellID: %i, ProcLevel: %u, Charges: %u, MaxCharges: %u",
-			(item->Magic ? "TRUE" : "FALSE"), item->Click.Effect, item->Click.Level, inst->GetCharges(), item->MaxCharges);
+				   (item->Magic ? "TRUE" : "FALSE"), item->Click.Effect, item->Click.Level, inst->GetCharges(), item->MaxCharges);
 		c->Message(0, ">> EffectType: 0x%02X, CastTime: %.2f", (uint8)item->Click.Type, ((double)item->CastTime / 1000));
 	}
 
 	if (c->Admin() >= 200)
 		c->Message(0, ">> MinStatus: %u", item->MinStatus);
 }
+
 
 
 void command_itemscore(Client *c, const Seperator *sep)
@@ -7192,9 +7167,9 @@ void command_summonitem(Client *c, const Seperator *sep)
 	std::string cmd_msg = sep->msg;
 	size_t link_open = cmd_msg.find('\x12');
 	size_t link_close = cmd_msg.find_last_of('\x12');
-	if (link_open != link_close && (cmd_msg.length() - link_open) > EQEmu::legacy::TEXT_LINK_BODY_LENGTH) {
+	if (link_open != link_close && (cmd_msg.length() - link_open) > EQEmu::constants::SayLinkBodySize) {
 		EQEmu::SayLinkBody_Struct link_body;
-		EQEmu::saylink::DegenerateLinkBody(link_body, cmd_msg.substr(link_open + 1, EQEmu::legacy::TEXT_LINK_BODY_LENGTH));
+		EQEmu::saylink::DegenerateLinkBody(link_body, cmd_msg.substr(link_open + 1, EQEmu::constants::SayLinkBodySize));
 		itemid = link_body.item_id;
 	}
 	else if (!sep->IsNumber(1)) {
@@ -7303,7 +7278,6 @@ void command_itemsearch(Client *c, const Seperator *sep)
 		const char *search_criteria=sep->argplus[1];
 
 		const EQEmu::ItemData* item = nullptr;
-		std::string item_link;
 		EQEmu::SayLinkEngine linker;
 		linker.SetLinkType(EQEmu::saylink::SayLinkItemData);
 
@@ -7312,9 +7286,8 @@ void command_itemsearch(Client *c, const Seperator *sep)
 			if (item) {
 				linker.SetItemData(item);
 
-				item_link = linker.GenerateLink();
 
-				c->Message(0, "%u: %s",  item->ID, item_link.c_str());
+				c->Message(0, "%u: %s",  item->ID, linker.GenerateLink().c_str());
 			}
 			else {
 				c->Message(0, "Item #%s not found",  search_criteria);
@@ -7337,9 +7310,8 @@ void command_itemsearch(Client *c, const Seperator *sep)
 			if (pdest != nullptr) {
 				linker.SetItemData(item);
 
-				item_link = linker.GenerateLink();
 
-				c->Message(0, "%u: %s",  item->ID, item_link.c_str());
+				c->Message(0, "%u: %s",  item->ID, linker.GenerateLink().c_str());
 
 				++count;
 			}
@@ -7355,6 +7327,7 @@ void command_itemsearch(Client *c, const Seperator *sep)
 
 	}
 }
+
 
 void command_setaaxp(Client *c, const Seperator *sep)
 {

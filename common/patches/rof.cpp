@@ -57,11 +57,11 @@ namespace RoF
 	static inline uint32 RoFToServerTypelessSlot(structs::TypelessInventorySlot_Struct rofSlot);
 	static inline uint32 RoFToServerCorpseSlot(uint32 rofCorpseSlot);
 
-	// server to client text link converter
-	static inline void ServerToRoFTextLink(std::string& rofTextLink, const std::string& serverTextLink);
+	// server to client say link converter
+	static inline void ServerToRoFSayLink(std::string& rofSayLink, const std::string& serverSayLink);
 
-	// client to server text link converter
-	static inline void RoFToServerTextLink(std::string& serverTextLink, const std::string& rofTextLink);
+	// client to server say link converter
+	static inline void RoFToServerSayLink(std::string& serverSayLink, const std::string& rofSayLink);
 
 	static inline CastingSlot ServerToRoFCastingSlot(EQEmu::CastingSlot slot);
 	static inline EQEmu::CastingSlot RoFToServerCastingSlot(CastingSlot slot);
@@ -209,8 +209,8 @@ namespace RoF
 			AltCurrencyPopulate_Struct *populate = (AltCurrencyPopulate_Struct*)emu_buffer;
 
 			auto outapp = new EQApplicationPacket(
-			    OP_AltCurrency, sizeof(structs::AltCurrencyPopulate_Struct) +
-						sizeof(structs::AltCurrencyPopulateEntry_Struct) * populate->count);
+					OP_AltCurrency, sizeof(structs::AltCurrencyPopulate_Struct) +
+									sizeof(structs::AltCurrencyPopulateEntry_Struct) * populate->count);
 			structs::AltCurrencyPopulate_Struct *out_populate = (structs::AltCurrencyPopulate_Struct*)outapp->pBuffer;
 
 			out_populate->opcode = populate->opcode;
@@ -520,7 +520,7 @@ namespace RoF
 
 		std::string old_message = emu->message;
 		std::string new_message;
-		ServerToRoFTextLink(new_message, old_message);
+		ServerToRoFSayLink(new_message, old_message);
 
 		//in->size = strlen(emu->sender) + 1 + strlen(emu->targetname) + 1 + strlen(emu->message) + 1 + 36;
 		in->size = strlen(emu->sender) + strlen(emu->targetname) + new_message.length() + 39;
@@ -847,7 +847,7 @@ namespace RoF
 
 		std::string old_message = emu->message;
 		std::string new_message;
-		ServerToRoFTextLink(new_message, old_message);
+		ServerToRoFSayLink(new_message, old_message);
 
 		//if (new_message.length() > 512) // length restricted in packet building function due vari-length name size (no nullterm)
 		//	new_message = new_message.substr(0, 512);
@@ -899,7 +899,7 @@ namespace RoF
 
 		for (int i = 0; i < 9; ++i) {
 			if (old_message_array[i].length() == 0) { break; }
-			ServerToRoFTextLink(new_message_array[i], old_message_array[i]);
+			ServerToRoFSayLink(new_message_array[i], old_message_array[i]);
 			new_message_size += new_message_array[i].length() + 1;
 		}
 
@@ -1046,7 +1046,7 @@ namespace RoF
 				//Log.LogDebugType(Logs::General, Logs::Netcode, "[ERROR] Group Leave, yourname = %s, membername = %s", gjs->yourname, gjs->membername);
 
 				auto outapp =
-				    new EQApplicationPacket(OP_GroupDisbandYou, sizeof(structs::GroupGeneric_Struct));
+						new EQApplicationPacket(OP_GroupDisbandYou, sizeof(structs::GroupGeneric_Struct));
 
 				structs::GroupGeneric_Struct *ggs = (structs::GroupGeneric_Struct*)outapp->pBuffer;
 				memcpy(ggs->name1, gjs->yourname, sizeof(ggs->name1));
@@ -1065,7 +1065,7 @@ namespace RoF
 			//	Log.LogDebugType(Logs::General, Logs::Netcode, "[ERROR] Group Leave, yourname = %s, membername = %s", gjs->yourname, gjs->membername);
 
 			auto outapp =
-			    new EQApplicationPacket(OP_GroupDisbandOther, sizeof(structs::GroupGeneric_Struct));
+					new EQApplicationPacket(OP_GroupDisbandOther, sizeof(structs::GroupGeneric_Struct));
 
 			structs::GroupGeneric_Struct *ggs = (structs::GroupGeneric_Struct*)outapp->pBuffer;
 			memcpy(ggs->name1, gjs->yourname, sizeof(ggs->name1));
@@ -1169,7 +1169,7 @@ namespace RoF
 		memcpy(eq->membername, emu->membername, sizeof(eq->membername));
 
 		auto outapp =
-		    new EQApplicationPacket(OP_GroupLeadershipAAUpdate, sizeof(GroupLeadershipAAUpdate_Struct));
+				new EQApplicationPacket(OP_GroupLeadershipAAUpdate, sizeof(GroupLeadershipAAUpdate_Struct));
 		GroupLeadershipAAUpdate_Struct *GLAAus = (GroupLeadershipAAUpdate_Struct*)outapp->pBuffer;
 
 		GLAAus->NPCMarkerID = emu->NPCMarkerID;
@@ -1182,7 +1182,7 @@ namespace RoF
 		dest->FastQueuePacket(&outapp);
 	}
 
-		ENCODE(OP_GuildBank)
+	ENCODE(OP_GuildBank)
 	{
 		auto in = *p;
 		*p = nullptr;
@@ -1191,40 +1191,40 @@ namespace RoF
 		// The first action in the enum was removed, everything 1 less
 		// Normally we cast them to their structs, but there are so many here! will only do when it's easier
 		switch (in->ReadUInt32()) {
-		case 10: // GuildBankAcknowledge
-			outapp->WriteUInt32(9);
-			outapp->WriteUInt32(in->ReadUInt32());
-			outapp->WriteUInt32(0);
-			break;
-		case 5: // GuildBankDeposit (ack)
-			outapp->WriteUInt32(4);
-			outapp->WriteUInt32(in->ReadUInt32());
-			outapp->WriteUInt32(0);
-			outapp->WriteUInt32(in->ReadUInt32());
-			break;
-		case 1: { // GuildBankItemUpdate
-			auto emu = (GuildBankItemUpdate_Struct *)in->pBuffer;
-			auto eq = (structs::GuildBankItemUpdate_Struct *)outapp->pBuffer;
-			eq->Action = 0;
-			OUT(Unknown004);
-			eq->Unknown08 = 0;
-			OUT(SlotID);
-			OUT(Area);
-			OUT(Unknown012);
-			OUT(ItemID);
-			OUT(Icon);
-			OUT(Quantity);
-			OUT(Permissions);
-			OUT(AllowMerge);
-			OUT(Useable);
-			OUT_str(ItemName);
-			OUT_str(Donator);
-			OUT_str(WhoFor);
-			OUT(Unknown226);
-			break;
-		}
-		default:
-			break;
+			case 10: // GuildBankAcknowledge
+				outapp->WriteUInt32(9);
+				outapp->WriteUInt32(in->ReadUInt32());
+				outapp->WriteUInt32(0);
+				break;
+			case 5: // GuildBankDeposit (ack)
+				outapp->WriteUInt32(4);
+				outapp->WriteUInt32(in->ReadUInt32());
+				outapp->WriteUInt32(0);
+				outapp->WriteUInt32(in->ReadUInt32());
+				break;
+			case 1: { // GuildBankItemUpdate
+				auto emu = (GuildBankItemUpdate_Struct *)in->pBuffer;
+				auto eq = (structs::GuildBankItemUpdate_Struct *)outapp->pBuffer;
+				eq->Action = 0;
+				OUT(Unknown004);
+				eq->Unknown08 = 0;
+				OUT(SlotID);
+				OUT(Area);
+				OUT(Unknown012);
+				OUT(ItemID);
+				OUT(Icon);
+				OUT(Quantity);
+				OUT(Permissions);
+				OUT(AllowMerge);
+				OUT(Useable);
+				OUT_str(ItemName);
+				OUT_str(Donator);
+				OUT_str(WhoFor);
+				OUT(Unknown226);
+				break;
+			}
+			default:
+				break;
 		}
 		delete in;
 		dest->FastQueuePacket(&outapp);
@@ -1243,8 +1243,8 @@ namespace RoF
 		//make a new EQ buffer.
 		uint32 pnl = strlen(emu->player_name);
 		uint32 length = sizeof(structs::GuildMembers_Struct) + pnl +
-			emu->count*sizeof(structs::GuildMemberEntry_Struct)
-			+ emu->name_length + emu->note_length;
+						emu->count*sizeof(structs::GuildMemberEntry_Struct)
+						+ emu->name_length + emu->note_length;
 		in->pBuffer = new uint8[length];
 		in->size = length;
 		//no memset since we fill every byte.
@@ -1269,13 +1269,13 @@ namespace RoF
 		if (emu->count > 0) {
 			Internal_GuildMemberEntry_Struct *emu_e = emu->member;
 			const char *emu_name = (const char *)(__emu_buffer +
-				sizeof(Internal_GuildMembers_Struct)+ //skip header
-				emu->count * sizeof(Internal_GuildMemberEntry_Struct)	//skip static length member data
-				);
+												  sizeof(Internal_GuildMembers_Struct)+ //skip header
+												  emu->count * sizeof(Internal_GuildMemberEntry_Struct)	//skip static length member data
+			);
 			const char *emu_note = (emu_name +
-				emu->name_length + //skip name contents
-				emu->count	//skip string terminators
-				);
+									emu->name_length + //skip name contents
+									emu->count	//skip string terminators
+			);
 
 			structs::GuildMemberEntry_Struct *e = (structs::GuildMemberEntry_Struct *) buffer;
 
@@ -1301,10 +1301,10 @@ namespace RoF
 
 				/* Translate older ranks to new values */
 				switch (emu_e->rank) {
-				case 0: { e->rank = htonl(5); break; }  // GUILD_MEMBER	0
-				case 1: { e->rank = htonl(3); break; }  // GUILD_OFFICER 1
-				case 2: { e->rank = htonl(1); break; }  // GUILD_LEADER	2
-				default: { e->rank = htonl(emu_e->rank); break; } // GUILD_NONE
+					case 0: { e->rank = htonl(5); break; }  // GUILD_MEMBER	0
+					case 1: { e->rank = htonl(3); break; }  // GUILD_OFFICER 1
+					case 2: { e->rank = htonl(1); break; }  // GUILD_LEADER	2
+					default: { e->rank = htonl(emu_e->rank); break; } // GUILD_NONE
 				}
 
 				PutFieldN(time_last_on);
@@ -1519,7 +1519,7 @@ namespace RoF
 
 		in->size = ob.size();
 		in->pBuffer = ob.detach();
-		
+
 		delete[] __emu_buffer;
 
 		dest->FastQueuePacket(&in, ack_req);
@@ -2759,7 +2759,7 @@ namespace RoF
 		{
 			RaidMOTD_Struct *inmotd = (RaidMOTD_Struct *)__emu_buffer;
 			auto outapp = new EQApplicationPacket(OP_RaidUpdate, sizeof(structs::RaidMOTD_Struct) +
-										 strlen(inmotd->motd) + 1);
+																 strlen(inmotd->motd) + 1);
 			structs::RaidMOTD_Struct *outmotd = (structs::RaidMOTD_Struct *)outapp->pBuffer;
 
 			outmotd->general.action = inmotd->general.action;
@@ -2771,7 +2771,7 @@ namespace RoF
 		{
 			RaidLeadershipUpdate_Struct *inlaa = (RaidLeadershipUpdate_Struct *)__emu_buffer;
 			auto outapp =
-			    new EQApplicationPacket(OP_RaidUpdate, sizeof(structs::RaidLeadershipUpdate_Struct));
+					new EQApplicationPacket(OP_RaidUpdate, sizeof(structs::RaidLeadershipUpdate_Struct));
 			structs::RaidLeadershipUpdate_Struct *outlaa = (structs::RaidLeadershipUpdate_Struct *)outapp->pBuffer;
 
 			outlaa->action = inlaa->action;
@@ -3000,8 +3000,8 @@ namespace RoF
 		}
 
 		size_t total_length = sizeof(structs::CharacterSelect_Struct)
-			+ character_count * sizeof(structs::CharacterSelectEntry_Struct)
-			+ names_length;
+							  + character_count * sizeof(structs::CharacterSelectEntry_Struct)
+							  + names_length;
 
 		ALLOC_VAR_ENCODE(structs::CharacterSelect_Struct, total_length);
 		structs::CharacterSelectEntry_Struct *eq_cse = (structs::CharacterSelectEntry_Struct *)nullptr;
@@ -3121,10 +3121,10 @@ namespace RoF
 
 		/* Translate older ranks to new values */
 		switch (emu->Rank) {
-		case 0: { eq->Rank = 5; break; }  // GUILD_MEMBER	0
-		case 1: { eq->Rank = 3; break; }  // GUILD_OFFICER	1
-		case 2: { eq->Rank = 1; break; }  // GUILD_LEADER	2
-		default: { eq->Rank = emu->Rank; break; }
+			case 0: { eq->Rank = 5; break; }  // GUILD_MEMBER	0
+			case 1: { eq->Rank = 3; break; }  // GUILD_OFFICER	1
+			case 2: { eq->Rank = 1; break; }  // GUILD_LEADER	2
+			default: { eq->Rank = emu->Rank; break; }
 		}
 
 		memcpy(eq->MemberName, emu->MemberName, sizeof(eq->MemberName));
@@ -3295,7 +3295,7 @@ namespace RoF
 		std::string old_message = &emu->message[strlen(emu->sayer)];
 		std::string new_message;
 
-		ServerToRoFTextLink(new_message, old_message);
+		ServerToRoFSayLink(new_message, old_message);
 
 		//in->size = 3 + 4 + 4 + strlen(emu->sayer) + 1 + 12 + new_message.length() + 1;
 		in->size = strlen(emu->sayer) + new_message.length() + 25;
@@ -3369,11 +3369,11 @@ namespace RoF
 
 		std::string old_message = InBuffer; // start 'Reward' as string
 		std::string new_message;
-		ServerToRoFTextLink(new_message, old_message);
+		ServerToRoFSayLink(new_message, old_message);
 
 		in->size = sizeof(TaskDescriptionHeader_Struct) + sizeof(TaskDescriptionData1_Struct)+
-			sizeof(TaskDescriptionData2_Struct) + sizeof(TaskDescriptionTrailer_Struct)+
-			title_size + description_size + new_message.length() + 1;
+				   sizeof(TaskDescriptionData2_Struct) + sizeof(TaskDescriptionTrailer_Struct)+
+				   title_size + description_size + new_message.length() + 1;
 
 		in->pBuffer = new unsigned char[in->size];
 
@@ -3721,9 +3721,9 @@ namespace RoF
 		}
 
 		uint32 packet_size = std::accumulate(name_lengths.begin(), name_lengths.end(), 0) +
-				     sizeof(structs::VeteranReward) + (sizeof(structs::VeteranRewardEntry) * count) +
-				     // size of name_lengths is the same as item count
-				     (sizeof(structs::VeteranRewardItem) * name_lengths.size());
+							 sizeof(structs::VeteranReward) + (sizeof(structs::VeteranRewardEntry) * count) +
+							 // size of name_lengths is the same as item count
+							 (sizeof(structs::VeteranRewardItem) * name_lengths.size());
 
 		// build packet now!
 		auto outapp = new EQApplicationPacket(OP_VetRewardsAvaliable, packet_size);
@@ -4046,10 +4046,10 @@ namespace RoF
 
 				/* Translate older ranks to new values */
 				switch (emu->guildrank) {
-				case 0: { VARSTRUCT_ENCODE_TYPE(uint32, Buffer, 5);  break; }  // GUILD_MEMBER	0
-				case 1: { VARSTRUCT_ENCODE_TYPE(uint32, Buffer, 3);  break; }  // GUILD_OFFICER	1
-				case 2: { VARSTRUCT_ENCODE_TYPE(uint32, Buffer, 1);  break; }  // GUILD_LEADER	2
-				default: { VARSTRUCT_ENCODE_TYPE(uint32, Buffer, emu->guildrank); break; }  //
+					case 0: { VARSTRUCT_ENCODE_TYPE(uint32, Buffer, 5);  break; }  // GUILD_MEMBER	0
+					case 1: { VARSTRUCT_ENCODE_TYPE(uint32, Buffer, 3);  break; }  // GUILD_OFFICER	1
+					case 2: { VARSTRUCT_ENCODE_TYPE(uint32, Buffer, 1);  break; }  // GUILD_LEADER	2
+					default: { VARSTRUCT_ENCODE_TYPE(uint32, Buffer, emu->guildrank); break; }  //
 				}
 			}
 
@@ -4355,7 +4355,7 @@ namespace RoF
 
 		std::string old_message = InBuffer;
 		std::string new_message;
-		RoFToServerTextLink(new_message, old_message);
+		RoFToServerSayLink(new_message, old_message);
 
 		//__packet->size = sizeof(ChannelMessage_Struct)+strlen(InBuffer) + 1;
 		__packet->size = sizeof(ChannelMessage_Struct) + new_message.length() + 1;
@@ -4489,7 +4489,7 @@ namespace RoF
 
 		std::string old_message = (char *)&__eq_buffer[4]; // unknown01 offset
 		std::string new_message;
-		RoFToServerTextLink(new_message, old_message);
+		RoFToServerSayLink(new_message, old_message);
 
 		__packet->size = sizeof(Emote_Struct);
 		__packet->pBuffer = new unsigned char[__packet->size];
@@ -4643,85 +4643,85 @@ namespace RoF
 	{
 		// all actions are 1 off due to the removal of one of enums
 		switch (__packet->ReadUInt32()) {
-		case 2: {// GuildBankPromote
-			DECODE_LENGTH_EXACT(structs::GuildBankPromote_Struct);
-			SETUP_DIRECT_DECODE(GuildBankPromote_Struct, structs::GuildBankPromote_Struct);
-			emu->Action = 3;
-			IN(Unknown04);
-			IN(Slot);
-			IN(Slot2);
-			FINISH_DIRECT_DECODE();
-			return;
-		}
-		case 3: { // GuildBankViewItem
-			DECODE_LENGTH_EXACT(structs::GuildBankViewItem_Struct);
-			SETUP_DIRECT_DECODE(GuildBankViewItem_Struct, structs::GuildBankViewItem_Struct);
-			emu->Action = 4;
-			IN(Unknown04);
-			IN(SlotID);
-			IN(Area);
-			IN(Unknown12);
-			IN(Unknown16);
-			FINISH_DIRECT_DECODE();
-			return;
-		}
-		case 4: { // GuildBankDeposit
-			__packet->WriteUInt32(5);
-			return;
-		}
-		case 5: { // GuildBankPermissions
-			DECODE_LENGTH_EXACT(structs::GuildBankPermissions_Struct);
-			SETUP_DIRECT_DECODE(GuildBankPermissions_Struct, structs::GuildBankPermissions_Struct);
-			emu->Action = 6;
-			IN(Unknown04);
-			IN(SlotID);
-			IN(Unknown10);
-			IN(ItemID);
-			IN(Permissions);
-			strn0cpy(emu->MemberName, eq->MemberName, 64);
-			FINISH_DIRECT_DECODE();
-			return;
-		}
-		case 6: { // GuildBankWithdraw
-			DECODE_LENGTH_EXACT(structs::GuildBankWithdrawItem_Struct);
-			SETUP_DIRECT_DECODE(GuildBankWithdrawItem_Struct, structs::GuildBankWithdrawItem_Struct);
-			emu->Action = 7;
-			IN(Unknown04);
-			IN(SlotID);
-			IN(Area);
-			IN(Unknown12);
-			IN(Quantity);
-			FINISH_DIRECT_DECODE();
-			return;
-		}
-		case 7: { // GuildBankSplitStacks
-			DECODE_LENGTH_EXACT(structs::GuildBankWithdrawItem_Struct);
-			SETUP_DIRECT_DECODE(GuildBankWithdrawItem_Struct, structs::GuildBankWithdrawItem_Struct);
-			emu->Action = 8;
-			IN(Unknown04);
-			IN(SlotID);
-			IN(Area);
-			IN(Unknown12);
-			IN(Quantity);
-			FINISH_DIRECT_DECODE();
-			return;
-		}
-		case 8: { // GuildBankMergeStacks
-			DECODE_LENGTH_EXACT(structs::GuildBankWithdrawItem_Struct);
-			SETUP_DIRECT_DECODE(GuildBankWithdrawItem_Struct, structs::GuildBankWithdrawItem_Struct);
-			emu->Action = 9;
-			IN(Unknown04);
-			IN(SlotID);
-			IN(Area);
-			IN(Unknown12);
-			IN(Quantity);
-			FINISH_DIRECT_DECODE();
-			return;
-		}
-		default:
-			Log(Logs::Detail, Logs::Netcode, "Unhandled OP_GuildBank action");
-			__packet->SetOpcode(OP_Unknown); /* invalidate the packet */
-			return;
+			case 2: {// GuildBankPromote
+				DECODE_LENGTH_EXACT(structs::GuildBankPromote_Struct);
+				SETUP_DIRECT_DECODE(GuildBankPromote_Struct, structs::GuildBankPromote_Struct);
+				emu->Action = 3;
+				IN(Unknown04);
+				IN(Slot);
+				IN(Slot2);
+				FINISH_DIRECT_DECODE();
+				return;
+			}
+			case 3: { // GuildBankViewItem
+				DECODE_LENGTH_EXACT(structs::GuildBankViewItem_Struct);
+				SETUP_DIRECT_DECODE(GuildBankViewItem_Struct, structs::GuildBankViewItem_Struct);
+				emu->Action = 4;
+				IN(Unknown04);
+				IN(SlotID);
+				IN(Area);
+				IN(Unknown12);
+				IN(Unknown16);
+				FINISH_DIRECT_DECODE();
+				return;
+			}
+			case 4: { // GuildBankDeposit
+				__packet->WriteUInt32(5);
+				return;
+			}
+			case 5: { // GuildBankPermissions
+				DECODE_LENGTH_EXACT(structs::GuildBankPermissions_Struct);
+				SETUP_DIRECT_DECODE(GuildBankPermissions_Struct, structs::GuildBankPermissions_Struct);
+				emu->Action = 6;
+				IN(Unknown04);
+				IN(SlotID);
+				IN(Unknown10);
+				IN(ItemID);
+				IN(Permissions);
+				strn0cpy(emu->MemberName, eq->MemberName, 64);
+				FINISH_DIRECT_DECODE();
+				return;
+			}
+			case 6: { // GuildBankWithdraw
+				DECODE_LENGTH_EXACT(structs::GuildBankWithdrawItem_Struct);
+				SETUP_DIRECT_DECODE(GuildBankWithdrawItem_Struct, structs::GuildBankWithdrawItem_Struct);
+				emu->Action = 7;
+				IN(Unknown04);
+				IN(SlotID);
+				IN(Area);
+				IN(Unknown12);
+				IN(Quantity);
+				FINISH_DIRECT_DECODE();
+				return;
+			}
+			case 7: { // GuildBankSplitStacks
+				DECODE_LENGTH_EXACT(structs::GuildBankWithdrawItem_Struct);
+				SETUP_DIRECT_DECODE(GuildBankWithdrawItem_Struct, structs::GuildBankWithdrawItem_Struct);
+				emu->Action = 8;
+				IN(Unknown04);
+				IN(SlotID);
+				IN(Area);
+				IN(Unknown12);
+				IN(Quantity);
+				FINISH_DIRECT_DECODE();
+				return;
+			}
+			case 8: { // GuildBankMergeStacks
+				DECODE_LENGTH_EXACT(structs::GuildBankWithdrawItem_Struct);
+				SETUP_DIRECT_DECODE(GuildBankWithdrawItem_Struct, structs::GuildBankWithdrawItem_Struct);
+				emu->Action = 9;
+				IN(Unknown04);
+				IN(SlotID);
+				IN(Area);
+				IN(Unknown12);
+				IN(Quantity);
+				FINISH_DIRECT_DECODE();
+				return;
+			}
+			default:
+				Log(Logs::Detail, Logs::Netcode, "Unhandled OP_GuildBank action");
+				__packet->SetOpcode(OP_Unknown); /* invalidate the packet */
+				return;
 		}
 	}
 
@@ -4905,7 +4905,7 @@ namespace RoF
 				IN(general.parameter);
 				FINISH_DIRECT_DECODE();
 				break;
-			 }
+			}
 			case 36: { // raidPlayerNote unhandled
 				break;
 			}
@@ -5192,7 +5192,7 @@ namespace RoF
 	void SerializeItem(EQEmu::OutBuffer& ob, const EQEmu::ItemInstance *inst, int16 slot_id_in, uint8 depth)
 	{
 		const EQEmu::ItemData *item = inst->GetUnscaledItem();
-		
+
 		RoF::structs::ItemSerializationHeader hdr;
 
 		//sprintf(hdr.unknown000, "06e0002Y1W00");
@@ -5288,7 +5288,7 @@ namespace RoF
 		ob.write("\0", 1);
 
 		ob.write("\0", 1);
-		
+
 		RoF::structs::ItemBodyStruct ibs;
 		memset(&ibs, 0, sizeof(RoF::structs::ItemBodyStruct));
 
@@ -5594,7 +5594,7 @@ namespace RoF
 		iqbs.unknown28 = 0;
 		iqbs.unknown30 = 0;
 		iqbs.unknown39 = 1;
-		
+
 		ob.write((const char*)&iqbs, sizeof(RoF::structs::ItemQuaternaryBodyStruct));
 
 		EQEmu::OutBuffer::pos_type count_pos = ob.tellp();
@@ -5653,10 +5653,10 @@ namespace RoF
 				RoFSlot.Slot += 1;
 		}
 
-		/*else if (ServerSlot < 51) { // Cursor Buffer
-		RoFSlot.SlotType = maps::MapLimbo;
-		RoFSlot.MainSlot = ServerSlot - 31;
-		}*/
+			/*else if (ServerSlot < 51) { // Cursor Buffer
+            RoFSlot.SlotType = maps::MapLimbo;
+            RoFSlot.MainSlot = ServerSlot - 31;
+            }*/
 
 		else if (serverSlot >= EQEmu::legacy::GENERAL_BAGS_BEGIN && serverSlot <= EQEmu::legacy::CURSOR_BAG_END) { // (> 250 && < 341)
 			RoFSlot.Type = invtype::InvTypePossessions;
@@ -5788,16 +5788,16 @@ namespace RoF
 			else if (rofSlot.Slot >= invslot::PossessionsCursor) // Cursor and Extended Corpse Inventory
 				TempSlot = rofSlot.Slot - 3;
 
-			/*else if (RoFSlot.MainSlot == slots::MainGeneral9 || RoFSlot.MainSlot == slots::MainGeneral10) { // 9th and 10th RoF inventory/corpse slots
-			// Need to figure out what to do when we get these
+				/*else if (RoFSlot.MainSlot == slots::MainGeneral9 || RoFSlot.MainSlot == slots::MainGeneral10) { // 9th and 10th RoF inventory/corpse slots
+                // Need to figure out what to do when we get these
 
-			// The slot range of 0 - client_max is cross-utilized between player inventory and corpse inventory.
-			// In the case of RoF, player inventory is addressed as 0 - 33 and corpse inventory is addressed as 23 - 56.
-			// We 'could' assign the two new inventory slots as 9997 and 9998, and then work around their bag
-			// slot assignments, but doing so may disrupt our ability to utilize the corpse looting range properly.
+                // The slot range of 0 - client_max is cross-utilized between player inventory and corpse inventory.
+                // In the case of RoF, player inventory is addressed as 0 - 33 and corpse inventory is addressed as 23 - 56.
+                // We 'could' assign the two new inventory slots as 9997 and 9998, and then work around their bag
+                // slot assignments, but doing so may disrupt our ability to utilize the corpse looting range properly.
 
-			// For now, it's probably best to leave as-is and let this work itself out in the inventory rework.
-			}*/
+                // For now, it's probably best to leave as-is and let this work itself out in the inventory rework.
+                }*/
 
 			else if (rofSlot.Slot >= invslot::PossessionsAmmo) // Ammo and Main Inventory
 				TempSlot = rofSlot.Slot - 1;
@@ -5840,8 +5840,8 @@ namespace RoF
 
 			if (rofSlot.SubIndex >= EQEmu::inventory::containerBegin)
 				TempSlot += ((rofSlot.Slot + 3) * EQEmu::inventory::ContainerCount) + rofSlot.SubIndex + 1;
-			// OLD CODE:
-			//TempSlot += 100 + (RoFSlot.MainSlot * EQEmu::inventory::ContainerCount) + RoFSlot.SubSlot;
+				// OLD CODE:
+				//TempSlot += 100 + (RoFSlot.MainSlot * EQEmu::inventory::ContainerCount) + RoFSlot.SubSlot;
 
 			else
 				TempSlot += rofSlot.Slot;
@@ -5858,14 +5858,14 @@ namespace RoF
 			ServerSlot = TempSlot;
 		}
 
-		/*else if (RoFSlot.SlotType == maps::MapLimbo) { // Cursor Buffer
-		TempSlot = 31;
+			/*else if (RoFSlot.SlotType == maps::MapLimbo) { // Cursor Buffer
+            TempSlot = 31;
 
-		if (RoFSlot.MainSlot >= 0)
-		TempSlot += RoFSlot.MainSlot;
+            if (RoFSlot.MainSlot >= 0)
+            TempSlot += RoFSlot.MainSlot;
 
-		ServerSlot = TempSlot;
-		}*/
+            ServerSlot = TempSlot;
+            }*/
 
 		else if (rofSlot.Type == invtype::InvTypeGuildTribute) {
 			ServerSlot = INVALID_INDEX;
@@ -5888,11 +5888,11 @@ namespace RoF
 			else if (rofSlot.Slot >= invslot::PossessionsCursor) // Cursor and Extended Corpse Inventory
 				TempSlot = rofSlot.Slot - 3;
 
-			/*else if (RoFSlot.MainSlot == slots::MainGeneral9 || RoFSlot.MainSlot == slots::MainGeneral10) { // 9th and 10th RoF inventory slots
-			// Need to figure out what to do when we get these
+				/*else if (RoFSlot.MainSlot == slots::MainGeneral9 || RoFSlot.MainSlot == slots::MainGeneral10) { // 9th and 10th RoF inventory slots
+                // Need to figure out what to do when we get these
 
-			// Same as above
-			}*/
+                // Same as above
+                }*/
 
 			else if (rofSlot.Slot >= invslot::PossessionsAmmo) // Main Inventory and Ammo Slots
 				TempSlot = rofSlot.Slot - 1;
@@ -5916,19 +5916,19 @@ namespace RoF
 		return (rofCorpseSlot - 1);
 	}
 
-	static inline void ServerToRoFTextLink(std::string& rofTextLink, const std::string& serverTextLink)
+	static inline void ServerToRoFSayLink(std::string& rofSayLink, const std::string& serverSayLink)
 	{
-		if ((constants::SayLinkBodySize == EQEmu::legacy::TEXT_LINK_BODY_LENGTH) || (serverTextLink.find('\x12') == std::string::npos)) {
-			rofTextLink = serverTextLink;
+		if ((constants::SayLinkBodySize == EQEmu::constants::SayLinkBodySize) || (serverSayLink.find('\x12') == std::string::npos)) {
+			rofSayLink = serverSayLink;
 			return;
 		}
 
-		auto segments = SplitString(serverTextLink, '\x12');
+		auto segments = SplitString(serverSayLink, '\x12');
 
 		for (size_t segment_iter = 0; segment_iter < segments.size(); ++segment_iter) {
 			if (segment_iter & 1) {
-				if (segments[segment_iter].length() <= EQEmu::legacy::TEXT_LINK_BODY_LENGTH) {
-					rofTextLink.append(segments[segment_iter]);
+				if (segments[segment_iter].length() <= EQEmu::constants::SayLinkBodySize) {
+					rofSayLink.append(segments[segment_iter]);
 					// TODO: log size mismatch error
 					continue;
 				}
@@ -5938,36 +5938,36 @@ namespace RoF
 				// RoF:  X XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX X  XXXX  X XXXXX XXXXXXXX (55)
 				// Diff:                                                     ^
 
-				rofTextLink.push_back('\x12');
-				rofTextLink.append(segments[segment_iter].substr(0, 41));
+				rofSayLink.push_back('\x12');
+				rofSayLink.append(segments[segment_iter].substr(0, 41));
 
 				if (segments[segment_iter][41] == '0')
-					rofTextLink.push_back(segments[segment_iter][42]);
+					rofSayLink.push_back(segments[segment_iter][42]);
 				else
-					rofTextLink.push_back('F');
+					rofSayLink.push_back('F');
 
-				rofTextLink.append(segments[segment_iter].substr(43));
-				rofTextLink.push_back('\x12');
+				rofSayLink.append(segments[segment_iter].substr(43));
+				rofSayLink.push_back('\x12');
 			}
 			else {
-				rofTextLink.append(segments[segment_iter]);
+				rofSayLink.append(segments[segment_iter]);
 			}
 		}
 	}
 
-	static inline void RoFToServerTextLink(std::string& serverTextLink, const std::string& rofTextLink)
+	static inline void RoFToServerSayLink(std::string& serverSayLink, const std::string& rofSayLink)
 	{
-		if ((EQEmu::legacy::TEXT_LINK_BODY_LENGTH == constants::SayLinkBodySize) || (rofTextLink.find('\x12') == std::string::npos)) {
-			serverTextLink = rofTextLink;
+		if ((EQEmu::constants::SayLinkBodySize == constants::SayLinkBodySize) || (rofSayLink.find('\x12') == std::string::npos)) {
+			serverSayLink = rofSayLink;
 			return;
 		}
 
-		auto segments = SplitString(rofTextLink, '\x12');
+		auto segments = SplitString(rofSayLink, '\x12');
 
 		for (size_t segment_iter = 0; segment_iter < segments.size(); ++segment_iter) {
 			if (segment_iter & 1) {
 				if (segments[segment_iter].length() <= constants::SayLinkBodySize) {
-					serverTextLink.append(segments[segment_iter]);
+					serverSayLink.append(segments[segment_iter]);
 					// TODO: log size mismatch error
 					continue;
 				}
@@ -5977,14 +5977,14 @@ namespace RoF
 				// RoF2: X XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX X  XXXX XX  XXXXX XXXXXXXX (56)
 				// Diff:                                                     ^
 
-				serverTextLink.push_back('\x12');
-				serverTextLink.append(segments[segment_iter].substr(0, 41));
-				serverTextLink.push_back('0');
-				serverTextLink.append(segments[segment_iter].substr(41));
-				serverTextLink.push_back('\x12');
+				serverSayLink.push_back('\x12');
+				serverSayLink.append(segments[segment_iter].substr(0, 41));
+				serverSayLink.push_back('0');
+				serverSayLink.append(segments[segment_iter].substr(41));
+				serverSayLink.push_back('\x12');
 			}
 			else {
-				serverTextLink.append(segments[segment_iter]);
+				serverSayLink.append(segments[segment_iter]);
 			}
 		}
 	}
@@ -5992,77 +5992,77 @@ namespace RoF
 	static inline CastingSlot ServerToRoFCastingSlot(EQEmu::CastingSlot slot)
 	{
 		switch (slot) {
-		case EQEmu::CastingSlot::Gem1:
-			return CastingSlot::Gem1;
-		case EQEmu::CastingSlot::Gem2:
-			return CastingSlot::Gem2;
-		case EQEmu::CastingSlot::Gem3:
-			return CastingSlot::Gem3;
-		case EQEmu::CastingSlot::Gem4:
-			return CastingSlot::Gem4;
-		case EQEmu::CastingSlot::Gem5:
-			return CastingSlot::Gem5;
-		case EQEmu::CastingSlot::Gem6:
-			return CastingSlot::Gem6;
-		case EQEmu::CastingSlot::Gem7:
-			return CastingSlot::Gem7;
-		case EQEmu::CastingSlot::Gem8:
-			return CastingSlot::Gem8;
-		case EQEmu::CastingSlot::Gem9:
-			return CastingSlot::Gem9;
-		case EQEmu::CastingSlot::Gem10:
-			return CastingSlot::Gem10;
-		case EQEmu::CastingSlot::Gem11:
-			return CastingSlot::Gem11;
-		case EQEmu::CastingSlot::Gem12:
-			return CastingSlot::Gem12;
-		case EQEmu::CastingSlot::Item:
-		case EQEmu::CastingSlot::PotionBelt:
-			return CastingSlot::Item;
-		case EQEmu::CastingSlot::Discipline:
-			return CastingSlot::Discipline;
-		case EQEmu::CastingSlot::AltAbility:
-			return CastingSlot::AltAbility;
-		default: // we shouldn't have any issues with other slots ... just return something
-			return CastingSlot::Discipline;
+			case EQEmu::CastingSlot::Gem1:
+				return CastingSlot::Gem1;
+			case EQEmu::CastingSlot::Gem2:
+				return CastingSlot::Gem2;
+			case EQEmu::CastingSlot::Gem3:
+				return CastingSlot::Gem3;
+			case EQEmu::CastingSlot::Gem4:
+				return CastingSlot::Gem4;
+			case EQEmu::CastingSlot::Gem5:
+				return CastingSlot::Gem5;
+			case EQEmu::CastingSlot::Gem6:
+				return CastingSlot::Gem6;
+			case EQEmu::CastingSlot::Gem7:
+				return CastingSlot::Gem7;
+			case EQEmu::CastingSlot::Gem8:
+				return CastingSlot::Gem8;
+			case EQEmu::CastingSlot::Gem9:
+				return CastingSlot::Gem9;
+			case EQEmu::CastingSlot::Gem10:
+				return CastingSlot::Gem10;
+			case EQEmu::CastingSlot::Gem11:
+				return CastingSlot::Gem11;
+			case EQEmu::CastingSlot::Gem12:
+				return CastingSlot::Gem12;
+			case EQEmu::CastingSlot::Item:
+			case EQEmu::CastingSlot::PotionBelt:
+				return CastingSlot::Item;
+			case EQEmu::CastingSlot::Discipline:
+				return CastingSlot::Discipline;
+			case EQEmu::CastingSlot::AltAbility:
+				return CastingSlot::AltAbility;
+			default: // we shouldn't have any issues with other slots ... just return something
+				return CastingSlot::Discipline;
 		}
 	}
 
 	static inline EQEmu::CastingSlot RoFToServerCastingSlot(CastingSlot slot)
 	{
 		switch (slot) {
-		case CastingSlot::Gem1:
-			return EQEmu::CastingSlot::Gem1;
-		case CastingSlot::Gem2:
-			return EQEmu::CastingSlot::Gem2;
-		case CastingSlot::Gem3:
-			return EQEmu::CastingSlot::Gem3;
-		case CastingSlot::Gem4:
-			return EQEmu::CastingSlot::Gem4;
-		case CastingSlot::Gem5:
-			return EQEmu::CastingSlot::Gem5;
-		case CastingSlot::Gem6:
-			return EQEmu::CastingSlot::Gem6;
-		case CastingSlot::Gem7:
-			return EQEmu::CastingSlot::Gem7;
-		case CastingSlot::Gem8:
-			return EQEmu::CastingSlot::Gem8;
-		case CastingSlot::Gem9:
-			return EQEmu::CastingSlot::Gem9;
-		case CastingSlot::Gem10:
-			return EQEmu::CastingSlot::Gem10;
-		case CastingSlot::Gem11:
-			return EQEmu::CastingSlot::Gem11;
-		case CastingSlot::Gem12:
-			return EQEmu::CastingSlot::Gem12;
-		case CastingSlot::Discipline:
-			return EQEmu::CastingSlot::Discipline;
-		case CastingSlot::Item:
-			return EQEmu::CastingSlot::Item;
-		case CastingSlot::AltAbility:
-			return EQEmu::CastingSlot::AltAbility;
-		default: // we shouldn't have any issues with other slots ... just return something
-			return EQEmu::CastingSlot::Discipline;
+			case CastingSlot::Gem1:
+				return EQEmu::CastingSlot::Gem1;
+			case CastingSlot::Gem2:
+				return EQEmu::CastingSlot::Gem2;
+			case CastingSlot::Gem3:
+				return EQEmu::CastingSlot::Gem3;
+			case CastingSlot::Gem4:
+				return EQEmu::CastingSlot::Gem4;
+			case CastingSlot::Gem5:
+				return EQEmu::CastingSlot::Gem5;
+			case CastingSlot::Gem6:
+				return EQEmu::CastingSlot::Gem6;
+			case CastingSlot::Gem7:
+				return EQEmu::CastingSlot::Gem7;
+			case CastingSlot::Gem8:
+				return EQEmu::CastingSlot::Gem8;
+			case CastingSlot::Gem9:
+				return EQEmu::CastingSlot::Gem9;
+			case CastingSlot::Gem10:
+				return EQEmu::CastingSlot::Gem10;
+			case CastingSlot::Gem11:
+				return EQEmu::CastingSlot::Gem11;
+			case CastingSlot::Gem12:
+				return EQEmu::CastingSlot::Gem12;
+			case CastingSlot::Discipline:
+				return EQEmu::CastingSlot::Discipline;
+			case CastingSlot::Item:
+				return EQEmu::CastingSlot::Item;
+			case CastingSlot::AltAbility:
+				return EQEmu::CastingSlot::AltAbility;
+			default: // we shouldn't have any issues with other slots ... just return something
+				return EQEmu::CastingSlot::Discipline;
 		}
 	}
 
@@ -6073,7 +6073,7 @@ namespace RoF
 		// we're a disc
 		if (index >= EQEmu::constants::LongBuffs + EQEmu::constants::ShortBuffs)
 			return index - EQEmu::constants::LongBuffs - EQEmu::constants::ShortBuffs +
-			       constants::LongBuffs + constants::ShortBuffs;
+				   constants::LongBuffs + constants::ShortBuffs;
 		// we're a song
 		if (index >= EQEmu::constants::LongBuffs)
 			return index - EQEmu::constants::LongBuffs + constants::LongBuffs;
@@ -6086,7 +6086,7 @@ namespace RoF
 		// we're a disc
 		if (index >= constants::LongBuffs + constants::ShortBuffs)
 			return index - constants::LongBuffs - constants::ShortBuffs + EQEmu::constants::LongBuffs +
-			       EQEmu::constants::ShortBuffs;
+				   EQEmu::constants::ShortBuffs;
 		// we're a song
 		if (index >= constants::LongBuffs)
 			return index - constants::LongBuffs + EQEmu::constants::LongBuffs;

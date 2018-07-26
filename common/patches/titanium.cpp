@@ -52,11 +52,11 @@ namespace Titanium
 	static inline uint32 TitaniumToServerSlot(int16 titaniumSlot);
 	static inline uint32 TitaniumToServerCorpseSlot(int16 titaniumCorpseSlot);
 
-	// server to client text link converter
-	static inline void ServerToTitaniumTextLink(std::string& titaniumTextLink, const std::string& serverTextLink);
+	// server to client say link converter
+	static inline void ServerToTitaniumSayLink(std::string& titaniumSayLink, const std::string& serverSayLink);
 
-	// client to server text link converter
-	static inline void TitaniumToServerTextLink(std::string& serverTextLink, const std::string& titaniumTextLink);
+	// client to server say link converter
+	static inline void TitaniumToServerSayLink(std::string& serverSayLink, const std::string& titaniumSayLink);
 
 	static inline CastingSlot ServerToTitaniumCastingSlot(EQEmu::CastingSlot slot);
 	static inline EQEmu::CastingSlot TitaniumToServerCastingSlot(CastingSlot slot, uint32 itemlocation);
@@ -290,7 +290,7 @@ namespace Titanium
 
 		std::string old_message = emu->message;
 		std::string new_message;
-		ServerToTitaniumTextLink(new_message, old_message);
+		ServerToTitaniumSayLink(new_message, old_message);
 
 		in->size = sizeof(ChannelMessage_Struct) + new_message.length() + 1;
 
@@ -335,13 +335,13 @@ namespace Titanium
 			SerializeItem(ob, (const EQEmu::ItemInstance*)eq->inst, eq->slot_id, 0);
 			if (ob.tellp() == last_pos)
 				Log(Logs::General, Logs::Netcode, "[STRUCTS] Serialization failed on item slot %d during OP_CharInventory.  Item skipped.", eq->slot_id);
-			
+
 			last_pos = ob.tellp();
 		}
 
 		in->size = ob.size();
 		in->pBuffer = ob.detach();
-		
+
 		delete[] __emu_buffer;
 
 		dest->FastQueuePacket(&in, ack_req);
@@ -532,7 +532,7 @@ namespace Titanium
 
 		std::string old_message = emu->message;
 		std::string new_message;
-		ServerToTitaniumTextLink(new_message, old_message);
+		ServerToTitaniumSayLink(new_message, old_message);
 
 		//if (new_message.length() > 512) // length restricted in packet building function due vari-length name size (no nullterm)
 		//	new_message = new_message.substr(0, 512);
@@ -574,7 +574,7 @@ namespace Titanium
 
 		for (int i = 0; i < 9; ++i) {
 			if (old_message_array[i].length() == 0) { break; }
-			ServerToTitaniumTextLink(new_message_array[i], old_message_array[i]);
+			ServerToTitaniumSayLink(new_message_array[i], old_message_array[i]);
 			new_message_size += new_message_array[i].length() + 1;
 		}
 
@@ -651,8 +651,8 @@ namespace Titanium
 		//make a new EQ buffer.
 		uint32 pnl = strlen(emu->player_name);
 		uint32 length = sizeof(structs::GuildMembers_Struct) + pnl +
-			emu->count*sizeof(structs::GuildMemberEntry_Struct)
-			+ emu->name_length + emu->note_length;
+						emu->count*sizeof(structs::GuildMemberEntry_Struct)
+						+ emu->name_length + emu->note_length;
 		in->pBuffer = new uint8[length];
 		in->size = length;
 		//no memset since we fill every byte.
@@ -674,13 +674,13 @@ namespace Titanium
 		if (emu->count > 0) {
 			Internal_GuildMemberEntry_Struct *emu_e = emu->member;
 			const char *emu_name = (const char *)(__emu_buffer +
-				sizeof(Internal_GuildMembers_Struct)+ //skip header
-				emu->count * sizeof(Internal_GuildMemberEntry_Struct)	//skip static length member data
-				);
+												  sizeof(Internal_GuildMembers_Struct)+ //skip header
+												  emu->count * sizeof(Internal_GuildMemberEntry_Struct)	//skip static length member data
+			);
 			const char *emu_note = (emu_name +
-				emu->name_length + //skip name contents
-				emu->count	//skip string terminators
-				);
+									emu->name_length + //skip name contents
+									emu->count	//skip string terminators
+			);
 
 			structs::GuildMemberEntry_Struct *e = (structs::GuildMemberEntry_Struct *) buffer;
 
@@ -810,7 +810,7 @@ namespace Titanium
 
 		//store away the emu struct
 		uchar* __emu_buffer = in->pBuffer;
-		
+
 		EQEmu::InternalSerializedItem_Struct* int_struct = (EQEmu::InternalSerializedItem_Struct*)(&__emu_buffer[4]);
 
 		EQEmu::OutBuffer ob;
@@ -827,7 +827,7 @@ namespace Titanium
 
 		in->size = ob.size();
 		in->pBuffer = ob.detach();
-		
+
 		delete[] __emu_buffer;
 
 		dest->FastQueuePacket(&in, ack_req);
@@ -1177,10 +1177,10 @@ namespace Titanium
 
 
 		const uint8 bytes[] = {
-			0x78, 0x03, 0x00, 0x00, 0x1A, 0x04, 0x00, 0x00, 0x1A, 0x04, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00,
-			0x19, 0x00, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00,
-			0x0F, 0x00, 0x00, 0x00, 0x1F, 0x85, 0xEB, 0x3E, 0x33, 0x33, 0x33, 0x3F, 0x09, 0x00, 0x00, 0x00,
-			0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x14
+				0x78, 0x03, 0x00, 0x00, 0x1A, 0x04, 0x00, 0x00, 0x1A, 0x04, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00,
+				0x19, 0x00, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00,
+				0x0F, 0x00, 0x00, 0x00, 0x1F, 0x85, 0xEB, 0x3E, 0x33, 0x33, 0x33, 0x3F, 0x09, 0x00, 0x00, 0x00,
+				0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x14
 		};
 		memcpy(eq->unknown12864, bytes, sizeof(bytes));
 
@@ -1234,7 +1234,7 @@ namespace Titanium
 		AARankInfo_Struct *emu = (AARankInfo_Struct*)inapp->pBuffer;
 
 		auto outapp = new EQApplicationPacket(
-		    OP_SendAATable, sizeof(structs::SendAA_Struct) + emu->total_effects * sizeof(structs::AA_Ability));
+				OP_SendAATable, sizeof(structs::SendAA_Struct) + emu->total_effects * sizeof(structs::AA_Ability));
 		structs::SendAA_Struct *eq = (structs::SendAA_Struct*)outapp->pBuffer;
 
 		inapp->SetReadPosition(sizeof(AARankInfo_Struct));
@@ -1402,7 +1402,7 @@ namespace Titanium
 		std::string old_message = &emu->message[strlen(emu->sayer)];
 		std::string new_message;
 
-		ServerToTitaniumTextLink(new_message, old_message);
+		ServerToTitaniumSayLink(new_message, old_message);
 
 		//in->size = 3 + 4 + 4 + strlen(emu->sayer) + 1 + 12 + new_message.length() + 1;
 		in->size = strlen(emu->sayer) + new_message.length() + 25;
@@ -1458,11 +1458,11 @@ namespace Titanium
 
 		std::string old_message = InBuffer; // start 'Reward' as string
 		std::string new_message;
-		ServerToTitaniumTextLink(new_message, old_message);
+		ServerToTitaniumSayLink(new_message, old_message);
 
 		in->size = sizeof(TaskDescriptionHeader_Struct) + sizeof(TaskDescriptionData1_Struct) +
-			sizeof(TaskDescriptionData2_Struct) + sizeof(TaskDescriptionTrailer_Struct) +
-			title_size + description_size + new_message.length() + 1;
+				   sizeof(TaskDescriptionData2_Struct) + sizeof(TaskDescriptionTrailer_Struct) +
+				   title_size + description_size + new_message.length() + 1;
 
 		in->pBuffer = new unsigned char[in->size];
 
@@ -1563,7 +1563,7 @@ namespace Titanium
 		*p = nullptr;
 
 		auto outapp_create =
-		    new EQApplicationPacket(OP_VetRewardsAvaliable, (sizeof(structs::VeteranReward) * count));
+				new EQApplicationPacket(OP_VetRewardsAvaliable, (sizeof(structs::VeteranReward) * count));
 		uchar *old_data = __emu_buffer;
 		uchar *data = outapp_create->pBuffer;
 		for (uint32 i = 0; i < count; ++i)
@@ -1819,7 +1819,7 @@ namespace Titanium
 
 		std::string old_message = (char *)&__eq_buffer[sizeof(ChannelMessage_Struct)];
 		std::string new_message;
-		TitaniumToServerTextLink(new_message, old_message);
+		TitaniumToServerSayLink(new_message, old_message);
 
 		__packet->size = sizeof(ChannelMessage_Struct) + new_message.length() + 1;
 		__packet->pBuffer = new unsigned char[__packet->size];
@@ -1891,7 +1891,7 @@ namespace Titanium
 
 		std::string old_message = (char *)&__eq_buffer[4]; // unknown01 offset
 		std::string new_message;
-		TitaniumToServerTextLink(new_message, old_message);
+		TitaniumToServerSayLink(new_message, old_message);
 
 		__packet->size = sizeof(Emote_Struct);
 		__packet->pBuffer = new unsigned char[__packet->size];
@@ -2042,63 +2042,63 @@ namespace Titanium
 
 		switch (eq->command)
 		{
-		case 1: // back off
-			emu->command = 28;
-			break;
-		case 2: // get lost
-			emu->command = 29;
-			break;
-		case 3: // as you were ???
-			emu->command = 4; // fuck it follow
-			break;
-		case 4: // report HP
-			emu->command = 0;
-			break;
-		case 5: // guard here
-			emu->command = 5;
-			break;
-		case 6: // guard me
-			emu->command = 4; // fuck it follow
-			break;
-		case 7: // attack
-			emu->command = 2;
-			break;
-		case 8: // follow
-			emu->command = 4;
-			break;
-		case 9: // sit down
-			emu->command = 7;
-			break;
-		case 10: // stand up
-			emu->command = 8;
-			break;
-		case 11: // taunt toggle
-			emu->command = 12;
-			break;
-		case 12: // hold toggle
-			emu->command = 15;
-			break;
-		case 13: // taunt on
-			emu->command = 13;
-			break;
-		case 14: // no taunt
-			emu->command = 14;
-			break;
-		// 15 is target, doesn't send packet
-		case 16: // leader
-			emu->command = 1;
-			break;
-		case 17: // feign
-			emu->command = 27;
-			break;
-		case 18: // no cast toggle
-			emu->command = 21;
-			break;
-		case 19: // focus toggle
-			emu->command = 24;
-			break;
-		default:
-			emu->command = eq->command;
+			case 1: // back off
+				emu->command = 28;
+				break;
+			case 2: // get lost
+				emu->command = 29;
+				break;
+			case 3: // as you were ???
+				emu->command = 4; // fuck it follow
+				break;
+			case 4: // report HP
+				emu->command = 0;
+				break;
+			case 5: // guard here
+				emu->command = 5;
+				break;
+			case 6: // guard me
+				emu->command = 4; // fuck it follow
+				break;
+			case 7: // attack
+				emu->command = 2;
+				break;
+			case 8: // follow
+				emu->command = 4;
+				break;
+			case 9: // sit down
+				emu->command = 7;
+				break;
+			case 10: // stand up
+				emu->command = 8;
+				break;
+			case 11: // taunt toggle
+				emu->command = 12;
+				break;
+			case 12: // hold toggle
+				emu->command = 15;
+				break;
+			case 13: // taunt on
+				emu->command = 13;
+				break;
+			case 14: // no taunt
+				emu->command = 14;
+				break;
+				// 15 is target, doesn't send packet
+			case 16: // leader
+				emu->command = 1;
+				break;
+			case 17: // feign
+				emu->command = 27;
+				break;
+			case 18: // no cast toggle
+				emu->command = 21;
+				break;
+			case 19: // focus toggle
+				emu->command = 24;
+				break;
+			default:
+				emu->command = eq->command;
 		}
 		IN(target);
 
@@ -2224,7 +2224,7 @@ namespace Titanium
 		const EQEmu::ItemData* item = inst->GetUnscaledItem();
 
 		ob << StringFormat("%.*s%s", (depth ? (depth - 1) : 0), protection, (depth ? "\"" : "")); // For leading quotes (and protection) if a subitem;
-		
+
 		// Instance data
 		ob << itoa((inst->IsStackable() ? inst->GetCharges() : 0)); // stack count
 		ob << '|' << itoa(0); // unknown
@@ -2445,7 +2445,7 @@ namespace Titanium
 			EQEmu::ItemInstance* sub = inst->GetItem(index);
 			if (!sub)
 				continue;
-			
+
 			SerializeItem(ob, sub, 0, (depth + 1));
 		}
 
@@ -2485,19 +2485,19 @@ namespace Titanium
 		return titaniumCorpseSlot;
 	}
 
-	static inline void ServerToTitaniumTextLink(std::string& titaniumTextLink, const std::string& serverTextLink)
+	static inline void ServerToTitaniumSayLink(std::string& titaniumSayLink, const std::string& serverSayLink)
 	{
-		if ((constants::SayLinkBodySize == EQEmu::legacy::TEXT_LINK_BODY_LENGTH) || (serverTextLink.find('\x12') == std::string::npos)) {
-			titaniumTextLink = serverTextLink;
+		if ((constants::SayLinkBodySize == EQEmu::constants::SayLinkBodySize) || (serverSayLink.find('\x12') == std::string::npos)) {
+			titaniumSayLink = serverSayLink;
 			return;
 		}
 
-		auto segments = SplitString(serverTextLink, '\x12');
+		auto segments = SplitString(serverSayLink, '\x12');
 
 		for (size_t segment_iter = 0; segment_iter < segments.size(); ++segment_iter) {
 			if (segment_iter & 1) {
-				if (segments[segment_iter].length() <= EQEmu::legacy::TEXT_LINK_BODY_LENGTH) {
-					titaniumTextLink.append(segments[segment_iter]);
+				if (segments[segment_iter].length() <= EQEmu::constants::SayLinkBodySize) {
+					titaniumSayLink.append(segments[segment_iter]);
 					// TODO: log size mismatch error
 					continue;
 				}
@@ -2507,37 +2507,37 @@ namespace Titanium
 				// 6.2:  X XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX       X  XXXX  X       XXXXXXXX (45)
 				// Diff:                                       ^^^^^         ^  ^^^^^
 
-				titaniumTextLink.push_back('\x12');
-				titaniumTextLink.append(segments[segment_iter].substr(0, 31));
-				titaniumTextLink.append(segments[segment_iter].substr(36, 5));
+				titaniumSayLink.push_back('\x12');
+				titaniumSayLink.append(segments[segment_iter].substr(0, 31));
+				titaniumSayLink.append(segments[segment_iter].substr(36, 5));
 
 				if (segments[segment_iter][41] == '0')
-					titaniumTextLink.push_back(segments[segment_iter][42]);
+					titaniumSayLink.push_back(segments[segment_iter][42]);
 				else
-					titaniumTextLink.push_back('F');
+					titaniumSayLink.push_back('F');
 
-				titaniumTextLink.append(segments[segment_iter].substr(48));
-				titaniumTextLink.push_back('\x12');
+				titaniumSayLink.append(segments[segment_iter].substr(48));
+				titaniumSayLink.push_back('\x12');
 			}
 			else {
-				titaniumTextLink.append(segments[segment_iter]);
+				titaniumSayLink.append(segments[segment_iter]);
 			}
 		}
 	}
 
-	static inline void TitaniumToServerTextLink(std::string& serverTextLink, const std::string& titaniumTextLink)
+	static inline void TitaniumToServerSayLink(std::string& serverSayLink, const std::string& titaniumSayLink)
 	{
-		if ((EQEmu::legacy::TEXT_LINK_BODY_LENGTH == constants::SayLinkBodySize) || (titaniumTextLink.find('\x12') == std::string::npos)) {
-			serverTextLink = titaniumTextLink;
+		if ((EQEmu::constants::SayLinkBodySize == constants::SayLinkBodySize) || (titaniumSayLink.find('\x12') == std::string::npos)) {
+			serverSayLink = titaniumSayLink;
 			return;
 		}
 
-		auto segments = SplitString(titaniumTextLink, '\x12');
+		auto segments = SplitString(titaniumSayLink, '\x12');
 
 		for (size_t segment_iter = 0; segment_iter < segments.size(); ++segment_iter) {
 			if (segment_iter & 1) {
 				if (segments[segment_iter].length() <= constants::SayLinkBodySize) {
-					serverTextLink.append(segments[segment_iter]);
+					serverSayLink.append(segments[segment_iter]);
 					// TODO: log size mismatch error
 					continue;
 				}
@@ -2547,18 +2547,18 @@ namespace Titanium
 				// RoF2: X XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX X  XXXX XX  XXXXX XXXXXXXX (56)
 				// Diff:                                       ^^^^^         ^   ^^^^^
 
-				serverTextLink.push_back('\x12');
-				serverTextLink.append(segments[segment_iter].substr(0, 31));
-				serverTextLink.append("00000");
-				serverTextLink.append(segments[segment_iter].substr(31, 5));
-				serverTextLink.push_back('0');
-				serverTextLink.push_back(segments[segment_iter][36]);
-				serverTextLink.append("00000");
-				serverTextLink.append(segments[segment_iter].substr(37));
-				serverTextLink.push_back('\x12');
+				serverSayLink.push_back('\x12');
+				serverSayLink.append(segments[segment_iter].substr(0, 31));
+				serverSayLink.append("00000");
+				serverSayLink.append(segments[segment_iter].substr(31, 5));
+				serverSayLink.push_back('0');
+				serverSayLink.push_back(segments[segment_iter][36]);
+				serverSayLink.append("00000");
+				serverSayLink.append(segments[segment_iter].substr(37));
+				serverSayLink.push_back('\x12');
 			}
 			else {
-				serverTextLink.append(segments[segment_iter]);
+				serverSayLink.append(segments[segment_iter]);
 			}
 		}
 	}
@@ -2566,72 +2566,72 @@ namespace Titanium
 	static inline CastingSlot ServerToTitaniumCastingSlot(EQEmu::CastingSlot slot)
 	{
 		switch (slot) {
-		case EQEmu::CastingSlot::Gem1:
-			return CastingSlot::Gem1;
-		case EQEmu::CastingSlot::Gem2:
-			return CastingSlot::Gem2;
-		case EQEmu::CastingSlot::Gem3:
-			return CastingSlot::Gem3;
-		case EQEmu::CastingSlot::Gem4:
-			return CastingSlot::Gem4;
-		case EQEmu::CastingSlot::Gem5:
-			return CastingSlot::Gem5;
-		case EQEmu::CastingSlot::Gem6:
-			return CastingSlot::Gem6;
-		case EQEmu::CastingSlot::Gem7:
-			return CastingSlot::Gem7;
-		case EQEmu::CastingSlot::Gem8:
-			return CastingSlot::Gem8;
-		case EQEmu::CastingSlot::Gem9:
-			return CastingSlot::Gem9;
-		case EQEmu::CastingSlot::Item:
-			return CastingSlot::Item;
-		case EQEmu::CastingSlot::PotionBelt:
-			return CastingSlot::PotionBelt;
-		case EQEmu::CastingSlot::Discipline:
-			return CastingSlot::Discipline;
-		case EQEmu::CastingSlot::AltAbility:
-			return CastingSlot::AltAbility;
-		default: // we shouldn't have any issues with other slots ... just return something
-			return CastingSlot::Discipline;
+			case EQEmu::CastingSlot::Gem1:
+				return CastingSlot::Gem1;
+			case EQEmu::CastingSlot::Gem2:
+				return CastingSlot::Gem2;
+			case EQEmu::CastingSlot::Gem3:
+				return CastingSlot::Gem3;
+			case EQEmu::CastingSlot::Gem4:
+				return CastingSlot::Gem4;
+			case EQEmu::CastingSlot::Gem5:
+				return CastingSlot::Gem5;
+			case EQEmu::CastingSlot::Gem6:
+				return CastingSlot::Gem6;
+			case EQEmu::CastingSlot::Gem7:
+				return CastingSlot::Gem7;
+			case EQEmu::CastingSlot::Gem8:
+				return CastingSlot::Gem8;
+			case EQEmu::CastingSlot::Gem9:
+				return CastingSlot::Gem9;
+			case EQEmu::CastingSlot::Item:
+				return CastingSlot::Item;
+			case EQEmu::CastingSlot::PotionBelt:
+				return CastingSlot::PotionBelt;
+			case EQEmu::CastingSlot::Discipline:
+				return CastingSlot::Discipline;
+			case EQEmu::CastingSlot::AltAbility:
+				return CastingSlot::AltAbility;
+			default: // we shouldn't have any issues with other slots ... just return something
+				return CastingSlot::Discipline;
 		}
 	}
 
 	static inline EQEmu::CastingSlot TitaniumToServerCastingSlot(CastingSlot slot, uint32 itemlocation)
 	{
 		switch (slot) {
-		case CastingSlot::Gem1:
-			return EQEmu::CastingSlot::Gem1;
-		case CastingSlot::Gem2:
-			return EQEmu::CastingSlot::Gem2;
-		case CastingSlot::Gem3:
-			return EQEmu::CastingSlot::Gem3;
-		case CastingSlot::Gem4:
-			return EQEmu::CastingSlot::Gem4;
-		case CastingSlot::Gem5:
-			return EQEmu::CastingSlot::Gem5;
-		case CastingSlot::Gem6:
-			return EQEmu::CastingSlot::Gem6;
-		case CastingSlot::Gem7:
-			return EQEmu::CastingSlot::Gem7;
-		case CastingSlot::Gem8:
-			return EQEmu::CastingSlot::Gem8;
-		case CastingSlot::Gem9:
-			return EQEmu::CastingSlot::Gem9;
-		case CastingSlot::Ability:
-			return EQEmu::CastingSlot::Ability;
-		// Tit uses 10 for item and discipline casting, but items have a valid location
-		case CastingSlot::Item:
-			if (itemlocation == INVALID_INDEX)
+			case CastingSlot::Gem1:
+				return EQEmu::CastingSlot::Gem1;
+			case CastingSlot::Gem2:
+				return EQEmu::CastingSlot::Gem2;
+			case CastingSlot::Gem3:
+				return EQEmu::CastingSlot::Gem3;
+			case CastingSlot::Gem4:
+				return EQEmu::CastingSlot::Gem4;
+			case CastingSlot::Gem5:
+				return EQEmu::CastingSlot::Gem5;
+			case CastingSlot::Gem6:
+				return EQEmu::CastingSlot::Gem6;
+			case CastingSlot::Gem7:
+				return EQEmu::CastingSlot::Gem7;
+			case CastingSlot::Gem8:
+				return EQEmu::CastingSlot::Gem8;
+			case CastingSlot::Gem9:
+				return EQEmu::CastingSlot::Gem9;
+			case CastingSlot::Ability:
+				return EQEmu::CastingSlot::Ability;
+				// Tit uses 10 for item and discipline casting, but items have a valid location
+			case CastingSlot::Item:
+				if (itemlocation == INVALID_INDEX)
+					return EQEmu::CastingSlot::Discipline;
+				else
+					return EQEmu::CastingSlot::Item;
+			case CastingSlot::PotionBelt:
+				return EQEmu::CastingSlot::PotionBelt;
+			case CastingSlot::AltAbility:
+				return EQEmu::CastingSlot::AltAbility;
+			default: // we shouldn't have any issues with other slots ... just return something
 				return EQEmu::CastingSlot::Discipline;
-			else
-				return EQEmu::CastingSlot::Item;
-		case CastingSlot::PotionBelt:
-			return EQEmu::CastingSlot::PotionBelt;
-		case CastingSlot::AltAbility:
-			return EQEmu::CastingSlot::AltAbility;
-		default: // we shouldn't have any issues with other slots ... just return something
-			return EQEmu::CastingSlot::Discipline;
 		}
 	}
 
@@ -2640,7 +2640,7 @@ namespace Titanium
 		// we're a disc
 		if (index >= EQEmu::constants::LongBuffs + EQEmu::constants::ShortBuffs)
 			return index - EQEmu::constants::LongBuffs - EQEmu::constants::ShortBuffs +
-			       constants::LongBuffs + constants::ShortBuffs;
+				   constants::LongBuffs + constants::ShortBuffs;
 		// we're a song
 		if (index >= EQEmu::constants::LongBuffs)
 			return index - EQEmu::constants::LongBuffs + constants::LongBuffs;
@@ -2653,7 +2653,7 @@ namespace Titanium
 		// we're a disc
 		if (index >= constants::LongBuffs + constants::ShortBuffs)
 			return index - constants::LongBuffs - constants::ShortBuffs + EQEmu::constants::LongBuffs +
-			       EQEmu::constants::ShortBuffs;
+				   EQEmu::constants::ShortBuffs;
 		// we're a song
 		if (index >= constants::LongBuffs)
 			return index - constants::LongBuffs + EQEmu::constants::LongBuffs;
