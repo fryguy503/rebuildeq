@@ -1266,6 +1266,7 @@ void ZoneServer::HandleMessage(uint16 opcode, const EQ::Net::Packet &p) {
 		break;
 	}
 
+	case ServerOP_UCSClientVersionReply:
 	case ServerOP_UCSMailMessage:
 	{
 		UCSLink.SendPacket(pack);
