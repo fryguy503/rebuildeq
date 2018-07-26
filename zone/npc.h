@@ -194,6 +194,7 @@ public:
 	void	AddItem(uint32 itemid, uint16 charges, bool equipitem = true, uint32 aug1 = 0, uint32 aug2 = 0, uint32 aug3 = 0, uint32 aug4 = 0, uint32 aug5 = 0, uint32 aug6 = 0);
 	void	AddLootTable();
 	void	AddLootTable(uint32 ldid);
+	void	CheckGlobalLootTables();
 	void AddCardTable();
 	void AddFeatTable();
 	void AddTeleportTable();
@@ -210,6 +211,7 @@ public:
 	uint32	CountLoot();
 	inline uint32	GetLoottableID()	const { return loottable_id; }
 	virtual void UpdateEquipmentLight();
+	inline bool DropsGlobalLoot() const { return !skip_global_loot; }
 
 	inline uint32	GetCopper()		const { return copper; }
 	inline uint32	GetSilver()		const { return silver; }
@@ -578,6 +580,7 @@ protected:
 
 private:
 	uint32	loottable_id;
+	bool	skip_global_loot;
 	bool	p_depop;
 };
 
