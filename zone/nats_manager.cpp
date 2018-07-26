@@ -680,7 +680,7 @@ void NatsManager::OnSpawnEvent(const EmuOpcode op, uint32 entity_id, Spawn_Struc
 	event.set_equip_chest2(spawn->equip_chest2);
 	event.set_mount_color(spawn->mount_color);
 	event.set_spawnid(spawn->spawnId);
-	event.set_unknown0344(*spawn->unknown0344);
+	event.set_bounding_radius(spawn->bounding_radius);
 	event.set_ismercenary(spawn->IsMercenary);
 	//event.set_equipment_tint(spawn->equipment_tint);
 	event.set_lfg(spawn->lfg);

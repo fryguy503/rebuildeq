@@ -4285,11 +4285,11 @@ class SpawnEvent : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 spawnid() const;
   void set_spawnid(::google::protobuf::uint32 value);
 
-  // uint32 unknown0344 = 76;
-  void clear_unknown0344();
-  static const int kUnknown0344FieldNumber = 76;
-  ::google::protobuf::uint32 unknown0344() const;
-  void set_unknown0344(::google::protobuf::uint32 value);
+  // uint32 bounding_radius = 76;
+  void clear_bounding_radius();
+  static const int kbounding_radiusFieldNumber = 76;
+  float bounding_radius() const;
+  void set_bounding_radius(float value);
 
   // uint32 IsMercenary = 77;
   void clear_ismercenary();
@@ -4488,7 +4488,7 @@ class SpawnEvent : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 equip_chest2_;
   ::google::protobuf::uint32 mount_color_;
   ::google::protobuf::uint32 spawnid_;
-  ::google::protobuf::uint32 unknown0344_;
+  float bounding_radius_;
   ::google::protobuf::uint32 ismercenary_;
   ::google::protobuf::uint32 lfg_;
   ::google::protobuf::uint32 destructibleappearance_;
@@ -8904,18 +8904,18 @@ inline void SpawnEvent::set_spawnid(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:eqproto.SpawnEvent.spawnId)
 }
 
-// uint32 unknown0344 = 76;
-inline void SpawnEvent::clear_unknown0344() {
-  unknown0344_ = 0u;
+// uint32 bounding_radius = 76;
+inline void SpawnEvent::clear_bounding_radius() {
+      bounding_radius_ = 0u;
 }
-inline ::google::protobuf::uint32 SpawnEvent::unknown0344() const {
-  // @@protoc_insertion_point(field_get:eqproto.SpawnEvent.unknown0344)
-  return unknown0344_;
+inline float SpawnEvent::bounding_radius() const {
+  // @@protoc_insertion_point(field_get:eqproto.SpawnEvent.bounding_radius)
+  return bounding_radius_;
 }
-inline void SpawnEvent::set_unknown0344(::google::protobuf::uint32 value) {
-  
-  unknown0344_ = value;
-  // @@protoc_insertion_point(field_set:eqproto.SpawnEvent.unknown0344)
+inline void SpawnEvent::set_bounding_radius(float value) {
+
+  bounding_radius_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.SpawnEvent.bounding_radius)
 }
 
 // uint32 IsMercenary = 77;
