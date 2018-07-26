@@ -726,8 +726,8 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, spellid_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, damage_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, force_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, meleepush_xy_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, meleepush_z_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, hit_heading_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, hit_pitch_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::EntityEvent, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -1025,7 +1025,7 @@ void AddDescriptorsImpl() {
       "\001\n\013DamageEvent\022\016\n\006target\030\001 \001(\r\022\016\n\006source"
       "\030\002 \001(\r\022\014\n\004type\030\003 \001(\r\022\017\n\007spellid\030\004 \001(\r\022\016\n"
       "\006damage\030\005 \001(\r\022\r\n\005force\030\006 \001(\002\022\024\n\014meleepus"
-      "h_xy\030\007 \001(\002\022\023\n\013meleepush_z\030\010 \001(\002\"3\n\013Entit"
+      "h_xy\030\007 \001(\002\022\023\n\013hit_pitch\030\010 \001(\002\"3\n\013Entit"
       "yEvent\022\021\n\tentity_id\030\001 \001(\r\022\021\n\ttarget_id\030\002"
       " \001(\r\"\237\001\n\023ChannelMessageEvent\022\023\n\013target_n"
       "ame\030\001 \001(\t\022\016\n\006sender\030\002 \001(\t\022\020\n\010language\030\003 "
@@ -7702,8 +7702,8 @@ const int DamageEvent::kTypeFieldNumber;
 const int DamageEvent::kSpellidFieldNumber;
 const int DamageEvent::kDamageFieldNumber;
 const int DamageEvent::kForceFieldNumber;
-const int DamageEvent::kMeleepushXyFieldNumber;
-const int DamageEvent::kMeleepushZFieldNumber;
+const int DamageEvent::khit_headingFieldNumber;
+const int DamageEvent::khit_pitchFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 DamageEvent::DamageEvent()
@@ -7720,15 +7720,15 @@ DamageEvent::DamageEvent(const DamageEvent& from)
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&target_, &from.target_,
-    static_cast<size_t>(reinterpret_cast<char*>(&meleepush_z_) -
-    reinterpret_cast<char*>(&target_)) + sizeof(meleepush_z_));
+    static_cast<size_t>(reinterpret_cast<char*>(&hit_pitch_) -
+    reinterpret_cast<char*>(&target_)) + sizeof(hit_pitch_));
   // @@protoc_insertion_point(copy_constructor:eqproto.DamageEvent)
 }
 
 void DamageEvent::SharedCtor() {
   ::memset(&target_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&meleepush_z_) -
-      reinterpret_cast<char*>(&target_)) + sizeof(meleepush_z_));
+      reinterpret_cast<char*>(&hit_pitch_) -
+      reinterpret_cast<char*>(&target_)) + sizeof(hit_pitch_));
   _cached_size_ = 0;
 }
 
@@ -7770,8 +7770,8 @@ void DamageEvent::Clear() {
   (void) cached_has_bits;
 
   ::memset(&target_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&meleepush_z_) -
-      reinterpret_cast<char*>(&target_)) + sizeof(meleepush_z_));
+      reinterpret_cast<char*>(&hit_pitch_) -
+      reinterpret_cast<char*>(&target_)) + sizeof(hit_pitch_));
   _internal_metadata_.Clear();
 }
 
@@ -7869,28 +7869,28 @@ bool DamageEvent::MergePartialFromCodedStream(
         break;
       }
 
-      // float meleepush_xy = 7;
+      // float hit_heading = 7;
       case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(61u /* 61 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &meleepush_xy_)));
+                 input, &hit_heading_)));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // float meleepush_z = 8;
+      // float hit_pitch = 8;
       case 8: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(69u /* 69 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &meleepush_z_)));
+                 input, &hit_pitch_)));
         } else {
           goto handle_unusual;
         }
@@ -7953,14 +7953,14 @@ void DamageEvent::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(6, this->force(), output);
   }
 
-  // float meleepush_xy = 7;
-  if (this->meleepush_xy() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(7, this->meleepush_xy(), output);
+  // float hit_heading = 7;
+  if (this->hit_heading() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(7, this->hit_heading(), output);
   }
 
-  // float meleepush_z = 8;
-  if (this->meleepush_z() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->meleepush_z(), output);
+  // float hit_pitch = 8;
+  if (this->hit_pitch() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->hit_pitch(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -8007,14 +8007,14 @@ void DamageEvent::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(6, this->force(), target);
   }
 
-  // float meleepush_xy = 7;
-  if (this->meleepush_xy() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(7, this->meleepush_xy(), target);
+  // float hit_heading = 7;
+  if (this->hit_heading() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(7, this->hit_heading(), target);
   }
 
-  // float meleepush_z = 8;
-  if (this->meleepush_z() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->meleepush_z(), target);
+  // float hit_pitch = 8;
+  if (this->hit_pitch() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->hit_pitch(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -8074,13 +8074,13 @@ size_t DamageEvent::ByteSizeLong() const {
     total_size += 1 + 4;
   }
 
-  // float meleepush_xy = 7;
-  if (this->meleepush_xy() != 0) {
+  // float hit_heading = 7;
+  if (this->hit_heading() != 0) {
     total_size += 1 + 4;
   }
 
-  // float meleepush_z = 8;
-  if (this->meleepush_z() != 0) {
+  // float hit_pitch = 8;
+  if (this->hit_pitch() != 0) {
     total_size += 1 + 4;
   }
 
@@ -8131,11 +8131,11 @@ void DamageEvent::MergeFrom(const DamageEvent& from) {
   if (from.force() != 0) {
     set_force(from.force());
   }
-  if (from.meleepush_xy() != 0) {
-    set_meleepush_xy(from.meleepush_xy());
+  if (from.hit_heading() != 0) {
+    set_hit_heading(from.hit_heading());
   }
-  if (from.meleepush_z() != 0) {
-    set_meleepush_z(from.meleepush_z());
+  if (from.hit_pitch() != 0) {
+    set_hit_pitch(from.hit_pitch());
   }
 }
 
@@ -8169,8 +8169,8 @@ void DamageEvent::InternalSwap(DamageEvent* other) {
   swap(spellid_, other->spellid_);
   swap(damage_, other->damage_);
   swap(force_, other->force_);
-  swap(meleepush_xy_, other->meleepush_xy_);
-  swap(meleepush_z_, other->meleepush_z_);
+  swap(hit_heading_, other->hit_heading_);
+  swap(hit_pitch_, other->hit_pitch_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
 }

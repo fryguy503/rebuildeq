@@ -801,8 +801,8 @@ void NatsManager::OnDamageEvent(uint32 entity_id, CombatDamage_Struct *cd) {
 	event.set_spellid(cd->spellid);
 	event.set_damage(cd->damage);
 	event.set_force(cd->force);
-	event.set_meleepush_xy(cd->meleepush_xy);
-	event.set_meleepush_z(cd->meleepush_z);
+	event.set_hit_heading(cd->hit_heading);
+	event.set_hit_pitch(cd->hit_pitch);
 	
 	if (!event.SerializeToString(&pubMessage)) { Log(Logs::General, Logs::NATS, "Failed to serialize message to string"); return; }
 	auto finalEvent = eqproto::Event();
