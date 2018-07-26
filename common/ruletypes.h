@@ -159,6 +159,7 @@ RULE_BOOL(Character, UseOldBindWound, false) // Uses the original bind wound beh
 RULE_BOOL(Character, GrantHoTTOnCreate, false) // Grant Health of Target's Target leadership AA on character creation
 RULE_BOOL(Character, UseOldConSystem, false) // Grant Health of Target's Target leadership AA on character creation
 RULE_BOOL(Character, OPClientUpdateVisualDebug, false) // Shows a pulse and forward directional particle each time the client sends its position to server
+RULE_BOOL(Character, PetsUseReagents, true) //Pets use reagent on spells
 RULE_BOOL(AA, NormalizedAAEnabled, false) // TSS+ change to AA that normalizes AA XP to a fixed # of white con kills independent of level.
 RULE_INT(AA, NormalizedAANumberOfWhiteConPerAA, 25) // The number of white con kills per AA point.
 RULE_BOOL(AA, ModernAAScalingEnabled, false) // Are we linearly scaling AA XP based on total # of earned AA?
