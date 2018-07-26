@@ -2114,8 +2114,8 @@ type DamageEvent struct {
 	Spellid     uint32  `protobuf:"varint,4,opt,name=spellid" json:"spellid,omitempty"`
 	Damage      uint32  `protobuf:"varint,5,opt,name=damage" json:"damage,omitempty"`
 	Force       float32 `protobuf:"fixed32,6,opt,name=force" json:"force,omitempty"`
-	MeleepushXy float32 `protobuf:"fixed32,7,opt,name=meleepush_xy,json=meleepushXy" json:"meleepush_xy,omitempty"`
-	MeleepushZ  float32 `protobuf:"fixed32,8,opt,name=meleepush_z,json=meleepushZ" json:"meleepush_z,omitempty"`
+	MeleepushXy float32 `protobuf:"fixed32,7,opt,name=hit_heading,json=hit_heading" json:"hit_heading,omitempty"`
+	MeleepushZ  float32 `protobuf:"fixed32,8,opt,name=hit_pitch,json=hit_pitch" json:"hit_pitch,omitempty"`
 }
 
 func (m *DamageEvent) Reset()                    { *m = DamageEvent{} }

@@ -128,8 +128,8 @@ message DamageEvent {
   uint32 spellid = 4;
   uint32 damage = 5;
   float force = 6;
-  float meleepush_xy = 7;	// see above notes in Action_Struct
-  float meleepush_z = 8;
+  float hit_heading = 7;	// see above notes in Action_Struct
+  float hit_pitch = 8;
 }
 
 //OP_Assist OP_Camp
