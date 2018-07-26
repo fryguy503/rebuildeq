@@ -1431,7 +1431,7 @@ void Mob::AI_Process() {
 							if (dist >= 5625)
 								speed = GetRunspeed();
 
-							if (distz > 100) {
+							if (dist >= 202500 || distz > 100) { // dist >= 450
 								m_Position = ownerPos;
 								SendPositionUpdate();
 								moved = true;
