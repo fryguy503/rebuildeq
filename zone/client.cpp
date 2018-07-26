@@ -260,6 +260,8 @@ Client::Client(EQStreamInterface* ieqs)
 	InitializeMercInfo();
 	SetMerc(0);
 
+	if (RuleI(World, PVPMinLevel) > 0 && level >= RuleI(World, PVPMinLevel) && m_pp.pvp == 0) SetPVP(true, false);
+
 	logging_enabled = CLIENT_DEFAULT_LOGGING_ENABLED;
 
 	//for good measure:

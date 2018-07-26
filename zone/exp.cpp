@@ -944,7 +944,9 @@ void Client::SetLevel(uint8 set_level, bool command)
 	}
 
 	UpdateSkillsAndSpells();
-	
+
+	if (RuleI(World, PVPMinLevel) > 0 && level >= RuleI(World, PVPMinLevel) && m_pp.pvp == 0) SetPVP(true);
+
 	DoTributeUpdate();
 	SendHPUpdate();
 	SetMana(CalcMaxMana());
