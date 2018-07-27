@@ -2892,21 +2892,18 @@ void Mob::BardPulse(uint16 spell_id, Mob *caster) {
 		if (buffs[buffs_i].spellid != spell_id)
 			continue;
 		if (buffs[buffs_i].casterid != caster->GetID()) {
-			Log(Logs::Detail, Logs::Spells,
-				"Bard Pulse for %d: found buff from caster %d and we are pulsing for %d... are there two bards playing the same song???",
-				spell_id, buffs[buffs_i].casterid, caster->GetID());
+			Log(Logs::Detail, Logs::Spells, "Bard Pulse for %d: found buff from caster %d and we are pulsing for %d... are there two bards playing the same song???", spell_id, buffs[buffs_i].casterid, caster->GetID());
 			return;
 		}
 		//extend the spell if it will expire before the next pulse
 		if (buffs[buffs_i].ticsremaining <= 3) {
 			buffs[buffs_i].ticsremaining += 3;
-			Log(Logs::Detail, Logs::Spells, "Bard Song Pulse %d: extending duration in slot %d to %d tics", spell_id,
-				buffs_i, buffs[buffs_i].ticsremaining);
+			Log(Logs::Detail, Logs::Spells, "Bard Song Pulse %d: extending duration in slot %d to %d tics", spell_id, buffs_i, buffs[buffs_i].ticsremaining);
 		}
 
 		//should we send this buff update to the client... seems like it would
 		//be a lot of traffic for no reason...
-//this may be the wrong packet...
+		//this may be the wrong packet...
 		if (IsClient()) {
 			auto packet = new EQApplicationPacket(OP_Action, sizeof(Action_Struct));
 
@@ -2921,24 +2918,29 @@ void Mob::BardPulse(uint16 spell_id, Mob *caster) {
 			action->effect_flag = 0;
 			action->spell_level = action->level = buffs[buffs_i].casterlevel;
 			action->type = DamageTypeSpell;
-			entity_list.QueueCloseClients(this, packet, false, RuleI(Range, SongMessages), 0, true,
-										  IsClient() ? FilterPCSpells : FilterNPCSpells);
+			entity_list.QueueCloseClients(this, packet, false, RuleI(Range, SongMessages), 0, true, IsClient() ? FilterPCSpells : FilterNPCSpells);
 
 			action->effect_flag = 4;
 
-			if (spells[spell_id].pushback > 0 || spells[spell_id].pushup > 0) {
-				if (IsClient()) {
-					if (!IsBuffSpell(spell_id)) {
+			if(spells[spell_id].pushback != 0.0f || spells[spell_id].pushup != 0.0f)
+			{
+				if(IsClient())
+				{
+					if(!IsBuffSpell(spell_id))
+					{
 						CastToClient()->SetKnockBackExemption(true);
+
 					}
 				}
 			}
 
-			if (IsClient() && IsEffectInSpell(spell_id, SE_ShadowStep)) {
+			if(IsClient() && IsEffectInSpell(spell_id, SE_ShadowStep))
+			{
 				CastToClient()->SetShadowStepExemption(true);
 			}
 
-			if (!IsEffectInSpell(spell_id, SE_BindAffinity)) {
+			if(!IsEffectInSpell(spell_id, SE_BindAffinity))
+			{
 				CastToClient()->QueuePacket(packet);
 			}
 
@@ -2952,9 +2954,9 @@ void Mob::BardPulse(uint16 spell_id, Mob *caster) {
 			cd->hit_heading = action->hit_heading;
 			cd->hit_pitch = action->hit_pitch;
 			cd->damage = 0;
-			if (!IsEffectInSpell(spell_id, SE_BindAffinity)) {
-				entity_list.QueueCloseClients(this, message_packet, false, RuleI(Range, SongMessages), 0, true,
-											  IsClient() ? FilterPCSpells : FilterNPCSpells);
+			if(!IsEffectInSpell(spell_id, SE_BindAffinity))
+			{
+				entity_list.QueueCloseClients(this, message_packet, false, RuleI(Range, SongMessages), 0, true, IsClient() ? FilterPCSpells : FilterNPCSpells);
 			}
 			safe_delete(message_packet);
 			safe_delete(packet);
@@ -4505,7 +4507,7 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob *spelltar, bool reflect, bool use_r
 	// the complete sequence is 2 actions and 1 damage message
 	action->effect_flag = 0x04;	// this is a success flag
 
-	if(spells[spell_id].pushback > 0 || spells[spell_id].pushup > 0) {
+	if(spells[spell_id].pushback != 0.0f || spells[spell_id].pushup != 0.0f) {
 		if (spelltar->IsClient()) {
 			if (!IsBuffSpell(spell_id)) {
 				spelltar->CastToClient()->SetKnockBackExemption(true);
