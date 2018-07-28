@@ -81,6 +81,7 @@ Copyright (C) 2001-2002 EQEMu Development Team (http://eqemu.org)
 #include "quest_parser_collection.h"
 #include "string_ids.h"
 #include "worldserver.h"
+#include "fastmath.h"
 #include "nats_manager.h"
 
 #include <assert.h>
@@ -105,6 +106,7 @@ Copyright (C) 2001-2002 EQEMu Development Team (http://eqemu.org)
 extern Zone* zone;
 extern volatile bool is_zone_loaded;
 extern WorldServer worldserver;
+extern FastMath g_Math;
 extern NatsManager nats;
 
 using EQEmu::CastingSlot;
@@ -4512,6 +4514,11 @@ bool Mob::SpellOnTarget(uint16 spell_id, Mob *spelltar, bool reflect, bool use_r
 			if (!IsBuffSpell(spell_id)) {
 				spelltar->CastToClient()->SetKnockBackExemption(true);
 			}
+		} else if (RuleB(Spells, NPCSpellPush) && !spelltar->IsRooted() && spelltar->ForcedMovement == 0) {
+			spelltar->m_Delta.x += action->force * g_Math.FastSin(action->hit_heading);
+			spelltar->m_Delta.y += action->force * g_Math.FastCos(action->hit_heading);
+			spelltar->m_Delta.z += action->hit_pitch;
+			spelltar->ForcedMovement = 6;
 		}
 	}
 
