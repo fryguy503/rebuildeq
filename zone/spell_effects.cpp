@@ -4773,7 +4773,7 @@ void Mob::DoBuffTic(const Buffs_Struct &buff, int slot, Mob *caster)
 		case SE_CastOnFadeEffectAlways: {
 			if (buff.ticsremaining == 0) {
 				if (buff.spellid == 8205) break; //don't bother reapplying blood magic for RB_NEC_BLOODMAGIC
-				SpellOnTarget(spells[buff.spellid].base[i], this);
+				SpellFinished(spells[buff.spellid].base[i], this, EQEmu::CastingSlot::Item, 0, -1, spells[spells[buff.spellid].base[i]].ResistDiff);
 			}
 			break;
 		}
