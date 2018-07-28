@@ -14123,6 +14123,11 @@ void Client::Handle_OP_Taunt(const EQApplicationPacket *app)
 	if (GetTarget() == nullptr || !GetTarget()->IsNPC())
 		return;
 
+	if (!zone->CanDoCombat()) {
+		Message(13, "You cannot taunt in a no combat zone.");
+		return;
+	}
+
 	Taunt(GetTarget()->CastToNPC(), false);
 	return;
 }

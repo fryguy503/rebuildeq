@@ -1545,7 +1545,8 @@ void NPC::PickPocket(Client* thief)
 
 	//5 % chance caught no matter what
 	if (zone->random.Roll(5)) {
-		AddToHateList(thief, 50);
+        if (zone->CanDoCombat())
+            AddToHateList(thief, 50);
 		//Talk if you're a playable NPC race
 		if (GetRace() == DARK_ELF ||
 			GetRace() == HIGH_ELF ||
