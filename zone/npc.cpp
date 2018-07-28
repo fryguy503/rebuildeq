@@ -771,6 +771,11 @@ bool NPC::Process()
 		reface_timer->Disable();
 	}
 
+	// needs to be done before mez and stun
+	if (ForcedMovement)
+		ProcessForcedMovement();
+
+
 	if (IsMezzed())
 		return true;
 
