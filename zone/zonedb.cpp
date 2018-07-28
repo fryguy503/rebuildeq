@@ -1660,6 +1660,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 	/* If this is ever zero - the client hasn't fully loaded and potentially crashed during zone */
 	if (account_id <= 0)
 		return false;
+	std::string mail_key = database.GetMailKey(character_id);
+
 	clock_t t = std::clock(); /* Function timer start */
 	std::string query = StringFormat(
 		"REPLACE INTO `character_data` ("
@@ -1760,7 +1762,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		" session_timeout,			 "
 		" build_data,				 "
 		" rested_exp,				 "
-		" e_last_invsnapshot		 "
+		" e_last_invsnapshot,		 "
+		" mailkey					 "
 		")							 "
 		"VALUES ("
 		"%u,"  // id																" id,                        "
@@ -1860,7 +1863,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		"%u,"  // session_timeout
 		"'%s',"  // build
 		"%f,"  // rested_exp
-		"%u"   // e_last_invsnapshot
+		"%u,"  // e_last_invsnapshot
+		"'%s'" // mailkey					  mail_key
 		")",
 		character_id,					  // " id,                        "
 		account_id,						  // " account_id,                "
@@ -1959,7 +1963,8 @@ bool ZoneDatabase::SaveCharacterData(uint32 character_id, uint32 account_id, Pla
 		m_epp->session_timeout,
 		EscapeString(buildbuffer).c_str(),
 		m_epp->rested_exp,
-		m_epp->last_invsnapshot_time
+		m_epp->last_invsnapshot_time,
+		mail_key.c_str()
 	);
 	//Log(Logs::General, Logs::Zone_Server);
 

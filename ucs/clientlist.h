@@ -46,33 +46,33 @@ struct CommandEntry {
 typedef enum { ConnectionTypeUnknown, ConnectionTypeCombined, ConnectionTypeMail, ConnectionTypeChat } ConnectionType;
 
 static const CommandEntry Commands[] = {
-					{ "join", CommandJoin },
-					{ "leaveall", CommandLeaveAll },
-					{ "leave", CommandLeave },
-					{ "listall", CommandListAll },
-					{ "list", CommandList },
-					{ "set", CommandSet },
-					{ "announce", CommandAnnounce },
-					{ "setowner", CommandSetOwner },
-					{ "oplist", CommandOPList },
-					{ "invite", CommandInvite },
-					{ "grant", CommandGrant },
-					{ "moderate", CommandModerate },
-					{ "voice", CommandVoice },
-					{ "kick", CommandKick },
-					{ "password", CommandPassword },
-					{ "toggleinvites", CommandToggleInvites },
-					{ "afk", CommandAFK },
-					{ "uptime", CommandUptime },
-					{ "getheaders", CommandGetHeaders },
-					{ "getbody", CommandGetBody },
-					{ "mailto", CommandMailTo },
-					{ "setmessagestatus", CommandSetMessageStatus },
-					{ "selectmailbox", CommandSelectMailBox },
-					{ "setmailforwarding", CommandSetMailForwarding },
-					{ "buddy", CommandBuddy },
-					{ "ignoreplayer", CommandIgnorePlayer },
-					{ "", CommandEndOfList } };
+		{ "join", CommandJoin },
+		{ "leaveall", CommandLeaveAll },
+		{ "leave", CommandLeave },
+		{ "listall", CommandListAll },
+		{ "list", CommandList },
+		{ "set", CommandSet },
+		{ "announce", CommandAnnounce },
+		{ "setowner", CommandSetOwner },
+		{ "oplist", CommandOPList },
+		{ "invite", CommandInvite },
+		{ "grant", CommandGrant },
+		{ "moderate", CommandModerate },
+		{ "voice", CommandVoice },
+		{ "kick", CommandKick },
+		{ "password", CommandPassword },
+		{ "toggleinvites", CommandToggleInvites },
+		{ "afk", CommandAFK },
+		{ "uptime", CommandUptime },
+		{ "getheaders", CommandGetHeaders },
+		{ "getbody", CommandGetBody },
+		{ "mailto", CommandMailTo },
+		{ "setmessagestatus", CommandSetMessageStatus },
+		{ "selectmailbox", CommandSelectMailBox },
+		{ "setmailforwarding", CommandSetMailForwarding },
+		{ "buddy", CommandBuddy },
+		{ "ignoreplayer", CommandIgnorePlayer },
+		{ "", CommandEndOfList } };
 
 struct CharacterEntry {
 	int CharID;
@@ -140,10 +140,8 @@ public:
 	int GetMailBoxNumber() { return CurrentMailBox; }
 	int GetMailBoxNumber(std::string CharacterName);
 
-	char GetRawConnectionType() { return RawConnectionType; }
 	void SetConnectionType(char c);
 	ConnectionType GetConnectionType() { return TypeOfConnection; }
-	void SetClientVersion(EQEmu::versions::ClientVersion client_version) { ClientVersion_ = client_version; }
 	EQEmu::versions::ClientVersion GetClientVersion() { return ClientVersion_; }
 
 	inline bool IsMailConnection() { return (TypeOfConnection == ConnectionTypeMail) || (TypeOfConnection == ConnectionTypeCombined); }
@@ -173,7 +171,6 @@ private:
 	int AttemptedMessages;
 	bool ForceDisconnect;
 
-	char RawConnectionType;
 	ConnectionType TypeOfConnection;
 	EQEmu::versions::ClientVersion ClientVersion_;
 	bool UnderfootOrLater;
@@ -189,20 +186,11 @@ public:
 	void	CheckForStaleConnections(Client *c);
 	Client *IsCharacterOnline(std::string CharacterName);
 	void ProcessOPMailCommand(Client *c, std::string CommandString);
-	std::list<uint32> ClientVersionRequestIDs;
-
-	void RequestClientVersion(uint32 character_id);
-	bool QueueClientVersionReply(uint32 character_id, EQEmu::versions::ClientVersion client_version);
-	bool CheckForClientVersionReply(Client* c);
 
 private:
-
-	typedef std::pair<EQEmu::versions::ClientVersion, uint32> cvt_pair;
 	EQ::Net::EQStreamManager *chatsf;
 
 	std::list<Client*> ClientChatConnections;
-	std::map<uint32, uint32> ClientVersionRequestQueue;
-	std::map<uint32, cvt_pair> ClientVersionReplyQueue;
 
 	OpcodeManager *ChatOpMgr;
 };
