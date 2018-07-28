@@ -7769,8 +7769,27 @@ void Client::JoinGroupXTargets(Group *g)
 	if (!g)
 		return;
 
+	// test code for merge crashes - hopefully gcc won't optimize these out...
+	auto c1 = GetXTargetAutoMgr()->get_list().empty();
+	auto c2 = GetXTargetAutoMgr()->get_list().size();
+	auto c3 = GetXTargetAutoMgr()->get_list().begin();
+	auto c4 = GetXTargetAutoMgr()->get_list().end();
+	auto c5 = GetXTargetAutoMgr()->get_list().rbegin();
+	auto c6 = GetXTargetAutoMgr()->get_list().rend();
+	auto g1 = g->GetXTargetAutoMgr()->get_list().empty();
+	auto g2 = g->GetXTargetAutoMgr()->get_list().size();
+	auto g3 = g->GetXTargetAutoMgr()->get_list().begin();
+	auto g4 = g->GetXTargetAutoMgr()->get_list().end();
+	auto g5 = g->GetXTargetAutoMgr()->get_list().rbegin();
+	auto g6 = g->GetXTargetAutoMgr()->get_list().rend();
+
 	if (!GetXTargetAutoMgr()->empty()) {
-		g->GetXTargetAutoMgr()->merge(*GetXTargetAutoMgr());
+		Log(Logs::Detail, Logs::Error, "XTarget Merge[clt] empty=%s, size=%u, (begin==end)=%s, (rbegin==rend)=%s",
+			(c1?"true":"false"), c2, (c3==c4?"true":"false"), (c5==c6?"true":"false"));
+		Log(Logs::Detail, Logs::Error, "XTarget Merge[grp] empty=%s, size=%u, (begin==end)=%s, (rbegin==rend)=%s",
+			(g1?"true":"false"), g2, (g3==g4?"true":"false"), (g5==g6?"true":"false"));
+
+        g->GetXTargetAutoMgr()->merge(*GetXTargetAutoMgr());
 		GetXTargetAutoMgr()->clear();
 		RemoveAutoXTargets();
 	}
@@ -7787,7 +7806,7 @@ void Client::LeaveGroupXTargets(Group *g)
 	if (!g)
 		return;
 
-	SetXTargetAutoMgr(nullptr); // this will set it back to our manager
+    SetXTargetAutoMgr(nullptr); // this will set it back to our manager
 	RemoveAutoXTargets();
 	entity_list.RefreshAutoXTargets(this); // this will probably break the temporal ordering, but whatever
 	// We now have a rebuilt, valid auto hater manager, so we need to demerge from the groups
