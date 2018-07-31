@@ -295,11 +295,11 @@ Map *Map::LoadMapFile(std::string file) {
 		filename = Config->MapDir;
 	}
 	std::transform(file.begin(), file.end(), file.begin(), ::tolower);
-	filename += "/";
+	filename += "/base/";
 	filename += file;
 	filename += ".map";
 
-	Log(Logs::General, Logs::Status, "Attempting to load Map File :: '%s'", filename.c_str());
+	Log(Logs::General, Logs::Status, "Attempting to load Map File '%s'", filename.c_str());
 
 	auto m = new Map();
 	if (m->Load(filename)) {
@@ -332,12 +332,12 @@ bool Map::Load(std::string filename)
 		}
 		
 		if(version == 0x01000000) {
-			Log(Logs::General, Logs::Status, "Loaded V1 Map File :: '%s'", filename.c_str());
+			Log(Logs::General, Logs::Status, "Loaded V1 Map File '%s'", filename.c_str());
 			bool v = LoadV1(f);
 			fclose(f);
 			return v;
 		} else if(version == 0x02000000) {
-			Log(Logs::General, Logs::Status, "Loaded V2 Map File :: '%s'", filename.c_str());
+			Log(Logs::General, Logs::Status, "Loaded V2 Map File '%s'", filename.c_str());
 			bool v = LoadV2(f);
 			fclose(f);
 
