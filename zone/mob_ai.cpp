@@ -592,9 +592,6 @@ void Client::AI_Stop() {
 
 // only call this on a zone shutdown event
 void Mob::AI_ShutDown() {
-	safe_delete(PathingLOSCheckTimer);
-	safe_delete(PathingRouteUpdateTimerShort);
-	safe_delete(PathingRouteUpdateTimerLong);
 
 	attack_timer.Disable();
 	attack_dw_timer.Disable();
@@ -799,7 +796,7 @@ void Client::AI_Process()
 						CalculateNewFearpoint();
 					}
 					if(!RuleB(Pathing, Fear) || !zone->pathing)
-						CalculateNewPosition2(m_FearWalkTarget.x, m_FearWalkTarget.y, m_FearWalkTarget.z, speed, true);
+						CalculateNewPosition(m_FearWalkTarget.x, m_FearWalkTarget.y, m_FearWalkTarget.z, speed, true);
 					else
 					{
 						bool WaypointChanged, NodeReached;
@@ -810,7 +807,7 @@ void Client::AI_Process()
 						if(WaypointChanged)
 							tar_ndx = 20;
 
-						CalculateNewPosition2(Goal.x, Goal.y, Goal.z, speed);
+						CalculateNewPosition(Goal.x, Goal.y, Goal.z, speed);
 					}
 				}
 				return;
@@ -882,7 +879,7 @@ void Client::AI_Process()
 					newspeed *= 2;
 					SetCurrentSpeed(newspeed);
 					if(!RuleB(Pathing, Aggro) || !zone->pathing)
-						CalculateNewPosition2(GetTarget()->GetX(), GetTarget()->GetY(), GetTarget()->GetZ(), newspeed);
+						CalculateNewPosition(GetTarget()->GetX(), GetTarget()->GetY(), GetTarget()->GetZ(), newspeed);
 					else
 					{
 						bool WaypointChanged, NodeReached;
@@ -892,7 +889,7 @@ void Client::AI_Process()
 						if(WaypointChanged)
 							tar_ndx = 20;
 
-						CalculateNewPosition2(Goal.x, Goal.y, Goal.z, newspeed);
+						CalculateNewPosition(Goal.x, Goal.y, Goal.z, newspeed);
 					}
 				}
 			}
@@ -941,7 +938,7 @@ void Client::AI_Process()
 					nspeed *= 2;
 					SetCurrentSpeed(nspeed);
 
-					CalculateNewPosition2(owner->GetX(), owner->GetY(), owner->GetZ(), nspeed);
+					CalculateNewPosition(owner->GetX(), owner->GetY(), owner->GetZ(), nspeed);
 				}
             } else {
                 if (moved) {
@@ -1076,7 +1073,7 @@ void Mob::AI_Process() {
 					}
 					if(!RuleB(Pathing, Fear) || !zone->pathing)
 					{
-						CalculateNewPosition2(m_FearWalkTarget.x, m_FearWalkTarget.y, m_FearWalkTarget.z, GetFearSpeed(), true);
+						CalculateNewPosition(m_FearWalkTarget.x, m_FearWalkTarget.y, m_FearWalkTarget.z, GetFearSpeed(), true);
 					}
 					else
 					{
@@ -1088,7 +1085,7 @@ void Mob::AI_Process() {
 						if(WaypointChanged)
 							tar_ndx = 20;
 
-						CalculateNewPosition2(Goal.x, Goal.y, Goal.z, GetFearSpeed());
+						CalculateNewPosition(Goal.x, Goal.y, Goal.z, GetFearSpeed());
 					}
 				}
 				return;
@@ -1419,7 +1416,7 @@ void Mob::AI_Process() {
 					if (!IsRooted()) {
 						Log(Logs::Detail, Logs::AI, "Pursuing %s while engaged.", target->GetName());
 						if (!RuleB(Pathing, Aggro) || !zone->pathing)
-							CalculateNewPosition2(target->GetX(), target->GetY(), target->GetZ(), GetRunspeed());
+							CalculateNewPosition(target->GetX(), target->GetY(), target->GetZ(), GetRunspeed());
 						else
 						{
 							bool WaypointChanged, NodeReached;
@@ -1430,7 +1427,7 @@ void Mob::AI_Process() {
 							if (WaypointChanged)
 								tar_ndx = 20;
 
-							CalculateNewPosition2(Goal.x, Goal.y, Goal.z, GetRunspeed());
+							CalculateNewPosition(Goal.x, Goal.y, Goal.z, GetRunspeed());
 						}
 
 					}
@@ -1521,8 +1518,16 @@ void Mob::AI_Process() {
 								SendPositionUpdate();
 								moved = true;
 							} else {
-								CalculateNewPosition2(owner->GetX(),
-													  owner->GetY(), owner->GetZ(), speed);
+								if (dist >= 202500 || distz > 100) // dist >= 450
+								{
+									m_Position = ownerPos;
+									SendPositionUpdate();
+									moved = true;
+								}
+								else
+								{
+									CalculateNewPosition(owner->GetX(), owner->GetY(), owner->GetZ(), speed);
+								}
 							}
 						} else {
 							if (moved) {
@@ -1580,7 +1585,7 @@ void Mob::AI_Process() {
 						int speed = GetWalkspeed();
 						if (dist2 >= followdist + 150)
 							speed = GetRunspeed();
-						CalculateNewPosition2(follow->GetX(), follow->GetY(), follow->GetZ(), speed);
+						CalculateNewPosition(follow->GetX(), follow->GetY(), follow->GetZ(), speed);
 					}
 					else
 					{
@@ -1632,11 +1637,11 @@ void NPC::AI_DoMovement() {
 
 	if (roambox_distance > 0) {
 		if (
-			roambox_movingto_x > roambox_max_x
-			|| roambox_movingto_x < roambox_min_x
-			|| roambox_movingto_y > roambox_max_y
-			|| roambox_movingto_y < roambox_min_y
-			)
+				roambox_movingto_x > roambox_max_x
+				|| roambox_movingto_x < roambox_min_x
+				|| roambox_movingto_y > roambox_max_y
+				|| roambox_movingto_y < roambox_min_y
+				)
 		{
 			float movedist = roambox_distance*roambox_distance;
 			float movex = zone->random.Real(0, movedist);
@@ -1658,15 +1663,17 @@ void NPC::AI_DoMovement() {
 				roambox_movingto_x = zone->random.Real(roambox_min_x+1,roambox_max_x-1);
 			if (roambox_movingto_y > roambox_max_y || roambox_movingto_y < roambox_min_y)
 				roambox_movingto_y = zone->random.Real(roambox_min_y+1,roambox_max_y-1);
-			Log(Logs::Detail, Logs::AI, 
+			Log(Logs::Detail, Logs::AI,
 				"Roam Box: d=%.3f (%.3f->%.3f,%.3f->%.3f): Go To (%.3f,%.3f)",
-				roambox_distance, roambox_min_x, roambox_max_x, roambox_min_y, 
+				roambox_distance, roambox_min_x, roambox_max_x, roambox_min_y,
 				roambox_max_y, roambox_movingto_x, roambox_movingto_y);
 		}
+		Log(Logs::Detail, Logs::AI, "Roam Box: d=%.3f (%.3f->%.3f,%.3f->%.3f): Go To (%.3f,%.3f)",
+			roambox_distance, roambox_min_x, roambox_max_x, roambox_min_y, roambox_max_y, roambox_movingto_x, roambox_movingto_y);
 
-		// Keep calling with updates, using wherever we are in Z.
-		if (!MakeNewPositionAndSendUpdate(roambox_movingto_x, 
-				roambox_movingto_y, m_Position.z, walksp))
+		float new_z = this->FindGroundZ(m_Position.x, m_Position.y, 5) + GetZOffset();
+
+		if (!CalculateNewPosition(roambox_movingto_x, roambox_movingto_y, new_z, walksp, true))
 		{
 			this->FixZ(); // FixZ on final arrival point.
 			roambox_movingto_x = roambox_max_x + 1; // force update
@@ -1683,7 +1690,6 @@ void NPC::AI_DoMovement() {
 			AI_walking_timer->Disable();
 		}
 
-
 		int32 gridno = CastToNPC()->GetGrid();
 
 		if (gridno > 0 || cur_wp==-2) {
@@ -1696,7 +1702,7 @@ void NPC::AI_DoMovement() {
 				if (m_CurrentWayPoint.x == GetX() && m_CurrentWayPoint.y == GetY())
 				{	// are we there yet? then stop
 					Log(Logs::Detail, Logs::AI, "We have reached waypoint %d (%.3f,%.3f,%.3f) on grid %d", cur_wp, GetX(), GetY(), GetZ(), GetGrid());
-					
+
 					SetWaypointPause();
 					SetAppearance(eaStanding, false);
 					SetMoving(false);
@@ -1704,7 +1710,9 @@ void NPC::AI_DoMovement() {
 						SetHeading(m_CurrentWayPoint.w);
 					}
 
-					this->FixZ();
+					if(this->GetRace() != 72 && this->GetRace() != 73 && this->GetRace() != 141 && zone->GetZoneID() != 216) {
+						this->FixZ(1);
+					}
 
 					SendPosition();
 
@@ -1723,35 +1731,34 @@ void NPC::AI_DoMovement() {
 					}
 
 					// wipe feign memory since we reached our first waypoint
-					if(cur_wp == 1)
+					if (cur_wp == 1) {
 						ClearFeignMemory();
+					}
 				}
 				if (doMove)
 				{	// not at waypoint yet or at 0 pause WP, so keep moving
 					if(!RuleB(Pathing, AggroReturnToGrid) || !zone->pathing || (DistractedFromGrid == 0))
-						CalculateNewPosition2(m_CurrentWayPoint.x, m_CurrentWayPoint.y, m_CurrentWayPoint.z, walksp, true);
+						CalculateNewPosition(m_CurrentWayPoint.x, m_CurrentWayPoint.y, m_CurrentWayPoint.z, walksp, true);
 					else
 					{
 						bool WaypointChanged;
 						bool NodeReached;
-						glm::vec3 Goal = UpdatePath(m_CurrentWayPoint.x, m_CurrentWayPoint.y, m_CurrentWayPoint.z, walksp, WaypointChanged, NodeReached);
+						glm::vec3 Goal = UpdatePath(m_CurrentWayPoint.x, m_CurrentWayPoint.y, m_CurrentWayPoint.z,
+													walksp, WaypointChanged, NodeReached);
 						if(WaypointChanged)
 							tar_ndx = 20;
 
 						if(NodeReached)
 							entity_list.OpenDoorsNear(CastToNPC());
 
-						CalculateNewPosition2(Goal.x, Goal.y, Goal.z, walksp, true);
+						CalculateNewPosition(Goal.x, Goal.y, Goal.z, walksp, true);
 					}
-
 				}
 			}
 		}		// endif (gridno > 0)
 // handle new quest grid command processing
-		else if (gridno < 0)
-		{	// this mob is under quest control
-			if (movetimercompleted==true)
-			{ // time to pause has ended
+		else if (gridno < 0) {    // this mob is under quest control
+			if (movetimercompleted == true) { // time to pause has ended
 				SetGrid( 0 - GetGrid()); // revert to AI control
 				Log(Logs::Detail, Logs::Pathing, "Quest pathing is finished. Resuming on grid %d", GetGrid());
 
@@ -1760,39 +1767,35 @@ void NPC::AI_DoMovement() {
 				CalculateNewWaypoint();
 			}
 		}
-
-	}
-	else if (IsGuarding())
-	{
+	} else if (IsGuarding()) {
 		bool CP2Moved;
 		if(!RuleB(Pathing, Guard) || !zone->pathing)
-			CP2Moved = CalculateNewPosition2(m_GuardPoint.x, m_GuardPoint.y, m_GuardPoint.z, walksp);
+			CP2Moved = CalculateNewPosition(m_GuardPoint.x, m_GuardPoint.y, m_GuardPoint.z, walksp);
 		else
 		{
 			if(!((m_Position.x == m_GuardPoint.x) && (m_Position.y == m_GuardPoint.y) && (m_Position.z == m_GuardPoint.z)))
 			{
 				bool WaypointChanged, NodeReached;
-				glm::vec3 Goal = UpdatePath(m_GuardPoint.x, m_GuardPoint.y, m_GuardPoint.z, walksp, WaypointChanged, NodeReached);
+				glm::vec3 Goal = UpdatePath(m_GuardPoint.x, m_GuardPoint.y, m_GuardPoint.z, walksp, WaypointChanged,
+											NodeReached);
 				if(WaypointChanged)
 					tar_ndx = 20;
 
 				if(NodeReached)
 					entity_list.OpenDoorsNear(CastToNPC());
 
-				CP2Moved = CalculateNewPosition2(Goal.x, Goal.y, Goal.z, walksp);
-			}
-			else
+				CP2Moved = CalculateNewPosition(Goal.x, Goal.y, Goal.z, walksp);
+			} else
 				CP2Moved = false;
 
 		}
-		if (!CP2Moved)
-		{
+		if (!CP2Moved) {
 			if(moved) {
-				Log(Logs::Detail, Logs::AI, "Reached guard point (%.3f,%.3f,%.3f)", m_GuardPoint.x, m_GuardPoint.y, m_GuardPoint.z);
+				Log(Logs::Detail, Logs::AI, "Reached guard point (%.3f,%.3f,%.3f)", m_GuardPoint.x, m_GuardPoint.y,
+					m_GuardPoint.z);
 				ClearFeignMemory();
 				moved=false;
-				if (GetTarget() == nullptr || DistanceSquared(m_Position, GetTarget()->GetPosition()) >= 5*5 )
-				{
+				if (GetTarget() == nullptr || DistanceSquared(m_Position, GetTarget()->GetPosition()) >= 5 * 5) {
 					SetHeading(m_GuardPoint.w);
 				} else {
 					FaceTarget(GetTarget());
@@ -1803,6 +1806,7 @@ void NPC::AI_DoMovement() {
 		}
 	}
 }
+
 
 void NPC::AI_SetupNextWaypoint() {
 	int32 spawn_id = this->GetSpawnPointID();

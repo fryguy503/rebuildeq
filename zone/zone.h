@@ -229,7 +229,7 @@ public:
 
 	EQEmu::Map*	zonemap;
 	WaterMap* watermap;
-	PathManager *pathing;
+	IPathfinder *pathing;
 	NewZone_Struct	newzone_data;
 
 	SpawnConditionManager spawn_conditions;

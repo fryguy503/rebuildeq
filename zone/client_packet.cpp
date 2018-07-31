@@ -6055,44 +6055,31 @@ void Client::Handle_OP_FindPersonRequest(const EQApplicationPacket *app)
 		{
 			//fill in the path array...
 			//
-			points.resize(2);
-			points[0].x = GetX();
-			points[0].y = GetY();
-			points[0].z = GetZ();
-			points[1].x = target->GetX();
-			points[1].y = target->GetY();
-			points[1].z = target->GetZ();
-		}
-		else
-		{
-			glm::vec3 Start(GetX(), GetY(), GetZ() + (GetSize() < 6.0 ? 6 : GetSize()) * HEAD_POSITION);
-			glm::vec3 End(target->GetX(), target->GetY(), target->GetZ() + (target->GetSize() < 6.0 ? 6 : target->GetSize()) * HEAD_POSITION);
+			points.clear();
+			FindPerson_Point a;
+			FindPerson_Point b;
 
-			if (!zone->zonemap->LineIntersectsZone(Start, End, 1.0f, nullptr) && zone->pathing->NoHazards(Start, End))
-			{
-				points.resize(2);
-				points[0].x = Start.x;
-				points[0].y = Start.y;
-				points[0].z = Start.z;
+			a.x = GetX();
+			a.y = GetY();
+			a.z = GetZ();
+			b.x = target->GetX();
+			b.y = target->GetY();
+			b.z = target->GetZ();
 
-				points[1].x = End.x;
-				points[1].y = End.y;
-				points[1].z = End.z;
+			points.push_back(a);
+			points.push_back(b);
 
 			}
 			else
 			{
-				std::deque<int> pathlist = zone->pathing->FindRoute(Start, End);
+				glm::vec3 Start(GetX(), GetY(), GetZ() + (GetSize() < 6.0 ? 6 : GetSize()) * HEAD_POSITION);
+				glm::vec3 End(target->GetX(), target->GetY(), target->GetZ() + (target->GetSize() < 6.0 ? 6 : target->GetSize()) * HEAD_POSITION);
 
-				if (pathlist.empty())
-				{
-					EQApplicationPacket outapp(OP_FindPersonReply, 0);
-					QueuePacket(&outapp);
-					return;
-				}
+				bool partial = false;
+				bool stuck = false;
+				auto pathlist = zone->pathing->FindRoute(Start, End, partial, stuck);
 
-				//the client seems to have issues with packets larger than this
-				if (pathlist.size() > 36)
+				if (pathlist.empty() || partial)
 				{
 					EQApplicationPacket outapp(OP_FindPersonReply, 0);
 					QueuePacket(&outapp);
@@ -6109,11 +6096,11 @@ void Client::Handle_OP_FindPersonRequest(const EQApplicationPacket *app)
 
 				bool LeadsToTeleporter = false;
 
-				glm::vec3 v = zone->pathing->GetPathNodeCoordinates(pathlist.back());
+				auto v = pathlist.back();
 
-				p.x = v.x;
-				p.y = v.y;
-				p.z = v.z;
+				p.x = v.pos.x;
+				p.y = v.pos.y;
+				p.z = v.pos.z;
 				points.push_back(p);
 
 				p.x = GetX();
@@ -6123,13 +6110,13 @@ void Client::Handle_OP_FindPersonRequest(const EQApplicationPacket *app)
 
 				for (auto Iterator = pathlist.begin(); Iterator != pathlist.end(); ++Iterator)
 				{
-					if ((*Iterator) == -1) // Teleporter
+					if ((*Iterator).teleport) // Teleporter
 					{
 						LeadsToTeleporter = true;
 						break;
 					}
 
-					glm::vec3 v = zone->pathing->GetPathNodeCoordinates((*Iterator), false);
+					glm::vec3 v = (*Iterator).pos;
 					p.x = v.x;
 					p.y = v.y;
 					p.z = v.z;
@@ -6145,13 +6132,10 @@ void Client::Handle_OP_FindPersonRequest(const EQApplicationPacket *app)
 
 					points.push_back(p);
 				}
-
-			}
 		}
 
 		SendPathPacket(points);
 	}
-	return;
 }
 
 void Client::Handle_OP_Fishing(const EQApplicationPacket *app)

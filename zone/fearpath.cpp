@@ -19,7 +19,6 @@
 #include "../common/rulesys.h"
 
 #include "map.h"
-#include "pathing.h"
 #include "zone.h"
 
 #ifdef _WINDOWS
@@ -126,27 +125,13 @@ void Mob::ProcessFlee()
 	}
 }
 
-void Mob::CalculateNewFearpoint()
-{
-	if(RuleB(Pathing, Fear) && zone->pathing)
-	{
-		int Node = zone->pathing->GetRandomPathNode();
+void Mob::CalculateNewFearpoint() {
+	if (RuleB(Pathing, Fear) && zone->pathing) {
+		auto Node = zone->pathing->GetRandomLocation();
+		if (Node.x != 0.0f || Node.y != 0.0f || Node.z != 0.0f) {
 
-		glm::vec3 Loc = zone->pathing->GetPathNodeCoordinates(Node);
-
-		++Loc.z;
-
-		glm::vec3 CurrentPosition(GetX(), GetY(), GetZ());
-
-		std::deque<int> Route = zone->pathing->FindRoute(CurrentPosition, Loc);
-
-		if(!Route.empty())
-		{
-            m_FearWalkTarget = glm::vec3(Loc.x, Loc.y, Loc.z);
-			currently_fleeing = true;
-
-			Log(Logs::Detail, Logs::None, "Feared to node %i (%8.3f, %8.3f, %8.3f)", Node, Loc.x, Loc.y, Loc.z);
-			return;
+			++Node.z;
+			m_FearWalkTarget = Node;
 		}
 
 		Log(Logs::Detail, Logs::None, "No path found to selected node. Falling through to old fear point selection.");
@@ -158,23 +143,20 @@ void Mob::CalculateNewFearpoint()
 	currently_fleeing = true;
 	while (loop < 100) //Max 100 tries
 	{
-		int ran = 250 - (loop*2);
+		int ran = 250 - (loop * 2);
 		loop++;
-		ranx = GetX()+zone->random.Int(0, ran-1)-zone->random.Int(0, ran-1);
-		rany = GetY()+zone->random.Int(0, ran-1)-zone->random.Int(0, ran-1);
-		ranz = FindGroundZ(ranx,rany);
+		ranx = GetX() + zone->random.Int(0, ran - 1) - zone->random.Int(0, ran - 1);
+		rany = GetY() + zone->random.Int(0, ran - 1) - zone->random.Int(0, ran - 1);
+		ranz = FindGroundZ(ranx, rany);
 		if (ranz == BEST_Z_INVALID)
 			continue;
 		float fdist = ranz - GetZ();
-		if (fdist >= -12 && fdist <= 12 && CheckCoordLosNoZLeaps(GetX(),GetY(),GetZ(),ranx,rany,ranz))
-		{
+		if (fdist >= -12 && fdist <= 12 && CheckCoordLosNoZLeaps(GetX(), GetY(), GetZ(), ranx, rany, ranz)) {
 			break;
 		}
 	}
 
-	if (loop <= 100)
-	{
-		m_FearWalkTarget = glm::vec3(ranx, rany, ranz);
-	}
-}
 
+	if (currently_fleeing)
+		m_FearWalkTarget = glm::vec3(ranx, rany, ranz);
+}

@@ -21,7 +21,7 @@
 #include "common.h"
 #include "entity.h"
 #include "hate_list.h"
-#include "pathing.h"
+#include "pathfinder_interface.h"
 #include "position.h"
 #include "aa_ability.h"
 #include "aa.h"
@@ -1095,8 +1095,7 @@ public:
 
 	inline bool			CheckAggro(Mob* other) {return hate_list.IsEntOnHateList(other);}
 	float				CalculateHeadingToTarget(float in_x, float in_y) {return HeadingAngleToMob(in_x, in_y); }
-	bool				CalculateNewPosition(float x, float y, float z, int speed, bool checkZ = false, bool calcHeading = true);
-	virtual bool		CalculateNewPosition2(float x, float y, float z, int speed, bool checkZ = true, bool calcHeading = true);
+	virtual bool		CalculateNewPosition(float x, float y, float z, int speed, bool checkZ = true, bool calcheading = true);
 	float				CalculateDistance(float x, float y, float z);
 	float				GetGroundZ(float new_x, float new_y, float z_offset=0.0);
 	void				SendTo(float new_x, float new_y, float new_z);
@@ -1448,7 +1447,7 @@ protected:
 	float FindGroundZ(float new_x, float new_y, float z_offset=0.0);
 	float FindDestGroundZ(glm::vec3 dest, float z_offset=0.0);
 	glm::vec3 UpdatePath(float ToX, float ToY, float ToZ, float Speed, bool &WaypointChange, bool &NodeReached);
-	void PrintRoute();
+	glm::vec3 HandleStuckPath(const glm::vec3 &To, const glm::vec3 &From);
 
 	virtual float GetSympatheticProcChances(uint16 spell_id, int16 ProcRateMod, int32 ItemProcRate = 0);
 	int16 GetSympatheticSpellProcRate(uint16 spell_id);
@@ -1635,16 +1634,11 @@ protected:
 	// Pathing
 	//
 	glm::vec3 PathingDestination;
+	IPathfinder::IPath Route;
+	std::unique_ptr<Timer> PathRecalcTimer;
+	bool DistractedFromGrid;
 	glm::vec3 PathingLastPosition;
 	int PathingLoopCount;
-	int PathingLastNodeVisited;
-	std::deque<int> Route;
-	LOSType PathingLOSState;
-	Timer *PathingLOSCheckTimer;
-	Timer *PathingRouteUpdateTimerShort;
-	Timer *PathingRouteUpdateTimerLong;
-	bool DistractedFromGrid;
-	int PathingTraversedNodes;
 
 	uint32 pDontHealMeBefore;
 	uint32 pDontBuffMeBefore;
