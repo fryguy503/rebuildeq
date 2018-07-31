@@ -89,3 +89,7 @@ dailyreport.yml
 
 # OS X Indexes
 .DS_Store
+
+#Jetbrains
+
+.idea/*
