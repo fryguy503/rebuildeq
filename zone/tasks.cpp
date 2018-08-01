@@ -3200,25 +3200,13 @@ bool TaskGoalListManager::LoadLists() {
 
 int TaskGoalListManager::GetListByID(int ListID) {
 
-	// Find the list with the specified ListID and return the index
+    // Find the list with the specified ListID and return the index
+    auto it = std::find_if(TaskGoalLists.begin(), TaskGoalLists.end(),
+                           [ListID](const TaskGoalList_Struct &t) { return t.ListID == ListID; });
+    if (it == TaskGoalLists.end())
+        return -1;
 
-	int FirstEntry = 0;
-	int LastEntry = NumberOfLists - 1;
-
-	while(FirstEntry <= LastEntry) {
-		int MiddleEntry = (FirstEntry + LastEntry) / 2;
-
-		if(ListID > TaskGoalLists[MiddleEntry].ListID)
-			FirstEntry = MiddleEntry + 1;
-		else if(ListID < TaskGoalLists[MiddleEntry].ListID)
-			LastEntry = MiddleEntry - 1;
-		else
-			return MiddleEntry;
-
-	}
-
-	return -1;
-
+    return std::distance(TaskGoalLists.begin(), it);
 }
 
 int TaskGoalListManager::GetFirstEntry(int ListID) {
