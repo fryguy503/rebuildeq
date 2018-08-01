@@ -283,7 +283,7 @@ bool TaskManager::SaveClientState(Client *c, ClientTaskState *state) {
 	Log(Logs::Detail, Logs::Tasks,"TaskManager::SaveClientState for character ID %d", characterID);
 
 	if(state->ActiveTaskCount > 0) {
-		for(int task=0; task<MAXACTIVETASKS; task++) {
+		for(int task=0; task<MAXACTIVEQUESTS; task++) {
 			int taskID = state->ActiveTasks[task].TaskID;
 			if(taskID==TASKSLOTEMPTY)
                 continue;
@@ -455,7 +455,7 @@ bool TaskManager::LoadClientState(Client *c, ClientTaskState *state) {
             continue;
         }
 
-        if((slot<0) || (slot>=MAXACTIVETASKS)) {
+        if((slot<0) || (slot>=MAXACTIVEQUESTS)) {
             Log(Logs::General, Logs::Error, "[TASKS] Slot %i out of range while loading character tasks from database", slot);
             continue;
         }
@@ -509,7 +509,7 @@ bool TaskManager::LoadClientState(Client *c, ClientTaskState *state) {
         // Find Active Task Slot
         int activeTaskIndex = -1;
 
-        for(int i=0; i<MAXACTIVETASKS; i++)
+        for(int i=0; i<MAXACTIVEQUESTS; i++)
             if(state->ActiveTasks[i].TaskID == taskID) {
                 activeTaskIndex = i;
                 break;
@@ -623,7 +623,7 @@ bool TaskManager::LoadClientState(Client *c, ClientTaskState *state) {
 	// Check that there is an entry in the client task state for every activity in each task
 	// This should only break if a ServerOP adds or deletes activites for a task that players already
 	// have active, or due to a bug.
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		int taskID = state->ActiveTasks[i].TaskID;
 		if(taskID==TASKSLOTEMPTY) continue;
 		if(!Tasks[taskID]) {
@@ -650,7 +650,7 @@ bool TaskManager::LoadClientState(Client *c, ClientTaskState *state) {
 		}
 	}
 
-	for(int i=0; i<MAXACTIVETASKS; i++)
+	for(int i=0; i<MAXACTIVEQUESTS; i++)
 		if(state->ActiveTasks[i].TaskID != TASKSLOTEMPTY)
 			state->UnlockActivities(characterID, i);
 
@@ -1272,7 +1272,7 @@ ClientTaskState::ClientTaskState() {
 	LastCompletedTaskLoaded = 0;
 	CheckedTouchActivities = false;
 
-	for(int i=0; i<MAXACTIVETASKS; i++)
+	for(int i=0; i<MAXACTIVEQUESTS; i++)
 		ActiveTasks[i].TaskID = TASKSLOTEMPTY;
 }
 
@@ -1284,7 +1284,7 @@ int ClientTaskState::GetActiveTaskID(int index) {
 
 	// Return the TaskID from the client's specified Active Task slot.
 
-	if((index<0) || (index>=MAXACTIVETASKS)) return 0;
+	if((index<0) || (index>=MAXACTIVEQUESTS)) return 0;
 
 	return ActiveTasks[index].TaskID;
 }
@@ -1476,7 +1476,7 @@ bool ClientTaskState::UpdateTasksByNPC(Client *c, int ActivityType, int NPCTypeI
 
 	if(!taskmanager || ActiveTaskCount == 0) return false;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID == TASKSLOTEMPTY) continue;
 
 		// Check if there are any active kill activities for this task
@@ -1529,7 +1529,7 @@ int ClientTaskState::ActiveSpeakTask(int NPCTypeID) {
 
 	if(!taskmanager || ActiveTaskCount == 0) return 0;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID == TASKSLOTEMPTY) continue;
 
 		TaskInformation* Task = taskmanager->Tasks[ActiveTasks[i].TaskID];
@@ -1560,7 +1560,7 @@ int ClientTaskState::ActiveSpeakActivity(int NPCTypeID, int TaskID) {
 	if(!taskmanager || ActiveTaskCount == 0) return -1;
 	if((TaskID<=0) || (TaskID>=MAXTASKS)) return -1;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID != TaskID) continue;
 
 		TaskInformation* Task = taskmanager->Tasks[ActiveTasks[i].TaskID];
@@ -1596,7 +1596,7 @@ void ClientTaskState::UpdateTasksForItem(Client *c, ActivityType Type, int ItemI
 
 	if(ActiveTaskCount == 0) return;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID == TASKSLOTEMPTY) continue;
 
 		// Check if there are any active loot activities for this task
@@ -1648,7 +1648,7 @@ void ClientTaskState::UpdateTasksOnExplore(Client *c, int ExploreID) {
 	Log(Logs::General, Logs::Tasks, "[UPDATE] ClientTaskState::UpdateTasksOnExplore(%i)", ExploreID);
 	if(ActiveTaskCount == 0) return;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID == TASKSLOTEMPTY) continue;
 
 		// Check if there are any active explore activities for this task
@@ -1703,7 +1703,7 @@ bool ClientTaskState::UpdateTasksOnDeliver(Client *c, std::list<EQEmu::ItemInsta
 
 	if(ActiveTaskCount == 0) return false;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID == TASKSLOTEMPTY) continue;
 
 		// Check if there are any active deliver activities for this task
@@ -1769,7 +1769,7 @@ void ClientTaskState::UpdateTasksOnTouch(Client *c, int ZoneID) {
 	Log(Logs::General, Logs::Tasks, "[UPDATE] ClientTaskState::UpdateTasksOnTouch(%i)", ZoneID);
 	if(ActiveTaskCount == 0) return;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID == TASKSLOTEMPTY) continue;
 
 		// Check if there are any active explore activities for this task
@@ -2008,7 +2008,7 @@ bool ClientTaskState::IsTaskActive(int TaskID) {
 
 	if((ActiveTaskCount == 0) || (TaskID == 0)) return false;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 
 		if(ActiveTasks[i].TaskID==TaskID) return true;
 
@@ -2022,7 +2022,7 @@ void ClientTaskState::FailTask(Client *c, int TaskID) {
 	Log(Logs::General, Logs::Tasks, "[UPDATE] FailTask %i, ActiveTaskCount is %i", TaskID, ActiveTaskCount);
 	if(ActiveTaskCount == 0) return;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 
 		if(ActiveTasks[i].TaskID==TaskID) {
 			c->SendTaskFailed(ActiveTasks[i].TaskID, i);
@@ -2044,7 +2044,7 @@ bool ClientTaskState::IsTaskActivityActive(int TaskID, int ActivityID) {
 
 	int ActiveTaskIndex = -1;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID==TaskID) {
 			ActiveTaskIndex = i;
 			break;
@@ -2080,7 +2080,7 @@ void ClientTaskState::UpdateTaskActivity(Client *c, int TaskID, int ActivityID, 
 
 	int ActiveTaskIndex = -1;
 
-	for (int i = 0; i < MAXACTIVETASKS; i++) {
+	for (int i = 0; i < MAXACTIVEQUESTS; i++) {
 		if (ActiveTasks[i].TaskID == TaskID) {
 			ActiveTaskIndex = i;
 			break;
@@ -2114,7 +2114,7 @@ void ClientTaskState::ResetTaskActivity(Client *c, int TaskID, int ActivityID) {
 
 	int ActiveTaskIndex = -1;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID==TaskID) {
 			ActiveTaskIndex = i;
 			break;
@@ -2150,7 +2150,7 @@ void ClientTaskState::ShowClientTasks(Client *c) {
 
 	c->Message(0, "Task Information:");
 	//for(int i=0; i<ActiveTaskCount; i++) {
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID==TASKSLOTEMPTY)
 			continue;
 
@@ -2170,7 +2170,7 @@ int ClientTaskState::TaskTimeLeft(int TaskID) {
 
 	if(ActiveTaskCount == 0) return -1;
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 
 		if(ActiveTasks[i].TaskID != TaskID) continue;
 
@@ -2223,7 +2223,7 @@ bool ClientTaskState::TaskOutOfTime(int Index) {
 
 	// Returns true if the Task in the specified slot has a time limit that has been exceeded.
 
-	if((Index < 0) || (Index>=MAXACTIVETASKS)) return false;
+	if((Index < 0) || (Index>=MAXACTIVEQUESTS)) return false;
 
 	if((ActiveTasks[Index].TaskID <= 0) || (ActiveTasks[Index].TaskID >= MAXTASKS)) return false;
 
@@ -2243,7 +2243,7 @@ void ClientTaskState::TaskPeriodicChecks(Client *c) {
 
 	// Check for tasks that have failed because they have not been completed in the specified time
 	//
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 
 		if(ActiveTasks[i].TaskID==TASKSLOTEMPTY) continue;
 
@@ -2702,7 +2702,7 @@ void TaskManager::SendTaskActivityNew(Client *c, int TaskID, int ActivityID, int
 void TaskManager::SendActiveTasksToClient(Client *c, bool TaskComplete) {
 
 	//for(int TaskIndex=0; TaskIndex<c->GetActiveTaskCount(); TaskIndex++) {
-	for(int TaskIndex=0; TaskIndex<MAXACTIVETASKS; TaskIndex++) {
+	for(int TaskIndex=0; TaskIndex<MAXACTIVEQUESTS; TaskIndex++) {
 		int TaskID = c->GetActiveTaskID(TaskIndex);
 		if((TaskID==0) || (Tasks[TaskID] ==0)) continue;
 		int StartTime = c->GetTaskStartTime(TaskIndex);
@@ -2736,7 +2736,7 @@ void TaskManager::SendActiveTasksToClient(Client *c, bool TaskComplete) {
 
 void TaskManager::SendSingleActiveTaskToClient(Client *c, int TaskIndex, bool TaskComplete, bool BringUpTaskJournal) {
 
-	if((TaskIndex < 0) || (TaskIndex >= MAXACTIVETASKS)) return;
+	if((TaskIndex < 0) || (TaskIndex >= MAXACTIVEQUESTS)) return;
 
 	int TaskID = c->GetActiveTaskID(TaskIndex);
 
@@ -2899,7 +2899,7 @@ int ClientTaskState::GetTaskActivityDoneCount(int index, int ActivityID) {
 
 int ClientTaskState::GetTaskActivityDoneCountFromTaskID(int TaskID, int ActivityID){
 	int ActiveTaskIndex = -1;
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID==TaskID) {
 			ActiveTaskIndex = i;
 			break;
@@ -2929,7 +2929,7 @@ void ClientTaskState::CancelAllTasks(Client *c) {
 	// It removes tasks from the in-game client state ready for them to be
 	// resent to the client, in case an updated task fails to load
 
-	for(int i=0; i<MAXACTIVETASKS; i++)
+	for(int i=0; i<MAXACTIVEQUESTS; i++)
 		if(ActiveTasks[i].TaskID != TASKSLOTEMPTY) {
 			CancelTask(c, i, false);
 			ActiveTasks[i].TaskID = TASKSLOTEMPTY;
@@ -2994,12 +2994,12 @@ void ClientTaskState::AcceptNewTask(Client *c, int TaskID, int NPCID, bool enfor
 		return;
 	}
 
-	if(ActiveTaskCount==MAXACTIVETASKS) {
-		c->Message(13, "You already have the maximum allowable number of active tasks (%i)", MAXACTIVETASKS);
+	if(ActiveTaskCount==MAXACTIVEQUESTS) {
+		c->Message(13, "You already have the maximum allowable number of active tasks (%i)", MAXACTIVEQUESTS);
 		return;
 	}
 
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		if(ActiveTasks[i].TaskID==TaskID) {
 			c->Message(13, "You have already been assigned this task.");
 			return;
@@ -3020,7 +3020,7 @@ void ClientTaskState::AcceptNewTask(Client *c, int TaskID, int NPCID, bool enfor
 	// waste of bandwidth.
 	//
 	int FreeSlot = -1;
-	for(int i=0; i<MAXACTIVETASKS; i++) {
+	for(int i=0; i<MAXACTIVEQUESTS; i++) {
 		Log(Logs::General, Logs::Tasks, "[UPDATE] ClientTaskState Looking for free slot in slot %i, found TaskID of %i",
 				i, ActiveTasks[i].TaskID);
 		if(ActiveTasks[i].TaskID == 0) {
@@ -3031,7 +3031,7 @@ void ClientTaskState::AcceptNewTask(Client *c, int TaskID, int NPCID, bool enfor
 
 	// This shouldn't happen unless there is a bug in the handling of ActiveTaskCount somewhere
 	if(FreeSlot == -1) {
-		c->Message(13, "You already have the maximum allowable number of active tasks (%i)", MAXACTIVETASKS);
+		c->Message(13, "You already have the maximum allowable number of active tasks (%i)", MAXACTIVEQUESTS);
 		return;
 	}
 
