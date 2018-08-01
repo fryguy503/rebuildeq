@@ -3120,21 +3120,12 @@ TaskGoalListManager::TaskGoalListManager() {
 
 }
 
-TaskGoalListManager::~TaskGoalListManager() {
-
-	for(int i=0; i< NumberOfLists; i++) {
-
-		safe_delete_array(TaskGoalLists[i].GoalItemEntries);
-
-	}
-}
+TaskGoalListManager::~TaskGoalListManager() {}
 
 bool TaskGoalListManager::LoadLists() {
 
 	Log(Logs::General, Logs::Tasks, "[GLOBALLOAD] TaskGoalListManager::LoadLists Called");
 
-	for(int i=0; i< NumberOfLists; i++)
-		safe_delete_array(TaskGoalLists[i].GoalItemEntries);
     TaskGoalLists.clear();
 
     const char *ERR_MYSQLERROR = "Error in TaskGoalListManager::LoadLists: %s %s";
@@ -3159,9 +3150,9 @@ bool TaskGoalListManager::LoadLists() {
     for(auto row = results.begin(); row != results.end(); ++row) {
         int listID = atoi(row[0]);
         int listSize = atoi(row[1]);
-        TaskGoalLists.push_back({listID, listSize, 0, 0, nullptr});
+        TaskGoalLists.push_back({listID, listSize, 0, 0});
 
-        TaskGoalLists[listIndex].GoalItemEntries = new int[listSize];
+        TaskGoalLists[listIndex].GoalItemEntries.reserve(listSize);
 
         listIndex++;
     }
