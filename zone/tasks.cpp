@@ -3150,7 +3150,7 @@ bool TaskGoalListManager::LoadLists() {
     for(auto row = results.begin(); row != results.end(); ++row) {
         int listID = atoi(row[0]);
         int listSize = atoi(row[1]);
-        TaskGoalLists.push_back({listID, listSize, 0, 0});
+        TaskGoalLists.push_back({listID, 0, 0});
 
         TaskGoalLists[listIndex].GoalItemEntries.reserve(listSize);
 
@@ -3160,22 +3160,15 @@ bool TaskGoalListManager::LoadLists() {
 	for(int listIndex = 0; listIndex < NumberOfLists; listIndex++) {
 
 		int listID = TaskGoalLists[listIndex].ListID;
-		unsigned int size = TaskGoalLists[listIndex].Size;
+        auto size = TaskGoalLists[listIndex].GoalItemEntries.capacity(); // this was only done for manual memory management, shouldn't need to do this
         query = StringFormat("SELECT `entry` from `goallists` "
                             "WHERE `listid` = %i "
 							"ORDER BY `entry` ASC LIMIT %i",
 							listID, size);
         results = database.QueryDatabase(query);
         if (!results.Success()) {
-			TaskGoalLists[listIndex].Size = 0;
 			continue;
         }
-
-        // This should only happen if a row is deleted in between us retrieving the counts
-        // at the start of this method and getting to here. It should not be possible for
-        // an INSERT to cause a problem, as the SELECT is used with a LIMIT
-        if(results.RowCount() < size)
-            TaskGoalLists[listIndex].Size = results.RowCount();
 
         int entryIndex = 0;
         for (auto row = results.begin(); row != results.end(); ++row, ++entryIndex) {
@@ -3215,7 +3208,7 @@ int TaskGoalListManager::GetFirstEntry(int ListID) {
 
 	if((ListIndex < 0) || (ListIndex >= NumberOfLists)) return -1;
 
-	if(TaskGoalLists[ListIndex].Size == 0) return -1;
+    if(TaskGoalLists[ListIndex].GoalItemEntries.empty()) return -1;
 
 	return TaskGoalLists[ListIndex].GoalItemEntries[0];
 }
@@ -3228,8 +3221,7 @@ std::vector<int> TaskGoalListManager::GetListContents(int ListID) {
 
 	if((ListIndex < 0) || (ListIndex >= NumberOfLists)) return ListContents;
 
-	for(int i=0; i<TaskGoalLists[ListIndex].Size; i++)
-		ListContents.push_back(TaskGoalLists[ListIndex].GoalItemEntries[i]);
+    ListContents = TaskGoalLists[ListIndex].GoalItemEntries;
 
 	return ListContents;
 
@@ -3249,23 +3241,17 @@ bool TaskGoalListManager::IsInList(int ListID, int Entry) {
 		return false;
 
 	int FirstEntry = 0;
-	int LastEntry = TaskGoalLists[ListIndex].Size - 1;
+    auto &task = TaskGoalLists[ListIndex];
 
-	while(FirstEntry <= LastEntry) {
-		int MiddleEntry = (FirstEntry + LastEntry) / 2;
+    auto it = std::find(task.GoalItemEntries.begin(), task.GoalItemEntries.end(), Entry);
 
-		if(Entry > TaskGoalLists[ListIndex].GoalItemEntries[MiddleEntry])
-			FirstEntry = MiddleEntry + 1;
-		else if(Entry < TaskGoalLists[ListIndex].GoalItemEntries[MiddleEntry])
-			LastEntry = MiddleEntry - 1;
-		else {
-			Log(Logs::General, Logs::Tasks, "[UPDATE] TaskGoalListManager::IsInList(%i, %i) returning true", ListIndex, Entry);
-			return true;
-		}
+    if (it == task.GoalItemEntries.end())
+        return false;
 
-	}
+    Log(Logs::General, Logs::Tasks, "[UPDATE] TaskGoalListManager::IsInList(%i, %i) returning true", ListIndex,
+        Entry);
 
-	return false;
+    return true;
 
 }
 
