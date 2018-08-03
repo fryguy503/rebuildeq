@@ -951,7 +951,7 @@ void TaskManager::TaskSetSelector(Client *c, ClientTaskState *state, Mob *mob, i
         return;
 
     if (TaskSets[TaskSetID].empty()) {
-        mob->SayTo_StringID(c, MAX_ACTIVE_TASKS, c->GetName()); // I think this is suppose to be yellow
+        mob->SayTo_StringID(c, CC_Yellow, MAX_ACTIVE_TASKS, c->GetName()); // I think this is suppose to be yellow
         return;
     }
     bool all_enabled = false;
@@ -980,7 +980,7 @@ void TaskManager::TaskSetSelector(Client *c, ClientTaskState *state, Mob *mob, i
     if (TaskListIndex > 0) {
         SendTaskSelector(c, mob, TaskListIndex, TaskList);
     } else {
-        mob->SayTo_StringID(c, MAX_ACTIVE_TASKS, c->GetName()); // check color, I think this might be only for (Shared) Tasks, w/e -- think should be yellow
+        mob->SayTo_StringID(c, CC_Yellow, MAX_ACTIVE_TASKS, c->GetName()); // check color, I think this might be only for (Shared) Tasks, w/e -- think should be yellow
     }
     return;
 }
@@ -1007,7 +1007,7 @@ void TaskManager::TaskQuestSetSelector(Client *c, ClientTaskState *state, Mob *m
     if (TaskListIndex > 0) {
         SendTaskSelector(c, mob, TaskListIndex, TaskList);
     } else {
-        c->Message_StringID(15, MAX_ACTIVE_TASKS, c->GetName()); // check color, I think this might be only for (Shared) Tasks, w/e
+        mob->SayTo_StringID(c, CC_Yellow, MAX_ACTIVE_TASKS, c->GetName()); // check color, I think this might be only for (Shared) Tasks, w/e -- think should be yellow
     }
 
     return;
