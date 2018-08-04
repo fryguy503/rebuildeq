@@ -998,7 +998,7 @@ bool NPC::SpawnZoneController(){
 NPC * NPC::SpawnGridNodeNPC(std::string name, const glm::vec4 &position, uint32 grid_id, uint32 grid_number, uint32 pause) {
 	auto npc_type = new NPCType;
 	memset(npc_type, 0, sizeof(NPCType));
-	sprintf(npc_type->name, "(%s)_%u", name.c_str(), grid_number);
+	sprintf(npc_type->name, "%u_%u", grid_id, grid_number);
 	sprintf(npc_type->lastname, "Number: %u Grid: %u Pause: %u", grid_number, grid_id, pause);
 	npc_type->cur_hp           = 4000000;
 	npc_type->max_hp           = 4000000;
