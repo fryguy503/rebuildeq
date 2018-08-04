@@ -300,17 +300,18 @@ bool TaskManager::SaveClientState(Client *c, ClientTaskState *state)
             if(taskID==TASKSLOTEMPTY)
                 continue;
 
+            int slot = state->ActiveTasks[task].slot;
             if (state->ActiveTasks[task].Updated) {
 
                 Log(Logs::General, Logs::Tasks,
                     "[CLIENTSAVE] TaskManager::SaveClientState for character ID %d, Updating TaskIndex "
                     "%i TaskID %i",
-                    characterID, task, taskID);
+                    characterID, slot, taskID);
 
                 std::string query = StringFormat(
                         "REPLACE INTO character_tasks (charid, taskid, slot, type, acceptedtime) "
                         "VALUES (%i, %i, %i, %i, %i)",
-                        characterID, taskID, task, static_cast<int>(Tasks[taskID]->type),
+                        characterID, taskID, slot, static_cast<int>(Tasks[taskID]->type),
                         state->ActiveTasks[task].AcceptedTime);
                 auto results = database.QueryDatabase(query);
                 if (!results.Success()) {
@@ -334,7 +335,7 @@ bool TaskManager::SaveClientState(Client *c, ClientTaskState *state)
                 Log(Logs::General, Logs::Tasks,
                     "[CLIENTSAVE] TaskManager::SaveClientSate for character ID %d, Updating Activity "
                     "%i, %i",
-                    characterID, task, activityIndex);
+                    characterID, slot, activityIndex);
 
                 if(updatedActivityCount==0)
                     query +=
@@ -1145,7 +1146,7 @@ void TaskManager::SendTaskSelector(Client *c, Mob *mob, int TaskCount, int *Task
         }
     }
 
-	auto outapp = new EQApplicationPacket(OP_OpenNewTasksWindow, buf);
+    auto outapp = new EQApplicationPacket(OP_OpenNewTasksWindow, buf);
 
     c->QueuePacket(outapp);
     safe_delete(outapp);
@@ -1232,7 +1233,7 @@ void TaskManager::SendTaskSelectorNew(Client *c, Mob *mob, int TaskCount, int *T
         }
     }
 
-	auto outapp = new EQApplicationPacket(OP_OpenNewTasksWindow, buf);
+    auto outapp = new EQApplicationPacket(OP_OpenNewTasksWindow, buf);
 
     c->QueuePacket(outapp);
     safe_delete(outapp);
@@ -1555,7 +1556,7 @@ bool ClientTaskState::UpdateTasksByNPC(Client *c, int ActivityType, int NPCTypeI
             }
             // We found an active task to kill this type of NPC, so increment the done count
             Log(Logs::General, Logs::Tasks, "[UPDATE] Calling increment done count ByNPC");
-            IncrementDoneCount(c, Task, i, j);
+            IncrementDoneCount(c, Task, cur_task->slot, j);
             Ret = true;
         }
     }
@@ -1695,7 +1696,7 @@ void ClientTaskState::UpdateTasksForItem(Client *c, ActivityType Type, int ItemI
             }
             // We found an active task related to this item, so increment the done count
             Log(Logs::General, Logs::Tasks, "[UPDATE] Calling increment done count ForItem");
-            IncrementDoneCount(c, Task, i, j, Count);
+            IncrementDoneCount(c, Task, cur_task->slot, j, Count);
         }
     }
 
@@ -1757,7 +1758,7 @@ void ClientTaskState::UpdateTasksOnExplore(Client *c, int ExploreID)
             // We found an active task to explore this area, so set done count to goal count
             // (Only a goal count of 1 makes sense for explore activities?)
             Log(Logs::General, Logs::Tasks, "[UPDATE] Increment on explore");
-            IncrementDoneCount(c, Task, i, j,
+            IncrementDoneCount(c, Task, cur_task->slot, j,
                                Task->Activity[j].GoalCount - cur_task->Activity[j].DoneCount);
         }
     }
@@ -1832,7 +1833,7 @@ bool ClientTaskState::UpdateTasksOnDeliver(Client *c, std::list<EQEmu::ItemInsta
                     }
                     // We found an active task related to this item, so increment the done count
                     Log(Logs::General, Logs::Tasks, "[UPDATE] Increment on GiveItem");
-                    IncrementDoneCount(c, Task, i, j, k->GetCharges() <= 0 ? 1 : k->GetCharges());
+                    IncrementDoneCount(c, Task, cur_task->slot, j, k->GetCharges() <= 0 ? 1 : k->GetCharges());
                     Ret = true;
                 }
             }
@@ -1880,7 +1881,7 @@ void ClientTaskState::UpdateTasksOnTouch(Client *c, int ZoneID)
             // We found an active task to zone into this zone, so set done count to goal count
             // (Only a goal count of 1 makes sense for touch activities?)
             Log(Logs::General, Logs::Tasks, "[UPDATE] Increment on Touch");
-            IncrementDoneCount(c, Task, i, j,
+            IncrementDoneCount(c, Task, cur_task->slot, j,
                                Task->Activity[j].GoalCount - cur_task->Activity[j].DoneCount);
         }
     }
@@ -2309,8 +2310,8 @@ void ClientTaskState::ResetTaskActivity(Client *c, int TaskID, int ActivityID)
                                       Task->Activity[ActivityID].Optional);
 }
 
-void ClientTaskState::ShowClientTasks(Client *c) {
-
+void ClientTaskState::ShowClientTasks(Client *c)
+{
     c->Message(0, "Task Information:");
     if (ActiveTask.TaskID != TASKSLOTEMPTY) {
         c->Message(0, "Task: %i %s", ActiveTask.TaskID, taskmanager->Tasks[ActiveTask.TaskID]->Title.c_str());
@@ -2331,8 +2332,7 @@ void ClientTaskState::ShowClientTasks(Client *c) {
         c->Message(0, "  Description: [%s]\n", taskmanager->Tasks[ActiveQuests[i].TaskID]->Description.c_str());
         for(int j=0; j<taskmanager->GetActivityCount(ActiveQuests[i].TaskID); j++) {
             c->Message(0, "  Activity: %2d, DoneCount: %2d, Status: %d (0=Hidden, 1=Active, 2=Complete)",
-                       ActiveQuests[i].Activity[j].ActivityID,
-                       ActiveQuests[i].Activity[j].DoneCount,
+                       ActiveQuests[i].Activity[j].ActivityID, ActiveQuests[i].Activity[j].DoneCount,
                        ActiveQuests[i].Activity[j].State);
         }
     }
@@ -2789,7 +2789,7 @@ void TaskManager::SendTaskActivityLong(Client *c, int TaskID, int ActivityID, in
 
     buf.WriteUInt32(1); // unknown
 
-	auto outapp = new EQApplicationPacket(OP_TaskActivity, buf);
+    auto outapp = new EQApplicationPacket(OP_TaskActivity, buf);
 
     c->QueuePacket(outapp);
     safe_delete(outapp);
@@ -2849,7 +2849,7 @@ void TaskManager::SendTaskActivityNew(Client *c, int TaskID, int ActivityID, int
 
     buf.WriteString(Tasks[TaskID]->Activity[ActivityID].zones);
 
-	auto outapp = new EQApplicationPacket(OP_TaskActivity, buf);
+    auto outapp = new EQApplicationPacket(OP_TaskActivity, buf);
 
     c->QueuePacket(outapp);
     safe_delete(outapp);
@@ -2874,20 +2874,21 @@ void TaskManager::SendActiveTasksToClient(Client *c, bool TaskComplete)
             GetActivityCount(TaskID));
 
         int Sequence = 0;
+        int fixed_index = Tasks[TaskID]->type == TaskType::Task ? 0 : TaskIndex - 1; // hmmm fuck
         for(int Activity=0; Activity<GetActivityCount(TaskID); Activity++) {
-            if(c->GetTaskActivityState(Tasks[TaskID]->type, TaskIndex, Activity) != ActivityHidden) {
+            if (c->GetTaskActivityState(Tasks[TaskID]->type, fixed_index, Activity) != ActivityHidden) {
                 Log(Logs::General, Logs::Tasks, "[UPDATE]   Long: %i, %i, %i Complete=%i", TaskID,
-                    Activity, TaskIndex, TaskComplete);
+                    Activity, fixed_index, TaskComplete);
                 if(Activity==GetActivityCount(TaskID)-1)
-                    SendTaskActivityLong(c, TaskID, Activity, TaskIndex,
+                    SendTaskActivityLong(c, TaskID, Activity, fixed_index,
                                          Tasks[TaskID]->Activity[Activity].Optional, TaskComplete);
                 else
-                    SendTaskActivityLong(c, TaskID, Activity, TaskIndex,
+                    SendTaskActivityLong(c, TaskID, Activity, fixed_index,
                                          Tasks[TaskID]->Activity[Activity].Optional, 0);
             } else {
                 Log(Logs::General, Logs::Tasks, "[UPDATE]   Short: %i, %i, %i", TaskID, Activity,
-                    TaskIndex);
-                SendTaskActivityShort(c, TaskID, Activity, TaskIndex);
+                    fixed_index);
+                SendTaskActivityShort(c, TaskID, Activity, fixed_index);
             }
             Sequence++;
         }
