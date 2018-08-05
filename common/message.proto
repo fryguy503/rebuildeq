@@ -278,7 +278,7 @@ message SpawnEvent {
   uint32 mount_color = 74;		// drogmor: 0=white, 1=black, 2=green, 3=red horse: 0=brown, 1=white, 2=black, 3=tan
   //endunion                            
   uint32 spawnId = 75;		// Spawn Id
-  uint32 unknown0344 = 76;
+  float bounding_radius = 76;
   uint32 IsMercenary = 77;
   TintProfile equipment_tint = 78;
   uint32	lfg = 79;			// 0=off, 1=lfg on
