@@ -52,6 +52,10 @@ IF(MSVC OR MINGW)
 	ENDIF(CMAKE_CL_64)
 ENDIF(MSVC OR MINGW)
 
+
+# on rebuild, i'm shifting the output directory to the deploy dir
+set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server")
+
 # include dirs are universal
 SET(NATS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats")
 
@@ -117,6 +121,13 @@ ENDIF()
 FILE(COPY ${NATS_LIBRARY} DESTINATION ${CMAKE_HOME_DIRECTORY}/deploy/server)	
 
 IF(MSVC)
+	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
+		string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
+	    set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
+	    set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
+	    set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
+	endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
+
 	#Set our default locations for zlib/mysql based on x86/x64
 	IF(CMAKE_CL_64)
 		SET(ZLIB_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/zlib_x64")

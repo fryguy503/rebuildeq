@@ -2765,17 +2765,17 @@ class DamageEvent : public ::google::protobuf::Message /* @@protoc_insertion_poi
   float force() const;
   void set_force(float value);
 
-  // float meleepush_xy = 7;
-  void clear_meleepush_xy();
-  static const int kMeleepushXyFieldNumber = 7;
-  float meleepush_xy() const;
-  void set_meleepush_xy(float value);
+  // float hit_heading = 7;
+  void clear_hit_heading();
+  static const int kHitHeadingFieldNumber = 7;
+  float hit_heading() const;
+  void set_hit_heading(float value);
 
-  // float meleepush_z = 8;
-  void clear_meleepush_z();
-  static const int kMeleepushZFieldNumber = 8;
-  float meleepush_z() const;
-  void set_meleepush_z(float value);
+  // float hit_pitch = 8;
+  void clear_hit_pitch();
+  static const int kHitPitchFieldNumber = 8;
+  float hit_pitch() const;
+  void set_hit_pitch(float value);
 
   // @@protoc_insertion_point(class_scope:eqproto.DamageEvent)
  private:
@@ -2787,8 +2787,8 @@ class DamageEvent : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::google::protobuf::uint32 spellid_;
   ::google::protobuf::uint32 damage_;
   float force_;
-  float meleepush_xy_;
-  float meleepush_z_;
+  float hit_heading_;
+  float hit_pitch_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_message_2eproto::TableStruct;
 };
@@ -7091,32 +7091,32 @@ inline void DamageEvent::set_force(float value) {
   // @@protoc_insertion_point(field_set:eqproto.DamageEvent.force)
 }
 
-// float meleepush_xy = 7;
-inline void DamageEvent::clear_meleepush_xy() {
-  meleepush_xy_ = 0;
+// float hit_heading = 7;
+inline void DamageEvent::clear_hit_heading() {
+  hit_heading_ = 0;
 }
-inline float DamageEvent::meleepush_xy() const {
-  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.meleepush_xy)
-  return meleepush_xy_;
+inline float DamageEvent::hit_heading() const {
+  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.hit_heading)
+  return hit_heading_;
 }
-inline void DamageEvent::set_meleepush_xy(float value) {
+inline void DamageEvent::set_hit_heading(float value) {
   
-  meleepush_xy_ = value;
-  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.meleepush_xy)
+  hit_heading_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.hit_heading)
 }
 
-// float meleepush_z = 8;
-inline void DamageEvent::clear_meleepush_z() {
-  meleepush_z_ = 0;
+// float hit_pitch = 8;
+inline void DamageEvent::clear_hit_pitch() {
+  hit_pitch_ = 0;
 }
-inline float DamageEvent::meleepush_z() const {
-  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.meleepush_z)
-  return meleepush_z_;
+inline float DamageEvent::hit_pitch() const {
+  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.hit_pitch)
+  return hit_pitch_;
 }
-inline void DamageEvent::set_meleepush_z(float value) {
+inline void DamageEvent::set_hit_pitch(float value) {
   
-  meleepush_z_ = value;
-  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.meleepush_z)
+  hit_pitch_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.hit_pitch)
 }
 
 // -------------------------------------------------------------------

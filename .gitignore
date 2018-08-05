@@ -12,7 +12,6 @@ Build_32/
 build_32/
 Build_64/
 build_64/
-dependencies/protobuf/build/*
 # eqemu temp files
 *.oldlock
 
@@ -93,3 +92,4 @@ dailyreport.yml
 #Jetbrains
 
 .idea/*
+dependencies/protobuf/windows/x64/lib/libprotobufd.lib
