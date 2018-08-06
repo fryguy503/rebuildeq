@@ -1,4 +1,5 @@
 +++
+note = "This file was auto generated. DO NOT EDIT"
 description = "Small Cloth Cape"
 id = "1018"
 icon = "656"

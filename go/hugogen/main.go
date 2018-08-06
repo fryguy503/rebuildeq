@@ -42,6 +42,7 @@ func main() {
 		}
 
 		outStr := "+++\n"
+		outStr += fmt.Sprintf("note = \"This file was auto generated. DO NOT EDIT\"\n")
 		outStr += fmt.Sprintf("description = \"%s\"\n", it.Lore)
 		outStr += fmt.Sprintf("id = \"%d\"\n", it.Id)
 		outStr += fmt.Sprintf("icon = \"%d\"\n", it.Icon)
