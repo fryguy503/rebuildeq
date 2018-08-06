@@ -1,5 +1,5 @@
 <section class="post">
 	<div class="post-description">		
-			<p><a href="{{ .Permalink }}">{{ .Title }}</a> - {{ printf "%s" .Summary | markdownify }}</p>		
+			<span class="slot slotdrop"><span alt="{{.Params.name}}" class="item icon-{{.Params.icon}}"></span></span><a href="{{ .Permalink }}">{{ .Title }}</a> - {{ printf "%s" .Summary | markdownify }}
 	</div>
 </section>
