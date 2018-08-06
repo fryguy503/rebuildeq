@@ -1,0 +1,1 @@
+Elasticsearch is a dependency of graylog

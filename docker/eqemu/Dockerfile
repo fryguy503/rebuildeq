@@ -6,5 +6,8 @@ RUN apt-get -y update \
 ENV HOME /eqemu
 WORKDIR /eqemu
 
-# Define default command.
-#CMD ["/eqemu"]
+RUN wget http://ftp.us.debian.org/debian/pool/main/libs/libsodium/libsodium-dev_1.0.11-1~bpo8+1_amd64.deb -O /eqemu/libsodium-dev.deb \
+	&& wget http://ftp.us.debian.org/debian/pool/main/libs/libsodium/libsodium18_1.0.11-1~bpo8+1_amd64.deb -O /eqemu/libsodium18.deb \
+	&& dpkg -i /eqemu/libsodium*.deb \
+	&& rm -f /eqemu/libsodium-dev.deb \
+	&& rm -f /eqemu/libsodium18.deb

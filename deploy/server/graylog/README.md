@@ -1,0 +1,1 @@
+Graylog is a logging system.

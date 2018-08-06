@@ -1,0 +1,1 @@
+Storage data for graylog mongo instance
