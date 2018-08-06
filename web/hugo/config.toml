@@ -1,0 +1,22 @@
+baseURL = "http://rebuildeq.com/"
+languageCode = "en-us"
+title = "RebuildEQ"
+fullName = "Rebuild Everquest"
+publishDir = "../../deploy/html"
+theme = "rebuildeq"
+# Define the number of posts per page
+paginate = 1
+# Enable Google Analytics by entering your tracking code
+googleAnalytics = "UA-72548849-1"
+
+[params]
+	disable_profile = true
+    # Tell me who you are
+    author = "Shin Noir"
+    bio = "RebuildEQ"
+    location = ""
+    site_description = "Rebuild EQ is an Everquest Private Server Project based on classic Everquest rebuilt to give a new enhanced experience."
+    copyright  = "No real copyrights, except those expressed by the content posted."
+    avatar = ""
+	# Format dates with Go's time formatting
+    date_format = "2006-01-02"

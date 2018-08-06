@@ -1,0 +1,14 @@
+{
+  "name": "rebuildeq",
+  "version": "1.0.0",
+  "description": "RebuildEQ Website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "purecss": "^1.0.0"
+  }
+}
