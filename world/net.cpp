@@ -176,7 +176,7 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	Log(Logs::General, Logs::World_Server, "Connecting to MySQL...");
+	Log(Logs::General, Logs::World_Server, "Connecting to MySQL %s:%d...", Config->DatabaseHost.c_str(), Config->DatabasePort);
 	if (!database.Connect(
 		Config->DatabaseHost.c_str(),
 		Config->DatabaseUsername.c_str(),
