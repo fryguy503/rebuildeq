@@ -1,1 +1,29 @@
-test
+{{ partial "head" . }}
+
+{{ partial "header" . }}
+
+<div id="layout" class="pure-g">
+	<div class="content pure-u-1 pure-u-md-4-4">
+		<div>
+			<div class="posts">
+			<h1 class="content-subhead">Item - {{ .Title }}</h1>
+			<section class="post">
+				<header class="post-header">
+
+					<h2 class="post-title">{{ .Title }}</h2>
+				</header>
+
+				<div class="post-description">
+					<p>
+							{{ .Content }}
+					</p>
+				</div>
+			</section>
+			</div>
+		</div>
+	</div>
+</div>
+
+{{ partial "footer" . }}
+</body>
+</html>

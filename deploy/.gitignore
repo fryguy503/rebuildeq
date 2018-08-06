@@ -1,7 +1,7 @@
 #patch/ directory is generated using ../client_patch/clientpatch.bat
 patch/*
 
-
+html/*
 # server stuff that needs ignored.
 !Makefile
 server/eqemu_config.xml

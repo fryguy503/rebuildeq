@@ -5,7 +5,7 @@ fullName = "Rebuild Everquest"
 publishDir = "../../deploy/html"
 theme = "rebuildeq"
 # Define the number of posts per page
-paginate = 1
+paginate = 10
 # Enable Google Analytics by entering your tracking code
 googleAnalytics = "UA-72548849-1"
 
