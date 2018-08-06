@@ -1,10 +1,38 @@
 #patch/ directory is generated using ../client_patch/clientpatch.bat
 patch/*
+!Makefile
 
+web/application/cache/*
+web/application/logs/*
+
+
+# This is the file list builder exe
+client/rof/patch.zip
+client/rof/filelist*
+
+# This is where patchfiles export to once we prep a patch
+client/patch/*
 
 # server stuff that needs ignored.
-!Makefile
+!server/*.dll
+server/eqemu_server.pl
+!server/*.so
+server/database_dumper.pl
 server/eqemu_config.xml
+server/eqemu_config.json
+server/grafana/*
+!server/grafana/README.md
+server/graylog/config/*
+!server/graylog/config/graylog.conf
+!server/graylog/config/log4j2.conf
+server/graylog/mongo/*
+!server/graylog/mongo/README.md
+server/graylog/journal/*
+!server/graylog/journal/README.md
+server/graylog/elasticsearch/*
+!server/graylog/elasticsearch/README.md
+
+server/db
 server/*.lock
 server/eqcleanup-linux64
 server/eqemu_update.pl

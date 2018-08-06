@@ -22,19 +22,6 @@ doxygen/
 packages/
 Temp/
 
-# Dependencies
-/dependencies/luaj_x64
-/dependencies/mysql_x64
-/dependencies/openssl_x64/include/openssl
-/dependencies/zlib_x64
-
-# This is the file list builder exe
-deploy/client/rof/patch.zip
-deploy/client/rof/filelist*
-
-# This is where patchfiles export to once we prep a patch
-deploy/client/patch/*
-
 #docker related
 .bash_history 
 
@@ -90,4 +77,3 @@ dailyreport.yml
 #Jetbrains
 
 .idea/*
-dependencies/protobuf/windows/x64/lib/libprotobufd.lib

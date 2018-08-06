@@ -1,5 +1,3 @@
-!*
-boost/*
 !boost/README.md
 .DS_Store
 dependencies/protobuf/windows/x64/lib/libprotobufd.lib
