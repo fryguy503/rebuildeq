@@ -23,8 +23,6 @@ packages/
 Temp/
 
 # Dependencies
-/dependencies/boost/boost
-/dependencies/libsodium
 /dependencies/luaj_x64
 /dependencies/mysql_x64
 /dependencies/openssl_x64/include/openssl
