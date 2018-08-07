@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "purecss": "^1.0.0"
+    "purecss": "^1.0.0",
+    "typescript": "^3.0.1"
   }
 }
