@@ -4,6 +4,16 @@
     box-sizing: border-box;
 }
 
+.border { 
+    border: 10px solid transparent;
+    /*padding: 15px;*/
+    -webkit-border-image: url(/border.gif) 6 round; /* Safari 3.1-5 */
+    -o-border-image: url(/border.gif) 6 round; /* Opera 11-12.1 */
+    border-image: url(/border.gif) 6 round;
+    background-color: #101010;
+    /*border-image-slice: 50%;*/
+}
+
 /*
  * -- BASE STYLES --
  * Most of these are inherited from Base, but I want to change a few.
@@ -78,8 +88,8 @@ label {
 }
 
 a.pure-button-primary {
-    background: white;
-    color: #1f8dd6;
+    background: #101010;
+    color: #e2d58b;
     border-radius: 5px;
     font-size: 120%;
 }
@@ -93,11 +103,14 @@ a.pure-button-primary {
 .home-menu {
     padding: 0.5em;
     text-align: center;
-    box-shadow: 0 1px 1px rgba(0,0,0, 0.10);
+    /* box-shadow: 0 1px 1px rgba(0,0,0, 0.10); */
 }
+/*
 .home-menu {
-    background: #2d3e50;
+     background: #2d263c;
 }
+*/
+
 .pure-menu.pure-menu-fixed {
     /* Fixed menus normally have a border at the bottom. */
     border-bottom: none;
@@ -106,7 +119,7 @@ a.pure-button-primary {
 }
 
 .home-menu .pure-menu-heading {
-    color: white;
+    color: #e2d58b;
     font-weight: 400;
     font-size: 120%;
 }
@@ -116,7 +129,7 @@ a.pure-button-primary {
 }
 
 .home-menu a {
-    color: #6FBEF3;
+    color: #e2d58b;
 }
 .home-menu li a:hover,
 .home-menu li a:focus {
@@ -158,8 +171,8 @@ a.pure-button-primary {
 .splash-head {
     font-size: 20px;
     font-weight: bold;
-    color: white;
-    border: 3px solid white;
+    color: #e2d58b;
+    /*border: 3px solid white;*/
     padding: 1em 1.6em;
     font-weight: 100;
     border-radius: 5px;

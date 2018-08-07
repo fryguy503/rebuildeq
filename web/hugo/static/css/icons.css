@@ -1,4 +1,7 @@
 
+.classicon {
+	padding: 0px 2px 2px 0px;
+}
 .slotarea {
 	-webkit-user-select: none; /* Chrome/Safari */        
 	-moz-user-select: none; /* Firefox */

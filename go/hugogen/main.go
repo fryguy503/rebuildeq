@@ -28,9 +28,10 @@ func main() {
 		return
 	}
 	outPath := "../../web/hugo/content/"
-	total := 150
+	total := 5
 	err = genItems(db, outPath+"item/", total)
 	err = genNPCs(db, outPath+"npc/", total)
+	err = genSpells(db, outPath+"spell/", total)
 
 }
 
