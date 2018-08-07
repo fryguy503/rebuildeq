@@ -29,51 +29,28 @@ func genSpells(db *sqlx.DB, outPath string, total int) (err error) {
 
 		count++
 
-		outStr := "+++\n"
-		outStr += fmt.Sprintf("note = \"This file was auto generated. DO NOT EDIT\"\n")
-		outStr += fmt.Sprintf("description = \"%s\"\n", s.Name.String)
-		outStr += fmt.Sprintf("id = \"%s\"\n", s.Id)
-		outStr += fmt.Sprintf("icon = \"%s\"\n", s.Icon)
-		type spellEffect struct {
-			Id    string
-			Value string
-		}
-		tags := []spellEffect{
-			{Id: s.Effectid1, Value: s.Effect_base_value1},
-			{Id: s.Effectid2, Value: s.Effect_base_value2},
-			{Id: s.Effectid3, Value: s.Effect_base_value3},
-			{Id: s.Effectid4, Value: s.Effect_base_value4},
-			{Id: s.Effectid5, Value: s.Effect_base_value5},
-			{Id: s.Effectid6, Value: s.Effect_base_value6},
-			{Id: s.Effectid7, Value: s.Effect_base_value7},
-			{Id: s.Effectid8, Value: s.Effect_base_value8},
-			{Id: s.Effectid9, Value: s.Effect_base_value9},
-			{Id: s.Effectid10, Value: s.Effect_base_value10},
-			{Id: s.Effectid11, Value: s.Effect_base_value11},
-			{Id: s.Effectid12, Value: s.Effect_base_value12},
-		}
-		tagStr := ""
-		for _, tag := range tags {
-			if tag.Id == "" {
-				continue
-			}
-			if tag.Id == "254" && s.Effect_base_value1 == "0" {
-				continue
-			}
-
-			tagStr += fmt.Sprintf(`"%s", `, tag.Id)
-		}
-		if getType(s.Targettype) != "" {
-			tagStr += fmt.Sprintf(`"%s", `, getType(s.Targettype))
-		}
-		if len(tagStr) > 0 {
-			tagStr = tagStr[0 : len(tagStr)-2]
-			outStr += fmt.Sprintf("tags = [%s]\n", tagStr)
-		}
-		outStr += fmt.Sprintf("title = \"%s\"\n", s.Name.String)
-		outStr += fmt.Sprintf("class = \"%s\"\n", s.Classes1)
-		outStr += "+++\n"
-		outStr += "targetType: " + getType(s.Targettype)
+		outStr := "---\n"
+		outStr += fmt.Sprintf("note: This file was auto generated. DO NOT EDIT\n")
+		outStr += fmt.Sprintf("description: \"%s\"\n", s.Name.String)
+		outStr += fmt.Sprintf("id: %s\n", s.Id)
+		outStr += fmt.Sprintf("icon: %s\n", s.Icon)
+		outStr += "effects:\n"
+		outStr += fmt.Sprintf("  effect1:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid1, s.Effect_base_value1, s.Effect_limit_value1)
+		outStr += fmt.Sprintf("  effect2:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid2, s.Effect_base_value2, s.Effect_limit_value2)
+		outStr += fmt.Sprintf("  effect3:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid3, s.Effect_base_value3, s.Effect_limit_value3)
+		outStr += fmt.Sprintf("  effect4:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid4, s.Effect_base_value4, s.Effect_limit_value4)
+		outStr += fmt.Sprintf("  effect5:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid5, s.Effect_base_value5, s.Effect_limit_value5)
+		outStr += fmt.Sprintf("  effect6:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid6, s.Effect_base_value6, s.Effect_limit_value6)
+		outStr += fmt.Sprintf("  effect7:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid7, s.Effect_base_value7, s.Effect_limit_value7)
+		outStr += fmt.Sprintf("  effect8:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid8, s.Effect_base_value8, s.Effect_limit_value8)
+		outStr += fmt.Sprintf("  effect9:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid9, s.Effect_base_value9, s.Effect_limit_value9)
+		outStr += fmt.Sprintf("  effect10:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid10, s.Effect_base_value10, s.Effect_limit_value10)
+		outStr += fmt.Sprintf("  effect11:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid11, s.Effect_base_value11, s.Effect_limit_value11)
+		outStr += fmt.Sprintf("  effect12:\n    id: %s\n    base: %s\n    limit: %s\n", s.Effectid12, s.Effect_base_value12, s.Effect_limit_value12)
+		outStr += fmt.Sprintf("targettype: %s\n", getType(s.Targettype))
+		outStr += fmt.Sprintf("title: \"%s\"\n", s.Name.String)
+		outStr += fmt.Sprintf("class: %s\n", s.Classes1)
+		outStr += "---\n"
 		err = ioutil.WriteFile(fmt.Sprintf("%s/%s-%s.md", outPath, slug.MakeLang(s.Name.String, "en"), s.Id), []byte(outStr), 0644)
 		if err != nil {
 			fmt.Println("Error writing file:", err.Error())
@@ -101,6 +78,7 @@ func getType(id string) (name string) {
 			return
 		}
 	}
+	name = "unknown"
 	return
 }
 

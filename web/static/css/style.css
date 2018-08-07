@@ -8,6 +8,7 @@
     background-color: black;
 }
 
+/* Builds */
 .build {
     position: absolute;
     left: 50%;
@@ -120,7 +121,7 @@ h4,
 h5,
 h6,
 label {
-    color: #34495e;
+    color: white;
 }
 
 .pure-img-responsive {
@@ -423,7 +424,7 @@ a.pure-button-primary {
 }
 .post-title {
     font-size: 2em;
-    color: #222;
+    color: #aaa;
     margin-bottom: 0.2em;
 }
 .post-avatar {

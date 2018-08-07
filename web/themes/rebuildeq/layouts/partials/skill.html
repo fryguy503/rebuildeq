@@ -1,3 +1,6 @@
+{{ if (not .name) }}<span class="skill"></span>
+{{else}}
 <span class="skill black" index="{{.index}}" style="background-image: url(/icons/builds/rb-{{.shortname}}.png)">				
 	<div class="tooltip border"><h1>{{ .name }}</h1>{{safeHTML .description}}</div>
 </span>
+{{end}}

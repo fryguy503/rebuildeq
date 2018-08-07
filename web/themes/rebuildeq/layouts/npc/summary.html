@@ -1,5 +1,5 @@
-<section class="post">
-	<div class="post-description">		
-			<span class="slot slotdrop"><span alt="{{.Params.name}}" class="item icon-{{.Params.icon}}"></span></span><a href="{{ .Permalink }}">{{ .Title }}</a> - {{ printf "%s" .Summary | markdownify }}
-	</div>
-</section>
+<td><a href="{{ .Permalink }}"></a><span alt="{{.Params.name}}" class="item icon-{{.Params.icon}}"></span></a></td>
+<td><a href="{{ .Permalink }}">{{ .Title }}</a></td>
+<td><a href="{{ .Permalink }}">{{ .Params.level }}</a></td>
+<td><a href="{{ .Permalink }}">{{ .Params.zonename }}</a></td>
+<td><a href="{{ .Permalink }}">{{ .Params.lootcount }}</a></td>
