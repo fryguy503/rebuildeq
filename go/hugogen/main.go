@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gosimple/slug"
@@ -27,8 +28,8 @@ func main() {
 		fmt.Println("Error connecting to DB:", err.Error())
 		return
 	}
-	outPath := "../../web/hugo/content/"
-	total := 5
+	outPath := "../../web/content/"
+	total := 150
 	err = genItems(db, outPath+"item/", total)
 	err = genNPCs(db, outPath+"npc/", total)
 	err = genSpells(db, outPath+"spell/", total)
@@ -78,6 +79,11 @@ func genItems(db *sqlx.DB, outPath string, total int) (err error) {
 }
 
 func genNPCs(db *sqlx.DB, outPath string, total int) (err error) {
+	err = os.MkdirAll(outPath, 0644)
+	if err != nil {
+		fmt.Println("Error making directory", err.Error())
+		return
+	}
 	count := 0
 	rows, err := db.Queryx(fmt.Sprintf("SELECT id, race, name, class FROM npc_types LIMIT %d", total))
 	if err != nil {

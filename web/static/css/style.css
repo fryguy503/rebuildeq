@@ -4,6 +4,94 @@
     box-sizing: border-box;
 }
 
+.black {
+    background-color: black;
+}
+
+.build {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    min-width: 800px;
+}
+
+.skill-group {
+    padding: 0 0 10px 0;
+    min-width: 800px;
+}
+
+.skill {
+    padding: 3px;
+    width: 52px;
+    height: 53px;
+    cursor: pointer;
+    position: relative;
+    float: left;
+}
+
+.skill .border {
+    background-color: black;
+}
+
+.skill .tooltip {
+    background-color: #101010;
+    color: #fff;
+    display: block;
+    left: 56px;
+    size: 5pt;
+    top: 80px;
+    bottom: 100%;
+    margin-bottom: 15px;
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+    width: 200px;
+    height: 200px;    
+    -webkit-transform: translateY(10px);
+        -moz-transform: translateY(10px);
+        -ms-transform: translateY(10px);
+            -o-transform: translateY(10px);
+            transform: translateY(10px);
+    -webkit-transition: all .25s ease-out;
+        -moz-transition: all .25s ease-out;
+        -ms-transition: all .25s ease-out;
+            -o-transition: all .25s ease-out;
+            transition: all .25s ease-out;
+    -webkit-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+        -moz-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+        -ms-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+            -o-box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.28);
+}
+
+
+.skill:hover .tooltip {
+    opacity: 1;
+    pointer-events: auto;
+        -webkit-transform: translateY(0px);
+        -moz-transform: translateY(0px);
+        -ms-transform: translateY(0px);
+        -o-transform: translateY(0px);
+        transform: translateY(0px);      
+}
+
+/* IE can just show/hide with no transition */
+.lte8 .skill .tooltip {
+    display: none;
+}
+
+.lte8 .skill:hover .tooltip {
+    display: block;
+}
+
+.skill .tooltip h1 {
+    color: white;
+    font-size: 1em;
+}
+
 .border { 
     border: 10px solid transparent;
     /*padding: 15px;*/
@@ -21,6 +109,7 @@
 body {
     line-height: 1.7em;
     color: #7f8c8d;
+    background-color: #333333;
     font-size: 13px;
 }
 

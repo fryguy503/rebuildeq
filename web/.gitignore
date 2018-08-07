@@ -1,0 +1,8 @@
+node_modules
+content/item/*
+!content/item/cloth-cap-1001.md
+content/spell/
+!content/spell/cloak-5.md
+content/npc/
+!content/npc/a_decaying_skeleton-2000.md
+static/js/build.js.map
