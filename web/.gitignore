@@ -6,3 +6,4 @@ content/spell/
 content/npc/
 !content/npc/a_decaying_skeleton-2000.md
 static/js/build.js.map
+public/

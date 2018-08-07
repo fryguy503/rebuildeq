@@ -1,8 +1,7 @@
-baseURL = "http://rebuildeq.com/"
+#baseURL = ""
 languageCode = "en-us"
 title = "RebuildEQ"
 fullName = "Rebuild Everquest"
-publishDir = "../../deploy/html"
 theme = "rebuildeq"
 # Define the number of posts per page
 paginate = 10
