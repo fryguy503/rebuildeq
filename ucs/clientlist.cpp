@@ -176,7 +176,7 @@ std::vector<std::string> ParseRecipients(std::string RecipientString) {
 							break;
 						}
 						RecipientList.push_back(Secret + Recips.substr(CurrentPos,
-							Space - CurrentPos));
+																	   Space - CurrentPos));
 						CurrentPos = Space + 1;
 					}
 					Iterator = RecipientList.begin();
@@ -359,16 +359,16 @@ static void ProcessSetMessageStatus(std::string SetMessageCommand) {
 
 	switch (SetMessageCommand[0]) {
 
-	case 'R': // READ
-		Status = 3;
-		break;
+		case 'R': // READ
+			Status = 3;
+			break;
 
-	case 'T': // TRASH
-		Status = 4;
-		break;
+		case 'T': // TRASH
+			Status = 4;
+			break;
 
-	default: // DELETE
-		Status = 0;
+		default: // DELETE
+			Status = 0;
 
 	}
 	std::string::size_type NumStart = SetMessageCommand.find_first_of("123456789");
@@ -513,6 +513,7 @@ Client::Client(std::shared_ptr<EQStreamInterface> eqs) {
 	GlobalChatLimiterTimer = new Timer(RuleI(Chat, IntervalDurationMS));
 
 	TypeOfConnection = ConnectionTypeUnknown;
+	ClientVersion_ = EQEmu::versions::ClientVersion::Unknown;
 
 	UnderfootOrLater = false;
 }
@@ -554,7 +555,7 @@ void Clientlist::CheckForStaleConnections(Client *c) {
 	for (Iterator = ClientChatConnections.begin(); Iterator != ClientChatConnections.end(); ++Iterator) {
 
 		if (((*Iterator) != c) && ((c->GetName() == (*Iterator)->GetName())
-			&& (c->GetConnectionType() == (*Iterator)->GetConnectionType()))) {
+								   && (c->GetConnectionType() == (*Iterator)->GetConnectionType()))) {
 
 			Log(Logs::Detail, Logs::UCS_Server, "Removing old connection for %s", c->GetName().c_str());
 
@@ -598,70 +599,70 @@ void Clientlist::Process()
 			EmuOpcode opcode = app->GetOpcode();
 
 			switch (opcode) {
-			case OP_MailLogin: {
-				char *PacketBuffer = (char *)app->pBuffer + 1;
-				char MailBox[64];
-				char Key[64];
-				char ConnectionTypeIndicator;
+				case OP_MailLogin: {
+					char *PacketBuffer = (char *)app->pBuffer + 1;
+					char MailBox[64];
+					char Key[64];
+					char ConnectionTypeIndicator;
 
-				VARSTRUCT_DECODE_STRING(MailBox, PacketBuffer);
+					VARSTRUCT_DECODE_STRING(MailBox, PacketBuffer);
 
-				if (strlen(PacketBuffer) != 9) {
-					Log(Logs::Detail, Logs::UCS_Server,
-						"Mail key is the wrong size. Version of world incompatible with UCS.");
-					KeyValid = false;
+					if (strlen(PacketBuffer) != 9) {
+						Log(Logs::Detail, Logs::UCS_Server,
+							"Mail key is the wrong size. Version of world incompatible with UCS.");
+						KeyValid = false;
+						break;
+					}
+					ConnectionTypeIndicator = VARSTRUCT_DECODE_TYPE(char, PacketBuffer);
+
+					(*it)->SetConnectionType(ConnectionTypeIndicator);
+
+					VARSTRUCT_DECODE_STRING(Key, PacketBuffer);
+
+					std::string MailBoxString = MailBox, CharacterName;
+
+					// Strip off the SOE.EQ.<shortname>.
+					//
+					std::string::size_type LastPeriod = MailBoxString.find_last_of(".");
+
+					if (LastPeriod == std::string::npos)
+						CharacterName = MailBoxString;
+					else
+						CharacterName = MailBoxString.substr(LastPeriod + 1);
+
+					Log(Logs::Detail, Logs::UCS_Server, "Received login for user %s with key %s",
+						MailBox, Key);
+
+					if (!database.VerifyMailKey(CharacterName, (*it)->ClientStream->GetRemoteIP(), Key)) {
+						Log(Logs::Detail, Logs::UCS_Server,
+							"Chat Key for %s does not match, closing connection.", MailBox);
+						KeyValid = false;
+						break;
+					}
+
+					(*it)->SetAccountID(database.FindAccount(CharacterName.c_str(), (*it)));
+
+					database.GetAccountStatus((*it));
+
+					if ((*it)->GetConnectionType() == ConnectionTypeCombined)
+						(*it)->SendFriends();
+
+					(*it)->SendMailBoxes();
+
+					CheckForStaleConnections((*it));
 					break;
 				}
-				ConnectionTypeIndicator = VARSTRUCT_DECODE_TYPE(char, PacketBuffer);
 
-				(*it)->SetConnectionType(ConnectionTypeIndicator);
-
-				VARSTRUCT_DECODE_STRING(Key, PacketBuffer);
-
-				std::string MailBoxString = MailBox, CharacterName;
-
-				// Strip off the SOE.EQ.<shortname>.
-				//
-				std::string::size_type LastPeriod = MailBoxString.find_last_of(".");
-
-				if (LastPeriod == std::string::npos)
-					CharacterName = MailBoxString;
-				else
-					CharacterName = MailBoxString.substr(LastPeriod + 1);
-
-				Log(Logs::Detail, Logs::UCS_Server, "Received login for user %s with key %s",
-					MailBox, Key);
-
-				if (!database.VerifyMailKey(CharacterName, (*it)->ClientStream->GetRemoteIP(), Key)) {
-					Log(Logs::Detail, Logs::UCS_Server,
-						"Chat Key for %s does not match, closing connection.", MailBox);
-					KeyValid = false;
+				case OP_Mail: {
+					std::string CommandString = (const char *)app->pBuffer + 1;
+					ProcessOPMailCommand((*it), CommandString);
 					break;
 				}
 
-				(*it)->SetAccountID(database.FindAccount(CharacterName.c_str(), (*it)));
-
-				database.GetAccountStatus((*it));
-
-				if ((*it)->GetConnectionType() == ConnectionTypeCombined)
-					(*it)->SendFriends();
-
-				(*it)->SendMailBoxes();
-
-				CheckForStaleConnections((*it));
-				break;
-			}
-
-			case OP_Mail: {
-				std::string CommandString = (const char *)app->pBuffer + 1;
-				ProcessOPMailCommand((*it), CommandString);
-				break;
-			}
-
-			default: {
-				Log(Logs::Detail, Logs::UCS_Server, "Unhandled chat opcode %8X", opcode);
-				break;
-			}
+				default: {
+					Log(Logs::Detail, Logs::UCS_Server, "Unhandled chat opcode %8X", opcode);
+					break;
+				}
 			}
 			safe_delete(app);
 		}
@@ -681,6 +682,7 @@ void Clientlist::Process()
 			it = ClientChatConnections.erase(it);
 			continue;
 		}
+
 		++it;
 	}
 }
@@ -726,117 +728,117 @@ void Clientlist::ProcessOPMailCommand(Client *c, std::string CommandString)
 
 	switch (CommandCode) {
 
-	case CommandJoin:
-		c->JoinChannels(Parameters);
-		break;
+		case CommandJoin:
+			c->JoinChannels(Parameters);
+			break;
 
-	case CommandLeaveAll:
-		c->LeaveAllChannels();
-		break;
+		case CommandLeaveAll:
+			c->LeaveAllChannels();
+			break;
 
-	case CommandLeave:
-		c->LeaveChannels(Parameters);
-		break;
+		case CommandLeave:
+			c->LeaveChannels(Parameters);
+			break;
 
-	case CommandListAll:
-		ChannelList->SendAllChannels(c);
-		break;
+		case CommandListAll:
+			ChannelList->SendAllChannels(c);
+			break;
 
-	case CommandList:
-		c->ProcessChannelList(Parameters);
-		break;
+		case CommandList:
+			c->ProcessChannelList(Parameters);
+			break;
 
-	case CommandSet:
-		c->LeaveAllChannels(false);
-		c->JoinChannels(Parameters);
-		break;
+		case CommandSet:
+			c->LeaveAllChannels(false);
+			c->JoinChannels(Parameters);
+			break;
 
-	case CommandAnnounce:
-		c->ToggleAnnounce(Parameters);
-		break;
+		case CommandAnnounce:
+			c->ToggleAnnounce(Parameters);
+			break;
 
-	case CommandSetOwner:
-		c->SetChannelOwner(Parameters);
-		break;
+		case CommandSetOwner:
+			c->SetChannelOwner(Parameters);
+			break;
 
-	case CommandOPList:
-		c->OPList(Parameters);
-		break;
+		case CommandOPList:
+			c->OPList(Parameters);
+			break;
 
-	case CommandInvite:
-		c->ChannelInvite(Parameters);
-		break;
+		case CommandInvite:
+			c->ChannelInvite(Parameters);
+			break;
 
-	case CommandGrant:
-		c->ChannelGrantModerator(Parameters);
-		break;
+		case CommandGrant:
+			c->ChannelGrantModerator(Parameters);
+			break;
 
-	case CommandModerate:
-		c->ChannelModerate(Parameters);
-		break;
+		case CommandModerate:
+			c->ChannelModerate(Parameters);
+			break;
 
-	case CommandVoice:
-		c->ChannelGrantVoice(Parameters);
-		break;
+		case CommandVoice:
+			c->ChannelGrantVoice(Parameters);
+			break;
 
-	case CommandKick:
-		c->ChannelKick(Parameters);
-		break;
+		case CommandKick:
+			c->ChannelKick(Parameters);
+			break;
 
-	case CommandPassword:
-		c->SetChannelPassword(Parameters);
-		break;
+		case CommandPassword:
+			c->SetChannelPassword(Parameters);
+			break;
 
-	case CommandToggleInvites:
-		c->ToggleInvites();
-		break;
+		case CommandToggleInvites:
+			c->ToggleInvites();
+			break;
 
-	case CommandAFK:
-		break;
+		case CommandAFK:
+			break;
 
-	case CommandUptime:
-		c->SendUptime();
-		break;
+		case CommandUptime:
+			c->SendUptime();
+			break;
 
-	case CommandGetHeaders:
-		database.SendHeaders(c);
-		break;
+		case CommandGetHeaders:
+			database.SendHeaders(c);
+			break;
 
-	case CommandGetBody:
-		database.SendBody(c, atoi(Parameters.c_str()));
-		break;
+		case CommandGetBody:
+			database.SendBody(c, atoi(Parameters.c_str()));
+			break;
 
-	case CommandMailTo:
-		ProcessMailTo(c, Parameters);
-		break;
+		case CommandMailTo:
+			ProcessMailTo(c, Parameters);
+			break;
 
-	case CommandSetMessageStatus:
-		Log(Logs::Detail, Logs::UCS_Server, "Set Message Status, Params: %s", Parameters.c_str());
-		ProcessSetMessageStatus(Parameters);
-		break;
+		case CommandSetMessageStatus:
+			Log(Logs::Detail, Logs::UCS_Server, "Set Message Status, Params: %s", Parameters.c_str());
+			ProcessSetMessageStatus(Parameters);
+			break;
 
-	case CommandSelectMailBox:
-	{
-		std::string::size_type NumStart = Parameters.find_first_of("0123456789");
-		c->ChangeMailBox(atoi(Parameters.substr(NumStart).c_str()));
-		break;
-	}
-	case CommandSetMailForwarding:
-		break;
+		case CommandSelectMailBox:
+		{
+			std::string::size_type NumStart = Parameters.find_first_of("0123456789");
+			c->ChangeMailBox(atoi(Parameters.substr(NumStart).c_str()));
+			break;
+		}
+		case CommandSetMailForwarding:
+			break;
 
-	case CommandBuddy:
-		RemoveApostrophes(Parameters);
-		ProcessCommandBuddy(c, Parameters);
-		break;
+		case CommandBuddy:
+			RemoveApostrophes(Parameters);
+			ProcessCommandBuddy(c, Parameters);
+			break;
 
-	case CommandIgnorePlayer:
-		RemoveApostrophes(Parameters);
-		ProcessCommandIgnore(c, Parameters);
-		break;
+		case CommandIgnorePlayer:
+			RemoveApostrophes(Parameters);
+			ProcessCommandIgnore(c, Parameters);
+			break;
 
-	default:
-		c->SendHelp();
-		Log(Logs::Detail, Logs::UCS_Server, "Unhandled OP_Mail command: %s", CommandString.c_str());
+		default:
+			c->SendHelp();
+			Log(Logs::Detail, Logs::UCS_Server, "Unhandled OP_Mail command: %s", CommandString.c_str());
 	}
 }
 
@@ -1300,7 +1302,7 @@ void Client::SendChannelMessage(std::string Message)
 					{
 						char TimeLeft[256];
 						sprintf(TimeLeft, "You are currently rate limited, you cannot send more messages for %i seconds.",
-							(GlobalChatLimiterTimer->GetRemainingTime() / 1000));
+								(GlobalChatLimiterTimer->GetRemainingTime() / 1000));
 						GeneralChannelMessage(TimeLeft);
 					}
 					else
@@ -1412,7 +1414,7 @@ void Client::SendChannelMessageByNumber(std::string Message) {
 				{
 					char TimeLeft[256];
 					sprintf(TimeLeft, "You are currently rate limited, you cannot send more messages for %i seconds.",
-						(GlobalChatLimiterTimer->GetRemainingTime() / 1000));
+							(GlobalChatLimiterTimer->GetRemainingTime() / 1000));
 					GeneralChannelMessage(TimeLeft);
 				}
 				else
@@ -1459,7 +1461,7 @@ void Client::SendChannelMessage(std::string ChannelName, std::string Message, Cl
 	VARSTRUCT_ENCODE_STRING(PacketBuffer, Message.c_str());
 
 	if (UnderfootOrLater)
-		VARSTRUCT_ENCODE_STRING(PacketBuffer, "SPAM:0:");
+	VARSTRUCT_ENCODE_STRING(PacketBuffer, "SPAM:0:");
 
 	QueuePacket(outapp);
 
@@ -2134,36 +2136,64 @@ void Client::SetConnectionType(char c) {
 
 	switch (c)
 	{
-	case 'S':
-	{
-		TypeOfConnection = ConnectionTypeCombined;
-		Log(Logs::Detail, Logs::UCS_Server, "Connection type is Combined (SoF/SoD)");
-		break;
-	}
-	case 'U':
-	{
-		TypeOfConnection = ConnectionTypeCombined;
-		UnderfootOrLater = true;
-		Log(Logs::Detail, Logs::UCS_Server, "Connection type is Combined (Underfoot+)");
-		break;
-	}
-	case 'M':
-	{
-		TypeOfConnection = ConnectionTypeMail;
-		Log(Logs::Detail, Logs::UCS_Server, "Connection type is Mail (6.2 or Titanium client)");
-		break;
-	}
-	case 'C':
-	{
-		TypeOfConnection = ConnectionTypeChat;
-		Log(Logs::Detail, Logs::UCS_Server, "Connection type is Chat (6.2 or Titanium client)");
-		break;
-	}
-	default:
-	{
-		TypeOfConnection = ConnectionTypeUnknown;
-		Log(Logs::Detail, Logs::UCS_Server, "Connection type is unknown.");
-	}
+		case EQEmu::versions::ucsTitaniumChat:
+		{
+			TypeOfConnection = ConnectionTypeChat;
+			ClientVersion_ = EQEmu::versions::ClientVersion::Titanium;
+			Log(Logs::Detail, Logs::UCS_Server, "Connection type is Chat (Titanium)");
+			break;
+		}
+		case EQEmu::versions::ucsTitaniumMail:
+		{
+			TypeOfConnection = ConnectionTypeMail;
+			ClientVersion_ = EQEmu::versions::ClientVersion::Titanium;
+			Log(Logs::Detail, Logs::UCS_Server, "Connection type is Mail (Titanium)");
+			break;
+		}
+		case EQEmu::versions::ucsSoFCombined:
+		{
+			TypeOfConnection = ConnectionTypeCombined;
+			ClientVersion_ = EQEmu::versions::ClientVersion::SoF;
+			Log(Logs::Detail, Logs::UCS_Server, "Connection type is Combined (SoF)");
+			break;
+		}
+		case EQEmu::versions::ucsSoDCombined:
+		{
+			TypeOfConnection = ConnectionTypeCombined;
+			ClientVersion_ = EQEmu::versions::ClientVersion::SoD;
+			Log(Logs::Detail, Logs::UCS_Server, "Connection type is Combined (SoD)");
+			break;
+		}
+		case EQEmu::versions::ucsUFCombined:
+		{
+			TypeOfConnection = ConnectionTypeCombined;
+			ClientVersion_ = EQEmu::versions::ClientVersion::UF;
+			UnderfootOrLater = true;
+			Log(Logs::Detail, Logs::UCS_Server, "Connection type is Combined (Underfoot)");
+			break;
+		}
+		case EQEmu::versions::ucsRoFCombined:
+		{
+			TypeOfConnection = ConnectionTypeCombined;
+			ClientVersion_ = EQEmu::versions::ClientVersion::RoF;
+			UnderfootOrLater = true;
+			Log(Logs::Detail, Logs::UCS_Server, "Connection type is Combined (RoF)");
+			break;
+		}
+		case EQEmu::versions::ucsRoF2Combined:
+		{
+			TypeOfConnection = ConnectionTypeCombined;
+			ClientVersion_ = EQEmu::versions::ClientVersion::RoF2;
+			UnderfootOrLater = true;
+			Log(Logs::Detail, Logs::UCS_Server, "Connection type is Combined (RoF2)");
+			break;
+		}
+		default:
+		{
+			TypeOfConnection = ConnectionTypeUnknown;
+			ClientVersion_ = EQEmu::versions::ClientVersion::Unknown;
+			Log(Logs::Detail, Logs::UCS_Server, "Connection type is unknown.");
+		}
 	}
 }
 

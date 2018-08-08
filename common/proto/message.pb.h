@@ -2693,17 +2693,17 @@ class DamageEvent : public ::google::protobuf::Message /* @@protoc_insertion_poi
   float force() const;
   void set_force(float value);
 
-  // float meleepush_xy = 7;
-  void clear_meleepush_xy();
-  static const int kMeleepushXyFieldNumber = 7;
-  float meleepush_xy() const;
-  void set_meleepush_xy(float value);
+  // float hit_heading = 7;
+  void clear_hit_heading();
+  static const int khit_headingFieldNumber = 7;
+  float hit_heading() const;
+  void set_hit_heading(float value);
 
-  // float meleepush_z = 8;
-  void clear_meleepush_z();
-  static const int kMeleepushZFieldNumber = 8;
-  float meleepush_z() const;
-  void set_meleepush_z(float value);
+  // float hit_pitch = 8;
+  void clear_hit_pitch();
+  static const int khit_pitchFieldNumber = 8;
+  float hit_pitch() const;
+  void set_hit_pitch(float value);
 
   // @@protoc_insertion_point(class_scope:eqproto.DamageEvent)
  private:
@@ -2715,8 +2715,8 @@ class DamageEvent : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::google::protobuf::uint32 spellid_;
   ::google::protobuf::uint32 damage_;
   float force_;
-  float meleepush_xy_;
-  float meleepush_z_;
+  float hit_heading_;
+  float hit_pitch_;
   mutable int _cached_size_;
   friend struct ::protobuf_message_2eproto::TableStruct;
   friend void ::protobuf_message_2eproto::InitDefaultsDamageEventImpl();
@@ -4285,11 +4285,11 @@ class SpawnEvent : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 spawnid() const;
   void set_spawnid(::google::protobuf::uint32 value);
 
-  // uint32 unknown0344 = 76;
-  void clear_unknown0344();
-  static const int kUnknown0344FieldNumber = 76;
-  ::google::protobuf::uint32 unknown0344() const;
-  void set_unknown0344(::google::protobuf::uint32 value);
+  // uint32 bounding_radius = 76;
+  void clear_bounding_radius();
+  static const int kbounding_radiusFieldNumber = 76;
+  float bounding_radius() const;
+  void set_bounding_radius(float value);
 
   // uint32 IsMercenary = 77;
   void clear_ismercenary();
@@ -4488,7 +4488,7 @@ class SpawnEvent : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 equip_chest2_;
   ::google::protobuf::uint32 mount_color_;
   ::google::protobuf::uint32 spawnid_;
-  ::google::protobuf::uint32 unknown0344_;
+  float bounding_radius_;
   ::google::protobuf::uint32 ismercenary_;
   ::google::protobuf::uint32 lfg_;
   ::google::protobuf::uint32 destructibleappearance_;
@@ -6903,32 +6903,32 @@ inline void DamageEvent::set_force(float value) {
   // @@protoc_insertion_point(field_set:eqproto.DamageEvent.force)
 }
 
-// float meleepush_xy = 7;
-inline void DamageEvent::clear_meleepush_xy() {
-  meleepush_xy_ = 0;
+// float hit_heading = 7;
+inline void DamageEvent::clear_hit_heading() {
+    hit_heading_ = 0;
 }
-inline float DamageEvent::meleepush_xy() const {
-  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.meleepush_xy)
-  return meleepush_xy_;
+inline float DamageEvent::hit_heading() const {
+  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.hit_heading)
+  return hit_heading_;
 }
-inline void DamageEvent::set_meleepush_xy(float value) {
-  
-  meleepush_xy_ = value;
-  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.meleepush_xy)
+inline void DamageEvent::set_hit_heading(float value) {
+
+  hit_heading_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.hit_heading)
 }
 
-// float meleepush_z = 8;
-inline void DamageEvent::clear_meleepush_z() {
-  meleepush_z_ = 0;
+// float hit_pitch = 8;
+inline void DamageEvent::clear_hit_pitch() {
+    hit_pitch_ = 0;
 }
-inline float DamageEvent::meleepush_z() const {
-  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.meleepush_z)
-  return meleepush_z_;
+inline float DamageEvent::hit_pitch() const {
+  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.hit_pitch)
+  return hit_pitch_;
 }
-inline void DamageEvent::set_meleepush_z(float value) {
-  
-  meleepush_z_ = value;
-  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.meleepush_z)
+inline void DamageEvent::set_hit_pitch(float value) {
+
+  hit_pitch_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.hit_pitch)
 }
 
 // -------------------------------------------------------------------
@@ -8904,18 +8904,18 @@ inline void SpawnEvent::set_spawnid(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:eqproto.SpawnEvent.spawnId)
 }
 
-// uint32 unknown0344 = 76;
-inline void SpawnEvent::clear_unknown0344() {
-  unknown0344_ = 0u;
+// uint32 bounding_radius = 76;
+inline void SpawnEvent::clear_bounding_radius() {
+      bounding_radius_ = 0u;
 }
-inline ::google::protobuf::uint32 SpawnEvent::unknown0344() const {
-  // @@protoc_insertion_point(field_get:eqproto.SpawnEvent.unknown0344)
-  return unknown0344_;
+inline float SpawnEvent::bounding_radius() const {
+  // @@protoc_insertion_point(field_get:eqproto.SpawnEvent.bounding_radius)
+  return bounding_radius_;
 }
-inline void SpawnEvent::set_unknown0344(::google::protobuf::uint32 value) {
-  
-  unknown0344_ = value;
-  // @@protoc_insertion_point(field_set:eqproto.SpawnEvent.unknown0344)
+inline void SpawnEvent::set_bounding_radius(float value) {
+
+  bounding_radius_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.SpawnEvent.bounding_radius)
 }
 
 // uint32 IsMercenary = 77;

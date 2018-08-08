@@ -1,8 +1,12 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+SET(PROTOBUF_GENERATE_CPP_APPEND_PATH "../../")
+
+PROTOBUF_GENERATE_CPP(PROTO_SRCS PROTO_HEADERS ../proto/message.proto)
 
 SET(common_sources
 	base_packet.cpp
 	classes.cpp
+	compression.cpp
 	condition.cpp
 	crash.cpp
 	crc16.cpp
@@ -13,7 +17,6 @@ SET(common_sources
 	dbcore.cpp
 	deity.cpp
 	emu_constants.cpp
-	emu_legacy.cpp
 	emu_limits.cpp
 	emu_opcodes.cpp
 	emu_versions.cpp
@@ -39,9 +42,10 @@ SET(common_sources
 	item_instance.cpp
 	json_config.cpp
 	light_source.cpp
-	md5.cpp
+	md5.cpp	
 	memory_buffer.cpp
 	memory_mapped_file.cpp
+	message.pb.cc
 	misc.cpp
 	misc_functions.cpp
 	mutex.cpp
@@ -60,6 +64,7 @@ SET(common_sources
 	rdtsc.cpp
 	rulesys.cpp
 	say_link.cpp
+	serialize_buffer.cpp
 	serverinfo.cpp
 	shareddb.cpp
 	skills.cpp
@@ -97,8 +102,7 @@ SET(common_sources
 	patches/titanium.cpp
 	patches/titanium_limits.cpp
 	patches/uf.cpp
-	patches/uf_limits.cpp
-	proto/message.pb.cc	
+	patches/uf_limits.cpp	
 	StackWalker/StackWalker.cpp
 	tinyxml/tinystr.cpp
 	tinyxml/tinyxml.cpp
@@ -114,6 +118,7 @@ SET(common_headers
 	base_data.h
 	bodytypes.h
 	classes.h
+	compression.h
 	condition.h
 	crash.h
 	crc16.h
@@ -123,7 +128,6 @@ SET(common_headers
 	dbcore.h
 	deity.h
 	emu_constants.h
-	emu_legacy.h
 	emu_limits.h
 	emu_opcodes.h
 	emu_oplist.h
@@ -168,6 +172,7 @@ SET(common_headers
 	md5.h
 	memory_buffer.h
 	memory_mapped_file.h
+	message.pb.h
 	misc.h
 	misc_functions.h
 	mutex.h
@@ -191,6 +196,7 @@ SET(common_headers
 	ruletypes.h
 	say_link.h
 	seperator.h
+	serialize_buffer.h
 	serverinfo.h
 	servertalk.h
 	shareddb.h
@@ -255,7 +261,6 @@ SET(common_headers
 	patches/uf_limits.h
 	patches/uf_ops.h
 	patches/uf_structs.h
-	proto/message.pb.h
 	StackWalker/StackWalker.h
 	tinyxml/tinystr.h
 	tinyxml/tinyxml.h

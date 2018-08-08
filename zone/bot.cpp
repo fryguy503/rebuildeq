@@ -1,16 +1,13 @@
 /*	EQEMu: Everquest Server Emulator
 	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.org)
-
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
 	the Free Software Foundation; version 2 of the License.
-
 	This program is distributed in the hope that it will be useful,
 	but WITHOUT ANY WARRANTY except by those people which sell it, which
 	are required to give you total support for your newly bought product;
 	without even the implied warranty of MERCHANTABILITY or FITNESS FOR
 	A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
 	You should have received a copy of the GNU General Public License
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
@@ -70,7 +67,6 @@ Bot::Bot(NPCType npcTypeData, Client* botOwner) : NPC(&npcTypeData, nullptr, glm
 	SetBotCharmer(false);
 	SetPetChooser(false);
 	SetRangerAutoWeaponSelect(false);
-	SetHasBeenSummoned(false);
 	SetTaunting(GetClass() == WARRIOR);
 	SetDefaultBotStance();
 
@@ -79,6 +75,11 @@ Bot::Bot(NPCType npcTypeData, Client* botOwner) : NPC(&npcTypeData, nullptr, glm
 	SetPauseAI(false);
 	rest_timer.Disable();
 	SetFollowDistance(BOT_FOLLOW_DISTANCE_DEFAULT);
+	if (IsCasterClass(GetClass()))
+		SetStopMeleeLevel((uint8)RuleI(Bots, CasterStopMeleeLevel));
+	else
+		SetStopMeleeLevel(255);
+
 	// Do this once and only in this constructor
 	GenerateAppearance();
 	GenerateBaseStats();
@@ -140,7 +141,6 @@ Bot::Bot(uint32 botID, uint32 botOwnerCharacterID, uint32 botSpellsID, double to
 	SetBotCharmer(false);
 	SetPetChooser(false);
 	SetRangerAutoWeaponSelect(false);
-	SetHasBeenSummoned(false);
 
 	bool stance_flag = false;
 	if (!botdb.LoadStance(this, stance_flag) && bot_owner)
@@ -153,6 +153,11 @@ Bot::Bot(uint32 botID, uint32 botOwnerCharacterID, uint32 botSpellsID, double to
 
 	rest_timer.Disable();
 	SetFollowDistance(BOT_FOLLOW_DISTANCE_DEFAULT);
+	if (IsCasterClass(GetClass()))
+		SetStopMeleeLevel((uint8)RuleI(Bots, CasterStopMeleeLevel));
+	else
+		SetStopMeleeLevel(255);
+
 	strcpy(this->name, this->GetCleanName());
 
 	memset(&_botInspectMessage, 0, sizeof(InspectMessage_Struct));
@@ -161,7 +166,7 @@ Bot::Bot(uint32 botID, uint32 botOwnerCharacterID, uint32 botSpellsID, double to
 
 	if (!botdb.LoadGuildMembership(GetBotID(), _guildId, _guildRank, _guildName) && bot_owner)
 		bot_owner->Message(13, "%s for '%s'", BotDatabase::fail::LoadGuildMembership(), GetCleanName());
-	
+
 	std::string error_message;
 
 	EquipBot(&error_message);
@@ -235,8 +240,8 @@ void Bot::SetBotSpellID(uint32 newSpellID) {
 }
 
 uint32 Bot::GetBotArcheryRange() {
-	const EQEmu::ItemInstance *range_inst = GetBotItem(EQEmu::inventory::slotRange);
-	const EQEmu::ItemInstance *ammo_inst = GetBotItem(EQEmu::inventory::slotAmmo);
+	const EQEmu::ItemInstance *range_inst = GetBotItem(EQEmu::invslot::slotRange);
+	const EQEmu::ItemInstance *ammo_inst = GetBotItem(EQEmu::invslot::slotAmmo);
 	if (!range_inst || !ammo_inst)
 		return 0;
 
@@ -252,15 +257,15 @@ uint32 Bot::GetBotArcheryRange() {
 void Bot::ChangeBotArcherWeapons(bool isArcher) {
 	if((GetClass()==WARRIOR) || (GetClass()==PALADIN) || (GetClass()==RANGER) || (GetClass()==SHADOWKNIGHT) || (GetClass()==ROGUE)) {
 		if(!isArcher) {
-			BotAddEquipItem(EQEmu::inventory::slotPrimary, GetBotItemBySlot(EQEmu::inventory::slotPrimary));
-			BotAddEquipItem(EQEmu::inventory::slotSecondary, GetBotItemBySlot(EQEmu::inventory::slotSecondary));
+			BotAddEquipItem(EQEmu::invslot::slotPrimary, GetBotItemBySlot(EQEmu::invslot::slotPrimary));
+			BotAddEquipItem(EQEmu::invslot::slotSecondary, GetBotItemBySlot(EQEmu::invslot::slotSecondary));
 			SetAttackTimer();
 			BotGroupSay(this, "My blade is ready");
 		} else {
-			BotRemoveEquipItem(EQEmu::inventory::slotPrimary);
-			BotRemoveEquipItem(EQEmu::inventory::slotSecondary);
-			BotAddEquipItem(EQEmu::inventory::slotAmmo, GetBotItemBySlot(EQEmu::inventory::slotAmmo));
-			BotAddEquipItem(EQEmu::inventory::slotSecondary, GetBotItemBySlot(EQEmu::inventory::slotRange));
+			BotRemoveEquipItem(EQEmu::invslot::slotPrimary);
+			BotRemoveEquipItem(EQEmu::invslot::slotSecondary);
+			BotAddEquipItem(EQEmu::invslot::slotAmmo, GetBotItemBySlot(EQEmu::invslot::slotAmmo));
+			BotAddEquipItem(EQEmu::invslot::slotSecondary, GetBotItemBySlot(EQEmu::invslot::slotRange));
 			SetAttackTimer();
 			BotGroupSay(this, "My bow is true and ready");
 		}
@@ -1158,11 +1163,11 @@ int32 Bot::acmod() {
 
 uint16 Bot::GetPrimarySkillValue() {
 	EQEmu::skills::SkillType skill = EQEmu::skills::HIGHEST_SKILL; //because nullptr == 0, which is 1H Slashing, & we want it to return 0 from GetSkill
-	bool equiped = m_inv.GetItem(EQEmu::inventory::slotPrimary);
+	bool equiped = m_inv.GetItem(EQEmu::invslot::slotPrimary);
 	if(!equiped)
 		skill = EQEmu::skills::SkillHandtoHand;
 	else {
-		uint8 type = m_inv.GetItem(EQEmu::inventory::slotPrimary)->GetItem()->ItemType; //is this the best way to do this?
+		uint8 type = m_inv.GetItem(EQEmu::invslot::slotPrimary)->GetItem()->ItemType; //is this the best way to do this?
 		switch(type) {
 		case EQEmu::item::ItemType1HSlash:
 			skill = EQEmu::skills::Skill1HSlashing;
@@ -1277,7 +1282,7 @@ void Bot::LoadAAs() {
 		points = 0;
 
 		AA::Rank *current = ability->first;
-		
+
 		if (current->level_req > GetLevel()) {
 			++iter;
 			continue;
@@ -1519,7 +1524,7 @@ bool Bot::IsValidName(std::string& name)
 		return false;
 	if (!isupper(name[0]))
 		return false;
-	
+
 	for (int i = 1; i < name.length(); ++i) {
 		if ((!RuleB(Bots, AllowCamelCaseNames) && !islower(name[i])) && name[i] != '_') {
 			return false;
@@ -1551,7 +1556,7 @@ bool Bot::Save()
 			return false;
 		}
 	}
-	
+
 	// All of these continue to process if any fail
 	if (!botdb.SaveBuffs(this))
 		bot_owner->Message(13, "%s for '%s'", BotDatabase::fail::SaveBuffs(), GetCleanName());
@@ -1559,10 +1564,10 @@ bool Bot::Save()
 		bot_owner->Message(13, "%s for '%s'", BotDatabase::fail::SaveTimers(), GetCleanName());
 	if (!botdb.SaveStance(this))
 		bot_owner->Message(13, "%s for '%s'", BotDatabase::fail::SaveStance(), GetCleanName());
-	
+
 	if (!SavePet())
 		bot_owner->Message(13, "Failed to save pet for '%s'", GetCleanName());
-	
+
 	return true;
 }
 
@@ -1666,12 +1671,12 @@ bool Bot::LoadPet()
 			}
 		}
 	}
-	
+
 	std::string error_message;
 
 	uint32 pet_index = 0;
 	if (!botdb.LoadPetIndex(GetBotID(), pet_index)) {
-		bot_owner->Message(13, "%s for %s's pet", BotDatabase::fail::LoadPetIndex(), GetCleanName());		
+		bot_owner->Message(13, "%s for %s's pet", BotDatabase::fail::LoadPetIndex(), GetCleanName());
 		return false;
 	}
 	if (!pet_index)
@@ -1710,8 +1715,8 @@ bool Bot::LoadPet()
 	if (!botdb.LoadPetBuffs(GetBotID(), pet_buffs))
 		bot_owner->Message(13, "%s for %s's pet", BotDatabase::fail::LoadPetBuffs(), GetCleanName());
 
-	uint32 pet_items[EQEmu::legacy::EQUIPMENT_SIZE];
-	memset(pet_items, 0, (sizeof(uint32) * EQEmu::legacy::EQUIPMENT_SIZE));
+	uint32 pet_items[EQEmu::invslot::EQUIPMENT_COUNT];
+	memset(pet_items, 0, (sizeof(uint32) * EQEmu::invslot::EQUIPMENT_COUNT));
 	if (!botdb.LoadPetItems(GetBotID(), pet_items))
 		bot_owner->Message(13, "%s for %s's pet", BotDatabase::fail::LoadPetItems(), GetCleanName());
 
@@ -1727,7 +1732,7 @@ bool Bot::SavePet()
 {
 	if (!GetPet() || GetPet()->IsFamiliar()) // dead?
 		return true;
-	
+
 	NPC *pet_inst = GetPet()->CastToNPC();
 	if (!pet_inst->GetPetSpellID() || !IsValidSpell(pet_inst->GetPetSpellID()))
 		return false;
@@ -1738,14 +1743,14 @@ bool Bot::SavePet()
 
 	char* pet_name = new char[64];
 	SpellBuff_Struct pet_buffs[PET_BUFF_COUNT];
-	uint32 pet_items[EQEmu::legacy::EQUIPMENT_SIZE];
+	uint32 pet_items[EQEmu::invslot::EQUIPMENT_COUNT];
 
 	memset(pet_name, 0, 64);
 	memset(pet_buffs, 0, (sizeof(SpellBuff_Struct) * PET_BUFF_COUNT));
-	memset(pet_items, 0, (sizeof(uint32) * EQEmu::legacy::EQUIPMENT_SIZE));
-	
+	memset(pet_items, 0, (sizeof(uint32) * EQEmu::invslot::EQUIPMENT_COUNT));
+
 	pet_inst->GetPetState(pet_buffs, pet_items, pet_name);
-	
+
 	std::string pet_name_str = pet_name;
 	safe_delete_array(pet_name);
 
@@ -1755,7 +1760,7 @@ bool Bot::SavePet()
 		bot_owner->Message(13, "%s for %s's pet", BotDatabase::fail::SavePetStats(), GetCleanName());
 		return false;
 	}
-	
+
 	if (!botdb.SavePetBuffs(GetBotID(), pet_buffs))
 		bot_owner->Message(13, "%s for %s's pet", BotDatabase::fail::SavePetBuffs(), GetCleanName());
 	if (!botdb.SavePetItems(GetBotID(), pet_items))
@@ -1769,7 +1774,7 @@ bool Bot::DeletePet()
 	auto bot_owner = GetBotOwner();
 	if (!bot_owner)
 		return false;
-	
+
 	std::string error_message;
 
 	if (!botdb.DeletePetItems(GetBotID())) {
@@ -1896,12 +1901,12 @@ void Bot::BotRangedAttack(Mob* other) {
 		return;
 	}
 
-	EQEmu::ItemInstance* rangedItem = GetBotItem(EQEmu::inventory::slotRange);
+	EQEmu::ItemInstance* rangedItem = GetBotItem(EQEmu::invslot::slotRange);
 	const EQEmu::ItemData* RangeWeapon = nullptr;
 	if(rangedItem)
 		RangeWeapon = rangedItem->GetItem();
 
-	EQEmu::ItemInstance* ammoItem = GetBotItem(EQEmu::inventory::slotAmmo);
+	EQEmu::ItemInstance* ammoItem = GetBotItem(EQEmu::invslot::slotAmmo);
 	const EQEmu::ItemData* Ammo = nullptr;
 	if(ammoItem)
 		Ammo = ammoItem->GetItem();
@@ -1995,19 +2000,19 @@ void Bot::ApplySpecialAttackMod(EQEmu::skills::SkillType skill, int32 &dmg, int3
 	case EQEmu::skills::SkillFlyingKick:
 	case EQEmu::skills::SkillRoundKick:
 	case EQEmu::skills::SkillKick:
-		item_slot = EQEmu::inventory::slotFeet;
+		item_slot = EQEmu::invslot::slotFeet;
 		break;
 	case EQEmu::skills::SkillBash:
-		item_slot = EQEmu::inventory::slotSecondary;
+		item_slot = EQEmu::invslot::slotSecondary;
 		break;
 	case EQEmu::skills::SkillDragonPunch:
 	case EQEmu::skills::SkillEagleStrike:
 	case EQEmu::skills::SkillTigerClaw:
-		item_slot = EQEmu::inventory::slotHands;
+		item_slot = EQEmu::invslot::slotHands;
 		break;
 	}
 
-	if (item_slot >= EQEmu::legacy::EQUIPMENT_BEGIN){
+	if (item_slot >= EQEmu::invslot::EQUIPMENT_BEGIN){
 		const EQEmu::ItemInstance* inst = GetBotItem(item_slot);
 		const EQEmu::ItemData* botweapon = nullptr;
 		if(inst)
@@ -2043,70 +2048,113 @@ void Bot::SetTarget(Mob* mob) {
 	}
 }
 
-float Bot::GetMaxMeleeRangeToTarget(Mob* target) {
-	float result = 0;
-	if(target) {
-		float size_mod = GetSize();
-		float other_size_mod = target->GetSize();
+void Bot::SetStopMeleeLevel(uint8 level) {
+	if (IsCasterClass(GetClass()) || IsSpellFighterClass(GetClass()))
+		_stopMeleeLevel = level;
+	else
+		_stopMeleeLevel = 255;
+}
 
-		if(GetRace() == 49 || GetRace() == 158 || GetRace() == 196) //For races with a fixed size
-			size_mod = 60.0f;
-		else if (size_mod < 6.0)
-			size_mod = 8.0f;
+void Bot::SetGuardMode() {
+	WipeHateList();
+	SetTarget(nullptr);
+	SetFollowID(GetID());
+	StopMoving();
+	m_GuardPoint = GetPosition();
 
-		if(target->GetRace() == 49 || target->GetRace() == 158 || target->GetRace() == 196) //For races with a fixed size
-			other_size_mod = 60.0f;
-		else if (other_size_mod < 6.0)
-			other_size_mod = 8.0f;
-
-		if (other_size_mod > size_mod)
-			size_mod = other_size_mod;
-
-		if (size_mod > 29)
-			size_mod *= size_mod;
-		else if (size_mod > 19)
-			size_mod *= (size_mod * 2);
-		else
-			size_mod *= (size_mod * 4);
-
-		// prevention of ridiculously sized hit boxes
-		if (size_mod > 10000)
-			size_mod = (size_mod / 7);
-
-		result = size_mod;
+	if (HasPet()) {
+		GetPet()->WipeHateList();
+		GetPet()->SetTarget(nullptr);
+		GetPet()->StopMoving();
 	}
-
-	return result;
 }
 
 // AI Processing for the Bot object
 void Bot::AI_Process() {
-	// TODO: Need to add root checks to all movement code
 
-	if (!IsAIControlled())
-		return;
-	if (GetPauseAI())
+#define TEST_TARGET() if (!GetTarget()) { return; }
+
+	Client* bot_owner = (GetBotOwner() && GetBotOwner()->IsClient() ? GetBotOwner()->CastToClient() : nullptr);
+	Group* bot_group = GetGroup();
+	Mob* follow_mob = entity_list.GetMob(GetFollowID());
+
+	// Primary reasons for not processing AI
+	if (!bot_owner || !bot_group || !follow_mob || !IsAIControlled())
 		return;
 
-	uint8 botClass = GetClass();
-	uint8 botLevel = GetLevel();
+	if (bot_owner->IsDead()) {
+		SetTarget(nullptr);
+		SetBotOwner(nullptr);
+
+		return;
+	}
+
+	// We also need a leash owner (subset of primary AI criteria)
+	Client* leash_owner = (bot_group->GetLeader() && bot_group->GetLeader()->IsClient() ? bot_group->GetLeader()->CastToClient() : bot_owner);
+	if (!leash_owner)
+		return;
+
+	// Berserk updates should occur if primary AI criteria are met
+	if (GetClass() == WARRIOR || GetClass() == BERSERKER) {
+		if (!berserk && GetHP() > 0 && GetHPRatio() < 30.0f) {
+			entity_list.MessageClose_StringID(this, false, 200, 0, BERSERK_START, GetName());
+			berserk = true;
+		}
+
+		if (berserk && GetHPRatio() >= 30.0f) {
+			entity_list.MessageClose_StringID(this, false, 200, 0, BERSERK_END, GetName());
+			berserk = false;
+		}
+	}
+
+	// Secondary reasons for not processing AI
+	if (GetPauseAI() || IsStunned() || IsMezzed() || (GetAppearance() == eaDead)) {
+		if (IsCasting())
+			InterruptSpell();
+		if (IsMyHealRotationSet() || (AmICastingForHealRotation() && m_member_of_heal_rotation->CastingMember() == this)) {
+			AdvanceHealRotation(false);
+			m_member_of_heal_rotation->SetMemberIsCasting(this, false);
+		}
+
+		return;
+	}
+
+	bool guard_mode = (follow_mob == this);
+
+	auto fm_dist = DistanceSquared(m_Position, follow_mob->GetPosition());
+	auto lo_distance = DistanceSquared(m_Position, leash_owner->GetPosition());
 
 	if (IsCasting()) {
-		if (
-			IsHealRotationMember() &&
+		if (IsHealRotationMember() &&
 			m_member_of_heal_rotation->CastingOverride() &&
 			m_member_of_heal_rotation->CastingTarget() != nullptr &&
 			m_member_of_heal_rotation->CastingReady() &&
 			m_member_of_heal_rotation->CastingMember() == this &&
-			!m_member_of_heal_rotation->MemberIsCasting(this)
-		) {
+			!m_member_of_heal_rotation->MemberIsCasting(this))
+		{
 			InterruptSpell();
 		}
 		else if (AmICastingForHealRotation() && m_member_of_heal_rotation->CastingMember() == this) {
 			AdvanceHealRotation(false);
 			return;
 		}
-		else if (botClass != BARD) {
+		else if (GetClass() != BARD) {
+			if (IsEngaged())
+				return;
+			if (fm_dist > GetFollowDistance()) // Cancel out-of-combat casting if movement is required
+				InterruptSpell();
+			if (guard_mode) {
+				auto& my_pos = GetPosition();
+				auto& my_guard = GetGuardPoint();
+
+				if (my_pos.x != my_guard.x ||
+					my_pos.y != my_guard.y ||
+					my_pos.z != my_guard.z)
+				{
+					InterruptSpell();
+				}
+			}
+
 			return;
 		}
 	}
@@ -2114,28 +2162,13 @@ void Bot::AI_Process() {
 		m_member_of_heal_rotation->SetMemberIsCasting(this, false);
 	}
 
-	// A bot wont start its AI if not grouped
-	if(!GetBotOwner() || !IsGrouped() || GetAppearance() == eaDead)
-		return;
-
-	Mob* BotOwner = GetBotOwner();
-	if(!BotOwner)
-		return;
-
-	try {
-		if(BotOwner->CastToClient()->IsDead()) {
-			SetTarget(0);
-			SetBotOwner(0);
-			return;
-		}
-	}
-	catch(...) {
-		SetTarget(0);
-		SetBotOwner(0);
+	// Can't move if rooted...
+	if (IsRooted() && IsMoving()) {
+		StopMoving();
 		return;
 	}
 
-	if(IsMyHealRotationSet()) {
+	if (IsMyHealRotationSet()) {
 		Mob* delete_me = HealRotationTarget();
 		if (AIHealRotation(HealRotationTarget(), UseHealRotationFastHeals())) {
 #if (EQDEBUG >= 12)
@@ -2154,432 +2187,662 @@ void Bot::AI_Process() {
 		}
 	}
 
-	if(GetHasBeenSummoned()) {
-		if(IsBotCaster() || IsBotArcher()) {
-			if (AI_movement_timer->Check()) {
-				if(!GetTarget() || (IsBotCaster() && !IsBotCasterAtCombatRange(GetTarget())) || (IsBotArcher() && IsArcheryRange(GetTarget())) || (DistanceSquaredNoZ(static_cast<glm::vec3>(m_Position), m_PreSummonLocation) < 10)) {
-					if(GetTarget())
-						FaceTarget(GetTarget());
+	// Empty hate list - let's find a target
+	if (!guard_mode && !IsEngaged()) {
+		Mob* lo_target = leash_owner->GetTarget();
 
-					SetHasBeenSummoned(false);
-				} else if(!IsRooted()) {
-					if(GetTarget() && GetTarget()->GetHateTop() && GetTarget()->GetHateTop() != this) {
-						Log(Logs::Detail, Logs::AI, "Returning to location prior to being summoned.");
-						CalculateNewPosition2(m_PreSummonLocation.x, m_PreSummonLocation.y, m_PreSummonLocation.z, GetBotRunspeed());
-						SetHeading(CalculateHeadingToTarget(m_PreSummonLocation.x, m_PreSummonLocation.y));
-						return;
-					}
-				}
-
-				if(IsMoving())
-					SendPositionUpdate();
-				else
-					SendPosition();
-			}
-		} else {
-			if(GetTarget())
-				FaceTarget(GetTarget());
-
-			SetHasBeenSummoned(false);
+		if (lo_target && lo_target->IsNPC() &&
+			!lo_target->IsMezzed() &&
+			(lo_target->GetHateAmount(leash_owner) || leash_owner->AutoAttackEnabled()) &&
+			lo_distance <= BOT_LEASH_DISTANCE &&
+			DistanceSquared(m_Position, lo_target->GetPosition()) <= BOT_LEASH_DISTANCE &&
+			(CheckLosFN(lo_target) || leash_owner->CheckLosFN(lo_target)) &&
+			IsAttackAllowed(lo_target))
+		{
+			AddToHateList(lo_target, 1);
+			if (HasPet())
+				GetPet()->AddToHateList(lo_target, 1);
 		}
-		return;
-	}
+		else {
+			for (int counter = 0; counter < bot_group->GroupCount(); counter++) {
+				Mob* bg_member = bot_group->members[counter];
+				if (!bg_member)
+					continue;
 
-	if(!IsEngaged()) {
-		if(GetFollowID()) {
-			if(BotOwner && BotOwner->GetTarget() && BotOwner->GetTarget()->IsNPC() && (BotOwner->GetTarget()->GetHateAmount(BotOwner) || BotOwner->CastToClient()->AutoAttackEnabled()) && IsAttackAllowed(BotOwner->GetTarget())) {
-					AddToHateList(BotOwner->GetTarget(), 1);
-					if(HasPet())
-						GetPet()->AddToHateList(BotOwner->GetTarget(), 1);
-			} else {
-				Group* g = GetGroup();
-				if(g) {
-					for(int counter = 0; counter < g->GroupCount(); counter++) {
-						if(g->members[counter]) {
-							Mob* tar = g->members[counter]->GetTarget();
-							if(tar && tar->IsNPC() && tar->GetHateAmount(g->members[counter]) && IsAttackAllowed(g->members[counter]->GetTarget())) {
-								AddToHateList(tar, 1);
-								if(HasPet())
-									GetPet()->AddToHateList(tar, 1);
+				Mob* bgm_target = bg_member->GetTarget();
+				if (!bgm_target || !bgm_target->IsNPC())
+					continue;
 
-								break;
-							}
-						}
-					}
+				if (!bgm_target->IsMezzed() &&
+					bgm_target->GetHateAmount(bg_member) &&
+					lo_distance <= BOT_LEASH_DISTANCE &&
+					DistanceSquared(m_Position, bgm_target->GetPosition()) <= BOT_LEASH_DISTANCE &&
+					(CheckLosFN(bgm_target) || leash_owner->CheckLosFN(bgm_target)) &&
+					IsAttackAllowed(bgm_target))
+				{
+					AddToHateList(bgm_target, 1);
+					if (HasPet())
+						GetPet()->AddToHateList(bgm_target, 1);
+
+					break;
 				}
 			}
 		}
 	}
 
-	if(IsEngaged()) {
-		if(rest_timer.Enabled())
+	glm::vec3 Goal(0, 0, 0);
+
+	// We have aggro to choose from
+	if (IsEngaged()) {
+		if (rest_timer.Enabled())
 			rest_timer.Disable();
 
-		if(IsRooted())
-			SetTarget(hate_list.GetClosestEntOnHateList(this));
-		else
-			SetTarget(hate_list.GetEntWithMostHateOnList(this));
+		// Group roles can be expounded upon in the future
+		auto assist_mob = entity_list.GetMob(bot_group->GetMainAssistName());
+		bool find_target = true;
 
-		if(!GetTarget())
+		if (assist_mob) {
+			if (assist_mob->GetTarget()) {
+				if (assist_mob != this)
+					SetTarget(assist_mob->GetTarget());
+
+				find_target = false;
+			}
+			else if (assist_mob != this) {
+				SetTarget(nullptr);
+				if (HasPet())
+					GetPet()->SetTarget(nullptr);
+
+				find_target = false;
+			}
+		}
+
+		if (find_target) {
+			if (IsRooted())
+				SetTarget(hate_list.GetClosestEntOnHateList(this));
+			else
+				SetTarget(hate_list.GetEntWithMostHateOnList(this));
+		}
+
+		TEST_TARGET();
+
+		Mob* tar = GetTarget();
+		if (!tar)
 			return;
 
-		if(HasPet())
-			GetPet()->SetTarget(GetTarget());
-
-		if(!IsSitting())
-			FaceTarget(GetTarget());
-
-		if(DivineAura())
-			return;
+		float tar_distance = DistanceSquared(m_Position, tar->GetPosition());
 
 		// Let's check if we have a los with our target.
 		// If we don't, our hate_list is wiped.
 		// Else, it was causing the bot to aggro behind wall etc... causing massive trains.
-		if(GetTarget()->IsMezzed() || !IsAttackAllowed(GetTarget())) {
-			WipeHateList();
-			if(IsMoving()) {
-				SetHeading(0);
-				SetRunAnimSpeed(0);
-				SetCurrentSpeed(GetBotRunspeed());
-				if(moved)
-					SetCurrentSpeed(0);
+		if (guard_mode ||
+			!tar->IsNPC() ||
+			tar->IsMezzed() ||
+			(!tar->GetHateAmount(this) && !tar->GetHateAmount(leash_owner) && !leash_owner->AutoAttackEnabled()) ||
+			lo_distance > BOT_LEASH_DISTANCE ||
+			tar_distance > BOT_LEASH_DISTANCE ||
+			(!CheckLosFN(tar) && !leash_owner->CheckLosFN(tar)) ||
+			!IsAttackAllowed(tar))
+		{
+			if (HasPet()) {
+				GetPet()->RemoveFromHateList(tar);
+				GetPet()->SetTarget(nullptr);
 			}
+
+			RemoveFromHateList(tar);
+			SetTarget(nullptr);
+
+			if (IsMoving())
+				StopMoving();
+
 			return;
 		}
-		else if (!CheckLosFN(GetTarget())) {
-			if (RuleB(Bots, UsePathing) && zone->pathing) {
-				bool WaypointChanged, NodeReached;
 
-				glm::vec3 Goal = UpdatePath(GetTarget()->GetX(), GetTarget()->GetY(), GetTarget()->GetZ(),
-					GetBotRunspeed(), WaypointChanged, NodeReached);
+		if (HasPet()) // this causes conflicts with default pet handler (bounces between targets)
+			GetPet()->SetTarget(tar);
 
-				if (WaypointChanged)
-					tar_ndx = 20;
-
-				CalculateNewPosition2(Goal.x, Goal.y, Goal.z, GetBotRunspeed());
-			}
-			else {
-				Mob* follow = entity_list.GetMob(GetFollowID());
-				if (follow)
-					CalculateNewPosition2(follow->GetX(), follow->GetY(), follow->GetZ(), GetBotRunspeed());
-			}
-			
+		if (DivineAura())
 			return;
-		}
 
 		if (!(m_PlayerState & static_cast<uint32>(PlayerState::Aggressive)))
 			SendAddPlayerState(PlayerState::Aggressive);
 
 		bool atCombatRange = false;
-		float meleeDistance = GetMaxMeleeRangeToTarget(GetTarget());
-		if(botClass == SHADOWKNIGHT || botClass == PALADIN || botClass == WARRIOR)
-			meleeDistance = (meleeDistance * .30);
-		else
-			meleeDistance *= (float)zone->random.Real(.50, .85);
 
-		bool atArcheryRange = IsArcheryRange(GetTarget());
+		const auto* p_item = GetBotItem(EQEmu::invslot::slotPrimary);
+		const auto* s_item = GetBotItem(EQEmu::invslot::slotSecondary);
 
-		if(GetRangerAutoWeaponSelect()) {
+		bool behind_mob = false;
+		bool backstab_weapon = false;
+		if (GetClass() == ROGUE) {
+			behind_mob = BehindMob(tar, GetX(), GetY()); // can be separated for other future use
+			backstab_weapon = p_item && p_item->GetItemBackstabDamage();
+		}
+
+		// Calculate melee distance
+		float melee_distance_max = 0.0f;
+		{
+			float size_mod = GetSize();
+			float other_size_mod = tar->GetSize();
+
+			if (GetRace() == RT_DRAGON || GetRace() == RT_WURM || GetRace() == RT_DRAGON_7) //For races with a fixed size
+				size_mod = 60.0f;
+			else if (size_mod < 6.0f)
+				size_mod = 8.0f;
+
+			if (tar->GetRace() == RT_DRAGON || tar->GetRace() == RT_WURM || tar->GetRace() == RT_DRAGON_7) //For races with a fixed size
+				other_size_mod = 60.0f;
+			else if (other_size_mod < 6.0f)
+				other_size_mod = 8.0f;
+
+			if (other_size_mod > size_mod)
+				size_mod = other_size_mod;
+
+			if (size_mod > 29.0f)
+				size_mod *= size_mod;
+			else if (size_mod > 19.0f)
+				size_mod *= (size_mod * 2.0f);
+			else
+				size_mod *= (size_mod * 4.0f);
+
+			// prevention of ridiculously sized hit boxes
+			if (size_mod > 10000.0f)
+				size_mod = (size_mod / 7.0f);
+
+			melee_distance_max = size_mod;
+		}
+
+		float melee_distance = 0.0f;
+
+		switch (GetClass()) {
+		case WARRIOR:
+		case PALADIN:
+		case SHADOWKNIGHT:
+			if (p_item && p_item->GetItem()->IsType2HWeapon())
+				melee_distance = melee_distance_max * 0.45f;
+			else if ((s_item && s_item->GetItem()->IsTypeShield()) || (!p_item && !s_item))
+				melee_distance = melee_distance_max * 0.35f;
+			else
+				melee_distance = melee_distance_max * 0.40f;
+
+			break;
+		case NECROMANCER:
+		case WIZARD:
+		case MAGICIAN:
+		case ENCHANTER:
+			if (p_item && p_item->GetItem()->IsType2HWeapon())
+				melee_distance = melee_distance_max * 0.95f;
+			else
+				melee_distance = melee_distance_max * 0.75f;
+
+			break;
+		case ROGUE:
+			if (behind_mob && backstab_weapon) {
+				if (p_item->GetItem()->IsType2HWeapon()) // p_item tested above
+					melee_distance = melee_distance_max * 0.30f;
+				else
+					melee_distance = melee_distance_max * 0.25f;
+
+				break;
+			}
+			// Fall-through
+		default:
+			if (p_item && p_item->GetItem()->IsType2HWeapon())
+				melee_distance = melee_distance_max * 0.70f;
+			else
+				melee_distance = melee_distance_max * 0.50f;
+
+			break;
+		}
+
+		float melee_distance_min = melee_distance / 2.0f;
+
+		// Calculate casting distance
+		float caster_distance_max = 0.0f;
+		{
+			if (GetLevel() >= GetStopMeleeLevel()) {
+				switch (GetClass()) {
+				case CLERIC:
+					caster_distance_max = 1156.0f; // as DSq value (34 units)
+					break;
+				case PALADIN:
+					caster_distance_max = 576.0f; // as DSq value (24 units)
+					break;
+				case RANGER:
+					caster_distance_max = 784.0f; // as DSq value (28 units)
+					break;
+				case SHADOWKNIGHT:
+					caster_distance_max = 676.0f; // as DSq value (26 units)
+					break;
+				case DRUID:
+					caster_distance_max = 1764.0f; // as DSq value (42 units)
+					break;
+				case SHAMAN:
+					caster_distance_max = 1444.0f; // as DSq value (38 units)
+					break;
+				case NECROMANCER:
+					caster_distance_max = 2916.0f; // as DSq value (54 units)
+					break;
+				case WIZARD:
+					caster_distance_max = 2304.0f; // as DSq value (48 units)
+					break;
+				case MAGICIAN:
+					caster_distance_max = 2704.0f; // as DSq value (52 units)
+					break;
+				case ENCHANTER:
+					caster_distance_max = 2500.0f; // as DSq value (50 units)
+					break;
+				case BEASTLORD:
+					caster_distance_max = 900.0f; // as DSq value (30 units)
+					break;
+				default:
+					// pure melee classes (and BARD) do not get this option
+					break;
+				}
+			}
+		}
+
+		float caster_distance_min = 0.0f;
+		if (caster_distance_max) {
+			caster_distance_min = melee_distance_max;
+
+			if (caster_distance_max <= caster_distance_min)
+				caster_distance_max = caster_distance_min * 1.25f;
+		}
+
+		bool atArcheryRange = IsArcheryRange(tar);
+
+		if (GetRangerAutoWeaponSelect()) {
 			bool changeWeapons = false;
 
-			if(atArcheryRange && !IsBotArcher()) {
+			if (atArcheryRange && !IsBotArcher()) {
 				SetBotArcher(true);
 				changeWeapons = true;
-			} else if(!atArcheryRange && IsBotArcher()) {
+			}
+			else if (!atArcheryRange && IsBotArcher()) {
 				SetBotArcher(false);
 				changeWeapons = true;
 			}
 
-			if(changeWeapons)
+			if (changeWeapons)
 				ChangeBotArcherWeapons(IsBotArcher());
 		}
 
-		if (IsBotArcher() && atArcheryRange) {
+		if (IsBotArcher() && atArcheryRange)
+			atCombatRange = true;
+		else if (caster_distance_max && tar_distance <= caster_distance_max)
+			atCombatRange = true;
+		else if (tar_distance <= melee_distance)
+			atCombatRange = true;
+
+		// We can fight
+		if (atCombatRange) {
 			if (IsMoving()) {
-				SetHeading(CalculateHeadingToTarget(GetTarget()->GetX(), GetTarget()->GetY()));
-				SetRunAnimSpeed(0);
-				SetCurrentSpeed(0);
-				if (moved) {
-					moved = false;
-					SetCurrentSpeed(0);
-				}
-			}
-			atCombatRange = true;
-		}
-		else if (GetLevel() >= RuleI(Bots, CasterStopMeleeLevel) && IsBotCasterAtCombatRange(GetTarget())) {
-			atCombatRange = true;
-		}
-		else if (DistanceSquared(m_Position, GetTarget()->GetPosition()) <= meleeDistance) {
-			atCombatRange = true;
-		}
-
-		if(atCombatRange) {
-			if(IsMoving()) {
-				SetHeading(CalculateHeadingToTarget(GetTarget()->GetX(), GetTarget()->GetY()));
-				SetCurrentSpeed(0);
-				if(moved) {
-					moved = false;
-					SetCurrentSpeed(0);
-				}
+				StopMoving(CalculateHeadingToTarget(tar->GetX(), tar->GetY()));
+				return;
 			}
 
-			if(AI_movement_timer->Check()) {
-				if (!IsMoving()) {
-					if (GetClass() == ROGUE) {
-						if (HasTargetReflection() && !GetTarget()->IsFeared() && !GetTarget()->IsStunned()) {
-							// Hate redux actions
-							if (evade_timer.Check(false)) {
-								// Attempt to evade
-								int timer_duration = (HideReuseTime - GetSkillReuseTime(EQEmu::skills::SkillHide)) * 1000;
-								if (timer_duration < 0)
-									timer_duration = 0;
-								evade_timer.Start(timer_duration);
+			// Combat 'jitter' code
+			if (AI_movement_timer->Check() && (!spellend_timer.Enabled() || GetClass() == BARD)) {
+				if (!IsRooted()) {
+					if (HasTargetReflection()) {
+						if (!tar->IsFeared() && !tar->IsStunned()) {
+							if (GetClass() == ROGUE) {
+								if (evade_timer.Check(false)) { // Attempt to evade
+									int timer_duration = (HideReuseTime - GetSkillReuseTime(EQEmu::skills::SkillHide)) * 1000;
+									if (timer_duration < 0)
+										timer_duration = 0;
 
-								Bot::BotGroupSay(this, "Attempting to evade %s", GetTarget()->GetCleanName());
-								if (zone->random.Int(0, 260) < (int)GetSkill(EQEmu::skills::SkillHide))
-									RogueEvade(GetTarget());
+									evade_timer.Start(timer_duration);
+									if (zone->random.Int(0, 260) < (int)GetSkill(EQEmu::skills::SkillHide))
+										RogueEvade(tar);
 
-								return;
+									return;
+								}
 							}
-							else if (GetTarget()->IsRooted()) {
-								// Move rogue back from rooted mob - out of combat range, if necessary
-								float melee_distance = GetMaxMeleeRangeToTarget(GetTarget());
-								float current_distance = DistanceSquared(static_cast<glm::vec3>(m_Position), static_cast<glm::vec3>(GetTarget()->GetPosition()));
-								
-								if (current_distance <= melee_distance) {
-									float newX = 0;
-									float newY = 0;
-									float newZ = 0;
-									FaceTarget(GetTarget());
-									if (PlotPositionAroundTarget(this, newX, newY, newZ)) {
-										CalculateNewPosition2(newX, newY, newZ, GetBotRunspeed());
-										return;
+
+							if (tar->IsRooted()) { // Move caster/rogue back from rooted mob - out of combat range, if necessary
+								if (GetArchetype() == ARCHETYPE_CASTER || GetClass() == ROGUE) {
+									if (tar_distance <= melee_distance_max) {
+										if (PlotPositionAroundTarget(this, Goal.x, Goal.y, Goal.z)) {
+											CalculateNewPosition(Goal.x, Goal.y, Goal.z, GetBotWalkspeed(), true, false);
+											return;
+										}
 									}
 								}
 							}
 						}
-						else if (!BehindMob(GetTarget(), GetX(), GetY())) {
-							// Move the rogue to behind the mob
-							float newX = 0;
-							float newY = 0;
-							float newZ = 0;
-							if (PlotPositionAroundTarget(GetTarget(), newX, newY, newZ)) {
-								CalculateNewPosition2(newX, newY, newZ, GetBotRunspeed());
-								return;
+					}
+					else {
+						if (caster_distance_min && tar_distance < caster_distance_min && !tar->IsFeared()) { // Caster back-off adjustment
+							if (PlotPositionAroundTarget(this, Goal.x, Goal.y, Goal.z)) {
+								if (DistanceSquared(Goal, tar->GetPosition()) <= caster_distance_max) {
+									CalculateNewPosition(Goal.x, Goal.y, Goal.z, GetBotWalkspeed(), true, false);
+									return;
+								}
 							}
 						}
-					}
-					else if (GetClass() != ROGUE && (DistanceSquaredNoZ(m_Position, GetTarget()->GetPosition()) < GetTarget()->GetSize())) {
-						// If we are not a rogue trying to backstab, let's try to adjust our melee range so we don't appear to be bunched up
-						float newX = 0;
-						float newY = 0;
-						float newZ = 0;
-						if (PlotPositionAroundTarget(GetTarget(), newX, newY, newZ, false) && GetArchetype() != ARCHETYPE_CASTER) {
-							CalculateNewPosition2(newX, newY, newZ, GetBotRunspeed());
+						else if (tar_distance < melee_distance_min) { // Melee back-off adjustment
+							if (PlotPositionAroundTarget(this, Goal.x, Goal.y, Goal.z)) {
+								if (DistanceSquared(Goal, tar->GetPosition()) <= melee_distance_max) {
+									CalculateNewPosition(Goal.x, Goal.y, Goal.z, GetBotWalkspeed(), true, false);
+									return;
+								}
+							}
+						}
+						else if (backstab_weapon && !behind_mob) { // Move the rogue to behind the mob
+							if (PlotPositionAroundTarget(tar, Goal.x, Goal.y, Goal.z)) {
+								if (DistanceSquared(Goal, tar->GetPosition()) <= melee_distance_max) {
+									CalculateNewPosition(Goal.x, Goal.y, Goal.z, GetBotRunspeed(), true, false); // rogues are agile enough to run in melee range
+									return;
+								}
+							}
+						}
+						else {
+							if (caster_distance_max == 0.0f && // Not a caster or a caster still below melee stop level (standard combat jitter)
+								zone->random.Int(1, 100) >= 94 && // 7:100 chance
+								PlotPositionAroundTarget(tar, Goal.x, Goal.y, Goal.z)) // If we're behind the mob, we can attack when it's enraged
+							{
+								if (DistanceSquared(Goal, tar->GetPosition()) <= melee_distance_max) {
+									CalculateNewPosition(Goal.x, Goal.y, Goal.z, GetBotWalkspeed(), true, false);
+									return;
+								}
+							}
+						}
+
+						if (!IsFacingMob(tar)) {
+							FaceTarget(tar);
 							return;
 						}
 					}
 				}
-
-				// TODO: Test RuleB(Bots, UpdatePositionWithTimer)
-				if(IsMoving())
-					SendPositionUpdate();
-				else
-					SendPosition();
+				else {
+					if (!IsSitting() && !IsFacingMob(tar)) {
+						FaceTarget(tar);
+						return;
+					}
+				}
 			}
 
-			if(IsBotArcher() && ranged_timer.Check(false)) {
-				if(GetTarget()->GetHPRatio() <= 99.0f)
-					BotRangedAttack(GetTarget());
+			// Up to this point, GetTarget() has been safe to dereference since the initial
+			// TEST_TARGET() call. Due to the chance of the target dying and our pointer
+			// being nullified, we need to test it before dereferencing to avoid crashes
+
+			if (IsBotArcher() && ranged_timer.Check(false)) { // can shoot mezzed, stunned and dead!?
+				TEST_TARGET();
+				if (GetTarget()->GetHPRatio() <= 99.0f)
+					BotRangedAttack(tar);
 			}
-			else if(!IsBotArcher() && (!(IsBotCaster() && GetLevel() >= RuleI(Bots, CasterStopMeleeLevel))) && GetTarget() && !IsStunned() && !IsMezzed() && (GetAppearance() != eaDead)) {
+			else if (!IsBotArcher() && (!(IsBotCaster() && GetLevel() >= RuleI(Bots, CasterStopMeleeLevel)))) {
 				// we can't fight if we don't have a target, are stun/mezzed or dead..
 				// Stop attacking if the target is enraged
-				if((IsEngaged() && !BehindMob(GetTarget(), GetX(), GetY()) && GetTarget()->IsEnraged()) || GetBotStance() == BotStancePassive)
+				TEST_TARGET();
+				if (GetBotStance() == BotStancePassive || (tar->IsEnraged() && !BehindMob(tar, GetX(), GetY())))
 					return;
 
 				// First, special attack per class (kick, backstab etc..)
-				DoClassAttacks(GetTarget());
-				if(attack_timer.Check()) {
-					Attack(GetTarget(), EQEmu::inventory::slotPrimary);
-					TriggerDefensiveProcs(GetTarget(), EQEmu::inventory::slotPrimary, false);
-					EQEmu::ItemInstance *wpn = GetBotItem(EQEmu::inventory::slotPrimary);
-					TryWeaponProc(wpn, GetTarget(), EQEmu::inventory::slotPrimary);
-					bool tripleSuccess = false;
-					if(BotOwner && GetTarget() && CanThisClassDoubleAttack()) {
-						if(BotOwner && CheckBotDoubleAttack())
-							Attack(GetTarget(), EQEmu::inventory::slotPrimary, true);
+				TEST_TARGET();
+				DoClassAttacks(tar);
 
-						if(BotOwner && GetTarget() && GetSpecialAbility(SPECATK_TRIPLE) && CheckBotDoubleAttack(true)) {
-							tripleSuccess = true;
-							Attack(GetTarget(), EQEmu::inventory::slotPrimary, true);
+				TEST_TARGET();
+				if (attack_timer.Check()) { // Process primary weapon attacks
+					Attack(tar, EQEmu::invslot::slotPrimary);
+
+					TEST_TARGET();
+					TriggerDefensiveProcs(tar, EQEmu::invslot::slotPrimary, false);
+
+					TEST_TARGET();
+					TryWeaponProc(p_item, tar, EQEmu::invslot::slotPrimary);
+
+					//bool tripleSuccess = false;
+
+					TEST_TARGET();
+					if (CanThisClassDoubleAttack()) {
+						if (CheckBotDoubleAttack())
+							Attack(tar, EQEmu::invslot::slotPrimary, true);
+
+						TEST_TARGET();
+						if (GetSpecialAbility(SPECATK_TRIPLE) && CheckBotDoubleAttack(true)) {
+							//tripleSuccess = true;
+							Attack(tar, EQEmu::invslot::slotPrimary, true);
 						}
 
+						TEST_TARGET();
 						//quad attack, does this belong here??
-						if(BotOwner && GetTarget() && GetSpecialAbility(SPECATK_QUAD) && CheckBotDoubleAttack(true))
-							Attack(GetTarget(), EQEmu::inventory::slotPrimary, true);
+						if (GetSpecialAbility(SPECATK_QUAD) && CheckBotDoubleAttack(true))
+							Attack(tar, EQEmu::invslot::slotPrimary, true);
 					}
 
+					TEST_TARGET();
 					//Live AA - Flurry, Rapid Strikes ect (Flurry does not require Triple Attack).
 					int32 flurrychance = (aabonuses.FlurryChance + spellbonuses.FlurryChance + itembonuses.FlurryChance);
-					if (GetTarget() && flurrychance) {
-						if(zone->random.Int(0, 100) < flurrychance) {
+					if (flurrychance) {
+						if (zone->random.Int(0, 100) < flurrychance) {
 							Message_StringID(MT_NPCFlurry, YOU_FLURRY);
-							Attack(GetTarget(), EQEmu::inventory::slotPrimary, false);
-							Attack(GetTarget(), EQEmu::inventory::slotPrimary, false);
+							Attack(tar, EQEmu::invslot::slotPrimary, false);
+
+							TEST_TARGET();
+							Attack(tar, EQEmu::invslot::slotPrimary, false);
 						}
 					}
 
+					TEST_TARGET();
 					int32 ExtraAttackChanceBonus = (spellbonuses.ExtraAttackChance + itembonuses.ExtraAttackChance + aabonuses.ExtraAttackChance);
-					if (GetTarget() && ExtraAttackChanceBonus) {
-						EQEmu::ItemInstance *wpn = GetBotItem(EQEmu::inventory::slotPrimary);
-						if(wpn) {
-							if (wpn->GetItem()->IsType2HWeapon()) {
-								if(zone->random.Int(0, 100) < ExtraAttackChanceBonus)
-									Attack(GetTarget(), EQEmu::inventory::slotPrimary, false);
-							}
+					if (ExtraAttackChanceBonus) {
+						if (p_item && p_item->GetItem()->IsType2HWeapon()) {
+							if (zone->random.Int(0, 100) < ExtraAttackChanceBonus)
+								Attack(tar, EQEmu::invslot::slotPrimary, false);
 						}
 					}
 				}
 
-				if (GetClass() == WARRIOR || GetClass() == BERSERKER) {
-					if(GetHP() > 0 && !berserk && this->GetHPRatio() < 30) {
-						entity_list.MessageClose_StringID(this, false, 200, 0, BERSERK_START, GetName());
-						this->berserk = true;
-					}
-
-					if (berserk && this->GetHPRatio() > 30) {
-						entity_list.MessageClose_StringID(this, false, 200, 0, BERSERK_END, GetName());
-						this->berserk = false;
-					}
-				}
-
-				//now off hand
-				if(GetTarget() && attack_dw_timer.Check() && CanThisClassDualWield()) {
-					const EQEmu::ItemInstance* instweapon = GetBotItem(EQEmu::inventory::slotSecondary);
-					const EQEmu::ItemData* weapon = nullptr;
+				TEST_TARGET();
+				if (attack_dw_timer.Check() && CanThisClassDualWield()) { // Process secondary weapon attacks
+					const EQEmu::ItemData* s_itemdata = nullptr;
 					//can only dual wield without a weapon if you're a monk
-					if(instweapon || (botClass == MONK)) {
-						if(instweapon)
-							weapon = instweapon->GetItem();
+					if (s_item || (GetClass() == MONK)) {
+						if(s_item)
+							s_itemdata = s_item->GetItem();
 
-						int weapontype = 0; // No weapon type.
-						bool bIsFist = true;
-						if(weapon) {
-							weapontype = weapon->ItemType;
-							bIsFist = false;
+						int weapon_type = 0; // No weapon type.
+						bool use_fist = true;
+						if (s_itemdata) {
+							weapon_type = s_itemdata->ItemType;
+							use_fist = false;
 						}
 
-						if (bIsFist || !weapon->IsType2HWeapon()) {
+						if (use_fist || !s_itemdata->IsType2HWeapon()) {
 							float DualWieldProbability = 0.0f;
+
 							int32 Ambidexterity = (aabonuses.Ambidexterity + spellbonuses.Ambidexterity + itembonuses.Ambidexterity);
 							DualWieldProbability = ((GetSkill(EQEmu::skills::SkillDualWield) + GetLevel() + Ambidexterity) / 400.0f); // 78.0 max
+
 							int32 DWBonus = (spellbonuses.DualWieldChance + itembonuses.DualWieldChance);
 							DualWieldProbability += (DualWieldProbability * float(DWBonus) / 100.0f);
+
 							float random = zone->random.Real(0, 1);
+
 							if (random < DualWieldProbability){ // Max 78% of DW
-								Attack(GetTarget(), EQEmu::inventory::slotSecondary);	// Single attack with offhand
-								EQEmu::ItemInstance *wpn = GetBotItem(EQEmu::inventory::slotSecondary);
-								TryWeaponProc(wpn, GetTarget(), EQEmu::inventory::slotSecondary);
-								if( CanThisClassDoubleAttack() && CheckBotDoubleAttack()) {
-									if(GetTarget() && GetTarget()->GetHP() > -10)
-										Attack(GetTarget(), EQEmu::inventory::slotSecondary);	// Single attack with offhand
+								Attack(tar, EQEmu::invslot::slotSecondary);	// Single attack with offhand
+
+								TEST_TARGET();
+								TryWeaponProc(s_item, tar, EQEmu::invslot::slotSecondary);
+
+								TEST_TARGET();
+								if (CanThisClassDoubleAttack() && CheckBotDoubleAttack()) {
+									if (tar->GetHP() > -10)
+										Attack(tar, EQEmu::invslot::slotSecondary);	// Single attack with offhand
 								}
 							}
 						}
 					}
 				}
 			}
-		} else {
-			if(GetTarget()->IsFeared() && !spellend_timer.Enabled()){
-				// This is a mob that is fleeing either because it has been feared or is low on hitpoints
-				if(GetBotStance() != BotStancePassive)
-					AI_PursueCastCheck();
-			}
-
-			if (AI_movement_timer->Check()) {
-				if(!IsRooted()) {
+		}
+		else { // To far away to fight (GetTarget() validity can be iffy below this point - including outer scopes)
+			if (AI_movement_timer->Check() && (!spellend_timer.Enabled() || GetClass() == BARD)) { // Pursue processing
+				if (GetTarget() && !IsRooted()) {
 					Log(Logs::Detail, Logs::AI, "Pursuing %s while engaged.", GetTarget()->GetCleanName());
-					CalculateNewPosition2(GetTarget()->GetX(), GetTarget()->GetY(), GetTarget()->GetZ(), GetBotRunspeed());
+
+					Goal = GetTarget()->GetPosition();
+
+					if (RuleB(Bots, UsePathing) && zone->pathing) {
+						bool WaypointChanged, NodeReached;
+
+						Goal = UpdatePath(Goal.x, Goal.y, Goal.z,
+							GetBotRunspeed(), WaypointChanged, NodeReached);
+
+						if (WaypointChanged)
+							tar_ndx = 20;
+					}
+
+					CalculateNewPosition(Goal.x, Goal.y, Goal.z, GetBotRunspeed());
 					return;
 				}
+				else {
+					if (IsMoving())
+						StopMoving();
+					else
+						SendPosition();
 
-				if(IsMoving())
-					SendPositionUpdate();
-				else
-					SendPosition();
+					return;
+				}
+			}
+
+			// Fix Z when following during pull, not when engaged and stationary
+			if (IsMoving() && fix_z_timer_engaged.Check()) {
+				FixZ();
+				return;
+			}
+
+			if (GetTarget() && GetTarget()->IsFeared() && !spellend_timer.Enabled() && AI_think_timer->Check()) {
+				if (!IsFacingMob(GetTarget()))
+					FaceTarget(GetTarget());
+
+				// This is a mob that is fleeing either because it has been feared or is low on hitpoints
+				if (GetBotStance() != BotStancePassive) {
+					AI_PursueCastCheck(); // This appears to always return true..can't trust for success/fail
+					return;
+				}
 			}
 		} // end not in combat range
 
-		if(!IsMoving() && !spellend_timer.Enabled()) {
-			if(GetBotStance() == BotStancePassive)
+		if (!IsMoving() && !spellend_timer.Enabled()) { // This may actually need work...
+			SendPosition();
+
+			if (GetBotStance() == BotStancePassive)
 				return;
 
-			if(AI_EngagedCastCheck())
+			if (GetTarget() && AI_EngagedCastCheck())
 				BotMeditate(false);
-			else if(GetArchetype() == ARCHETYPE_CASTER)
+			else if (GetArchetype() == ARCHETYPE_CASTER)
 				BotMeditate(true);
+
+			return;
 		}
 	}
-	else {
+	else { // Out-of-combat behavior
 		SetTarget(nullptr);
+
+		if (HasPet()) {
+			GetPet()->WipeHateList();
+			GetPet()->SetTarget(nullptr);
+		}
+
 		if (m_PlayerState & static_cast<uint32>(PlayerState::Aggressive))
 			SendRemovePlayerState(PlayerState::Aggressive);
 
-		Mob* follow = entity_list.GetMob(GetFollowID());
-		if (!follow)
-			return;
+		// Check guard point
+		if (guard_mode) {
+			auto& my_pos = GetPosition();
+			auto& my_guard = GetGuardPoint();
 
-		if (!IsMoving() && AI_think_timer->Check() && !spellend_timer.Enabled()) {
-			if (GetBotStance() != BotStancePassive) {
-				if (!AI_IdleCastCheck() && !IsCasting() && GetClass() != BARD)
-					BotMeditate(true);
-			}
-			else {
-				if (GetClass() != BARD)
-					BotMeditate(true);
+			if (my_pos.x != my_guard.x ||
+				my_pos.y != my_guard.y ||
+				my_pos.z != my_guard.z)
+			{
+				if (IsMoving())
+					StopMoving();
+
+				Warp(glm::vec3(my_guard));
+
+				if (HasPet())
+					GetPet()->Warp(glm::vec3(my_guard));
+
+				return;
 			}
 		}
+		// Leash the bot
+		else if (lo_distance > BOT_LEASH_DISTANCE) {
+			if (IsMoving())
+				StopMoving();
 
-		if (AI_movement_timer->Check()) {
-			float dist = DistanceSquared(m_Position, follow->GetPosition());
-			int speed = GetBotRunspeed();
+			Warp(glm::vec3(leash_owner->GetPosition()));
 
-			if (dist < GetFollowDistance() + BOT_FOLLOW_DISTANCE_WALK)
-				speed = GetBotWalkspeed();
+			if (HasPet())
+				GetPet()->Warp(glm::vec3(leash_owner->GetPosition()));
 
-			SetRunAnimSpeed(0);
+			return;
+		}
 
-			if (dist > GetFollowDistance()) {
-				if (RuleB(Bots, UsePathing) && zone->pathing) {
-					bool WaypointChanged, NodeReached;
-
-					glm::vec3 Goal = UpdatePath(follow->GetX(), follow->GetY(), follow->GetZ(),
-						speed, WaypointChanged, NodeReached);
-
-					if (WaypointChanged)
-						tar_ndx = 20;
-
-					CalculateNewPosition2(Goal.x, Goal.y, Goal.z, speed);
+		// Ok to idle
+		if (fm_dist <= GetFollowDistance()) {
+			if (!IsMoving() && AI_think_timer->Check() && !spellend_timer.Enabled()) {
+				if (GetBotStance() != BotStancePassive) {
+					if (!AI_IdleCastCheck() && !IsCasting() && GetClass() != BARD)
+						BotMeditate(true);
 				}
 				else {
-					CalculateNewPosition2(follow->GetX(), follow->GetY(), follow->GetZ(), speed);
+					if (GetClass() != BARD)
+						BotMeditate(true);
 				}
 
-				if (rest_timer.Enabled())
-					rest_timer.Disable();
+				return;
+			}
+		}
+
+		// Non-engaged movement checks
+		if (AI_movement_timer->Check() && (!IsCasting() || GetClass() == BARD)) {
+			if (fm_dist > GetFollowDistance()) {
+				if (!IsRooted()) {
+					if (rest_timer.Enabled())
+						rest_timer.Disable();
+
+					int speed = GetBotRunspeed();
+					if (fm_dist < GetFollowDistance() + BOT_FOLLOW_DISTANCE_WALK)
+						speed = GetBotWalkspeed();
+
+					Goal = follow_mob->GetPosition();
+
+					if (RuleB(Bots, UsePathing) && zone->pathing) {
+						bool WaypointChanged, NodeReached;
+
+						Goal = UpdatePath(Goal.x, Goal.y, Goal.z,
+							speed, WaypointChanged, NodeReached);
+
+						if (WaypointChanged)
+							tar_ndx = 20;
+					}
+
+					CalculateNewPosition(Goal.x, Goal.y, Goal.z, speed);
+					return;
+				}
 			}
 			else {
-				if (moved) {
-					moved = false;
-					SetCurrentSpeed(0);
+				if (IsMoving()) {
+					StopMoving();
+					return;
 				}
 			}
 		}
-		
+
+		// Basically, bard bots get a chance to cast idle spells while moving
 		if (IsMoving()) {
-			if (GetClass() == BARD && GetBotStance() != BotStancePassive && !spellend_timer.Enabled() && AI_think_timer->Check()) {
-				AI_IdleCastCheck();
+			if (GetBotStance() != BotStancePassive) {
+				if (GetClass() == BARD && !spellend_timer.Enabled() && AI_think_timer->Check()) {
+					AI_IdleCastCheck();
+					return;
+				}
 			}
 		}
 	}
@@ -2643,14 +2906,14 @@ void Bot::PetAIProcess() {
 				if(botPet->GetClass() == ROGUE && !petHasAggro && !botPet->BehindMob(botPet->GetTarget(), botPet->GetX(), botPet->GetY())) {
 					// Move the rogue to behind the mob
 					if(botPet->PlotPositionAroundTarget(botPet->GetTarget(), newX, newY, newZ)) {
-						botPet->CalculateNewPosition2(newX, newY, newZ, botPet->GetRunspeed());
+						botPet->CalculateNewPosition(newX, newY, newZ, botPet->GetRunspeed());
 						return;
 					}
 				}
 				else if(GetTarget() == botPet->GetTarget() && !petHasAggro && !botPet->BehindMob(botPet->GetTarget(), botPet->GetX(), botPet->GetY())) {
 					// If the bot owner and the bot are fighting the same mob, then move the pet to the rear arc of the mob
 					if(botPet->PlotPositionAroundTarget(botPet->GetTarget(), newX, newY, newZ)) {
-						botPet->CalculateNewPosition2(newX, newY, newZ, botPet->GetRunspeed());
+						botPet->CalculateNewPosition(newX, newY, newZ, botPet->GetRunspeed());
 						return;
 					}
 				}
@@ -2665,7 +2928,7 @@ void Bot::PetAIProcess() {
 						moveBehindMob = true;
 
 					if(botPet->PlotPositionAroundTarget(botPet->GetTarget(), newX, newY, newZ, moveBehindMob)) {
-						botPet->CalculateNewPosition2(newX, newY, newZ, botPet->GetRunspeed());
+						botPet->CalculateNewPosition(newX, newY, newZ, botPet->GetRunspeed());
 						return;
 					}
 				}
@@ -2679,12 +2942,12 @@ void Bot::PetAIProcess() {
 					if(!botPet->BehindMob(botPet->GetTarget(), botPet->GetX(), botPet->GetY()) && botPet->GetTarget()->IsEnraged())
 						return;
 
-					if (botPet->Attack(GetTarget(), EQEmu::inventory::slotPrimary))	// try the main hand
+					if (botPet->Attack(GetTarget(), EQEmu::invslot::slotPrimary))	// try the main hand
 						if (botPet->GetTarget()) {
 							// We're a pet so we re able to dual attack
 							int32 RandRoll = zone->random.Int(0, 99);
 							if (botPet->CanThisClassDoubleAttack() && (RandRoll < (botPet->GetLevel() + NPCDualAttackModifier))) {
-								if (botPet->Attack(botPet->GetTarget(), EQEmu::inventory::slotPrimary)) {}
+								if (botPet->Attack(botPet->GetTarget(), EQEmu::invslot::slotPrimary)) {}
 							}
 						}
 
@@ -2722,11 +2985,11 @@ void Bot::PetAIProcess() {
 								float DualWieldProbability = ((botPet->GetSkill(EQEmu::skills::SkillDualWield) + botPet->GetLevel()) / 400.0f);
 								DualWieldProbability -= zone->random.Real(0, 1);
 								if(DualWieldProbability < 0) {
-									botPet->Attack(botPet->GetTarget(), EQEmu::inventory::slotSecondary);
+									botPet->Attack(botPet->GetTarget(), EQEmu::invslot::slotSecondary);
 									if (botPet->CanThisClassDoubleAttack()) {
 										int32 RandRoll = zone->random.Int(0, 99);
 										if (RandRoll < (botPet->GetLevel() + 20))
-											botPet->Attack(botPet->GetTarget(), EQEmu::inventory::slotSecondary);
+											botPet->Attack(botPet->GetTarget(), EQEmu::invslot::slotSecondary);
 									}
 								}
 							}
@@ -2748,7 +3011,7 @@ void Bot::PetAIProcess() {
 					botPet->SetRunAnimSpeed(0);
 					if(!botPet->IsRooted()) {
 						Log(Logs::Detail, Logs::AI, "Pursuing %s while engaged.", botPet->GetTarget()->GetCleanName());
-						botPet->CalculateNewPosition2(botPet->GetTarget()->GetX(), botPet->GetTarget()->GetY(), botPet->GetTarget()->GetZ(), botPet->GetOwner()->GetRunspeed());
+						botPet->CalculateNewPosition(botPet->GetTarget()->GetX(), botPet->GetTarget()->GetY(), botPet->GetTarget()->GetZ(), botPet->GetOwner()->GetRunspeed());
 						return;
 					} else {
 						botPet->SetHeading(botPet->GetTarget()->GetHeading());
@@ -2776,7 +3039,7 @@ void Bot::PetAIProcess() {
 					float dist = DistanceSquared(botPet->GetPosition(), botPet->GetTarget()->GetPosition());
 					botPet->SetRunAnimSpeed(0);
 					if(dist > 184) {
-						botPet->CalculateNewPosition2(botPet->GetTarget()->GetX(), botPet->GetTarget()->GetY(), botPet->GetTarget()->GetZ(), botPet->GetTarget()->GetRunspeed());
+						botPet->CalculateNewPosition(botPet->GetTarget()->GetX(), botPet->GetTarget()->GetY(), botPet->GetTarget()->GetZ(), botPet->GetTarget()->GetRunspeed());
 						return;
 					} else {
 						botPet->SetHeading(botPet->GetTarget()->GetHeading());
@@ -2815,7 +3078,7 @@ void Bot::Depop() {
 	NPC::Depop(false);
 }
 
-void Bot::Spawn(Client* botCharacterOwner) {
+bool Bot::Spawn(Client* botCharacterOwner) {
 	if(GetBotID() > 0 && _botOwnerCharacterID > 0 && botCharacterOwner && botCharacterOwner->CharacterID() == _botOwnerCharacterID) {
 		// Rename the bot name to make sure that Mob::GetName() matches Mob::GetCleanName() so we dont have a bot named "Jesuschrist001"
 		strcpy(name, GetCleanName());
@@ -2851,7 +3114,7 @@ void Bot::Spawn(Client* botCharacterOwner) {
 		// I re-enabled this until I can sort it out
 		uint32 itemID = 0;
 		uint8 materialFromSlot = 0xFF;
-		for (int i = EQEmu::legacy::EQUIPMENT_BEGIN; i <= EQEmu::legacy::EQUIPMENT_END; ++i) {
+		for (int i = EQEmu::invslot::EQUIPMENT_BEGIN; i <= EQEmu::invslot::EQUIPMENT_END; ++i) {
 			itemID = GetBotItemBySlot(i);
 			if(itemID != 0) {
 				materialFromSlot = EQEmu::InventoryProfile::CalcMaterialFromSlot(i);
@@ -2859,7 +3122,11 @@ void Bot::Spawn(Client* botCharacterOwner) {
 					this->SendWearChange(materialFromSlot);
 			}
 		}
+
+		return true;
 	}
+
+	return false;
 }
 
 // Deletes the inventory record for the specified item from the database for this bot.
@@ -2955,7 +3222,7 @@ void Bot::FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho) {
 			}
 		}
 
-		inst = GetBotItem(EQEmu::inventory::slotPrimary);
+		inst = GetBotItem(EQEmu::invslot::slotPrimary);
 		if(inst) {
 			item = inst->GetItem();
 			if(item) {
@@ -2966,7 +3233,7 @@ void Bot::FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho) {
 			}
 		}
 
-		inst = GetBotItem(EQEmu::inventory::slotSecondary);
+		inst = GetBotItem(EQEmu::invslot::slotSecondary);
 		if(inst) {
 			item = inst->GetItem();
 			if(item) {
@@ -2984,10 +3251,10 @@ Bot* Bot::LoadBot(uint32 botID)
 	Bot* loaded_bot = nullptr;
 	if (!botID)
 		return loaded_bot;
-	
+
 	if (!botdb.LoadBot(botID, loaded_bot)) // TODO: Consider update to message handler
 		return loaded_bot;
-	
+
 	return loaded_bot;
 }
 
@@ -3004,20 +3271,24 @@ void Bot::LoadAndSpawnAllZonedBots(Client* botOwner) {
 					botOwner->Message(13, "%s", BotDatabase::fail::LoadGroupedBotsByGroupID());
 					return;
 				}
-				
+
 				if(!ActiveBots.empty()) {
 					for(std::list<uint32>::iterator itr = ActiveBots.begin(); itr != ActiveBots.end(); ++itr) {
 						Bot* activeBot = Bot::LoadBot(*itr);
+						if (!activeBot)
+							continue;
 
-						if(activeBot) {
-							activeBot->Spawn(botOwner);
-							g->UpdatePlayer(activeBot);
-							// follow the bot owner, not the group leader we just zoned with our owner.
-							if(g->IsGroupMember(botOwner) && g->IsGroupMember(activeBot))
-								activeBot->SetFollowID(botOwner->GetID());
+						if (!activeBot->Spawn(botOwner)) {
+							safe_delete(activeBot);
+							continue;
 						}
 
-						if(activeBot && !botOwner->HasGroup())
+						g->UpdatePlayer(activeBot);
+						// follow the bot owner, not the group leader we just zoned with our owner.
+						if (g->IsGroupMember(botOwner) && g->IsGroupMember(activeBot))
+							activeBot->SetFollowID(botOwner->GetID());
+
+						if(!botOwner->HasGroup())
 							database.SetGroupID(activeBot->GetCleanName(), 0, activeBot->GetBotID());
 					}
 				}
@@ -3216,17 +3487,21 @@ EQEmu::ItemInstance* Bot::GetBotItem(uint32 slotID) {
 
 // Adds the specified item it bot to the NPC equipment array and to the bot inventory collection.
 void Bot::BotAddEquipItem(int slot, uint32 id) {
+	// this is being called before bot is assigned an entity id..
+	// ..causing packets to be sent out to zone with an id of '0'
 	if(slot > 0 && id > 0) {
 		uint8 materialFromSlot = EQEmu::InventoryProfile::CalcMaterialFromSlot(slot);
 
 		if (materialFromSlot != EQEmu::textures::materialInvalid) {
 			equipment[slot] = id; // npc has more than just material slots. Valid material should mean valid inventory index
-			SendWearChange(materialFromSlot);
+			if (GetID()) // temp hack fix
+				SendWearChange(materialFromSlot);
 		}
 
 		UpdateEquipmentLight();
 		if (UpdateActiveLight())
-			SendAppearancePacket(AT_Light, GetActiveLightType());
+			if (GetID()) // temp hack fix
+				SendAppearancePacket(AT_Light, GetActiveLightType());
 	}
 }
 
@@ -3343,12 +3618,12 @@ void Bot::FinishTrade(Client* client, BotTradeType tradeType)
 	if (tradeType == BotTradeClientNormal) {
 		// Items being traded are found in the normal trade window used to trade between a Client and a Client or NPC
 		// Items in this mode are found in slot ids 3000 thru 3003 - thought bots used the full 8-slot window..?
-		PerformTradeWithClient(EQEmu::legacy::TRADE_BEGIN, EQEmu::legacy::TRADE_END, client); // {3000..3007}
+		PerformTradeWithClient(EQEmu::invslot::TRADE_BEGIN, EQEmu::invslot::TRADE_END, client); // {3000..3007}
 	}
 	else if (tradeType == BotTradeClientNoDropNoTrade) {
 		// Items being traded are found on the Client's cursor slot, slot id 30. This item can be either a single item or it can be a bag.
 		// If it is a bag, then we have to search for items in slots 331 thru 340
-		PerformTradeWithClient(EQEmu::inventory::slotCursor, EQEmu::inventory::slotCursor, client);
+		PerformTradeWithClient(EQEmu::invslot::slotCursor, EQEmu::invslot::slotCursor, client);
 
 		// TODO: Add logic here to test if the item in SLOT_CURSOR is a container type, if it is then we need to call the following:
 		// PerformTradeWithClient(331, 340, client);
@@ -3366,8 +3641,8 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 		int16 toBotSlot;
 		int adjustStackSize;
 		std::string acceptedItemName;
-		
-		ClientTrade(const ItemInstance* item, int16 from, const char* name = "") : tradeItemInstance(item), fromClientSlot(from), toBotSlot(legacy::SLOT_INVALID), adjustStackSize(0), acceptedItemName(name) { }
+
+		ClientTrade(const ItemInstance* item, int16 from, const char* name = "") : tradeItemInstance(item), fromClientSlot(from), toBotSlot(invslot::SLOT_INVALID), adjustStackSize(0), acceptedItemName(name) { }
 	};
 
 	struct ClientReturn {
@@ -3376,23 +3651,23 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 		int16 toClientSlot;
 		int adjustStackSize;
 		std::string failedItemName;
-		
-		ClientReturn(const ItemInstance* item, int16 from, const char* name = "") : returnItemInstance(item), fromBotSlot(from), toClientSlot(legacy::SLOT_INVALID), adjustStackSize(0), failedItemName(name) { }
+
+		ClientReturn(const ItemInstance* item, int16 from, const char* name = "") : returnItemInstance(item), fromBotSlot(from), toClientSlot(invslot::SLOT_INVALID), adjustStackSize(0), failedItemName(name) { }
 	};
 
 	static const int16 proxyPowerSource = 22;
 
-	static const int16 bot_equip_order[(legacy::EQUIPMENT_SIZE + 1)] = {
-		inventory::slotCharm,			inventory::slotEar1,			inventory::slotHead,			inventory::slotFace,
-		inventory::slotEar2,			inventory::slotNeck,			inventory::slotShoulders,		inventory::slotArms,
-		inventory::slotBack,			inventory::slotWrist1,			inventory::slotWrist2,			inventory::slotRange,
-		inventory::slotHands,			inventory::slotPrimary,			inventory::slotSecondary,		inventory::slotFinger1,
-		inventory::slotFinger2,			inventory::slotChest,			inventory::slotLegs,			inventory::slotFeet,
-		inventory::slotWaist,			inventory::slotAmmo,			proxyPowerSource // inventory::slotPowerSource
+	static const int16 bot_equip_order[(invslot::CORPSE_BEGIN + 1)] = {
+		invslot::slotCharm,			invslot::slotEar1,			invslot::slotHead,			invslot::slotFace,
+		invslot::slotEar2,			invslot::slotNeck,			invslot::slotShoulders,		invslot::slotArms,
+		invslot::slotBack,			invslot::slotWrist1,		invslot::slotWrist2,		invslot::slotRange,
+		invslot::slotHands,			invslot::slotPrimary,		invslot::slotSecondary,		invslot::slotFinger1,
+		invslot::slotFinger2,		invslot::slotChest,			invslot::slotLegs,			invslot::slotFeet,
+		invslot::slotWaist,			invslot::slotAmmo,			proxyPowerSource // invslot::SLOT_POWER_SOURCE
 	};
 
 	enum { stageStackable = 0, stageEmpty, stageReplaceable };
-	
+
 	if (!client) {
 		Emote("NO CLIENT");
 		return;
@@ -3403,17 +3678,17 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 		client->ResetTrade();
 		return;
 	}
-	if ((beginSlotID != legacy::TRADE_BEGIN) && (beginSlotID != inventory::slotCursor)) {
+	if ((beginSlotID != invslot::TRADE_BEGIN) && (beginSlotID != invslot::slotCursor)) {
 		client->Message(CC_Red, "Trade request processing from illegal 'begin' slot - Trade Canceled.");
 		client->ResetTrade();
 		return;
 	}
-	if ((endSlotID != legacy::TRADE_END) && (endSlotID != inventory::slotCursor)) {
+	if ((endSlotID != invslot::TRADE_END) && (endSlotID != invslot::slotCursor)) {
 		client->Message(CC_Red, "Trade request processing from illegal 'end' slot - Trade Canceled.");
 		client->ResetTrade();
 		return;
 	}
-	if (((beginSlotID == inventory::slotCursor) && (endSlotID != inventory::slotCursor)) || ((beginSlotID != inventory::slotCursor) && (endSlotID == inventory::slotCursor))) {
+	if (((beginSlotID == invslot::slotCursor) && (endSlotID != invslot::slotCursor)) || ((beginSlotID != invslot::slotCursor) && (endSlotID == invslot::slotCursor))) {
 		client->Message(CC_Red, "Trade request processing illegal slot range - Trade Canceled.");
 		client->ResetTrade();
 		return;
@@ -3444,7 +3719,7 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 			client->ResetTrade();
 			return;
 		}
-		if ((trade_index != inventory::slotCursor) && !trade_instance->IsDroppable()) {
+		if ((trade_index != invslot::slotCursor) && !trade_instance->IsDroppable()) {
 			// TODO: add logging
 			client->Message(CC_Red, "Trade hack detected - Trade Canceled.");
 			client->ResetTrade();
@@ -3483,7 +3758,7 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 				continue;
 			if (!check_iterator.tradeItemInstance->GetItem()->LoreFlag)
 				continue;
-			
+
 			if ((trade_iterator.tradeItemInstance->GetItem()->LoreGroup == -1) && (check_iterator.tradeItemInstance->GetItem()->ID == trade_iterator.tradeItemInstance->GetItem()->ID)) {
 				// TODO: add logging
 				client->Message(CC_Red, "Trade hack detected - Trade Canceled.");
@@ -3507,7 +3782,7 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 	//for (unsigned stage_loop = stageStackable; stage_loop <= stageReplaceable; ++stage_loop) { // awaiting implementation
 	for (unsigned stage_loop = stageEmpty; stage_loop <= stageReplaceable; ++stage_loop) {
 		for (auto& trade_iterator : client_trade) {
-			if (trade_iterator.toBotSlot != legacy::SLOT_INVALID)
+			if (trade_iterator.toBotSlot != invslot::SLOT_INVALID)
 				continue;
 
 			auto trade_instance = trade_iterator.tradeItemInstance;
@@ -3524,7 +3799,7 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 				//}
 
 				if (stage_loop != stageReplaceable) {
-					if ((index == proxyPowerSource) && m_inv[inventory::slotPowerSource])
+					if ((index == proxyPowerSource) && m_inv[invslot::SLOT_POWER_SOURCE])
 						continue;
 					else if (m_inv[index])
 						continue;
@@ -3543,28 +3818,28 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 				if (slot_taken)
 					continue;
 
-				if (index == inventory::slotPrimary) {
+				if (index == invslot::slotPrimary) {
 					if (trade_instance->GetItem()->IsType2HWeapon()) {
 						if (!melee_secondary) {
 							melee_2h_weapon = true;
 
-							auto equipped_secondary_weapon = m_inv[inventory::slotSecondary];
+							auto equipped_secondary_weapon = m_inv[invslot::slotSecondary];
 							if (equipped_secondary_weapon)
-								client_return.push_back(ClientReturn(equipped_secondary_weapon, inventory::slotSecondary));
+								client_return.push_back(ClientReturn(equipped_secondary_weapon, invslot::slotSecondary));
 						}
 						else {
 							continue;
 						}
 					}
 				}
-				if (index == inventory::slotSecondary) {
+				if (index == invslot::slotSecondary) {
 					if (!melee_2h_weapon) {
 						if ((can_dual_wield && trade_instance->GetItem()->IsType1HWeapon()) || trade_instance->GetItem()->IsTypeShield() || !trade_instance->IsWeapon()) {
 							melee_secondary = true;
 
-							auto equipped_primary_weapon = m_inv[inventory::slotPrimary];
+							auto equipped_primary_weapon = m_inv[invslot::slotPrimary];
 							if (equipped_primary_weapon && equipped_primary_weapon->GetItem()->IsType2HWeapon())
-								client_return.push_back(ClientReturn(equipped_primary_weapon, inventory::slotPrimary));
+								client_return.push_back(ClientReturn(equipped_primary_weapon, invslot::slotPrimary));
 						}
 						else {
 							continue;
@@ -3576,10 +3851,10 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 				}
 
 				if (index == proxyPowerSource) {
-					trade_iterator.toBotSlot = inventory::slotPowerSource;
+					trade_iterator.toBotSlot = invslot::SLOT_POWER_SOURCE;
 
-					if (m_inv[inventory::slotPowerSource])
-						client_return.push_back(ClientReturn(m_inv[inventory::slotPowerSource], inventory::slotPowerSource));
+					if (m_inv[invslot::SLOT_POWER_SOURCE])
+						client_return.push_back(ClientReturn(m_inv[invslot::SLOT_POWER_SOURCE], invslot::SLOT_POWER_SOURCE));
 				}
 				else {
 					trade_iterator.toBotSlot = index;
@@ -3595,14 +3870,14 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 
 	// move unassignable items from trade list to return list
 	for (std::list<ClientTrade>::iterator trade_iterator = client_trade.begin(); trade_iterator != client_trade.end();) {
-		if (trade_iterator->toBotSlot == legacy::SLOT_INVALID) {
+		if (trade_iterator->toBotSlot == invslot::SLOT_INVALID) {
 			client_return.push_back(ClientReturn(trade_iterator->tradeItemInstance, trade_iterator->fromClientSlot, trade_iterator->tradeItemInstance->GetItem()->Name));
 			trade_iterator = client_trade.erase(trade_iterator);
 			continue;
 		}
 		++trade_iterator;
 	}
-	
+
 	// out-going return checks for client
 	for (auto& return_iterator : client_return) {
 		auto return_instance = return_iterator.returnItemInstance;
@@ -3621,17 +3896,17 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 			return;
 		}
 
-		if (return_iterator.fromBotSlot == inventory::slotCursor) {
-			return_iterator.toClientSlot = inventory::slotCursor;
+		if (return_iterator.fromBotSlot == invslot::slotCursor) {
+			return_iterator.toClientSlot = invslot::slotCursor;
 		}
 		else {
-			int16 client_search_general = legacy::GENERAL_BEGIN;
-			uint8 client_search_bag = inventory::containerBegin;
+			int16 client_search_general = invslot::GENERAL_BEGIN;
+			uint8 client_search_bag = invbag::SLOT_BEGIN;
 
 			bool run_search = true;
 			while (run_search) {
 				int16 client_test_slot = client->GetInv().FindFreeSlotForTradeItem(return_instance, client_search_general, client_search_bag);
-				if (client_test_slot == legacy::SLOT_INVALID) {
+				if (client_test_slot == invslot::SLOT_INVALID) {
 					run_search = false;
 					continue;
 				}
@@ -3641,26 +3916,26 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 					if (check_iterator.fromBotSlot == return_iterator.fromBotSlot)
 						continue;
 
-					if ((check_iterator.toClientSlot == client_test_slot) && (client_test_slot != inventory::slotCursor)) {
+					if ((check_iterator.toClientSlot == client_test_slot) && (client_test_slot != invslot::slotCursor)) {
 						slot_taken = true;
 						break;
 					}
 				}
 				if (slot_taken) {
-					if ((client_test_slot >= legacy::GENERAL_BEGIN) && (client_test_slot <= legacy::GENERAL_END)) {
+					if ((client_test_slot >= invslot::GENERAL_BEGIN) && (client_test_slot <= invslot::GENERAL_END)) {
 						++client_search_general;
-						client_search_bag = inventory::containerBegin;
+						client_search_bag = invbag::SLOT_BEGIN;
 					}
 					else {
 						client_search_general = InventoryProfile::CalcSlotId(client_test_slot);
 						client_search_bag = InventoryProfile::CalcBagIdx(client_test_slot);
 
 						++client_search_bag;
-						if (client_search_bag >= inventory::ContainerCount) {
+						if (client_search_bag >= invbag::SLOT_COUNT) {
 							// incrementing this past legacy::GENERAL_END triggers the (client_test_slot == legacy::SLOT_INVALID) at the beginning of the search loop
 							// ideally, this will never occur because we always start fresh with each loop iteration and should receive SLOT_CURSOR as a return value
 							++client_search_general;
-							client_search_bag = inventory::containerBegin;
+							client_search_bag = invbag::SLOT_BEGIN;
 						}
 					}
 
@@ -3672,7 +3947,7 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 			}
 		}
 
-		if (return_iterator.toClientSlot == legacy::SLOT_INVALID) {
+		if (return_iterator.toClientSlot == invslot::SLOT_INVALID) {
 			client->Message(CC_Yellow, "You do not have room to complete this trade - Trade Canceled!");
 			client->ResetTrade();
 			return;
@@ -3684,10 +3959,10 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 	for (auto& return_iterator : client_return) {
 		// TODO: code for stackables
 
-		if (return_iterator.fromBotSlot == inventory::slotCursor) { // failed trade return
+		if (return_iterator.fromBotSlot == invslot::slotCursor) { // failed trade return
 			// no movement action required
 		}
-		else if ((return_iterator.fromBotSlot >= legacy::TRADE_BEGIN) && (return_iterator.fromBotSlot <= legacy::TRADE_END)) { // failed trade returns
+		else if ((return_iterator.fromBotSlot >= invslot::TRADE_BEGIN) && (return_iterator.fromBotSlot <= invslot::TRADE_END)) { // failed trade returns
 			client->PutItemInInventory(return_iterator.toClientSlot, *return_iterator.returnItemInstance);
 			client->SendItemPacket(return_iterator.toClientSlot, return_iterator.returnItemInstance, ItemPacketTrade);
 			client->DeleteItemInInventory(return_iterator.fromBotSlot);
@@ -3718,7 +3993,7 @@ void Bot::PerformTradeWithClient(int16 beginSlotID, int16 endSlotID, Client* cli
 
 		m_inv.PutItem(trade_iterator.toBotSlot, *trade_iterator.tradeItemInstance);
 		this->BotAddEquipItem(trade_iterator.toBotSlot, (trade_iterator.tradeItemInstance ? trade_iterator.tradeItemInstance->GetID() : 0));
-		client->DeleteItemInInventory(trade_iterator.fromClientSlot, 0, true);
+		client->DeleteItemInInventory(trade_iterator.fromClientSlot, 0, (trade_iterator.fromClientSlot == EQEmu::invslot::slotCursor));
 		trade_iterator.tradeItemInstance = nullptr;
 	}
 
@@ -3860,7 +4135,7 @@ void Bot::AddToHateList(Mob* other, uint32 hate, int32 damage, bool iYellForHelp
 	Mob::AddToHateList(other, hate, damage, iYellForHelp, bFrenzy, iBuffTic, pet_command);
 }
 
-bool Bot::Attack(Mob* other, int Hand, bool FromRiposte, bool IsStrikethrough, bool IsFromSpell, ExtraAttackOptions *opts) {	
+bool Bot::Attack(Mob* other, int Hand, bool FromRiposte, bool IsStrikethrough, bool IsFromSpell, ExtraAttackOptions *opts) {
 	if (!other) {
 		SetTarget(nullptr);
 		Log(Logs::General, Logs::Error, "A null Mob object was passed to Bot::Attack for evaluation!");
@@ -3880,7 +4155,7 @@ bool Bot::Attack(Mob* other, int Hand, bool FromRiposte, bool IsStrikethrough, b
 	SetTarget(other);
 	// takes more to compare a call result, load for a call, load a compare to address and compare, and finally
 	// push a value to an address than to just load for a call and push a value to an address.
-	
+
 	Log(Logs::Detail, Logs::Combat, "Attacking %s with hand %d %s", other->GetCleanName(), Hand, (FromRiposte ? "(this is a riposte)" : ""));
 	if ((IsCasting() && (GetClass() != BARD) && !IsFromSpell) || (!IsAttackAllowed(other))) {
 		if(this->GetOwnerID())
@@ -3900,13 +4175,13 @@ bool Bot::Attack(Mob* other, int Hand, bool FromRiposte, bool IsStrikethrough, b
 
 	FaceTarget(GetTarget());
 	EQEmu::ItemInstance* weapon = nullptr;
-	if (Hand == EQEmu::inventory::slotPrimary) {
-		weapon = GetBotItem(EQEmu::inventory::slotPrimary);
+	if (Hand == EQEmu::invslot::slotPrimary) {
+		weapon = GetBotItem(EQEmu::invslot::slotPrimary);
 		OffHandAtk(false);
 	}
 
-	if (Hand == EQEmu::inventory::slotSecondary) {
-		weapon = GetBotItem(EQEmu::inventory::slotSecondary);
+	if (Hand == EQEmu::invslot::slotSecondary) {
+		weapon = GetBotItem(EQEmu::invslot::slotSecondary);
 		OffHandAtk(true);
 	}
 
@@ -3955,7 +4230,7 @@ bool Bot::Attack(Mob* other, int Hand, bool FromRiposte, bool IsStrikethrough, b
 		// This is not recommended for normal usage, as the damage bonus represents a non-trivial component of the DPS output
 		// of weapons wielded by higher-level melee characters (especially for two-handed weapons).
 		int ucDamageBonus = 0;
-		if (Hand == EQEmu::inventory::slotPrimary && GetLevel() >= 28 && IsWarriorClass()) {
+		if (Hand == EQEmu::invslot::slotPrimary && GetLevel() >= 28 && IsWarriorClass()) {
 			// Damage bonuses apply only to hits from the main hand (Hand == MainPrimary) by characters level 28 and above
 			// who belong to a melee class. If we're here, then all of these conditions apply.
 			ucDamageBonus = GetWeaponDamageBonus(weapon ? weapon->GetItem() : (const EQEmu::ItemData*) nullptr);
@@ -3964,7 +4239,7 @@ bool Bot::Attack(Mob* other, int Hand, bool FromRiposte, bool IsStrikethrough, b
 		}
 #endif
 		//Live AA - Sinister Strikes *Adds weapon damage bonus to offhand weapon.
-		if (Hand == EQEmu::inventory::slotSecondary) {
+		if (Hand == EQEmu::invslot::slotSecondary) {
 			if (aabonuses.SecondaryDmgInc || itembonuses.SecondaryDmgInc || spellbonuses.SecondaryDmgInc){
 				ucDamageBonus = GetWeaponDamageBonus(weapon ? weapon->GetItem() : (const EQEmu::ItemData*) nullptr);
 				my_hit.min_damage = ucDamageBonus;
@@ -4371,7 +4646,7 @@ int32 Bot::GetBotFocusEffect(BotfocusType bottype, uint16 spell_id) {
 		int32 focus_max = 0;
 		int32 focus_max_real = 0;
 		//item focus
-		for (int x = EQEmu::legacy::EQUIPMENT_BEGIN; x <= EQEmu::legacy::EQUIPMENT_END; x++) {
+		for (int x = EQEmu::invslot::EQUIPMENT_BEGIN; x <= EQEmu::invslot::EQUIPMENT_END; x++) {
 			TempItem = nullptr;
 			EQEmu::ItemInstance* ins = GetBotItem(x);
 			if (!ins)
@@ -4396,7 +4671,7 @@ int32 Bot::GetBotFocusEffect(BotfocusType bottype, uint16 spell_id) {
 				}
 			}
 
-			for (int y = EQEmu::inventory::socketBegin; y < EQEmu::inventory::SocketCount; ++y) {
+			for (int y = EQEmu::invaug::SOCKET_BEGIN; y <= EQEmu::invaug::SOCKET_END; ++y) {
 				EQEmu::ItemInstance *aug = nullptr;
 				aug = ins->GetAugment(y);
 				if(aug) {
@@ -4832,13 +5107,13 @@ float Bot::GetProcChances(float ProcBonus, uint16 hand) {
 	float ProcChance = 0.0f;
 	uint32 weapon_speed = 0;
 	switch (hand) {
-	case EQEmu::inventory::slotPrimary:
+	case EQEmu::invslot::slotPrimary:
 		weapon_speed = attack_timer.GetDuration();
 		break;
-	case EQEmu::inventory::slotSecondary:
+	case EQEmu::invslot::slotSecondary:
 		weapon_speed = attack_dw_timer.GetDuration();
 		break;
-	case EQEmu::inventory::slotRange:
+	case EQEmu::invslot::slotRange:
 		weapon_speed = ranged_timer.GetDuration();
 		break;
 	}
@@ -4928,11 +5203,11 @@ void Bot::DoRiposte(Mob* defender) {
 	if (!defender)
 		return;
 
-	defender->Attack(this, EQEmu::inventory::slotPrimary, true);
+	defender->Attack(this, EQEmu::invslot::slotPrimary, true);
 	int32 DoubleRipChance = (defender->GetAABonuses().GiveDoubleRiposte[0] + defender->GetSpellBonuses().GiveDoubleRiposte[0] + defender->GetItemBonuses().GiveDoubleRiposte[0]);
 	if(DoubleRipChance && (DoubleRipChance >= zone->random.Int(0, 100))) {
 		Log(Logs::Detail, Logs::Combat, "Preforming a double riposte (%d percent chance)", DoubleRipChance);
-		defender->Attack(this, EQEmu::inventory::slotPrimary, true);
+		defender->Attack(this, EQEmu::invslot::slotPrimary, true);
 	}
 
 	DoubleRipChance = defender->GetAABonuses().GiveDoubleRiposte[1];
@@ -4962,7 +5237,7 @@ int Bot::GetBaseSkillDamage(EQEmu::skills::SkillType skill, Mob *target)
 			base++;
 		return base;
 	case EQEmu::skills::SkillFrenzy:
-		if (GetBotItem(EQEmu::inventory::slotPrimary)) {
+		if (GetBotItem(EQEmu::invslot::slotPrimary)) {
 			if (GetLevel() > 15)
 				base += GetLevel() - 15;
 			if (base > 23)
@@ -4978,7 +5253,7 @@ int Bot::GetBaseSkillDamage(EQEmu::skills::SkillType skill, Mob *target)
 	case EQEmu::skills::SkillFlyingKick: {
 		float skill_bonus = skill_level / 9.0f;
 		float ac_bonus = 0.0f;
-		auto inst = GetBotItem(EQEmu::inventory::slotFeet);
+		auto inst = GetBotItem(EQEmu::invslot::slotFeet);
 		if (inst)
 			ac_bonus = inst->GetItemArmorClass(true) / 25.0f;
 		if (ac_bonus > skill_bonus)
@@ -4988,7 +5263,7 @@ int Bot::GetBaseSkillDamage(EQEmu::skills::SkillType skill, Mob *target)
 	case EQEmu::skills::SkillKick: {
 		float skill_bonus = skill_level / 10.0f;
 		float ac_bonus = 0.0f;
-		auto inst = GetBotItem(EQEmu::inventory::slotFeet);
+		auto inst = GetBotItem(EQEmu::invslot::slotFeet);
 		if (inst)
 			ac_bonus = inst->GetItemArmorClass(true) / 25.0f;
 		if (ac_bonus > skill_bonus)
@@ -5000,9 +5275,9 @@ int Bot::GetBaseSkillDamage(EQEmu::skills::SkillType skill, Mob *target)
 		float ac_bonus = 0.0f;
 		const EQEmu::ItemInstance *inst = nullptr;
 		if (HasShieldEquiped())
-			inst = GetBotItem(EQEmu::inventory::slotSecondary);
+			inst = GetBotItem(EQEmu::invslot::slotSecondary);
 		else if (HasTwoHanderEquipped())
-			inst = GetBotItem(EQEmu::inventory::slotPrimary);
+			inst = GetBotItem(EQEmu::invslot::slotPrimary);
 		if (inst)
 			ac_bonus = inst->GetItemArmorClass(true) / 25.0f;
 		if (ac_bonus > skill_bonus)
@@ -5011,7 +5286,7 @@ int Bot::GetBaseSkillDamage(EQEmu::skills::SkillType skill, Mob *target)
 	}
 	case EQEmu::skills::SkillBackstab: {
 		float skill_bonus = static_cast<float>(skill_level) * 0.02f;
-		auto inst = GetBotItem(EQEmu::inventory::slotPrimary);
+		auto inst = GetBotItem(EQEmu::invslot::slotPrimary);
 		if (inst && inst->GetItem() && inst->GetItem()->ItemType == EQEmu::item::ItemType1HPiercing) {
 			base = inst->GetItemBackstabDamage(true);
 			if (!inst->GetItemBackstabDamage())
@@ -5036,7 +5311,7 @@ void Bot::DoSpecialAttackDamage(Mob *who, EQEmu::skills::SkillType skill, int32 
 		hate = hate_override;
 
 	if (skill == EQEmu::skills::SkillBash) {
-		const EQEmu::ItemInstance* inst = GetBotItem(EQEmu::inventory::slotSecondary);
+		const EQEmu::ItemInstance* inst = GetBotItem(EQEmu::invslot::slotSecondary);
 		const EQEmu::ItemData* botweapon = nullptr;
 		if(inst)
 			botweapon = inst->GetItem();
@@ -5057,10 +5332,10 @@ void Bot::DoSpecialAttackDamage(Mob *who, EQEmu::skills::SkillType skill, int32 
 	my_hit.skill = skill;
 	my_hit.offense = offense(my_hit.skill);
 	my_hit.tohit = GetTotalToHit(my_hit.skill, 0);
-	my_hit.hand = EQEmu::inventory::slotPrimary;
+	my_hit.hand = EQEmu::invslot::slotPrimary;
 
 	if (skill == EQEmu::skills::SkillThrowing || skill == EQEmu::skills::SkillArchery)
-		my_hit.hand = EQEmu::inventory::slotRange;
+		my_hit.hand = EQEmu::invslot::slotRange;
 
 	DoAttack(who, my_hit);
 
@@ -5097,7 +5372,7 @@ void Bot::TryBackstab(Mob *other, int ReuseTime) {
 
 	bool bIsBehind = false;
 	bool bCanFrontalBS = false;
-	const EQEmu::ItemInstance* inst = GetBotItem(EQEmu::inventory::slotPrimary);
+	const EQEmu::ItemInstance* inst = GetBotItem(EQEmu::invslot::slotPrimary);
 	const EQEmu::ItemData* botpiercer = nullptr;
 	if(inst)
 		botpiercer = inst->GetItem();
@@ -5140,7 +5415,7 @@ void Bot::TryBackstab(Mob *other, int ReuseTime) {
 		m_specialattacks = eSpecialAttacks::None;
 	}
 	else
-		Attack(other, EQEmu::inventory::slotPrimary);
+		Attack(other, EQEmu::invslot::slotPrimary);
 }
 
 void Bot::RogueBackstab(Mob *other, bool min_damage, int ReuseTime)
@@ -5148,7 +5423,7 @@ void Bot::RogueBackstab(Mob *other, bool min_damage, int ReuseTime)
 	if (!other)
 		return;
 
-	EQEmu::ItemInstance *botweaponInst = GetBotItem(EQEmu::inventory::slotPrimary);
+	EQEmu::ItemInstance *botweaponInst = GetBotItem(EQEmu::invslot::slotPrimary);
 	if (botweaponInst) {
 		if (!GetWeaponDamage(other, botweaponInst))
 			return;
@@ -5166,7 +5441,7 @@ void Bot::RogueBackstab(Mob *other, bool min_damage, int ReuseTime)
 }
 
 void Bot::RogueAssassinate(Mob* other) {
-	EQEmu::ItemInstance* botweaponInst = GetBotItem(EQEmu::inventory::slotPrimary);
+	EQEmu::ItemInstance* botweaponInst = GetBotItem(EQEmu::invslot::slotPrimary);
 	if(botweaponInst) {
 		if(GetWeaponDamage(other, botweaponInst))
 			other->Damage(this, 32000, SPELL_UNKNOWN, EQEmu::skills::SkillBackstab);
@@ -5231,7 +5506,7 @@ void Bot::DoClassAttacks(Mob *target, bool IsRiposte) {
 		case WARRIOR:
 			if(level >= RuleI(Combat, NPCBashKickLevel)){
 				bool canBash = false;
-				if ((GetRace() == OGRE || GetRace() == TROLL || GetRace() == BARBARIAN) || (m_inv.GetItem(EQEmu::inventory::slotSecondary) && m_inv.GetItem(EQEmu::inventory::slotSecondary)->GetItem()->ItemType == EQEmu::item::ItemTypeShield) || (m_inv.GetItem(EQEmu::inventory::slotPrimary) && m_inv.GetItem(EQEmu::inventory::slotPrimary)->GetItem()->IsType2HWeapon() && GetAA(aa2HandBash) >= 1))
+				if ((GetRace() == OGRE || GetRace() == TROLL || GetRace() == BARBARIAN) || (m_inv.GetItem(EQEmu::invslot::slotSecondary) && m_inv.GetItem(EQEmu::invslot::slotSecondary)->GetItem()->ItemType == EQEmu::item::ItemTypeShield) || (m_inv.GetItem(EQEmu::invslot::slotPrimary) && m_inv.GetItem(EQEmu::invslot::slotPrimary)->GetItem()->IsType2HWeapon() && GetAA(aa2HandBash) >= 1))
 					canBash = true;
 
 				if(!canBash || zone->random.Int(0, 100) > 25)
@@ -5250,7 +5525,7 @@ void Bot::DoClassAttacks(Mob *target, bool IsRiposte) {
 		case SHADOWKNIGHT:
 		case PALADIN:
 			if(level >= RuleI(Combat, NPCBashKickLevel)){
-				if ((GetRace() == OGRE || GetRace() == TROLL || GetRace() == BARBARIAN) || (m_inv.GetItem(EQEmu::inventory::slotSecondary) && m_inv.GetItem(EQEmu::inventory::slotSecondary)->GetItem()->ItemType == EQEmu::item::ItemTypeShield) || (m_inv.GetItem(EQEmu::inventory::slotPrimary) && m_inv.GetItem(EQEmu::inventory::slotPrimary)->GetItem()->IsType2HWeapon() && GetAA(aa2HandBash) >= 1))
+				if ((GetRace() == OGRE || GetRace() == TROLL || GetRace() == BARBARIAN) || (m_inv.GetItem(EQEmu::invslot::slotSecondary) && m_inv.GetItem(EQEmu::invslot::slotSecondary)->GetItem()->ItemType == EQEmu::item::ItemTypeShield) || (m_inv.GetItem(EQEmu::invslot::slotPrimary) && m_inv.GetItem(EQEmu::invslot::slotPrimary)->GetItem()->IsType2HWeapon() && GetAA(aa2HandBash) >= 1))
 					skill_to_use = EQEmu::skills::SkillBash;
 			}
 			break;
@@ -5281,7 +5556,7 @@ void Bot::DoClassAttacks(Mob *target, bool IsRiposte) {
 	if (skill_to_use == EQEmu::skills::SkillBash) {
 		if (target != this) {
 			DoAnim(animTailRake);
-			if (GetWeaponDamage(target, GetBotItem(EQEmu::inventory::slotSecondary)) <= 0 && GetWeaponDamage(target, GetBotItem(EQEmu::inventory::slotShoulders)) <= 0)
+			if (GetWeaponDamage(target, GetBotItem(EQEmu::invslot::slotSecondary)) <= 0 && GetWeaponDamage(target, GetBotItem(EQEmu::invslot::slotShoulders)) <= 0)
 				dmg = DMG_INVULNERABLE;
 
 			reuse = (BashReuseTime * 1000);
@@ -5308,7 +5583,7 @@ void Bot::DoClassAttacks(Mob *target, bool IsRiposte) {
 	if (skill_to_use == EQEmu::skills::SkillKick) {
 		if(target != this) {
 			DoAnim(animKick);
-			if (GetWeaponDamage(target, GetBotItem(EQEmu::inventory::slotFeet)) <= 0)
+			if (GetWeaponDamage(target, GetBotItem(EQEmu::invslot::slotFeet)) <= 0)
 				dmg = DMG_INVULNERABLE;
 
 			reuse = (KickReuseTime * 1000);
@@ -5446,7 +5721,7 @@ void Bot::EquipBot(std::string* errorMessage) {
 	GetBotItems(m_inv, errorMessage);
 	const EQEmu::ItemInstance* inst = nullptr;
 	const EQEmu::ItemData* item = nullptr;
-	for (int i = EQEmu::legacy::EQUIPMENT_BEGIN; i <= EQEmu::legacy::EQUIPMENT_END; ++i) {
+	for (int i = EQEmu::invslot::EQUIPMENT_BEGIN; i <= EQEmu::invslot::EQUIPMENT_END; ++i) {
 		inst = GetBotItem(i);
 		if(inst) {
 			item = inst->GetItem();
@@ -5495,7 +5770,7 @@ void Bot::ProcessGuildInvite(Client* guildOfficer, Bot* botToGuild) {
 				guildOfficer->Message(13, "%s for '%s'", BotDatabase::fail::SaveGuildMembership(), botToGuild->GetCleanName());
 				return;
 			}
-			
+
 			ServerPacket* pack = new ServerPacket(ServerOP_GuildCharRefresh, sizeof(ServerGuildCharRefresh_Struct));
 			ServerGuildCharRefresh_Struct *s = (ServerGuildCharRefresh_Struct *) pack->pBuffer;
 			s->guild_id = guildOfficer->GuildID();
@@ -5573,12 +5848,12 @@ void Bot::SetAttackTimer() {
 	attack_timer.SetAtTrigger(4000, true);
 	Timer* TimerToUse = nullptr;
 	const EQEmu::ItemData* PrimaryWeapon = nullptr;
-	for (int i = EQEmu::inventory::slotRange; i <= EQEmu::inventory::slotSecondary; i++) {
-		if (i == EQEmu::inventory::slotPrimary)
+	for (int i = EQEmu::invslot::slotRange; i <= EQEmu::invslot::slotSecondary; i++) {
+		if (i == EQEmu::invslot::slotPrimary)
 			TimerToUse = &attack_timer;
-		else if (i == EQEmu::inventory::slotRange)
+		else if (i == EQEmu::invslot::slotRange)
 			TimerToUse = &ranged_timer;
-		else if (i == EQEmu::inventory::slotSecondary)
+		else if (i == EQEmu::invslot::slotSecondary)
 			TimerToUse = &attack_dw_timer;
 		else
 			continue;
@@ -5588,7 +5863,7 @@ void Bot::SetAttackTimer() {
 		if (ci)
 			ItemToUse = ci->GetItem();
 
-		if (i == EQEmu::inventory::slotSecondary) {
+		if (i == EQEmu::invslot::slotSecondary) {
 			if (PrimaryWeapon != nullptr) {
 				if (PrimaryWeapon->IsClassCommon() && PrimaryWeapon->IsType2HWeapon()) {
 					attack_dw_timer.Disable();
@@ -5619,7 +5894,7 @@ void Bot::SetAttackTimer() {
 		speed = (RuleB(Spells, Jun182014HundredHandsRevamp) ? static_cast<int>(((delay / haste_mod) + ((hhe / 1000.0f) * (delay / haste_mod))) * 100) : static_cast<int>(((delay / haste_mod) + ((hhe / 100.0f) * delay)) * 100));
 		TimerToUse->SetAtTrigger(std::max(RuleI(Combat, MinHastedDelay), speed), true, true);
 
-		if (i == EQEmu::inventory::slotPrimary)
+		if (i == EQEmu::invslot::slotPrimary)
 			PrimaryWeapon = ItemToUse;
 	}
 }
@@ -7046,38 +7321,11 @@ bool Bot::IsArcheryRange(Mob *target) {
 	return result;
 }
 
-bool Bot::IsBotCasterAtCombatRange(Mob *target)
-{
-	static const float local[PLAYER_CLASS_COUNT] = {
-		0.0f, // WARRIOR
-		1156.0f,	// CLERIC as DSq value (34 units)
-		0.0f, 0.0f, 0.0f,	// PALADIN, RANGER, SHADOWKNIGHT
-		1764.0f,	// DRUID as DSq value (42 units)
-		0.0f, 0.0f, 0.0f, // MONK, BARD, ROGUE
-		1444.0f,	// SHAMAN as DSq value (38 units)
-		2916.0f,	// NECROMANCER as DSq value (54 units)
-		2304.0f,	// WIZARD as DSq value (48 units)
-		2704.0f,	// MAGICIAN as DSq value (52 units)
-		2500.0f,	// ENCHANTER as DSq value (50 units)
-		0.0f, 0.0f	// BEASTLORD, BERSERKER
-	};
-
-	if (!target)
-		return false;
-	if (GetClass() < WARRIOR || GetClass() > BERSERKER)
-		return false;
-
-	float targetDistance = DistanceSquaredNoZ(m_Position, target->GetPosition());
-	if (targetDistance < local[GetClass() - 1])
-		return true;
-	return false;
-}
-
 void Bot::UpdateGroupCastingRoles(const Group* group, bool disband)
 {
 	if (!group)
 		return;
-	
+
 	for (auto iter : group->members) {
 		if (!iter)
 			continue;
@@ -7114,7 +7362,7 @@ void Bot::UpdateGroupCastingRoles(const Group* group, bool disband)
 				default:
 					healer = iter;
 				}
-			
+
 			break;
 		case DRUID:
 			if (!healer)
@@ -7356,7 +7604,7 @@ void Bot::ProcessBotInspectionRequest(Bot* inspectedBot, Client* client) {
 		// Modded to display power source items (will only show up on SoF+ client inspect windows though.)
 		// I don't think bots are currently coded to use them..but, you'll have to use '#bot inventory list'
 		// to see them on a Titanium client when/if they are activated.
-		for (int16 L = EQEmu::legacy::EQUIPMENT_BEGIN; L <= EQEmu::inventory::slotWaist; L++) {
+		for (int16 L = EQEmu::invslot::EQUIPMENT_BEGIN; L <= EQEmu::invslot::slotWaist; L++) {
 			inst = inspectedBot->GetBotItem(L);
 
 			if(inst) {
@@ -7370,28 +7618,28 @@ void Bot::ProcessBotInspectionRequest(Bot* inspectedBot, Client* client) {
 			}
 		}
 
-		inst = inspectedBot->GetBotItem(EQEmu::inventory::slotPowerSource);
+		inst = inspectedBot->GetBotItem(EQEmu::invslot::SLOT_POWER_SOURCE);
 
 		if(inst) {
 			item = inst->GetItem();
 			if(item) {
-				strcpy(insr->itemnames[SoF::invslot::PossessionsPowerSource], item->Name);
-				insr->itemicons[SoF::invslot::PossessionsPowerSource] = item->Icon;
+				strcpy(insr->itemnames[SoF::invslot::slotPowerSource], item->Name);
+				insr->itemicons[SoF::invslot::slotPowerSource] = item->Icon;
 			}
 			else
-				insr->itemicons[SoF::invslot::PossessionsPowerSource] = 0xFFFFFFFF;
+				insr->itemicons[SoF::invslot::slotPowerSource] = 0xFFFFFFFF;
 		}
 
-		inst = inspectedBot->GetBotItem(EQEmu::inventory::slotAmmo);
+		inst = inspectedBot->GetBotItem(EQEmu::invslot::slotAmmo);
 
 		if(inst) {
 			item = inst->GetItem();
 			if(item) {
-				strcpy(insr->itemnames[SoF::invslot::PossessionsAmmo], item->Name);
-				insr->itemicons[SoF::invslot::PossessionsAmmo] = item->Icon;
+				strcpy(insr->itemnames[SoF::invslot::slotAmmo], item->Name);
+				insr->itemicons[SoF::invslot::slotAmmo] = item->Icon;
 			}
 			else
-				insr->itemicons[SoF::invslot::PossessionsAmmo] = 0xFFFFFFFF;
+				insr->itemicons[SoF::invslot::slotAmmo] = 0xFFFFFFFF;
 		}
 
 		strcpy(insr->text, inspectedBot->GetInspectMessage().text);
@@ -7404,7 +7652,7 @@ void Bot::CalcItemBonuses(StatBonuses* newbon)
 {
 	const EQEmu::ItemData* itemtmp = nullptr;
 
-	for (int i = EQEmu::legacy::EQUIPMENT_BEGIN; i <= (EQEmu::legacy::EQUIPMENT_END + 1); ++i) {
+	for (int i = EQEmu::invslot::EQUIPMENT_BEGIN; i <= (EQEmu::invslot::EQUIPMENT_END + 1); ++i) {
 		const EQEmu::ItemInstance* item = GetBotItem((i == 22 ? 9999 : i));
 		if(item) {
 			AddItemBonuses(item, newbon);
@@ -7717,7 +7965,7 @@ void Bot::AddItemBonuses(const EQEmu::ItemInstance *inst, StatBonuses* newbon, b
 
 	if (!isAug)
 	{
-		for (int i = EQEmu::inventory::socketBegin; i < EQEmu::inventory::SocketCount; i++)
+		for (int i = EQEmu::invaug::SOCKET_BEGIN; i <= EQEmu::invaug::SOCKET_END; i++)
 			AddItemBonuses(inst->GetAugment(i),newbon,true, false, rec_level);
 	}
 
@@ -8226,12 +8474,12 @@ uint8 Bot::GetNumberNeedingHealedInGroup(uint8 hpr, bool includePets) {
 int Bot::GetRawACNoShield(int &shield_ac) {
 	int ac = itembonuses.AC + spellbonuses.AC;
 	shield_ac = 0;
-	EQEmu::ItemInstance* inst = GetBotItem(EQEmu::inventory::slotSecondary);
+	EQEmu::ItemInstance* inst = GetBotItem(EQEmu::invslot::slotSecondary);
 	if(inst) {
 		if (inst->GetItem()->ItemType == EQEmu::item::ItemTypeShield) {
 			ac -= inst->GetItem()->AC;
 			shield_ac = inst->GetItem()->AC;
-			for (uint8 i = EQEmu::inventory::socketBegin; i < EQEmu::inventory::SocketCount; i++) {
+			for (uint8 i = EQEmu::invaug::SOCKET_BEGIN; i <= EQEmu::invaug::SOCKET_END; i++) {
 				if(inst->GetAugment(i)) {
 					ac -= inst->GetAugment(i)->GetItem()->AC;
 					shield_ac += inst->GetAugment(i)->GetItem()->AC;
@@ -8246,7 +8494,7 @@ uint32 Bot::CalcCurrentWeight() {
 	const EQEmu::ItemData* TempItem = nullptr;
 	EQEmu::ItemInstance* inst = nullptr;
 	uint32 Total = 0;
-	for (int i = EQEmu::legacy::EQUIPMENT_BEGIN; i <= EQEmu::legacy::EQUIPMENT_END; ++i) {
+	for (int i = EQEmu::invslot::EQUIPMENT_BEGIN; i <= EQEmu::invslot::EQUIPMENT_END; ++i) {
 		inst = GetBotItem(i);
 		if(inst) {
 			TempItem = inst->GetItem();
@@ -8370,7 +8618,7 @@ bool Bot::GetNeedsHateRedux(Mob *tar) {
 	// TODO: Still awaiting bot spell rework..
 	if (!tar || !tar->IsEngaged() || !tar->HasTargetReflection() || !tar->GetTarget()->IsNPC())
 		return false;
-	
+
 	if (tar->IsClient()) {
 		switch (tar->GetClass()) {
 			// TODO: figure out affectable classes..
@@ -8415,12 +8663,6 @@ bool Bot::HasOrMayGetAggro() {
 		}
 	}
 	return mayGetAggro;
-}
-
-void Bot::SetHasBeenSummoned(bool wasSummoned) {
-	_hasBeenSummoned = wasSummoned;
-	if(!wasSummoned)
-        m_PreSummonLocation = glm::vec3();
 }
 
 void Bot::SetDefaultBotStance() {
@@ -8488,7 +8730,7 @@ bool Bot::CreateHealRotation(uint32 interval_ms, bool fast_heals, bool adaptive_
 		return false;
 	if (!IsHealRotationMemberClass(GetClass()))
 		return false;
-	
+
 	m_member_of_heal_rotation = std::make_shared<HealRotation>(this, interval_ms, fast_heals, adaptive_targeting, casting_override);
 
 	return IsHealRotationMember();
@@ -8541,7 +8783,7 @@ bool Bot::UseHealRotationFastHeals()
 {
 	if (!IsHealRotationMember())
 		return false;
-	
+
 	return m_member_of_heal_rotation->FastHeals();
 }
 
@@ -8681,6 +8923,8 @@ bool Bot::DyeArmor(int16 slot_id, uint32 rgb, bool all_flag, bool save_flag)
 
 std::string Bot::CreateSayLink(Client* c, const char* message, const char* name)
 {
+	// TODO: review
+
 	int saylink_size = strlen(message);
 	char* escaped_string = new char[saylink_size * 2];
 

@@ -515,7 +515,7 @@ int main(int argc, char** argv) {
 				entity_list.BeaconProcess();
 				entity_list.EncounterProcess();
 				if (zone->IsLoaded()) { //&& zone->CountAuth() > 0) { we don't need clients to do nats processing
-					nats.ZoneSubscribe(zone->GetShortName());
+					nats.ZoneSubscribe(zone->GetShortName(), zone->GetInstanceID());
 					nats.Process();
 				}
 
@@ -550,11 +550,6 @@ int main(int argc, char** argv) {
 		if (previous_loaded && !current_loaded) {
 			process_timer.Stop();
 			process_timer.Start(1000, true);
-
-			if (zone && zone->GetZoneID() && zone->GetInstanceVersion()) {
-				uint32 shutdown_timer = database.getZoneShutDownDelay(zone->GetZoneID(), zone->GetInstanceVersion());
-				zone->StartShutdownTimer(shutdown_timer);
-			}
 		}
 		else if (!previous_loaded && current_loaded) {
 			process_timer.Stop();

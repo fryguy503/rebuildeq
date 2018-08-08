@@ -1,0 +1,98 @@
+#this is a production-ready copy of docker-compose.
+version: '3'
+services:
+  zone:
+    image: ../docker/eqemu
+    volumes:
+      - ./deploy/server:/eqemu
+    command: ["zone"]
+    scale: 2
+    links:
+      - nats
+      - mariadb
+  world:
+    image: ../docker/eqemu
+    volumes:
+      - ./deploy/server:/eqemu
+    command: ["world"]
+    links:
+      - nats
+      - mariadb
+  #MariaDB is the main database.
+  mariadb:
+    image: "bitnami/mariadb:latest"
+    volumes:
+      - ./server/db:/bitnami/mariadb
+    environment:
+      MARIADB_DATABASE: eqemu
+      MARIADB_USER: eqemu
+      MARIADB_PASSWORD: eqemupass
+      ALLOW_EMPTY_PASSWORD: 'false'
+    ports:
+      - "3306:3306"
+  #Grafana is metrics aggregation
+  grafana:
+    image: "grafana/grafana:latest"
+    volumes:
+      - ./server/grafana:/var/lib/grafana
+    environment:
+      GF_SERVER_ROOT_URL: http://127.0.0.1
+      GF_SECURITY_ADMIN_PASSWORD: admin      
+    ports:      
+      - "3000:3000"
+  #Graylog is logging https://hub.docker.com/r/graylog/graylog/
+  graylog:
+    image: graylog/graylog:2.4
+    volumes:
+      - ./server/graylog/journal:/usr/share/graylog/data/journal
+      - ./server/graylog/config:/usr/share/graylog/data/config
+    environment:
+      GRAYLOG_PASSWORD_SECRET: somepasswordpepper
+      GRAYLOG_ROOT_PASSWORD_SHA2: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+      GRAYLOG_WEB_ENDPOINT_URI: http://127.0.0.1:9000/api
+    links:
+      - mongo
+      - elasticsearch
+    ports:
+      # Graylog web interface and REST API
+      - 9005:9000
+      # Syslog TCP
+      - 514:514
+      # Syslog UDP
+      - 514:514/udp
+      # GELF TCP
+      - 12201:12201
+      # GELF UDP
+      - 12201:12201/udp
+  #MongoDB for graylog instance https://hub.docker.com/_/mongo/
+  mongo:
+    image: mongo:3
+    volumes:
+      - ./server/graylog/mongo:/data/db
+  #Elasticsearchfor graylog instance https://www.elastic.co/guide/en/elasticsearch/reference/5.5/docker.html
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+    volumes:
+      - ./server/graylog/elasticsearch:/usr/share/elasticsearch/data
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=localhost
+      - network.host=0.0.0.0
+      # Disable X-Pack security: https://www.elastic.co/guide/en/elasticsearch/reference/5.5/security-settings.html#general-security-settings
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+  #NATS is a message queue system
+  nats:
+     image: "nats:latest"
+     ports:
+       - "4222:4222"
+       - "6222:6222"
+       - "8222:8222"

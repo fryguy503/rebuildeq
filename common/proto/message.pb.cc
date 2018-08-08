@@ -726,8 +726,8 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, spellid_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, damage_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, force_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, meleepush_xy_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, meleepush_z_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, hit_heading_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, hit_pitch_),
   ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::EntityEvent, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -882,7 +882,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, equip_chest2_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, mount_color_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, spawnid_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0344_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, bounding_radius_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, ismercenary_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, equipment_tint_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, lfg_),
@@ -1025,7 +1025,7 @@ void AddDescriptorsImpl() {
       "\001\n\013DamageEvent\022\016\n\006target\030\001 \001(\r\022\016\n\006source"
       "\030\002 \001(\r\022\014\n\004type\030\003 \001(\r\022\017\n\007spellid\030\004 \001(\r\022\016\n"
       "\006damage\030\005 \001(\r\022\r\n\005force\030\006 \001(\002\022\024\n\014meleepus"
-      "h_xy\030\007 \001(\002\022\023\n\013meleepush_z\030\010 \001(\002\"3\n\013Entit"
+      "h_xy\030\007 \001(\002\022\023\n\013hit_pitch\030\010 \001(\002\"3\n\013Entit"
       "yEvent\022\021\n\tentity_id\030\001 \001(\r\022\021\n\ttarget_id\030\002"
       " \001(\r\"\237\001\n\023ChannelMessageEvent\022\023\n\013target_n"
       "ame\030\001 \001(\t\022\016\n\006sender\030\002 \001(\t\022\020\n\010language\030\003 "
@@ -1082,7 +1082,7 @@ void AddDescriptorsImpl() {
       "2\030D \001(\r\022\017\n\007flymode\030E \001(\r\022\016\n\006gender\030F \001(\r"
       "\022\020\n\010bodytype\030G \001(\r\022\023\n\013unknown0336\030H \001(\r\022"
       "\024\n\014equip_chest2\030I \001(\r\022\023\n\013mount_color\030J \001"
-      "(\r\022\017\n\007spawnId\030K \001(\r\022\023\n\013unknown0344\030L \001(\r"
+      "(\r\022\017\n\007spawnId\030K \001(\r\022\023\n\013bounding_radius\030L \001(\r"
       "\022\023\n\013IsMercenary\030M \001(\r\022,\n\016equipment_tint\030"
       "N \001(\0132\024.eqproto.TintProfile\022\013\n\003lfg\030O \001(\r"
       "\022\032\n\022DestructibleObject\030P \001(\010\022\031\n\021Destruct"
@@ -7702,8 +7702,8 @@ const int DamageEvent::kTypeFieldNumber;
 const int DamageEvent::kSpellidFieldNumber;
 const int DamageEvent::kDamageFieldNumber;
 const int DamageEvent::kForceFieldNumber;
-const int DamageEvent::kMeleepushXyFieldNumber;
-const int DamageEvent::kMeleepushZFieldNumber;
+const int DamageEvent::khit_headingFieldNumber;
+const int DamageEvent::khit_pitchFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 DamageEvent::DamageEvent()
@@ -7720,15 +7720,15 @@ DamageEvent::DamageEvent(const DamageEvent& from)
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&target_, &from.target_,
-    static_cast<size_t>(reinterpret_cast<char*>(&meleepush_z_) -
-    reinterpret_cast<char*>(&target_)) + sizeof(meleepush_z_));
+    static_cast<size_t>(reinterpret_cast<char*>(&hit_pitch_) -
+    reinterpret_cast<char*>(&target_)) + sizeof(hit_pitch_));
   // @@protoc_insertion_point(copy_constructor:eqproto.DamageEvent)
 }
 
 void DamageEvent::SharedCtor() {
   ::memset(&target_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&meleepush_z_) -
-      reinterpret_cast<char*>(&target_)) + sizeof(meleepush_z_));
+      reinterpret_cast<char*>(&hit_pitch_) -
+      reinterpret_cast<char*>(&target_)) + sizeof(hit_pitch_));
   _cached_size_ = 0;
 }
 
@@ -7770,8 +7770,8 @@ void DamageEvent::Clear() {
   (void) cached_has_bits;
 
   ::memset(&target_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&meleepush_z_) -
-      reinterpret_cast<char*>(&target_)) + sizeof(meleepush_z_));
+      reinterpret_cast<char*>(&hit_pitch_) -
+      reinterpret_cast<char*>(&target_)) + sizeof(hit_pitch_));
   _internal_metadata_.Clear();
 }
 
@@ -7869,28 +7869,28 @@ bool DamageEvent::MergePartialFromCodedStream(
         break;
       }
 
-      // float meleepush_xy = 7;
+      // float hit_heading = 7;
       case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(61u /* 61 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &meleepush_xy_)));
+                 input, &hit_heading_)));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // float meleepush_z = 8;
+      // float hit_pitch = 8;
       case 8: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(69u /* 69 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &meleepush_z_)));
+                 input, &hit_pitch_)));
         } else {
           goto handle_unusual;
         }
@@ -7953,14 +7953,14 @@ void DamageEvent::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(6, this->force(), output);
   }
 
-  // float meleepush_xy = 7;
-  if (this->meleepush_xy() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(7, this->meleepush_xy(), output);
+  // float hit_heading = 7;
+  if (this->hit_heading() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(7, this->hit_heading(), output);
   }
 
-  // float meleepush_z = 8;
-  if (this->meleepush_z() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->meleepush_z(), output);
+  // float hit_pitch = 8;
+  if (this->hit_pitch() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->hit_pitch(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -8007,14 +8007,14 @@ void DamageEvent::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(6, this->force(), target);
   }
 
-  // float meleepush_xy = 7;
-  if (this->meleepush_xy() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(7, this->meleepush_xy(), target);
+  // float hit_heading = 7;
+  if (this->hit_heading() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(7, this->hit_heading(), target);
   }
 
-  // float meleepush_z = 8;
-  if (this->meleepush_z() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->meleepush_z(), target);
+  // float hit_pitch = 8;
+  if (this->hit_pitch() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->hit_pitch(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -8074,13 +8074,13 @@ size_t DamageEvent::ByteSizeLong() const {
     total_size += 1 + 4;
   }
 
-  // float meleepush_xy = 7;
-  if (this->meleepush_xy() != 0) {
+  // float hit_heading = 7;
+  if (this->hit_heading() != 0) {
     total_size += 1 + 4;
   }
 
-  // float meleepush_z = 8;
-  if (this->meleepush_z() != 0) {
+  // float hit_pitch = 8;
+  if (this->hit_pitch() != 0) {
     total_size += 1 + 4;
   }
 
@@ -8131,11 +8131,11 @@ void DamageEvent::MergeFrom(const DamageEvent& from) {
   if (from.force() != 0) {
     set_force(from.force());
   }
-  if (from.meleepush_xy() != 0) {
-    set_meleepush_xy(from.meleepush_xy());
+  if (from.hit_heading() != 0) {
+    set_hit_heading(from.hit_heading());
   }
-  if (from.meleepush_z() != 0) {
-    set_meleepush_z(from.meleepush_z());
+  if (from.hit_pitch() != 0) {
+    set_hit_pitch(from.hit_pitch());
   }
 }
 
@@ -8169,8 +8169,8 @@ void DamageEvent::InternalSwap(DamageEvent* other) {
   swap(spellid_, other->spellid_);
   swap(damage_, other->damage_);
   swap(force_, other->force_);
-  swap(meleepush_xy_, other->meleepush_xy_);
-  swap(meleepush_z_, other->meleepush_z_);
+  swap(hit_heading_, other->hit_heading_);
+  swap(hit_pitch_, other->hit_pitch_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
 }
@@ -11201,7 +11201,7 @@ const int SpawnEvent::kUnknown0336FieldNumber;
 const int SpawnEvent::kEquipChest2FieldNumber;
 const int SpawnEvent::kMountColorFieldNumber;
 const int SpawnEvent::kSpawnIdFieldNumber;
-const int SpawnEvent::kUnknown0344FieldNumber;
+const int SpawnEvent::kbounding_radiusFieldNumber;
 const int SpawnEvent::kIsMercenaryFieldNumber;
 const int SpawnEvent::kEquipmentTintFieldNumber;
 const int SpawnEvent::kLfgFieldNumber;
@@ -12431,14 +12431,14 @@ bool SpawnEvent::MergePartialFromCodedStream(
         break;
       }
 
-      // uint32 unknown0344 = 76;
+      // uint32 bounding_radius = 76;
       case 76: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(96u /* 608 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &unknown0344_)));
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &bounding_radius_)));
         } else {
           goto handle_unusual;
         }
@@ -13193,9 +13193,9 @@ void SpawnEvent::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(75, this->spawnid(), output);
   }
 
-  // uint32 unknown0344 = 76;
-  if (this->unknown0344() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(76, this->unknown0344(), output);
+  // uint32 bounding_radius = 76;
+  if (this->bounding_radius() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(76, this->bounding_radius(), output);
   }
 
   // uint32 IsMercenary = 77;
@@ -13744,9 +13744,9 @@ void SpawnEvent::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(75, this->spawnid(), target);
   }
 
-  // uint32 unknown0344 = 76;
-  if (this->unknown0344() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(76, this->unknown0344(), target);
+  // uint32 bounding_radius = 76;
+  if (this->bounding_radius() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(76, this->bounding_radius(), target);
   }
 
   // uint32 IsMercenary = 77;
@@ -14448,11 +14448,11 @@ size_t SpawnEvent::ByteSizeLong() const {
         this->spawnid());
   }
 
-  // uint32 unknown0344 = 76;
-  if (this->unknown0344() != 0) {
+  // uint32 bounding_radius = 76;
+  if (this->bounding_radius() != 0) {
     total_size += 2 +
       ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->unknown0344());
+        this->bounding_radius());
   }
 
   // uint32 IsMercenary = 77;
@@ -14855,8 +14855,8 @@ void SpawnEvent::MergeFrom(const SpawnEvent& from) {
   if (from.spawnid() != 0) {
     set_spawnid(from.spawnid());
   }
-  if (from.unknown0344() != 0) {
-    set_unknown0344(from.unknown0344());
+  if (from.bounding_radius() != 0) {
+    set_bounding_radius(from.bounding_radius());
   }
   if (from.ismercenary() != 0) {
     set_ismercenary(from.ismercenary());
@@ -15020,7 +15020,7 @@ void SpawnEvent::InternalSwap(SpawnEvent* other) {
   swap(equip_chest2_, other->equip_chest2_);
   swap(mount_color_, other->mount_color_);
   swap(spawnid_, other->spawnid_);
-  swap(unknown0344_, other->unknown0344_);
+  swap(bounding_radius_, other->bounding_radius_);
   swap(ismercenary_, other->ismercenary_);
   swap(lfg_, other->lfg_);
   swap(destructibleappearance_, other->destructibleappearance_);

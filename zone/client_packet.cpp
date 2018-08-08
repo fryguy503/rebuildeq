@@ -182,6 +182,7 @@ void MapOpcodes()
 	ConnectedOpcodes[OP_DeleteItem] = &Client::Handle_OP_DeleteItem;
 	ConnectedOpcodes[OP_DeleteSpawn] = &Client::Handle_OP_DeleteSpawn;
 	ConnectedOpcodes[OP_DeleteSpell] = &Client::Handle_OP_DeleteSpell;
+	ConnectedOpcodes[OP_Disarm] = &Client::Handle_OP_Disarm;
 	ConnectedOpcodes[OP_DisarmTraps] = &Client::Handle_OP_DisarmTraps;
 	ConnectedOpcodes[OP_DoGroupLeadershipAbility] = &Client::Handle_OP_DoGroupLeadershipAbility;
 	ConnectedOpcodes[OP_DuelResponse] = &Client::Handle_OP_DuelResponse;
@@ -293,6 +294,7 @@ void MapOpcodes()
 	ConnectedOpcodes[OP_MercenaryTimerRequest] = &Client::Handle_OP_MercenaryTimerRequest;
 	ConnectedOpcodes[OP_MoveCoin] = &Client::Handle_OP_MoveCoin;
 	ConnectedOpcodes[OP_MoveItem] = &Client::Handle_OP_MoveItem;
+	ConnectedOpcodes[OP_MoveMultipleItems] = &Client::Handle_OP_MoveMultipleItems;
 	ConnectedOpcodes[OP_OpenContainer] = &Client::Handle_OP_OpenContainer;
 	ConnectedOpcodes[OP_OpenGuildTributeMaster] = &Client::Handle_OP_OpenGuildTributeMaster;
 	ConnectedOpcodes[OP_OpenInventory] = &Client::Handle_OP_OpenInventory;
@@ -316,6 +318,7 @@ void MapOpcodes()
 	ConnectedOpcodes[OP_PurchaseLeadershipAA] = &Client::Handle_OP_PurchaseLeadershipAA;
 	ConnectedOpcodes[OP_PVPLeaderBoardDetailsRequest] = &Client::Handle_OP_PVPLeaderBoardDetailsRequest;
 	ConnectedOpcodes[OP_PVPLeaderBoardRequest] = &Client::Handle_OP_PVPLeaderBoardRequest;
+	ConnectedOpcodes[OP_QueryUCSServerStatus] = &Client::Handle_OP_QueryUCSServerStatus;
 	ConnectedOpcodes[OP_RaidInvite] = &Client::Handle_OP_RaidCommand;
 	ConnectedOpcodes[OP_RandomReq] = &Client::Handle_OP_RandomReq;
 	ConnectedOpcodes[OP_ReadBook] = &Client::Handle_OP_ReadBook;
@@ -792,7 +795,7 @@ void Client::CompleteConnect()
 	}
 
 	if (zone)
-		zone->weatherSend();
+		zone->weatherSend(this);
 
 	TotalKarma = database.GetKarma(AccountID());
 	SendDisciplineTimers();
@@ -1821,7 +1824,7 @@ void Client::Handle_Connect_OP_ZoneEntry(const EQApplicationPacket *app)
 			if (iter == m_inv.cursor_cbegin())
 				continue;
 			const EQEmu::ItemInstance *inst = *iter;
-			SendItemPacket(EQEmu::inventory::slotCursor, inst, ItemPacketLimbo);
+			SendItemPacket(EQEmu::invslot::slotCursor, inst, ItemPacketLimbo);
 		}
 	}
 
@@ -2164,7 +2167,7 @@ void Client::Handle_OP_AdventureMerchantPurchase(const EQApplicationPacket *app)
 	EQEmu::ItemInstance *inst = database.CreateItem(item, charges);
 	if (!AutoPutLootInInventory(*inst, true, true))
 	{
-		PutLootInInventory(EQEmu::inventory::slotCursor, *inst);
+		PutLootInInventory(EQEmu::invslot::slotCursor, *inst);
 	}
 	Save(1);
 }
@@ -2698,7 +2701,7 @@ void Client::Handle_OP_AltCurrencyPurchase(const EQApplicationPacket *app)
 		EQEmu::ItemInstance *inst = database.CreateItem(item, charges);
 		if (!AutoPutLootInInventory(*inst, true, true))
 		{
-			PutLootInInventory(EQEmu::inventory::slotCursor, *inst);
+			PutLootInInventory(EQEmu::invslot::slotCursor, *inst);
 		}
 
 		Save(1);
@@ -2748,7 +2751,7 @@ void Client::Handle_OP_AltCurrencyReclaim(const EQApplicationPacket *app)
 			SetAlternateCurrencyValue(reclaim->currency_id, 0);
 		}
 		else {
-			SummonItem(item_id, reclaim->count, 0, 0, 0, 0, 0, 0, false, EQEmu::inventory::slotCursor);
+			SummonItem(item_id, reclaim->count, 0, 0, 0, 0, 0, 0, false, EQEmu::invslot::slotCursor);
 			AddAlternateCurrencyValue(reclaim->currency_id, -((int32)reclaim->count));
 		}
 		/* QS: PlayerLogAlternateCurrencyTransactions :: Cursor to Item Storage */
@@ -2960,39 +2963,57 @@ void Client::Handle_OP_ApplyPoison(const EQApplicationPacket *app)
 	}
 	uint32 ApplyPoisonSuccessResult = 0;
 	ApplyPoison_Struct* ApplyPoisonData = (ApplyPoison_Struct*)app->pBuffer;
-	const EQEmu::ItemInstance* PrimaryWeapon = GetInv().GetItem(EQEmu::inventory::slotPrimary);
-	const EQEmu::ItemInstance* SecondaryWeapon = GetInv().GetItem(EQEmu::inventory::slotSecondary);
+	const EQEmu::ItemInstance* PrimaryWeapon = GetInv().GetItem(EQEmu::invslot::slotPrimary);
+	const EQEmu::ItemInstance* SecondaryWeapon = GetInv().GetItem(EQEmu::invslot::slotSecondary);
 	const EQEmu::ItemInstance* PoisonItemInstance = GetInv()[ApplyPoisonData->inventorySlot];
+	const EQEmu::ItemData* poison=PoisonItemInstance->GetItem();
+	const EQEmu::ItemData* primary=nullptr;
+	const EQEmu::ItemData* secondary=nullptr;
+	bool IsPoison = PoisonItemInstance &&
+					(poison->ItemType == EQEmu::item::ItemTypePoison);
 
-	bool IsPoison = PoisonItemInstance && (PoisonItemInstance->GetItem()->ItemType == EQEmu::item::ItemTypePoison);
-
-	if (!IsPoison)
-	{
-		Log(Logs::Detail, Logs::Spells, "Item used to cast spell effect from a poison item was missing from inventory slot %d "
-			"after casting, or is not a poison!", ApplyPoisonData->inventorySlot);
-
-		Message(0, "Error: item not found for inventory slot #%i or is not a poison", ApplyPoisonData->inventorySlot);
+	if (PrimaryWeapon) {
+		primary=PrimaryWeapon->GetItem();
 	}
-	else if (GetClass() == ROGUE)
-	{
-		if ((PrimaryWeapon && PrimaryWeapon->GetItem()->ItemType == EQEmu::item::ItemType1HPiercing) ||
-			(SecondaryWeapon && SecondaryWeapon->GetItem()->ItemType == EQEmu::item::ItemType1HPiercing)) {
-			float SuccessChance = (GetSkill(EQEmu::skills::SkillApplyPoison) + GetLevel()) / 400.0f;
+
+	if (SecondaryWeapon) {
+		secondary=SecondaryWeapon->GetItem();
+	}
+
+	if (IsPoison && GetClass() == ROGUE) {
+
+		// Live always checks for skillup, even when poison is too high
+		CheckIncreaseSkill(EQEmu::skills::SkillApplyPoison, nullptr, 10);
+
+		if (poison->Proc.Level2 > GetLevel()) {
+			// Poison is too high to apply.
+			Message_StringID(clientMessageTradeskill, POISON_TOO_HIGH);
+		}
+		else if ((primary &&
+				  primary->ItemType == EQEmu::item::ItemType1HPiercing) ||
+				 (secondary &&
+				  secondary->ItemType == EQEmu::item::ItemType1HPiercing)) {
+
 			double ChanceRoll = zone->random.Real(0, 1);
 
-			CheckIncreaseSkill(EQEmu::skills::SkillApplyPoison, nullptr, 10);
+			// Poisons that use this skill (old world poisons) almost
+			// never fail to apply.  I did 25 applies of a trivial 120+
+			// poison with an apply skill of 48 and they all worked.
+			// Also did 25 straight poisons at apply skill 248 for very
+			// high end and they never failed.
+			// Apply poison ranging from 1-9, 28/30 worked for a level 18..
+			// Poisons that don't proc until a level higher than the
+			// rogue simply won't apply at all, no skill check done.
 
-			if (ChanceRoll < SuccessChance) {
+			if (ChanceRoll < (.9 + GetLevel()/1000)) {
 				ApplyPoisonSuccessResult = 1;
-				// NOTE: Someone may want to tweak the chance to proc the poison effect that is added to the weapon here.
-				// My thinking was that DEX should be apart of the calculation.
-				AddProcToWeapon(PoisonItemInstance->GetItem()->Proc.Effect, false, (GetDEX() / 100) + 103);
+				AddProcToWeapon(poison->Proc.Effect, false,
+								(GetDEX() / 100) + 103);
 			}
-
-			DeleteItemInInventory(ApplyPoisonData->inventorySlot, 1, true);
-
-			Log(Logs::General, Logs::None, "Chance to Apply Poison was %f. Roll was %f. Result is %u.", SuccessChance, ChanceRoll, ApplyPoisonSuccessResult);
 		}
+
+		// Live always deletes the item, success or failure. Even if too high.
+		DeleteItemInInventory(ApplyPoisonData->inventorySlot, 1, true);
 	}
 
 	auto outapp = new EQApplicationPacket(OP_ApplyPoison, nullptr, sizeof(ApplyPoison_Struct));
@@ -3077,14 +3098,14 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 	bool deleteItems = false;
 	if (ClientVersion() >= EQEmu::versions::ClientVersion::RoF)
 	{
-		if ((in_augment->container_slot < 0 || in_augment->container_slot >= EQEmu::legacy::SLOT_CURSOR) &&
-			in_augment->container_slot != EQEmu::legacy::SLOT_POWER_SOURCE &&
-			(in_augment->container_slot < EQEmu::legacy::SLOT_PERSONAL_BAGS_BEGIN || in_augment->container_slot > EQEmu::legacy::SLOT_PERSONAL_BAGS_END))
+		if ((in_augment->container_slot < 0 || in_augment->container_slot >= EQEmu::invslot::slotCursor) &&
+			in_augment->container_slot != EQEmu::invslot::SLOT_POWER_SOURCE &&
+			(in_augment->container_slot < EQEmu::invbag::GENERAL_BAGS_BEGIN || in_augment->container_slot > EQEmu::invbag::GENERAL_BAGS_END))
 		{
 			Message(13, "The server does not allow augmentation actions from this slot.");
-			auto cursor_item = m_inv[EQEmu::legacy::SLOT_CURSOR];
+			auto cursor_item = m_inv[EQEmu::invslot::slotCursor];
 			auto augmented_item = m_inv[in_augment->container_slot];
-			SendItemPacket(EQEmu::legacy::SLOT_CURSOR, cursor_item, ItemPacketCharInventory);
+			SendItemPacket(EQEmu::invslot::slotCursor, cursor_item, ItemPacketCharInventory);
 			// this may crash clients on certain slots
 			SendItemPacket(in_augment->container_slot, augmented_item, ItemPacketCharInventory);
 			return;
@@ -3159,7 +3180,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 		{
 		case 0: // Adding an augment
 		case 2: // Swapping augment
-			new_aug = user_inv.GetItem(EQEmu::inventory::slotCursor);
+			new_aug = user_inv.GetItem(EQEmu::invslot::slotCursor);
 
 			if (!new_aug) // Shouldn't get the OP code without the augment on the user's cursor, but maybe it's h4x.
 			{
@@ -3217,7 +3238,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 					if (itemOneToPush)
 					{
 						DeleteItemInInventory(item_slot, 0, true);
-						DeleteItemInInventory(EQEmu::inventory::slotCursor, new_aug->IsStackable() ? 1 : 0, true);
+						DeleteItemInInventory(EQEmu::invslot::slotCursor, new_aug->IsStackable() ? 1 : 0, true);
 
 						if (solvent)
 						{
@@ -3228,7 +3249,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 						if (itemTwoToPush)
 						{
 							// This is a swap. Return the old aug to the player's cursor.
-							if (!PutItemInInventory(EQEmu::inventory::slotCursor, *itemTwoToPush, true))
+							if (!PutItemInInventory(EQEmu::invslot::slotCursor, *itemTwoToPush, true))
 							{
 								Log(Logs::General, Logs::Error, "Problem returning old augment to player's cursor after augmentation swap.");
 								Message(15, "Error: Failed to retrieve old augment after augmentation swap!");
@@ -3313,7 +3334,7 @@ void Client::Handle_OP_AugmentItem(const EQApplicationPacket *app)
 				}
 
 				// Drop the removed augment on the player's cursor
-				if (!PutItemInInventory(EQEmu::inventory::slotCursor, *itemTwoToPush, true))
+				if (!PutItemInInventory(EQEmu::invslot::slotCursor, *itemTwoToPush, true))
 				{
 					Log(Logs::General, Logs::Error, "Problem returning augment to player's cursor after safe removal.");
 					Message(15, "Error: Failed to return augment after removal from item!");
@@ -4074,11 +4095,21 @@ void Client::Handle_OP_BuffRemoveRequest(const EQApplicationPacket *app)
 
 void Client::Handle_OP_Bug(const EQApplicationPacket *app)
 {
-	if (app->size != sizeof(BugStruct))
-		printf("Wrong size of BugStruct got %d expected %zu!\n", app->size, sizeof(BugStruct));
+    if (!RuleB(Bugs, ReportingSystemActive)) {
+        Message(0, "Bug reporting is disabled on this server.");
+        return;
+    }
+
+    if (app->size != sizeof(BugReport_Struct)) {
+        printf("Wrong size of BugReport_Struct got %d expected %zu!\n", app->size, sizeof(BugReport_Struct));
+    }
 	else {
-		BugStruct* bug = (BugStruct*)app->pBuffer;
-		database.UpdateBug(bug);
+        BugReport_Struct* bug_report = (BugReport_Struct*)app->pBuffer;
+
+        if (RuleB(Bugs, UseOldReportingMethod))
+            database.RegisterBug(bug_report);
+        else
+            database.RegisterBug(this, bug_report);
 	}
 	return;
 }
@@ -4114,7 +4145,7 @@ void Client::Handle_OP_CancelTask(const EQApplicationPacket *app)
 	CancelTask_Struct *cts = (CancelTask_Struct*)app->pBuffer;
 
 	if (RuleB(TaskSystem, EnableTaskSystem) && taskstate)
-		taskstate->CancelTask(this, cts->SequenceNumber);
+		taskstate->CancelTask(this, cts->SequenceNumber, static_cast<TaskType>(cts->type));
 }
 
 void Client::Handle_OP_CancelTrade(const EQApplicationPacket *app)
@@ -4272,7 +4303,7 @@ void Client::Handle_OP_CastSpell(const EQApplicationPacket *app)
 		}
 		else
 		{
-			Message(0, "Error: castspell->inventoryslot >= %i (0x%04x)", EQEmu::inventory::slotCursor, castspell->inventoryslot);
+			Message(0, "Error: castspell->inventoryslot >= %i (0x%04x)", EQEmu::invslot::slotCursor, castspell->inventoryslot);
 			InterruptSpell(castspell->spell_id);
 		}
 	}
@@ -4531,7 +4562,7 @@ void Client::Handle_OP_ClientUpdate(const EQApplicationPacket *app)
 				return;
 			}
 
-			auto boat_delta = glm::vec4(ppu->delta_x, ppu->delta_y, ppu->delta_z, ppu->delta_heading);
+			auto boat_delta = glm::vec4(ppu->delta_x, ppu->delta_y, ppu->delta_z, EQ10toFloat(ppu->delta_heading));
 			boat->SetDelta(boat_delta);
 			
 			auto outapp = new EQApplicationPacket(OP_ClientUpdate, sizeof(PlayerPositionUpdateServer_Struct));
@@ -4541,7 +4572,7 @@ void Client::Handle_OP_ClientUpdate(const EQApplicationPacket *app)
 			safe_delete(outapp);
 
 			/* Update the boat's position on the server, without sending an update */
-			boat->GMMove(ppu->x_pos, ppu->y_pos, ppu->z_pos, EQ19toFloat(ppu->heading), false);
+			boat->GMMove(ppu->x_pos, ppu->y_pos, ppu->z_pos, EQ12toFloat(ppu->heading), false);
 			return;
 		}
 		else return;
@@ -4686,7 +4717,7 @@ void Client::Handle_OP_ClientUpdate(const EQApplicationPacket *app)
 	}
 
 	/* Update internal state */
-	m_Delta = glm::vec4(ppu->delta_x, ppu->delta_y, ppu->delta_z, ppu->delta_heading);
+	m_Delta = glm::vec4(ppu->delta_x, ppu->delta_y, ppu->delta_z, EQ10toFloat(ppu->delta_heading));
 
 	if (IsTracking() && ((m_Position.x != ppu->x_pos) || (m_Position.y != ppu->y_pos))) {
 		if (zone->random.Real(0, 100) < 70)//should be good
@@ -4738,8 +4769,8 @@ void Client::Handle_OP_ClientUpdate(const EQApplicationPacket *app)
 			client_scan_npc_aggro_timer.Start(3000);
 		}
 	}
-	
-	float new_heading = EQ19toFloat(ppu->heading);
+
+	float new_heading = EQ12toFloat(ppu->heading);
 	int32 new_animation = ppu->animation;
 
 	/* Update internal server position from what the client has sent */
@@ -4758,7 +4789,7 @@ void Client::Handle_OP_ClientUpdate(const EQApplicationPacket *app)
 	if (is_client_moving || new_heading != m_Position.w || new_animation != animation) {
 
 		animation = ppu->animation;
-		m_Position.w = EQ19toFloat(ppu->heading);
+		m_Position.w = EQ12toFloat(ppu->heading);
 
 		/* Broadcast update to other clients */
 		auto outapp = new EQApplicationPacket(OP_ClientUpdate, sizeof(PlayerPositionUpdateServer_Struct));
@@ -4789,11 +4820,17 @@ void Client::Handle_OP_ClientUpdate(const EQApplicationPacket *app)
 	}
 
 	if (zone->watermap) {
-		if (zone->watermap->InLiquid(glm::vec3(m_Position)))
+		if (zone->watermap->InLiquid(glm::vec3(m_Position))) {
 			CheckIncreaseSkill(EQEmu::skills::SkillSwimming, nullptr, -17);
+
+			// Dismount horses when entering water
+			if (GetHorseId() && RuleB(Character, DismountWater)) {
+				SetHorseId(0);
+				BuffFadeByEffect(SE_SummonHorse);
+			}
+		}
 		CheckRegionTypeChanges();
 	}
-
 	return;
 }
 
@@ -5359,7 +5396,7 @@ void Client::Handle_OP_CreateObject(const EQApplicationPacket *app)
 	if (LogSys.log_settings[Logs::Inventory].is_category_enabled)
 		Log(Logs::Detail, Logs::Inventory, "Handle_OP_CreateObject() [psize: %u] %s", app->size, DumpPacketToString(app).c_str());
 
-	DropItem(EQEmu::inventory::slotCursor);
+	DropItem(EQEmu::invslot::slotCursor);
 	return;
 }
 
@@ -5563,6 +5600,97 @@ void Client::Handle_OP_DeleteSpawn(const EQApplicationPacket *app)
 	hate_list.RemoveEntFromHateList(this->CastToMob());
 
 	Disconnect();
+	return;
+}
+
+void Client::Handle_OP_Disarm(const EQApplicationPacket *app) {
+	if (dead || bZoning) return;
+	if (!HasSkill(EQEmu::skills::SkillDisarm))
+		return;
+
+	if (app->size != sizeof(Disarm_Struct)) {
+		Log(Logs::General, Logs::Skills, "Size mismatch for Disarm_Struct packet");
+		return;
+	}
+
+	Disarm_Struct *disarm = (Disarm_Struct *)app->pBuffer;
+
+	if (!p_timers.Expired(&database, pTimerCombatAbility2, false)) {
+		Message(13, "Ability recovery time not yet met.");
+		return;
+	}
+
+	p_timers.Start(pTimerCombatAbility2, 8);
+
+	BreakInvis();
+	Mob* pmob = entity_list.GetMob(disarm->source);
+	Mob* tmob = entity_list.GetMob(disarm->target);
+	if (!pmob || !tmob)
+		return;
+	if (pmob->GetID() != GetID()) {
+		// Client sent a disarm request with an originator ID not matching their own ID.
+		char *hack_str = NULL;
+		MakeAnyLenString(&hack_str, "Player %s (%d) sent OP_Disarm with source ID of: %d", GetCleanName(), GetID(), pmob->GetID());
+		database.SetMQDetectionFlag(this->account_name, this->name, hack_str, zone->GetShortName());
+		safe_delete_array(hack_str);
+		return;
+	}
+	// No disarm on corpses
+	if (tmob->IsCorpse())
+		return;
+	// No target
+	if (!GetTarget())
+		return;
+	// Targets don't match (possible hack, but not flagging)
+	if (GetTarget() != tmob) {
+		return;
+	}
+	// Too far away
+	if (pmob->CalculateDistance(GetTarget()->GetX(), GetTarget()->GetY(), GetTarget()->GetZ()) > 400)
+		return;
+
+	// Can't see mob
+	//if (tmob->BehindMob(pmob))
+	//	return;
+	// How can we disarm someone if we are feigned.
+	if (GetFeigned())
+		return;
+	// We can't disarm someone who is feigned.
+	if (tmob->IsClient() && tmob->CastToClient()->GetFeigned())
+		return;
+	if (GetTarget() == tmob && pmob == this->CastToMob() &&
+		disarm->skill == GetSkill(EQEmu::skills::SkillDisarm) && IsAttackAllowed(tmob)) {
+		int p_level = pmob->GetLevel() ? pmob->GetLevel() : 1;
+		int t_level = tmob->GetLevel() ? tmob->GetLevel() : 1;
+		// We have a disarmable target - sucess or fail, we always aggro the mob
+		if (tmob->IsNPC()) {
+			if (!tmob->CheckAggro(pmob)) {
+				zone->AddAggroMob();
+				tmob->AddToHateList(pmob, p_level);
+			}
+			else {
+				tmob->AddToHateList(pmob, p_level / 3);
+			}
+		}
+		int chance = GetSkill(EQEmu::skills::SkillDisarm); // (1% @ 0 skill) (11% @ 200 skill) - against even con
+		chance /= 2;
+		chance += 10;
+		// Modify chance based on level difference
+		float lvl_mod = p_level / t_level;
+		chance *= lvl_mod;
+		if (chance > 300)
+			chance = 300; // max chance of 30%
+		if (tmob->IsNPC()) {
+			tmob->CastToNPC()->Disarm(this, chance);
+		}
+		else if (tmob->IsClient()) {
+			tmob->CastToClient()->Disarm(this, chance);
+		}
+		return;
+	}
+	// Trying to disarm something we can't disarm
+	Message_StringID(MT_Skills, DISARM_NO_TARGET);
+
 	return;
 }
 
@@ -6025,44 +6153,31 @@ void Client::Handle_OP_FindPersonRequest(const EQApplicationPacket *app)
 		{
 			//fill in the path array...
 			//
-			points.resize(2);
-			points[0].x = GetX();
-			points[0].y = GetY();
-			points[0].z = GetZ();
-			points[1].x = target->GetX();
-			points[1].y = target->GetY();
-			points[1].z = target->GetZ();
-		}
-		else
-		{
-			glm::vec3 Start(GetX(), GetY(), GetZ() + (GetSize() < 6.0 ? 6 : GetSize()) * HEAD_POSITION);
-			glm::vec3 End(target->GetX(), target->GetY(), target->GetZ() + (target->GetSize() < 6.0 ? 6 : target->GetSize()) * HEAD_POSITION);
+			points.clear();
+			FindPerson_Point a;
+			FindPerson_Point b;
 
-			if (!zone->zonemap->LineIntersectsZone(Start, End, 1.0f, nullptr) && zone->pathing->NoHazards(Start, End))
-			{
-				points.resize(2);
-				points[0].x = Start.x;
-				points[0].y = Start.y;
-				points[0].z = Start.z;
+			a.x = GetX();
+			a.y = GetY();
+			a.z = GetZ();
+			b.x = target->GetX();
+			b.y = target->GetY();
+			b.z = target->GetZ();
 
-				points[1].x = End.x;
-				points[1].y = End.y;
-				points[1].z = End.z;
+			points.push_back(a);
+			points.push_back(b);
 
 			}
 			else
 			{
-				std::deque<int> pathlist = zone->pathing->FindRoute(Start, End);
+				glm::vec3 Start(GetX(), GetY(), GetZ() + (GetSize() < 6.0 ? 6 : GetSize()) * HEAD_POSITION);
+				glm::vec3 End(target->GetX(), target->GetY(), target->GetZ() + (target->GetSize() < 6.0 ? 6 : target->GetSize()) * HEAD_POSITION);
 
-				if (pathlist.empty())
-				{
-					EQApplicationPacket outapp(OP_FindPersonReply, 0);
-					QueuePacket(&outapp);
-					return;
-				}
+				bool partial = false;
+				bool stuck = false;
+				auto pathlist = zone->pathing->FindRoute(Start, End, partial, stuck);
 
-				//the client seems to have issues with packets larger than this
-				if (pathlist.size() > 36)
+				if (pathlist.empty() || partial)
 				{
 					EQApplicationPacket outapp(OP_FindPersonReply, 0);
 					QueuePacket(&outapp);
@@ -6079,11 +6194,11 @@ void Client::Handle_OP_FindPersonRequest(const EQApplicationPacket *app)
 
 				bool LeadsToTeleporter = false;
 
-				glm::vec3 v = zone->pathing->GetPathNodeCoordinates(pathlist.back());
+				auto v = pathlist.back();
 
-				p.x = v.x;
-				p.y = v.y;
-				p.z = v.z;
+				p.x = v.pos.x;
+				p.y = v.pos.y;
+				p.z = v.pos.z;
 				points.push_back(p);
 
 				p.x = GetX();
@@ -6093,13 +6208,13 @@ void Client::Handle_OP_FindPersonRequest(const EQApplicationPacket *app)
 
 				for (auto Iterator = pathlist.begin(); Iterator != pathlist.end(); ++Iterator)
 				{
-					if ((*Iterator) == -1) // Teleporter
+					if ((*Iterator).teleport) // Teleporter
 					{
 						LeadsToTeleporter = true;
 						break;
 					}
 
-					glm::vec3 v = zone->pathing->GetPathNodeCoordinates((*Iterator), false);
+					glm::vec3 v = (*Iterator).pos;
 					p.x = v.x;
 					p.y = v.y;
 					p.z = v.z;
@@ -6115,13 +6230,10 @@ void Client::Handle_OP_FindPersonRequest(const EQApplicationPacket *app)
 
 					points.push_back(p);
 				}
-
-			}
 		}
 
 		SendPathPacket(points);
 	}
-	return;
 }
 
 void Client::Handle_OP_Fishing(const EQApplicationPacket *app)
@@ -7321,7 +7433,7 @@ void Client::Handle_OP_GuildBank(const EQApplicationPacket *app)
 			return;
 		}
 
-		EQEmu::ItemInstance *CursorItemInst = GetInv().GetItem(EQEmu::inventory::slotCursor);
+		EQEmu::ItemInstance *CursorItemInst = GetInv().GetItem(EQEmu::invslot::slotCursor);
 
 		bool Allowed = true;
 
@@ -7369,7 +7481,7 @@ void Client::Handle_OP_GuildBank(const EQApplicationPacket *app)
 		{
 			GuildBankDepositAck(false, sentAction);
 
-			DeleteItemInInventory(EQEmu::inventory::slotCursor, 0, false);
+			DeleteItemInInventory(EQEmu::invslot::slotCursor, 0, false);
 		}
 
 		break;
@@ -7390,7 +7502,7 @@ void Client::Handle_OP_GuildBank(const EQApplicationPacket *app)
 
 	case GuildBankWithdraw:
 	{
-		if (GetInv()[EQEmu::inventory::slotCursor])
+		if (GetInv()[EQEmu::invslot::slotCursor])
 		{
 			Message_StringID(13, GUILD_BANK_EMPTY_HANDS);
 
@@ -7436,7 +7548,7 @@ void Client::Handle_OP_GuildBank(const EQApplicationPacket *app)
 		{
 			PushItemOnCursor(*inst);
 
-			SendItemPacket(EQEmu::inventory::slotCursor, inst, ItemPacketLimbo);
+			SendItemPacket(EQEmu::invslot::slotCursor, inst, ItemPacketLimbo);
 
 			GuildBanks->DeleteItem(GuildID(), gbwis->Area, gbwis->SlotID, gbwis->Quantity);
 		}
@@ -8419,7 +8531,7 @@ void Client::Handle_OP_InspectAnswer(const EQApplicationPacket *app)
 	const EQEmu::ItemData* item = nullptr;
 
 	int ornamentationAugtype = RuleI(Character, OrnamentationAugmentType);
-	for (int16 L = EQEmu::legacy::EQUIPMENT_BEGIN; L <= EQEmu::inventory::slotWaist; L++) {
+	for (int16 L = EQEmu::invslot::EQUIPMENT_BEGIN; L <= EQEmu::invslot::slotWaist; L++) {
 		const EQEmu::ItemInstance* inst = GetInv().GetItem(L);
 		item = inst ? inst->GetItem() : nullptr;
 
@@ -8439,15 +8551,15 @@ void Client::Handle_OP_InspectAnswer(const EQApplicationPacket *app)
 		else { insr->itemicons[L] = 0xFFFFFFFF; }
 	}
 
-	const EQEmu::ItemInstance* inst = GetInv().GetItem(EQEmu::inventory::slotAmmo);
+	const EQEmu::ItemInstance* inst = GetInv().GetItem(EQEmu::invslot::slotAmmo);
 	item = inst ? inst->GetItem() : nullptr;
 
 	if (item) {
 		// another one..I did these, didn't I!!?
-		strcpy(insr->itemnames[SoF::invslot::PossessionsAmmo], item->Name);
-		insr->itemicons[SoF::invslot::PossessionsAmmo] = item->Icon;
+		strcpy(insr->itemnames[SoF::invslot::slotAmmo], item->Name);
+		insr->itemicons[SoF::invslot::slotAmmo] = item->Icon;
 	}
-	else { insr->itemicons[SoF::invslot::PossessionsAmmo] = 0xFFFFFFFF; }
+	else { insr->itemicons[SoF::invslot::slotAmmo] = 0xFFFFFFFF; }
 
 	InspectMessage_Struct* newmessage = (InspectMessage_Struct*)insr->text;
 	InspectMessage_Struct& playermessage = this->GetInspectMessage();
@@ -8520,7 +8632,6 @@ void Client::Handle_OP_ItemLinkClick(const EQApplicationPacket *app)
 		return;
 	}
 
-	DumpPacket(app);
 	ItemViewRequest_Struct *ivrs = (ItemViewRequest_Struct *)app->pBuffer;
 
 	// todo: verify ivrs->link_hash based on a rule, in case we don't care about people being able to sniff data
@@ -8910,7 +9021,7 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 		EQEmu::ItemInstance* clickaug = nullptr;
 		EQEmu::ItemData* augitem = nullptr;
 
-		for (r = EQEmu::inventory::socketBegin; r < EQEmu::inventory::SocketCount; r++) {
+		for (r = EQEmu::invaug::SOCKET_BEGIN; r <= EQEmu::invaug::SOCKET_END; r++) {
 			const EQEmu::ItemInstance* aug_i = inst->GetAugment(r);
 			if (!aug_i)
 				continue;
@@ -8958,7 +9069,7 @@ void Client::Handle_OP_ItemVerifyRequest(const EQApplicationPacket *app)
 						item->ID == 100004 || //Old Violet Box
 						item->ID == 100005) {  //Old Weapon Box
 						
-						EQEmu::ItemInstance *CursorItemInst = GetInv().GetItem(EQEmu::inventory::slotCursor);
+						EQEmu::ItemInstance *CursorItemInst = GetInv().GetItem(EQEmu::invslot::slotCursor);
 						if (CursorItemInst) {
 							Message(13, "Your cursor must be empty before opening the box.");
 							return;
@@ -10141,7 +10252,7 @@ void Client::Handle_OP_MoveItem(const EQApplicationPacket *app)
 	MoveItem_Struct* mi = (MoveItem_Struct*)app->pBuffer;
 	if (spellend_timer.Enabled() && casting_spell_id && !IsBardSong(casting_spell_id))
 	{
-		if (mi->from_slot != mi->to_slot && (mi->from_slot <= EQEmu::legacy::GENERAL_END || mi->from_slot > 39) && IsValidSlot(mi->from_slot) && IsValidSlot(mi->to_slot))
+		if (mi->from_slot != mi->to_slot && (mi->from_slot <= EQEmu::invslot::GENERAL_END || mi->from_slot > 39) && IsValidSlot(mi->from_slot) && IsValidSlot(mi->to_slot))
 		{
 			char *detect = nullptr;
 			const EQEmu::ItemInstance *itm_from = GetInv().GetItem(mi->from_slot);
@@ -10162,8 +10273,8 @@ void Client::Handle_OP_MoveItem(const EQApplicationPacket *app)
 	// Illegal bagslot usage checks. Currently, user only receives a message if this check is triggered.
 	bool mi_hack = false;
 
-	if (mi->from_slot >= EQEmu::legacy::GENERAL_BAGS_BEGIN && mi->from_slot <= EQEmu::legacy::CURSOR_BAG_END) {
-		if (mi->from_slot >= EQEmu::legacy::CURSOR_BAG_BEGIN) { mi_hack = true; }
+	if (mi->from_slot >= EQEmu::invbag::GENERAL_BAGS_BEGIN && mi->from_slot <= EQEmu::invbag::CURSOR_BAG_END) {
+		if (mi->from_slot >= EQEmu::invbag::CURSOR_BAG_BEGIN) { mi_hack = true; }
 		else {
 			int16 from_parent = m_inv.CalcSlotId(mi->from_slot);
 			if (!m_inv[from_parent]) { mi_hack = true; }
@@ -10172,8 +10283,8 @@ void Client::Handle_OP_MoveItem(const EQApplicationPacket *app)
 		}
 	}
 
-	if (mi->to_slot >= EQEmu::legacy::GENERAL_BAGS_BEGIN && mi->to_slot <= EQEmu::legacy::CURSOR_BAG_END) {
-		if (mi->to_slot >= EQEmu::legacy::CURSOR_BAG_BEGIN) { mi_hack = true; }
+	if (mi->to_slot >= EQEmu::invbag::GENERAL_BAGS_BEGIN && mi->to_slot <= EQEmu::invbag::CURSOR_BAG_END) {
+		if (mi->to_slot >= EQEmu::invbag::CURSOR_BAG_BEGIN) { mi_hack = true; }
 		else {
 			int16 to_parent = m_inv.CalcSlotId(mi->to_slot);
 			if (!m_inv[to_parent]) { mi_hack = true; }
@@ -10194,6 +10305,11 @@ void Client::Handle_OP_MoveItem(const EQApplicationPacket *app)
 	}
 
 	return;
+}
+
+void Client::Handle_OP_MoveMultipleItems(const EQApplicationPacket *app)
+{
+	Kick(); // TODO: lets not desync though
 }
 
 void Client::Handle_OP_OpenContainer(const EQApplicationPacket *app)
@@ -10295,21 +10411,17 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 	Mob* mypet = this->GetPet();
 	Mob *target = entity_list.GetMob(pet->target);
 
-	if (!mypet || pet->command == PET_LEADER)
-	{
-		if (pet->command == PET_LEADER)
-		{
-			if (mypet && (!GetTarget() || GetTarget() == mypet))
-			{
+	if (!mypet || pet->command == PET_LEADER) {
+		if (pet->command == PET_LEADER) {
+			// we either send the ID of an NPC we're interested in or no ID for our own pet
+			if (target) {
+				auto owner = target->GetOwner();
+				if (owner)
+					target->Say_StringID(PET_LEADERIS, owner->GetCleanName());
+				else
+					target->Say_StringID(I_FOLLOW_NOONE);
+			} else if (mypet) {
 				mypet->Say_StringID(PET_LEADERIS, GetName());
-			}
-			else if ((mypet = GetTarget()))
-			{
-				Mob *Owner = mypet->GetOwner();
-				if (Owner)
-					mypet->Say_StringID(PET_LEADERIS, Owner->GetCleanName());
-				else if (mypet->IsNPC())
-					mypet->Say_StringID(I_FOLLOW_NOONE);
 			}
 		}
 
@@ -10349,6 +10461,14 @@ void Client::Handle_OP_PetCommands(const EQApplicationPacket *app)
 
 		if (!mypet->IsAttackAllowed(target)) {
 			mypet->SayTo_StringID(this, NOT_LEGAL_TARGET);
+			break;
+		}
+
+		// default range is 200, takes Z into account
+		// really they do something weird where they're added to the aggro list then remove them
+		// and will attack if they come in range -- too lazy, lets remove exploits for now
+		if (DistanceSquared(mypet->GetPosition(), target->GetPosition()) >= RuleR(Aggro, PetAttackRange)) {
+			// they say they're attacking then remove on live ... so they don't really say anything in this case ...
 			break;
 		}
 
@@ -10923,11 +11043,7 @@ void Client::Handle_OP_Petition(const EQApplicationPacket *app) {
 
 void Client::Handle_OP_PetitionBug(const EQApplicationPacket *app)
 {
-	if (app->size != sizeof(PetitionBug_Struct))
-		printf("Wrong size of BugStruct! Expected: %zu, Got: %i\n", sizeof(PetitionBug_Struct), app->size);
-	else {
-		Message(0, "Petition Bugs are not supported, please use /bug.");
-	}
+    Message(0, "Petition Bugs are not supported, please use /bug.");
 	return;
 }
 
@@ -11345,6 +11461,84 @@ void Client::Handle_OP_PVPLeaderBoardRequest(const EQApplicationPacket *app)
 
 	QueuePacket(outapp);
 	safe_delete(outapp);
+}
+
+void Client::Handle_OP_QueryUCSServerStatus(const EQApplicationPacket *app)
+{
+	if (zone->IsUCSServerAvailable()) {
+		EQApplicationPacket* outapp = nullptr;
+		std::string buffer;
+
+		std::string MailKey = database.GetMailKey(CharacterID(), true);
+		EQEmu::versions::UCSVersion ConnectionType = EQEmu::versions::ucsUnknown;
+
+		// chat server packet
+		switch (ClientVersion()) {
+			case EQEmu::versions::ClientVersion::Titanium:
+				ConnectionType = EQEmu::versions::ucsTitaniumChat;
+				break;
+			case EQEmu::versions::ClientVersion::SoF:
+				ConnectionType = EQEmu::versions::ucsSoFCombined;
+				break;
+			case EQEmu::versions::ClientVersion::SoD:
+				ConnectionType = EQEmu::versions::ucsSoDCombined;
+				break;
+			case EQEmu::versions::ClientVersion::UF:
+				ConnectionType = EQEmu::versions::ucsUFCombined;
+				break;
+			case EQEmu::versions::ClientVersion::RoF:
+				ConnectionType = EQEmu::versions::ucsRoFCombined;
+				break;
+			case EQEmu::versions::ClientVersion::RoF2:
+				ConnectionType = EQEmu::versions::ucsRoF2Combined;
+				break;
+			default:
+				ConnectionType = EQEmu::versions::ucsUnknown;
+				break;
+		}
+
+		buffer = StringFormat("%s,%i,%s.%s,%c%s",
+							  Config->ChatHost.c_str(),
+							  Config->ChatPort,
+							  Config->ShortName.c_str(),
+							  GetName(),
+							  ConnectionType,
+							  MailKey.c_str()
+		);
+
+		outapp = new EQApplicationPacket(OP_SetChatServer, (buffer.length() + 1));
+		memcpy(outapp->pBuffer, buffer.c_str(), buffer.length());
+		outapp->pBuffer[buffer.length()] = '\0';
+
+		QueuePacket(outapp);
+		safe_delete(outapp);
+
+		// mail server packet
+		switch (ClientVersion()) {
+			case EQEmu::versions::ClientVersion::Titanium:
+				ConnectionType = EQEmu::versions::ucsTitaniumMail;
+				break;
+			default:
+				// retain value from previous switch
+				break;
+		}
+
+		buffer = StringFormat("%s,%i,%s.%s,%c%s",
+							  Config->MailHost.c_str(),
+							  Config->MailPort,
+							  Config->ShortName.c_str(),
+							  GetName(),
+							  ConnectionType,
+							  MailKey.c_str()
+		);
+
+		outapp = new EQApplicationPacket(OP_SetChatServer2, (buffer.length() + 1));
+		memcpy(outapp->pBuffer, buffer.c_str(), buffer.length());
+		outapp->pBuffer[buffer.length()] = '\0';
+
+		QueuePacket(outapp);
+		safe_delete(outapp);
+	}
 }
 
 void Client::Handle_OP_RaidCommand(const EQApplicationPacket *app)
@@ -12039,15 +12233,14 @@ void Client::Handle_OP_RecipeDetails(const EQApplicationPacket *app)
 	return;
 }
 
-void Client::Handle_OP_RecipesFavorite(const EQApplicationPacket *app)
-{
+void Client::Handle_OP_RecipesFavorite(const EQApplicationPacket *app) {
 	if (app->size != sizeof(TradeskillFavorites_Struct)) {
 		Log(Logs::General, Logs::Error, "Invalid size for TradeskillFavorites_Struct: Expected: %i, Got: %i",
 			sizeof(TradeskillFavorites_Struct), app->size);
 		return;
 	}
 
-	TradeskillFavorites_Struct* tsf = (TradeskillFavorites_Struct*)app->pBuffer;
+	TradeskillFavorites_Struct *tsf = (TradeskillFavorites_Struct *) app->pBuffer;
 
 	Log(Logs::General, Logs::None, "Requested Favorites for: %d - %d\n", tsf->object_type, tsf->some_id);
 
@@ -12056,10 +12249,21 @@ void Client::Handle_OP_RecipesFavorite(const EQApplicationPacket *app)
 
 	// make where clause segment for container(s)
 	std::string containers;
-	if (tsf->some_id == 0)
+	uint32 combineObjectSlots;
+	if (tsf->some_id == 0) {
 		containers += StringFormat(" = %u ", tsf->object_type); // world combiner so no item number
-	else
-		containers += StringFormat(" in (%u, %u) ", tsf->object_type, tsf->some_id); // container in inventory
+		combineObjectSlots = 10;
+	} else {
+        containers += StringFormat(" in (%u, %u) ", tsf->object_type, tsf->some_id); // container in inventory
+        auto item = database.GetItem(tsf->some_id);
+        if (!item) {
+            Log(Logs::General, Logs::Error,
+                "Invalid container ID: %d.  GetItem returned null.  Defaulting to BagSlots = 10.\n", tsf->some_id);
+            combineObjectSlots = 10;
+        } else {
+            combineObjectSlots = item->BagSlots;
+        }
+    }
 
 	std::string favoriteIDs; //gotta be big enough for 500 IDs
 	bool first = true;
@@ -12071,84 +12275,92 @@ void Client::Handle_OP_RecipesFavorite(const EQApplicationPacket *app)
 		if (first) {
 			favoriteIDs += StringFormat("%u", tsf->favorite_recipes[favoriteIndex]);
 			first = false;
-		}
-		else
+		} else
 			favoriteIDs += StringFormat(",%u", tsf->favorite_recipes[favoriteIndex]);
 	}
 
-	if (first)	//no favorites....
+	if (first)    //no favorites....
 		return;
 
 	const std::string query = StringFormat("SELECT tr.id, tr.name, tr.trivial, "
-		"SUM(tre.componentcount), crl.madecount,tr.tradeskill "
-		"FROM tradeskill_recipe AS tr "
-		"LEFT JOIN tradeskill_recipe_entries AS tre ON tr.id=tre.recipe_id "
-		"LEFT JOIN (SELECT recipe_id, madecount "
-		"FROM char_recipe_list "
-		"WHERE char_id = %u) AS crl ON tr.id=crl.recipe_id "
-		"WHERE tr.enabled <> 0 AND tr.id IN (%s) "
-		"AND tr.must_learn & 0x20 <> 0x20 AND "
-		"((tr.must_learn & 0x3 <> 0 AND crl.madecount IS NOT NULL) "
-		"OR (tr.must_learn & 0x3 = 0)) "
-		"GROUP BY tr.id "
-		"HAVING sum(if(tre.item_id %s AND tre.iscontainer > 0,1,0)) > 0 "
-		"LIMIT 100 ", CharacterID(), favoriteIDs.c_str(), containers.c_str());
+										   "SUM(tre.componentcount), crl.madecount,tr.tradeskill "
+										   "FROM tradeskill_recipe AS tr "
+										   "LEFT JOIN tradeskill_recipe_entries AS tre ON tr.id=tre.recipe_id "
+										   "LEFT JOIN (SELECT recipe_id, madecount "
+										   "FROM char_recipe_list "
+										   "WHERE char_id = %u) AS crl ON tr.id=crl.recipe_id "
+										   "WHERE tr.enabled <> 0 AND tr.id IN (%s) "
+										   "AND tr.must_learn & 0x20 <> 0x20 AND "
+										   "((tr.must_learn & 0x3 <> 0 AND crl.madecount IS NOT NULL) "
+										   "OR (tr.must_learn & 0x3 = 0)) "
+										   "GROUP BY tr.id "
+										   "HAVING sum(if(tre.item_id %s AND tre.iscontainer > 0,1,0)) > 0 AND SUM(tre.componentcount) <= %u "
+										   "LIMIT 100 ", CharacterID(), favoriteIDs.c_str(), containers.c_str(),
+										   combineObjectSlots);
 
 	TradeskillSearchResults(query, tsf->object_type, tsf->some_id);
 	return;
 }
 
-void Client::Handle_OP_RecipesSearch(const EQApplicationPacket *app)
-{
+void Client::Handle_OP_RecipesSearch(const EQApplicationPacket *app) {
 	if (app->size != sizeof(RecipesSearch_Struct)) {
 		Log(Logs::General, Logs::Error, "Invalid size for RecipesSearch_Struct: Expected: %i, Got: %i",
 			sizeof(RecipesSearch_Struct), app->size);
 		return;
 	}
 
-	RecipesSearch_Struct* rss = (RecipesSearch_Struct*)app->pBuffer;
-	rss->query[55] = '\0';	//just to be sure.
+	RecipesSearch_Struct *rss = (RecipesSearch_Struct *) app->pBuffer;
+	rss->query[55] = '\0';    //just to be sure.
 
 
 	Log(Logs::General, Logs::None, "Requested search recipes for: %d - %d\n", rss->object_type, rss->some_id);
 
 	// make where clause segment for container(s)
 	char containers[30];
+	uint32 combineObjectSlots;
 	if (rss->some_id == 0) {
 		// world combiner so no item number
 		snprintf(containers, 29, "= %u", rss->object_type);
-	}
-	else {
-		// container in inventory
-		snprintf(containers, 29, "in (%u,%u)", rss->object_type, rss->some_id);
-	}
+		combineObjectSlots = 10;
+	} else {
+        // container in inventory
+        snprintf(containers, 29, "in (%u,%u)", rss->object_type, rss->some_id);
+        auto item = database.GetItem(rss->some_id);
+        if (!item) {
+            Log(Logs::General, Logs::Error,
+                "Invalid container ID: %d.  GetItem returned null.  Defaulting to BagSlots = 10.\n", rss->some_id);
+            combineObjectSlots = 10;
+        } else {
+            combineObjectSlots = item->BagSlots;
+        }
+    }
 
 	std::string searchClause;
 
 	//omit the rlike clause if query is empty
 	if (rss->query[0] != 0) {
-		char buf[120];	//larger than 2X rss->query
+		char buf[120];    //larger than 2X rss->query
 		database.DoEscapeString(buf, rss->query, strlen(rss->query));
 		searchClause = StringFormat("name rlike '%s' AND", buf);
 	}
 
 	//arbitrary limit of 200 recipes, makes sense to me.
 	const std::string query = StringFormat("SELECT tr.id, tr.name, tr.trivial, "
-		"SUM(tre.componentcount), crl.madecount,tr.tradeskill "
-		"FROM tradeskill_recipe AS tr "
-		"LEFT JOIN tradeskill_recipe_entries AS tre ON tr.id = tre.recipe_id "
-		"LEFT JOIN (SELECT recipe_id, madecount "
-		"FROM char_recipe_list WHERE char_id = %u) AS crl ON tr.id=crl.recipe_id "
-		"WHERE %s tr.trivial >= %u AND tr.trivial <= %u AND tr.enabled <> 0 "
-		"AND tr.must_learn & 0x20 <> 0x20 "
-		"AND ((tr.must_learn & 0x3 <> 0 "
-		"AND crl.madecount IS NOT NULL) "
-		"OR (tr.must_learn & 0x3 = 0)) "
-		"GROUP BY tr.id "
-		"HAVING sum(if(tre.item_id %s AND tre.iscontainer > 0,1,0)) > 0 "
-		"LIMIT 200 ",
-		CharacterID(), searchClause.c_str(),
-		rss->mintrivial, rss->maxtrivial, containers);
+										   "SUM(tre.componentcount), crl.madecount,tr.tradeskill "
+										   "FROM tradeskill_recipe AS tr "
+										   "LEFT JOIN tradeskill_recipe_entries AS tre ON tr.id = tre.recipe_id "
+										   "LEFT JOIN (SELECT recipe_id, madecount "
+										   "FROM char_recipe_list WHERE char_id = %u) AS crl ON tr.id=crl.recipe_id "
+										   "WHERE %s tr.trivial >= %u AND tr.trivial <= %u AND tr.enabled <> 0 "
+										   "AND tr.must_learn & 0x20 <> 0x20 "
+										   "AND ((tr.must_learn & 0x3 <> 0 "
+										   "AND crl.madecount IS NOT NULL) "
+										   "OR (tr.must_learn & 0x3 = 0)) "
+										   "GROUP BY tr.id "
+										   "HAVING sum(if(tre.item_id %s AND tre.iscontainer > 0,1,0)) > 0 AND SUM(tre.componentcount) <= %u "
+										   "LIMIT 200 ",
+										   CharacterID(), searchClause.c_str(),
+										   rss->mintrivial, rss->maxtrivial, containers, combineObjectSlots);
 	TradeskillSearchResults(query, rss->object_type, rss->some_id);
 	return;
 }
@@ -12720,7 +12932,7 @@ void Client::Handle_OP_Shielding(const EQApplicationPacket *app)
 	Shielding_Struct* shield = (Shielding_Struct*)app->pBuffer;
 	shield_target = entity_list.GetMob(shield->target_id);
 	bool ack = false;
-	EQEmu::ItemInstance* inst = GetInv().GetItem(EQEmu::inventory::slotSecondary);
+	EQEmu::ItemInstance* inst = GetInv().GetItem(EQEmu::invslot::slotSecondary);
 	if (!shield_target)
 		return;
 	if (inst)
@@ -12947,8 +13159,8 @@ void Client::Handle_OP_ShopPlayerBuy(const EQApplicationPacket *app)
 	// shouldn't we be reimbursing if these two fail?
 
 	//make sure we are not completely full...
-	if (freeslotid == EQEmu::inventory::slotCursor) {
-		if (m_inv.GetItem(EQEmu::inventory::slotCursor) != nullptr) {
+	if (freeslotid == EQEmu::invslot::slotCursor) {
+		if (m_inv.GetItem(EQEmu::invslot::slotCursor) != nullptr) {
 			Message(13, "You do not have room for any more items.");
 			safe_delete(outapp);
 			safe_delete(inst);
@@ -13608,13 +13820,13 @@ void Client::Handle_OP_Split(const EQApplicationPacket *app)
 	//Per the note above, Im not exactly sure what to do on error
 	//to notify the client of the error...
 	if (!isgrouped) {
-		Message(13, "You can not split money if your not in a group.");
+		Message(13, "You can not split money if you're not in a group.");
 		return;
 	}
 	Group *cgroup = GetGroup();
 	if (cgroup == nullptr) {
 		//invalid group, not sure if we should say more...
-		Message(13, "You can not split money if your not in a group.");
+		Message(13, "You can not split money if you're not in a group.");
 		return;
 	}
 
@@ -13991,6 +14203,11 @@ void Client::Handle_OP_Taunt(const EQApplicationPacket *app)
 
 	if (GetTarget() == nullptr || !GetTarget()->IsNPC())
 		return;
+
+	if (!zone->CanDoCombat()) {
+		Message(13, "You cannot taunt in a no combat zone.");
+		return;
+	}
 
 	Taunt(GetTarget()->CastToNPC(), false);
 	return;

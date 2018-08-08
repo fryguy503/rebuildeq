@@ -39,8 +39,8 @@ void WorldDatabase::GetCharSelectInfo(uint32 accountID, EQApplicationPacket **ou
 	size_t character_limit = EQEmu::constants::Lookup(client_version)->CharacterCreationLimit;
 	
 	// Validate against absolute server max
-	if (character_limit > EQEmu::constants::CharacterCreationMax)
-		character_limit = EQEmu::constants::CharacterCreationMax;
+	if (character_limit > EQEmu::constants::CHARACTER_CREATION_LIMIT)
+		character_limit = EQEmu::constants::CHARACTER_CREATION_LIMIT;
 
 	// Force Titanium clients to use '8'
 	if (client_version == EQEmu::versions::ClientVersion::Titanium)
@@ -513,23 +513,6 @@ void WorldDatabase::GetLauncherList(std::vector<std::string> &rl) {
 
     for (auto row = results.begin(); row != results.end(); ++row)
         rl.push_back(row[0]);
-
-}
-
-void WorldDatabase::SetMailKey(int CharID, int IPAddress, int MailKey)
-{
-	char MailKeyString[17];
-
-	if(RuleB(Chat, EnableMailKeyIPVerification) == true)
-		sprintf(MailKeyString, "%08X%08X", IPAddress, MailKey);
-	else
-		sprintf(MailKeyString, "%08X", MailKey);
-
-    std::string query = StringFormat("UPDATE character_data SET mailkey = '%s' WHERE id = '%i'",
-                                    MailKeyString, CharID);
-    auto results = QueryDatabase(query);
-	if (!results.Success())
-		Log(Logs::General, Logs::Error, "WorldDatabase::SetMailKey(%i, %s) : %s", CharID, MailKeyString, results.ErrorMessage().c_str());
 
 }
 
