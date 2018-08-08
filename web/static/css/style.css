@@ -4,6 +4,23 @@
     box-sizing: border-box;
 }
 
+/* We want to give the content area some more padding */
+.content {
+    background: url(/container.png) repeat-y;
+    text-align: left;
+    overflow-y: hidden;    
+}
+
+#outer {
+    padding: 0px 10px;
+    margin: auto;
+    /*transform: translate(-50%, -50%);
+    position: absolute;*/
+    background: url(/border.png);
+    max-width: 960px;
+}
+
+
 .black {
     background-color: black;
 }
@@ -109,8 +126,8 @@
  */
 body {
     line-height: 1.7em;
-    color: #7f8c8d;
-    background-color: #333333;
+    color: #2b2b2b;
+    background: #474747 url('/bg-line.png') repeat-x;
     font-size: 13px;
 }
 
@@ -219,13 +236,14 @@ a.pure-button-primary {
 }
 
 .home-menu a {
-    color: #e2d58b;
+    color: #39bdeb;
 }
 .home-menu li a:hover,
 .home-menu li a:focus {
     background: none;
     border: none;
-    color: #AECFE5;
+    color: #74d7f9;
+    
 }
 
 
@@ -291,10 +309,7 @@ a.pure-button-primary {
 
 }
 
-/* We want to give the content area some more padding */
-.content {
-    padding: 1em 1em 3em;
-}
+
 
 /* This is the class used for the main content headers (<h2>) */
 .content-head {
@@ -413,10 +428,6 @@ a.pure-button-primary {
     font-size: 80%;
     font-weight: 500;
     letter-spacing: 0.1em;
-}
-
-.content {
-    padding: 2em 1em 0;
 }
 
 .post {
