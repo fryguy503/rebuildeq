@@ -1350,6 +1350,7 @@ public:
 	bool IsValidItem(int itemid);
 	int GiveBoxReward(int minimumRarity, int boxType);
 	void ResetBuild();
+	bool SetBuild(std::string build);
 	FACTION_VALUE FactionLevelRaw(int32 faction_id);
 	void EvadeOnce(Mob * mob);
 

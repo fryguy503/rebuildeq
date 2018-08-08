@@ -515,7 +515,7 @@ int main(int argc, char** argv) {
 				entity_list.BeaconProcess();
 				entity_list.EncounterProcess();
 				if (zone->IsLoaded()) { //&& zone->CountAuth() > 0) { we don't need clients to do nats processing
-					nats.ZoneSubscribe(zone->GetShortName());
+					nats.ZoneSubscribe(zone->GetShortName(), zone->GetInstanceID());
 					nats.Process();
 				}
 

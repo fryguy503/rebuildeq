@@ -7589,7 +7589,7 @@ int Mob::GetAggroTier() {
 
 void Mob::DailyGain(int account_id, int character_id, const char* identity, int levels_gained, int experience_gained, int money_earned)
 {
-	nats.DailyGain(account_id, character_id, identity, levels_gained, experience_gained, money_earned);
+	nats.OnDailyGain(account_id, character_id, identity, levels_gained, experience_gained, money_earned);
 }
 
 //This triggers the crippling presence mechanic on each attack. It's a bit weird.

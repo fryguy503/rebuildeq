@@ -1,10 +1,11 @@
 syntax = "proto3";
 package eqproto;
 
-
+option cc_enable_arenas = true;
+option optimize_for = SPEED;
 
 message ChannelMessage {
-  int32 chan_num = 1;
+  MessageType number = 1;
   int32 language = 2;
   string from = 3;
   string to = 4;
@@ -15,41 +16,116 @@ message ChannelMessage {
   int32 minstatus = 9;
   int32 fromadmin = 10;
   bool noreply = 11;
-  bool is_emote = 12;
-  //0 not queued, 1 queued, 2 queue full, 3 offline
-  int32 queued = 13;
-  //You can specify a zone id if you want a message exclusively to one zone
-  int32 zone_id = 14;
+  bool is_emote = 12;  //Is message considered an emote?
+  int32 queued = 13; //only used on channel_message.out events. (*.in uses response_message): 0 not queued, 1 queued, 2 queue full, 3 offline
+  int32 from_entity_id = 16; //(Only in zone requests) Entity to send message from
+  EntityType from_entity_type = 17; //(Only in zone requests) Entity type the message is from
+  float distance = 18; //(optional, only in zone requests) how far should the message travel? (e.g. say)
+  bool skip_sender = 19; //(optional, only in zone requests) should we skip sender?
+  string response_message = 20; //Human-readable response message of request.
+  int32 response_value = 21; //Response value. In cases where a single value is returned, this is utilized (like an entity id)
+  ErrorType response_error = 22; //error (if any), ERR_OK (0) is default
+  string response_type = 23; //defines what message type the response_payload is
+  bytes response_payload = 24; //binary payload to be parsed using response_type
 }
 
 message CommandMessage {
-  string author = 1;
-  string command = 2;
-  repeated string params = 3;
-  string result = 4;
-  bytes payload = 5;
-}
-
-//Daily Gain is a special system for tracking players progression in a daily snapshot.
-message DailyGain  {
-  int32 account_id = 1;
-  int32 character_id  = 2;
-  int32 levels_gained = 3;
-  int32 experience_gained = 4;
-  int32 money_earned = 5;  
-  string identity = 6;
+  string author = 1; //Author of command. This can typically be ignored
+  string command = 2; //command to request
+  repeated string params = 3; //Parameters are an array of strings.   
+  string response_message = 4; //Human-readable response message of request.
+  int32 response_value = 5; //Response value. In cases where a single value is returned, this is utilized (like an entity id)
+  ErrorType response_error = 6; //error (if any), ERR_OK (0) is default
+  string response_type = 7; //defines what message type the response_payload is
+  bytes response_payload = 8; //binary payload to be parsed using response_type
 }
 
 //Entity is full of entity data.
 message Entity {
-  int32 id = 1;
-  string name = 2;
-  int32 type = 3;
-  int32 hp = 4;
-  int32 level = 5;
-  Position position = 6;
-  int32 race = 7;
-  int32 class = 8;
+  int32 id = 1; //Entity: Unique entity identifier for zone.
+  string name = 2; //Entity: Name of entity
+  EntityType type = 3; //Type of entity
+  int32 hp = 4; //Mob: Current health
+  int32 level = 5; //Mob: Current level
+  Position position = 6; //Mob, Door: Position
+  int32 race = 7; //Mob: Race
+  int32 class = 8; //Mob: Class  
+  int32 max_hp = 9; //Mob: Maximum Hitpoints
+  int64 spawn_timestamp = 10; //Entity: When entity was spawned
+  //SpecialAbility special_ability = 11; //Mob: Special abilities mob contains
+  //AuraInfo aura_info = 12; //Mob: Aura information
+  string lastname = 13; //Mob: Last name. Surname for clients
+  GenderType gender = 14; //Mob: Gender
+  BodyType bodytype = 15; //Mob: Body Type
+  DeityType deity = 16; //Mob: Deity
+  uint32 npctype_id = 17; //Mob: When npc was spawned from db, this is it's entry for npctype
+  float size = 18; //Mob, Door: size of mob
+  float runspeed = 19; //Mob: runspeed
+  //int32 light = 20; //Mob: Light level
+  int32 texture = 21; //Mob: texture
+  int32 helmtexture = 22; //Mob: helm texture
+	int32 ac = 23; //Mob: Armor class
+	int32 atk = 24; //Mob: Attack
+	int32	str = 25; //Mob: Strength
+	int32 sta = 26; //Mob: Stamina
+	int32 dex = 27; //Mob: Dexterity
+	int32 agi = 28; //Mob: Agility
+	int32 int = 29; //Mob: Intelligence
+	int32 wis = 30; //Mob: Wisdom
+	int32 cha = 31; //Mob: Charisma
+	int32	haircolor = 32; //Mob: Hair color
+	int32	beardcolor = 33; //Mob: beard color
+	int32 eyecolor1 = 34; //Mob: eye color left?
+  int32 eyecolor2 = 35; //Mob: eye color right?
+		/*uint8		in_eyecolor2,
+		uint8		in_hairstyle,
+		uint8		in_luclinface,
+		uint8		in_beard,
+		uint32		in_drakkin_heritage,
+		uint32		in_drakkin_tattoo,
+		uint32		in_drakkin_details,
+		EQEmu::TintProfile	in_armor_tint,
+		uint8		in_aa_title,
+		uint8		in_see_invis, // see through invis
+		uint8		in_see_invis_undead, // see through invis vs. undead
+		uint8		in_see_hide,
+		uint8		in_see_improved_hide,
+		int32		in_hp_regen,
+		int32		in_mana_regen,
+		uint8		in_qglobal,
+		uint8		in_maxlevel,
+		uint32		in_scalerate,
+		uint8		in_armtexture,
+		uint8		in_bracertexture,
+		uint8		in_handtexture,
+		uint8		in_legtexture,
+		uint8		in_feettexture
+*/
+
+
+//DOOR
+
+  uint32	door_db_id = 100; //Door: databse ID of door
+	uint32	door_id = 101; //Door: Unique ID of door
+	//string door_zone_name = 102; //Door: zone name of door not needed?
+	string door_name = 103;	 //Door: name
+	int32		door_incline = 104; //Door: Incline
+	uint32	door_opentype = 105; //Door: Open type
+	uint32	door_guild_id = 106; //Door: Guild ID
+	uint32	door_lockpick = 107;  //Door: Lockpick
+	uint32	door_keyitem = 108; //Door: Key item
+	uint32	door_nokeyring = 109; //Door: No key ring
+	uint32	door_trigger_door_id = 110; //Door: trigger door
+	uint32	door_trigger_type = 111; //Door: trigger type
+	uint32	door_param = 112; //Door: parameter
+	int32		door_invert_state = 113; //Door: invert state
+	bool	door_disable_timer = 114; //Door: is timer disabled?
+	bool	door_is_open = 115; //Door: is it currently open?	
+	//string	door_destination_zone = 116; //Door: destination zone TODO: not exposed
+	//int32		door_destination_instance_id = 117; //Door: destination instance TODO: not exposed
+	//Position door_destination_position = 118; //Door: destination position TODO: not exposed
+	uint32	door_is_ldon = 119; //Door: is it ldon?
+	uint32	door_client_version_mask = 120; //Door: client version mask
 }
 
 message Entities {
@@ -104,8 +180,9 @@ message Tint {
 }
 
 message Event {
-  OpCode op = 1;
-  bytes payload = 2;
+  OpCode op = 1; //opcode enum
+  bytes payload = 2; //unmarshal based on opcode
+  uint32 entity_id = 3; //target entity_id of event  
 }
 
 //OP_Death
@@ -128,8 +205,8 @@ message DamageEvent {
   uint32 spellid = 4;
   uint32 damage = 5;
   float force = 6;
-  float hit_heading = 7;	// see above notes in Action_Struct
-  float hit_pitch = 8;
+  float meleepush_xy = 7;	// see above notes in Action_Struct
+  float meleepush_z = 8;
 }
 
 //OP_Assist OP_Camp
@@ -143,10 +220,61 @@ message ChannelMessageEvent {
   string target_name = 1; // Tell recipient
   string sender = 2;			// The senders name (len might be wrong)
   uint32	language = 3;			// Language
-  uint32	chan_num = 4;			// Channel
+  MessageType	number = 4;			// Channel number
   uint32	cm_unknown4 = 5;		// ***Placeholder
   uint32	skill_in_language = 6;	// The players skill in this language? might be wrong
   string	message = 7;			// Variable length message
+}
+
+
+//OP_SpecialMesg
+message SpecialMessageEvent {
+  string header = 1;				// 04 04 00 <-- for #emote style msg
+  MessageType number = 2;				// Color of text (see *** below)
+	uint32	target_spawn_id = 3;		// Who is it being said to?
+  string sayer = 4;				// Who is the source of the info
+  uint32	unknown12 = 5;
+  string	message = 6;				// What is being said?
+}
+
+//OP_NewZone
+message NewZoneEvent {
+  string	char_name = 1;			// Character Name
+  string	zone_short_name = 2;	// Zone Short Name
+  string	zone_long_name = 3;	// Zone Long Name
+  uint32	ztype = 4;					// Zone type (usually FF)
+  uint32	fog_red = 5;				// Zone fog (red)
+  uint32	fog_green = 6;			// Zone fog (green)
+  uint32	fog_blue = 7;			// Zone fog (blue)
+  uint32	unknown323 = 8;
+  float	fog_minclip = 9;
+  float	fog_maxclip = 10;
+  float	gravity = 11;
+  uint32	time_type = 12;
+  uint32   rain_chance = 13;
+  uint32   rain_duration = 14;
+  uint32   snow_chance = 15;
+  uint32   snow_duration = 16;
+  uint32	unknown360 = 17;
+  uint32	sky = 18;					// Sky Type
+  uint32	unknown331 = 19;			// ***Placeholder
+  float	zone_exp_multiplier = 20;	// Experience Multiplier
+  float	safe_y = 21;					// Zone Safe Y
+  float	safe_x = 22;					// Zone Safe X
+  float	safe_z = 23;					// Zone Safe Z
+  float	max_z = 24;					// Guessed
+  float	underworld = 25;				// Underworld, min z (Not Sure?)
+  float	minclip = 26;				// Minimum View Distance
+  float	maxclip = 27;				// Maximum View DIstance
+  uint32	unknown_end = 28;		// ***Placeholder
+  string	zone_short_name2 = 29;
+  string	unknown672 = 30;
+  uint32	zone_id = 31;
+  uint32	zone_instance = 32;
+  uint32	unknown688 = 33;
+  uint32	unknown692 = 34;
+  float	fog_density = 35;
+  uint32	suspend_buffs = 36;
 }
 
 //OP_WearChange
@@ -278,7 +406,7 @@ message SpawnEvent {
   uint32 mount_color = 74;		// drogmor: 0=white, 1=black, 2=green, 3=red horse: 0=brown, 1=white, 2=black, 3=tan
   //endunion                            
   uint32 spawnId = 75;		// Spawn Id
-  float bounding_radius = 76;
+  uint32 unknown0344 = 76;
   uint32 IsMercenary = 77;
   TintProfile equipment_tint = 78;
   uint32	lfg = 79;			// 0=off, 1=lfg on
@@ -304,14 +432,255 @@ message SpawnEvent {
 	bool show_name= 100;
 }
 
+message AlternateAdvancementStatsEvent {
+  uint32 experience = 1;
+  uint32 unspent = 2;
+  uint32 unknown006 = 3;
+  uint32 percentage = 4;
+  uint32 unknown009 = 5;
+}
+
+message ZoneCompleteEvent {
+
+}
+
+message UseAAEvent {
+  uint32 begin = 1;
+	uint32 ability = 2;
+	uint32 end = 3;
+  uint32 action = 4;
+  uint32 target_id = 5;
+  uint32 exp_value = 6;
+}
+
+
+enum ErrorType {
+  ERR_OK = 0; //OK, No error provided
+  ERR_Request = 1; //Request data has something wrong. See response_message for more details.
+  ERR_Internal = 2; //Internal server error. See response message for mode details  
+  ERR_Failed = 3; //Failed request. This is when the request succeeds, there are no internal server errors, but the response is a failure.
+}
+
+//EntityType will attempt to identify an entity to it's upper-most type by default
+enum EntityType {
+  NPC = 0; //Inherits mob
+  Client = 1; //Inherits mob
+  Mob = 2; //Inherits entity
+  Mercenary = 3; //Inherits NPC
+  Corpse = 4; //Inherits mob
+  Door = 5; //Inherits entity
+  Object = 6; //Inherits entity
+  Trap = 7; //Inherits entity
+  Beacon = 9; //Inherits mob
+  Encounter = 10; //Inherits mob
+}
+
+enum DeityType {
+  Unknown = 0;
+  Agnostic_LB = 140;
+  Bertoxxulous = 201;
+  BrellSirilis = 202;
+  CazicThule = 203;
+  ErollisiMarr = 204;
+  Bristlebane = 205;
+  Innoruuk = 206;
+  Karana = 207;
+  MithanielMarr = 208;
+  Prexus = 209;
+  Quellious = 210;
+  RallosZek = 211;
+  RodcetNife = 212;
+  SolusekRo = 213;
+  TheTribunal = 214;
+  Tunare = 215;
+  Veeshan = 216;
+  Agnostic = 396;
+}
+
+enum DeityTypeBit {
+  bit_DeityNone = 0x00000000;
+  bit_DeityAgnostic = 0x00000001;
+  bit_DeityBertoxxulous = 0x00000002;
+  bit_DeityBrellSirilis = 0x00000004;
+  bit_DeityCazicThule = 0x00000008;
+  bit_DeityErollisiMarr = 0x00000010;
+  bit_DeityBristlebane = 0x00000020;
+  bit_DeityInnoruuk = 0x00000040;
+  bit_DeityKarana = 0x00000080;
+  bit_DeityMithanielMarr = 0x00000100;
+  bit_DeityPrexus = 0x00000200;
+  bit_DeityQuellious = 0x00000400;
+  bit_DeityRallosZek = 0x00000800;
+  bit_DeityRodcetNife = 0x00001000;
+  bit_DeitySolusekRo = 0x00002000;
+  bit_DeityTheTribunal = 0x00004000;
+  bit_DeityTunare = 0x00008000;
+  bit_DeityVeeshan = 0x00010000;
+  bit_DeityAll = 0xFFFFFFF;
+}
+
+
+enum MessageType {
+  //option allow_alias = true;
+  Auction = 0;
+  Group = 2;	// FF|F0F0F0
+  Shout = 3;
+  Auction4 = 4;
+  OOC = 5;
+  Broadcast = 6;
+  Tell = 7;
+  Say = 8;
+  Tell14 = 14;
+  Raid = 15;
+  Guild = 17;
+  GMSayWeird18 = 18;
+  LocalEmote20 = 20;
+  Fellowship = 21;
+  Emote = 22;      
+	Say256 = 256;
+  Tell257 = 257;
+  Group258 = 258;
+  Shout259 = 259;
+  Auction260 = 260;
+  OOC261 = 261;
+  Broadcast262 = 262;
+  Tell263 = 263;
+  Say264 = 264;
+  YouHitOther = 265;
+  OtherHitsYou = 266;
+  YouMissOther = 267;
+  OtherMissesYou = 268;
+  Skills = 270;
+  Disciplines = 271;
+  Guild273 = 273;
+  GMSay = 274;
+  MerchantOffer = 275;
+  MerchantBuySell = 276;
+  Fellowship277 = 277;
+  Emote278 = 278;
+  OtherHits = 279;
+  OtherMisses = 280;
+  Who = 281;
+  YellForHelp = 282;
+  NonMelee = 283;
+  WornOff = 284;
+  MoneySplit = 285;
+  LootMessages = 286;
+  DiceRoll = 287;
+  OtherSpells = 288;
+  SpellFailure = 289;
+  Chat = 290;
+  Channel1 = 291;
+  Channel2 = 292;
+  Channel3 = 293;
+  Channel4 = 294;
+  Channel5 = 295;
+  Channel6 = 296;
+  Channel7 = 297;
+  Channel8 = 298;
+  Channel9 = 299;
+  Channel10 = 300;
+  CritMelee = 301;
+  SpellCrits = 302;
+  TooFarAway = 303;
+  NPCRampage = 304;
+  NPCFlurry = 305;
+  NPCEnrage = 306;
+  SayEcho = 307;
+  TellEcho = 308;
+  GroupEcho = 309;
+  GuildEcho = 310;
+  OOCEcho = 311;
+  Auction2 = 312;
+  ShoutECho = 313;
+  EmoteEcho = 314;
+  Chat1Echo = 315;
+  Chat2Echo = 316;
+  Chat3Echo = 317;
+  Chat4Echo = 318;
+  Chat5Echo = 319;
+  Chat6Echo = 320;
+  Chat7Echo = 321;
+  Chat8Echo = 322;
+  Chat9Echo = 323;
+  Chat10Echo = 324;
+  DoTDamage = 325;
+  ItemLink = 326;
+  RaidSay = 327;
+  MyPet = 328;
+  DS = 329;
+  Leadership = 330;
+  PetFlurry = 331;
+  PetCrit = 332;
+  FocusEffect = 333;
+  Experience = 334;
+  System = 335;
+  PetSpell = 336;
+  PetResponse = 337;
+  ItemSpeech = 338;
+  StrikeThrough = 339;
+  Stun = 340;
+}
+
+enum BodyType {  
+  //option allow_alias = true;
+  BodyType_Unknown = 0;
+  BodyType_Humanoid			= 1;
+	BodyType_Lycanthrope		= 2;
+	BodyType_Undead			= 3;
+	BodyType_Giant			= 4;
+	BodyType_Construct		= 5;
+	BodyType_Extraplanar		= 6;
+	BodyType_Magical			= 7;	//this name might be a bit off
+	BodyType_SummonedUndead	= 8;
+	BodyType_RaidGiant		= 9;
+  
+	BodyType_NoTarget			= 11;	//no name; can't target this bodytype
+	BodyType_Vampire			= 12;
+	BodyType_Atenha_Ra		= 13;
+	BodyType_Greater_Akheva	= 14;
+	BodyType_Khati_Sha		= 15;
+	BodyType_Seru				= 16;	//not confirmed....
+	BodyType_Draz_Nurakk      = 18;
+	BodyType_Zek				= 19;
+	BodyType_Luggald			= 20;
+	BodyType_Animal			= 21;
+	BodyType_Insect			= 22;
+	BodyType_Monster			= 23;
+	BodyType_Summoned			= 24;	//Elemental?
+	BodyType_Plant			= 25;
+	BodyType_Dragon			= 26;
+	BodyType_Summoned2		= 27;
+	BodyType_Summoned3		= 28;
+
+	BodyType_VeliousDragon	= 30;	//might not be a tight set
+  
+	BodyType_Dragon3			= 32;
+	BodyType_Boxes			= 33;
+	BodyType_Muramite			= 34;	//tribal dudes
+  
+	BodyType_NoTarget2		= 60;
+  
+	BodyType_SwarmPet			= 63;	//is this valid; or made up?
+  
+	BodyType_InvisMan			= 66;	//no name; seen on 'InvisMan'; can be /targeted
+	BodyType_Special = 67;
+}
+
+enum GenderType {
+  Male = 0;
+  Female = 1;
+  Neutral = 2;
+}
+
 enum OpCode {
   //option allow_alias = true;
   OP_Unknown = 0;
-  OP_ExploreUnknown = 1;
-  OP_0x0193 = 2;
-  OP_0x0347 = 3;
-  OP_AAAction = 4;
-  OP_AAExpUpdate = 5;
+  OP_ExploreUnknown = 1; //Not used
+  OP_0x0193 = 2; //Not used
+  OP_ZoneCompleted = 3; //supported, internally OP_0x0347
+  OP_AAAction = 4; //supported
+  OP_AAExpUpdate = 5; //supported
   OP_AcceptNewTask = 6;
   OP_AckPacket = 7;
   OP_Action = 8;
@@ -383,7 +752,7 @@ enum OpCode {
   OP_ChannelMessage = 74;
   OP_CharacterCreate = 75;
   OP_CharacterCreateRequest = 76;
-  OP_CharInventory = 77;
+  OP_CharInventory = 77; //uses outbuffer, may not be worth working with
   OP_Charm = 78;
   OP_ChatMessage = 79; //used by lua
   OP_ClearAA = 80;
@@ -420,8 +789,8 @@ enum OpCode {
   OP_CrystalCreate = 111;
   OP_CrystalReclaim = 112;
   OP_CustomTitles = 113;
-  OP_Damage = 114;
-  OP_Death = 115;
+  OP_Damage = 114; //supported
+  OP_Death = 115; //supported
   OP_DelegateAbility = 116;
   OP_DeleteCharacter = 117;
   OP_DeleteCharge = 118;
@@ -652,7 +1021,7 @@ enum OpCode {
   OP_MultiLineMsg = 343;
   OP_NewSpawn = 344; //supported
   OP_NewTitlesAvailable = 345;
-  OP_NewZone = 346;
+  OP_NewZone = 346; //supported
   OP_OnLevelMessage = 347;
   OP_OpenContainer = 348;
   OP_OpenDiscordMerchant = 349;
@@ -784,7 +1153,7 @@ enum OpCode {
   OP_SpawnAppearance = 475;
   OP_SpawnDoor = 476;
   OP_SpawnPositionUpdate = 477;
-  OP_SpecialMesg = 478;
+  OP_SpecialMesg = 478; //supported
   OP_SpellEffect = 479;
   OP_Split = 480;
   OP_Stamina = 481;
@@ -882,4 +1251,14 @@ enum OpCode {
   OP_MailNew = 573;
   OP_MailSendBody = 574;
 
+}
+
+//Daily Gain is a special system for tracking players progression in a daily snapshot.
+message DailyGain  {
+  int32 account_id = 1;
+  int32 character_id  = 2;
+  int32 levels_gained = 3;
+  int32 experience_gained = 4;
+  int32 money_earned = 5;  
+  string identity = 6;
 }

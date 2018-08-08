@@ -703,7 +703,7 @@ void Mob::SendTo(float new_x, float new_y, float new_z) {
 
 	//fix up pathing Z, this shouldent be needed IF our waypoints
 	//are corrected instead
-	if (zone->HasMap() && RuleB(Map, FixPathingZOnSendTo))
+	if (zone->HasMap() && RuleB(EQMap, FixPathingZOnSendTo))
 	{
 		if (!RuleB(Watermap, CheckForWaterOnSendTo) || !zone->HasWaterMap() ||
 			(zone->HasWaterMap() && !zone->watermap->InWater(glm::vec3(m_Position))))
@@ -714,7 +714,7 @@ void Mob::SendTo(float new_x, float new_y, float new_z) {
 
 			Log(Logs::Detail, Logs::AI, "BestZ returned %4.3f at %4.3f, %4.3f, %4.3f", newz, m_Position.x, m_Position.y, m_Position.z);
 
-			if ((newz > -2000) && std::abs(newz - dest.z) < RuleR(Map, FixPathingZMaxDeltaSendTo)) // Sanity check.
+			if ((newz > -2000) && std::abs(newz - dest.z) < RuleR(EQMap, FixPathingZMaxDeltaSendTo)) // Sanity check.
 				m_Position.z = newz + 1;
 		}
 	}
@@ -731,7 +731,7 @@ void Mob::SendToFixZ(float new_x, float new_y, float new_z) {
 	m_Position.y = new_y;
 	m_Position.z = new_z + 0.1;
 
-	if (zone->HasMap() && RuleB(Map, FixPathingZOnSendTo))
+	if (zone->HasMap() && RuleB(EQMap, FixPathingZOnSendTo))
 	{
 		if (!RuleB(Watermap, CheckForWaterOnSendTo) || !zone->HasWaterMap() ||
 			(zone->HasWaterMap() && !zone->watermap->InWater(glm::vec3(m_Position))))
@@ -742,7 +742,7 @@ void Mob::SendToFixZ(float new_x, float new_y, float new_z) {
 
 			Log(Logs::Moderate, Logs::Pathing, "BestZ returned %4.3f at %4.3f, %4.3f, %4.3f", newz, m_Position.x, m_Position.y, m_Position.z);
 
-			if ((newz > -2000) && std::abs(newz - dest.z) < RuleR(Map, FixPathingZMaxDeltaSendTo)) // Sanity check.
+			if ((newz > -2000) && std::abs(newz - dest.z) < RuleR(EQMap, FixPathingZMaxDeltaSendTo)) // Sanity check.
 				m_Position.z = newz + 1;
 		}
 	}
@@ -753,7 +753,7 @@ float Mob::GetFixedZ(glm::vec3 dest, int32 z_find_offset) {
 	timer.reset();
 	float new_z = dest.z;
 
-	if (zone->HasMap() && RuleB(Map, FixZWhenMoving)) {
+	if (zone->HasMap() && RuleB(EQMap, FixZWhenMoving)) {
 		if (flymode == 1 || flymode == 2)
 			return new_z;
 		if (this->IsBoat())
@@ -788,12 +788,12 @@ void Mob::FixZ(int32 z_find_offset /*= 5*/) {
 
 	if (!IsClient() && new_z != m_Position.z) {
 		if ((new_z > -2000) && new_z != BEST_Z_INVALID) {
-			if (RuleB(Map, MobZVisualDebug))
+			if (RuleB(EQMap, MobZVisualDebug))
 				this->SendAppearanceEffect(78, 0, 0, 0, 0);
 
 			m_Position.z = new_z;
 		} else {
-			if (RuleB(Map, MobZVisualDebug))
+			if (RuleB(EQMap, MobZVisualDebug))
 				this->SendAppearanceEffect(103, 0, 0, 0, 0);
 			Log(Logs::General, Logs::FixZ, "%s is failing to find Z %f",
 				this->GetCleanName(), std::abs(m_Position.z - new_z));

@@ -10737,19 +10737,11 @@ int Client::GiveBoxReward(int minimumRarity, int boxType) {
 
 
 void Client::ResetBuild() {	
-	strn0cpy(m_epp.build, "00000000000000000000000000000000000000000000000000000", sizeof(m_epp.build)); //copy to session
-	std::string buildbuffer = m_epp.build;
-	buildbuffer.erase(53);
-	if (GetClass() == BARD && GetSkill(EQEmu::skills::SkillDoubleAttack) > 0) { //Reset Double Attack?		
-		SetSkill(EQEmu::skills::SkillDoubleAttack, 0);
-	}
-	std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %d",
-		EscapeString(buildbuffer).c_str(), CharacterID());
-	auto results = database.QueryDatabase(query);
-	if (!results.Success()) {
+	if (!SetBuild("00000000000000000000000000000000000000000000000000000")) {
+		Message(13, "Failed to reset build.");
 		return;
-	}
-	
+	}	
+
 	//break charm or poof pet if they reset.
 	if (HasPet()) {
 		if (this->GetPet()->IsCharmed()) {
@@ -10759,8 +10751,20 @@ void Client::ResetBuild() {
 			this->GetPet()->Depop();
 		}
 	}
-	
 	SendAlternateAdvancementTable();
+}
+
+bool Client::SetBuild(std::string build) {
+	strn0cpy(m_epp.build, build.c_str(), sizeof(m_epp.build)); //copy to session
+	std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %d",
+		EscapeString(build).c_str(), CharacterID());
+	auto results = database.QueryDatabase(query);
+	if (!results.Success()) {
+		return false;
+	}
+
+	SendAlternateAdvancementTable();
+	return true;
 }
 
 std::string Client::GetBuildName(uint32 id) {

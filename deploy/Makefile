@@ -66,7 +66,7 @@ dev-zone2: ## Starts zone binary using eqemu image on port 7001
 proto: ## Removes proto compiled files and generates new ones based on proto folder
 	rm -rf ../common/*.pb.*
 	rm -rf ../go/eqproto/*
-	protoc --cpp_out=../common --go_out=../go/eqproto -I ../common ../common/message.proto
+	protoc --cpp_out=../common --go_out=../go/eqproto -I ../proto ../proto/message.proto
 discordeq: ## Run discordeq in developer mode
 	cd ../go/discordnats
 	go run main.go

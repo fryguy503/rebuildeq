@@ -4341,15 +4341,10 @@ void command_setallbuilds(Client *c, const Seperator *sep) {
     if (rank == 3) build = "33333333333333333333333333333333333333333333333333333";
     if (rank == 4) build = "44444444444444444444444444444444444444444444444444444";
 
-    std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %i", EscapeString(build).c_str(), (int)c->CharacterID());
-    auto results = database.QueryDatabase(query);
-    if (!results.Success()) {
-        c->Message(13, "Failed to set build.");
-        return;
-    }
+	if (!c->SetBuild(build)) {
+		c->Message(13, "Failed to set build.");
+	}
     c->Message(15, "Successfully updated your build.");
-
-    // Trigger refresh on target.
     c->RefreshBuild();
 }
 
@@ -4394,23 +4389,16 @@ void command_setbuild(Client *c, const Seperator *sep) {
     build[id] = std::to_string(rank)[0];
     build.erase(53);
 
-    std::string query = StringFormat("UPDATE character_data SET build_data = '%s' WHERE id = %i", EscapeString(build).c_str(), cTarget->CharacterID());
-    auto results = database.QueryDatabase(query);
-    if (!results.Success()) {
-        c->Message(13, "Failed to set build.");
-        return;
+	if (!c->SetBuild(build)) {
+		c->Message(13, "Failed to set build.");
+		return;
+	}        
+    if (c == cTarget) {
+        c->Message(15, "Successfully updated your build.");
+		return;
     }
-    else {
-        if (c == cTarget) {
-            c->Message(15, "Successfully updated your build.");
-        }
-        else {
-            c->Message(15, "Successfully updated your target's build.");
-            cTarget->Message(15, "Your build has been updated.");
-        }
-    }
-
-    // Trigger refresh on target.
+    c->Message(15, "Successfully updated your target's build.");
+    cTarget->Message(15, "Your build has been updated.");        
     cTarget->RefreshBuild();
 }
 

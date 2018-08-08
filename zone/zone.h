@@ -75,7 +75,7 @@ struct item_tick_struct {
 };
 
 class Client;
-class Map;
+class EQMap;
 class Mob;
 class PathManager;
 class WaterMap;
