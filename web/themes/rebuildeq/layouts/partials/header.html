@@ -1,0 +1,43 @@
+<div class="header">
+	<div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+		<a class="border pure-menu-heading" href="/">Rebuild EQ</a>
+		
+		{{ if and (eq .Section "build") (eq .IsPage true) }}
+		<ul class="pure-menu-list"></ul>
+		
+			<li class="pure-menu-item"><a href="/build/bard"><img class="classicon " src="/icons/classes/brd.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/cleric"><img class="classicon " src="/icons/classes/clr.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/druid"><img class="classicon " src="/icons/classes/dru.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/enchanter"><img class="classicon " src="/icons/classes/enc.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/magician"><img class="classicon " src="/icons/classes/mag.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/monk"><img class="classicon " src="/icons/classes/mnk.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/necromancer"><img class="classicon " src="/icons/classes/nec.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/paladin"><img class="classicon " src="/icons/classes/pal.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/ranger"><img class="classicon " src="/icons/classes/rng.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/rogue"><img class="classicon " src="/icons/classes/rog.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/shadow-knight"><img class="classicon classicon-active" src="/icons/classes/shd.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/shaman"><img class="classicon " src="/icons/classes/shm.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/warrior"><img class="classicon " src="/icons/classes/war.png"></a></li>
+			<li class="pure-menu-item"><a href="/build/wizard"><img class="classicon " src="/icons/classes/wiz.png"></a></li>
+		</ul>
+		{{end}}
+
+		<ul class="border pure-menu-list">
+			<!--  pure-menu-selected -->
+			<li class="pure-menu-item"><a href="/about/" class="pure-menu-link">About</a></li>
+			<li class="pure-menu-item"><a href="/build/" class="pure-menu-link">Build</a></li>
+			<li class="pure-menu-item"><a href="/info/" class="pure-menu-link">Info</a></li>
+			<li class="pure-menu-item"><a href="/news/" class="pure-menu-link">News</a></li>
+			
+			<li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+					<a href="#" id="menuLink1" class="pure-menu-link">Database</a>
+					<ul class="pure-menu-children" style="background-color: #2d3e50">
+						<li class="pure-menu-item"><a href="/item/" class="pure-menu-link">Item</a></li>
+						<li class="pure-menu-item"><a href="/npc/" class="pure-menu-link">NPC</a></li>
+						<li class="pure-menu-item"><a href="/spell/" class="pure-menu-link">Spell</a></li>
+					</ul>
+			</li>			
+		</ul>
+	</div>
+</div>
+	

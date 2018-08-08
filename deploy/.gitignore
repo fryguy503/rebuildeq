@@ -5,14 +5,13 @@ patch/*
 web/application/cache/*
 web/application/logs/*
 
-
 # This is the file list builder exe
 client/rof/patch.zip
 client/rof/filelist*
 
 # This is where patchfiles export to once we prep a patch
 client/patch/*
-
+html/*
 # server stuff that needs ignored.
 !server/*.dll
 server/eqemu_server.pl

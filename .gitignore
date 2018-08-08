@@ -1,4 +1,7 @@
- 
+#hugo ignores
+content/item/*
+content/spell/*
+content/npc/* 
 
 #bin and build for temp build files
 bin/
