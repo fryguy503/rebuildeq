@@ -73,7 +73,7 @@ export class Build {
 	public LoadHash(hash:string) {
 		//build a temporary skill list
 		let skills = new Map<number, Skill>();
-		for (let i = 0; i < 32; i++) {
+		for (let i = 0; i < 53; i++) {
 			let value = 0;
 			if (hash.length < i) {
 				value = 0;
@@ -89,7 +89,7 @@ export class Build {
 			console.log("failed to parse: "+reason);
 			return;
 		}
-		for (let i = 0; i < 32; i++) {
+		for (let i = 0; i < 53; i++) {
 			let skill = this.skills.get(i);
 			if (skill == null) continue;
 			let newSkill = skills.get(i);
@@ -130,7 +130,7 @@ export class Build {
 
 	private getHash():string {
 		let hash = "";
-		for (let i = 0; i < 32; i++) {
+		for (let i = 0; i < 53; i++) {
 			let value = this.getSkillPoints(i);
 			hash += value;
 		}
@@ -146,6 +146,8 @@ export class Build {
 			if (this.getSkillPoints(disabled[i]) > 0) return "this skill is not valid";
 		}
 
+		let req = 5;
+
 		//each tree is an abbreviation, l = left tree. the number is the row. layer 1 = top row
 		let l1 = this.getSkillPoints(0) + this.getSkillPoints(1) + this.getSkillPoints(2)
 		let m1 = this.getSkillPoints(18) + this.getSkillPoints(19) + this.getSkillPoints(20)
@@ -155,52 +157,57 @@ export class Build {
 		let m2 = this.getSkillPoints(21) + this.getSkillPoints(22) + this.getSkillPoints(23)
 		let r2 = this.getSkillPoints(39) + this.getSkillPoints(40) + this.getSkillPoints(41)
 
-		if ((l1 < 5 && l2 > 0) || (m1 < 5 && m2 > 0) || (r1 < 5 && r2 > 0)) return "at least 5 points must be spent in the prior row";
+		if ((l1 < req && l2 > 0) || (m1 < req && m2 > 0) || (r1 < req && r2 > 0)) return "at least 5 points must be spent in the prior row";
 
 		l2 += l1;
 		m2 += m1;
 		r2 += r1;
+		req = 10;
 
 		let l3 = this.getSkillPoints(6) + this.getSkillPoints(7) + this.getSkillPoints(8)
 		let m3 = this.getSkillPoints(24) + this.getSkillPoints(25) + this.getSkillPoints(26)
 		let r3 = this.getSkillPoints(42) + this.getSkillPoints(43) + this.getSkillPoints(44)
 
-		if ((l2 < 5 && l3 > 0) || (m2 < 5 && m3 > 0) || (r2 < 5 && r3 > 0)) return "at least 5 points must be spent in the prior row";
+		if ((l2 < req && l3 > 0) || (m2 < req && m3 > 0) || (r2 < req && r3 > 0)) return "at least 5 points must be spent in the prior row";
 
 		l3 += l2;
 		m3 += m2;
 		r3 += r2;
+		req = 15;
 
 		let l4 = this.getSkillPoints(9) + this.getSkillPoints(10) + this.getSkillPoints(11)
 		let m4 = this.getSkillPoints(27) + this.getSkillPoints(28) + this.getSkillPoints(29)
 		let r4 = this.getSkillPoints(45) + this.getSkillPoints(46) + this.getSkillPoints(47)
 
-		if ((l3 < 5 && l4 > 0) || (m3 < 5 && m4 > 0) || (r3 < 5 && r4 > 0)) return "at least 5 points must be spent in the prior row";
+		if ((l3 < req && l4 > 0) || (m3 < req && m4 > 0) || (r3 < req && r4 > 0)) return "at least 5 points must be spent in the prior row";
 
 		l4 += l3;
 		m4 += m3;
 		r4 += r3;
+		req = 20;
 
 		let l5 = this.getSkillPoints(12) + this.getSkillPoints(13) + this.getSkillPoints(14)
 		let m5 = this.getSkillPoints(30) + this.getSkillPoints(31) + this.getSkillPoints(32)
 		let r5 = this.getSkillPoints(48) + this.getSkillPoints(49) + this.getSkillPoints(50)
 
-		if ((l4 < 5 && l5 > 0) || (m4 < 5 && m5 > 0) || (r4 < 5 && r5 > 0)) return "at least 5 points must be spent in the prior row";
+		if ((l4 < req && l5 > 0) || (m4 < req && m5 > 0) || (r4 < req && r5 > 0)) return "at least 5 points must be spent in the prior row";
 
 		l5 += l4;
 		m5 += m4;
 		r5 += r4;
+		req = 25;
 
 		let l6 = this.getSkillPoints(15) + this.getSkillPoints(16) + this.getSkillPoints(17)
 		let m6 = this.getSkillPoints(33) + this.getSkillPoints(34) + this.getSkillPoints(35)
 		let r6 = this.getSkillPoints(51) + this.getSkillPoints(52) + this.getSkillPoints(53)
 
-		if ((l5 < 5 && l6 > 0) || (m5 < 5 && m6 > 0) || (r5 < 5 && r6 > 0)) return "at least 5 points must be spent in the prior row";
+		if ((l5 < req && l6 > 0) || (m5 < req && m6 > 0) || (r5 < req && r6 > 0)) return "at least 5 points must be spent in the prior row";
 		
 		l6 += l5;
 		m6 += m5;
 		r6 += r5;
-		
+		req = 30;
+
 		return "";
 	}
 
