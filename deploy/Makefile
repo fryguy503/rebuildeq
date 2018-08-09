@@ -4,6 +4,8 @@ default: dev-server
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+api:
+	cd ../ && go run go/api/cmd/api/main.go
 dev-server: dev-services ## Start development services and eqemu environment
 	@if [ ! -f $(shell pwd)/server/eqemu_config.xml ]; then echo "Copying deploy/server/eqemu_config.xml..."; cp $(shell pwd)/../docker/eqemu/eqemu_config.xml $(shell pwd)/server/; fi;
 	@if [ ! -f $(shell pwd)/web/application/config/database.php ]; then echo "Copying deploy/web/applicaton/config/database.php..."; cp $(shell pwd)/../docker/web/database.php  $(shell pwd)/web/application/config/; fi;
@@ -20,18 +22,10 @@ server: services ## Start production services and eqemu environment
 	@if [ ! -d $(shell pwd)/web/application/cache ]; then echo "Making deploy/web/application/cache..."; mkdir $(shell pwd)/web/application/cache; fi;
 	@if [ ! -d $(shell pwd)/web/application/logs ]; then echo "Making deploy/web/application/logs..."; mkdir $(shell pwd)/web/application/logs; fi;
 	-docker run -v $(shell pwd)/../deploy/server:/eqemu --network="rebuildeq_default" --name shared -it eqemu /eqemu/shared_memory
-
-services: ## Start 
-	-docker-compose down
-	#TODO: add -e MARIADB_DATABASE etc
-	-docker-compose up 
-	docker-compose down
 build: ## Build binaries
 	docker build ../docker/build -t buildeq
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu buildeq /bin/bash -c "/usr/bin/cmake ~/."
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu buildeq /bin/bash -c "make"
-deploy: ## Deploy files to live
-
 images: ## Builds docker images needed to run dockerized eqemu
 	docker build ../docker/build -t buildeq
 	docker build ../docker/eqemu -t eqemu
@@ -66,7 +60,7 @@ dev-zone2: ## Starts zone binary using eqemu image on port 7001
 proto: ## Removes proto compiled files and generates new ones based on proto folder
 	rm -rf ../common/*.pb.*
 	rm -rf ../go/eqproto/*
-	protoc --cpp_out=../common --go_out=../go/eqproto -I ../proto ../proto/message.proto
+	protoc --cpp_out=../common --go_out=../go/eqproto -I ../proto ../proto/message.proto ../proto/rebuildeq.proto
 discordeq: ## Run discordeq in developer mode
 	cd ../go/discordnats
 	go run main.go
@@ -74,3 +68,19 @@ buildeqbash: ## Run buildeq container and attach bash
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu -it buildeq /bin/bash
 eqemubash: ## Run eqemu container and attach bash
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu -it eqemu /bin/bash
+hugo-dev: ## Run a hugo dev environment, watching for local changes
+	cd ../web && $(MAKE) hugo-dev
+web-build: ## Builds ts, hugo, and hugogen files, prepare for web
+	cd ../web && $(MAKE) web-dev
+hugogen-build: # runs the hugogen go script
+	cd ../web && $(MAKE) hugogen-build
+clean-build: ## cleans all web stuff
+	cd ../web && $(MAKE) clean-build
+js-build: ## builds javascript file, works great with hugo-dev for local testing
+	cd ../web && $(MAKE) js-build
+ts-build: ## runs tsc to verify any typescript errors
+	cd ../web && $(MAKE) ts-build
+hugo-build: ## runs hugo to build hugo files
+	cd ../web && $(MAKE) hugo-build
+web-deploy: ## runs web-build then firebase deploys
+	cd ../web && $(MAKE) deploy
