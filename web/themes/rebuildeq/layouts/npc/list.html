@@ -2,34 +2,58 @@
 
 {{ partial "header" . }}
 
-<div class="content pure-g">	
-		<div class="pure-u-1 pure-u-md-3-4 black">
-				<h1>NPCs </h1>
-				<table class="pure-table">
-					<thead>
-						<tr>
-							<th></th>
-							<th>Name</th>
-							<th>Level</th>
-							<th>Zone</th>
-							<th>Drops</th>
-						</tr>
-					</thead>					
-			{{ $paginator := .Paginate .Data.Pages }}
-			{{ range $paginator.Pages }}
-			<tr>
-				{{ .Render "summary" }}
-			</tr>
-			{{ end}}
-		</table>
-		{{ partial "pagination" . }}
+<div class="contents">
+	<div class="main">
+		<h1 class="title">
+			<span class="news">News</span>
+		</h1>
+		<ul class="breadcrumb" itemprop="breadcrumb">
+			<li><a href="/">Home</a></li>
+			<li>News</li>
+		</ul>
+		<div class="tabbedElement">
+			<ul class="tabNav" id="tabNav">
+				<li class="active"><a href="#newsContent"><span>Latest</span></a></li>
+				<li class=""><a href="#videos"><span>Videos</span></a></li>
+			</ul>
+			<div class="tabbedContents">
+				<div id="newsContent" class="tabbedContent">
+					<div class="categories">
+						<h6>Categories</h6>
+						<ul class="catList" id="catListNews">
+						<li><a href="http://services.runescape.com/m=news/list?cat=0&amp;page=1" data-type="news" data-id="0" class="active">All</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=1&amp;page=1" data-type="news" data-id="1">Game Updates</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=2&amp;page=1" data-type="news" data-id="2">Website</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=3&amp;page=1" data-type="news" data-id="3">Support</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=4&amp;page=1" data-type="news" data-id="4">Technical</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=5&amp;page=1" data-type="news" data-id="5">Community</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=6&amp;page=1" data-type="news" data-id="6">Behind The Scenes</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=7&amp;page=1" data-type="news" data-id="7">Mobile</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=9&amp;page=1" data-type="news" data-id="9">Shop</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=10&amp;page=1" data-type="news" data-id="10">Dev blogs</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=11&amp;page=1" data-type="news" data-id="11">Competitions</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=12&amp;page=1" data-type="news" data-id="12">Future Updates</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=13&amp;page=1" data-type="news" data-id="13">Solomon's Store</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=14&amp;page=1" data-type="news" data-id="14">Treasure Hunter</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=15&amp;page=1" data-type="news" data-id="15">Your Feedback</a></li>
+						<li><a href="http://services.runescape.com/m=news/list?cat=16&amp;page=1" data-type="news" data-id="16">Events</a></li>
+						</ul>
+					</div>
+					<div class="index" id="newsSection">
+						<p>There are 333,123 total NPCs.</p>								
+						{{ $paginator := .Paginate .Data.Pages }}
+						{{ range first 10 $paginator.Pages }}
+							{{ .Render "summary" }}
+						{{ end}}						
+					</div>
+					<a href="http://services.runescape.com/m=news/archive?cat=0" class="archive">Visit Archive</a>
+					{{ partial "pagination" . }}
+				</div>				
+			</div>		
 		</div>
-		<div class="pure-u-1 pure-u-md-1-4 black">
-			<h1>Search</h1>
-			
-		</div>
-</div>
+	</div>
 	
+</div>
 {{ partial "footer" . }}
 </body>
 </html>

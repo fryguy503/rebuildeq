@@ -1,5 +1,11 @@
-<section class="post">
-		<div class="post-description">		
-				<p><a href="{{ .Params.link }}">{{ .Title }}</a> - {{ printf "%s" .Summary | markdownify }}</p>		
+
+<article>
+		<figure><a href="{{.Params.link}}"><img src="{{.Params.banner}}" alt="{{.Title}}" title="{{.Title}}"></a></figure>
+		<div class="copy">
+		<header>
+		<h4><a href="{{.Params.link}}">{{.Title}}</a></h4>
+		<h5><a href="#">Category</a></h5>
+		<time datetime="{{ .Date.Format .Site.Params.date_format}}">{{ .Date.Format .Site.Params.date_format}}</time>
+		</header> <p>{{ .Summary }}  <a class="readMore" href="{{.Params.link}}">read more</a></p>
 		</div>
-	</section>
+		</article>

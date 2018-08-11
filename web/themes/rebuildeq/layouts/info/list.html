@@ -2,22 +2,26 @@
 
 {{ partial "header" . }}
 
-<div id="layout" class="pure-g">
-
-	<div class="content pure-u-1 pure-u-md-4-4">
-		<div>			
-			<div class="posts">
-				<h1 class="content-subhead">Information</h1>
-			{{ $paginator := .Paginate .Data.Pages }}
-			{{ range $paginator.Pages }}
-				{{ .Render "summary" }}
-			{{ end}}
-			</div>
-		</div>
-		{{ partial "pagination" . }}
+  <br>
+<article class="grid-container">
+  <div class="grid-x cell">
+	<nav aria-label="You are here:" role="navigation">
+	  <ul class="breadcrumbs">
+		<li><a href="/">Home</a></li>
+		<li>
+		  <span class="show-for-sr">Current: </span> News
+		</li>
+	  </ul>
+	</nav>
+  </div>
+  <div class="grid-x grid-margin-x">
+	<div class="medium-12 cell">
+		<table class="hover">
+	  {{ $paginator := .Paginate .Data.Pages }}
+		{{ range first 10 $paginator.Pages }}
+			{{ .Render "summary" }}
+		{{ end}}
+	</table>
 	</div>
-</div>
-	
+	</div>	
 {{ partial "footer" . }}
-</body>
-</html>

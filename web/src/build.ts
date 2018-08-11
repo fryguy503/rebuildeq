@@ -219,7 +219,7 @@ export class Build {
 }
 
 
-window.onload = () => {
+export function OnWindowLoadBuild() {
 	let build = new Build();
 
 	let initialHash = "test"

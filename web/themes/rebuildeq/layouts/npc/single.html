@@ -1,27 +1,48 @@
 {{ partial "head" . }}
 
 {{ partial "header" . }}
-
-<div class="content pure-g">	
-		<div class="pure-u-1 pure-u-md-3-4 black">
-				<h1>{{ .Title}} </h1>
+  <br>
+<article class="grid-container">
+  <div class="grid-x cell">
+	<nav aria-label="You are here:" role="navigation">
+	  <ul class="breadcrumbs">
+		<li><a href="/">Home</a></li>
+		<li><a href="/npc/">NPC</a></li>
+		<li>
+		  <span class="show-for-sr">Current: </span> {{.Title}}
+		</li>
+	  </ul>
+	</nav>
+	</div>
+	<div class="grid-x grid-margin-x">
+			<div class="medium-8 cell">
+				{{.Content}}
+			</div>
+			<div class="medium-4 cell">
+				<div class="info">
+						<ul>
+							<li>HP: {{.Params.hp}}</li>
+							<li>Damage: {{.Params.mindamage}}-{{.Params.maxdamage}}</li>
+							<li>Gender: {{.Params.gendername}}</li>
+							<li>Body Type: {{.Params.bodytypename}}</li>
+							<li>Race: {{.Params.racename}}</li>
+							<li>Class: {{.Params.classname}}</li>
+							<li>Level: {{.Params.level}}</li>
+							<li>Zone: {{.Params.zonename}}</li>
+							<li>Loot: {{.Params.lootcount}}</li>
+						</ul>
+				</div>
+			</div>
+	</div>
+	<div  class="grid-x grid-margin-x">
+			<div class="tabs-content" data-tabs-content="example-tabs">
+			<div class="tabs-panel is-active" id="panel1">
+				<p>Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor. Suspendisse dictum feugiat nisl ut dapibus.</p>
+			</div>
+			<div class="tabs-panel" id="panel2">
+				<p>Suspendisse dictum feugiat nisl ut dapibus.  Vivamus hendrerit arcu sed erat molestie vehicula. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.  Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor.</p>
+			</div>
 		</div>
-		<div class="pure-u-1 pure-u-md-1-4 black">
-			<h1>Quick Facts</h1>
-			<ul>
-				<li>HP: {{.Params.hp}}</li>
-				<li>Damage: {{.Params.mindamage}}-{{.Params.maxdamage}}</li>
-				<li>Gender: {{.Params.gendername}}</li>
-				<li>Body Type: {{.Params.bodytypename}}</li>
-				<li>Race: {{.Params.racename}}</li>
-				<li>Class: {{.Params.classname}}</li>
-				<li>Level: {{.Params.level}}</li>
-				<li>Zone: {{.Params.zonename}}</li>
-				<li>Loot: {{.Params.lootcount}}</li>
-			</ul>
-		</div>
-</div>
-
+	</div>
+</article>
 {{ partial "footer" . }}
-</body>
-</html>

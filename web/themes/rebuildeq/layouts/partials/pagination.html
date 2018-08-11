@@ -1,15 +1,22 @@
-<nav id="page-nav" style="text-align: center">
-{{ if or (.Paginator.HasPrev) (.Paginator.HasNext) }}
-	{{ if .Paginator.HasPrev }}
-		<a class="extend prev" rel="prev" href="{{ .Site.BaseURL }}{{.Paginator.Prev.URL}}">
-			« Previous Page {{with .Site.Data.l10n.pagination.previous}}{{.}}{{end}}
-		</a>
+<ul class="pagination-pointed pagination text-center" role="navigation" aria-label="Pagination">
+	{{ if or (.Paginator.HasPrev) (.Paginator.HasNext) }}
+		{{ if .Paginator.HasPrev }}
+		<li class="pagination-previous"><a class="pagination-pointed-button" href="{{ .Site.BaseURL }}{{.Paginator.Prev.URL}}" aria-label="Previous page">Previous <span class="show-for-sr">{{with .Site.Data.l10n.pagination.previous}}{{.}}{{end}}</span></a></li>		
+		{{else}}
+		<li class="pagination-previous disabled">Previous <span class="show-for-sr">page</span></a></li>
+		{{ end }}
+	{{ if gt .Paginator.PageNumber 1 }}
+	<li><a class="pagination-pointed-button" href="#" aria-label="Page 1">1</a></li>	
+	{{ end  }}
+	<li class="current"><span class="show-for-sr">You're on page</span> {{.Paginator.PageNumber}}</li>
+	{{ if gt .Paginator.TotalPages .Paginator.PageNumber }}
+		<li><a class="pagination-pointed-button" href="#" aria-label="Page 4">3</a></li>
 	{{ end }}
-	{{ if .Paginator.HasNext }}
-		<a class="extend next" rel="next" href="{{ .Site.BaseURL }}{{.Paginator.Next.URL}}">
-			{{with .Site.Data.l10n.pagination.next}}{{.}}{{end}} Next Page »
-		</a>
-	{{ end }}
-{{ end }}
-</nav>
-		
+	<!--li class="ellipsis" aria-hidden="true"></li-->	
+		{{ if .Paginator.HasNext }}
+		<li class="pagination-next"><a class="pagination-pointed-button" href="{{.Site.BaseURL}}{{.Paginator.Next.URL}}" aria-label="Next page">Next <span class="show-for-sr">{{with .Site.Data.l10n.pagination.previous}}{{.}}{{end}}</span></a></li>
+		{{else}}
+		<li class="pagination-next disabled">Next <span class="show-for-sr">page</span></li>
+		{{end}}
+	{{end}}
+</ul>

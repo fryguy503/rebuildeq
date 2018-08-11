@@ -1,20 +1,43 @@
 {
-  "name": "rebuildeq",
+  "name": "foundation-sites-template",
   "version": "1.0.0",
-  "description": "RebuildEQ Website",
-  "main": "index.js",
+  "description": "Basic template for a new Foundation for Sites project.",
+  "main": "gulpfile.js",
   "scripts": {
-    "dev": "webpack --config webpack.dev.config.js --mode development && webpack-dev-server --config webpack.dev.config.js --mode development",
-    "build": "webpack --mode production --progress --colors"
+    "start": "gulp",
+    "build": "gulp sass ts"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "ZURB <foundation@zurb.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zurb/foundation-sites/issues",
+    "email": "foundation@zurb.com"
+  },
   "dependencies": {
-    "purecss": "^1.0.0",
-    "ts-loader": "^4.4.2",
+    "@types/foundation-sites": "^6.4.3",
+    "foundation-sites": "~6.4.0",
+    "jquery": ">=3.0.0",
+    "motion-ui": "~1.2.2",
+    "what-input": "^4.1.3"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.3.5",
+    "babel-core": "^6.26.3",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^8.0.0",
+    "browserify": "^16.2.2",
+    "gulp": "^3.9.0",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-load-plugins": "^1.1.0",
+    "gulp-sass": "^2.1.0",
+    "gulp-typescript": "^5.0.0-alpha.3",
+    "tsify": "^4.0.0",
     "typescript": "^3.0.1",
-    "uglifyjs-webpack-plugin": "^1.2.7",
-    "webpack": "^4.16.5",
-    "webpack-cli": "^3.1.0"
-  }
+    "vinyl-source-stream": "^2.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zurb/foundation-sites-template.git"
+  },
+  "private": true
 }

@@ -135,5 +135,7 @@ builds:
 
 ---
 Bards are enhanced with their songs being more powerful, focused on utility.
+<!--more-->
+
 Cassindra's Secret is a second form of mana song.
 Many new combat enhancements assist bards in their usefulness."

@@ -2,22 +2,33 @@
 
 {{ partial "header" . }}
 
-<div id="layout" class="pure-g">
-
-	<div class="content pure-u-1 pure-u-md-4-4">
-		<div>			
-			<div class="posts">
-				<h1 class="content-subhead">Database</h1>
-			{{ $paginator := .Paginate .Data.Pages }}
-			{{ range $paginator.Pages }}
-				{{ .Render "summary" }}
-			{{ end}}
-			</div>
+<div class="contents">
+	<div class="main">
+		<h1 class="title">
+			<span class="news">News</span>
+		</h1>
+		<ul class="breadcrumb" itemprop="breadcrumb">
+			<li><a href="/">Home</a></li>
+			<li>News</li>
+		</ul>
+		<div class="tabbedElement">			
+			<div class="tabbedContents">
+				<div id="newsContent" class="tabbedContent">					
+					<div class="index" id="newsSection">
+						<p>The latest breaking RuneScape player and in game news <a href="http://services.runescape.com/m=news/latest_news.rss" class="ext rss">RSS</a></p>
+						{{ $paginator := .Paginate .Data.Pages }}
+						{{ range first 10 $paginator.Pages }}			
+							{{ .Render "summary" }}
+						{{ end}}						
+					</div>
+					<a href="http://services.runescape.com/m=news/archive?cat=0" class="archive">Visit Archive</a>
+					{{ partial "pagination" . }}
+				</div>				
+			</div>		
 		</div>
-		{{ partial "pagination" . }}
 	</div>
-</div>
 	
+</div>
 {{ partial "footer" . }}
 </body>
 </html>

@@ -1,12 +1,12 @@
 ---
-shortName: brd
-fullName: Bard
+shortName: clr
+fullName: Cleric
 monogram: 8
 banner: post/images/site.png
-description: Bards focus on support roles.
+description: Clerics are healers
 images: [ post/images/site.png ]
-tags: [ bard ]
-title: [ Bard Build ]
+tags: [ cleric ]
+title: [ Cleric Build ]
 builds:
   styles:
     left: Virtuoso
