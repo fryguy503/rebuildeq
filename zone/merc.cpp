@@ -1309,7 +1309,7 @@ bool Merc::Process()
 		_check_confidence = true;
 	}
 
-	if (sendhpupdate_timer.Check()) {
+	if (send_hp_update_timer.Check()) {
 		SendHPUpdate();
 	}
 
