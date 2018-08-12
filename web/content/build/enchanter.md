@@ -1,6 +1,6 @@
 ---
-shortName: brd
-fullName: Bard
+shortName: enc
+fullName: Enchanter
 monogram: 8
 banner: post/images/site.png
 description: Bards focus on support roles.

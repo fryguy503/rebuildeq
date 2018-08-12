@@ -6,7 +6,7 @@ banner: post/images/site.png
 description: Clerics are healers
 images: [ post/images/site.png ]
 tags: [ cleric ]
-title: [ Cleric Build ]
+title: Cleric Build
 builds:
   styles:
     left: Virtuoso

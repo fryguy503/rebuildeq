@@ -1,6 +1,6 @@
 ---
-shortName: brd
-fullName: Bard
+shortName: shm
+fullName: Shaman
 monogram: 8
 banner: post/images/site.png
 description: Bards focus on support roles.

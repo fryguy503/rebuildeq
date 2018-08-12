@@ -6,7 +6,7 @@ banner: post/images/site.png
 description: Bards focus on support roles.
 images: [ post/images/site.png ]
 tags: [ bard ]
-title: [ Bard Build ]
+title: Bard
 builds:
   styles:
     left: Virtuoso
@@ -19,11 +19,13 @@ builds:
     description: Resistant songs (lvl 9) now grant an additional <em data-base="10">10</em> resistance to each resistance type<span class="perLevel"> per rank</span>
   build2:
     index: 2
+    push: 1
     shortname: healingtreble
     name: Healing Treble
     description: Healing effects on songs (lvl 6) are <em data-base="10">10</em>% more effective<span class="perLevel"> per rank</span>.
   build4:
     index: 4
+    push: 1
     shortname: psalmofnorrath
     name: Psalm of Norrath
     description: Damage shield effects on songs (lvl 25) are <em data-base="20">20</em>% more effective<span class="perLevel"> per rank</span>.'
@@ -34,21 +36,25 @@ builds:
     description: Mana effects on songs (lvl 20) are <em data-base="26">26</em>% more effective<span class="perLevel"> per rank</span>.
   build8:
     index: 8
+    push: 1
     shortname: shieldofsongs
     name: Shield of Songs
     description: Rune effects on songs (lvl 49) are <em data-base="20">20</em>% more effective<span class="perLevel"> per rank</span>.
   build10:
     index: 10
+    push: 1
     shortname: kattasconcord
     name: Katta's Concord
     description: Katta\'s Song of Sword (lvl 39) now also gives a 100 proc chance to those with the buff that deals (level * <em data-base="0.4">0.4</em>) damage<span class="perLevel"> per rank</span>.
   build13:
     index: 13
+    push: 1
     shortname: cassindrassecret
     name: Cassindra's Secret
     description: Enhances Cassindra\'s Elegy (lvl 44) to also give <em data-base="3">3</em> mana<span class="perLevel"> per rank</span>.
   build16:
     index: 16
+    push: 1
     shortname: kinsong
     name: Kingsong
     description: Grants the Lesson of the Devoted AA, increasing spell crit chance for nukes and DoTs and melee accuracy for the group. 10 minute recast time, each rank reduces recast by 30 seconds.
@@ -59,11 +65,13 @@ builds:
     description: Grants the bard a passive 300 mod proc that deals (level * 2 * <em data-base="0.2">0.2</em>) magic damage.
   build20:
     index: 20
+    push: 1
     shortname: offhandattack
     name: Offhand Attack
     description: All offhand attacks (lvl 17) have <em data-base="5">5</em>% additional chance to hit<span class="perLevel"> per rank</span>.
   build22:
     index: 22
+    push: 1
     shortname: innatesongblade
     name: Innate Songblade
     description: Increases chance to hit and damage by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.
@@ -74,11 +82,13 @@ builds:
     description: Increases bard\'s melee damage by <em data-base="2">2</em>%<span class="perLevel"> per rank</span>.
   build26:
     index: 26
+    push: 1
     shortname: danceofblades
     name: Dance of Blades
     description: Grants the Dance of Blades AA, increasing chance to dual wield and double attack as well as proc Bladewhirl at <em data-base="20">20</em>% effectiveness<span class="perLevel"> per rank</span>.
   build28:
     index: 28
+    push: 1
     shortname: bladedancer
     name: Blade Dancer
     description: When a bard is attacked while in a group, increases chance to dodge by <em data-base="2">2</em>%<span class="perLevel"> per rank</span> per player in group.
@@ -138,4 +148,5 @@ Bards are enhanced with their songs being more powerful, focused on utility.
 <!--more-->
 
 Cassindra's Secret is a second form of mana song.
-Many new combat enhancements assist bards in their usefulness."
+
+Many new combat enhancements assist bards in their usefulness.

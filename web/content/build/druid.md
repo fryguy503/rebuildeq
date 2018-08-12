@@ -1,6 +1,6 @@
 ---
-shortName: brd
-fullName: Bard
+shortName: dru
+fullName: Druid
 monogram: 8
 banner: post/images/site.png
 description: Bards focus on support roles.
