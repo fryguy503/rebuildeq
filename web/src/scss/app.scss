@@ -1,5 +1,46 @@
 @charset 'utf-8';
 
+@import 'brave/animate.min';
+@import 'brave/bootstrap.min';
+@import 'brave/custom';
+@import 'brave/font-awesome.min';
+@import 'brave/magnific-popup';
+@import 'brave/owl.carousel';
+@import 'brave/parallax-slider';
+@import 'brave/settings';
+@import 'brave/smart-addons';
+@import 'brave/smart-forms-ie8';
+@import 'brave/smart-forms';
+@import 'brave/styles/app-site';
+@import 'brave/styles/background-image';
+@import 'brave/styles/comingsoon';
+@import 'brave/styles/ecommerce';
+@import 'brave/styles/index-slim';
+@import 'brave/styles/letterhead';
+@import 'brave/styles/medical';
+@import 'brave/styles/non-profit';
+@import 'brave/styles/parallax';
+@import 'brave/styles/portfolio';
+@import 'brave/styles/real-estate';
+@import 'brave/styles/restaurant';
+@import 'brave/styles/resume';
+@import 'brave/styles/skin-black';
+/*@import 'brave/styles/skin-blue';
+@import 'brave/styles/skin-brown';
+@import 'brave/styles/skin-green';
+@import 'brave/styles/skin-lblue';
+@import 'brave/styles/skin-less';
+@import 'brave/styles/skin-orange';
+@import 'brave/styles/skin-purple';
+@import 'brave/styles/skin-red';
+@import 'brave/styles/skin-rose';
+@import 'brave/styles/skin-yellow';*/
+@import 'brave/styles/status';
+@import 'brave/styles/style';
+@import 'brave/styles/vcard';
+@import 'brave/styles/wedding';
+
+/*
 @import 'settings';
 @import 'foundation';
 @import 'motion-ui';
@@ -54,3 +95,5 @@
 
 @include motion-ui-transitions;
 @include motion-ui-animations;
+
+*/
