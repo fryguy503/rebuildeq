@@ -3,15 +3,24 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gosimple/slug"
 	"github.com/jmoiron/sqlx"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/xackery/eqemuconfig"
 	"github.com/xackery/goeq/item"
 )
 
 func main() {
+	zerolog.TimeFieldFormat = ""
+
+	zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	logInfo := log.Info()
+	logError := log.Error()
+	t := time.Now()
 
 	config, err := eqemuconfig.GetConfig()
 	if err != nil {
@@ -26,11 +35,28 @@ func main() {
 		fmt.Println("Error connecting to DB:", err.Error())
 		return
 	}
-	outPath := "../../web/content/"
+	contentPath := "../../web/content/"
+	staticPath := "../../web/static/"
+	mapSrcPath := "../../deploy/client/rof/Resources/maps/"
+
 	total := 150
-	err = genItems(db, outPath+"item/", total)
-	err = genNPCs(db, outPath+"npc/", total)
-	err = genSpells(db, outPath+"spell/", total)
+	err = genItems(db, contentPath+"item/", total)
+	if err != nil {
+		logError.Err(err).Str("path", contentPath+"item/").Msg("genItems")
+	}
+	err = genNPCs(db, contentPath+"npc/", total)
+	if err != nil {
+		logError.Err(err).Str("path", contentPath+"npc/").Msg("genNPCs")
+	}
+	err = genSpells(db, contentPath+"spell/", total)
+	if err != nil {
+		logError.Err(err).Str("path", contentPath+"spell/").Msg("genSpells")
+	}
+	//err = genMaps(db, mapSrcPath, staticPath+"map/", total)
+	if err != nil {
+		logError.Err(err).Str("src", mapSrcPath).Str("dest", staticPath+"map/").Msg("genMaps")
+	}
+	logInfo.Dur("run", time.Since(t)).Msg("done")
 
 }
 
