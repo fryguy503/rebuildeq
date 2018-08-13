@@ -1,17 +1,17 @@
 ---
 shortName: clr
 fullName: Cleric
-monogram: 8
+monogram: 2
 banner: post/images/site.png
-description: Bards focus on support roles.
+description: Clerics have adapted to be more combat ready, focused on healing.
 images: [ post/images/site.png ]
 tags: [ cleric ]
 title: Cleric
 builds:
   styles:
-    left: Virtuoso
-    middle: Swordsinger
-    right: Maestro
+    left: Templar
+    middle: Bishop
+    right: Archon
   build0:
     index: 0
     name: Believe
@@ -152,9 +152,9 @@ builds:
     shortname: avatarsboon
 
 ---
-Bards are enhanced with their songs being more powerful, focused on utility.
+Clerics have adapted to be more combat ready, focused on healing.
 <!--more-->
+Clerics focus on many procs.
 
-Cassindra's Secret is a second form of mana song.
-
-Many new combat enhancements assist bards in their usefulness.
+Clerics no longer have complete heal.
+Healer classes have an innate mana tap when they melee.
