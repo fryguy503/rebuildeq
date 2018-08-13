@@ -8,3 +8,4 @@ content/npc/
 static/js/build.js.map
 public/
 src/dist/
+tmp/
