@@ -1,11 +1,11 @@
 {{ partial "head" . }}
 
 {{ partial "header" . }}
-	
+
 <div class="main-block">
 
 				<!-- Page heading two starts -->
-				
+
 				<div class="page-heading-two">
 						<div class="container">
 							<h2>NPC <span>Creatures found in game</span></h2>
@@ -15,10 +15,10 @@
 							<div class="clearfix"></div>
 						</div>
 					</div>
-					
+
 	<div class="container">
 		<div class="row">
-						
+
 			<div class="table-responsive">
 				<table class="table table-striped">
 					<tbody><tr>
@@ -33,7 +33,7 @@
 					<tr>
 						{{ .Render "summary" }}
 					</tr>
-					{{ end}}					
+					{{ end}}
 				</tbody></table>
 				{{ partial "pagination" . }}
 			</div>

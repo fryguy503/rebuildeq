@@ -1,10 +1,5 @@
-<tr><td>
-<article>
-<figure><a href="{{.Permalink}}"><img src="/icons/classes/{{.Params.shortname}}.png" alt="{{.Title}}" title="{{.Title}}"></a></figure>
-<div class="copy">
-<header>
-<h4><a href="{{.Permalink}}">{{.Params.fullname}}</a></h4>
-</header> <p>{{ .Summary }}  <a class="readMore" href="{{.Permalink}}">read more</a></p>
-</div>
-</article>
-</td></tr>
+<tr>
+	<td><a href="{{.Permalink}}"><img src="/icons/classes/{{.Params.shortname}}.png" alt="{{.Title}}" title="{{.Title}}"></a></td>
+	<td><a href="{{.Permalink}}">{{.Params.fullname}}</a></td>
+	<td><a href="{{.Permalink}}">{{ .Summary }}</a></td>
+</tr>

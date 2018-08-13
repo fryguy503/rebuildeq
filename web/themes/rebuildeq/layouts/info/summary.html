@@ -1,7 +1,24 @@
-
-<tr>
-<td><a href="{{.Permalink}}"><img src="{{.Params.banner}}" alt="{{.Title}}" title="{{.Title}}"></a></td>
-<td><a href="#">Category</a></td>
-<td><time datetime="{{ .Date.Format .Site.Params.date_format}}">{{ .Date.Format .Site.Params.date_format}}</time></td>
-<td>{{ .Summary }}  <a class="readMore" href="{{.Permalink}}">read more</a></td>
-</tr>
+<!-- Blog item starts -->
+<div class="blog-one-item">
+		<!-- blog One Img -->
+		<div class="blog-one-img">
+			<!-- Image -->
+			<a href="#"><img src="{{.Params.banner}}" alt="{{.Title}}" class="img-responsive img-thumbnail" /></a>
+		</div>
+		
+		<!-- blog One Content -->
+		<div class="blog-one-content">
+			<!-- Heading -->
+			<h3><a href="{{.Permalink}}">{{.Title}}</a></h3>
+			<!-- Blog meta -->
+			<div class="blog-meta">
+				<!-- Date -->
+				<a href="#"><i class="fa fa-calendar"></i> &nbsp; {{ .Date.Format .Site.Params.date_format}}</a> &nbsp; 
+				<!-- Author -->
+				<a href="#"><i class="fa fa-user"></i> &nbsp; Shin Noir</a> &nbsp;
+			</div>
+			<!-- Paragraph -->
+			<p>{{ .Summary }}  <a class="readMore" href="{{.Permalink}}">read more</a></p>
+		</div>
+	</div>
+		<!-- Blog item ends -->

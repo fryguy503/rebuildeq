@@ -2,164 +2,483 @@
 
 {{ partial "header" . }}
 
-  <br>
-<article class="grid-container">
-  <div class="grid-x cell">
-	<nav aria-label="You are here:" role="navigation">
-	  <ul class="breadcrumbs">
-		<li><a href="#">Home</a></li>
-		<li><a href="#">Features</a></li>
-		<li class="disabled">Gene Splicing</li>
-		<li>
-		  <span class="show-for-sr">Current: </span> Cloning
-		</li>
-	  </ul>
-	</nav>
-  </div>
-  <div class="grid-x grid-margin-x">
-	<div class="medium-6 cell">
-	  <img class="thumbnail" src="https://placehold.it/650x350">
-	  <div class="grid-x grid-padding-x small-up-4">
-		<div class="cell">
-		  <img src="https://placehold.it/250x200">
+<div class="main-block">
+			
+	<!-- Page heading two starts -->
+	
+	<div class="page-heading-two">
+		<div class="container">
+				<h2>Info <span>details to help you on your journey</span></h2>
+			<div class="breads">
+				Home / <a href="/info/">Info</a> / {{.Title}}
+			</div>
+			<div class="clearfix"></div>
 		</div>
-		<div class="cell">
-		  <img src="https://placehold.it/250x200">
-		</div>
-		<div class="cell">
-		  <img src="https://placehold.it/250x200">
-		</div>
-		<div class="cell">
-		  <img src="https://placehold.it/250x200">
-		</div>
-	  </div>
 	</div>
-	<div class="medium-6 large-5 cell large-offset-1">
-	  <h3>My Awesome Product</h3>
-	  <p>Nunc eu ullamcorper orci. Quisque eget odio ac lectus vestibulum faucibus eget in metus. In pellentesque faucibus vestibulum. Nulla at nulla justo, eget luctus tortor. Nulla facilisi. Duis aliquet egestas purus in.</p>
+	
+	<!-- Page heading two ends -->
 
-	  <label>Size
-	  <select>
-		<option value="husker">Small</option>
-		<option value="starbuck">Medium</option>
-		<option value="hotdog">Large</option>
-		<option value="apollo">Yeti</option>
-	  </select>
-	  </label>
+	<div class="container">
+		
+		<!-- blog two -->
+		<div class="blog-two">
+			<div class="row">
+				<!-- Mainbar column -->
+				<div class="col-md-8">
+				
+					<!-- Blog item starts -->
+					<div class="blog-two-item">
+						<!-- blog two Content -->
+						<div class="blog-two-content">
+							<!-- Heading -->
+							<h3>{{.Title}}</h3>
+							<!-- Blog meta -->
+							<div class="blog-meta">
+								<!-- Date -->
+								<a href="#"><i class="fa fa-calendar"></i> &nbsp; {{ .Date.Format .Site.Params.date_format }}</a> &nbsp; 
+								<!-- Author -->
+								<a href="#"><i class="fa fa-user"></i> &nbsp; Shin Noir</a> &nbsp;
+							</div>
+							
+							<!-- Carousel -->
+							
+							<!-- Bootstrap carousel usage 
+								Bootstrap carousel should have id. Below i am using "bs-carousel-X". Where "X" denotes number". If a page has more than 1 carousel, then add the new carousel with the id "bs-carousel-1", "bs-carousel-2". You also need to update the id in, "carousel indicators" section and "carousel control" section.  
+								
+								Carousel comes with 3 main data attributes which you can customize. They are...
+								data-interval - Time delay between item cycle. Default value "5000".
+								data-pause - Pause on hover. Default value "pause".
+								data-wrap - Continues cycle or stop at the end. Default value "true".
+							-->
+						
+							<!-- Outer layer -->
+							<div id="bs-carousel-1" class="carousel slide" data-ride="carousel" data-interval="5000" data-pause="hover" data-wrap="true">
+								<!-- Bootstrap indicators. If you don't need indicators, remove the below section -->
+								<ol class="carousel-indicators">
+									<li data-target="#bs-carousel-1" data-slide-to="0" class="active"></li>
+									<li data-target="#bs-carousel-1" data-slide-to="1" class=""></li>
+									<li data-target="#bs-carousel-1" data-slide-to="2" class=""></li>
+								</ol>
+								<!-- Slides. You can also add captions -->
+								<div class="carousel-inner">
+									<!-- Item, First item should have extra class "active" -->
+									<div class="item active">
+										<!-- Image -->
+										<img src="img/backgrounds/s1.jpg" alt="">
+									</div>
+									<div class="item">
+										<img src="img/backgrounds/s2.jpg" alt="">
+									</div>
+									<div class="item">
+										<img src="img/backgrounds/s3.jpg" alt="">
+									</div>
+								</div>
+								<!-- Carousel controls (arrows). If you don't need controls, remove the below section -->
+								<a class="left carousel-control" href="#bs-carousel-1" role="button" data-slide="prev">
+									<span class="fa fa-chevron-left"></span>
+								</a>
+								<a class="right carousel-control" href="#bs-carousel-1" role="button" data-slide="next">
+									<span class="fa fa-chevron-right"></span>
+								</a>
+							</div>
+											
+							
+							<!-- Paragraph -->
+							<p>{{.Content}}</p>
+						</div>
+					</div>
+					<!-- Blog item ends -->
+					{{/*}}
+					<!-- Social media sharing section -->
+					<div class="well">
+						<span class="bold">Sharing is Sexy: </span>  &nbsp; &nbsp;
+						<span class="brand-bg">
+							<a href="#" class="facebook"><i class="fa fa-facebook square-2 rounded-1"></i></a>
+							<a href="#" class="twitter"><i class="fa fa-twitter square-2 rounded-1"></i></a>
+							<a href="#" class="google-plus"><i class="fa fa-google-plus square-2 rounded-1"></i></a>
+							<a href="#" class="linkedin"><i class="fa fa-linkedin square-2 rounded-1"></i></a>
+							<a href="#" class="pinterest"><i class="fa fa-pinterest square-2 rounded-1"></i></a>
+						</span>
+					</div>
+					{{*/}}
+					{{/*}}
+					<!-- Author section -->
+					<div class="blog-author well">
+						<!-- Author image -->
+						<div class="blog-author-img">
+							<a href="#"><img src="img/user/1.jpg" alt="" class="img-responsive img-thumbnail"></a>
+						</div>
+						<!-- Author details -->
+						<div class="blog-author-content">
+							<h5><a href="#">Ashok Ramesh <small>Madurai</small></a></h5>
+							<p>Temporibus autem quibusdam et aut officiis debitis aut  molestiae non recusandae rerum hic tenetur rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae rerum hic tenetur.</p>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					{{*/}}
 
-	  <div class="grid-x">
-		<div class="small-3 cell">
-		  <label for="middle-label" class="middle">Quantity</label>
-		</div>
-		<div class="small-9 cell">
-		  <input type="text" id="middle-label" placeholder="One fish two fish">
-		</div>
-	  </div>
+					{{/*}}
+					<!-- Comments section -->
+					<div class="blog-comments">
+						<h4><i class="fa fa-comments color"></i>&nbsp; 6 Comments</h4>
+						<hr>
+						
+						<!-- Blog comment item -->
+						<div class="blog-comment-item">
+							<div class="comment-author-image">
+								<a href="#"><img src="img/user/1.jpg" alt="" class="img-responsive img-thumbnail"></a>
+							</div>
+							<div class="comment-details">
+								<!-- Name -->
+								<h5><a href="#">Frank Thomas</a> <small>08/08/2013</small></h5>
+								<!-- Paragraph -->
+								<p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>
+							</div>
+						</div>
+						
+						<!-- Blog comment item -->
+						<div class="blog-comment-item">
+							<div class="comment-author-image">
+								<a href="#"><img src="img/user/2.jpg" alt="" class="img-responsive img-thumbnail"></a>
+							</div>
+							<div class="comment-details">
+								<!-- Name -->
+								<h5><a href="#">Bob Marley</a> <small>08/08/2013</small></h5>
+								<!-- Paragraph -->
+								<p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et m et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>
+							</div>
+						</div>
 
-	  <a href="#" class="button large expanded">Buy Now</a>
+						<!-- Blog comment item -->
+						<div class="blog-comment-item comment-reply">
+							<div class="comment-author-image">
+								<a href="#"><img src="img/user/3.jpg" alt="" class="img-responsive img-thumbnail"></a>
+							</div>
+							<div class="comment-details">
+								<!-- Name -->
+								<h5><a href="#">James Brown</a> <small>08/08/2013</small></h5>
+								<!-- Paragraph -->
+								<p>Debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>
+							</div>
+						</div>
 
-	  <div class="small secondary expanded button-group">
-		  <a class="button">Facebook</a>
-		  <a class="button">Twitter</a>
-		  <a class="button">Yo</a>
+						<!-- Blog comment item -->
+						<div class="blog-comment-item">
+							<div class="comment-author-image">
+								<a href="#"><img src="img/user/4.jpg" alt="" class="img-responsive img-thumbnail"></a>
+							</div>
+							<div class="comment-details">
+								<!-- Name -->
+								<h5><a href="#">Jockey Rambo</a> <small>08/08/2013</small></h5>
+								<!-- Paragraph -->
+								<p>Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptatesdiandae sint et molestiae non recusandae.</p>
+							</div>
+						</div>									
+						
+						
+					</div>
+					
+					<br>
+					
+					<!-- Comment Form -->
+					<div class="well">
+						<!-- Heading -->
+						<h4><i class="fa fa-comments color"></i>&nbsp; Post Comment</h4><!-- Form -->
+						<hr>
+						<form class="form" role="form">
+							<div class="row">
+								<div class="col-md-4">
+									<div class="form-group">
+										<input type="text" class="form-control" placeholder="Enter Name">
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<input type="text" class="form-control" placeholder="Enter Email">
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group">
+										<input type="text" class="form-control" placeholder="Enter Website">
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<textarea class="form-control" rows="7" placeholder="Enter Message"></textarea>
+							</div>
+							<!-- Button -->
+							<button type="button" class="btn btn-color">Submit</button>&nbsp;
+							<button type="button" class="btn btn-white">Reset</button>
+						</form>
+					</div>
+					{{*/}}				
+				</div>
+				
+				<!-- Sidebar column -->
+				<div class="col-md-4">					
+					<!-- Sidebar -->
+					<div class="sidebar">
+						{{/*}}
+						<!-- Search Widget -->
+						<div class="s-widget">
+							<!-- Heading -->
+							<h5><i class="fa fa-search color"></i>&nbsp; Search</h5>
+							<!-- Widgets Content -->
+							<div class="widget-content search">
+								<form role="form">
+									<div class="input-group">
+										<input type="text" class="form-control" placeholder="Type Something">
+										<span class="input-group-btn">
+											<button class="btn btn-color" type="button">Search</button>
+										</span>
+									</div>
+								</form>
+							</div>
+						</div>
+						{{*/}}
+						<!-- Categories Widget -->
+						<div class="s-widget">
+							<!-- Heading -->
+							<h5><i class="fa fa-folder color"></i>&nbsp; Categories</h5>
+							<!-- Widgets Content -->
+							<div class="widget-content categories">
+								<ul class="list-6">
+									{{ .Render "categories" }}
+								</ul>
+							</div>
+						</div>
+						{{/*}}
+						<!-- Nav tab widget - popular, recent and comments -->
+						<div class="s-widget">
+							<h5><i class="fa fa-tags color"></i>&nbsp; Nav Tabs</h5>
+							<div class="widget-content tabs">
+								<div class="nav-tabs-two">
+									<!-- Nav tabs -->
+									<ul class="nav nav-tabs">
+										<li class="active"><a href="#popular" data-toggle="tab">Popular</a></li>
+										<li><a href="#recent" data-toggle="tab">Recent</a></li>
+										<li><a href="#comments" data-toggle="tab">Comments</a></li>
+									</ul>
+									<!-- Tab content -->
+									<div class="tab-content">
+										<!-- Popular posts -->
+										<div class="tab-pane fade in active" id="popular">
+											<ul>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/1.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Neque porro quisquam estui dolorem ipsum quia dolor sit</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/2.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Temporibus autem quibusdam et aut officiis  aut rerum</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/3.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Voluptates repudiandae sint et molestiae non recusand</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/4.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Neque porro quisquam estui dolorem ipsum quia dolor sit</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+											</ul>
+										</div>
+										<!-- Recent posts -->
+										<div class="tab-pane fade" id="recent">
+											<ul>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/1.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Neque porro quisquam estui dolorem ipsum quia dolor sit</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/2.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Temporibus autem quibusdam et aut officiis  aut rerum</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/3.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Voluptates repudiandae sint et molestiae non recusand</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/4.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Neque porro quisquam estui dolorem ipsum quia dolor sit</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+											</ul>														
+										</div>
+										<!-- Recent comments -->
+										<div class="tab-pane fade" id="comments">
+											<ul>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/1.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Neque porro quisquam estui dolorem ipsum quia dolor sit</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/2.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Temporibus autem quibusdam et aut officiis  aut rerum</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/3.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Voluptates repudiandae sint et molestiae non recusand</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+												<li>
+													<a href="#">
+														<!-- Item image -->
+														<img src="img/user/4.jpg" alt="" class="img-responsive img-thumbnail">
+														<!-- Item title -->
+														<span>Neque porro quisquam estui dolorem ipsum quia dolor sit</span>
+														<div class="clearfix"></div>
+													</a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{{*/}}
+						<!-- Tag Widget -->
+						<div class="s-widget">
+							<h5><i class="fa fa-tags color"></i>&nbsp; Tags</h5>
+							<!-- Widgets Content -->
+							<div class="widget-content">
+									{{ .Render "tags" }}
+							</div>
+						</div>
+						
+						<!-- Gallery Widget -->
+						<div class="s-widget">
+							<!-- Heading -->
+							<h5><i class="fa fa-photo color"></i>&nbsp; Gallery</h5>
+							<!-- Widgets Content -->
+							<div class="widget-content gallery">
+								<a href="img/gallery/small/1.jpg" class="lightbox"><img src="img/gallery/small/1.jpg" alt="" class="img-responsive img-thumbnail"></a>
+								<a href="img/gallery/small/2.jpg" class="lightbox"><img src="img/gallery/small/2.jpg" alt="" class="img-responsive img-thumbnail"></a>
+								<a href="img/gallery/small/3.jpg" class="lightbox"><img src="img/gallery/small/3.jpg" alt="" class="img-responsive img-thumbnail"></a>
+								<a href="img/gallery/small/1.jpg" class="lightbox"><img src="img/gallery/small/1.jpg" alt="" class="img-responsive img-thumbnail"></a>
+								<a href="img/gallery/small/2.jpg" class="lightbox"><img src="img/gallery/small/2.jpg" alt="" class="img-responsive img-thumbnail"></a>
+								<a href="img/gallery/small/3.jpg" class="lightbox"><img src="img/gallery/small/3.jpg" alt="" class="img-responsive img-thumbnail"></a>
+							</div>
+						</div>									
+						
+						<!-- Social media widget -->
+						<div class="s-widget">
+							<h5><i class="fa fa-share color"></i>&nbsp; Social Media</h5>
+							<!-- Widgets Content -->
+							<div class="widget-content brand-bg">
+								<!-- Social Media Icons -->
+								<a href="#" class="facebook"><i class="fa fa-facebook square-3 rounded-1"></i></a>
+								<a href="#" class="twitter"><i class="fa fa-twitter square-3 rounded-1"></i></a>
+								<a href="#" class="google-plus"><i class="fa fa-google-plus square-3 rounded-1"></i></a>
+								<a href="#" class="linkedin"><i class="fa fa-linkedin square-3 rounded-1"></i></a>
+								<a href="#" class="pinterest"><i class="fa fa-pinterest square-3 rounded-1"></i></a>
+								<a href="#" class="dropbox"><i class="fa fa-dropbox square-3 rounded-1"></i></a>
+								<a href="#" class="foursquare"><i class="fa fa-foursquare square-3 rounded-1"></i></a>
+								<a href="#" class="flickr"><i class="fa fa-flickr square-3 rounded-1"></i></a>
+								<a href="#" class="github"><i class="fa fa-github square-3 rounded-1"></i></a>
+								<a href="#" class="instagram"><i class="fa fa-instagram square-3 rounded-1"></i></a>
+								<a href="#" class="skype"><i class="fa fa-skype square-3 rounded-1"></i></a>
+								<a href="#" class="tumblr"><i class="fa fa-tumblr square-3 rounded-1"></i></a>
+								<a href="#" class="dribbble"><i class="fa fa-dribbble square-3 rounded-1"></i></a>
+								<a href="#" class="youtube"><i class="fa fa-youtube square-3 rounded-1"></i></a>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
 		</div>
-	  </div>
-  </div>
-
-  <div class="">
-	<hr>
-	<ul class="tabs" data-tabs id="example-tabs">
-	  <li class="tabs-title is-active"><a href="#panel1" aria-selected="true">Reviews</a></li>
-	  <li class="tabs-title"><a href="#panel2">Similar Products</a></li>
-	</ul>
-	<div class="tabs-content" data-tabs-content="example-tabs">
-	  <div class="tabs-panel is-active" id="panel1">
-		<h4>Reviews</h4>
-		<div class="media-object stack-for-small">
-		  <div class="media-object-section">
-			<img class="thumbnail" src="https://placehold.it/200x200">
-		  </div>
-		  <div class="media-object-section">
-			<h5>Mike Stevenson</h5>
-			<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you.</p>
-		  </div>
-		</div>
-		<div class="media-object stack-for-small">
-		  <div class="media-object-section">
-			<img class="thumbnail" src="https://placehold.it/200x200">
-		  </div>
-		  <div class="media-object-section">
-			<h5>Mike Stevenson</h5>
-			<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you</p>
-		  </div>
-		</div>
-		<div class="media-object stack-for-small">
-		  <div class="media-object-section">
-			<img class="thumbnail" src="https://placehold.it/200x200">
-		  </div>
-		  <div class="media-object-section">
-			<h5>Mike Stevenson</h5>
-			<p>I'm going to improvise. Listen, there's something you should know about me... about inception. An idea is like a virus, resilient, highly contagious. The smallest seed of an idea can grow. It can grow to define or destroy you</p>
-		  </div>
-		</div>
-		<label>
-		  My Review
-		  <textarea placeholder="None"></textarea>
-		</label>
-		<button class="button">Submit Review</button>
-	  </div>
-	  <div class="tabs-panel" id="panel2">
-		<div class="grid-x grid-margin-x medium-up-3 large-up-5">
-		  <div class="cell">
-			<img class="thumbnail" src="https://placehold.it/350x200">
-			<h5>Other Product <small>$22</small></h5>
-			<p>In condimentum facilisis porta. Sed nec diam eu diam mattis viverra. Nulla fringilla, orci ac euismod semper, magna diam.</p>
-			<a href="#" class="button hollow tiny expanded">Buy Now</a>
-		  </div>
-		  <div class="cell">
-			<img class="thumbnail" src="https://placehold.it/350x200">
-			<h5>Other Product <small>$22</small></h5>
-			<p>In condimentum facilisis porta. Sed nec diam eu diam mattis viverra. Nulla fringilla, orci ac euismod semper, magna diam.</p>
-			<a href="#" class="button hollow tiny expanded">Buy Now</a>
-		  </div>
-		  <div class="cell">
-			<img class="thumbnail" src="https://placehold.it/350x200">
-			<h5>Other Product <small>$22</small></h5>
-			<p>In condimentum facilisis porta. Sed nec diam eu diam mattis viverra. Nulla fringilla, orci ac euismod semper, magna diam.</p>
-			<a href="#" class="button hollow tiny expanded">Buy Now</a>
-		  </div>
-		  <div class="cell">
-			<img class="thumbnail" src="https://placehold.it/350x200">
-			<h5>Other Product <small>$22</small></h5>
-			<p>In condimentum facilisis porta. Sed nec diam eu diam mattis viverra. Nulla fringilla, orci ac euismod semper, magna diam.</p>
-			<a href="#" class="button hollow tiny expanded">Buy Now</a>
-		  </div>
-		  <div class="cell">
-			<img class="thumbnail" src="https://placehold.it/350x200">
-			<h5>Other Product <small>$22</small></h5>
-			<p>In condimentum facilisis porta. Sed nec diam eu diam mattis viverra. Nulla fringilla, orci ac euismod semper, magna diam.</p>
-			<a href="#" class="button hollow tiny expanded">Buy Now</a>
-		  </div>
-		</div>
-	  </div>
+						
 	</div>
-  </div>
+</div>
 
-  <hr>
 
-  <div class="grid-x align-justify align-middle">
-	<div class="small-12 medium-shrink cell">
-	  <ul class="menu">
-		<li class="align-self-middle">Yeti Store</li>
-		<li><a href="#">Home</a></li>
-		<li><a href="#">About</a></li>
-		<li><a href="#">Contact</a></li>
-	  </ul>
-	</div>
-
-	<div class="small-12 medium-shrink cell">
-	  <span>Copyright 2018</span>
-	</div>
-  </div>
-</article>
 {{ partial "footer" . }}
+
+
+
+
+
+
+
+
+
+<div class="contents">
+	<div class="main">
+		<h1 class="title">
+			<span class="news">News</span>
+		</h1>
+		<ul class="breadcrumb" itemprop="breadcrumb">
+			<li><a href="/">Home</a></li>
+			<li>News</li>
+		</ul>
+		<article class="content">
+			<div class="articleContent">
+				<div class="articleMeta">
+					<time datetime="{{ .Date.Format .Site.Params.date_format }}">{{ .Date.Format .Site.Params.date_format }}</time>
+					<span><a href="#">Category</a></span>
+					<span>author</span>
+					<h2>{{.Title}}</h2>
+					<div class="articleContentText">
+						<p>{{ .Content }}</p>
+					</div>
+				</div>
+			</div>
+		</article>
+	</div>
+</div>
+{{ partial "footer" . }}
+</body>
+</html>

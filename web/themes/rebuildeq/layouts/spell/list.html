@@ -1,23 +1,39 @@
 {{ partial "head" . }}
 
 {{ partial "header" . }}
+	
+<div class="main-block">
 
-<div id="layout" class="pure-g">
-
-	<div class="content pure-u-1 pure-u-md-4-4">
-		<div>			
-			<div class="posts">
-				<h1 class="content-subhead">Information</h1>
-			{{ $paginator := .Paginate .Data.Pages }}
-			{{ range $paginator.Pages }}
-				{{ .Render "summary" }}
-			{{ end}}
+				<!-- Page heading two starts -->
+				
+				<div class="page-heading-two">
+						<div class="container">
+							<h2>Spell <span>Spells casted in game</span></h2>
+							<div class="breads">
+								Home / Spell
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					</div>
+					
+	<div class="container">
+		<div class="row">
+						
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<tbody><tr>
+						<th></th>
+						<th>Name</th>
+					</tr>
+					{{ $paginator := .Paginate .Data.Pages }}
+					{{ range $paginator.Pages }}
+					<tr>
+						{{ .Render "summary" }}
+					</tr>
+					{{ end}}					
+				</tbody></table>
+				{{ partial "pagination" . }}
 			</div>
 		</div>
-		{{ partial "pagination" . }}
 	</div>
 </div>
-	
-{{ partial "footer" . }}
-</body>
-</html>

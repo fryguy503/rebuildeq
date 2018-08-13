@@ -28,7 +28,7 @@
 										<h3><span>{{.Title}}</span></h3>
 									</div>
 									<!-- Item image -->
-									<img class="img-responsive img-thumbnail" src="/map/{{if .Params.zone}}{{.Params.zone.shortname}}{{end}}.png" alt="" style="width:353px; height:223px;">
+									<img class="img-responsive img-thumbnail" src="img/restaurant/medium/1.jpg" alt="" style="width:353px; height:223px;">
 									<hr>
 									<h4>Found in Zones<span class="color">:</span></h4>
 
@@ -65,25 +65,49 @@
 
 								</div>
 								<div class="col-md-8 col-sm-8">
-									<h4>Drops <span class="color">: {{.Params.lootcount}} total</span></h4>
+									<h4>Drops <span class="color">:</span></h4>
 									<div class="row">
 										<div class="col-md-6">
-												{{if .Params.loot}}
-											<table class="table table-bordered">
-												<tbody><thead><tr><th></th><th>Drop</th><th>Name</th><th>Multiplier</th></tr></thead>
-
-													{{range sort .Params.loot.entries }}
-														{{if .drops}}
-															{{range sort .drops}}
-															<tr><td>1</td><td>{{.multiplier}}</td><td>{{.item.id}}</td><td>{{.chance}}</td></tr>
-															{{end}}
-														{{end}}
-													{{end}}
-												</tbody>
-											</table>
-											{{else}}
-											None
-											{{end}}
+											<div class="item-ingred">
+												<!-- Ingredient list -->
+												<ul class="list-unstyled">
+													<li><i class="fa fa-angle-double-right"></i>&nbsp;
+														Drop 1
+														<span>100%</span>
+														<div class="clearfix"></div>
+													</li>
+													<li><i class="fa fa-angle-double-right"></i>&nbsp;
+														Suger
+														<span>150g</span>
+														<div class="clearfix"></div>
+													</li>
+													<li><i class="fa fa-angle-double-right"></i>&nbsp;
+														Sale Marino
+														<span>250g</span>
+														<div class="clearfix"></div>
+													</li>
+													<li><i class="fa fa-angle-double-right"></i>&nbsp;
+														Sweet Spices
+														<span>300g</span>
+														<div class="clearfix"></div>
+													</li>
+													<li><i class="fa fa-angle-double-right"></i>&nbsp;
+														Dextrose
+														<span>300g</span>
+														<div class="clearfix"></div>
+													</li>
+													<li><i class="fa fa-angle-double-right"></i>&nbsp;
+														Wine
+														<span>100ml</span>
+														<div class="clearfix"></div>
+													</li>
+													<li><i class="fa fa-angle-double-right"></i>&nbsp;
+														Preservative
+														<span>E252</span>
+														<div class="clearfix"></div>
+													</li>
+												</ul>
+											</div>
 										</div>
 										<div class="col-md-6">
 											<!-- Payment form -->
@@ -98,7 +122,7 @@
 																		<tr><td>Race</td><td>{{.Params.racename}}</td></tr>
 																		<tr><td>Class</td><td>{{.Params.classname}}</td></tr>
 																		<tr><td>Level</td><td>{{.Params.level}}</td></tr>
-																		{{if .Params.zone}}<tr><td>Zone</td><td>{{.Params.zone.name}}</td></tr>{{end}}
+																		<tr><td>Zone</td><td>{{.Params.zonename}}</td></tr>
 																		<tr><td>Loot</td><td>{{.Params.lootcount}}</td></tr>
 															</tbody></table>
 												</form>

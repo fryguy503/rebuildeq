@@ -1,15 +1,24 @@
-
-<tr>
-<td>
-<article>
-<figure><a href="{{.Permalink}}"><img src="{{.Params.banner}}" alt="{{.Title}}" title="{{.Title}}"></a></figure>
-<div class="copy">
-<header>
-<h4><a href="{{.Permalink}}">{{.Title}}</a></h4>
-<h5><a href="#">Category</a></h5>
-<time datetime="{{ .Date.Format .Site.Params.date_format}}">{{ .Date.Format .Site.Params.date_format}}</time>
-</header> <p>{{ .Summary }}  <a class="readMore" href="{{.Permalink}}">read more</a></p>
+<!-- Blog item starts -->
+<div class="blog-one-item">
+	<!-- blog One Img -->
+	<div class="blog-one-img">
+		<!-- Image -->
+		<a href="#"><img src="{{.Params.banner}}" alt="{{.Title}}" class="img-responsive img-thumbnail" /></a>
+	</div>
+	
+	<!-- blog One Content -->
+	<div class="blog-one-content">
+		<!-- Heading -->
+		<h3><a href="{{.Permalink}}">{{.Title}}</a></h3>
+		<!-- Blog meta -->
+		<div class="blog-meta">
+			<!-- Date -->
+			<a href="#"><i class="fa fa-calendar"></i> &nbsp; {{ .Date.Format .Site.Params.date_format}}</a> &nbsp; 
+			<!-- Author -->
+			<a href="#"><i class="fa fa-user"></i> &nbsp; Shin Noir</a> &nbsp;
+		</div>
+		<!-- Paragraph -->
+		<p>{{ .Summary }}  <a class="readMore" href="{{.Permalink}}">read more</a></p>
+	</div>
 </div>
-</article>
-</td>
-</tr>
+	<!-- Blog item ends -->

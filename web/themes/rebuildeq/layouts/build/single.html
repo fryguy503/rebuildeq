@@ -1,132 +1,275 @@
 {{ partial "head" . }}
 
 {{ partial "header" . }}
-  <br>
-<article class="grid-container">
-	<div class="grid-x cell">
-  		<nav aria-label="You are here:" role="navigation">
-			<ul class="breadcrumbs">
-				<li><a href="/">Home</a></li>
-				<li><a href="/build/">Builds</a></li>
-				<li>
-				<span class="show-for-sr">Current: </span> {{.Params.fullname}}
-				</li>
-			</ul>
-		</nav>
-	</div>
-				
-	<div class="grid-y medium-grid-frame">
 
-		<div class="grid-x small-up-1 medium-up-1 large-up-7">
-			<div class="cell cell-auto hide-for-small-only"></div>
-			<div class="cell green" style="height: 371px; width: 159px;">
-				<div class="bglayer gray"></div>
-				<div class="bglayer color"></div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build0 }}
-					{{ partial "skill" .Params.builds.build1 }}
-					{{ partial "skill" .Params.builds.build2 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build3 }}
-					{{ partial "skill" .Params.builds.build4 }}
-					{{ partial "skill" .Params.builds.build5 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build6 }}
-					{{ partial "skill" .Params.builds.build7 }}
-					{{ partial "skill" .Params.builds.build8 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build9 }}
-					{{ partial "skill" .Params.builds.build10 }}
-					{{ partial "skill" .Params.builds.build11 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build12 }}
-					{{ partial "skill" .Params.builds.build13 }}
-					{{ partial "skill" .Params.builds.build14 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build15 }}
-					{{ partial "skill" .Params.builds.build16 }}
-					{{ partial "skill" .Params.builds.build17 }}
-				</div>															
-			</div>					
-			<div class="cell cell-auto hide-for-small-only"></div>
-			<div class="cell blue" style="height: 371px; width: 159px;">
-				<div class="bglayer gray"></div>
-				<div class="bglayer color"></div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build0 }}
-					{{ partial "skill" .Params.builds.build1 }}
-					{{ partial "skill" .Params.builds.build2 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build3 }}
-					{{ partial "skill" .Params.builds.build4 }}
-					{{ partial "skill" .Params.builds.build5 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build6 }}
-					{{ partial "skill" .Params.builds.build7 }}
-					{{ partial "skill" .Params.builds.build8 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build9 }}
-					{{ partial "skill" .Params.builds.build10 }}
-					{{ partial "skill" .Params.builds.build11 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build12 }}
-					{{ partial "skill" .Params.builds.build13 }}
-					{{ partial "skill" .Params.builds.build14 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build15 }}
-					{{ partial "skill" .Params.builds.build16 }}
-					{{ partial "skill" .Params.builds.build17 }}
-				</div>															
-			</div>					
-			<div class="cell cell-auto hide-for-small-only"></div>
-			<div class="cell red"  style="height: 371px; width: 159px;">
-				<div class="bglayer gray"></div>
-				<div class="bglayer color"></div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build0 }}
-					{{ partial "skill" .Params.builds.build1 }}
-					{{ partial "skill" .Params.builds.build2 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build3 }}
-					{{ partial "skill" .Params.builds.build4 }}
-					{{ partial "skill" .Params.builds.build5 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build6 }}
-					{{ partial "skill" .Params.builds.build7 }}
-					{{ partial "skill" .Params.builds.build8 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build9 }}
-					{{ partial "skill" .Params.builds.build10 }}
-					{{ partial "skill" .Params.builds.build11 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build12 }}
-					{{ partial "skill" .Params.builds.build13 }}
-					{{ partial "skill" .Params.builds.build14 }}
-				</div>
-				<div class="row">
-					{{ partial "skill" .Params.builds.build15 }}
-					{{ partial "skill" .Params.builds.build16 }}
-					{{ partial "skill" .Params.builds.build17 }}
-				</div>															
-			</div>				
-			<div class="cell cell-auto hide-for-small-only"></div>				
-		</div>				
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+<script src="/js/builds/skillManager.js"></script>
+<link href="/css/builds/builds.css" rel="stylesheet" type="text/css">
 
-		
+<div class="main-block">
+		<div class="page-heading-two">
+				<div class="container">
+					<h2>Builds</h2>
+					<div class="form-group">
+						<a href="/build/bard"><img class="classicon {{if eq .Params.shortname "brd"}}classicon-active{{end}}" src="/images/classicons/brd.png"></a>
+						<a href="/build/cleric"><img class="classicon " src="/images/classicons/clr.png"></a>
+						<a href="/build/druid"><img class="classicon " src="/images/classicons/dru.png"></a>
+						<a href="/build/enchanter"><img class="classicon " src="/images/classicons/enc.png"></a>
+						<a href="/build/magician"><img class="classicon " src="/images/classicons/mag.png"></a>
+						<a href="/build/monk"><img class="classicon " src="/images/classicons/mnk.png"></a>
+						<a href="/build/necromancer"><img class="classicon " src="/images/classicons/nec.png"></a>
+						<a href="/build/paladin"><img class="classicon " src="/images/classicons/pal.png"></a>
+						<a href="/build/ranger"><img class="classicon " src="/images/classicons/rng.png"></a>
+						<a href="/build/rogue"><img class="classicon " src="/images/classicons/rog.png"></a>
+						<a href="/build/shadow-knight"><img class="classicon {{if eq .Params.shortname "shd"}}classicon-active{{end}}" src="/images/classicons/shd.png"></a>
+						<a href="/build/shaman"><img class="classicon " src="/images/classicons/shm.png"></a>
+						<a href="/build/warrior"><img class="classicon " src="/images/classicons/war.png"></a>
+						<a href="/build/wizard"><img class="classicon " src="/images/classicons/wiz.png"></a>
+					</div>
+					<div class="breads">
+						Home / <a href="/build/">Builds</a> / {{.Params.fullname}}
+					</div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+  <div class="container">
+
+	<div class="row" style="margin-top:60px;">
+
+
+					 <div class="row">
+
+		</div>
+
+		<div class="row">
+				<div class="br-grey padd-15">
+					<p>{{.Content}}</p>
+				</div>
+			<p><br>
+			 Points Spent: <span class="charLevel">0</span>
+			</p>
+		</div>
+
+		  <div class="row">
+
+		<img unselectable="on" class="portrait" src="/images/monograms/{{.Params.monogram}}.gif" style="left: 30%;margin-left: -30%;">
+		<div class="treeCollection">
+		<div class="treewrapper green">
+			<div class="bglayer gray"></div>
+			<div class="bglayer color" style="height: 80px;"></div>
+			<div class="tree" id="tree-1">
+
+				<div class="tier" data-level="0" data-invested="0" data-total="0">
+					{{ partial "skill" .Params.builds.build0 }}
+					{{ partial "skill" .Params.builds.build2 }}
+				</div>
+				<div class="tier" data-level="1" data-invested="0" data-total="0">
+					{{ partial "skill" .Params.builds.build4 }}
+				</div>
+				<div class="tier" data-level="2" data-invested="0" data-total="0">
+					{{ partial "skill" .Params.builds.build6 }}
+					{{ partial "skill" .Params.builds.build8 }}
+				</div>
+				<div class="tier" data-level="3" data-invested="0" data-total="0">
+					{{ partial "skill" .Params.builds.build10 }}
+				</div>
+				<div class="tier" data-level="4" data-invested="0" data-total="0">
+					{{ partial "skill" .Params.builds.build13 }}
+				</div>
+				<div class="tier" data-level="5" data-invested="0" data-total="0">
+					{{ partial "skill" .Params.builds.build16 }}
+				</div>
+				<div class="totalPoints">
+					<span class="totalPoints">0</span>
+				</div>
+				<legend class="build-legend">{{.Params.builds.styles.left}}</legend>
+			</div>
+		</div>
+
+		<div class="treewrapper blue">
+			<div class="bglayer gray"></div>
+			<div class="bglayer color" style="height: 80px;"></div>
+			<div class="tree" id="tree-2">
+				<div class="tier" data-level="0" data-invested="0" data-total="0">
+					{{ partial "skill" .Params.builds.build18 }}
+					{{ partial "skill" .Params.builds.build20 }}
+				</div>
+				<div class="tier" data-level="1" data-invested="0" data-total="0">
+					{{ partial "skill" .Params.builds.build22 }}
+				</div>
+				<div class="tier" data-level="2" data-invested="0" data-total="0">
+					{{ partial "skill" .Params.builds.build24 }}
+					{{ partial "skill" .Params.builds.build26 }}
+				</div>
+				<div class="tier" data-level="3" data-invested="0" data-total="0">
+					{{ partial "skill" .Params.builds.build28 }}
+				</div>
+				<div class="tier" data-level="4" data-invested="0" data-total="0">
+																							<div class="skill push1" data-points="0" id="skill-{{.Params.builds.build31.index}}" data-max="5"><img src="/icons/builds/rb-{{.Params.builds.build31.shortname}}.png">
+						<div class="description"><h2>Unholy Focus</h2>Enables use of the #focus command, transferring lifetaps to the focused ally for <em data-base="4">4</em>% of the recourse given<span class="perLevel"> per rank</span>.</div>
+						<div class="points" style="visibility: hidden;">0/5</div>
+					</div>
+																												</div>
+				<div class="tier" data-level="5" data-invested="0" data-total="0">
+																							<div class="skill push1" data-points="0" id="skill-{{.Params.builds.build34.index}}" data-max="5"><img src="/icons/builds/rb-{{.Params.builds.build34.shortname}}.png">
+						<div class="description"><h2>Bash of Death</h2>When you bash a target that is equal to your level or lower and the enemy is at <em data-base="10">10</em>% or less total health you deal an additional (level * <em data-base="1">1</em>) <span class="perLevel"> per rank</span>.</div>
+						<div class="points" style="visibility: hidden;">0/5</div>
+					</div>
+																												</div>
+				<div class="column3 totalPoints">
+					<span class="totalPoints">0</span>
+				</div>
+				<legend class="build-legend">Defiler</legend>
+			</div>
+		</div>
+
+		<div class="treewrapper red">
+			<div class="bglayer gray"></div>
+			<div class="bglayer color" style="height: 80px;"></div>
+			<div class="tree" id="tree-3" unselectable="on">
+				<div class="tier" data-level="0" data-invested="0" data-total="0">
+					<div class="skill" data-points="0" id="skill-{{.Params.builds.build36.index}}" data-max="5"><img src="/icons/builds/rb-{{.Params.builds.build36.shortname}}.png">
+						<div class="description"><h2>Embrace Death</h2>Grants you the Death Peace AA, giving the ability to feign death as well as heal you for <em data-base="1">1</em>% of missing health<span class="perLevel"> per rank</span>.</div>
+						<div class="points" style="visibility: visible;">0/5</div>
+					</div>
+																													<div class="skill push1" data-points="0" id="skill-{{.Params.builds.build38.index}}" data-max="5"><img src="/icons/builds/rb-{{.Params.builds.build38.shortname}}.png">
+						<div class="description"><h2>Darkness</h2>Darkness-based and Terror spells now cause <em data-base="40">40</em>% more hate<span class="perLevel"> per rank</span>.</div>
+						<div class="points" style="visibility: visible;">0/5</div>
+					</div>
+										</div>
+				<div class="tier" data-level="1" data-invested="0" data-total="0">
+																							<div class="skill push1" data-points="0" id="skill-{{.Params.builds.build40.index}}" data-max="5"><img src="/icons/builds/rb-{{.Params.builds.build40.shortname}}.png">
+						<div class="description"><h2>Empathetic Soul</h2>Improves Dark Empathy by granting an additional <em data-base="40">40</em> hitpoints healed and <em data-base="0.5">0.5</em>% max mana <span class="perLevel"> per rank</span>.</div>
+						<div class="points" style="visibility: hidden;">0/5</div>
+					</div>
+																												</div>
+				<div class="tier" data-level="2" data-invested="0" data-total="0">
+					<div class="skill" data-points="0" id="skill-{{.Params.builds.build42.index}}" data-max="5"><img src="/icons/builds/rb-{{.Params.builds.build42.shortname}}.png">
+						<div class="description"><h2>Embrace Shadow</h2>Each time you feign death, you are instantly be invisible to both living and undead creatures for <em data-base="1">1</em> tick<span class="perLevel"> per rank</span>.</div>
+						<div class="points" style="visibility: hidden;">0/5</div>
+					</div>
+																													<div class="skill push1" data-points="0" id="skill-{{.Params.builds.build44.index}}" data-max="5"><img src="/icons/builds/rb-{{.Params.builds.build44.shortname}}.png">
+						<div class="description"><h2>Siphon of Death</h2>Vampiric Embrace, Scream of Death and Shroud of Death now also grant a mana tap for <em data-base="5">5</em>% of damage dealt<span class="perLevel"> per rank</span>.</div>
+						<div class="points" style="visibility: hidden;">0/5</div>
+					</div>
+										</div>
+				<div class="tier" data-level="3" data-invested="0" data-total="0">
+																							<div class="skill push1" data-points="0" id="skill-{{.Params.builds.build46.index}}" data-max="5"><img src="/icons/builds/rb-{{.Params.builds.build46.shortname}}.png">
+						<div class="description"><h2>Nightmare</h2>Fear now causes target to be stunned in panic for 0 to <em data-base="1">1</em> seconds<span class="perLevel"> per rank</span> before fleeing.</div>
+						<div class="points" style="visibility: hidden;">0/5</div>
+					</div>
+																												</div>
+				<div class="tier" data-level="4" data-invested="0" data-total="0">
+																							<div class="skill push1" data-points="0" id="skill-{{.Params.builds.build49.index}}" data-max="5"><img src="/icons/builds/rb-{{.Params.builds.build49.shortname}}.png">
+						<div class="description"><h2>Mental Resistance</h2>Gives a <em data-base="2">2</em>% chance to resist stun effects<span class="perLevel"> per rank</span>.</div>
+						<div class="points" style="visibility: hidden;">0/5</div>
+					</div>
+																												</div>
+				<div class="tier" data-level="5" data-invested="0" data-total="0">
+																							<div class="skill push1" data-points="0" id="skill-{{.Params.builds.build52.index}}" data-max="5"><img src="/icons/builds/rb-{{.Params.builds.build52.shortname}}.png">
+						<div class="description"><h2>Cloak of Shadows</h2>Grants the Cloak of the Shadows AA, allowing you to step into the shadows, causing a <em data-base="5">5</em>% chance that all targets will forget your actions.</div>
+						<div class="points" style="visibility: hidden;">0/5</div>
+					</div>
+																												</div>
+				<div class="column3 totalPoints">
+					<span class="totalPoints">0</span>
+				</div>
+				<legend class="build-legend">Revenant</legend>
+			</div>
+		</div>
+		</div>
+
+		<div class="row" style="text-align: left;">
+
+					  <div style="text-align: center;"><label class="control-label" style="color: white">Shadowknight Skill List</label><br></div>
+					  <ul class="build-list">
+													<li>
+							  <a href="/builds/shadowknight/skill/0"><img src="/icons/builds/rb-leechtouch.png"> <b>Leech Touch</b> - Grants the Leech Touch AA, which replaces all normal Knight lifetaps. It will use your best lifetap, curved up, as well as improves all lifetaps by...</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/2"><img src="/icons/builds/rb-gougingskin.png"> <b>Gouging Skin</b> - When attacked, causes a  4  point damage shield and  30  hate  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/4"><img src="/icons/builds/rb-hungeringaura.png"> <b>Hungering Aura</b> - Improves lifetaps casted by Leech Touch or Innate Procs by  5 % healing for each enemy attacking you with a maximum of  1  enemies or group size,...</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/6"><img src="/icons/builds/rb-steadfastservant.png"> <b>Steadfast Servant</b> - Grants the Steadfast Servant AA, summoning a pet at  20 % effectiveness  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/8"><img src="/icons/builds/rb-zevfeersfeast.png"> <b>Zevfeer's Feast</b> - While in a group, you and your allies gain (group size * level *  0.028 ) mana regen per tick, capped at maximum group size 3  per rank </a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/10"><img src="/icons/builds/rb-swornenemy.png"> <b>Sworn Enemy</b> - When you use taunt, you mark a target as your sworn enemy. For the next 3 ticks, any spell damage dealt to target causes (mana *  0.5 ) hate  per...</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/13"><img src="/icons/builds/rb-bansheesmirror.png"> <b>Banshee's Mirror</b> - Passively grants the Shadow Knight a  6 % bonus when healed by other allies  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/16"><img src="/icons/builds/rb-reapersstrike.png"> <b>Reaper's Strike</b> - Grants the Lesson of the Devoted AA, which improves accuracy by 50% and gain lifetap from weapon damage. 10 minute recast time, each rank reduces...</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/18"><img src="/icons/builds/rb-festeringspear.png"> <b>Festering Spear</b> - Improve spear type spells by (level *  1 ) bonus damage   per rank . Also gives a  1 % chance to cause quad damage.</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/20"><img src="/icons/builds/rb-festeringwound.png"> <b>Festering Wound</b> - Improves DoT damage by  1 % for each ally in group  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/22"><img src="/icons/builds/rb-rottencore.png"> <b>Rotten Core</b> - Each time a creature is successfully killed, the knight gains a rotten core counter. For 60 seconds, each counter adds  3 % damage  per rank  to...</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/24"><img src="/icons/builds/rb-lingeringpain.png"> <b>Lingering Pain</b> - All direct damage spells cause a DoT effect for 0 to  1  ticks  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/26"><img src="/icons/builds/rb-bloodoath.png"> <b>Blood Oath</b> - While using a 2 handed weapon, increases damage by  5 %  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/28"><img src="/icons/builds/rb-giftofurash.png"> <b>Gift of Urash</b> - Increases all skill damage by  5 %  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/31"><img src="/icons/builds/rb-unholyfocus.png"> <b>Unholy Focus</b> - Enables use of the #focus command, transferring lifetaps to the focused ally for  4 % of the recourse given  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/34"><img src="/icons/builds/rb-bashofdeath.png"> <b>Bash of Death</b> - When you bash a target that is equal to your level or lower and the enemy is at  10 % or less total health you deal an additional (level *  1 )...</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/36"><img src="/icons/builds/rb-embracedeath.png"> <b>Embrace Death</b> - Grants you the Death Peace AA, giving the ability to feign death as well as heal you for  1 % of missing health  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/38"><img src="/icons/builds/rb-darkness.png"> <b>Darkness</b> - Darkness-based and Terror spells now cause  40 % more hate  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/40"><img src="/icons/builds/rb-empatheticsoul.png"> <b>Empathetic Soul</b> - Improves Dark Empathy by granting an additional  40  hitpoints healed and  0.5 % max mana   per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/42"><img src="/icons/builds/rb-embraceshadow.png"> <b>Embrace Shadow</b> - Each time you feign death, you are instantly be invisible to both living and undead creatures for  1  tick  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/44"><img src="/icons/builds/rb-siphonofdeath.png"> <b>Siphon of Death</b> - Vampiric Embrace, Scream of Death and Shroud of Death now also grant a mana tap for  5 % of damage dealt  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/46"><img src="/icons/builds/rb-nightmare.png"> <b>Nightmare</b> - Fear now causes target to be stunned in panic for 0 to  1  seconds  per rank  before fleeing.</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/49"><img src="/icons/builds/rb-mentalresistance.png"> <b>Mental Resistance</b> - Gives a  2 % chance to resist stun effects  per rank .</a>
+						  </li>
+													<li>
+							  <a href="/builds/shadowknight/skill/52"><img src="/icons/builds/rb-cloakofshadows.png"> <b>Cloak of Shadows</b> - Grants the Cloak of the Shadows AA, allowing you to step into the shadows, causing a  5 % chance that all targets will forget your actions.</a>
+						  </li>
+
+					  </ul>
+		</div>
+
+
+
+		<script type="text/javascript">
+		var classLevel = 60;
+		var isTest = true;
+		var session = "";
+								</script>
+
 	</div>
-		
+  </div>
+</div>
+</div>
+
 {{ partial "footer" . }}

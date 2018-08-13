@@ -1,27 +1,40 @@
 {{ partial "head" . }}
 
 {{ partial "header" . }}
+	
+<div class="main-block">
 
-  <br>
-<article class="grid-container">
-  <div class="grid-x cell">
-	<nav aria-label="You are here:" role="navigation">
-	  <ul class="breadcrumbs">
-		<li><a href="/">Home</a></li>
-		<li>
-		  <span class="show-for-sr">Current: </span> Builds
-		</li>
-	  </ul>
-	</nav>
-  </div>
-  <div class="grid-x grid-margin-x">
-	<div class="medium-12 cell">
-		<table class="hover">
-	  {{ $paginator := .Paginate .Data.Pages }}
-		{{ range first 10 $paginator.Pages }}
-			{{ .Render "summary" }}
-		{{ end}}
-	</table>
+	<!-- Page heading two starts -->
+	
+	<div class="page-heading-two">
+		<div class="container">
+			<h2>Builds <span>Every level, you gain 1 build point</span></h2>
+			<div class="breads">
+				Home / Builds
+			</div>
+			<div class="clearfix"></div>
+		</div>
 	</div>
-	</div>	
-{{ partial "footer" . }}
+					
+	<div class="container">
+		<div class="row">
+						
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<tbody><tr>
+						<th>Icon</th>
+						<th>Name</th>
+						<th>Description</th>
+					</tr>
+					{{ $paginator := .Paginate .Data.Pages }}
+					{{ range $paginator.Pages }}
+					<tr>
+						{{ .Render "summary" }}
+					</tr>
+					{{ end}}					
+				</tbody></table>
+				{{ partial "pagination" . }}
+			</div>
+		</div>
+	</div>
+</div>
