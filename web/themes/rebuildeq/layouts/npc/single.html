@@ -28,7 +28,8 @@
 										<h3><span>{{.Title}}</span></h3>
 									</div>
 									<!-- Item image -->
-									<img class="img-responsive img-thumbnail" src="/map/{{if .Params.zone}}{{.Params.zone.shortname}}{{end}}.png" alt="" style="width:353px; height:223px;">
+									<div id="map" style="width:353px; height:223px;"></div>
+									<!--img class="img-responsive img-thumbnail" src="/map/{{if .Params.zone}}{{.Params.zone.shortname}}{{end}}.png" alt="" style="width:353px; height:223px;"-->
 									<hr>
 									<h4>Found in Zones<span class="color">:</span></h4>
 
@@ -70,14 +71,17 @@
 										<div class="col-md-6">
 												{{if .Params.loot}}
 											<table class="table table-bordered">
-												<tbody><thead><tr><th></th><th>Drop</th><th>Name</th><th>Multiplier</th></tr></thead>
-
+												<tbody><thead><tr>
+													<th>Drop</th><th>Name</th><th>Multiplier</th><th>Chance</th></tr></thead>
+													{{if and (.Params.loot) (.Params.loot.entries)}}
 													{{range sort .Params.loot.entries }}
+														<tr><td>></td><td>Group</td><td>{{.multiplier}}</td><td>{{math.Round .probability}}%</td></tr>
 														{{if .drops}}
 															{{range sort .drops}}
-															<tr><td>1</td><td>{{.multiplier}}</td><td>{{.item.id}}</td><td>{{.chance}}</td></tr>
+														<tr><td><span class="slot slotdrop"><span alt="{{.item.name}}" class="item icon-{{.item.icon}}"></span></span></td><td><a href="/item/{{.item.name}}-{{.item.id}}">{{.item.name}}</a></td><td>{{.multiplier}}</td><td>{{math.Round .chance}}%</td></tr>
 															{{end}}
 														{{end}}
+													{{end}}
 													{{end}}
 												</tbody>
 											</table>
@@ -89,18 +93,17 @@
 											<!-- Payment form -->
 											<div class="item-payment table-responsive">
 												<form role="form">
-														<table class="table table-striped">
-																<tbody>
-																		<tr><td>HP</td><td>{{.Params.hp}}</td></tr>
-																		<tr><td>Damage</td><td>{{.Params.mindamage}}-{{.Params.maxdamage}}</td></tr>
-																		<tr><td>Gender</td><td>{{.Params.gendername}}</td></tr>
-																		<tr><td>Body Type</td><td>{{.Params.bodytypename}}</td></tr>
-																		<tr><td>Race</td><td>{{.Params.racename}}</td></tr>
-																		<tr><td>Class</td><td>{{.Params.classname}}</td></tr>
-																		<tr><td>Level</td><td>{{.Params.level}}</td></tr>
-																		{{if .Params.zone}}<tr><td>Zone</td><td>{{.Params.zone.name}}</td></tr>{{end}}
-																		<tr><td>Loot</td><td>{{.Params.lootcount}}</td></tr>
-															</tbody></table>
+													<table class="table table-striped"><tbody>
+														<tr><td>HP</td><td>{{.Params.hp}}</td></tr>
+														<tr><td>Damage</td><td>{{.Params.mindamage}}-{{.Params.maxdamage}}</td></tr>
+														<tr><td>Gender</td><td>{{.Params.gendername}}</td></tr>
+														<tr><td>Body Type</td><td>{{.Params.bodytypename}}</td></tr>
+														<tr><td>Race</td><td>{{.Params.racename}}</td></tr>
+														<tr><td>Class</td><td>{{.Params.classname}}</td></tr>
+														<tr><td>Level</td><td>{{.Params.level}}</td></tr>
+														{{if .Params.zone}}<tr><td>Zone</td><td>{{.Params.zone.name}}</td></tr>{{end}}
+														<tr><td>Loot</td><td>{{.Params.lootcount}}</td></tr>
+													</tbody></table>
 												</form>
 											</div>
 										</div>
@@ -117,4 +120,37 @@
 				</div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.3/leaflet.js"></script>
+<script>
+	var map = L.map('map', {
+		crs: L.CRS.Simple,
+		minZoom: -3
+	});
+	var bounds = [[0,0], [600,600]];
+	var image = L.imageOverlay('/map/{{if .Params.zone}}{{.Params.zone.shortname}}{{end}}.png', bounds).addTo(map);
+	map.fitBounds(bounds);
+	{{if and (.Params.zone) (.Params.zone.spawns)}}
+		{{range sort .Params.zone.spawns }}
+	//var spawn{{- safeJS (int .id) -}} = L.latLng([{{.ymap}}, {{.xmap}}]);
+	new L.marker(L.latLng([{{.ymap}}, {{.xmap}}])).bindTooltip("{{.ymap}}, {{.xmap}}").addTo(map);
+	
+	{{if .grids}}
+	var coordinateArray{{safeJS (int .id)}} = [
+		{{range sort .grids}}
+		[{{safeJS .ymap}}, {{safeJS .xmap}} ],
+		{{end}}
+	];
+	var myGrid = L.polyline(coordinateArray{{safeJS (int .id)}});
+	myGrid.addTo(map);
+		{{end}}
+		
+	{{end}}
+	{{end}}
+	//new L.marker(L.latLng([0, 0])).bindTooltip("0, 0").addTo(map);
+	//new L.marker(L.latLng([50, 50])).bindTooltip("50, 50").addTo(map);
+	//new L.marker(L.latLng([100, 100])).bindTooltip("100, 100").addTo(map);
+	//new L.marker(L.latLng([150, 150])).bindTooltip("150, 150").addTo(map);
+	//new L.marker(L.latLng([200, 200])).bindTooltip("200, 200").addTo(map);
+	//map.setView( [70, 120], 1);
+</script>
 {{ partial "footer" . }}
