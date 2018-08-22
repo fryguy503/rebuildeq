@@ -12,6 +12,8 @@ help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 api:
 	cd ../ && go run go/api/cmd/api/main.go
+quest: ## Check if perl/lua scripts are in good shape
+	@./scripts/check_quest.sh
 dev-server: dev-services ## Start development services and eqemu environment
 	@if [ ! -f $(shell pwd)/server/eqemu_config.xml ]; then echo "Copying deploy/server/eqemu_config.xml..."; cp $(shell pwd)/docker/eqemu/eqemu_config.xml $(shell pwd)/server/; fi;
 	@if [ ! -f $(shell pwd)/web/application/config/database.php ]; then echo "Copying deploy/web/applicaton/config/database.php..."; cp $(shell pwd)/docker/web/database.php  $(shell pwd)/web/application/config/; fi;
