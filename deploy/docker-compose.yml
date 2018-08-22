@@ -1,22 +1,6 @@
 #this is a production-ready copy of docker-compose.
 version: '3'
 services:
-  zone:
-    image: ../docker/eqemu
-    volumes:
-      - ./deploy/server:/eqemu
-    command: ["zone"]
-    links:
-      - nats
-      - mariadb
-  world:
-    image: ../docker/eqemu
-    volumes:
-      - ./deploy/server:/eqemu
-    command: ["world"]
-    links:
-      - nats
-      - mariadb
   #MariaDB is the main database.
   mariadb:
     image: "bitnami/mariadb:latest"
