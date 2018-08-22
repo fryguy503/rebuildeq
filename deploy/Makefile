@@ -1,5 +1,11 @@
 # first run, use the command make initial
 default: dev-server
+check-not-prod:
+	echo $(ENV)
+	ifdef ENV
+	ifeq ($(ENV),"PROD")
+		$(error ENV is set to PROD, aborting)
+	endif
 
 .PHONY: help
 help:
@@ -22,7 +28,7 @@ server: services ## Start production services and eqemu environment
 	@if [ ! -d $(shell pwd)/web/application/cache ]; then echo "Making deploy/web/application/cache..."; mkdir $(shell pwd)/web/application/cache; fi;
 	@if [ ! -d $(shell pwd)/web/application/logs ]; then echo "Making deploy/web/application/logs..."; mkdir $(shell pwd)/web/application/logs; fi;
 	-docker run -v $(shell pwd)/../deploy/server:/eqemu --network="rebuildeq_default" --name shared -it eqemu /eqemu/shared_memory
-build: ## Build binaries
+build: check-not-prod ## Build binaries
 	docker build docker/build -t buildeq
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu buildeq /bin/bash -c "/usr/bin/cmake ~/."
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu buildeq /bin/bash -c "make"
@@ -37,9 +43,9 @@ images: ## Builds docker images needed to run dockerized eqemu
 purge: ## Purge containers and images made by this system.
 	docker rm $(shell docker ps -a -q)
 	docker rmi rebuildeq_web buildeq
-cmake: ## Runs cmake inside build image to prepare for build
+cmake: check-not-prod ## Runs cmake inside build image to prepare for build
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu buildeq /bin/bash -c "/usr/bin/cmake ~/."
-clean: ## Cleans the build files using build image
+clean: check-not-prod ## Cleans the build files using build image
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu buildeq /bin/bash -c "make clean"
 shared: ## Runs shared_memory inside eqemu image
 	-docker run -v $(shell pwd)/../deploy/server:/eqemu --network="rebuildeq_default" --name shared -it eqemu /eqemu/shared_memory
@@ -49,38 +55,38 @@ services: ## Runs docker-compose up, starting database, nats, and web server
 	-docker-compose down
 	-docker-compose up
 	docker-compose down
-dev-world: ## Starts world binary using eqemu image
+dev-world: check-not-prod ## Starts world binary using eqemu image
 	cd ..
 	-docker run -v $(shell pwd)/../deploy/server:/eqemu -p 5998:5998/udp -p 5999:5999/udp -p 9000:9000/udp -p 9000:9000 --name world --network="rebuildeq_default" -it eqemu /eqemu/world
 	docker rm world
-dev-zone1: ## Starts a single zone binary on port  7001
+dev-zone1: check-not-prod ## Starts a single zone binary on port  7001
 	docker run -v $(shell pwd)/../deploy/server:/eqemu --network="rebuildeq_default"  -p 7002:7002/udp -it eqemu /eqemu/zone ecommons:7001
-dev-zone2: ## Starts zone binary using eqemu image on port 7001
+dev-zone2:check-not-prod  ## Starts zone binary using eqemu image on port 7001
 	docker run -v $(shell pwd)/../deploy/server:/eqemu --network="rebuildeq_default"  -p 7002:7002/udp -it eqemu /eqemu/zone ecommons:7002
-proto: ## Removes proto compiled files and generates new ones based on proto folder
+proto: check-not-prod ## Removes proto compiled files and generates new ones based on proto folder
 	rm -rf ../common/*.pb.*
 	rm -rf ../go/eqproto/*
 	protoc --cpp_out=../common --go_out=../go/eqproto -I ../proto ../proto/message.proto ../proto/rebuildeq.proto
-discordeq: ## Run discordeq in developer mode
+discordeq: check-not-prod ## Run discordeq in developer mode
 	cd ../go/discordnats
 	go run main.go
-buildeqbash: ## Run buildeq container and attach bash
+buildeqbash: check-not-prod ## Run buildeq container and attach bash
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu -it buildeq /bin/bash
-eqemubash: ## Run eqemu container and attach bash
+eqemubash: check-not-prod ## Run eqemu container and attach bash
 	docker run -v $(shell pwd)/../:/src -v $(shell pwd)/../deploy/server:/eqemu -it eqemu /bin/bash
-hugo-dev: ## Run a hugo dev environment, watching for local changes
+hugo-dev: check-not-prod ## Run a hugo dev environment, watching for local changes
 	cd ../web && $(MAKE) hugo-dev
-web-build: ## Builds ts, hugo, and hugogen files, prepare for web
+web-build: check-not-prod ## Builds ts, hugo, and hugogen files, prepare for web
 	cd ../web && $(MAKE) web-dev
-hugogen-build: # runs the hugogen go script
+hugogen-build: check-not-prod # runs the hugogen go script
 	cd ../web && $(MAKE) hugogen-build
-clean-build: ## cleans all web stuff
+clean-build: check-not-prod ## cleans all web stuff
 	cd ../web && $(MAKE) clean-build
-js-build: ## builds javascript file, works great with hugo-dev for local testing
+js-build: check-not-prod ## builds javascript file, works great with hugo-dev for local testing
 	cd ../web && $(MAKE) js-build
-ts-build: ## runs tsc to verify any typescript errors
+ts-build: check-not-prod ## runs tsc to verify any typescript errors
 	cd ../web && $(MAKE) ts-build
-hugo-build: ## runs hugo to build hugo files
+hugo-build: check-not-prod ## runs hugo to build hugo files
 	cd ../web && $(MAKE) hugo-build
-web-deploy: ## runs web-build then firebase deploys
+web-deploy: check-not-prod ## runs web-build then firebase deploys
 	cd ../web && $(MAKE) deploy
