@@ -84,3 +84,5 @@ hugo-build: ## runs hugo to build hugo files
 	cd ../web && $(MAKE) hugo-build
 web-deploy: ## runs web-build then firebase deploys
 	cd ../web && $(MAKE) deploy
+mariadb: ##start mariadb as a docker instance
+	docker-compose run --service-ports mariadb
