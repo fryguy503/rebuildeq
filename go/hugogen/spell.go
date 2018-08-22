@@ -12,8 +12,14 @@ import (
 )
 
 func genSpells(db *sqlx.DB, outPath string, total int) (err error) {
+	totalRows := 0
+	db.Get(&totalRows, "SELECT count(id) FROM spells_new LIMIT ?", total)
+	if totalRows < total {
+		total = totalRows
+	}
+
 	count := 0
-	rows, err := db.Queryx(fmt.Sprintf("SELECT * FROM spells_new LIMIT %d", total))
+	rows, err := db.Queryx("SELECT * FROM spells_new LIMIT ?", total)
 	if err != nil {
 		fmt.Println("Error deleting merchanlist", err.Error())
 		return
@@ -27,8 +33,10 @@ func genSpells(db *sqlx.DB, outPath string, total int) (err error) {
 			return
 		}
 
+		if count%1000 == 0 {
+			fmt.Printf("spell %d / %d\n", count, total)
+		}
 		count++
-
 		outStr := "---\n"
 		outStr += fmt.Sprintf("note: This file was auto generated. DO NOT EDIT\n")
 		outStr += fmt.Sprintf("description: \"%s\"\n", s.Name.String)
