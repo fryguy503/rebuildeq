@@ -6,7 +6,6 @@ services:
     volumes:
       - ./deploy/server:/eqemu
     command: ["zone"]
-    scale: 2
     links:
       - nats
       - mariadb
@@ -27,7 +26,7 @@ services:
       MARIADB_DATABASE: eqemu
       MARIADB_USER: eqemu
       MARIADB_PASSWORD: eqemupass
-      ALLOW_EMPTY_PASSWORD: 'false'
+      ALLOW_EMPTY_PASSWORD: 'yes'
     ports:
       - "3306:3306"
   #Grafana is metrics aggregation
@@ -37,8 +36,8 @@ services:
       - ./server/grafana:/var/lib/grafana
     environment:
       GF_SERVER_ROOT_URL: http://127.0.0.1
-      GF_SECURITY_ADMIN_PASSWORD: admin      
-    ports:      
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    ports:
       - "3000:3000"
   #Graylog is logging https://hub.docker.com/r/graylog/graylog/
   graylog:
@@ -81,10 +80,10 @@ services:
       # Disable X-Pack security: https://www.elastic.co/guide/en/elasticsearch/reference/5.5/security-settings.html#general-security-settings
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    deploy:
-      resources:
-        limits:
-          memory: 1G
+    #deploy:
+    #  resources:
+    #    limits:
+    #      memory: 1G
     ulimits:
       memlock:
         soft: -1
