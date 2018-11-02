@@ -1,12 +1,12 @@
-echo THIS SHOULD ONLY BE RAN ONCE, unless there's a critical change or something. It builds up the images and preps the environment.
-echo This preps a docker environment for building binaries.
+echo "THIS SHOULD ONLY BE RAN ONCE, unless there's a critical change or something. It builds up the images and preps the environment."
+echo "This preps a docker environment for building binaries."
 echo Removing old build data
 rm CMakeCache.txt
 
-echo Shutting down docker-compose... (in case it was running)
+echo "Shutting down docker-compose... (in case it was running)"
 docker-compose down
 
-echo Building 'build' docker container...
+echo "Building 'build' docker container..."
 docker build docker/build/. -t buildeq
 
 echo Prepping Cmake...
@@ -16,7 +16,7 @@ echo Building binaries...
 docker run -v `pwd`:/src -v `pwd`/deploy/server:/eqemu buildeq
 
 echo Copying binaries...
-copy bin\* deploy\server\
+cp bin/* deploy/server/
 
 echo Building docker-compose...
 docker-compose build
