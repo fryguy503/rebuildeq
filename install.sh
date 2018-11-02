@@ -1,7 +1,6 @@
 echo "THIS SHOULD ONLY BE RAN ONCE, unless there's a critical change or something. It builds up the images and preps the environment."
 echo "This preps a docker environment for building binaries."
-echo Removing old build data
-rm CMakeCache.txt
+[ -e CMakeCache.txt ] && echo "Removing old build data..." && rm -f CMakeCache.txt
 
 echo "Shutting down docker-compose... (in case it was running)"
 docker-compose down
