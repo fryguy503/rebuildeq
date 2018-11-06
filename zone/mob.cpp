@@ -7258,12 +7258,12 @@ int Mob::GetTier() {
 		if (npc_type_id == 86014) return 2; //Gorenaire
 		if (npc_type_id == 89154) return 2; //Trakanon
 
-		if (npc_type_id == 108050) return 3; //Silverwing
-		if (npc_type_id == 108053) return 3; //Xygoz
-		if (npc_type_id == 108048) return 3; //Phara Dar
+		if (npc_type_id == 108509) return 3; //Silverwing
+		if (npc_type_id == 108511) return 3; //Xygoz
+		if (npc_type_id == 108510) return 3; //Phara Dar
 		if (npc_type_id == 108512) return 3; //Druushk
-		if (npc_type_id == 108047) return 3; //Nexona
-		if (npc_type_id == 108043) return 3; //Hoshkar
+		if (npc_type_id == 108513) return 3; //Nexona
+		if (npc_type_id == 108517) return 3; //Hoshkar
 
 		if (npc_type_id == 117073) return 4; //Kelorek`Dar
 		if (npc_type_id == 119112) return 4; //Wuoshi
