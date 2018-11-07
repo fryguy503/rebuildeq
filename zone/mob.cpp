@@ -7519,6 +7519,10 @@ int Mob::AdjustTierPenalty(Mob* caster, int value) {
 		tmpTier = GetOwner()->GetTier();
 		if (tmpTier < lowTier) lowTier = tmpTier;
 	}
+	if (caster->IsPet() && caster->GetOwner()->IsClient()) {
+		tmpTier = caster->GetOwner()->GetTier();
+		if (tmpTier < lowTier) lowTier = tmpTier;
+	}
 
 	//Get tier difference
 	int tierDifference = highTier - lowTier;
