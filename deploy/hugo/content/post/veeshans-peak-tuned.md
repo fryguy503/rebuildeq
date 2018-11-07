@@ -3,7 +3,7 @@ banner = "post/images/veeshans-peak-tuned.png"
 date = "2018-11-06T13:28:18-07:00"
 description = "Veeshan's Peak Tuned"
 images = ["post/images/veeshans-peak-tuned.png"]
-tags = ["zone", "bugs", "cleric", "wizard"]
+tags = ["zone", "tier", "bugs", "cleric", "wizard"]
 title = "Veeshan's Peak Tuned"
 +++
 * Veeshan's Peak has been tuned to bring it back to Kunark era.
