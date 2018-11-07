@@ -26,6 +26,8 @@ docker-compose build
 [ -e deploy/web/application/logs ] || echo Making web logs directory... && mkdir deploy/web/application/logs
 [ -e deploy/server/shared ] || echo Making shared directory... && mkdir deploy/server/shared
 
+chmod 777 deploy/web/application/logs && echo Making web logs directory writable...
+
 echo Running shared memory...
 docker-compose run eqemu /eqemu/shared_memory
 
