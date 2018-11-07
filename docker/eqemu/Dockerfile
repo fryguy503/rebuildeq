@@ -7,4 +7,4 @@ ENV HOME /eqemu
 WORKDIR /eqemu
 
 # Define default command.
-#CMD ["/eqemu"]
+CMD ["/eqemu/eqemu_cmd.sh"]
