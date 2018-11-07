@@ -11,5 +11,6 @@ title = "Veeshan's Peak Tuned"
 * The door to Phara Dar's lair in Veeshan's Peak is no longer locked.
 * Fixed an issue preventing clerics and wizards from unmemorizing certain pet spells.
 * Adjusted certain Heirloom quest targets' spawn chance and/or respawn timers.
+* Fixed an issue that was causing pets to take reduced damage from tiered bosses.
 
 <!--more-->
