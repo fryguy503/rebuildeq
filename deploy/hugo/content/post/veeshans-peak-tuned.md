@@ -1,6 +1,6 @@
 +++
 banner = "post/images/veeshans-peak-tuned.png"
-date = "2018-07-01T13:28:18-07:00"
+date = "2018-11-06T13:28:18-07:00"
 description = "Veeshan's Peak Tuned"
 images = ["post/images/veeshans-peak-tuned.png"]
 tags = ["zone", "bugs", "cleric", "wizard"]
