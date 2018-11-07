@@ -7531,12 +7531,11 @@ int Mob::AdjustTierPenalty(Mob* caster, int value) {
 		value = -value;
 	}
 
-	if (IsNPC()) { //if we're doing something to an npc, penalize it
+	if (IsNPC() && !IsPet()) { //if we're doing something to an npc, penalize it
 		if (GetTier() >= 8) value -= floor(value * 0.5f * tierDifference);
 		if (GetTier() >= 5) value -= floor(value * 0.3f * tierDifference);
 		else value -= floor(value * 0.2f * tierDifference);
-	}
-	if (IsClient() && caster->IsNPC()) { //if we're a NPC doing something to a client, boost it
+	} else { //if we're a NPC doing something to a client, boost it
 		if (GetTier() >= 8) value += floor(value * 0.5f * tierDifference);
 		if (GetTier() >= 5) value += floor(value * 0.3f * tierDifference);
 		else value += floor(value * 0.2f * tierDifference);
