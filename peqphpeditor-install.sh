@@ -6,5 +6,6 @@ curl -o peqphpeditor.zip -L https://github.com/ProjectEQ/peqphpeditor/archive/ma
 && cd deploy/web/html/peqphpeditor \
 && if [ ! -e logs ]; then mkdir logs; fi \
 && find . -type d -exec chmod 0755 {} + && find . -type f -exec chmod 0644 {} + \
+&& chmod 777 logs \
 && echo "Peqphpeditor installation successful." \
 "Open http://[server]/peqphpadmin and log in with admin / password"
