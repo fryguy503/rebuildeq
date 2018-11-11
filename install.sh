@@ -20,7 +20,7 @@ cp bin/* deploy/server/
 echo Building docker-compose...
 docker-compose build
 
-[ ! -e deploy/server/libprotobuf.so.14 ] && echo Extracing libprotobuf.so.14... \
+[ ! -e deploy/server/libprotobuf.so.14 ] && echo Extracting libprotobuf.so.14... \
 && unzip deploy/server/libprotobuf.so.14.zip -d deploy/server/
 [ ! -e docker/db ] && echo Making docker/db directory... && mkdir docker/db
 echo "Making the database directory writable. Enter sudo password if promtped."
