@@ -43,6 +43,7 @@ services:
     build: ./docker/web/.
     volumes:
       - "./deploy/web:/var/www"
+      - "./deploy/hugo:/var/hugo"
     links:
       - mariadb
       - nats
