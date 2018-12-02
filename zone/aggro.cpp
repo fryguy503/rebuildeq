@@ -108,16 +108,10 @@ void NPC::DescribeAggro(Client *towho, Mob *mob, bool verbose) {
 	float iAggroRange = GetAggroRange();
 
 	float t1, t2, t3;
-	t1 = mob->GetX() - GetX();
-	t2 = mob->GetY() - GetY();
-	t3 = mob->GetZ() - GetZ();
-	//Cheap ABS()
-	if(t1 < 0)
-		t1 = 0 - t1;
-	if(t2 < 0)
-		t2 = 0 - t2;
-	if(t3 < 0)
-		t3 = 0 - t3;
+	t1 = std::abs(mob->GetX() - GetX());
+	t2 = std::abs(mob->GetY() - GetY());
+	t3 = std::abs(mob->GetZ() - GetZ());
+
 	if(( t1 > iAggroRange)
 		|| ( t2 > iAggroRange)
 		|| ( t3 > iAggroRange) ) {
@@ -159,7 +153,7 @@ void NPC::DescribeAggro(Client *towho, Mob *mob, bool verbose) {
 
 	if (RuleB(Aggro, UseLevelAggro))
 	{
-		if (GetLevel() < 18 && mob->GetLevelCon(GetLevel()) == CON_GRAY && GetBodyType() != 3)
+		if (GetLevel() < RuleI(Aggro, MinAggroLevel) && mob->GetLevelCon(GetLevel()) == CON_GRAY && GetBodyType() != 3)
 		{
 			towho->Message(0, "...%s is red to me (basically)", mob->GetName(),	dist2, iAggroRange2);
 			return;
@@ -254,7 +248,7 @@ bool Mob::CheckWillAggro(Mob *mob) {
 	//sometimes if a client has some lag while zoning into a dangerous place while either invis or a GM
 	//they will aggro mobs even though it's supposed to be impossible, to lets make sure we've finished connecting
 	if (mob->IsClient()) {
-		if (!mob->CastToClient()->ClientFinishedLoading() || mob->CastToClient()->IsHoveringForRespawn() || mob->CastToClient()->zoning)
+		if (!mob->CastToClient()->ClientFinishedLoading() || mob->CastToClient()->IsHoveringForRespawn() || mob->CastToClient()->bZoning)
 			return false;
 	}
 
@@ -272,16 +266,10 @@ bool Mob::CheckWillAggro(Mob *mob) {
 	// Image: I moved this up by itself above faction and distance checks because if one of these return true, theres no reason to go through the other information
 
 	float t1, t2, t3;
-	t1 = mob->GetX() - GetX();
-	t2 = mob->GetY() - GetY();
-	t3 = mob->GetZ() - GetZ();
-	//Cheap ABS()
-	if(t1 < 0)
-		t1 = 0 - t1;
-	if(t2 < 0)
-		t2 = 0 - t2;
-	if(t3 < 0)
-		t3 = 0 - t3;
+	t1 = std::abs(mob->GetX() - GetX());
+	t2 = std::abs(mob->GetY() - GetY());
+	t3 = std::abs(mob->GetZ() - GetZ());
+
 	if(( t1 > iAggroRange)
 		|| ( t2 > iAggroRange)
 		|| ( t3 > iAggroRange)
@@ -337,7 +325,7 @@ bool Mob::CheckWillAggro(Mob *mob) {
 	(
 	//old InZone check taken care of above by !mob->CastToClient()->Connected()
 	(
-		( GetLevel() >= 18 )
+		( GetLevel() >= RuleI(Aggro, MinAggroLevel))
 		||(GetBodyType() == 3)
 		||( mob->IsClient() && mob->CastToClient()->IsSitting() )
 		||( mob->GetLevelCon(GetLevel()) != CON_GRAY)
@@ -425,7 +413,7 @@ Mob* EntityList::AICheckNPCtoNPCAggro(Mob* sender, float iAggroRange, float iAss
 	return nullptr;
 }
 
-int EntityList::GetHatedCount(Mob *attacker, Mob *exclude)
+int EntityList::GetHatedCount(Mob *attacker, Mob *exclude, bool inc_gray_con)
 {
 	// Return a list of how many non-feared, non-mezzed, non-green mobs, within aggro range, hate *attacker
 	if (!attacker)
@@ -435,20 +423,25 @@ int EntityList::GetHatedCount(Mob *attacker, Mob *exclude)
 
 	for (auto it = npc_list.begin(); it != npc_list.end(); ++it) {
 		NPC *mob = it->second;
-		if (!mob || (mob == exclude))
+		if (!mob || (mob == exclude)) {
 			continue;
+		}
 
-		if (!mob->IsEngaged())
+		if (!mob->IsEngaged()) {
 			continue;
+		}
 
-		if (mob->IsFeared() || mob->IsMezzed())
+		if (mob->IsFeared() || mob->IsMezzed()) {
 			continue;
+		}
 
-		if (attacker->GetLevelCon(mob->GetLevel()) == CON_GRAY)
+		if (!inc_gray_con && attacker->GetLevelCon(mob->GetLevel()) == CON_GRAY) {
 			continue;
+		}
 
-		if (!mob->CheckAggro(attacker))
+		if (!mob->CheckAggro(attacker)) {
 			continue;
+		}
 
 		float AggroRange = mob->GetAggroRange();
 
@@ -456,14 +449,12 @@ int EntityList::GetHatedCount(Mob *attacker, Mob *exclude)
 
 		AggroRange *= AggroRange;
 
-		if (DistanceSquared(mob->GetPosition(), attacker->GetPosition()) > AggroRange)
+		if (DistanceSquared(mob->GetPosition(), attacker->GetPosition()) > AggroRange) {
 			continue;
-
+		}
 		Count++;
 	}
-
 	return Count;
-
 }
 
 void EntityList::AIYellForHelp(Mob* sender, Mob* attacker) {
@@ -527,7 +518,7 @@ void EntityList::AIYellForHelp(Mob* sender, Mob* attacker) {
 						Log(Logs::General, Logs::None, "AIYellForHelp(\"%s\",\"%s\") %s attacking %s Dist %f Z %f",
 							sender->GetName(), attacker->GetName(), mob->GetName(),
 							attacker->GetName(), DistanceSquared(mob->GetPosition(),
-							sender->GetPosition()), fabs(sender->GetZ()+mob->GetZ()));
+							sender->GetPosition()), std::abs(sender->GetZ()+mob->GetZ()));
 #endif
 						mob->AddToHateList(attacker, 25, 0, false);
 						sender->AddAssistCap();
@@ -935,7 +926,9 @@ bool Mob::CombatRange(Mob* other)
 	if (size_mod > 10000)
 		size_mod = size_mod / 7;
 
-	float _DistNoRoot = DistanceSquared(m_Position, other->GetPosition());
+	float _DistNoRoot = DistanceSquaredNoZ(m_Position, other->GetPosition());
+	float _zDist = m_Position.z - other->GetZ();
+	_zDist *= _zDist;
 
 	if (GetSpecialAbility(NPC_CHASE_DISTANCE)){
 
@@ -964,6 +957,11 @@ bool Mob::CombatRange(Mob* other)
 
 	if (_DistNoRoot <= size_mod)
 	{
+		//A hack to kill an exploit till we get something better.
+		if (flymode == 0 && _zDist > 500 && !CheckLastLosState()) {
+			return false;
+		}
+
 		return true;
 	}
 	return false;
@@ -1009,6 +1007,28 @@ bool Mob::CheckLosFN(float posX, float posY, float posZ, float mobSize) {
 	Log(Logs::General, Logs::None, "LOS from (%.2f, %.2f, %.2f) to (%.2f, %.2f, %.2f) sizes: (%.2f, %.2f)", myloc.x, myloc.y, myloc.z, oloc.x, oloc.y, oloc.z, GetSize(), mobSize);
 #endif
 	return zone->zonemap->CheckLoS(myloc, oloc);
+}
+
+bool Mob::CheckLosFN(glm::vec3 posWatcher, float sizeWatcher, glm::vec3 posTarget, float sizeTarget) {
+	if (zone->zonemap == nullptr) {
+		//not sure what the best return is on error
+		//should make this a database variable, but im lazy today
+#ifdef LOS_DEFAULT_CAN_SEE
+		return(true);
+#else
+		return(false);
+#endif
+	}
+
+#define LOS_DEFAULT_HEIGHT 6.0f
+
+	posWatcher.z += (sizeWatcher == 0.0f ? LOS_DEFAULT_HEIGHT : sizeWatcher) / 2 * HEAD_POSITION;
+	posTarget.z += (sizeTarget == 0.0f ? LOS_DEFAULT_HEIGHT : sizeTarget) / 2 * SEE_POSITION;
+
+#if LOSDEBUG>=5
+	Log(Logs::General, Logs::None, "LOS from (%.2f, %.2f, %.2f) to (%.2f, %.2f, %.2f) sizes: (%.2f, %.2f) [static]", posWatcher.x, posWatcher.y, posWatcher.z, posTarget.x, posTarget.y, posTarget.z, sizeWatcher, sizeTarget);
+#endif
+	return zone->zonemap->CheckLoS(posWatcher, posTarget);
 }
 
 //offensive spell aggro

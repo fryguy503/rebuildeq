@@ -86,6 +86,7 @@ union semun {
 #include "console.h"
 
 #include "../common/net/servertalk_server.h"
+#include "../zone/data_bucket.h"
 
 ClientList client_list;
 GroupLFPList LFPGroupList;
@@ -175,7 +176,7 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	Log(Logs::General, Logs::World_Server, "Connecting to MySQL...");
+	Log(Logs::General, Logs::World_Server, "Connecting to MySQL %s@%s:%i...", Config->DatabaseUsername.c_str(), Config->DatabaseHost.c_str(), Config->DatabasePort);
 	if (!database.Connect(
 		Config->DatabaseHost.c_str(),
 		Config->DatabaseUsername.c_str(),
@@ -299,6 +300,9 @@ int main(int argc, char** argv) {
 		}
 	}
 
+	Log(Logs::General, Logs::World_Server, "Purging expired data buckets...");
+	database.PurgeAllDeletedDataBuckets();
+
 	Log(Logs::General, Logs::World_Server, "Loading zones..");
 	database.LoadZoneNames();
 	Log(Logs::General, Logs::World_Server, "Clearing groups..");
@@ -380,6 +384,7 @@ int main(int argc, char** argv) {
 	nats.Load();
 	Log(Logs::General, Logs::World_Server, "Purging expired instances");
 	database.PurgeExpiredInstances();
+
 	Timer PurgeInstanceTimer(450000);
 	PurgeInstanceTimer.Start(450000);
 
@@ -453,6 +458,8 @@ int main(int argc, char** argv) {
 			connection->Handle()->RemoteIP(), connection->Handle()->RemotePort(), connection->GetUUID());
 
 		UCSLink.SetConnection(connection);
+
+		zoneserver_list.UpdateUCSServerAvailable();
 	});
 
 	server_connection->OnConnectionRemoved("UCS", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
@@ -460,6 +467,8 @@ int main(int argc, char** argv) {
 			connection->GetUUID());
 
 		UCSLink.SetConnection(nullptr);
+
+		zoneserver_list.UpdateUCSServerAvailable(false);
 	});
 
 	server_connection->OnConnectionIdentified("WebInterface", [](std::shared_ptr<EQ::Net::ServertalkServerConnection> connection) {
@@ -532,9 +541,9 @@ int main(int argc, char** argv) {
 
 		client_list.Process();
 
-		if (PurgeInstanceTimer.Check())
-		{
+		if (PurgeInstanceTimer.Check()) {
 			database.PurgeExpiredInstances();
+			database.PurgeAllDeletedDataBuckets();
 		}
 
 		if (EQTimeTimer.Check()) {

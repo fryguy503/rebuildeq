@@ -50,18 +50,30 @@ uint32	ResolveIP(const char* hostname, char* errbuf = 0);
 bool	ParseAddress(const char* iAddress, uint32* oIP, uint16* oPort, char* errbuf = 0);
 void	CoutTimestamp(bool ms = true);
 float EQ13toFloat(int d);
-float NewEQ13toFloat(int d);
 float EQ19toFloat(int d);
 float EQHtoFloat(int d);
 int FloatToEQ13(float d);
-int NewFloatToEQ13(float d);
 int FloatToEQ19(float d);
 int FloatToEQH(float d);
-uint32 SwapBits21and22(uint32 mask);
+
+float EQ12toFloat(int d);
+int FloatToEQ12(float d);
+
+float EQ10toFloat(int d);
+int FloatToEQ10(float d);
+
+// this is also a 10 bit float
+float EQSpeedRunToFloat(int d);
+int FloatToEQSpeedRun(float d);
+
+// brings heading back into EQ angles range
+float FixHeading(float in);
+
+uint32 SwapBits21And22(uint32 mask);
 uint32 Catch22(uint32 mask);
 
 // macro to catch fp errors (provided by noudness)
-#define FCMP(a,b) (fabs(a-b) < FLT_EPSILON)
+#define FCMP(a,b) (std::abs(a-b) < FLT_EPSILON)
 
 #define _ITOA_BUFLEN	25
 const char *itoa(int num);	//not thread safe

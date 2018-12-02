@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="libuv"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\cmake\;CMake Files\common\;CMake Files\libs\;CMake Files\libs\luabind\;CMake Files\libs\libuv\;CMake Files\libs\format\;CMake Files\libs\format\support\;CMake Files\libs\format\support\cmake\;CMake Files\libs\format\fmt\;CMake Files\libs\recast\;CMake Files\shared_memory\;CMake Files\world\;CMake Files\zone\;CMake Files\ucs\;CMake Files\queryserv\;CMake Files\eqlaunch\;CMake Files\client_files\;CMake Files\client_files\import\;CMake Files\client_files\export\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/eqemu/eq/src/libs/libuv"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="libuv">
+				<Option output="/home/eqemu/eq/src/libs/libuv/liblibuv.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/eqemu/eq/src/libs/libuv"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DHAS_UNION_SEMUN"/>
+					<Add option="-DCOMMANDS_LOGGING"/>
+					<Add option="-DDISABLE_LOGSYS"/>
+					<Add option="-DEMBPERL"/>
+					<Add option="-DEMBPERL_PLUGIN"/>
+					<Add option="-DLUA_EQEMU"/>
+					<Add option="-DEQDEBUG=5"/>
+					<Add option="-DINVERSEXY"/>
+					<Add option="-DFIELD_ITEMS"/>
+					<Add option="-DMAP_DIR=&quot;./Maps&quot;"/>
+					<Add option="-DLOG_LEVEL_STATUS=2"/>
+					<Add option="-DLOG_LEVEL_NORMAL=3"/>
+					<Add option="-DLOG_LEVEL_ERROR=2"/>
+					<Add option="-DLOG_LEVEL_DEBUG=3"/>
+					<Add option="-DLOG_LEVEL_QUEST=2"/>
+					<Add option="-DLOG_LEVEL_COMMANDS=1"/>
+					<Add option="-DLOG_LEVEL_CRASH=3"/>
+					<Add option="-DGLM_FORCE_RADIANS"/>
+					<Add option="-DENABLE_SECURITY"/>
+					<Add option="-DSANITIZE_LUA_LIBS"/>
+					<Add option="-D_GNU_SOURCE"/>
+					<Add directory="/home/eqemu/eq/src/dependencies/protobuf/include"/>
+					<Add directory="/usr/lib/x86_64-linux-gnu/perl/5.26/CORE"/>
+					<Add directory="/usr/include/lua5.1"/>
+					<Add directory="/home/eqemu/eq/src/dependencies/boost"/>
+					<Add directory="/home/eqemu/eq/src/libs/luabind"/>
+					<Add directory="/usr/include/mysql"/>
+					<Add directory="/home/eqemu/eq/src/dependencies/nats/include"/>
+					<Add directory="/home/eqemu/eq/src/common/glm"/>
+					<Add directory="/home/eqemu/eq/src/libs/cereal"/>
+					<Add directory="/home/eqemu/eq/src/libs/libuv/include"/>
+					<Add directory="/home/eqemu/eq/src/libs/libuv/src"/>
+					<Add directory="/home/eqemu/eq/src/libs/format"/>
+					<Add directory="/home/eqemu/eq/src/libs/recast/detour/include"/>
+					<Add directory="/home/eqemu/eq/src/libs/recast/recast/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 libuv"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="libuv/fast">
+				<Option output="/home/eqemu/eq/src/libs/libuv/liblibuv.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/eqemu/eq/src/libs/libuv"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DHAS_UNION_SEMUN"/>
+					<Add option="-DCOMMANDS_LOGGING"/>
+					<Add option="-DDISABLE_LOGSYS"/>
+					<Add option="-DEMBPERL"/>
+					<Add option="-DEMBPERL_PLUGIN"/>
+					<Add option="-DLUA_EQEMU"/>
+					<Add option="-DEQDEBUG=5"/>
+					<Add option="-DINVERSEXY"/>
+					<Add option="-DFIELD_ITEMS"/>
+					<Add option="-DMAP_DIR=&quot;./Maps&quot;"/>
+					<Add option="-DLOG_LEVEL_STATUS=2"/>
+					<Add option="-DLOG_LEVEL_NORMAL=3"/>
+					<Add option="-DLOG_LEVEL_ERROR=2"/>
+					<Add option="-DLOG_LEVEL_DEBUG=3"/>
+					<Add option="-DLOG_LEVEL_QUEST=2"/>
+					<Add option="-DLOG_LEVEL_COMMANDS=1"/>
+					<Add option="-DLOG_LEVEL_CRASH=3"/>
+					<Add option="-DGLM_FORCE_RADIANS"/>
+					<Add option="-DENABLE_SECURITY"/>
+					<Add option="-DSANITIZE_LUA_LIBS"/>
+					<Add option="-D_GNU_SOURCE"/>
+					<Add directory="/home/eqemu/eq/src/dependencies/protobuf/include"/>
+					<Add directory="/usr/lib/x86_64-linux-gnu/perl/5.26/CORE"/>
+					<Add directory="/usr/include/lua5.1"/>
+					<Add directory="/home/eqemu/eq/src/dependencies/boost"/>
+					<Add directory="/home/eqemu/eq/src/libs/luabind"/>
+					<Add directory="/usr/include/mysql"/>
+					<Add directory="/home/eqemu/eq/src/dependencies/nats/include"/>
+					<Add directory="/home/eqemu/eq/src/common/glm"/>
+					<Add directory="/home/eqemu/eq/src/libs/cereal"/>
+					<Add directory="/home/eqemu/eq/src/libs/libuv/include"/>
+					<Add directory="/home/eqemu/eq/src/libs/libuv/src"/>
+					<Add directory="/home/eqemu/eq/src/libs/format"/>
+					<Add directory="/home/eqemu/eq/src/libs/recast/detour/include"/>
+					<Add directory="/home/eqemu/eq/src/libs/recast/recast/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 libuv/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/eqemu/eq/src/libs/libuv/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/fs-poll.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/heap-inl.h">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/inet.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/queue.h">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/threadpool.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/async.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/atomic-ops.h">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/core.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/dl.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/fs.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/getaddrinfo.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/getnameinfo.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/internal.h">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/linux-core.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/linux-inotify.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/linux-syscalls.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/linux-syscalls.h">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/loop-watcher.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/loop.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/pipe.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/poll.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/process.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/proctitle.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/signal.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/spinlock.h">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/stream.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/tcp.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/thread.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/timer.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/tty.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/unix/udp.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/uv-common.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/uv-common.h">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/src/version.c">
+			<Option target="libuv"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/cmake/FindEQLua51.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/cmake/FindMySQL.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/cmake/FindPackageHandleStandardArgs.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/cmake/FindPackageMessage.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/cmake/FindSodium.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/common/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\common\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\libs\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/luabind/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\libs\luabind\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/libuv/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\libs\libuv\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/format/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\libs\format\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/format/support/cmake/cxx11.cmake">
+			<Option virtualFolder="CMake Files\libs\format\support\cmake\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/format/fmt/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\libs\format\fmt\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/libs/recast/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\libs\recast\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/shared_memory/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\shared_memory\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/world/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\world\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/zone/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\zone\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/ucs/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\ucs\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/queryserv/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\queryserv\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/eqlaunch/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\eqlaunch\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/client_files/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\client_files\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/client_files/import/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\client_files\import\"/>
+		</Unit>
+		<Unit filename="/home/eqemu/eq/src/client_files/export/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\client_files\export\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

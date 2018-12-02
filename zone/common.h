@@ -194,7 +194,8 @@ enum {
 	CASTING_RESIST_DIFF = 43,
 	COUNTER_AVOID_DAMAGE = 44,
 	PROX_AGGRO = 45,
-	MAX_SPECIAL_ATTACK = 46
+	IMMUNE_RANGED_ATTACKS = 46,
+	MAX_SPECIAL_ATTACK = 47
 };
 
 typedef enum {	//fear states
@@ -260,6 +261,17 @@ enum class LootResponse : uint8 {
 	Hostiles = 4,
 	TooFar = 5,
 	LootAll = 6 // SoD+
+};
+
+enum class LootRequestType : uint8 {
+	Forbidden = 0,
+	GMPeek,
+	GMAllowed,
+	Self,
+	AllowedPVE,
+	AllowedPVPAll,
+	AllowedPVPSingle, // can make this 'AllowedPVPVariable' and allow values between 1 and EQEmu::invtype::POSSESSIONS_SIZE
+	AllowedPVPDefined,
 };
 
 //this is our internal representation of the BUFF struct, can put whatever we want in it

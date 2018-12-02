@@ -1,5 +1,5 @@
 /*	EQEMu: Everquest Server Emulator
-	
+
 	Copyright (C) 2001-2016 EQEMu Development Team (http://eqemulator.net)
 
 	This program is free software; you can redistribute it and/or modify
@@ -46,18 +46,18 @@ namespace SoD
 	void SerializeItem(EQEmu::OutBuffer& ob, const EQEmu::ItemInstance *inst, int16 slot_id, uint8 depth);
 
 	// server to client inventory location converters
-	static inline uint32 ServerToSoDSlot(uint32 ServerSlot);
-	static inline uint32 ServerToSoDCorpseSlot(uint32 serverCorpseSlot);
+	static inline uint32 ServerToSoDSlot(uint32 server_slot);
+	static inline uint32 ServerToSoDCorpseSlot(uint32 server_corpse_slot);
 
 	// client to server inventory location converters
-	static inline uint32 SoDToServerSlot(uint32 sodSlot);
-	static inline uint32 SoDToServerCorpseSlot(uint32 sodCorpseSlot);
+	static inline uint32 SoDToServerSlot(uint32 sod_slot);
+	static inline uint32 SoDToServerCorpseSlot(uint32 sod_corpse_slot);
 
-	// server to client text link converter
-	static inline void ServerToSoDTextLink(std::string& sodTextLink, const std::string& serverTextLink);
+	// server to client say link converter
+	static inline void ServerToSoDSayLink(std::string &sod_saylink, const std::string &server_saylink);
 
-	// client to server text link converter
-	static inline void SoDToServerTextLink(std::string& serverTextLink, const std::string& sodTextLink);
+	// client to server say link converter
+	static inline void SoDToServerSayLink(std::string &server_saylink, const std::string &sod_saylink);
 
 	static inline CastingSlot ServerToSoDCastingSlot(EQEmu::CastingSlot slot);
 	static inline EQEmu::CastingSlot SoDToServerCastingSlot(CastingSlot slot);
@@ -161,15 +161,14 @@ namespace SoD
 		OUT(source);
 		OUT(level);
 		OUT(instrument_mod);
-		eq->sequence = emu->sequence;
+		OUT(force);
+		OUT(hit_heading);
+		OUT(hit_pitch);
 		OUT(type);
 		//OUT(damage);
 		OUT(spell);
-		eq->level2 = emu->level;
-		OUT(buff_unknown); // if this is 4, a buff icon is made
-		//eq->unknown0036 = -1;
-		//eq->unknown0040 = -1;
-		//eq->unknown0044 = -1;
+		OUT(spell_level);
+		OUT(effect_flag); // if this is 4, a buff icon is made
 
 		FINISH_ENCODE();
 	}
@@ -346,7 +345,7 @@ namespace SoD
 
 		std::string old_message = emu->message;
 		std::string new_message;
-		ServerToSoDTextLink(new_message, old_message);
+		ServerToSoDSayLink(new_message, old_message);
 
 		in->size = sizeof(ChannelMessage_Struct) + new_message.length() + 1;
 
@@ -401,14 +400,14 @@ namespace SoD
 		for (int index = 0; index < item_count; ++index, ++eq) {
 			SerializeItem(ob, (const EQEmu::ItemInstance*)eq->inst, eq->slot_id, 0);
 			if (ob.tellp() == last_pos)
-				Log(Logs::General, Logs::Netcode, "[STRUCTS] Serialization failed on item slot %d during OP_CharInventory.  Item skipped.", eq->slot_id);
+				Log(Logs::General, Logs::Netcode, "SoD::ENCODE(OP_CharInventory) Serialization failed on item slot %d during OP_CharInventory.  Item skipped.", eq->slot_id);
 
 			last_pos = ob.tellp();
 		}
 
 		in->size = ob.size();
 		in->pBuffer = ob.detach();
-		
+
 		delete[] __emu_buffer;
 
 		dest->FastQueuePacket(&in, ack_req);
@@ -458,14 +457,19 @@ namespace SoD
 		OUT(spellid);
 		OUT(damage);
 		OUT(force);
-		OUT(meleepush_xy);
-		OUT(meleepush_z);
+		OUT(hit_heading);
+		OUT(hit_pitch);
 		OUT(special);
 
 		FINISH_ENCODE();
 	}
 
-	ENCODE(OP_DeleteCharge) { ENCODE_FORWARD(OP_MoveItem); }
+	ENCODE(OP_DeleteCharge)
+	{
+		Log(Logs::Moderate, Logs::Netcode, "SoD::ENCODE(OP_DeleteCharge)");
+
+		ENCODE_FORWARD(OP_MoveItem);
+	}
 
 	ENCODE(OP_DeleteItem)
 	{
@@ -625,7 +629,7 @@ namespace SoD
 
 		std::string old_message = emu->message;
 		std::string new_message;
-		ServerToSoDTextLink(new_message, old_message);
+		ServerToSoDSayLink(new_message, old_message);
 
 		//if (new_message.length() > 512) // length restricted in packet building function due vari-length name size (no nullterm)
 		//	new_message = new_message.substr(0, 512);
@@ -677,7 +681,7 @@ namespace SoD
 
 		for (int i = 0; i < 9; ++i) {
 			if (old_message_array[i].length() == 0) { break; }
-			ServerToSoDTextLink(new_message_array[i], old_message_array[i]);
+			ServerToSoDSayLink(new_message_array[i], old_message_array[i]);
 			new_message_size += new_message_array[i].length() + 1;
 		}
 
@@ -786,7 +790,7 @@ namespace SoD
 				//Log.LogDebugType(Logs::General, Logs::Netcode, "[ERROR] Group Leave, yourname = %s, membername = %s", gjs->yourname, gjs->membername);
 
 				auto outapp =
-				    new EQApplicationPacket(OP_GroupDisbandYou, sizeof(structs::GroupGeneric_Struct));
+						new EQApplicationPacket(OP_GroupDisbandYou, sizeof(structs::GroupGeneric_Struct));
 
 				structs::GroupGeneric_Struct *ggs = (structs::GroupGeneric_Struct*)outapp->pBuffer;
 				memcpy(ggs->name1, gjs->yourname, sizeof(ggs->name1));
@@ -805,7 +809,7 @@ namespace SoD
 			//	Log.LogDebugType(Logs::General, Logs::Netcode, "[ERROR] Group Leave, yourname = %s, membername = %s", gjs->yourname, gjs->membername);
 
 			auto outapp =
-			    new EQApplicationPacket(OP_GroupDisbandOther, sizeof(structs::GroupGeneric_Struct));
+					new EQApplicationPacket(OP_GroupDisbandOther, sizeof(structs::GroupGeneric_Struct));
 
 			structs::GroupGeneric_Struct *ggs = (structs::GroupGeneric_Struct*)outapp->pBuffer;
 			memcpy(ggs->name1, gjs->yourname, sizeof(ggs->name1));
@@ -907,7 +911,7 @@ namespace SoD
 		memcpy(eq->membername, emu->membername, sizeof(eq->membername));
 
 		auto outapp =
-		    new EQApplicationPacket(OP_GroupLeadershipAAUpdate, sizeof(GroupLeadershipAAUpdate_Struct));
+				new EQApplicationPacket(OP_GroupLeadershipAAUpdate, sizeof(GroupLeadershipAAUpdate_Struct));
 		GroupLeadershipAAUpdate_Struct *GLAAus = (GroupLeadershipAAUpdate_Struct*)outapp->pBuffer;
 
 		GLAAus->NPCMarkerID = emu->NPCMarkerID;
@@ -933,8 +937,8 @@ namespace SoD
 		//make a new EQ buffer.
 		uint32 pnl = strlen(emu->player_name);
 		uint32 length = sizeof(structs::GuildMembers_Struct) + pnl +
-			emu->count*sizeof(structs::GuildMemberEntry_Struct)
-			+ emu->name_length + emu->note_length;
+						emu->count*sizeof(structs::GuildMemberEntry_Struct)
+						+ emu->name_length + emu->note_length;
 		in->pBuffer = new uint8[length];
 		in->size = length;
 		//no memset since we fill every byte.
@@ -956,13 +960,13 @@ namespace SoD
 		if (emu->count > 0) {
 			Internal_GuildMemberEntry_Struct *emu_e = emu->member;
 			const char *emu_name = (const char *)(__emu_buffer +
-				sizeof(Internal_GuildMembers_Struct)+ //skip header
-				emu->count * sizeof(Internal_GuildMemberEntry_Struct)	//skip static length member data
-				);
+												  sizeof(Internal_GuildMembers_Struct)+ //skip header
+												  emu->count * sizeof(Internal_GuildMemberEntry_Struct)	//skip static length member data
+			);
 			const char *emu_note = (emu_name +
-				emu->name_length + //skip name contents
-				emu->count	//skip string terminators
-				);
+									emu->name_length + //skip name contents
+									emu->count	//skip string terminators
+			);
 
 			structs::GuildMemberEntry_Struct *e = (structs::GuildMemberEntry_Struct *) buffer;
 
@@ -1055,7 +1059,7 @@ namespace SoD
 
 		//store away the emu struct
 		uchar* __emu_buffer = in->pBuffer;
-		
+
 		EQEmu::InternalSerializedItem_Struct* int_struct = (EQEmu::InternalSerializedItem_Struct*)(&__emu_buffer[4]);
 
 		EQEmu::OutBuffer ob;
@@ -1065,14 +1069,14 @@ namespace SoD
 
 		SerializeItem(ob, (const EQEmu::ItemInstance*)int_struct->inst, int_struct->slot_id, 0);
 		if (ob.tellp() == last_pos) {
-			Log(Logs::General, Logs::Netcode, "[STRUCTS] Serialization failed on item slot %d.", int_struct->slot_id);
+			Log(Logs::General, Logs::Netcode, "SoD::ENCODE(OP_ItemPacket) Serialization failed on item slot %d.", int_struct->slot_id);
 			delete in;
 			return;
 		}
 
 		in->size = ob.size();
 		in->pBuffer = ob.detach();
-		
+
 		delete[] __emu_buffer;
 
 		dest->FastQueuePacket(&in, ack_req);
@@ -1125,6 +1129,8 @@ namespace SoD
 	{
 		ENCODE_LENGTH_EXACT(LootingItem_Struct);
 		SETUP_DIRECT_ENCODE(LootingItem_Struct, structs::LootingItem_Struct);
+
+		Log(Logs::Moderate, Logs::Netcode, "SoD::ENCODE(OP_LootItem)");
 
 		OUT(lootee);
 		OUT(looter);
@@ -1287,6 +1293,8 @@ namespace SoD
 		ENCODE_LENGTH_EXACT(MoveItem_Struct);
 		SETUP_DIRECT_ENCODE(MoveItem_Struct, structs::MoveItem_Struct);
 
+		Log(Logs::Moderate, Logs::Netcode, "SoD::ENCODE(OP_MoveItem)");
+
 		eq->from_slot = ServerToSoDSlot(emu->from_slot);
 		eq->to_slot = ServerToSoDSlot(emu->to_slot);
 		OUT(number_in_stack);
@@ -1342,6 +1350,10 @@ namespace SoD
 		OUT(zone_id);
 		OUT(zone_instance);
 		OUT(SuspendBuffs);
+		OUT(FastRegenHP);
+		OUT(FastRegenMana);
+		OUT(FastRegenEndurance);
+
 		/*fill in some unknowns with observed values, hopefully it will help */
 		eq->unknown800 = -1;
 		eq->unknown844 = 600;
@@ -1355,9 +1367,6 @@ namespace SoD
 		eq->unknown893 = 0;
 		eq->fall_damage = 0;	// 0 = Fall Damage on, 1 = Fall Damage off
 		eq->unknown895 = 0;
-		eq->unknown896 = 180;
-		eq->unknown900 = 180;
-		eq->unknown904 = 180;
 		eq->unknown908 = 2;
 		eq->unknown912 = 2;
 		eq->FogDensity = emu->fog_density;
@@ -1382,114 +1391,6 @@ namespace SoD
 		OUT_str(ButtonName1);
 
 		FINISH_ENCODE();
-	}
-
-	ENCODE(OP_OpenNewTasksWindow)
-	{
-		AvailableTaskHeader_Struct*	__emu_AvailableTaskHeader;
-		AvailableTaskData1_Struct* 	__emu_AvailableTaskData1;
-		AvailableTaskData2_Struct* 	__emu_AvailableTaskData2;
-		AvailableTaskTrailer_Struct* 	__emu_AvailableTaskTrailer;
-
-		structs::AvailableTaskHeader_Struct*	__eq_AvailableTaskHeader;
-		structs::AvailableTaskData1_Struct* 	__eq_AvailableTaskData1;
-		structs::AvailableTaskData2_Struct* 	__eq_AvailableTaskData2;
-		structs::AvailableTaskTrailer_Struct* 	__eq_AvailableTaskTrailer;
-
-		EQApplicationPacket *in = *p;
-		*p = nullptr;
-
-		unsigned char *__emu_buffer = in->pBuffer;
-
-		__emu_AvailableTaskHeader = (AvailableTaskHeader_Struct*)__emu_buffer;
-
-		// For each task, SoF has an extra uint32 and what appears to be space for a null terminated string.
-		//
-		in->size = in->size + (__emu_AvailableTaskHeader->TaskCount * 5);
-		in->pBuffer = new unsigned char[in->size];
-		unsigned char *__eq_buffer = in->pBuffer;
-		__eq_AvailableTaskHeader = (structs::AvailableTaskHeader_Struct*)__eq_buffer;
-		char *__eq_ptr, *__emu_Ptr;
-
-		// Copy Header
-		//
-		//
-
-		__eq_AvailableTaskHeader->TaskCount = __emu_AvailableTaskHeader->TaskCount;
-		__eq_AvailableTaskHeader->unknown1 = __emu_AvailableTaskHeader->unknown1;
-		__eq_AvailableTaskHeader->TaskGiver = __emu_AvailableTaskHeader->TaskGiver;
-
-		__emu_Ptr = (char *)__emu_AvailableTaskHeader + sizeof(AvailableTaskHeader_Struct);
-		__eq_ptr = (char *)__eq_AvailableTaskHeader + sizeof(structs::AvailableTaskHeader_Struct);
-
-		for (uint32 i = 0; i<__emu_AvailableTaskHeader->TaskCount; i++) {
-
-			__emu_AvailableTaskData1 = (AvailableTaskData1_Struct*)__emu_Ptr;
-			__eq_AvailableTaskData1 = (structs::AvailableTaskData1_Struct*)__eq_ptr;
-
-			__eq_AvailableTaskData1->TaskID = __emu_AvailableTaskData1->TaskID;
-			// This next unknown seems to affect the colour of the task title. 0x3f80000 is what I have seen
-			// in Live packets. Changing it to 0x3f000000 makes the title red.
-			__eq_AvailableTaskData1->unknown1 = 0x3f800000;
-			__eq_AvailableTaskData1->TimeLimit = __emu_AvailableTaskData1->TimeLimit;
-			__eq_AvailableTaskData1->unknown2 = __emu_AvailableTaskData1->unknown2;
-
-			__emu_Ptr += sizeof(AvailableTaskData1_Struct);
-			__eq_ptr += sizeof(structs::AvailableTaskData1_Struct);
-
-			strcpy(__eq_ptr, __emu_Ptr); // Title
-
-			__emu_Ptr += strlen(__emu_Ptr) + 1;
-			__eq_ptr += strlen(__eq_ptr) + 1;
-
-			strcpy(__eq_ptr, __emu_Ptr); // Description
-
-			__emu_Ptr += strlen(__emu_Ptr) + 1;
-			__eq_ptr += strlen(__eq_ptr) + 1;
-
-			__eq_ptr[0] = 0;
-			__eq_ptr += strlen(__eq_ptr) + 1;
-
-			__emu_AvailableTaskData2 = (AvailableTaskData2_Struct*)__emu_Ptr;
-			__eq_AvailableTaskData2 = (structs::AvailableTaskData2_Struct*)__eq_ptr;
-
-			__eq_AvailableTaskData2->unknown1 = __emu_AvailableTaskData2->unknown1;
-			__eq_AvailableTaskData2->unknown2 = __emu_AvailableTaskData2->unknown2;
-			__eq_AvailableTaskData2->unknown3 = __emu_AvailableTaskData2->unknown3;
-			__eq_AvailableTaskData2->unknown4 = __emu_AvailableTaskData2->unknown4;
-
-			__emu_Ptr += sizeof(AvailableTaskData2_Struct);
-			__eq_ptr += sizeof(structs::AvailableTaskData2_Struct);
-
-			strcpy(__eq_ptr, __emu_Ptr); // Unknown string
-
-			__emu_Ptr += strlen(__emu_Ptr) + 1;
-			__eq_ptr += strlen(__eq_ptr) + 1;
-
-			strcpy(__eq_ptr, __emu_Ptr); // Unknown string
-
-			__emu_Ptr += strlen(__emu_Ptr) + 1;
-			__eq_ptr += strlen(__eq_ptr) + 1;
-
-			__emu_AvailableTaskTrailer = (AvailableTaskTrailer_Struct*)__emu_Ptr;
-			__eq_AvailableTaskTrailer = (structs::AvailableTaskTrailer_Struct*)__eq_ptr;
-
-			__eq_AvailableTaskTrailer->ItemCount = __emu_AvailableTaskTrailer->ItemCount;
-			__eq_AvailableTaskTrailer->unknown1 = __emu_AvailableTaskTrailer->unknown1;
-			__eq_AvailableTaskTrailer->unknown2 = __emu_AvailableTaskTrailer->unknown2;
-			__eq_AvailableTaskTrailer->StartZone = __emu_AvailableTaskTrailer->StartZone;
-
-			__emu_Ptr += sizeof(AvailableTaskTrailer_Struct);
-			__eq_ptr += sizeof(structs::AvailableTaskTrailer_Struct);
-
-			strcpy(__eq_ptr, __emu_Ptr); // Unknown string
-
-			__emu_Ptr += strlen(__emu_Ptr) + 1;
-			__eq_ptr += strlen(__eq_ptr) + 1;
-		}
-
-		delete[] __emu_buffer;
-		dest->FastQueuePacket(&in, ack_req);
 	}
 
 	ENCODE(OP_PetBuffWindow)
@@ -1632,19 +1533,19 @@ namespace SoD
 
 		//	OUT(unknown06160[4]);
 
-		// Copy bandoliers where server and client indexes converge
-		for (r = 0; r < EQEmu::legacy::BANDOLIERS_SIZE && r < profile::BandoliersSize; ++r) {
+		// Copy bandoliers where server and client indices converge
+		for (r = 0; r < EQEmu::profile::BANDOLIERS_SIZE && r < profile::BANDOLIERS_SIZE; ++r) {
 			OUT_str(bandoliers[r].Name);
-			for (uint32 k = 0; k < profile::BandolierItemCount; ++k) { // Will need adjusting if 'server != client' is ever true
+			for (uint32 k = 0; k < profile::BANDOLIER_ITEM_COUNT; ++k) { // Will need adjusting if 'server != client' is ever true
 				OUT(bandoliers[r].Items[k].ID);
 				OUT(bandoliers[r].Items[k].Icon);
 				OUT_str(bandoliers[r].Items[k].Name);
 			}
 		}
-		// Nullify bandoliers where server and client indexes diverge, with a client bias
-		for (r = EQEmu::legacy::BANDOLIERS_SIZE; r < profile::BandoliersSize; ++r) {
+		// Nullify bandoliers where server and client indices diverge, with a client bias
+		for (r = EQEmu::profile::BANDOLIERS_SIZE; r < profile::BANDOLIERS_SIZE; ++r) {
 			eq->bandoliers[r].Name[0] = '\0';
-			for (uint32 k = 0; k < profile::BandolierItemCount; ++k) { // Will need adjusting if 'server != client' is ever true
+			for (uint32 k = 0; k < profile::BANDOLIER_ITEM_COUNT; ++k) { // Will need adjusting if 'server != client' is ever true
 				eq->bandoliers[r].Items[k].ID = 0;
 				eq->bandoliers[r].Items[k].Icon = 0;
 				eq->bandoliers[r].Items[k].Name[0] = '\0';
@@ -1653,14 +1554,14 @@ namespace SoD
 
 		//	OUT(unknown07444[5120]);
 
-		// Copy potion belt where server and client indexes converge
-		for (r = 0; r < EQEmu::legacy::POTION_BELT_ITEM_COUNT && r < profile::PotionBeltSize; ++r) {
+		// Copy potion belt where server and client indices converge
+		for (r = 0; r < EQEmu::profile::POTION_BELT_SIZE && r < profile::POTION_BELT_SIZE; ++r) {
 			OUT(potionbelt.Items[r].ID);
 			OUT(potionbelt.Items[r].Icon);
 			OUT_str(potionbelt.Items[r].Name);
 		}
-		// Nullify potion belt where server and client indexes diverge, with a client bias
-		for (r = EQEmu::legacy::POTION_BELT_ITEM_COUNT; r < profile::PotionBeltSize; ++r) {
+		// Nullify potion belt where server and client indices diverge, with a client bias
+		for (r = EQEmu::profile::POTION_BELT_SIZE; r < profile::POTION_BELT_SIZE; ++r) {
 			eq->potionbelt.Items[r].ID = 0;
 			eq->potionbelt.Items[r].Icon = 0;
 			eq->potionbelt.Items[r].Name[0] = '\0';
@@ -1764,11 +1665,11 @@ namespace SoD
 		//	OUT(unknown19588);
 
 		const uint8 bytes[] = {
-			0xa3, 0x02, 0x00, 0x00, 0x95, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00,
-			0x19, 0x00, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00,
-			0x0F, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x1F, 0x85, 0xEB, 0x3E, 0x33, 0x33, 0x33, 0x3F,
-			0x04, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00,
-			0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+				0xa3, 0x02, 0x00, 0x00, 0x95, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00,
+				0x19, 0x00, 0x00, 0x00, 0x19, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00,
+				0x0F, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x00, 0x00, 0x1F, 0x85, 0xEB, 0x3E, 0x33, 0x33, 0x33, 0x3F,
+				0x04, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00,
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 		};
 
 		memcpy(eq->unknown12864, bytes, sizeof(bytes));
@@ -1829,7 +1730,7 @@ namespace SoD
 		{
 			RaidMOTD_Struct *inmotd = (RaidMOTD_Struct *)__emu_buffer;
 			auto outapp = new EQApplicationPacket(OP_RaidUpdate, sizeof(structs::RaidMOTD_Struct) +
-										 strlen(inmotd->motd) + 1);
+																 strlen(inmotd->motd) + 1);
 			structs::RaidMOTD_Struct *outmotd = (structs::RaidMOTD_Struct *)outapp->pBuffer;
 
 			outmotd->general.action = inmotd->general.action;
@@ -1841,7 +1742,7 @@ namespace SoD
 		{
 			RaidLeadershipUpdate_Struct *inlaa = (RaidLeadershipUpdate_Struct *)__emu_buffer;
 			auto outapp =
-			    new EQApplicationPacket(OP_RaidUpdate, sizeof(structs::RaidLeadershipUpdate_Struct));
+					new EQApplicationPacket(OP_RaidUpdate, sizeof(structs::RaidLeadershipUpdate_Struct));
 			structs::RaidLeadershipUpdate_Struct *outlaa = (structs::RaidLeadershipUpdate_Struct *)outapp->pBuffer;
 
 			outlaa->action = inlaa->action;
@@ -1889,7 +1790,7 @@ namespace SoD
 		AARankInfo_Struct *emu = (AARankInfo_Struct*)inapp->pBuffer;
 
 		auto outapp = new EQApplicationPacket(
-		    OP_SendAATable, sizeof(structs::SendAA_Struct) + emu->total_effects * sizeof(structs::AA_Ability));
+				OP_SendAATable, sizeof(structs::SendAA_Struct) + emu->total_effects * sizeof(structs::AA_Ability));
 		structs::SendAA_Struct *eq = (structs::SendAA_Struct*)outapp->pBuffer;
 
 		inapp->SetReadPosition(sizeof(AARankInfo_Struct));
@@ -1948,8 +1849,8 @@ namespace SoD
 			eq->CharCount = emu->CharCount;
 			eq->TotalChars = emu->TotalChars;
 
-			if (eq->TotalChars > constants::CharacterCreationLimit)
-				eq->TotalChars = constants::CharacterCreationLimit;
+			if (eq->TotalChars > constants::CHARACTER_CREATION_LIMIT)
+				eq->TotalChars = constants::CHARACTER_CREATION_LIMIT;
 
 			FINISH_ENCODE();
 			return;
@@ -1961,15 +1862,15 @@ namespace SoD
 
 		size_t names_length = 0;
 		size_t character_count = 0;
-		for (; character_count < emu->CharCount && character_count < constants::CharacterCreationLimit; ++character_count) {
+		for (; character_count < emu->CharCount && character_count < constants::CHARACTER_CREATION_LIMIT; ++character_count) {
 			emu_cse = (CharacterSelectEntry_Struct *)emu_ptr;
 			names_length += strlen(emu_cse->Name);
 			emu_ptr += sizeof(CharacterSelectEntry_Struct);
 		}
 
 		size_t total_length = sizeof(structs::CharacterSelect_Struct)
-			+ character_count * sizeof(structs::CharacterSelectEntry_Struct)
-			+ names_length;
+							  + character_count * sizeof(structs::CharacterSelectEntry_Struct)
+							  + names_length;
 
 		ALLOC_VAR_ENCODE(structs::CharacterSelect_Struct, total_length);
 		structs::CharacterSelectEntry_Struct *eq_cse = (structs::CharacterSelectEntry_Struct *)nullptr;
@@ -1977,8 +1878,8 @@ namespace SoD
 		eq->CharCount = character_count;
 		eq->TotalChars = emu->TotalChars;
 
-		if (eq->TotalChars > constants::CharacterCreationLimit)
-			eq->TotalChars = constants::CharacterCreationLimit;
+		if (eq->TotalChars > constants::CHARACTER_CREATION_LIMIT)
+			eq->TotalChars = constants::CHARACTER_CREATION_LIMIT;
 
 		emu_ptr = __emu_buffer;
 		emu_ptr += sizeof(CharacterSelect_Struct);
@@ -2156,7 +2057,7 @@ namespace SoD
 		std::string old_message = &emu->message[strlen(emu->sayer)];
 		std::string new_message;
 
-		ServerToSoDTextLink(new_message, old_message);
+		ServerToSoDSayLink(new_message, old_message);
 
 		//in->size = 3 + 4 + 4 + strlen(emu->sayer) + 1 + 12 + new_message.length() + 1;
 		in->size = strlen(emu->sayer) + new_message.length() + 25;
@@ -2250,13 +2151,15 @@ namespace SoD
 		InBuffer += description_size;
 		InBuffer += sizeof(TaskDescriptionData2_Struct);
 
-		std::string old_message = InBuffer; // start 'Reward' as string
+		uint32 reward_size = strlen(InBuffer) + 1;
+		InBuffer += reward_size;
+		std::string old_message = InBuffer; // start item link string
 		std::string new_message;
-		ServerToSoDTextLink(new_message, old_message);
+		ServerToSoDSayLink(new_message, old_message);
 
 		in->size = sizeof(TaskDescriptionHeader_Struct) + sizeof(TaskDescriptionData1_Struct)+
-			sizeof(TaskDescriptionData2_Struct) + sizeof(TaskDescriptionTrailer_Struct)+
-			title_size + description_size + new_message.length() + 1;
+				   sizeof(TaskDescriptionData2_Struct) + sizeof(TaskDescriptionTrailer_Struct)+
+				title_size + description_size + reward_size + new_message.length() + 1;
 
 		in->pBuffer = new unsigned char[in->size];
 
@@ -2370,7 +2273,7 @@ namespace SoD
 		*p = nullptr;
 
 		auto outapp_create =
-		    new EQApplicationPacket(OP_VetRewardsAvaliable, (sizeof(structs::VeteranReward) * count));
+				new EQApplicationPacket(OP_VetRewardsAvaliable, (sizeof(structs::VeteranReward) * count));
 		uchar *old_data = __emu_buffer;
 		uchar *data = outapp_create->pBuffer;
 		for (unsigned int i = 0; i < count; ++i)
@@ -2933,25 +2836,6 @@ namespace SoD
 		FINISH_DIRECT_DECODE();
 	}
 
-	DECODE(OP_Bug)
-	{
-		DECODE_LENGTH_EXACT(structs::BugStruct);
-		SETUP_DIRECT_DECODE(BugStruct, structs::BugStruct);
-
-		strn0cpy(emu->chartype, eq->chartype, sizeof(emu->chartype));
-		strn0cpy(emu->name, eq->name, sizeof(emu->name));
-		strn0cpy(emu->ui, eq->ui, sizeof(emu->ui));
-		IN(x);
-		IN(y);
-		IN(z);
-		IN(heading);
-		strn0cpy(emu->target_name, eq->target_name, sizeof(emu->target_name));
-		strn0cpy(emu->bug, eq->bug, sizeof(emu->bug));
-		strn0cpy(emu->system_info, eq->system_info, sizeof(emu->system_info));
-
-		FINISH_DIRECT_DECODE();
-	}
-
 	DECODE(OP_CastSpell)
 	{
 		DECODE_LENGTH_EXACT(structs::CastSpell_Struct);
@@ -2972,7 +2856,7 @@ namespace SoD
 
 		std::string old_message = (char *)&__eq_buffer[sizeof(ChannelMessage_Struct)];
 		std::string new_message;
-		SoDToServerTextLink(new_message, old_message);
+		SoDToServerSayLink(new_message, old_message);
 
 		__packet->size = sizeof(ChannelMessage_Struct) + new_message.length() + 1;
 		__packet->pBuffer = new unsigned char[__packet->size];
@@ -3086,7 +2970,7 @@ namespace SoD
 
 		std::string old_message = (char *)&__eq_buffer[4]; // unknown01 offset
 		std::string new_message;
-		SoDToServerTextLink(new_message, old_message);
+		SoDToServerSayLink(new_message, old_message);
 
 		__packet->size = sizeof(Emote_Struct);
 		__packet->pBuffer = new unsigned char[__packet->size];
@@ -3264,6 +3148,8 @@ namespace SoD
 		DECODE_LENGTH_EXACT(structs::LootingItem_Struct);
 		SETUP_DIRECT_DECODE(LootingItem_Struct, structs::LootingItem_Struct);
 
+		Log(Logs::Moderate, Logs::Netcode, "SoD::DECODE(OP_LootItem)");
+
 		IN(lootee);
 		IN(looter);
 		emu->slot_id = SoDToServerCorpseSlot(eq->slot_id);
@@ -3277,7 +3163,7 @@ namespace SoD
 		DECODE_LENGTH_EXACT(structs::MoveItem_Struct);
 		SETUP_DIRECT_DECODE(MoveItem_Struct, structs::MoveItem_Struct);
 
-		Log(Logs::General, Logs::Netcode, "[SoD] Moved item from %u to %u", eq->from_slot, eq->to_slot);
+		Log(Logs::Moderate, Logs::Netcode, "SoD::DECODE(OP_MoveItem)");
 
 		emu->from_slot = SoDToServerSlot(eq->from_slot);
 		emu->to_slot = SoDToServerSlot(eq->to_slot);
@@ -3293,63 +3179,63 @@ namespace SoD
 
 		switch (eq->command)
 		{
-		case 1: // back off
-			emu->command = 28;
-			break;
-		case 2: // get lost
-			emu->command = 29;
-			break;
-		case 3: // as you were ???
-			emu->command = 4; // fuck it follow
-			break;
-		case 4: // report HP
-			emu->command = 0;
-			break;
-		case 5: // guard here
-			emu->command = 5;
-			break;
-		case 6: // guard me
-			emu->command = 4; // fuck it follow
-			break;
-		case 7: // attack
-			emu->command = 2;
-			break;
-		case 8: // follow
-			emu->command = 4;
-			break;
-		case 9: // sit down
-			emu->command = 7;
-			break;
-		case 10: // stand up
-			emu->command = 8;
-			break;
-		case 11: // taunt toggle
-			emu->command = 12;
-			break;
-		case 12: // hold toggle
-			emu->command = 15;
-			break;
-		case 13: // taunt on
-			emu->command = 13;
-			break;
-		case 14: // no taunt
-			emu->command = 14;
-			break;
-		// 15 is target, doesn't send packet
-		case 16: // leader
-			emu->command = 1;
-			break;
-		case 17: // feign
-			emu->command = 27;
-			break;
-		case 18: // no cast toggle
-			emu->command = 21;
-			break;
-		case 19: // focus toggle
-			emu->command = 24;
-			break;
-		default:
-			emu->command = eq->command;
+			case 1: // back off
+				emu->command = 28;
+				break;
+			case 2: // get lost
+				emu->command = 29;
+				break;
+			case 3: // as you were ???
+				emu->command = 4; // fuck it follow
+				break;
+			case 4: // report HP
+				emu->command = 0;
+				break;
+			case 5: // guard here
+				emu->command = 5;
+				break;
+			case 6: // guard me
+				emu->command = 4; // fuck it follow
+				break;
+			case 7: // attack
+				emu->command = 2;
+				break;
+			case 8: // follow
+				emu->command = 4;
+				break;
+			case 9: // sit down
+				emu->command = 7;
+				break;
+			case 10: // stand up
+				emu->command = 8;
+				break;
+			case 11: // taunt toggle
+				emu->command = 12;
+				break;
+			case 12: // hold toggle
+				emu->command = 15;
+				break;
+			case 13: // taunt on
+				emu->command = 13;
+				break;
+			case 14: // no taunt
+				emu->command = 14;
+				break;
+				// 15 is target, doesn't send packet
+			case 16: // leader
+				emu->command = 1;
+				break;
+			case 17: // feign
+				emu->command = 27;
+				break;
+			case 18: // no cast toggle
+				emu->command = 21;
+				break;
+			case 19: // focus toggle
+				emu->command = 24;
+				break;
+			default:
+				emu->command = eq->command;
 		}
 		IN(target);
 
@@ -3548,7 +3434,7 @@ namespace SoD
 	void SerializeItem(EQEmu::OutBuffer& ob, const EQEmu::ItemInstance *inst, int16 slot_id_in, uint8 depth)
 	{
 		const EQEmu::ItemData *item = inst->GetUnscaledItem();
-		
+
 		SoD::structs::ItemSerializationHeader hdr;
 
 		hdr.stacksize = (inst->IsStackable() ? ((inst->GetCharges() > 254) ? 0xFFFFFFFF : inst->GetCharges()) : 1);
@@ -3598,7 +3484,7 @@ namespace SoD
 		ibs.nodrop = item->NoDrop;
 		ibs.attune = item->Attuneable;
 		ibs.size = item->Size;
-		ibs.slots = SwapBits21and22(item->Slots);
+		ibs.slots = item->Slots;
 		ibs.price = item->Price;
 		ibs.icon = item->Icon;
 		ibs.unknown1 = 1;
@@ -3688,7 +3574,7 @@ namespace SoD
 		isbs.augtype = item->AugType;
 		isbs.augrestrict = item->AugRestrict;
 
-		for (int index = 0; index < invaug::ItemAugSize; ++index) {
+		for (int index = invaug::SOCKET_BEGIN; index <= invaug::SOCKET_END; ++index) {
 			isbs.augslots[index].type = item->AugSlotType[index];
 			isbs.augslots[index].visible = item->AugSlotVisible[index];
 			isbs.augslots[index].unknown = item->AugSlotUnk2[index];
@@ -3853,7 +3739,7 @@ namespace SoD
 		iqbs.HealAmt = item->HealAmt;
 		iqbs.SpellDmg = item->SpellDmg;
 		iqbs.Clairvoyance = item->Clairvoyance;
-		
+
 		ob.write((const char*)&iqbs, sizeof(SoD::structs::ItemQuaternaryBodyStruct));
 
 		EQEmu::OutBuffer::pos_type count_pos = ob.tellp();
@@ -3861,94 +3747,216 @@ namespace SoD
 
 		ob.write((const char*)&subitem_count, sizeof(uint32));
 
-		for (uint32 index = EQEmu::inventory::containerBegin; index < EQEmu::inventory::ContainerCount; ++index) {
-			EQEmu::ItemInstance* sub = inst->GetItem(index);
-			if (!sub)
-				continue;
+		// moved outside of loop since it is not modified within that scope
+		int16 SubSlotNumber = EQEmu::invbag::SLOT_INVALID;
 
-			int SubSlotNumber = INVALID_INDEX;
-			if (slot_id_in >= EQEmu::legacy::GENERAL_BEGIN && slot_id_in <= EQEmu::legacy::GENERAL_END)
-				SubSlotNumber = (((slot_id_in + 3) * EQEmu::inventory::ContainerCount) + index + 1);
-			else if (slot_id_in >= EQEmu::legacy::BANK_BEGIN && slot_id_in <= EQEmu::legacy::BANK_END)
-				SubSlotNumber = (((slot_id_in - EQEmu::legacy::BANK_BEGIN) * EQEmu::inventory::ContainerCount) + EQEmu::legacy::BANK_BAGS_BEGIN + index);
-			else if (slot_id_in >= EQEmu::legacy::SHARED_BANK_BEGIN && slot_id_in <= EQEmu::legacy::SHARED_BANK_END)
-				SubSlotNumber = (((slot_id_in - EQEmu::legacy::SHARED_BANK_BEGIN) * EQEmu::inventory::ContainerCount) + EQEmu::legacy::SHARED_BANK_BAGS_BEGIN + index);
-			else
-				SubSlotNumber = slot_id_in;
+		if (slot_id_in <= EQEmu::invslot::slotGeneral8 && slot_id_in >= EQEmu::invslot::GENERAL_BEGIN)
+			SubSlotNumber = EQEmu::invbag::GENERAL_BAGS_BEGIN + ((slot_id_in - EQEmu::invslot::GENERAL_BEGIN) * EQEmu::invbag::SLOT_COUNT);
+		else if (slot_id_in <= EQEmu::invslot::GENERAL_END && slot_id_in >= EQEmu::invslot::slotGeneral9)
+			SubSlotNumber = EQEmu::invbag::SLOT_INVALID;
+		else if (slot_id_in == EQEmu::invslot::slotCursor)
+			SubSlotNumber = EQEmu::invbag::CURSOR_BAG_BEGIN;
+		else if (slot_id_in <= EQEmu::invslot::BANK_END && slot_id_in >= EQEmu::invslot::BANK_BEGIN)
+			SubSlotNumber = EQEmu::invbag::BANK_BAGS_BEGIN + ((slot_id_in - EQEmu::invslot::BANK_BEGIN) * EQEmu::invbag::SLOT_COUNT);
+		else if (slot_id_in <= EQEmu::invslot::SHARED_BANK_END && slot_id_in >= EQEmu::invslot::SHARED_BANK_BEGIN)
+			SubSlotNumber = EQEmu::invbag::SHARED_BANK_BAGS_BEGIN + ((slot_id_in - EQEmu::invslot::SHARED_BANK_BEGIN) * EQEmu::invbag::SLOT_COUNT);
+		else
+			SubSlotNumber = slot_id_in; // not sure if this is the best way to handle this..leaving for now
 
-			ob.write((const char*)&index, sizeof(uint32));
+		if (SubSlotNumber != EQEmu::invbag::SLOT_INVALID) {
+			for (uint32 index = EQEmu::invbag::SLOT_BEGIN; index <= EQEmu::invbag::SLOT_END; ++index) {
+				EQEmu::ItemInstance* sub = inst->GetItem(index);
+				if (!sub)
+					continue;
 
-			SerializeItem(ob, sub, SubSlotNumber, (depth + 1));
-			++subitem_count;
+				ob.write((const char*)&index, sizeof(uint32));
+
+				SerializeItem(ob, sub, SubSlotNumber, (depth + 1));
+				++subitem_count;
+			}
+
+			if (subitem_count)
+				ob.overwrite(count_pos, (const char*)&subitem_count, sizeof(uint32));
 		}
-
-		if (subitem_count)
-			ob.overwrite(count_pos, (const char*)&subitem_count, sizeof(uint32));
 	}
 
 	static inline uint32 ServerToSoDSlot(uint32 serverSlot)
 	{
-		uint32 SoDSlot = 0;
+		uint32 SoDSlot = invslot::SLOT_INVALID;
 
-		if (serverSlot >= EQEmu::inventory::slotAmmo && serverSlot <= 53) // Cursor/Ammo/Power Source and Normal Inventory Slots
-			SoDSlot = serverSlot + 1;
-		else if (serverSlot >= EQEmu::legacy::GENERAL_BAGS_BEGIN && serverSlot <= EQEmu::legacy::CURSOR_BAG_END)
-			SoDSlot = serverSlot + 11;
-		else if (serverSlot >= EQEmu::legacy::BANK_BAGS_BEGIN && serverSlot <= EQEmu::legacy::BANK_BAGS_END)
-			SoDSlot = serverSlot + 1;
-		else if (serverSlot >= EQEmu::legacy::SHARED_BANK_BAGS_BEGIN && serverSlot <= EQEmu::legacy::SHARED_BANK_BAGS_END)
-			SoDSlot = serverSlot + 1;
-		else if (serverSlot == EQEmu::inventory::slotPowerSource)
-			SoDSlot = invslot::PossessionsPowerSource;
-		else
+		if (serverSlot <= EQEmu::invslot::slotGeneral8) {
 			SoDSlot = serverSlot;
+		}
+
+		else if (serverSlot <= EQEmu::invslot::CORPSE_END && serverSlot >= EQEmu::invslot::slotCursor) {
+			SoDSlot = serverSlot - 2;
+		}
+
+		else if (serverSlot <= EQEmu::invbag::GENERAL_BAGS_8_END && serverSlot >= EQEmu::invbag::GENERAL_BAGS_BEGIN) {
+			SoDSlot = serverSlot + 11;
+		}
+
+		else if (serverSlot <= EQEmu::invbag::CURSOR_BAG_END && serverSlot >= EQEmu::invbag::CURSOR_BAG_BEGIN) {
+			SoDSlot = serverSlot - 9;
+		}
+
+		else if (serverSlot <= EQEmu::invslot::TRIBUTE_END && serverSlot >= EQEmu::invslot::TRIBUTE_BEGIN) {
+			SoDSlot = serverSlot;
+		}
+
+		else if (serverSlot <= EQEmu::invslot::GUILD_TRIBUTE_END && serverSlot >= EQEmu::invslot::GUILD_TRIBUTE_BEGIN) {
+			SoDSlot = serverSlot;
+		}
+
+		else if (serverSlot == EQEmu::invslot::SLOT_TRADESKILL_EXPERIMENT_COMBINE) {
+			SoDSlot = serverSlot;
+		}
+
+		else if (serverSlot <= EQEmu::invslot::BANK_END && serverSlot >= EQEmu::invslot::BANK_BEGIN) {
+			SoDSlot = serverSlot;
+		}
+
+		else if (serverSlot <= EQEmu::invbag::BANK_BAGS_END && serverSlot >= EQEmu::invbag::BANK_BAGS_BEGIN) {
+			SoDSlot = serverSlot + 1;
+		}
+
+		else if (serverSlot <= EQEmu::invslot::SHARED_BANK_END && serverSlot >= EQEmu::invslot::SHARED_BANK_BEGIN) {
+			SoDSlot = serverSlot;
+		}
+
+		else if (serverSlot <= EQEmu::invbag::SHARED_BANK_BAGS_END && serverSlot >= EQEmu::invbag::SHARED_BANK_BAGS_BEGIN) {
+			SoDSlot = serverSlot + 1;
+		}
+
+		else if (serverSlot <= EQEmu::invslot::TRADE_END && serverSlot >= EQEmu::invslot::TRADE_BEGIN) {
+			SoDSlot = serverSlot;
+		}
+
+		else if (serverSlot <= EQEmu::invbag::TRADE_BAGS_END && serverSlot >= EQEmu::invbag::TRADE_BAGS_BEGIN) {
+			SoDSlot = serverSlot;
+		}
+
+		else if (serverSlot <= EQEmu::invslot::WORLD_END && serverSlot >= EQEmu::invslot::WORLD_BEGIN) {
+			SoDSlot = serverSlot;
+		}
+
+		Log(Logs::Detail, Logs::Netcode, "Convert Server Slot %i to SoD Slot %i", serverSlot, SoDSlot);
+
 		return SoDSlot;
 	}
 
-	static inline uint32 ServerToSoDCorpseSlot(uint32 serverCorpseSlot)
+	static inline uint32 ServerToSoDCorpseSlot(uint32 server_corpse_slot)
 	{
-		//uint32 SoDCorpse;
-		return (serverCorpseSlot + 1);
+		uint32 SoDSlot = invslot::SLOT_INVALID;
+
+		if (server_corpse_slot <= EQEmu::invslot::slotGeneral8 && server_corpse_slot >= EQEmu::invslot::slotGeneral1) {
+			SoDSlot = server_corpse_slot;
+		}
+
+		else if (server_corpse_slot <= EQEmu::invslot::CORPSE_END && server_corpse_slot >= EQEmu::invslot::slotCursor) {
+			SoDSlot = server_corpse_slot - 2;
+		}
+
+		Log(Logs::Detail, Logs::Netcode, "Convert Server Corpse Slot %i to SoD Corpse Slot %i", server_corpse_slot, SoDSlot);
+
+		return SoDSlot;
 	}
 
-	static inline uint32 SoDToServerSlot(uint32 sodSlot)
+	static inline uint32 SoDToServerSlot(uint32 sod_slot)
 	{
-		uint32 ServerSlot = 0;
+		uint32 server_slot = EQEmu::invslot::SLOT_INVALID;
 
-		if (sodSlot >= invslot::PossessionsAmmo && sodSlot <= invslot::CorpseEnd) // Cursor/Ammo/Power Source and Normal Inventory Slots
-			ServerSlot = sodSlot - 1;
-		else if (sodSlot >= invbag::GeneralBagsBegin && sodSlot <= invbag::CursorBagEnd)
-			ServerSlot = sodSlot - 11;
-		else if (sodSlot >= invbag::BankBagsBegin && sodSlot <= invbag::BankBagsEnd)
-			ServerSlot = sodSlot - 1;
-		else if (sodSlot >= invbag::SharedBankBagsBegin && sodSlot <= invbag::SharedBankBagsEnd)
-			ServerSlot = sodSlot - 1;
-		else if (sodSlot == invslot::PossessionsPowerSource)
-			ServerSlot = EQEmu::inventory::slotPowerSource;
-		else
-			ServerSlot = sodSlot;
-		return ServerSlot;
+		if (sod_slot <= invslot::slotGeneral8) {
+			server_slot = sod_slot;
+		}
+
+		else if (sod_slot <= invslot::CORPSE_END && sod_slot >= invslot::slotCursor) {
+			server_slot = sod_slot + 2;
+		}
+
+		else if (sod_slot <= invbag::GENERAL_BAGS_END && sod_slot >= invbag::GENERAL_BAGS_BEGIN) {
+			server_slot = sod_slot - 11;
+		}
+
+		else if (sod_slot <= invbag::CURSOR_BAG_END && sod_slot >= invbag::CURSOR_BAG_BEGIN) {
+			server_slot = sod_slot + 9;
+		}
+
+		else if (sod_slot <= invslot::TRIBUTE_END && sod_slot >= invslot::TRIBUTE_BEGIN) {
+			server_slot = sod_slot;
+		}
+
+		else if (sod_slot <= invslot::GUILD_TRIBUTE_END && sod_slot >= invslot::GUILD_TRIBUTE_BEGIN) {
+			server_slot = sod_slot;
+		}
+
+		else if (sod_slot == invslot::SLOT_TRADESKILL_EXPERIMENT_COMBINE) {
+			server_slot = sod_slot;
+		}
+
+		else if (sod_slot <= invslot::BANK_END && sod_slot >= invslot::BANK_BEGIN) {
+			server_slot = sod_slot;
+		}
+
+		else if (sod_slot <= invbag::BANK_BAGS_END && sod_slot >= invbag::BANK_BAGS_BEGIN) {
+			server_slot = sod_slot - 1;
+		}
+
+		else if (sod_slot <= invslot::SHARED_BANK_END && sod_slot >= invslot::SHARED_BANK_BEGIN) {
+			server_slot = sod_slot;
+		}
+
+		else if (sod_slot <= invbag::SHARED_BANK_BAGS_END && sod_slot >= invbag::SHARED_BANK_BAGS_BEGIN) {
+			server_slot = sod_slot - 1;
+		}
+
+		else if (sod_slot <= invslot::TRADE_END && sod_slot >= invslot::TRADE_BEGIN) {
+			server_slot = sod_slot;
+		}
+
+		else if (sod_slot <= invbag::TRADE_BAGS_END && sod_slot >= invbag::TRADE_BAGS_BEGIN) {
+			server_slot = sod_slot;
+		}
+
+		else if (sod_slot <= invslot::WORLD_END && sod_slot >= invslot::WORLD_BEGIN) {
+			server_slot = sod_slot;
+		}
+
+		Log(Logs::Detail, Logs::Netcode, "Convert SoD Slot %i to Server Slot %i", sod_slot, server_slot);
+
+		return server_slot;
 	}
 
-	static inline uint32 SoDToServerCorpseSlot(uint32 sodCorpseSlot)
+	static inline uint32 SoDToServerCorpseSlot(uint32 sod_corpse_slot)
 	{
-		//uint32 ServerCorpse;
-		return (sodCorpseSlot - 1);
+		uint32 server_slot = EQEmu::invslot::SLOT_INVALID;
+
+		if (sod_corpse_slot <= invslot::slotGeneral8 && sod_corpse_slot >= invslot::slotGeneral1) {
+			server_slot = sod_corpse_slot;
+		}
+
+		else if (sod_corpse_slot <= invslot::CORPSE_END && sod_corpse_slot >= invslot::slotCursor) {
+			server_slot = sod_corpse_slot + 2;
+		}
+
+		Log(Logs::Detail, Logs::Netcode, "Convert SoD Corpse Slot %i to Server Corpse Slot %i", sod_corpse_slot, server_slot);
+
+		return server_slot;
 	}
 
-	static inline void ServerToSoDTextLink(std::string& sodTextLink, const std::string& serverTextLink)
+	static inline void ServerToSoDSayLink(std::string &sod_saylink, const std::string &server_saylink)
 	{
-		if ((constants::SayLinkBodySize == EQEmu::legacy::TEXT_LINK_BODY_LENGTH) || (serverTextLink.find('\x12') == std::string::npos)) {
-			sodTextLink = serverTextLink;
+		if ((constants::SAY_LINK_BODY_SIZE == EQEmu::constants::SAY_LINK_BODY_SIZE) || (server_saylink.find('\x12') == std::string::npos)) {
+			sod_saylink = server_saylink;
 			return;
 		}
 
-		auto segments = SplitString(serverTextLink, '\x12');
+		auto segments = SplitString(server_saylink, '\x12');
 
 		for (size_t segment_iter = 0; segment_iter < segments.size(); ++segment_iter) {
 			if (segment_iter & 1) {
-				if (segments[segment_iter].length() <= EQEmu::legacy::TEXT_LINK_BODY_LENGTH) {
-					sodTextLink.append(segments[segment_iter]);
+				if (segments[segment_iter].length() <= EQEmu::constants::SAY_LINK_BODY_SIZE) {
+					sod_saylink.append(segments[segment_iter]);
 					// TODO: log size mismatch error
 					continue;
 				}
@@ -3958,37 +3966,37 @@ namespace SoD
 				// SoF:  X XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX       X  XXXX  X XXXXX XXXXXXXX (50)
 				// Diff:                                       ^^^^^         ^
 
-				sodTextLink.push_back('\x12');
-				sodTextLink.append(segments[segment_iter].substr(0, 31));
-				sodTextLink.append(segments[segment_iter].substr(36, 5));
+				sod_saylink.push_back('\x12');
+				sod_saylink.append(segments[segment_iter].substr(0, 31));
+				sod_saylink.append(segments[segment_iter].substr(36, 5));
 
 				if (segments[segment_iter][41] == '0')
-					sodTextLink.push_back(segments[segment_iter][42]);
+					sod_saylink.push_back(segments[segment_iter][42]);
 				else
-					sodTextLink.push_back('F');
+					sod_saylink.push_back('F');
 
-				sodTextLink.append(segments[segment_iter].substr(43));
-				sodTextLink.push_back('\x12');
+				sod_saylink.append(segments[segment_iter].substr(43));
+				sod_saylink.push_back('\x12');
 			}
 			else {
-				sodTextLink.append(segments[segment_iter]);
+				sod_saylink.append(segments[segment_iter]);
 			}
 		}
 	}
 
-	static inline void SoDToServerTextLink(std::string& serverTextLink, const std::string& sodTextLink)
+	static inline void SoDToServerSayLink(std::string &server_saylink, const std::string &sod_saylink)
 	{
-		if ((EQEmu::legacy::TEXT_LINK_BODY_LENGTH == constants::SayLinkBodySize) || (sodTextLink.find('\x12') == std::string::npos)) {
-			serverTextLink = sodTextLink;
+		if ((EQEmu::constants::SAY_LINK_BODY_SIZE == constants::SAY_LINK_BODY_SIZE) || (sod_saylink.find('\x12') == std::string::npos)) {
+			server_saylink = sod_saylink;
 			return;
 		}
 
-		auto segments = SplitString(sodTextLink, '\x12');
+		auto segments = SplitString(sod_saylink, '\x12');
 
 		for (size_t segment_iter = 0; segment_iter < segments.size(); ++segment_iter) {
 			if (segment_iter & 1) {
-				if (segments[segment_iter].length() <= constants::SayLinkBodySize) {
-					serverTextLink.append(segments[segment_iter]);
+				if (segments[segment_iter].length() <= constants::SAY_LINK_BODY_SIZE) {
+					server_saylink.append(segments[segment_iter]);
 					// TODO: log size mismatch error
 					continue;
 				}
@@ -3998,16 +4006,16 @@ namespace SoD
 				// RoF2: X XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX X  XXXX XX  XXXXX XXXXXXXX (56)
 				// Diff:                                       ^^^^^         ^
 
-				serverTextLink.push_back('\x12');
-				serverTextLink.append(segments[segment_iter].substr(0, 31));
-				serverTextLink.append("00000");
-				serverTextLink.append(segments[segment_iter].substr(31, 5));
-				serverTextLink.push_back('0');
-				serverTextLink.append(segments[segment_iter].substr(36));
-				serverTextLink.push_back('\x12');
+				server_saylink.push_back('\x12');
+				server_saylink.append(segments[segment_iter].substr(0, 31));
+				server_saylink.append("00000");
+				server_saylink.append(segments[segment_iter].substr(31, 5));
+				server_saylink.push_back('0');
+				server_saylink.append(segments[segment_iter].substr(36));
+				server_saylink.push_back('\x12');
 			}
 			else {
-				serverTextLink.append(segments[segment_iter]);
+				server_saylink.append(segments[segment_iter]);
 			}
 		}
 	}
@@ -4015,69 +4023,69 @@ namespace SoD
 	static inline CastingSlot ServerToSoDCastingSlot(EQEmu::CastingSlot slot)
 	{
 		switch (slot) {
-		case EQEmu::CastingSlot::Gem1:
-			return CastingSlot::Gem1;
-		case EQEmu::CastingSlot::Gem2:
-			return CastingSlot::Gem2;
-		case EQEmu::CastingSlot::Gem3:
-			return CastingSlot::Gem3;
-		case EQEmu::CastingSlot::Gem4:
-			return CastingSlot::Gem4;
-		case EQEmu::CastingSlot::Gem5:
-			return CastingSlot::Gem5;
-		case EQEmu::CastingSlot::Gem6:
-			return CastingSlot::Gem6;
-		case EQEmu::CastingSlot::Gem7:
-			return CastingSlot::Gem7;
-		case EQEmu::CastingSlot::Gem8:
-			return CastingSlot::Gem8;
-		case EQEmu::CastingSlot::Gem9:
-			return CastingSlot::Gem9;
-		case EQEmu::CastingSlot::Gem10:
-			return CastingSlot::Gem10;
-		case EQEmu::CastingSlot::Item:
-		case EQEmu::CastingSlot::PotionBelt:
-			return CastingSlot::Item;
-		case EQEmu::CastingSlot::Discipline:
-			return CastingSlot::Discipline;
-		case EQEmu::CastingSlot::AltAbility:
-			return CastingSlot::AltAbility;
-		default: // we shouldn't have any issues with other slots ... just return something
-			return CastingSlot::Discipline;
+			case EQEmu::CastingSlot::Gem1:
+				return CastingSlot::Gem1;
+			case EQEmu::CastingSlot::Gem2:
+				return CastingSlot::Gem2;
+			case EQEmu::CastingSlot::Gem3:
+				return CastingSlot::Gem3;
+			case EQEmu::CastingSlot::Gem4:
+				return CastingSlot::Gem4;
+			case EQEmu::CastingSlot::Gem5:
+				return CastingSlot::Gem5;
+			case EQEmu::CastingSlot::Gem6:
+				return CastingSlot::Gem6;
+			case EQEmu::CastingSlot::Gem7:
+				return CastingSlot::Gem7;
+			case EQEmu::CastingSlot::Gem8:
+				return CastingSlot::Gem8;
+			case EQEmu::CastingSlot::Gem9:
+				return CastingSlot::Gem9;
+			case EQEmu::CastingSlot::Gem10:
+				return CastingSlot::Gem10;
+			case EQEmu::CastingSlot::Item:
+			case EQEmu::CastingSlot::PotionBelt:
+				return CastingSlot::Item;
+			case EQEmu::CastingSlot::Discipline:
+				return CastingSlot::Discipline;
+			case EQEmu::CastingSlot::AltAbility:
+				return CastingSlot::AltAbility;
+			default: // we shouldn't have any issues with other slots ... just return something
+				return CastingSlot::Discipline;
 		}
 	}
 
 	static inline EQEmu::CastingSlot SoDToServerCastingSlot(CastingSlot slot)
 	{
 		switch (slot) {
-		case CastingSlot::Gem1:
-			return EQEmu::CastingSlot::Gem1;
-		case CastingSlot::Gem2:
-			return EQEmu::CastingSlot::Gem2;
-		case CastingSlot::Gem3:
-			return EQEmu::CastingSlot::Gem3;
-		case CastingSlot::Gem4:
-			return EQEmu::CastingSlot::Gem4;
-		case CastingSlot::Gem5:
-			return EQEmu::CastingSlot::Gem5;
-		case CastingSlot::Gem6:
-			return EQEmu::CastingSlot::Gem6;
-		case CastingSlot::Gem7:
-			return EQEmu::CastingSlot::Gem7;
-		case CastingSlot::Gem8:
-			return EQEmu::CastingSlot::Gem8;
-		case CastingSlot::Gem9:
-			return EQEmu::CastingSlot::Gem9;
-		case CastingSlot::Gem10:
-			return EQEmu::CastingSlot::Gem10;
-		case CastingSlot::Discipline:
-			return EQEmu::CastingSlot::Discipline;
-		case CastingSlot::Item:
-			return EQEmu::CastingSlot::Item;
-		case CastingSlot::AltAbility:
-			return EQEmu::CastingSlot::AltAbility;
-		default: // we shouldn't have any issues with other slots ... just return something
-			return EQEmu::CastingSlot::Discipline;
+			case CastingSlot::Gem1:
+				return EQEmu::CastingSlot::Gem1;
+			case CastingSlot::Gem2:
+				return EQEmu::CastingSlot::Gem2;
+			case CastingSlot::Gem3:
+				return EQEmu::CastingSlot::Gem3;
+			case CastingSlot::Gem4:
+				return EQEmu::CastingSlot::Gem4;
+			case CastingSlot::Gem5:
+				return EQEmu::CastingSlot::Gem5;
+			case CastingSlot::Gem6:
+				return EQEmu::CastingSlot::Gem6;
+			case CastingSlot::Gem7:
+				return EQEmu::CastingSlot::Gem7;
+			case CastingSlot::Gem8:
+				return EQEmu::CastingSlot::Gem8;
+			case CastingSlot::Gem9:
+				return EQEmu::CastingSlot::Gem9;
+			case CastingSlot::Gem10:
+				return EQEmu::CastingSlot::Gem10;
+			case CastingSlot::Discipline:
+				return EQEmu::CastingSlot::Discipline;
+			case CastingSlot::Item:
+				return EQEmu::CastingSlot::Item;
+			case CastingSlot::AltAbility:
+				return EQEmu::CastingSlot::AltAbility;
+			default: // we shouldn't have any issues with other slots ... just return something
+				return EQEmu::CastingSlot::Discipline;
 		}
 	}
 
@@ -4086,7 +4094,7 @@ namespace SoD
 		// we're a disc
 		if (index >= EQEmu::constants::LongBuffs + EQEmu::constants::ShortBuffs)
 			return index - EQEmu::constants::LongBuffs - EQEmu::constants::ShortBuffs +
-			       constants::LongBuffs + constants::ShortBuffs;
+				   constants::LongBuffs + constants::ShortBuffs;
 		// we're a song
 		if (index >= EQEmu::constants::LongBuffs)
 			return index - EQEmu::constants::LongBuffs + constants::LongBuffs;
@@ -4099,7 +4107,7 @@ namespace SoD
 		// we're a disc
 		if (index >= constants::LongBuffs + constants::ShortBuffs)
 			return index - constants::LongBuffs - constants::ShortBuffs + EQEmu::constants::LongBuffs +
-			       EQEmu::constants::ShortBuffs;
+				   EQEmu::constants::ShortBuffs;
 		// we're a song
 		if (index >= constants::LongBuffs)
 			return index - constants::LongBuffs + EQEmu::constants::LongBuffs;

@@ -29,7 +29,7 @@
 #include "string_ids.h"
 
 #ifdef BOTS
-	#include "bot.h"
+#include "bot.h"
 #endif
 
 #include <algorithm>
@@ -70,93 +70,93 @@ int32 Client::GetMaxResist() const
 int32 Client::GetMaxSTR() const
 {
 	return GetMaxStat()
-	       + itembonuses.STRCapMod
-	       + spellbonuses.STRCapMod
-	       + aabonuses.STRCapMod;
+		   + itembonuses.STRCapMod
+		   + spellbonuses.STRCapMod
+		   + aabonuses.STRCapMod;
 }
 int32 Client::GetMaxSTA() const
 {
 	return GetMaxStat()
-	       + itembonuses.STACapMod
-	       + spellbonuses.STACapMod
-	       + aabonuses.STACapMod;
+		   + itembonuses.STACapMod
+		   + spellbonuses.STACapMod
+		   + aabonuses.STACapMod;
 }
 int32 Client::GetMaxDEX() const
 {
 	return GetMaxStat()
-	       + itembonuses.DEXCapMod
-	       + spellbonuses.DEXCapMod
-	       + aabonuses.DEXCapMod;
+		   + itembonuses.DEXCapMod
+		   + spellbonuses.DEXCapMod
+		   + aabonuses.DEXCapMod;
 }
 int32 Client::GetMaxAGI() const
 {
 	return GetMaxStat()
-	       + itembonuses.AGICapMod
-	       + spellbonuses.AGICapMod
-	       + aabonuses.AGICapMod;
+		   + itembonuses.AGICapMod
+		   + spellbonuses.AGICapMod
+		   + aabonuses.AGICapMod;
 }
 int32 Client::GetMaxINT() const
 {
 	return GetMaxStat()
-	       + itembonuses.INTCapMod
-	       + spellbonuses.INTCapMod
-	       + aabonuses.INTCapMod;
+		   + itembonuses.INTCapMod
+		   + spellbonuses.INTCapMod
+		   + aabonuses.INTCapMod;
 }
 int32 Client::GetMaxWIS() const
 {
 	return GetMaxStat()
-	       + itembonuses.WISCapMod
-	       + spellbonuses.WISCapMod
-	       + aabonuses.WISCapMod;
+		   + itembonuses.WISCapMod
+		   + spellbonuses.WISCapMod
+		   + aabonuses.WISCapMod;
 }
 int32 Client::GetMaxCHA() const
 {
 	return GetMaxStat()
-	       + itembonuses.CHACapMod
-	       + spellbonuses.CHACapMod
-	       + aabonuses.CHACapMod;
+		   + itembonuses.CHACapMod
+		   + spellbonuses.CHACapMod
+		   + aabonuses.CHACapMod;
 }
 int32 Client::GetMaxMR() const
 {
 	return GetMaxResist()
-	       + itembonuses.MRCapMod
-	       + spellbonuses.MRCapMod
-	       + aabonuses.MRCapMod;
+		   + itembonuses.MRCapMod
+		   + spellbonuses.MRCapMod
+		   + aabonuses.MRCapMod;
 }
 int32 Client::GetMaxPR() const
 {
 	return GetMaxResist()
-	       + itembonuses.PRCapMod
-	       + spellbonuses.PRCapMod
-	       + aabonuses.PRCapMod;
+		   + itembonuses.PRCapMod
+		   + spellbonuses.PRCapMod
+		   + aabonuses.PRCapMod;
 }
 int32 Client::GetMaxDR() const
 {
 	return GetMaxResist()
-	       + itembonuses.DRCapMod
-	       + spellbonuses.DRCapMod
-	       + aabonuses.DRCapMod;
+		   + itembonuses.DRCapMod
+		   + spellbonuses.DRCapMod
+		   + aabonuses.DRCapMod;
 }
 int32 Client::GetMaxCR() const
 {
 	return GetMaxResist()
-	       + itembonuses.CRCapMod
-	       + spellbonuses.CRCapMod
-	       + aabonuses.CRCapMod;
+		   + itembonuses.CRCapMod
+		   + spellbonuses.CRCapMod
+		   + aabonuses.CRCapMod;
 }
 int32 Client::GetMaxFR() const
 {
 	return GetMaxResist()
-	       + itembonuses.FRCapMod
-	       + spellbonuses.FRCapMod
-	       + aabonuses.FRCapMod;
+		   + itembonuses.FRCapMod
+		   + spellbonuses.FRCapMod
+		   + aabonuses.FRCapMod;
 }
 int32 Client::GetMaxCorrup() const
 {
 	return GetMaxResist()
-	       + itembonuses.CorrupCapMod
-	       + spellbonuses.CorrupCapMod
-	       + aabonuses.CorrupCapMod;
+		   + itembonuses.CorrupCapMod
+		   + spellbonuses.CorrupCapMod
+		   + aabonuses.CorrupCapMod;
 }
 int32 Client::LevelRegen()
 {
@@ -183,7 +183,7 @@ int32 Client::LevelRegen()
 			hp += 1 * multiplier1;
 		}
 	}
-	//there may be an easier way to calculate this next part, but I don't know what it is
+		//there may be an easier way to calculate this next part, but I don't know what it is
 	else {	//level >= 51
 		int32 tmp = 0;
 		float multiplier2 = 1;
@@ -290,12 +290,16 @@ int32 Client::CalcHPRegen(bool bCombat)
 	base = base * 100.0f * AreaHPRegen * 0.01f + 0.5f;
 	// another check for IsClient && !(base + item_regen) && Cur_HP <= 0 do --base; do later
 
+	if (!bCombat && CanFastRegen() && (IsSitting() || CanMedOnHorse())) {
+		auto max_hp = GetMaxHP();
+		int fast_regen = 6 * (max_hp / zone->newzone_data.FastRegenHP);
+		if (base < fast_regen) // weird, but what the client is doing
+			base = fast_regen;
+	}
 
 	int regen = base + item_regen + spellbonuses.HPRegen; // TODO: client does this in buff tick
 
-	if (!bCombat && CanFastRegen() && (IsSitting() || CanMedOnHorse())) {
-		regen += RestRegenHP;
-	}
+
 
 	if (GetBuildRank(DRUID, RB_DRU_REGENERATION) > 0) {
 		int druidRegen = 0;
@@ -352,132 +356,132 @@ uint32 Mob::GetClassLevelFactor()
 	uint8 mlevel = GetLevel();
 	switch (GetClass()) {
 		case WARRIOR: {
-				if (mlevel < 20) {
-					multiplier = 220;
-				}
-				else if (mlevel < 30) {
-					multiplier = 230;
-				}
-				else if (mlevel < 40) {
-					multiplier = 250;
-				}
-				else if (mlevel < 53) {
-					multiplier = 270;
-				}
-				else if (mlevel < 57) {
-					multiplier = 280;
-				}
-				else if (mlevel < 60) {
-					multiplier = 290;
-				}
-				else if (mlevel < 70) {
-					multiplier = 300;
-				}
-				else {
-					multiplier = 311;
-				}
-				break;
+			if (mlevel < 20) {
+				multiplier = 220;
 			}
+			else if (mlevel < 30) {
+				multiplier = 230;
+			}
+			else if (mlevel < 40) {
+				multiplier = 250;
+			}
+			else if (mlevel < 53) {
+				multiplier = 270;
+			}
+			else if (mlevel < 57) {
+				multiplier = 280;
+			}
+			else if (mlevel < 60) {
+				multiplier = 290;
+			}
+			else if (mlevel < 70) {
+				multiplier = 300;
+			}
+			else {
+				multiplier = 311;
+			}
+			break;
+		}
 		case DRUID:
 		case CLERIC:
 		case SHAMAN: {
-				if (mlevel < 70) {
-					multiplier = 150;
-				}
-				else {
-					multiplier = 157;
-				}
-				break;
+			if (mlevel < 70) {
+				multiplier = 150;
 			}
+			else {
+				multiplier = 157;
+			}
+			break;
+		}
 		case BERSERKER:
 		case PALADIN:
 		case SHADOWKNIGHT: {
-				if (mlevel < 35) {
-					multiplier = 210;
-				}
-				else if (mlevel < 45) {
-					multiplier = 220;
-				}
-				else if (mlevel < 51) {
-					multiplier = 230;
-				}
-				else if (mlevel < 56) {
-					multiplier = 240;
-				}
-				else if (mlevel < 60) {
-					multiplier = 250;
-				}
-				else if (mlevel < 68) {
-					multiplier = 260;
-				}
-				else {
-					multiplier = 270;
-				}
-				break;
+			if (mlevel < 35) {
+				multiplier = 210;
 			}
+			else if (mlevel < 45) {
+				multiplier = 220;
+			}
+			else if (mlevel < 51) {
+				multiplier = 230;
+			}
+			else if (mlevel < 56) {
+				multiplier = 240;
+			}
+			else if (mlevel < 60) {
+				multiplier = 250;
+			}
+			else if (mlevel < 68) {
+				multiplier = 260;
+			}
+			else {
+				multiplier = 270;
+			}
+			break;
+		}
 		case MONK:
 		case BARD:
 		case ROGUE:
 		case BEASTLORD: {
-				if (mlevel < 51) {
-					multiplier = 180;
-				}
-				else if (mlevel < 58) {
-					multiplier = 190;
-				}
-				else if (mlevel < 70) {
-					multiplier = 200;
-				}
-				else {
-					multiplier = 210;
-				}
-				break;
+			if (mlevel < 51) {
+				multiplier = 180;
 			}
+			else if (mlevel < 58) {
+				multiplier = 190;
+			}
+			else if (mlevel < 70) {
+				multiplier = 200;
+			}
+			else {
+				multiplier = 210;
+			}
+			break;
+		}
 		case RANGER: {
-				if (mlevel < 58) {
-					multiplier = 200;
-				}
-				else if (mlevel < 70) {
-					multiplier = 210;
-				}
-				else {
-					multiplier = 220;
-				}
-				break;
+			if (mlevel < 58) {
+				multiplier = 200;
 			}
+			else if (mlevel < 70) {
+				multiplier = 210;
+			}
+			else {
+				multiplier = 220;
+			}
+			break;
+		}
 		case MAGICIAN:
 		case WIZARD:
 		case NECROMANCER:
 		case ENCHANTER: {
-				if (mlevel < 70) {
-					multiplier = 120;
-				}
-				else {
-					multiplier = 127;
-				}
-				break;
+			if (mlevel < 70) {
+				multiplier = 120;
 			}
+			else {
+				multiplier = 127;
+			}
+			break;
+		}
 		default: {
-				if (mlevel < 35) {
-					multiplier = 210;
-				}
-				else if (mlevel < 45) {
-					multiplier = 220;
-				}
-				else if (mlevel < 51) {
-					multiplier = 230;
-				}
-				else if (mlevel < 56) {
-					multiplier = 240;
-				}
-				else if (mlevel < 60) {
-					multiplier = 250;
-				}
-				else {
-					multiplier = 260;
-				}
-				break;
+			if (mlevel < 35) {
+				multiplier = 210;
 			}
+			else if (mlevel < 45) {
+				multiplier = 220;
+			}
+			else if (mlevel < 51) {
+				multiplier = 230;
+			}
+			else if (mlevel < 56) {
+				multiplier = 240;
+			}
+			else if (mlevel < 60) {
+				multiplier = 250;
+			}
+			else {
+				multiplier = 260;
+			}
+			break;
+		}
 	}
 	return multiplier;
 }
@@ -560,7 +564,7 @@ int32 Client::GetRawItemAC()
 {
 	int32 Total = 0;
 	// this skips MainAmmo..add an '=' conditional if that slot is required (original behavior)
-	for (int16 slot_id = EQEmu::legacy::EQUIPMENT_BEGIN; slot_id < EQEmu::legacy::EQUIPMENT_END; slot_id++) {
+	for (int16 slot_id = EQEmu::invslot::BONUS_BEGIN; slot_id <= EQEmu::invslot::BONUS_STAT_END; slot_id++) {
 		const EQEmu::ItemInstance* inst = m_inv[slot_id];
 		if (inst && inst->IsClassCommon()) {
 			Total += inst->GetItem()->AC;
@@ -772,7 +776,7 @@ int32 Client::acmod()
 		else if (level <= 6) {
 			return 15;
 		}
-		//level is >6
+			//level is >6
 		else if (agility >= 101 && agility <= 105) {
 			if (level <= 19) {
 				return 29;
@@ -820,7 +824,7 @@ int32 Client::acmod()
 		else if (level <= 19) {
 			return 32;
 		}
-		//level is > 19
+			//level is > 19
 		else if (agility == 120) {
 			if (level <= 39) {
 				return 42;
@@ -1105,18 +1109,18 @@ int32 Client::CalcMaxMana()
 	switch (GetCasterClass()) {
 		case 'I':
 		case 'W': {
-				max_mana = (CalcBaseMana() + itembonuses.Mana + spellbonuses.Mana + aabonuses.Mana + GroupLeadershipAAManaEnhancement());
-				break;
-			}
+			max_mana = (CalcBaseMana() + itembonuses.Mana + spellbonuses.Mana + aabonuses.Mana + GroupLeadershipAAManaEnhancement());
+			break;
+		}
 		case 'N': {
-				max_mana = 0;
-				break;
-			}
+			max_mana = 0;
+			break;
+		}
 		default: {
-				Log(Logs::Detail, Logs::Spells, "Invalid Class '%c' in CalcMaxMana", GetCasterClass());
-				max_mana = 0;
-				break;
-			}
+			Log(Logs::Detail, Logs::Spells, "Invalid Class '%c' in CalcMaxMana", GetCasterClass());
+			max_mana = 0;
+			break;
+		}
 	}
 	if (max_mana < 0) {
 		max_mana = 0;
@@ -1211,18 +1215,18 @@ int32 Client::CalcBaseMana()
 			}
 			break;
 		case 'N': {
-				max_m = 0;
-				break;
-			}
+			max_m = 0;
+			break;
+		}
 		default: {
-				Log(Logs::General, Logs::None, "Invalid Class '%c' in CalcMaxMana", GetCasterClass());
-				max_m = 0;
-				break;
-			}
+			Log(Logs::General, Logs::None, "Invalid Class '%c' in CalcMaxMana", GetCasterClass());
+			max_m = 0;
+			break;
+		}
 	}
-	#if EQDEBUG >= 11
+#if EQDEBUG >= 11
 	Log(Logs::General, Logs::None, "Client::CalcBaseMana() called for %s - returning %d", GetName(), max_m);
-	#endif
+#endif
 	return max_m;
 }
 
@@ -1287,12 +1291,12 @@ int32 Client::CalcManaRegen(bool bCombat)
 	int heroic_bonus = 0;
 
 	switch (GetCasterClass()) {
-	case 'W':
-		heroic_bonus = GetHeroicWIS();
-		break;
-	default:
-		heroic_bonus = GetHeroicINT();
-		break;
+		case 'W':
+			heroic_bonus = GetHeroicWIS();
+			break;
+		default:
+			heroic_bonus = GetHeroicINT();
+			break;
 	}
 
 	item_bonus += heroic_bonus / 25;
@@ -1304,12 +1308,10 @@ int32 Client::CalcManaRegen(bool bCombat)
 	regen = regen * 100.0f * AreaManaRegen * 0.01f + 0.5f;
 
 	if (!bCombat && CanFastRegen() && (IsSitting() || CanMedOnHorse())) {
-		/*auto fast_mod = RuleI(Character, RestRegenMana); // TODO: this is actually zone based
 		auto max_mana = GetMaxMana();
-		int fast_regen = 6 * (max_mana / fast_mod);
+		int fast_regen = 6 * (max_mana / zone->newzone_data.FastRegenMana);
 		if (regen < fast_regen) // weird, but what the client is doing
-			regen = fast_regen;*/
-		regen += RestRegenMana;
+			regen = fast_regen;
 	}
 
 	regen += DoBuildManaRegen();
@@ -1329,7 +1331,7 @@ uint32 Client::CalcCurrentWeight()
 	EQEmu::ItemInstance* ins = nullptr;
 	uint32 Total = 0;
 	int x;
-	for (x = EQEmu::legacy::EQUIPMENT_BEGIN; x <= EQEmu::inventory::slotCursor; x++) { // include cursor or not?
+	for (x = EQEmu::invslot::POSSESSIONS_BEGIN; x <= EQEmu::invslot::POSSESSIONS_END; x++) {
 		TempItem = 0;
 		ins = GetInv().GetItem(x);
 		if (ins) {
@@ -1339,7 +1341,7 @@ uint32 Client::CalcCurrentWeight()
 			Total += TempItem->Weight;
 		}
 	}
-	for (x = EQEmu::legacy::GENERAL_BAGS_BEGIN; x <= EQEmu::legacy::GENERAL_BAGS_END; x++) { // include cursor bags or not?
+	for (x = EQEmu::invbag::GENERAL_BAGS_BEGIN; x <= EQEmu::invbag::CURSOR_BAG_END; x++) {
 		int TmpWeight = 0;
 		TempItem = 0;
 		ins = GetInv().GetItem(x);
@@ -1352,9 +1354,9 @@ uint32 Client::CalcCurrentWeight()
 		if (TmpWeight > 0) {
 			// this code indicates that weight redux bags can only be in the first general inventory slot to be effective...
 			// is this correct? or can we scan for the highest weight redux and use that? (need client verifications)
-			int bagslot = EQEmu::inventory::slotGeneral1;
+			int bagslot = EQEmu::invslot::slotGeneral1;
 			int reduction = 0;
-			for (int m = EQEmu::legacy::GENERAL_BAGS_BEGIN + 10; m <= EQEmu::legacy::GENERAL_BAGS_END; m += 10) { // include cursor bags or not?
+			for (int m = EQEmu::invbag::GENERAL_BAGS_BEGIN + EQEmu::invbag::SLOT_COUNT; m <= EQEmu::invbag::CURSOR_BAG_END; m += EQEmu::invbag::SLOT_COUNT) {
 				if (x >= m) {
 					bagslot += 1;
 				}
@@ -2069,67 +2071,67 @@ uint32 Mob::GetInstrumentMod(uint16 spell_id) const
 	// clickies (Symphony of Battle) that have a song skill don't get AA bonus for some reason
 	// but clickies that are songs (selo's on Composers Greaves) do get AA mod as well
 	switch (spells[spell_id].skill) {
-	case EQEmu::skills::SkillPercussionInstruments:
-		if (itembonuses.percussionMod == 0 && spellbonuses.percussionMod == 0)
+		case EQEmu::skills::SkillPercussionInstruments:
+			if (itembonuses.percussionMod == 0 && spellbonuses.percussionMod == 0)
+				effectmod = 10;
+			else if (GetSkill(EQEmu::skills::SkillPercussionInstruments) == 0)
+				effectmod = 10;
+			else if (itembonuses.percussionMod > spellbonuses.percussionMod)
+				effectmod = itembonuses.percussionMod;
+			else
+				effectmod = spellbonuses.percussionMod;
+			if (IsBardSong(spell_id))
+				effectmod += aabonuses.percussionMod;
+			break;
+		case EQEmu::skills::SkillStringedInstruments:
+			if (itembonuses.stringedMod == 0 && spellbonuses.stringedMod == 0)
+				effectmod = 10;
+			else if (GetSkill(EQEmu::skills::SkillStringedInstruments) == 0)
+				effectmod = 10;
+			else if (itembonuses.stringedMod > spellbonuses.stringedMod)
+				effectmod = itembonuses.stringedMod;
+			else
+				effectmod = spellbonuses.stringedMod;
+			if (IsBardSong(spell_id))
+				effectmod += aabonuses.stringedMod;
+			break;
+		case EQEmu::skills::SkillWindInstruments:
+			if (itembonuses.windMod == 0 && spellbonuses.windMod == 0)
+				effectmod = 10;
+			else if (GetSkill(EQEmu::skills::SkillWindInstruments) == 0)
+				effectmod = 10;
+			else if (itembonuses.windMod > spellbonuses.windMod)
+				effectmod = itembonuses.windMod;
+			else
+				effectmod = spellbonuses.windMod;
+			if (IsBardSong(spell_id))
+				effectmod += aabonuses.windMod;
+			break;
+		case EQEmu::skills::SkillBrassInstruments:
+			if (itembonuses.brassMod == 0 && spellbonuses.brassMod == 0)
+				effectmod = 10;
+			else if (GetSkill(EQEmu::skills::SkillBrassInstruments) == 0)
+				effectmod = 10;
+			else if (itembonuses.brassMod > spellbonuses.brassMod)
+				effectmod = itembonuses.brassMod;
+			else
+				effectmod = spellbonuses.brassMod;
+			if (IsBardSong(spell_id))
+				effectmod += aabonuses.brassMod;
+			break;
+		case EQEmu::skills::SkillSinging:
+			if (itembonuses.singingMod == 0 && spellbonuses.singingMod == 0)
+				effectmod = 10;
+			else if (itembonuses.singingMod > spellbonuses.singingMod)
+				effectmod = itembonuses.singingMod;
+			else
+				effectmod = spellbonuses.singingMod;
+			if (IsBardSong(spell_id))
+				effectmod += aabonuses.singingMod + spellbonuses.Amplification;
+			break;
+		default:
 			effectmod = 10;
-		else if (GetSkill(EQEmu::skills::SkillPercussionInstruments) == 0)
-			effectmod = 10;
-		else if (itembonuses.percussionMod > spellbonuses.percussionMod)
-			effectmod = itembonuses.percussionMod;
-		else
-			effectmod = spellbonuses.percussionMod;
-		if (IsBardSong(spell_id))
-			effectmod += aabonuses.percussionMod;
-		break;
-	case EQEmu::skills::SkillStringedInstruments:
-		if (itembonuses.stringedMod == 0 && spellbonuses.stringedMod == 0)
-			effectmod = 10;
-		else if (GetSkill(EQEmu::skills::SkillStringedInstruments) == 0)
-			effectmod = 10;
-		else if (itembonuses.stringedMod > spellbonuses.stringedMod)
-			effectmod = itembonuses.stringedMod;
-		else
-			effectmod = spellbonuses.stringedMod;
-		if (IsBardSong(spell_id))
-			effectmod += aabonuses.stringedMod;
-		break;
-	case EQEmu::skills::SkillWindInstruments:
-		if (itembonuses.windMod == 0 && spellbonuses.windMod == 0)
-			effectmod = 10;
-		else if (GetSkill(EQEmu::skills::SkillWindInstruments) == 0)
-			effectmod = 10;
-		else if (itembonuses.windMod > spellbonuses.windMod)
-			effectmod = itembonuses.windMod;
-		else
-			effectmod = spellbonuses.windMod;
-		if (IsBardSong(spell_id))
-			effectmod += aabonuses.windMod;
-		break;
-	case EQEmu::skills::SkillBrassInstruments:
-		if (itembonuses.brassMod == 0 && spellbonuses.brassMod == 0)
-			effectmod = 10;
-		else if (GetSkill(EQEmu::skills::SkillBrassInstruments) == 0)
-			effectmod = 10;
-		else if (itembonuses.brassMod > spellbonuses.brassMod)
-			effectmod = itembonuses.brassMod;
-		else
-			effectmod = spellbonuses.brassMod;
-		if (IsBardSong(spell_id))
-			effectmod += aabonuses.brassMod;
-		break;
-	case EQEmu::skills::SkillSinging:
-		if (itembonuses.singingMod == 0 && spellbonuses.singingMod == 0)
-			effectmod = 10;
-		else if (itembonuses.singingMod > spellbonuses.singingMod)
-			effectmod = itembonuses.singingMod;
-		else
-			effectmod = spellbonuses.singingMod;
-		if (IsBardSong(spell_id))
-			effectmod += aabonuses.singingMod + spellbonuses.Amplification;
-		break;
-	default:
-		effectmod = 10;
-		return effectmod;
+			return effectmod;
 	}
 	if (!RuleB(Character, UseSpellFileSongCap))
 		effectmodcap += aabonuses.songModCap + spellbonuses.songModCap + itembonuses.songModCap;
@@ -2274,9 +2276,8 @@ int32 Client::CalcEnduranceRegen(bool bCombat)
 
 	int regen = base;
 	if (!bCombat && CanFastRegen() && (IsSitting() || CanMedOnHorse())) {
-		auto fast_mod = RuleI(Character, RestRegenEnd); // TODO: this is actually zone based
 		auto max_end = GetMaxEndurance();
-		int fast_regen = 6 * (max_end / fast_mod);
+		int fast_regen = 6 * (max_end / zone->newzone_data.FastRegenEndurance);
 		if (aa_regen < fast_regen) // weird, but what the client is doing
 			aa_regen = fast_regen;
 	}
@@ -2303,12 +2304,12 @@ int Client::GetRawACNoShield(int &shield_ac) const
 {
 	int ac = itembonuses.AC + spellbonuses.AC + aabonuses.AC;
 	shield_ac = 0;
-	const EQEmu::ItemInstance *inst = m_inv.GetItem(EQEmu::inventory::slotSecondary);
+	const EQEmu::ItemInstance *inst = m_inv.GetItem(EQEmu::invslot::slotSecondary);
 	if (inst) {
 		if (inst->GetItem()->ItemType == EQEmu::item::ItemTypeShield) {
 			ac -= inst->GetItem()->AC;
 			shield_ac = inst->GetItem()->AC;
-			for (uint8 i = EQEmu::inventory::socketBegin; i < EQEmu::inventory::SocketCount; i++) {
+			for (uint8 i = EQEmu::invaug::SOCKET_BEGIN; i <= EQEmu::invaug::SOCKET_END; i++) {
 				if (inst->GetAugment(i)) {
 					ac -= inst->GetAugment(i)->GetItem()->AC;
 					shield_ac += inst->GetAugment(i)->GetItem()->AC;

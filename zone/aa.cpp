@@ -456,6 +456,7 @@ void Mob::WakeTheDead(uint16 spell_id, Mob *target, uint32 duration)
 		npca->GetSwarmInfo()->duration->Start(duration*1000);
 	}
 
+	npca->StartSwarmTimer(duration * 1000);
 	npca->GetSwarmInfo()->owner_id = GetID();
 
 	//give the pet somebody to "love"
@@ -466,7 +467,7 @@ void Mob::WakeTheDead(uint16 spell_id, Mob *target, uint32 duration)
 
 	//gear stuff, need to make sure there's
 	//no situation where this stuff can be duped
-	for (int x = EQEmu::legacy::EQUIPMENT_BEGIN; x <= EQEmu::legacy::EQUIPMENT_END; x++) // (< 21) added MainAmmo
+	for (int x = EQEmu::invslot::EQUIPMENT_BEGIN; x <= EQEmu::invslot::EQUIPMENT_END; x++)
 	{
 		uint32 sitem = 0;
 		sitem = CorpseToUse->GetWornItem(x);
@@ -1658,7 +1659,7 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 		return;
 
 	//check cooldown
-	if(!p_timers.Expired(&database, rank->spell_type + pTimerAAStart)) {
+	if(!p_timers.Expired(&database, rank->spell_type + pTimerAAStart, false)) {
 		uint32 aaremain = p_timers.GetRemainingTime(rank->spell_type + pTimerAAStart);
 		uint32 aaremain_hr = aaremain / (60 * 60);
 		uint32 aaremain_min = (aaremain / 60) % 60;
@@ -1687,6 +1688,17 @@ void Client::ActivateAlternateAdvancementAbility(int rank_id, int target_id) {
 	// Modern clients don't require pet targeted for AA casts that are ST_Pet
 	if (spells[spellid].targettype == ST_Pet || spells[spellid].targettype == ST_SummonedPet)
 		target_id = GetPetID();
+
+	// extra handling for cast_not_standing spells
+	if (!spells[rank->spell].cast_not_standing) {
+		if (GetAppearance() == eaSitting) // we need to stand!
+			SetAppearance(eaStanding, false);
+
+		if (GetAppearance() != eaStanding) {
+			Message_StringID(MT_SpellFailure, STAND_TO_CAST);
+			return;
+		}
+	}
 
 	// Bards can cast instant cast AAs while they are casting another song
 	if(spells[spellid].cast_time == 0 && GetClass() == BARD && IsBardSong(casting_spell_id)) {

@@ -136,11 +136,11 @@ void InitDefaultsChannelMessageImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_ChannelMessage_default_instance_;
-    new (ptr) ::eqproto::ChannelMessage();
+    void* ptr = &::pb::_ChannelMessage_default_instance_;
+    new (ptr) ::pb::ChannelMessage();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::ChannelMessage::InitAsDefaultInstance();
+  ::pb::ChannelMessage::InitAsDefaultInstance();
 }
 
 void InitDefaultsChannelMessage() {
@@ -157,11 +157,11 @@ void InitDefaultsCommandMessageImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_CommandMessage_default_instance_;
-    new (ptr) ::eqproto::CommandMessage();
+    void* ptr = &::pb::_CommandMessage_default_instance_;
+    new (ptr) ::pb::CommandMessage();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::CommandMessage::InitAsDefaultInstance();
+  ::pb::CommandMessage::InitAsDefaultInstance();
 }
 
 void InitDefaultsCommandMessage() {
@@ -178,11 +178,11 @@ void InitDefaultsDailyGainImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_DailyGain_default_instance_;
-    new (ptr) ::eqproto::DailyGain();
+    void* ptr = &::pb::_DailyGain_default_instance_;
+    new (ptr) ::pb::DailyGain();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::DailyGain::InitAsDefaultInstance();
+  ::pb::DailyGain::InitAsDefaultInstance();
 }
 
 void InitDefaultsDailyGain() {
@@ -200,11 +200,11 @@ void InitDefaultsEntityImpl() {
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   protobuf_message_2eproto::InitDefaultsPosition();
   {
-    void* ptr = &::eqproto::_Entity_default_instance_;
-    new (ptr) ::eqproto::Entity();
+    void* ptr = &::pb::_Entity_default_instance_;
+    new (ptr) ::pb::Entity();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::Entity::InitAsDefaultInstance();
+  ::pb::Entity::InitAsDefaultInstance();
 }
 
 void InitDefaultsEntity() {
@@ -222,11 +222,11 @@ void InitDefaultsEntitiesImpl() {
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   protobuf_message_2eproto::InitDefaultsEntity();
   {
-    void* ptr = &::eqproto::_Entities_default_instance_;
-    new (ptr) ::eqproto::Entities();
+    void* ptr = &::pb::_Entities_default_instance_;
+    new (ptr) ::pb::Entities();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::Entities::InitAsDefaultInstance();
+  ::pb::Entities::InitAsDefaultInstance();
 }
 
 void InitDefaultsEntities() {
@@ -243,11 +243,11 @@ void InitDefaultsPositionImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_Position_default_instance_;
-    new (ptr) ::eqproto::Position();
+    void* ptr = &::pb::_Position_default_instance_;
+    new (ptr) ::pb::Position();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::Position::InitAsDefaultInstance();
+  ::pb::Position::InitAsDefaultInstance();
 }
 
 void InitDefaultsPosition() {
@@ -265,11 +265,11 @@ void InitDefaultsTextureProfileImpl() {
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   protobuf_message_2eproto::InitDefaultsTexture();
   {
-    void* ptr = &::eqproto::_TextureProfile_default_instance_;
-    new (ptr) ::eqproto::TextureProfile();
+    void* ptr = &::pb::_TextureProfile_default_instance_;
+    new (ptr) ::pb::TextureProfile();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::TextureProfile::InitAsDefaultInstance();
+  ::pb::TextureProfile::InitAsDefaultInstance();
 }
 
 void InitDefaultsTextureProfile() {
@@ -286,11 +286,11 @@ void InitDefaultsTextureImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_Texture_default_instance_;
-    new (ptr) ::eqproto::Texture();
+    void* ptr = &::pb::_Texture_default_instance_;
+    new (ptr) ::pb::Texture();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::Texture::InitAsDefaultInstance();
+  ::pb::Texture::InitAsDefaultInstance();
 }
 
 void InitDefaultsTexture() {
@@ -308,11 +308,11 @@ void InitDefaultsTintProfileImpl() {
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   protobuf_message_2eproto::InitDefaultsTint();
   {
-    void* ptr = &::eqproto::_TintProfile_default_instance_;
-    new (ptr) ::eqproto::TintProfile();
+    void* ptr = &::pb::_TintProfile_default_instance_;
+    new (ptr) ::pb::TintProfile();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::TintProfile::InitAsDefaultInstance();
+  ::pb::TintProfile::InitAsDefaultInstance();
 }
 
 void InitDefaultsTintProfile() {
@@ -329,11 +329,11 @@ void InitDefaultsTintImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_Tint_default_instance_;
-    new (ptr) ::eqproto::Tint();
+    void* ptr = &::pb::_Tint_default_instance_;
+    new (ptr) ::pb::Tint();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::Tint::InitAsDefaultInstance();
+  ::pb::Tint::InitAsDefaultInstance();
 }
 
 void InitDefaultsTint() {
@@ -350,11 +350,11 @@ void InitDefaultsEventImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_Event_default_instance_;
-    new (ptr) ::eqproto::Event();
+    void* ptr = &::pb::_Event_default_instance_;
+    new (ptr) ::pb::Event();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::Event::InitAsDefaultInstance();
+  ::pb::Event::InitAsDefaultInstance();
 }
 
 void InitDefaultsEvent() {
@@ -371,11 +371,11 @@ void InitDefaultsDeathEventImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_DeathEvent_default_instance_;
-    new (ptr) ::eqproto::DeathEvent();
+    void* ptr = &::pb::_DeathEvent_default_instance_;
+    new (ptr) ::pb::DeathEvent();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::DeathEvent::InitAsDefaultInstance();
+  ::pb::DeathEvent::InitAsDefaultInstance();
 }
 
 void InitDefaultsDeathEvent() {
@@ -392,11 +392,11 @@ void InitDefaultsDamageEventImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_DamageEvent_default_instance_;
-    new (ptr) ::eqproto::DamageEvent();
+    void* ptr = &::pb::_DamageEvent_default_instance_;
+    new (ptr) ::pb::DamageEvent();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::DamageEvent::InitAsDefaultInstance();
+  ::pb::DamageEvent::InitAsDefaultInstance();
 }
 
 void InitDefaultsDamageEvent() {
@@ -413,11 +413,11 @@ void InitDefaultsEntityEventImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_EntityEvent_default_instance_;
-    new (ptr) ::eqproto::EntityEvent();
+    void* ptr = &::pb::_EntityEvent_default_instance_;
+    new (ptr) ::pb::EntityEvent();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::EntityEvent::InitAsDefaultInstance();
+  ::pb::EntityEvent::InitAsDefaultInstance();
 }
 
 void InitDefaultsEntityEvent() {
@@ -434,11 +434,11 @@ void InitDefaultsChannelMessageEventImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_ChannelMessageEvent_default_instance_;
-    new (ptr) ::eqproto::ChannelMessageEvent();
+    void* ptr = &::pb::_ChannelMessageEvent_default_instance_;
+    new (ptr) ::pb::ChannelMessageEvent();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::ChannelMessageEvent::InitAsDefaultInstance();
+  ::pb::ChannelMessageEvent::InitAsDefaultInstance();
 }
 
 void InitDefaultsChannelMessageEvent() {
@@ -456,11 +456,11 @@ void InitDefaultsWearChangeEventImpl() {
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   protobuf_message_2eproto::InitDefaultsTint();
   {
-    void* ptr = &::eqproto::_WearChangeEvent_default_instance_;
-    new (ptr) ::eqproto::WearChangeEvent();
+    void* ptr = &::pb::_WearChangeEvent_default_instance_;
+    new (ptr) ::pb::WearChangeEvent();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::WearChangeEvent::InitAsDefaultInstance();
+  ::pb::WearChangeEvent::InitAsDefaultInstance();
 }
 
 void InitDefaultsWearChangeEvent() {
@@ -477,11 +477,11 @@ void InitDefaultsDeleteSpawnEventImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_DeleteSpawnEvent_default_instance_;
-    new (ptr) ::eqproto::DeleteSpawnEvent();
+    void* ptr = &::pb::_DeleteSpawnEvent_default_instance_;
+    new (ptr) ::pb::DeleteSpawnEvent();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::DeleteSpawnEvent::InitAsDefaultInstance();
+  ::pb::DeleteSpawnEvent::InitAsDefaultInstance();
 }
 
 void InitDefaultsDeleteSpawnEvent() {
@@ -498,11 +498,11 @@ void InitDefaultsHPEventImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_HPEvent_default_instance_;
-    new (ptr) ::eqproto::HPEvent();
+    void* ptr = &::pb::_HPEvent_default_instance_;
+    new (ptr) ::pb::HPEvent();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::HPEvent::InitAsDefaultInstance();
+  ::pb::HPEvent::InitAsDefaultInstance();
 }
 
 void InitDefaultsHPEvent() {
@@ -519,11 +519,11 @@ void InitDefaultsPlayerPositionUpdateEventImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_PlayerPositionUpdateEvent_default_instance_;
-    new (ptr) ::eqproto::PlayerPositionUpdateEvent();
+    void* ptr = &::pb::_PlayerPositionUpdateEvent_default_instance_;
+    new (ptr) ::pb::PlayerPositionUpdateEvent();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::PlayerPositionUpdateEvent::InitAsDefaultInstance();
+  ::pb::PlayerPositionUpdateEvent::InitAsDefaultInstance();
 }
 
 void InitDefaultsPlayerPositionUpdateEvent() {
@@ -540,11 +540,11 @@ void InitDefaultsAnimationEventImpl() {
   ::google::protobuf::internal::InitProtobufDefaults();
 #endif  // GOOGLE_PROTOBUF_ENFORCE_UNIQUENESS
   {
-    void* ptr = &::eqproto::_AnimationEvent_default_instance_;
-    new (ptr) ::eqproto::AnimationEvent();
+    void* ptr = &::pb::_AnimationEvent_default_instance_;
+    new (ptr) ::pb::AnimationEvent();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::AnimationEvent::InitAsDefaultInstance();
+  ::pb::AnimationEvent::InitAsDefaultInstance();
 }
 
 void InitDefaultsAnimationEvent() {
@@ -563,11 +563,11 @@ void InitDefaultsSpawnEventImpl() {
   protobuf_message_2eproto::InitDefaultsTextureProfile();
   protobuf_message_2eproto::InitDefaultsTintProfile();
   {
-    void* ptr = &::eqproto::_SpawnEvent_default_instance_;
-    new (ptr) ::eqproto::SpawnEvent();
+    void* ptr = &::pb::_SpawnEvent_default_instance_;
+    new (ptr) ::pb::SpawnEvent();
     ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::eqproto::SpawnEvent::InitAsDefaultInstance();
+  ::pb::SpawnEvent::InitAsDefaultInstance();
 }
 
 void InitDefaultsSpawnEvent() {
@@ -580,379 +580,379 @@ const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors[1];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, chan_num_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, language_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, from_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, to_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, message_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, guilddbid_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, deliverto_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, type_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, minstatus_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, fromadmin_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, noreply_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, is_emote_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, queued_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessage, zone_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, chan_num_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, language_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, from_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, to_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, message_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, guilddbid_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, deliverto_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, minstatus_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, fromadmin_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, noreply_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, is_emote_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, queued_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessage, zone_id_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::CommandMessage, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::CommandMessage, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::CommandMessage, author_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::CommandMessage, command_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::CommandMessage, params_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::CommandMessage, result_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::CommandMessage, payload_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::CommandMessage, author_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::CommandMessage, command_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::CommandMessage, params_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::CommandMessage, result_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::CommandMessage, payload_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DailyGain, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DailyGain, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DailyGain, account_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DailyGain, character_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DailyGain, levels_gained_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DailyGain, experience_gained_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DailyGain, money_earned_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DailyGain, identity_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DailyGain, account_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DailyGain, character_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DailyGain, levels_gained_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DailyGain, experience_gained_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DailyGain, money_earned_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DailyGain, identity_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Entity, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, name_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, type_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, hp_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, level_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, position_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, race_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entity, class__),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Entity, id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Entity, name_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Entity, type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Entity, hp_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Entity, level_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Entity, position_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Entity, race_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Entity, class__),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entities, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Entities, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Entities, entities_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Entities, entities_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Position, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Position, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Position, x_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Position, y_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Position, z_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Position, h_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Position, x_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Position, y_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Position, z_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Position, h_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TextureProfile, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TextureProfile, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TextureProfile, head_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TextureProfile, chest_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TextureProfile, arms_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TextureProfile, wrist_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TextureProfile, hands_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TextureProfile, legs_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TextureProfile, feet_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TextureProfile, primary_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TextureProfile, secondary_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TextureProfile, head_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TextureProfile, chest_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TextureProfile, arms_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TextureProfile, wrist_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TextureProfile, hands_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TextureProfile, legs_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TextureProfile, feet_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TextureProfile, primary_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TextureProfile, secondary_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Texture, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Texture, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Texture, material_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Texture, unknown1_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Texture, elitemodel_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Texture, herosforgemodel_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Texture, unknown2_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Texture, material_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Texture, unknown1_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Texture, elitemodel_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Texture, herosforgemodel_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Texture, unknown2_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TintProfile, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TintProfile, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TintProfile, head_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TintProfile, chest_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TintProfile, arms_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TintProfile, wrist_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TintProfile, hands_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TintProfile, legs_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TintProfile, feet_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TintProfile, primary_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::TintProfile, secondary_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TintProfile, head_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TintProfile, chest_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TintProfile, arms_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TintProfile, wrist_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TintProfile, hands_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TintProfile, legs_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TintProfile, feet_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TintProfile, primary_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::TintProfile, secondary_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Tint, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Tint, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Tint, blue_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Tint, green_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Tint, red_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Tint, usetint_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Tint, color_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Tint, blue_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Tint, green_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Tint, red_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Tint, usetint_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Tint, color_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Event, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Event, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Event, op_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::Event, payload_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Event, op_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::Event, payload_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeathEvent, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeathEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeathEvent, spawn_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeathEvent, killer_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeathEvent, corpse_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeathEvent, bind_zone_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeathEvent, spell_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeathEvent, attack_skill_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeathEvent, damage_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeathEvent, unknown028_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeathEvent, spawn_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeathEvent, killer_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeathEvent, corpse_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeathEvent, bind_zone_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeathEvent, spell_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeathEvent, attack_skill_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeathEvent, damage_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeathEvent, unknown028_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DamageEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, target_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, source_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, type_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, spellid_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, damage_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, force_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, meleepush_xy_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DamageEvent, meleepush_z_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DamageEvent, target_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DamageEvent, source_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DamageEvent, type_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DamageEvent, spellid_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DamageEvent, damage_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DamageEvent, force_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DamageEvent, hit_heading_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DamageEvent, hit_pitch_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::EntityEvent, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::EntityEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::EntityEvent, entity_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::EntityEvent, target_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::EntityEvent, entity_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::EntityEvent, target_id_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessageEvent, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessageEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessageEvent, target_name_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessageEvent, sender_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessageEvent, language_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessageEvent, chan_num_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessageEvent, cm_unknown4_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessageEvent, skill_in_language_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::ChannelMessageEvent, message_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessageEvent, target_name_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessageEvent, sender_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessageEvent, language_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessageEvent, chan_num_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessageEvent, cm_unknown4_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessageEvent, skill_in_language_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::ChannelMessageEvent, message_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::WearChangeEvent, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::WearChangeEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::WearChangeEvent, spawn_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::WearChangeEvent, material_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::WearChangeEvent, unknown06_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::WearChangeEvent, elite_material_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::WearChangeEvent, hero_forge_model_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::WearChangeEvent, unknown18_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::WearChangeEvent, color_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::WearChangeEvent, wear_slot_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::WearChangeEvent, spawn_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::WearChangeEvent, material_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::WearChangeEvent, unknown06_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::WearChangeEvent, elite_material_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::WearChangeEvent, hero_forge_model_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::WearChangeEvent, unknown18_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::WearChangeEvent, color_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::WearChangeEvent, wear_slot_id_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeleteSpawnEvent, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeleteSpawnEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeleteSpawnEvent, spawn_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::DeleteSpawnEvent, decay_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeleteSpawnEvent, spawn_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::DeleteSpawnEvent, decay_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::HPEvent, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::HPEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::HPEvent, spawn_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::HPEvent, cur_hp_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::HPEvent, max_hp_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::HPEvent, spawn_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::HPEvent, cur_hp_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::HPEvent, max_hp_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, spawn_id_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, delta_heading_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, x_pos_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, padding0002_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, y_pos_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, animation_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, padding0006_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, z_pos_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, delta_y_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, delta_x_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, heading_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, padding0014_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, delta_z_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::PlayerPositionUpdateEvent, padding0018_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, spawn_id_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, delta_heading_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, x_pos_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, padding0002_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, y_pos_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, animation_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, padding0006_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, z_pos_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, delta_y_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, delta_x_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, heading_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, padding0014_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, delta_z_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::PlayerPositionUpdateEvent, padding0018_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::AnimationEvent, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::AnimationEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::AnimationEvent, spawnid_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::AnimationEvent, speed_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::AnimationEvent, action_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::AnimationEvent, spawnid_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::AnimationEvent, speed_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::AnimationEvent, action_),
   ~0u,  // no _has_bits_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, _internal_metadata_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0000_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, gm_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0003_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, aaitle_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0004_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, anon_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, face_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, name_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, deity_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0073_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, size_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0079_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, npc_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, invis_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, haircolor_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, curhp_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, max_hp_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, findable_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0089_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, deltaheading_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, x_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, padding0054_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, y_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, animation_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, padding0058_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, z_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, deltay_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, deltax_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, heading_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, padding0066_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, deltaz_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, padding0070_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, eyecolor1_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0115_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, standstate_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, drakkin_heritage_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, drakkin_tattoo_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, drakkin_details_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, showhelm_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0140_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, is_npc_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, hairstyle_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, beard_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0147_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, level_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, playerstate_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, beardcolor_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, suffix_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, petownerid_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, guildrank_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0194_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, equipment_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, runspeed_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, afk_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, guildid_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, title_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0274_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, set_to_0xff_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, helm_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, race_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0288_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, lastname_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, walkspeed_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0328_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, is_pet_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, light_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, class__),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, eyecolor2_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, flymode_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, gender_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, bodytype_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0336_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, equip_chest2_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, mount_color_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, spawnid_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, unknown0344_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, ismercenary_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, equipment_tint_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, lfg_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleobject_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructiblemodel_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructiblename2_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructiblestring_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleappearance_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleunk1_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleid1_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleid2_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleid3_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleid4_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleunk2_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleunk3_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleunk4_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleunk5_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleunk6_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleunk7_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleunk8_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, destructibleunk9_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, targetable_with_hotkey_),
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::eqproto::SpawnEvent, show_name_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0000_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, gm_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0003_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, aaitle_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0004_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, anon_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, face_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, name_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, deity_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0073_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, size_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0079_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, npc_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, invis_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, haircolor_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, curhp_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, max_hp_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, findable_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0089_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, deltaheading_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, x_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, padding0054_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, y_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, animation_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, padding0058_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, z_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, deltay_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, deltax_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, heading_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, padding0066_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, deltaz_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, padding0070_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, eyecolor1_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0115_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, standstate_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, drakkin_heritage_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, drakkin_tattoo_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, drakkin_details_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, showhelm_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0140_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, is_npc_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, hairstyle_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, beard_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0147_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, level_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, playerstate_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, beardcolor_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, suffix_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, petownerid_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, guildrank_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0194_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, equipment_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, runspeed_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, afk_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, guildid_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, title_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0274_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, set_to_0xff_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, helm_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, race_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0288_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, lastname_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, walkspeed_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0328_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, is_pet_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, light_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, class__),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, eyecolor2_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, flymode_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, gender_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, bodytype_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, unknown0336_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, equip_chest2_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, mount_color_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, spawnid_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, bounding_radius_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, ismercenary_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, equipment_tint_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, lfg_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleobject_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructiblemodel_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructiblename2_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructiblestring_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleappearance_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleunk1_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleid1_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleid2_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleid3_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleid4_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleunk2_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleunk3_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleunk4_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleunk5_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleunk6_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleunk7_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleunk8_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, destructibleunk9_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, targetable_with_hotkey_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::pb::SpawnEvent, show_name_),
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::eqproto::ChannelMessage)},
-  { 19, -1, sizeof(::eqproto::CommandMessage)},
-  { 29, -1, sizeof(::eqproto::DailyGain)},
-  { 40, -1, sizeof(::eqproto::Entity)},
-  { 53, -1, sizeof(::eqproto::Entities)},
-  { 59, -1, sizeof(::eqproto::Position)},
-  { 68, -1, sizeof(::eqproto::TextureProfile)},
-  { 82, -1, sizeof(::eqproto::Texture)},
-  { 92, -1, sizeof(::eqproto::TintProfile)},
-  { 106, -1, sizeof(::eqproto::Tint)},
-  { 116, -1, sizeof(::eqproto::Event)},
-  { 123, -1, sizeof(::eqproto::DeathEvent)},
-  { 136, -1, sizeof(::eqproto::DamageEvent)},
-  { 149, -1, sizeof(::eqproto::EntityEvent)},
-  { 156, -1, sizeof(::eqproto::ChannelMessageEvent)},
-  { 168, -1, sizeof(::eqproto::WearChangeEvent)},
-  { 181, -1, sizeof(::eqproto::DeleteSpawnEvent)},
-  { 188, -1, sizeof(::eqproto::HPEvent)},
-  { 196, -1, sizeof(::eqproto::PlayerPositionUpdateEvent)},
-  { 215, -1, sizeof(::eqproto::AnimationEvent)},
-  { 223, -1, sizeof(::eqproto::SpawnEvent)},
+  { 0, -1, sizeof(::pb::ChannelMessage)},
+  { 19, -1, sizeof(::pb::CommandMessage)},
+  { 29, -1, sizeof(::pb::DailyGain)},
+  { 40, -1, sizeof(::pb::Entity)},
+  { 53, -1, sizeof(::pb::Entities)},
+  { 59, -1, sizeof(::pb::Position)},
+  { 68, -1, sizeof(::pb::TextureProfile)},
+  { 82, -1, sizeof(::pb::Texture)},
+  { 92, -1, sizeof(::pb::TintProfile)},
+  { 106, -1, sizeof(::pb::Tint)},
+  { 116, -1, sizeof(::pb::Event)},
+  { 123, -1, sizeof(::pb::DeathEvent)},
+  { 136, -1, sizeof(::pb::DamageEvent)},
+  { 149, -1, sizeof(::pb::EntityEvent)},
+  { 156, -1, sizeof(::pb::ChannelMessageEvent)},
+  { 168, -1, sizeof(::pb::WearChangeEvent)},
+  { 181, -1, sizeof(::pb::DeleteSpawnEvent)},
+  { 188, -1, sizeof(::pb::HPEvent)},
+  { 196, -1, sizeof(::pb::PlayerPositionUpdateEvent)},
+  { 215, -1, sizeof(::pb::AnimationEvent)},
+  { 223, -1, sizeof(::pb::SpawnEvent)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_ChannelMessage_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_CommandMessage_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_DailyGain_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Entity_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Entities_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Position_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_TextureProfile_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Texture_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_TintProfile_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Tint_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_Event_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_DeathEvent_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_DamageEvent_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_EntityEvent_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_ChannelMessageEvent_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_WearChangeEvent_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_DeleteSpawnEvent_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_HPEvent_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_PlayerPositionUpdateEvent_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_AnimationEvent_default_instance_),
-  reinterpret_cast<const ::google::protobuf::Message*>(&::eqproto::_SpawnEvent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_ChannelMessage_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_CommandMessage_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_DailyGain_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_Entity_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_Entities_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_Position_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_TextureProfile_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_Texture_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_TintProfile_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_Tint_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_Event_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_DeathEvent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_DamageEvent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_EntityEvent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_ChannelMessageEvent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_WearChangeEvent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_DeleteSpawnEvent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_HPEvent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_PlayerPositionUpdateEvent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_AnimationEvent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::pb::_SpawnEvent_default_instance_),
 };
 
 void protobuf_AssignDescriptors() {
@@ -1025,7 +1025,7 @@ void AddDescriptorsImpl() {
       "\001\n\013DamageEvent\022\016\n\006target\030\001 \001(\r\022\016\n\006source"
       "\030\002 \001(\r\022\014\n\004type\030\003 \001(\r\022\017\n\007spellid\030\004 \001(\r\022\016\n"
       "\006damage\030\005 \001(\r\022\r\n\005force\030\006 \001(\002\022\024\n\014meleepus"
-      "h_xy\030\007 \001(\002\022\023\n\013meleepush_z\030\010 \001(\002\"3\n\013Entit"
+      "h_xy\030\007 \001(\002\022\023\n\013hit_pitch\030\010 \001(\002\"3\n\013Entit"
       "yEvent\022\021\n\tentity_id\030\001 \001(\r\022\021\n\ttarget_id\030\002"
       " \001(\r\"\237\001\n\023ChannelMessageEvent\022\023\n\013target_n"
       "ame\030\001 \001(\t\022\016\n\006sender\030\002 \001(\t\022\020\n\010language\030\003 "
@@ -1082,7 +1082,7 @@ void AddDescriptorsImpl() {
       "2\030D \001(\r\022\017\n\007flymode\030E \001(\r\022\016\n\006gender\030F \001(\r"
       "\022\020\n\010bodytype\030G \001(\r\022\023\n\013unknown0336\030H \001(\r\022"
       "\024\n\014equip_chest2\030I \001(\r\022\023\n\013mount_color\030J \001"
-      "(\r\022\017\n\007spawnId\030K \001(\r\022\023\n\013unknown0344\030L \001(\r"
+      "(\r\022\017\n\007spawnId\030K \001(\r\022\023\n\013bounding_radius\030L \001(\r"
       "\022\023\n\013IsMercenary\030M \001(\r\022,\n\016equipment_tint\030"
       "N \001(\0132\024.eqproto.TintProfile\022\013\n\003lfg\030O \001(\r"
       "\022\032\n\022DestructibleObject\030P \001(\010\022\031\n\021Destruct"
@@ -3736,8 +3736,8 @@ void DailyGain::InternalSwap(DailyGain* other) {
 // ===================================================================
 
 void Entity::InitAsDefaultInstance() {
-  ::eqproto::_Entity_default_instance_._instance.get_mutable()->position_ = const_cast< ::eqproto::Position*>(
-      ::eqproto::Position::internal_default_instance());
+  ::pb::_Entity_default_instance_._instance.get_mutable()->position_ = const_cast< ::pb::Position*>(
+      ::pb::Position::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Entity::kIdFieldNumber;
@@ -3768,7 +3768,7 @@ Entity::Entity(const Entity& from)
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
   if (from.has_position()) {
-    position_ = new ::eqproto::Position(*from.position_);
+    position_ = new ::pb::Position(*from.position_);
   } else {
     position_ = NULL;
   }
@@ -4199,7 +4199,7 @@ void Entity::MergeFrom(const Entity& from) {
     name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
   }
   if (from.has_position()) {
-    mutable_position()->::eqproto::Position::MergeFrom(from.position());
+    mutable_position()->::pb::Position::MergeFrom(from.position());
   }
   if (from.id() != 0) {
     set_id(from.id());
@@ -4851,24 +4851,24 @@ void Position::InternalSwap(Position* other) {
 // ===================================================================
 
 void TextureProfile::InitAsDefaultInstance() {
-  ::eqproto::_TextureProfile_default_instance_._instance.get_mutable()->head_ = const_cast< ::eqproto::Texture*>(
-      ::eqproto::Texture::internal_default_instance());
-  ::eqproto::_TextureProfile_default_instance_._instance.get_mutable()->chest_ = const_cast< ::eqproto::Texture*>(
-      ::eqproto::Texture::internal_default_instance());
-  ::eqproto::_TextureProfile_default_instance_._instance.get_mutable()->arms_ = const_cast< ::eqproto::Texture*>(
-      ::eqproto::Texture::internal_default_instance());
-  ::eqproto::_TextureProfile_default_instance_._instance.get_mutable()->wrist_ = const_cast< ::eqproto::Texture*>(
-      ::eqproto::Texture::internal_default_instance());
-  ::eqproto::_TextureProfile_default_instance_._instance.get_mutable()->hands_ = const_cast< ::eqproto::Texture*>(
-      ::eqproto::Texture::internal_default_instance());
-  ::eqproto::_TextureProfile_default_instance_._instance.get_mutable()->legs_ = const_cast< ::eqproto::Texture*>(
-      ::eqproto::Texture::internal_default_instance());
-  ::eqproto::_TextureProfile_default_instance_._instance.get_mutable()->feet_ = const_cast< ::eqproto::Texture*>(
-      ::eqproto::Texture::internal_default_instance());
-  ::eqproto::_TextureProfile_default_instance_._instance.get_mutable()->primary_ = const_cast< ::eqproto::Texture*>(
-      ::eqproto::Texture::internal_default_instance());
-  ::eqproto::_TextureProfile_default_instance_._instance.get_mutable()->secondary_ = const_cast< ::eqproto::Texture*>(
-      ::eqproto::Texture::internal_default_instance());
+  ::pb::_TextureProfile_default_instance_._instance.get_mutable()->head_ = const_cast< ::pb::Texture*>(
+      ::pb::Texture::internal_default_instance());
+  ::pb::_TextureProfile_default_instance_._instance.get_mutable()->chest_ = const_cast< ::pb::Texture*>(
+      ::pb::Texture::internal_default_instance());
+  ::pb::_TextureProfile_default_instance_._instance.get_mutable()->arms_ = const_cast< ::pb::Texture*>(
+      ::pb::Texture::internal_default_instance());
+  ::pb::_TextureProfile_default_instance_._instance.get_mutable()->wrist_ = const_cast< ::pb::Texture*>(
+      ::pb::Texture::internal_default_instance());
+  ::pb::_TextureProfile_default_instance_._instance.get_mutable()->hands_ = const_cast< ::pb::Texture*>(
+      ::pb::Texture::internal_default_instance());
+  ::pb::_TextureProfile_default_instance_._instance.get_mutable()->legs_ = const_cast< ::pb::Texture*>(
+      ::pb::Texture::internal_default_instance());
+  ::pb::_TextureProfile_default_instance_._instance.get_mutable()->feet_ = const_cast< ::pb::Texture*>(
+      ::pb::Texture::internal_default_instance());
+  ::pb::_TextureProfile_default_instance_._instance.get_mutable()->primary_ = const_cast< ::pb::Texture*>(
+      ::pb::Texture::internal_default_instance());
+  ::pb::_TextureProfile_default_instance_._instance.get_mutable()->secondary_ = const_cast< ::pb::Texture*>(
+      ::pb::Texture::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int TextureProfile::kHeadFieldNumber;
@@ -4896,47 +4896,47 @@ TextureProfile::TextureProfile(const TextureProfile& from)
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.has_head()) {
-    head_ = new ::eqproto::Texture(*from.head_);
+    head_ = new ::pb::Texture(*from.head_);
   } else {
     head_ = NULL;
   }
   if (from.has_chest()) {
-    chest_ = new ::eqproto::Texture(*from.chest_);
+    chest_ = new ::pb::Texture(*from.chest_);
   } else {
     chest_ = NULL;
   }
   if (from.has_arms()) {
-    arms_ = new ::eqproto::Texture(*from.arms_);
+    arms_ = new ::pb::Texture(*from.arms_);
   } else {
     arms_ = NULL;
   }
   if (from.has_wrist()) {
-    wrist_ = new ::eqproto::Texture(*from.wrist_);
+    wrist_ = new ::pb::Texture(*from.wrist_);
   } else {
     wrist_ = NULL;
   }
   if (from.has_hands()) {
-    hands_ = new ::eqproto::Texture(*from.hands_);
+    hands_ = new ::pb::Texture(*from.hands_);
   } else {
     hands_ = NULL;
   }
   if (from.has_legs()) {
-    legs_ = new ::eqproto::Texture(*from.legs_);
+    legs_ = new ::pb::Texture(*from.legs_);
   } else {
     legs_ = NULL;
   }
   if (from.has_feet()) {
-    feet_ = new ::eqproto::Texture(*from.feet_);
+    feet_ = new ::pb::Texture(*from.feet_);
   } else {
     feet_ = NULL;
   }
   if (from.has_primary()) {
-    primary_ = new ::eqproto::Texture(*from.primary_);
+    primary_ = new ::pb::Texture(*from.primary_);
   } else {
     primary_ = NULL;
   }
   if (from.has_secondary()) {
-    secondary_ = new ::eqproto::Texture(*from.secondary_);
+    secondary_ = new ::pb::Texture(*from.secondary_);
   } else {
     secondary_ = NULL;
   }
@@ -5420,31 +5420,31 @@ void TextureProfile::MergeFrom(const TextureProfile& from) {
   (void) cached_has_bits;
 
   if (from.has_head()) {
-    mutable_head()->::eqproto::Texture::MergeFrom(from.head());
+    mutable_head()->::pb::Texture::MergeFrom(from.head());
   }
   if (from.has_chest()) {
-    mutable_chest()->::eqproto::Texture::MergeFrom(from.chest());
+    mutable_chest()->::pb::Texture::MergeFrom(from.chest());
   }
   if (from.has_arms()) {
-    mutable_arms()->::eqproto::Texture::MergeFrom(from.arms());
+    mutable_arms()->::pb::Texture::MergeFrom(from.arms());
   }
   if (from.has_wrist()) {
-    mutable_wrist()->::eqproto::Texture::MergeFrom(from.wrist());
+    mutable_wrist()->::pb::Texture::MergeFrom(from.wrist());
   }
   if (from.has_hands()) {
-    mutable_hands()->::eqproto::Texture::MergeFrom(from.hands());
+    mutable_hands()->::pb::Texture::MergeFrom(from.hands());
   }
   if (from.has_legs()) {
-    mutable_legs()->::eqproto::Texture::MergeFrom(from.legs());
+    mutable_legs()->::pb::Texture::MergeFrom(from.legs());
   }
   if (from.has_feet()) {
-    mutable_feet()->::eqproto::Texture::MergeFrom(from.feet());
+    mutable_feet()->::pb::Texture::MergeFrom(from.feet());
   }
   if (from.has_primary()) {
-    mutable_primary()->::eqproto::Texture::MergeFrom(from.primary());
+    mutable_primary()->::pb::Texture::MergeFrom(from.primary());
   }
   if (from.has_secondary()) {
-    mutable_secondary()->::eqproto::Texture::MergeFrom(from.secondary());
+    mutable_secondary()->::pb::Texture::MergeFrom(from.secondary());
   }
 }
 
@@ -5882,24 +5882,24 @@ void Texture::InternalSwap(Texture* other) {
 // ===================================================================
 
 void TintProfile::InitAsDefaultInstance() {
-  ::eqproto::_TintProfile_default_instance_._instance.get_mutable()->head_ = const_cast< ::eqproto::Tint*>(
-      ::eqproto::Tint::internal_default_instance());
-  ::eqproto::_TintProfile_default_instance_._instance.get_mutable()->chest_ = const_cast< ::eqproto::Tint*>(
-      ::eqproto::Tint::internal_default_instance());
-  ::eqproto::_TintProfile_default_instance_._instance.get_mutable()->arms_ = const_cast< ::eqproto::Tint*>(
-      ::eqproto::Tint::internal_default_instance());
-  ::eqproto::_TintProfile_default_instance_._instance.get_mutable()->wrist_ = const_cast< ::eqproto::Tint*>(
-      ::eqproto::Tint::internal_default_instance());
-  ::eqproto::_TintProfile_default_instance_._instance.get_mutable()->hands_ = const_cast< ::eqproto::Tint*>(
-      ::eqproto::Tint::internal_default_instance());
-  ::eqproto::_TintProfile_default_instance_._instance.get_mutable()->legs_ = const_cast< ::eqproto::Tint*>(
-      ::eqproto::Tint::internal_default_instance());
-  ::eqproto::_TintProfile_default_instance_._instance.get_mutable()->feet_ = const_cast< ::eqproto::Tint*>(
-      ::eqproto::Tint::internal_default_instance());
-  ::eqproto::_TintProfile_default_instance_._instance.get_mutable()->primary_ = const_cast< ::eqproto::Tint*>(
-      ::eqproto::Tint::internal_default_instance());
-  ::eqproto::_TintProfile_default_instance_._instance.get_mutable()->secondary_ = const_cast< ::eqproto::Tint*>(
-      ::eqproto::Tint::internal_default_instance());
+  ::pb::_TintProfile_default_instance_._instance.get_mutable()->head_ = const_cast< ::pb::Tint*>(
+      ::pb::Tint::internal_default_instance());
+  ::pb::_TintProfile_default_instance_._instance.get_mutable()->chest_ = const_cast< ::pb::Tint*>(
+      ::pb::Tint::internal_default_instance());
+  ::pb::_TintProfile_default_instance_._instance.get_mutable()->arms_ = const_cast< ::pb::Tint*>(
+      ::pb::Tint::internal_default_instance());
+  ::pb::_TintProfile_default_instance_._instance.get_mutable()->wrist_ = const_cast< ::pb::Tint*>(
+      ::pb::Tint::internal_default_instance());
+  ::pb::_TintProfile_default_instance_._instance.get_mutable()->hands_ = const_cast< ::pb::Tint*>(
+      ::pb::Tint::internal_default_instance());
+  ::pb::_TintProfile_default_instance_._instance.get_mutable()->legs_ = const_cast< ::pb::Tint*>(
+      ::pb::Tint::internal_default_instance());
+  ::pb::_TintProfile_default_instance_._instance.get_mutable()->feet_ = const_cast< ::pb::Tint*>(
+      ::pb::Tint::internal_default_instance());
+  ::pb::_TintProfile_default_instance_._instance.get_mutable()->primary_ = const_cast< ::pb::Tint*>(
+      ::pb::Tint::internal_default_instance());
+  ::pb::_TintProfile_default_instance_._instance.get_mutable()->secondary_ = const_cast< ::pb::Tint*>(
+      ::pb::Tint::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int TintProfile::kHeadFieldNumber;
@@ -5927,47 +5927,47 @@ TintProfile::TintProfile(const TintProfile& from)
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.has_head()) {
-    head_ = new ::eqproto::Tint(*from.head_);
+    head_ = new ::pb::Tint(*from.head_);
   } else {
     head_ = NULL;
   }
   if (from.has_chest()) {
-    chest_ = new ::eqproto::Tint(*from.chest_);
+    chest_ = new ::pb::Tint(*from.chest_);
   } else {
     chest_ = NULL;
   }
   if (from.has_arms()) {
-    arms_ = new ::eqproto::Tint(*from.arms_);
+    arms_ = new ::pb::Tint(*from.arms_);
   } else {
     arms_ = NULL;
   }
   if (from.has_wrist()) {
-    wrist_ = new ::eqproto::Tint(*from.wrist_);
+    wrist_ = new ::pb::Tint(*from.wrist_);
   } else {
     wrist_ = NULL;
   }
   if (from.has_hands()) {
-    hands_ = new ::eqproto::Tint(*from.hands_);
+    hands_ = new ::pb::Tint(*from.hands_);
   } else {
     hands_ = NULL;
   }
   if (from.has_legs()) {
-    legs_ = new ::eqproto::Tint(*from.legs_);
+    legs_ = new ::pb::Tint(*from.legs_);
   } else {
     legs_ = NULL;
   }
   if (from.has_feet()) {
-    feet_ = new ::eqproto::Tint(*from.feet_);
+    feet_ = new ::pb::Tint(*from.feet_);
   } else {
     feet_ = NULL;
   }
   if (from.has_primary()) {
-    primary_ = new ::eqproto::Tint(*from.primary_);
+    primary_ = new ::pb::Tint(*from.primary_);
   } else {
     primary_ = NULL;
   }
   if (from.has_secondary()) {
-    secondary_ = new ::eqproto::Tint(*from.secondary_);
+    secondary_ = new ::pb::Tint(*from.secondary_);
   } else {
     secondary_ = NULL;
   }
@@ -6451,31 +6451,31 @@ void TintProfile::MergeFrom(const TintProfile& from) {
   (void) cached_has_bits;
 
   if (from.has_head()) {
-    mutable_head()->::eqproto::Tint::MergeFrom(from.head());
+    mutable_head()->::pb::Tint::MergeFrom(from.head());
   }
   if (from.has_chest()) {
-    mutable_chest()->::eqproto::Tint::MergeFrom(from.chest());
+    mutable_chest()->::pb::Tint::MergeFrom(from.chest());
   }
   if (from.has_arms()) {
-    mutable_arms()->::eqproto::Tint::MergeFrom(from.arms());
+    mutable_arms()->::pb::Tint::MergeFrom(from.arms());
   }
   if (from.has_wrist()) {
-    mutable_wrist()->::eqproto::Tint::MergeFrom(from.wrist());
+    mutable_wrist()->::pb::Tint::MergeFrom(from.wrist());
   }
   if (from.has_hands()) {
-    mutable_hands()->::eqproto::Tint::MergeFrom(from.hands());
+    mutable_hands()->::pb::Tint::MergeFrom(from.hands());
   }
   if (from.has_legs()) {
-    mutable_legs()->::eqproto::Tint::MergeFrom(from.legs());
+    mutable_legs()->::pb::Tint::MergeFrom(from.legs());
   }
   if (from.has_feet()) {
-    mutable_feet()->::eqproto::Tint::MergeFrom(from.feet());
+    mutable_feet()->::pb::Tint::MergeFrom(from.feet());
   }
   if (from.has_primary()) {
-    mutable_primary()->::eqproto::Tint::MergeFrom(from.primary());
+    mutable_primary()->::pb::Tint::MergeFrom(from.primary());
   }
   if (from.has_secondary()) {
-    mutable_secondary()->::eqproto::Tint::MergeFrom(from.secondary());
+    mutable_secondary()->::pb::Tint::MergeFrom(from.secondary());
   }
 }
 
@@ -7007,7 +7007,7 @@ bool Event::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          set_op(static_cast< ::eqproto::OpCode >(value));
+          set_op(static_cast< ::pb::OpCode >(value));
         } else {
           goto handle_unusual;
         }
@@ -7702,8 +7702,8 @@ const int DamageEvent::kTypeFieldNumber;
 const int DamageEvent::kSpellidFieldNumber;
 const int DamageEvent::kDamageFieldNumber;
 const int DamageEvent::kForceFieldNumber;
-const int DamageEvent::kMeleepushXyFieldNumber;
-const int DamageEvent::kMeleepushZFieldNumber;
+const int DamageEvent::khit_headingFieldNumber;
+const int DamageEvent::khit_pitchFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 DamageEvent::DamageEvent()
@@ -7720,15 +7720,15 @@ DamageEvent::DamageEvent(const DamageEvent& from)
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   ::memcpy(&target_, &from.target_,
-    static_cast<size_t>(reinterpret_cast<char*>(&meleepush_z_) -
-    reinterpret_cast<char*>(&target_)) + sizeof(meleepush_z_));
+    static_cast<size_t>(reinterpret_cast<char*>(&hit_pitch_) -
+    reinterpret_cast<char*>(&target_)) + sizeof(hit_pitch_));
   // @@protoc_insertion_point(copy_constructor:eqproto.DamageEvent)
 }
 
 void DamageEvent::SharedCtor() {
   ::memset(&target_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&meleepush_z_) -
-      reinterpret_cast<char*>(&target_)) + sizeof(meleepush_z_));
+      reinterpret_cast<char*>(&hit_pitch_) -
+      reinterpret_cast<char*>(&target_)) + sizeof(hit_pitch_));
   _cached_size_ = 0;
 }
 
@@ -7770,8 +7770,8 @@ void DamageEvent::Clear() {
   (void) cached_has_bits;
 
   ::memset(&target_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&meleepush_z_) -
-      reinterpret_cast<char*>(&target_)) + sizeof(meleepush_z_));
+      reinterpret_cast<char*>(&hit_pitch_) -
+      reinterpret_cast<char*>(&target_)) + sizeof(hit_pitch_));
   _internal_metadata_.Clear();
 }
 
@@ -7869,28 +7869,28 @@ bool DamageEvent::MergePartialFromCodedStream(
         break;
       }
 
-      // float meleepush_xy = 7;
+      // float hit_heading = 7;
       case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(61u /* 61 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &meleepush_xy_)));
+                 input, &hit_heading_)));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // float meleepush_z = 8;
+      // float hit_pitch = 8;
       case 8: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(69u /* 69 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, &meleepush_z_)));
+                 input, &hit_pitch_)));
         } else {
           goto handle_unusual;
         }
@@ -7953,14 +7953,14 @@ void DamageEvent::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(6, this->force(), output);
   }
 
-  // float meleepush_xy = 7;
-  if (this->meleepush_xy() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(7, this->meleepush_xy(), output);
+  // float hit_heading = 7;
+  if (this->hit_heading() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(7, this->hit_heading(), output);
   }
 
-  // float meleepush_z = 8;
-  if (this->meleepush_z() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->meleepush_z(), output);
+  // float hit_pitch = 8;
+  if (this->hit_pitch() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(8, this->hit_pitch(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -8007,14 +8007,14 @@ void DamageEvent::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(6, this->force(), target);
   }
 
-  // float meleepush_xy = 7;
-  if (this->meleepush_xy() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(7, this->meleepush_xy(), target);
+  // float hit_heading = 7;
+  if (this->hit_heading() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(7, this->hit_heading(), target);
   }
 
-  // float meleepush_z = 8;
-  if (this->meleepush_z() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->meleepush_z(), target);
+  // float hit_pitch = 8;
+  if (this->hit_pitch() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(8, this->hit_pitch(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -8074,13 +8074,13 @@ size_t DamageEvent::ByteSizeLong() const {
     total_size += 1 + 4;
   }
 
-  // float meleepush_xy = 7;
-  if (this->meleepush_xy() != 0) {
+  // float hit_heading = 7;
+  if (this->hit_heading() != 0) {
     total_size += 1 + 4;
   }
 
-  // float meleepush_z = 8;
-  if (this->meleepush_z() != 0) {
+  // float hit_pitch = 8;
+  if (this->hit_pitch() != 0) {
     total_size += 1 + 4;
   }
 
@@ -8131,11 +8131,11 @@ void DamageEvent::MergeFrom(const DamageEvent& from) {
   if (from.force() != 0) {
     set_force(from.force());
   }
-  if (from.meleepush_xy() != 0) {
-    set_meleepush_xy(from.meleepush_xy());
+  if (from.hit_heading() != 0) {
+    set_hit_heading(from.hit_heading());
   }
-  if (from.meleepush_z() != 0) {
-    set_meleepush_z(from.meleepush_z());
+  if (from.hit_pitch() != 0) {
+    set_hit_pitch(from.hit_pitch());
   }
 }
 
@@ -8169,8 +8169,8 @@ void DamageEvent::InternalSwap(DamageEvent* other) {
   swap(spellid_, other->spellid_);
   swap(damage_, other->damage_);
   swap(force_, other->force_);
-  swap(meleepush_xy_, other->meleepush_xy_);
-  swap(meleepush_z_, other->meleepush_z_);
+  swap(hit_heading_, other->hit_heading_);
+  swap(hit_pitch_, other->hit_pitch_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   swap(_cached_size_, other->_cached_size_);
 }
@@ -8987,8 +8987,8 @@ void ChannelMessageEvent::InternalSwap(ChannelMessageEvent* other) {
 // ===================================================================
 
 void WearChangeEvent::InitAsDefaultInstance() {
-  ::eqproto::_WearChangeEvent_default_instance_._instance.get_mutable()->color_ = const_cast< ::eqproto::Tint*>(
-      ::eqproto::Tint::internal_default_instance());
+  ::pb::_WearChangeEvent_default_instance_._instance.get_mutable()->color_ = const_cast< ::pb::Tint*>(
+      ::pb::Tint::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int WearChangeEvent::kSpawnIdFieldNumber;
@@ -9015,7 +9015,7 @@ WearChangeEvent::WearChangeEvent(const WearChangeEvent& from)
       _cached_size_(0) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   if (from.has_color()) {
-    color_ = new ::eqproto::Tint(*from.color_);
+    color_ = new ::pb::Tint(*from.color_);
   } else {
     color_ = NULL;
   }
@@ -9426,7 +9426,7 @@ void WearChangeEvent::MergeFrom(const WearChangeEvent& from) {
   (void) cached_has_bits;
 
   if (from.has_color()) {
-    mutable_color()->::eqproto::Tint::MergeFrom(from.color());
+    mutable_color()->::pb::Tint::MergeFrom(from.color());
   }
   if (from.spawn_id() != 0) {
     set_spawn_id(from.spawn_id());
@@ -11120,10 +11120,10 @@ void AnimationEvent::InternalSwap(AnimationEvent* other) {
 // ===================================================================
 
 void SpawnEvent::InitAsDefaultInstance() {
-  ::eqproto::_SpawnEvent_default_instance_._instance.get_mutable()->equipment_ = const_cast< ::eqproto::TextureProfile*>(
-      ::eqproto::TextureProfile::internal_default_instance());
-  ::eqproto::_SpawnEvent_default_instance_._instance.get_mutable()->equipment_tint_ = const_cast< ::eqproto::TintProfile*>(
-      ::eqproto::TintProfile::internal_default_instance());
+  ::pb::_SpawnEvent_default_instance_._instance.get_mutable()->equipment_ = const_cast< ::pb::TextureProfile*>(
+      ::pb::TextureProfile::internal_default_instance());
+  ::pb::_SpawnEvent_default_instance_._instance.get_mutable()->equipment_tint_ = const_cast< ::pb::TintProfile*>(
+      ::pb::TintProfile::internal_default_instance());
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int SpawnEvent::kUnknown0000FieldNumber;
@@ -11201,7 +11201,7 @@ const int SpawnEvent::kUnknown0336FieldNumber;
 const int SpawnEvent::kEquipChest2FieldNumber;
 const int SpawnEvent::kMountColorFieldNumber;
 const int SpawnEvent::kSpawnIdFieldNumber;
-const int SpawnEvent::kUnknown0344FieldNumber;
+const int SpawnEvent::kbounding_radiusFieldNumber;
 const int SpawnEvent::kIsMercenaryFieldNumber;
 const int SpawnEvent::kEquipmentTintFieldNumber;
 const int SpawnEvent::kLfgFieldNumber;
@@ -11269,12 +11269,12 @@ SpawnEvent::SpawnEvent(const SpawnEvent& from)
     destructiblestring_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.destructiblestring_);
   }
   if (from.has_equipment()) {
-    equipment_ = new ::eqproto::TextureProfile(*from.equipment_);
+    equipment_ = new ::pb::TextureProfile(*from.equipment_);
   } else {
     equipment_ = NULL;
   }
   if (from.has_equipment_tint()) {
-    equipment_tint_ = new ::eqproto::TintProfile(*from.equipment_tint_);
+    equipment_tint_ = new ::pb::TintProfile(*from.equipment_tint_);
   } else {
     equipment_tint_ = NULL;
   }
@@ -12431,14 +12431,14 @@ bool SpawnEvent::MergePartialFromCodedStream(
         break;
       }
 
-      // uint32 unknown0344 = 76;
+      // uint32 bounding_radius = 76;
       case 76: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(96u /* 608 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &unknown0344_)));
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &bounding_radius_)));
         } else {
           goto handle_unusual;
         }
@@ -13193,9 +13193,9 @@ void SpawnEvent::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(75, this->spawnid(), output);
   }
 
-  // uint32 unknown0344 = 76;
-  if (this->unknown0344() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(76, this->unknown0344(), output);
+  // uint32 bounding_radius = 76;
+  if (this->bounding_radius() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(76, this->bounding_radius(), output);
   }
 
   // uint32 IsMercenary = 77;
@@ -13744,9 +13744,9 @@ void SpawnEvent::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(75, this->spawnid(), target);
   }
 
-  // uint32 unknown0344 = 76;
-  if (this->unknown0344() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(76, this->unknown0344(), target);
+  // uint32 bounding_radius = 76;
+  if (this->bounding_radius() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(76, this->bounding_radius(), target);
   }
 
   // uint32 IsMercenary = 77;
@@ -14448,11 +14448,11 @@ size_t SpawnEvent::ByteSizeLong() const {
         this->spawnid());
   }
 
-  // uint32 unknown0344 = 76;
-  if (this->unknown0344() != 0) {
+  // uint32 bounding_radius = 76;
+  if (this->bounding_radius() != 0) {
     total_size += 2 +
       ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->unknown0344());
+        this->bounding_radius());
   }
 
   // uint32 IsMercenary = 77;
@@ -14640,10 +14640,10 @@ void SpawnEvent::MergeFrom(const SpawnEvent& from) {
     destructiblestring_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.destructiblestring_);
   }
   if (from.has_equipment()) {
-    mutable_equipment()->::eqproto::TextureProfile::MergeFrom(from.equipment());
+    mutable_equipment()->::pb::TextureProfile::MergeFrom(from.equipment());
   }
   if (from.has_equipment_tint()) {
-    mutable_equipment_tint()->::eqproto::TintProfile::MergeFrom(from.equipment_tint());
+    mutable_equipment_tint()->::pb::TintProfile::MergeFrom(from.equipment_tint());
   }
   if (from.unknown0000() != 0) {
     set_unknown0000(from.unknown0000());
@@ -14855,8 +14855,8 @@ void SpawnEvent::MergeFrom(const SpawnEvent& from) {
   if (from.spawnid() != 0) {
     set_spawnid(from.spawnid());
   }
-  if (from.unknown0344() != 0) {
-    set_unknown0344(from.unknown0344());
+  if (from.bounding_radius() != 0) {
+    set_bounding_radius(from.bounding_radius());
   }
   if (from.ismercenary() != 0) {
     set_ismercenary(from.ismercenary());
@@ -15020,7 +15020,7 @@ void SpawnEvent::InternalSwap(SpawnEvent* other) {
   swap(equip_chest2_, other->equip_chest2_);
   swap(mount_color_, other->mount_color_);
   swap(spawnid_, other->spawnid_);
-  swap(unknown0344_, other->unknown0344_);
+  swap(bounding_radius_, other->bounding_radius_);
   swap(ismercenary_, other->ismercenary_);
   swap(lfg_, other->lfg_);
   swap(destructibleappearance_, other->destructibleappearance_);

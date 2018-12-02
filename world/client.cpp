@@ -85,6 +85,7 @@ extern ClientList client_list;
 extern EQEmu::Random emu_random;
 extern uint32 numclients;
 extern volatile bool RunLoops;
+extern volatile bool UCSServerAvailable_;
 extern NatsManager nats;
 
 Client::Client(EQStreamInterface* ieqs)
@@ -216,8 +217,8 @@ void Client::SendMaxCharCreate() {
 	MaxCharacters_Struct* mc = (MaxCharacters_Struct*)outapp->pBuffer;
 
 	mc->max_chars = EQEmu::constants::Lookup(m_ClientVersion)->CharacterCreationLimit;
-	if (mc->max_chars > EQEmu::constants::CharacterCreationMax)
-		mc->max_chars = EQEmu::constants::CharacterCreationMax;
+	if (mc->max_chars > EQEmu::constants::CHARACTER_CREATION_LIMIT)
+		mc->max_chars = EQEmu::constants::CHARACTER_CREATION_LIMIT;
 
 	QueuePacket(outapp);
 	safe_delete(outapp);
@@ -256,7 +257,7 @@ void Client::SendMembership() {
 	mc->entries[1] = 0xffffffff;	// Max Level Restriction
 	mc->entries[2] = 0xffffffff;	// Max Char Slots per Account (not used by client?)
 	mc->entries[3] = 0xffffffff;	// 1 for Silver
-	mc->entries[4] = 8;				// Main Inventory Size (0xffffffff on Live for Gold, but limiting to 8 until 10 is supported)
+	mc->entries[4] = 0xffffffff;	// Main Inventory Size (0xffffffff on Live for Gold, but limiting to 8 until 10 is supported)
 	mc->entries[5] = 0xffffffff;	// Max Platinum per level
 	mc->entries[6] = 1;				// 0 for Silver
 	mc->entries[7] = 1;				// 0 for Silver
@@ -770,8 +771,8 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 	// (This is a literal translation of the original process..I don't see why it can't be changed to a single-target query over account iteration)
 	if (!is_player_zoning) {
 		size_t character_limit = EQEmu::constants::Lookup(eqs->ClientVersion())->CharacterCreationLimit;
-		if (character_limit > EQEmu::constants::CharacterCreationMax) { character_limit = EQEmu::constants::CharacterCreationMax; }
-		if (eqs->ClientVersion() == EQEmu::versions::ClientVersion::Titanium) { character_limit = 8; }
+		if (character_limit > EQEmu::constants::CHARACTER_CREATION_LIMIT) { character_limit = EQEmu::constants::CHARACTER_CREATION_LIMIT; }
+		if (eqs->ClientVersion() == EQEmu::versions::ClientVersion::Titanium) { character_limit = Titanium::constants::CHARACTER_CREATION_LIMIT; }
 
 		std::string tgh_query = StringFormat(
 			"SELECT                     "
@@ -899,52 +900,83 @@ bool Client::HandleEnterWorldPacket(const EQApplicationPacket *app) {
 	QueuePacket(outapp);
 	safe_delete(outapp);
 
+	// set mailkey - used for duration of character session
 	int MailKey = emu_random.Int(1, INT_MAX);
 
 	database.SetMailKey(charid, GetIP(), MailKey);
+	if (UCSServerAvailable_) {
+		const WorldConfig *Config = WorldConfig::get();
+		std::string buffer;
 
-	char ConnectionType;
+		EQEmu::versions::UCSVersion ConnectionType = EQEmu::versions::ucsUnknown;
 
-	if (m_ClientVersionBit & EQEmu::versions::bit_UFAndLater)
-		ConnectionType = 'U';
-	else if (m_ClientVersionBit & EQEmu::versions::bit_SoFAndLater)
-		ConnectionType = 'S';
-	else
-		ConnectionType = 'C';
+		// chat server packet
+		switch (GetClientVersion()) {
+			case EQEmu::versions::ClientVersion::Titanium:
+				ConnectionType = EQEmu::versions::ucsTitaniumChat;
+				break;
+			case EQEmu::versions::ClientVersion::SoF:
+				ConnectionType = EQEmu::versions::ucsSoFCombined;
+				break;
+			case EQEmu::versions::ClientVersion::SoD:
+				ConnectionType = EQEmu::versions::ucsSoDCombined;
+				break;
+			case EQEmu::versions::ClientVersion::UF:
+				ConnectionType = EQEmu::versions::ucsUFCombined;
+				break;
+			case EQEmu::versions::ClientVersion::RoF:
+				ConnectionType = EQEmu::versions::ucsRoFCombined;
+				break;
+			case EQEmu::versions::ClientVersion::RoF2:
+				ConnectionType = EQEmu::versions::ucsRoF2Combined;
+				break;
+			default:
+				ConnectionType = EQEmu::versions::ucsUnknown;
+				break;
+		}
 
-	auto outapp2 = new EQApplicationPacket(OP_SetChatServer);
-	char buffer[112];
+		buffer = StringFormat("%s,%i,%s.%s,%c%08X",
+							  Config->ChatHost.c_str(),
+							  Config->ChatPort,
+							  Config->ShortName.c_str(),
+							  GetCharName(),
+							  ConnectionType,
+							  MailKey
+		);
 
-	const WorldConfig *Config = WorldConfig::get();
+		outapp = new EQApplicationPacket(OP_SetChatServer, (buffer.length() + 1));
+		memcpy(outapp->pBuffer, buffer.c_str(), buffer.length());
+		outapp->pBuffer[buffer.length()] = '\0';
 
-	sprintf(buffer,"%s,%i,%s.%s,%c%08X",
-		Config->ChatHost.c_str(),
-		Config->ChatPort,
-		Config->ShortName.c_str(),
-		this->GetCharName(), ConnectionType, MailKey
-	);
-	outapp2->size=strlen(buffer)+1;
-	outapp2->pBuffer = new uchar[outapp2->size];
-	memcpy(outapp2->pBuffer,buffer,outapp2->size);
-	QueuePacket(outapp2);
-	safe_delete(outapp2);
+		QueuePacket(outapp);
+		safe_delete(outapp);
 
-	outapp2 = new EQApplicationPacket(OP_SetChatServer2);
+		// mail server packet
+		switch (GetClientVersion()) {
+			case EQEmu::versions::ClientVersion::Titanium:
+				ConnectionType = EQEmu::versions::ucsTitaniumMail;
+				break;
+			default:
+				// retain value from previous switch
+				break;
+		}
 
-	if (m_ClientVersionBit & EQEmu::versions::bit_TitaniumAndEarlier)
-		ConnectionType = 'M';
+		buffer = StringFormat("%s,%i,%s.%s,%c%08X",
+							  Config->MailHost.c_str(),
+							  Config->MailPort,
+							  Config->ShortName.c_str(),
+							  GetCharName(),
+							  ConnectionType,
+							  MailKey
+		);
 
-	sprintf(buffer,"%s,%i,%s.%s,%c%08X",
-		Config->MailHost.c_str(),
-		Config->MailPort,
-		Config->ShortName.c_str(),
-		this->GetCharName(), ConnectionType, MailKey
-	);
-	outapp2->size=strlen(buffer)+1;
-	outapp2->pBuffer = new uchar[outapp2->size];
-	memcpy(outapp2->pBuffer,buffer,outapp2->size);
-	QueuePacket(outapp2);
-	safe_delete(outapp2);
+		outapp = new EQApplicationPacket(OP_SetChatServer2, (buffer.length() + 1));
+		memcpy(outapp->pBuffer, buffer.c_str(), buffer.length());
+		outapp->pBuffer[buffer.length()] = '\0';
+
+		QueuePacket(outapp);
+		safe_delete(outapp);
+	}
 
 	EnterWorld();
 
@@ -1418,6 +1450,7 @@ bool Client::OPCharCreate(char *name, CharCreate_Struct *cc)
 	PlayerProfile_Struct pp;
 	ExtendedProfile_Struct ext;
 	EQEmu::InventoryProfile inv;
+	inv.SetInventoryVersion(EQEmu::versions::ConvertClientVersionBitToClientVersion(m_ClientVersionBit));
 	time_t bday = time(nullptr);
 	char startzone[50]={0};
 	uint32 i;

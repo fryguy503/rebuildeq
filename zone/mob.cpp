@@ -99,7 +99,7 @@ Mob::Mob(const char* in_name,
 		tic_timer(6000),
 		mana_timer(2000),
 		spellend_timer(0),
-		rewind_timer(30000), //Timer used for determining amount of time between actual player position updates for /rewind.
+		rewind_timer(30000),
 		bindwound_timer(10000),
 		stunned_timer(0),
 		spun_timer(0),
@@ -117,16 +117,16 @@ Mob::Mob(const char* in_name,
 		fix_z_timer(300),
 		fix_z_timer_engaged(100),
 		attack_anim_timer(1000),
-		position_update_melee_push_timer(1000)
+		position_update_melee_push_timer(500),
+		hate_list_cleanup_timer(6000)
 {
 	targeted = 0;
 	tar_ndx=0;
 	tar_vector=0;
 	currently_fleeing = false;
 
-	last_z = 0;
-
 	last_major_update_position = m_Position;
+	is_distance_roamer = false;
 
 	AI_Init();
 	SetMoving(false);
@@ -254,7 +254,7 @@ Mob::Mob(const char* in_name,
 	max_mana = 0;
 	hp_regen = in_hp_regen;
 	mana_regen = in_mana_regen;
-	oocregen = RuleI(NPC, OOCRegen); //default Out of Combat Regen
+	ooc_regen = RuleI(NPC, OOCRegen); //default Out of Combat Regen
 	maxlevel = in_maxlevel;
 	scalerate = in_scalerate;
 	invisible = false;
@@ -267,6 +267,7 @@ Mob::Mob(const char* in_name,
 	IsFullHP	= (cur_hp == max_hp);
 	qglobal=0;
 	spawned = false;
+	rare_spawn = false;
 
 	InitializeBuffSlots();
 
@@ -383,8 +384,9 @@ Mob::Mob(const char* in_name,
 	m_CurrentWayPoint = glm::vec4();
 	cur_wp_pause = 0;
 	patrol=0;
-	follow=0;
+	follow_id =0;
 	follow_dist = 100;	// Default Distance for Follow
+	follow_run = true;	// We can run if distance great enough
 	no_target_hotkey = false;
 	flee_mode = false;
 	currently_fleeing = false;
@@ -393,6 +395,7 @@ Mob::Mob(const char* in_name,
 	permarooted = (runspeed > 0) ? false : true;
 
 	movetimercompleted = false;
+	ForcedMovement = 0;
 	roamer = false;
 	rooted = false;
 	charmed = false;
@@ -403,10 +406,11 @@ Mob::Mob(const char* in_name,
 	pStandingPetOrder = SPO_Follow;
 	pseudo_rooted = false;
 
-	see_invis = in_see_invis;
-	see_invis_undead = in_see_invis_undead != 0;
-	see_hide = in_see_hide != 0;
-	see_improved_hide = in_see_improved_hide != 0;
+	see_invis = GetSeeInvisible(in_see_invis);
+	see_invis_undead = GetSeeInvisible(in_see_invis_undead);
+	see_hide = GetSeeInvisible(in_see_hide);
+	see_improved_hide = GetSeeInvisible(in_see_improved_hide);
+
 	qglobal = in_qglobal != 0;
 
 	// Bind wound
@@ -431,15 +435,7 @@ Mob::Mob(const char* in_name,
     m_TargetRing = glm::vec3();
 
 	flymode = FlyMode3;
-	// Pathing
-	PathingLOSState = UnknownLOS;
-	PathingLoopCount = 0;
-	PathingLastNodeVisited = -1;
-	PathingLOSCheckTimer = new Timer(RuleI(Pathing, LOSCheckFrequency));
-	PathingRouteUpdateTimerShort = new Timer(RuleI(Pathing, RouteUpdateFrequencyShort));
-	PathingRouteUpdateTimerLong = new Timer(RuleI(Pathing, RouteUpdateFrequencyLong));
 	DistractedFromGrid = false;
-	PathingTraversedNodes = 0;
 	hate_list.SetHateOwner(this);
 
 	m_AllowBeneficial = false;
@@ -453,6 +449,9 @@ Mob::Mob(const char* in_name,
 	PrimaryAggro = false;
 	AssistAggro = false;
 	npc_assist_cap = 0;
+
+	PathRecalcTimer.reset(new Timer(500));
+	PathingLoopCount = 0;
 }
 
 Mob::~Mob()
@@ -486,9 +485,6 @@ Mob::~Mob()
 		entity_list.DestroyTempPets(this);
 	}
 	entity_list.UnMarkNPC(GetID());
-	safe_delete(PathingLOSCheckTimer);
-	safe_delete(PathingRouteUpdateTimerShort);
-	safe_delete(PathingRouteUpdateTimerLong);
 	UninitializeBuffSlots();
 
 #ifdef BOTS
@@ -1110,7 +1106,7 @@ void Mob::FillSpawnStruct(NewSpawn_Struct* ns, Mob* ForWho)
 		strn0cpy(ns->spawn.lastName, lastname, sizeof(ns->spawn.lastName));
 	}
 
-	ns->spawn.heading	= FloatToEQ19(m_Position.w);
+	ns->spawn.heading	= FloatToEQ12(m_Position.w);
 	ns->spawn.x			= FloatToEQ19(m_Position.x);//((int32)x_pos)<<3;
 	ns->spawn.y			= FloatToEQ19(m_Position.y);//((int32)y_pos)<<3;
 	ns->spawn.z			= FloatToEQ19(m_Position.z);//((int32)z_pos)<<3;
@@ -1313,7 +1309,10 @@ void Mob::SendHPUpdate(bool skip_self /*= false*/, bool force_update_all /*= fal
 	/* If our HP is different from last HP update call - let's update ourself */
 	if (IsClient()) {
 		if (cur_hp != last_hp || force_update_all) {
-			/* This is to prevent excessive packet sending under trains/fast combat */
+
+			/**
+			 * This is to prevent excessive packet sending under trains/fast combat
+			 */
 			if (this->CastToClient()->hp_self_update_throttle_timer.Check() || force_update_all) {
 				Log(Logs::General, Logs::HP_Update,
 					"Mob::SendHPUpdate :: Update HP of self (%s) HP: %i last: %i skip_self: %s",
@@ -1325,11 +1324,12 @@ void Mob::SendHPUpdate(bool skip_self /*= false*/, bool force_update_all /*= fal
 
 				if (!skip_self || this->CastToClient()->ClientVersion() >= EQEmu::versions::ClientVersion::SoD) {
 					auto client_packet = new EQApplicationPacket(OP_HPUpdate, sizeof(SpawnHPUpdate_Struct));
-					SpawnHPUpdate_Struct* hp_packet_client = (SpawnHPUpdate_Struct*)client_packet->pBuffer;
 
-					hp_packet_client->cur_hp = CastToClient()->GetHP() - itembonuses.HP;
+					SpawnHPUpdate_Struct *hp_packet_client = (SpawnHPUpdate_Struct *) client_packet->pBuffer;
+
+					hp_packet_client->cur_hp   = CastToClient()->GetHP() - itembonuses.HP;
 					hp_packet_client->spawn_id = GetID();
-					hp_packet_client->max_hp = CastToClient()->GetMaxHP() - itembonuses.HP;
+					hp_packet_client->max_hp   = CastToClient()->GetMaxHP() - itembonuses.HP;
 
 					CastToClient()->QueuePacket(client_packet);
 
@@ -1338,7 +1338,9 @@ void Mob::SendHPUpdate(bool skip_self /*= false*/, bool force_update_all /*= fal
 					ResetHPUpdateTimer();
 				}
 
-				/* Used to check if HP has changed to update self next round */
+				/**
+				 * Used to check if HP has changed to update self next round
+				 */
 				last_hp = cur_hp;
 			}
 		}
@@ -1346,7 +1348,12 @@ void Mob::SendHPUpdate(bool skip_self /*= false*/, bool force_update_all /*= fal
 
 	int8 current_hp_percent = (max_hp == 0 ? 0 : static_cast<int>(cur_hp * 100 / max_hp));
 
-	Log(Logs::General, Logs::HP_Update, "Mob::SendHPUpdate :: SendHPUpdate %s HP is %i last %i", this->GetCleanName(), current_hp_percent, last_hp_percent);
+	Log(Logs::General,
+		Logs::HP_Update,
+		"Mob::SendHPUpdate :: SendHPUpdate %s HP is %i last %i",
+		this->GetCleanName(),
+		current_hp_percent,
+		last_hp_percent);
 
 	if (current_hp_percent == last_hp_percent && !force_update_all) {
 		Log(Logs::General, Logs::HP_Update, "Mob::SendHPUpdate :: Same HP - skipping update");
@@ -1355,8 +1362,9 @@ void Mob::SendHPUpdate(bool skip_self /*= false*/, bool force_update_all /*= fal
 	}
 	else {
 
-		if (IsClient() && RuleB(Character, MarqueeHPUpdates))
+		if (IsClient() && RuleB(Character, MarqueeHPUpdates)) {
 			this->CastToClient()->SendHPUpdateMarquee();
+		}
 
 		Log(Logs::General, Logs::HP_Update, "Mob::SendHPUpdate :: HP Changed - Send update");
 
@@ -1364,52 +1372,69 @@ void Mob::SendHPUpdate(bool skip_self /*= false*/, bool force_update_all /*= fal
 	}
 
 	EQApplicationPacket hp_packet;
-	Group *group = nullptr;
+	Group               *group = nullptr;
 
 	CreateHPPacket(&hp_packet);
 
-	/* Update those who have us targeted */
+	/**
+	 * Update those who have us targeted
+	 */
 	entity_list.QueueClientsByTarget(this, &hp_packet, false, 0, false, true, EQEmu::versions::bit_AllClients);
 
-	/* Update those who have us on x-target */
+	/**
+	 * Update those who have us on x-target
+	 */
 	entity_list.QueueClientsByXTarget(this, &hp_packet, false);
 
-	/* Update groups using Group LAA health name tag counter */
+	/**
+	 * Update groups using Group LAA health name tag counter
+	 */
 	entity_list.QueueToGroupsForNPCHealthAA(this, &hp_packet);
 
-	/* Update group */
-	if(IsGrouped()) {
+	/**
+	 * Group
+	 */
+	if (IsGrouped()) {
 		group = entity_list.GetGroupByMob(this);
-		if(group)
+		if (group) {
 			group->SendHPPacketsFrom(this);
+		}
 	}
 
-	/* Update Raid */
-	if(IsClient()){
+	/**
+	 * Raid
+	 */
+	if (IsClient()) {
 		Raid *raid = entity_list.GetRaidByClient(CastToClient());
-		if (raid)
+		if (raid) {
 			raid->SendHPManaEndPacketsFrom(this);
+		}
 	}
 
-	/* Pet - Update master - group and raid if exists */
-	if(GetOwner() && GetOwner()->IsClient()) {
+	/**
+	 * Pet
+	 */
+	if (GetOwner() && GetOwner()->IsClient()) {
 		GetOwner()->CastToClient()->QueuePacket(&hp_packet, false);
 		group = entity_list.GetGroupByClient(GetOwner()->CastToClient());
 
-		if(group)
+		if (group) {
 			group->SendHPPacketsFrom(this);
+		}
 
 		Raid *raid = entity_list.GetRaidByClient(GetOwner()->CastToClient());
-		if(raid)
+		if (raid) {
 			raid->SendHPManaEndPacketsFrom(this);
+		}
 	}
 
-	/* Send to pet */
-	if(GetPet() && GetPet()->IsClient()) {
+	if (GetPet() && GetPet()->IsClient()) {
 		GetPet()->CastToClient()->QueuePacket(&hp_packet, false);
 	}
 
-	/* Destructible objects */
+	/**
+	 * Destructible objects
+	 */
 	if (IsNPC() && IsDestructibleObject()) {
 		if (GetHPRatio() > 74) {
 			if (GetAppearance() != eaStanding) {
@@ -1442,6 +1467,21 @@ void Mob::SendHPUpdate(bool skip_self /*= false*/, bool force_update_all /*= fal
 	}
 }
 
+void Mob::StopMoving() {
+	FixZ();
+	SetCurrentSpeed(0);
+	if (moved)
+		moved = false;
+}
+
+void Mob::StopMoving(float new_heading) {
+	SetHeading(new_heading);
+	FixZ();
+	SetCurrentSpeed(0);
+	if (moved)
+		moved = false;
+}
+
 /* Used for mobs standing still - this does not send a delta */
 void Mob::SendPosition() {
 	auto app = new EQApplicationPacket(OP_ClientUpdate, sizeof(PlayerPositionUpdateServer_Struct));
@@ -1452,6 +1492,7 @@ void Mob::SendPosition() {
 	if (DistanceSquared(last_major_update_position, m_Position) >= (100 * 100)) {
 		entity_list.QueueClients(this, app, true, true);
 		last_major_update_position = m_Position;
+		is_distance_roamer = true;
 	}
 	else {
 		entity_list.QueueCloseClients(this, app, true, RuleI(Range, MobPositionUpdates), nullptr, false);
@@ -1483,8 +1524,11 @@ void Mob::SendPositionUpdate(uint8 iSendToSelf) {
 		if (IsClient()) {
 			CastToClient()->FastQueuePacket(&app, false);
 		}
-	}
-	else {
+	} else if (DistanceSquared(last_major_update_position, m_Position) >= (100 * 100)) {
+		entity_list.QueueClients(this, app, true, true);
+		last_major_update_position = m_Position;
+		is_distance_roamer = true;
+	} else {
 		entity_list.QueueCloseClients(this, app, (iSendToSelf == 0), RuleI(Range, MobPositionUpdates), nullptr, false);
 	}
 	nats.OnClientUpdateEvent(this->GetID(), spu);
@@ -1498,12 +1542,12 @@ void Mob::MakeSpawnUpdateNoDelta(PlayerPositionUpdateServer_Struct *spu) {
 	spu->x_pos = FloatToEQ19(m_Position.x);
 	spu->y_pos = FloatToEQ19(m_Position.y);
 	spu->z_pos = FloatToEQ19(m_Position.z);
-	spu->delta_x = NewFloatToEQ13(0);
-	spu->delta_y = NewFloatToEQ13(0);
-	spu->delta_z = NewFloatToEQ13(0);
-	spu->heading = FloatToEQ19(m_Position.w);
+	spu->delta_x = FloatToEQ13(0);
+	spu->delta_y = FloatToEQ13(0);
+	spu->delta_z = FloatToEQ13(0);
+	spu->heading = FloatToEQ12(m_Position.w);
 	spu->animation = 0;
-	spu->delta_heading = NewFloatToEQ13(0);
+    spu->delta_heading = FloatToEQ10(0);
 	spu->padding0002 = 0;
 	spu->padding0006 = 7;
 	spu->padding0014 = 0x7f;
@@ -1517,10 +1561,10 @@ void Mob::MakeSpawnUpdate(PlayerPositionUpdateServer_Struct* spu) {
 	spu->x_pos = FloatToEQ19(m_Position.x);
 	spu->y_pos = FloatToEQ19(m_Position.y);
 	spu->z_pos = FloatToEQ19(m_Position.z);
-	spu->delta_x = NewFloatToEQ13(m_Delta.x);
-	spu->delta_y = NewFloatToEQ13(m_Delta.y);
-	spu->delta_z = NewFloatToEQ13(m_Delta.z);
-	spu->heading = FloatToEQ19(m_Position.w);
+    spu->delta_x = FloatToEQ13(m_Delta.x);
+    spu->delta_y = FloatToEQ13(m_Delta.y);
+    spu->delta_z = FloatToEQ13(m_Delta.z);
+    spu->heading = FloatToEQ12(m_Position.w);
 	spu->padding0002 = 0;
 	spu->padding0006 = 7;
 	spu->padding0014 = 0x7f;
@@ -1534,7 +1578,7 @@ void Mob::MakeSpawnUpdate(PlayerPositionUpdateServer_Struct* spu) {
 	else
 		spu->animation = pRunAnimSpeed;//animation;
 
-	spu->delta_heading = NewFloatToEQ13(m_Delta.w);
+    spu->delta_heading = FloatToEQ10(m_Delta.w);
 }
 
 void Mob::ShowStats(Client* client)
@@ -2074,7 +2118,7 @@ bool Mob::IsPlayerRace(uint16 in_race) {
 
 
 uint8 Mob::GetDefaultGender(uint16 in_race, uint8 in_gender) {
-	if (Mob::IsPlayerRace(in_race) || in_race == 15 || in_race == 50 || in_race == 57 || in_race == 70 || in_race == 98 || in_race == 118 || in_race == 23) {
+	if (Mob::IsPlayerRace(in_race) || in_race == 15 || in_race == 50 || in_race == 57 || in_race == 70 || in_race == 98 || in_race == 118 || in_race == 562) {
 		if (in_gender >= 2) {
 			// Male default for PC Races
 			return 0;
@@ -2449,18 +2493,18 @@ float Mob::MobAngle(Mob *other, float ourx, float oury) const {
 	float mobx = -(other->GetX());	// mob xloc (inverse because eq)
 	float moby = other->GetY();		// mob yloc
 	float heading = other->GetHeading();	// mob heading
-	heading = (heading * 360.0f) / 256.0f;	// convert to degrees
+    heading = (heading * 360.0f) / 512.0f;	// convert to degrees
 	if (heading < 270)
 		heading += 90;
 	else
 		heading -= 270;
 
 	heading = heading * 3.1415f / 180.0f;	// convert to radians
-	vectorx = mobx + (10.0f * cosf(heading));	// create a vector based on heading
-	vectory = moby + (10.0f * sinf(heading));	// of mob length 10
+    vectorx = mobx + (10.0f * std::cos(heading));	// create a vector based on heading
+    vectory = moby + (10.0f * std::sin(heading));	// of mob length 10
 
 	// length of mob to player vector
-	lengthb = (float) sqrtf(((-ourx - mobx) * (-ourx - mobx)) + ((oury - moby) * (oury - moby)));
+    lengthb = (float) std::sqrt(((-ourx - mobx) * (-ourx - mobx)) + ((oury - moby) * (oury - moby)));
 
 	// calculate dot product to get angle
 	// Handle acos domain errors due to floating point rounding errors
@@ -2473,7 +2517,7 @@ float Mob::MobAngle(Mob *other, float ourx, float oury) const {
 	else if (dotp < -1)
 		return 180.0f;
 
-	angle = acosf(dotp);
+    angle = std::acos(dotp);
 	angle = angle * 180.0f / 3.1415f;
 
 	return angle;
@@ -2498,8 +2542,8 @@ bool Mob::CanThisClassDualWield(void) const {
 		return(GetSkill(EQEmu::skills::SkillDualWield) > 0);
 	}
 	else if (CastToClient()->HasSkill(EQEmu::skills::SkillDualWield)) {
-		const EQEmu::ItemInstance* pinst = CastToClient()->GetInv().GetItem(EQEmu::inventory::slotPrimary);
-		const EQEmu::ItemInstance* sinst = CastToClient()->GetInv().GetItem(EQEmu::inventory::slotSecondary);
+		const EQEmu::ItemInstance* pinst = CastToClient()->GetInv().GetItem(EQEmu::invslot::slotPrimary);
+		const EQEmu::ItemInstance* sinst = CastToClient()->GetInv().GetItem(EQEmu::invslot::slotSecondary);
 
 		// 2HS, 2HB, or 2HP
 		if(pinst && pinst->IsWeapon()) {
@@ -2757,20 +2801,10 @@ bool Mob::HateSummon() {
 
 			entity_list.MessageClose(this, true, 500, MT_Say, "%s says,'You will not evade me, %s!' ", GetCleanName(), target->GetCleanName() );
 
-			if (target->IsClient()) {
+			if (target->IsClient())
 				target->CastToClient()->MovePC(zone->GetZoneID(), zone->GetInstanceID(), m_Position.x, m_Position.y, m_Position.z, target->GetHeading(), 0, SummonPC);
-			}
-			else {
-#ifdef BOTS
-				if(target && target->IsBot()) {
-					// set pre summoning info to return to (to get out of melee range for caster)
-					target->CastToBot()->SetHasBeenSummoned(true);
-					target->CastToBot()->SetPreSummonLocation(glm::vec3(target->GetPosition()));
-
-				}
-#endif //BOTS
+			else
 				target->GMMove(m_Position.x, m_Position.y, m_Position.z, target->GetHeading());
-			}
 
 			return true;
 		} else if(summon_level == 2) {
@@ -3457,13 +3491,18 @@ int Mob::GetHaste()
 	else // 1-25
 		h += itembonuses.haste > 10 ? 10 : itembonuses.haste;
 
-	// 60+ 100, 51-59 85, 1-50 level+25
-	if (level > 59) // 60+
-		cap = RuleI(Character, HasteCap);
-	else if (level > 50) // 51-59
-		cap = 85;
-	else // 1-50
-		cap = level + 25;
+	// mobs are different!
+	Mob *owner = nullptr;
+	if (IsPet())
+		owner = GetOwner();
+	else if (IsNPC() && CastToNPC()->GetSwarmOwner())
+		owner = entity_list.GetMobID(CastToNPC()->GetSwarmOwner());
+	if (owner) {
+		cap = 10 + level;
+		cap += std::max(0, owner->GetLevel() - 39) + std::max(0, owner->GetLevel() - 60);
+	} else {
+		cap = 150;
+	}
 
 	if(h > cap)
 		h = cap;
@@ -3497,6 +3536,19 @@ void Mob::SetTarget(Mob* mob) {
 
 	if (this->IsClient() && this->GetTarget() && this->CastToClient()->hp_other_update_throttle_timer.Check())
 		this->GetTarget()->SendHPUpdate(false, true);
+}
+
+// For when we want a Ground Z at a location we are not at yet
+// Like MoveTo.
+float Mob::FindDestGroundZ(glm::vec3 dest, float z_offset)
+{
+    float best_z = BEST_Z_INVALID;
+    if (zone->zonemap != nullptr)
+    {
+        dest.z += z_offset;
+        best_z = zone->zonemap->FindBestZ(dest, nullptr);
+    }
+    return best_z;
 }
 
 float Mob::FindGroundZ(float new_x, float new_y, float z_offset)
@@ -4717,16 +4769,16 @@ void Mob::DoKnockback(Mob *caster, uint32 pushback, uint32 pushup)
 		spu->x_pos		= FloatToEQ19(GetX());
 		spu->y_pos		= FloatToEQ19(GetY());
 		spu->z_pos		= FloatToEQ19(GetZ());
-		spu->delta_x	= NewFloatToEQ13(static_cast<float>(new_x));
-		spu->delta_y	= NewFloatToEQ13(static_cast<float>(new_y));
-		spu->delta_z	= NewFloatToEQ13(static_cast<float>(pushup));
-		spu->heading	= FloatToEQ19(GetHeading());
+        spu->delta_x	= FloatToEQ13(static_cast<float>(new_x));
+        spu->delta_y	= FloatToEQ13(static_cast<float>(new_y));
+        spu->delta_z	= FloatToEQ13(static_cast<float>(pushup));
+        spu->heading	= FloatToEQ12(GetHeading());
 		spu->padding0002	=0;
 		spu->padding0006	=7;
 		spu->padding0014	=0x7f;
 		spu->padding0018	=0x5df27;
 		spu->animation = 0;
-		spu->delta_heading = NewFloatToEQ13(0);
+        spu->delta_heading = FloatToEQ10(0);
 		outapp_push->priority = 6;
 		entity_list.QueueClients(this, outapp_push, true);
 		CastToClient()->FastQueuePacket(&outapp_push);
@@ -5048,7 +5100,7 @@ void Mob::DoGravityEffect()
 		}
 
 		if(IsClient())
-			this->CastToClient()->MovePC(zone->GetZoneID(), zone->GetInstanceID(), cur_x, cur_y, new_ground, GetHeading()*2); // I know the heading thing is weird(chance of movepc to halve the heading value, too lazy to figure out why atm)
+            this->CastToClient()->MovePC(zone->GetZoneID(), zone->GetInstanceID(), cur_x, cur_y, new_ground, GetHeading());
 		else
 			this->GMMove(cur_x, cur_y, new_ground, GetHeading());
 	}
@@ -5683,8 +5735,7 @@ bool Mob::IsFacingMob(Mob *other)
 	if (!other)
 		return false;
 	float angle = HeadingAngleToMob(other);
-	// what the client uses appears to be 2x our internal heading
-	float heading = GetHeading() * 2.0f;
+    float heading = GetHeading();
 
 	if (angle > 472.0 && heading < 40.0)
 		angle = heading;
@@ -5698,15 +5749,13 @@ bool Mob::IsFacingMob(Mob *other)
 }
 
 // All numbers derived from the client
-float Mob::HeadingAngleToMob(Mob *other)
+float Mob::HeadingAngleToMob(float other_x, float other_y)
 {
-	float mob_x = other->GetX();
-	float mob_y = other->GetY();
 	float this_x = GetX();
 	float this_y = GetY();
 
-	float y_diff = std::abs(this_y - mob_y);
-	float x_diff = std::abs(this_x - mob_x);
+    float y_diff = std::abs(this_y - other_y);
+    float x_diff = std::abs(this_x - other_x);
 	if (y_diff < 0.0000009999999974752427)
 		y_diff = 0.0000009999999974752427;
 
@@ -5714,16 +5763,31 @@ float Mob::HeadingAngleToMob(Mob *other)
 
 	// return the right thing based on relative quadrant
 	// I'm sure this could be improved for readability, but whatever
-	if (this_y >= mob_y) {
-		if (mob_x >= this_x)
+    if (this_y >= other_y) {
+        if (other_x >= this_x)
 			return (90.0f - angle + 90.0f) * 511.5f * 0.0027777778f;
-		if (mob_x <= this_x)
+        if (other_x <= this_x)
 			return (angle + 180.0f) * 511.5f * 0.0027777778f;
 	}
-	if (this_y > mob_y || mob_x > this_x)
+    if (this_y > other_y || other_x > this_x)
 		return angle * 511.5f * 0.0027777778f;
 	else
 		return (90.0f - angle + 270.0f) * 511.5f * 0.0027777778f;
+}
+
+bool Mob::GetSeeInvisible(uint8 see_invis)
+{
+	if(see_invis > 0)
+	{
+		if(see_invis == 1)
+			return true;
+		else
+		{
+			if (zone->random.Int(0, 99) < see_invis)
+				return true;
+		}
+	}
+	return false;
 }
 
 int32 Mob::GetSpellStat(uint32 spell_id, const char *identifier, uint8 slot)
@@ -6433,6 +6497,9 @@ NPCType* Mob::AdjustNPC(NPCType* npctype, bool keepSpells = true, bool isPet = f
 	return npctype;
 }
 
+float Mob::GetDefaultRaceSize() const {
+	return GetRaceGenderDefaultHeight(race, gender);
+}
 
 #ifdef BOTS
 bool Mob::JoinHealRotationTargetPool(std::shared_ptr<HealRotation>* heal_rotation)
@@ -7258,12 +7325,12 @@ int Mob::GetTier() {
 		if (npc_type_id == 86014) return 2; //Gorenaire
 		if (npc_type_id == 89154) return 2; //Trakanon
 
-		if (npc_type_id == 108050) return 3; //Silverwing
-		if (npc_type_id == 108053) return 3; //Xygoz
-		if (npc_type_id == 108048) return 3; //Phara Dar
+		if (npc_type_id == 108509) return 3; //Silverwing
+		if (npc_type_id == 108511) return 3; //Xygoz
+		if (npc_type_id == 108510) return 3; //Phara Dar
 		if (npc_type_id == 108512) return 3; //Druushk
-		if (npc_type_id == 108047) return 3; //Nexona
-		if (npc_type_id == 108043) return 3; //Hoshkar
+		if (npc_type_id == 108513) return 3; //Nexona
+		if (npc_type_id == 108517) return 3; //Hoshkar
 
 		if (npc_type_id == 117073) return 4; //Kelorek`Dar
 		if (npc_type_id == 119112) return 4; //Wuoshi
@@ -7277,6 +7344,7 @@ int Mob::GetTier() {
 		if (npc_type_id == 113071) return 5; //Statue of Rallos Zek
 		if (npc_type_id == 129003) return 5; //Dain Frostreaver IV
 		if (npc_type_id == 127001) return 5; //Tunare
+		if (npc_type_id == 127098) return 5; //Tunare after engaging 
 		if (npc_type_id == 114106) return 5; //Lord Yelinak
 		if (npc_type_id == 113215) return 5; //King Tormax
 		if (npc_type_id == 120005) return 5; //Sontalak
@@ -7519,6 +7587,10 @@ int Mob::AdjustTierPenalty(Mob* caster, int value) {
 		tmpTier = GetOwner()->GetTier();
 		if (tmpTier < lowTier) lowTier = tmpTier;
 	}
+	if (caster->IsPet() && caster->GetOwner()->IsClient()) {
+		tmpTier = caster->GetOwner()->GetTier();
+		if (tmpTier < lowTier) lowTier = tmpTier;
+	}
 
 	//Get tier difference
 	int tierDifference = highTier - lowTier;
@@ -7531,12 +7603,11 @@ int Mob::AdjustTierPenalty(Mob* caster, int value) {
 		value = -value;
 	}
 
-	if (IsNPC()) { //if we're doing something to an npc, penalize it
+	if (IsNPC() && !IsPet()) { //if we're doing something to an npc, penalize it
 		if (GetTier() >= 8) value -= floor(value * 0.5f * tierDifference);
 		if (GetTier() >= 5) value -= floor(value * 0.3f * tierDifference);
 		else value -= floor(value * 0.2f * tierDifference);
-	}
-	if (IsClient() && caster->IsNPC()) { //if we're a NPC doing something to a client, boost it
+	} else { //if we're a NPC doing something to a client, boost it
 		if (GetTier() >= 8) value += floor(value * 0.5f * tierDifference);
 		if (GetTier() >= 5) value += floor(value * 0.3f * tierDifference);
 		else value += floor(value * 0.2f * tierDifference);
@@ -7568,7 +7639,7 @@ int Mob::GetAggroTier() {
 
 void Mob::DailyGain(int account_id, int character_id, const char* identity, int levels_gained, int experience_gained, int money_earned)
 {
-	nats.DailyGain(account_id, character_id, identity, levels_gained, experience_gained, money_earned);
+	nats.OnDailyGain(account_id, character_id, identity, levels_gained, experience_gained, money_earned);
 }
 
 //This triggers the crippling presence mechanic on each attack. It's a bit weird.

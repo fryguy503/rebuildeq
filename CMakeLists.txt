@@ -29,7 +29,7 @@
 
 #We set a fairly new version (as of 2013) because I found finding perl was a bit... buggy on older ones
 #Can change this if you really want but you should upgrade!
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
 
 #FindMySQL is located here so lets make it so CMake can find it
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
@@ -53,31 +53,86 @@ IF(MSVC OR MINGW)
 ENDIF(MSVC OR MINGW)
 
 
-
-
 # on rebuild, i'm shifting the output directory to the deploy dir
-set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server")
+#set( CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server")
 
 # include dirs are universal
 SET(NATS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats")
-SET(PROTOBUF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf")
 
+# We load the protobuf library, but always override to ensure compatibility
+SET(PROTOBUF_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf")
 SET(NATS_INCLUDE_DIR "${NATS_ROOT}/include")
-SET(PROTOBUF_INCLUDE_DIR "${PROTOBUF_ROOT}/include")
+SET(PROTOBUF_INCLUDE_DIR "${PROTOBUF_DIR}/include")
+# SET(PROTOBUF_IMPORT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/proto")
+SET(PROTOBUF_IMPORT_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/proto")
 
-IF(MSVC)	
+IF(MSVC)
+	IF(CMAKE_CL_64)
+		SET(PROTOBUF_SRC_ROOT_FOLDER "${PROTOBUF_DIR}/windows/x64/include")
+		SET(PROTOBUF_PROTOC_EXECUTABLE  "${PROTOBUF_DIR}/windows/x64/bin/protoc.exe")
+		SET(PROTOBUF_LIBRARY_DEBUG "${PROTOBUF_DIR}/windows/x64/lib/libprotobufd.lib")
+		SET(PROTOBUF_LIBRARY_RELEASE "${PROTOBUF_DIR}/windows/x64/lib/libprotobufd.lib")
+		IF(NOT PROTOBUF_LIBRARY_DEBUG)
+			MESSAGE(ERROR "PROTOBUF library was not found in ${PROTOBUF_LIBRARY_DEBUG}. Go into your dependencies directory and likely extract the zip file")
+		ENDIF()
+		SET(NATS_LIBRARY_DEBUG "${NATS_ROOT}/windows/x64/lib/nats.lib")
+		SET(NATS_LIBRARY "${NATS_ROOT}/windows/x64/lib/nats.dll")
+	ELSE(CMAKE_CL_64)
+		SET(PROTOBUF_SRC_ROOT_FOLDER "${PROTOBUF_DIR}/windows/x86/include")
+		SET(PROTOBUF_PROTOC_EXECUTABLE  "${PROTOBUF_DIR}/windows/x86/bin/protoc.exe")
+		SET(PROTOBUF_LIBRARY_DEBUG "${PROTOBUF_DIR}/windows/x86/lib/libprotobufd.lib")
+		SET(PROTOBUF_LIBRARY_RELEASE "${PROTOBUF_DIR}/windows/x86/lib/libprotobufd.lib")
+		IF(NOT PROTOBUF_LIBRARY_DEBUG)
+			MESSAGE(ERROR "PROTOBUF library was not found in ${PROTOBUF_LIBRARY_DEBUG}. Go into your dependencies directory and likely extract the zip file")
+		ENDIF()
+
+		SET(NATS_LIBRARY_DEBUG "${NATS_ROOT}/windows/x86/lib/nats.lib")
+		SET(NATS_LIBRARY "${NATS_ROOT}/windows/x86/lib/nats.dll")
+	ENDIF(CMAKE_CL_64)
+ELSE(MSVC)
+	IF(CMAKE_CL_64)
+		SET(PROTOBUF_SRC_ROOT_FOLDER "${PROTOBUF_DIR}/linux/x86/include")
+		SET(PROTOBUF_PROTOC_EXECUTABLE  "${PROTOBUF_DIR}/linux/x86/bin/protoc")
+		SET(PROTOBUF_LIBRARY_DEBUG "${PROTOBUF_DIR}/linux/x86/lib/libprotobuf.so.16")
+		SET(PROTOBUF_LIBRARY_RELEASE "${PROTOBUF_DIR}/linux/x86/lib/libprotobuf.so.16")
+
+		SET(NATS_LIBRARY_DEBUG "${NATS_ROOT}/linux/x86/lib/libnats.so")
+		SET(NATS_LIBRARY "${NATS_LIBRARY_DEBUG}")
+	ELSE(CMAKE_CL_64)
+		SET(PROTOBUF_SRC_ROOT_FOLDER "${PROTOBUF_DIR}/linux/x64/include")
+		SET(PROTOBUF_PROTOC_EXECUTABLE  "${PROTOBUF_DIR}/linux/x64/bin/protoc")
+		SET(PROTOBUF_LIBRARY_DEBUG "${PROTOBUF_DIR}/linux/x64/lib/libprotobuf.so.16")
+		SET(PROTOBUF_LIBRARY_RELEASE "${PROTOBUF_DIR}/linux/x64/lib/libprotobuf.so.16")
+
+		SET(NATS_LIBRARY_DEBUG "${NATS_ROOT}/linux/x64/lib/libnats.so")
+		SET(NATS_LIBRARY "${NATS_LIBRARY_DEBUG}")
+	ENDIF(CMAKE_CL_64)
+ENDIF()
+SET(PROTOBUF_LIBRARY "${PROTOBUF_LIBRARY_DEBUG}")
+IF(NOT PROTOBUF_LIBRARY_DEBUG)
+	MESSAGE(ERROR "PROTOBUF library was not found in ${PROTOBUF_LIBRARY_DEBUG}. Please download the depenencies and extract them as noted.")
+ENDIF()
+FILE(COPY ${PROTOBUF_LIBRARY_DEBUG} DESTINATION ${CMAKE_HOME_DIRECTORY}/deploy/server)
+FIND_PACKAGE(Protobuf REQUIRED)
+INCLUDE_DIRECTORIES(SYSTEM "${PROTOBUF_INCLUDE_DIR}")
+
+IF(${NATS_LIBRARY})
+	MESSAGE(ERROR " NATS library was not found in ${NATS_LIBRARY_DEBUG}. Please download the depenencies and extract them as noted.")
+ENDIF()
+FILE(COPY ${NATS_LIBRARY} DESTINATION ${CMAKE_HOME_DIRECTORY}/deploy/server)
+
+IF(MSVC)
 	foreach( OUTPUTCONFIG ${CMAKE_CONFIGURATION_TYPES} )
 		string( TOUPPER ${OUTPUTCONFIG} OUTPUTCONFIG )
-	    set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
-	    set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
-	    set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
+	    #set( CMAKE_RUNTIME_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
+	    #set( CMAKE_LIBRARY_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
+	    #set( CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${OUTPUTCONFIG} "${CMAKE_CURRENT_SOURCE_DIR}/deploy/server" )
 	endforeach( OUTPUTCONFIG CMAKE_CONFIGURATION_TYPES )
-
-	
 
 	#Set our default locations for zlib/mysql based on x86/x64
 	IF(CMAKE_CL_64)
-		SET(ZLIB_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/zlib_x64")
+		SET(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/zlib_x64/include")
+		SET(ZLIB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/zlib_x64/lib/zlib.lib")
 		SET(MYSQL_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/mysql_x64")
 		SET(LUA_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/luaj_x64")
 		SET(OPENSSL_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/openssl_x64")
@@ -89,16 +144,14 @@ IF(MSVC)
 		ELSE()
 			SET(SODIUM_LIBRARY_HINTS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/libsodium/x64/Release/v110/dynamic")
 		ENDIF()
-		SET(NATS_LIBRARY "${NATS_ROOT}/lib_x64/nats.lib")
-		SET(PROTOBUF_LIBRARY "${PROTOBUF_ROOT}/lib_x64/libprotobufd.lib")
 	ELSE(CMAKE_CL_64)
-		SET(ZLIB_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/zlib_x86")
+		SET(ZLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/zlib_x86/include")
+		SET(ZLIB_LIBRARY "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/zlib_x86/lib/zlib.lib")
 		SET(MYSQL_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/mysql_x86")
 		SET(LUA_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/luaj_x86")
 		SET(SODIUM_INCLUDE_HINTS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/libsodium/include")
 		SET(OPENSSL_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/openssl_x86")
 		SET(NATS_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/nats_x86")
-		SET(PROTOBUF_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/protobuf_x86")
 		IF(MSVC_VERSION GREATER 1800)
 			SET(SODIUM_LIBRARY_HINTS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/libsodium/Win32/Release/v140/dynamic")
 		ELSEIF(MSVC_VERSION EQUAL 1800)
@@ -106,8 +159,6 @@ IF(MSVC)
 		ELSE()
 			SET(SODIUM_LIBRARY_HINTS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/libsodium/Win32/Release/v110/dynamic")
 		ENDIF()
-		SET(NATS_LIBRARY "${NATS_ROOT}/lib_x86/nats.lib")
-		SET(PROTOBUF_LIBRARY "${PROTOBUF_ROOT}/lib_x86/libprotobufd.lib")
 	ENDIF(CMAKE_CL_64)
 
 	#disable CRT warnings on windows cause they're annoying as shit and we use C functions everywhere
@@ -159,9 +210,7 @@ IF(MSVC)
 
 	ADD_DEFINITIONS(-DNOMINMAX)
 ELSE(MSVC)
-	
-	SET(NATS_LIBRARY "${NATS_ROOT}/lib_x64/libnats.so")
-	SET(PROTOBUF_LIBRARY "${PROTOBUF_ROOT}/lib_x64/libprotobuf.so")
+
 
 	#Normally set by perl but we don't use the perl flags anymore so we set it.
 	ADD_DEFINITIONS(-DHAS_UNION_SEMUN)
@@ -341,7 +390,7 @@ IF(EQEMU_BUILD_PERL)
 	INCLUDE_DIRECTORIES(SYSTEM "${PERL_INCLUDE_PATH}")
 ENDIF(EQEMU_BUILD_PERL)
 
-SET(SERVER_LIBS common debug ${MySQL_LIBRARY_DEBUG} optimized ${MySQL_LIBRARY_RELEASE} ${ZLIB_LIBRARY} libuv fmt ${NATS_LIBRARY} ${PROTOBUF_LIBRARY})
+SET(SERVER_LIBS common debug ${MySQL_LIBRARY_DEBUG} optimized ${MySQL_LIBRARY_RELEASE} ${ZLIB_LIBRARY} libuv fmt recast_navigation ${NATS_LIBRARY_DEBUG} ${PROTOBUF_LIBRARY_DEBUG})
 
 FIND_PACKAGE(Sodium REQUIRED)
 IF(SODIUM_FOUND)
@@ -374,7 +423,7 @@ IF(EQEMU_BUILD_LUA)
 
 	FIND_PACKAGE(Boost REQUIRED)
 	INCLUDE_DIRECTORIES(SYSTEM "${LUA_INCLUDE_DIR}" "${Boost_INCLUDE_DIRS}")
-	INCLUDE_DIRECTORIES(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/luabind")
+	INCLUDE_DIRECTORIES(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/libs/luabind")
 
 	OPTION(EQEMU_SANITIZE_LUA_LIBS "Sanitize Lua Libraries (Remove OS and IO standard libraries from being able to run)." ON)
 	IF(EQEMU_SANITIZE_LUA_LIBS)
@@ -382,15 +431,18 @@ IF(EQEMU_BUILD_LUA)
 	ENDIF(EQEMU_SANITIZE_LUA_LIBS)
 ENDIF(EQEMU_BUILD_LUA)
 
-INCLUDE_DIRECTORIES(SYSTEM "${ZLIB_INCLUDE_DIRS}")
+INCLUDE_DIRECTORIES(SYSTEM "${ZLIB_INCLUDE_DIR}")
 INCLUDE_DIRECTORIES(SYSTEM "${MySQL_INCLUDE_DIR}")
 INCLUDE_DIRECTORIES(SYSTEM "${NATS_INCLUDE_DIR}")
-INCLUDE_DIRECTORIES(SYSTEM "${PROTOBUF_INCLUDE_DIR}")
+
 INCLUDE_DIRECTORIES(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/common/glm")
 INCLUDE_DIRECTORIES(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/libs/cereal")
 INCLUDE_DIRECTORIES(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/libs/libuv/include" )
 INCLUDE_DIRECTORIES(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/libs/libuv/src")
 INCLUDE_DIRECTORIES(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/libs/format")
+
+INCLUDE_DIRECTORIES(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/libs/recast/detour/include")
+INCLUDE_DIRECTORIES(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/libs/recast/recast/include")
 
 IF(EQEMU_BUILD_SERVER OR EQEMU_BUILD_LOGIN OR EQEMU_BUILD_TESTS OR EQEMU_BUILD_HC)
 	ADD_SUBDIRECTORY(common)

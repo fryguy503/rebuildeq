@@ -243,6 +243,19 @@ bool Client::Process() {
 			}
 		}
 
+		if (RuleB(Character, ActiveInvSnapshots) && time(nullptr) >= GetNextInvSnapshotTime()) {
+			if (database.SaveCharacterInvSnapshot(CharacterID())) {
+				SetNextInvSnapshot(RuleI(Character, InvSnapshotMinIntervalM));
+				Log(Logs::Moderate, Logs::Inventory, "Successful inventory snapshot taken of %s - setting next interval for %i minute%s.",
+					GetName(), RuleI(Character, InvSnapshotMinIntervalM), (RuleI(Character, InvSnapshotMinIntervalM) == 1 ? "" : "s"));
+			}
+			else {
+				SetNextInvSnapshot(RuleI(Character, InvSnapshotMinRetryM));
+				Log(Logs::Moderate, Logs::Inventory, "Failed to take inventory snapshot of %s - retrying in %i minute%s.",
+					GetName(), RuleI(Character, InvSnapshotMinRetryM), (RuleI(Character, InvSnapshotMinRetryM) == 1 ? "" : "s"));
+			}
+		}
+
 		/* Build a close range list of NPC's  */
 		if (npc_close_scan_timer.Check()) {
 			close_mobs.clear();
@@ -265,14 +278,21 @@ bool Client::Process() {
 					if (distance <= scan_range) {
 						close_mobs.insert(std::pair<Mob *, float>(mob, distance));
 					}
-					else if (mob->GetAggroRange() > scan_range) {
+					else if ((mob->GetAggroRange() * mob->GetAggroRange()) > scan_range) {
 						close_mobs.insert(std::pair<Mob *, float>(mob, distance));
 					}
 				}
 
-				if (force_spawn_updates && mob != this && distance <= client_update_range)
-					mob->SendPositionUpdateToClient(this);
+				if (force_spawn_updates && mob != this) {
 
+					if (mob->is_distance_roamer) {
+						mob->SendPositionUpdateToClient(this);
+						continue;
+					}
+
+					if (distance <= client_update_range)
+						mob->SendPositionUpdateToClient(this);
+				}
 			}
 		}
 
@@ -303,7 +323,7 @@ bool Client::Process() {
 		}
 
 		if (AutoFireEnabled()) {
-			EQEmu::ItemInstance *ranged = GetInv().GetItem(EQEmu::inventory::slotRange);
+			EQEmu::ItemInstance *ranged = GetInv().GetItem(EQEmu::invslot::slotRange);
 			if (ranged)
 			{
 				if (ranged->GetItem() && ranged->GetItem()->ItemType == EQEmu::item::ItemTypeBow) {
@@ -398,11 +418,11 @@ bool Client::Process() {
 			}
 			else if (auto_attack_target->GetHP() > -10) // -10 so we can watch people bleed in PvP
 			{
-				EQEmu::ItemInstance *wpn = GetInv().GetItem(EQEmu::inventory::slotPrimary);
-				TryWeaponProc(wpn, auto_attack_target, EQEmu::inventory::slotPrimary);
-				TriggerDefensiveProcs(auto_attack_target, EQEmu::inventory::slotPrimary, false);
+				EQEmu::ItemInstance *wpn = GetInv().GetItem(EQEmu::invslot::slotPrimary);
+				TryWeaponProc(wpn, auto_attack_target, EQEmu::invslot::slotPrimary);
+				TriggerDefensiveProcs(auto_attack_target, EQEmu::invslot::slotPrimary, false);
 
-				DoAttackRounds(auto_attack_target, EQEmu::inventory::slotPrimary);
+				DoAttackRounds(auto_attack_target, EQEmu::invslot::slotPrimary);
 				if (CheckAATimer(aaTimerRampage))
 					entity_list.AEAttack(this, 30);
 			}
@@ -438,10 +458,10 @@ bool Client::Process() {
 			else if (auto_attack_target->GetHP() > -10) {
 				CheckIncreaseSkill(EQEmu::skills::SkillDualWield, auto_attack_target, -10);
 				if (CheckDualWield()) {
-					EQEmu::ItemInstance *wpn = GetInv().GetItem(EQEmu::inventory::slotSecondary);
-					TryWeaponProc(wpn, auto_attack_target, EQEmu::inventory::slotSecondary);
+					EQEmu::ItemInstance *wpn = GetInv().GetItem(EQEmu::invslot::slotSecondary);
+					TryWeaponProc(wpn, auto_attack_target, EQEmu::invslot::slotSecondary);
 
-					DoAttackRounds(auto_attack_target, EQEmu::inventory::slotSecondary);
+					DoAttackRounds(auto_attack_target, EQEmu::invslot::slotSecondary);
 				}
 			}
 		}
@@ -660,17 +680,17 @@ bool Client::Process() {
 	{
 		//client logged out or errored out
 		//ResetTrade();
-		if (client_state != CLIENT_KICKED && !zoning && !instalog) {
+		if (client_state != CLIENT_KICKED && !bZoning && !instalog) {
 			Save();
 		}
 
 		client_state = CLIENT_LINKDEAD;
-		if (zoning || instalog || GetGM())
+		if (bZoning || instalog || GetGM())
 		{
 			Group *mygroup = GetGroup();
 			if (mygroup)
 			{
-				if (!zoning)
+				if (!bZoning)
 				{
 					entity_list.MessageGroup(this, true, 15, "%s logged out.", GetName());
 					LeaveGroup();
@@ -689,7 +709,7 @@ bool Client::Process() {
 			Raid *myraid = entity_list.GetRaidByClient(this);
 			if (myraid)
 			{
-				if (!zoning)
+				if (!bZoning)
 				{
 					//entity_list.MessageGroup(this,true,15,"%s logged out.",GetName());
 					myraid->MemberZoned(this);
@@ -782,7 +802,7 @@ void Client::BulkSendInventoryItems()
 {
 	// LINKDEAD TRADE ITEMS
 	// Move trade slot items back into normal inventory..need them there now for the proceeding validity checks
-	for (int16 slot_id = EQEmu::legacy::TRADE_BEGIN; slot_id <= EQEmu::legacy::TRADE_END; slot_id++) {
+	for (int16 slot_id = EQEmu::invslot::TRADE_BEGIN; slot_id <= EQEmu::invslot::TRADE_END; slot_id++) {
 		EQEmu::ItemInstance* inst = m_inv.PopItem(slot_id);
 		if(inst) {
 			bool is_arrow = (inst->GetItem()->ItemType == EQEmu::item::ItemTypeArrow) ? true : false;
@@ -808,7 +828,7 @@ void Client::BulkSendInventoryItems()
 	EQEmu::OutBuffer::pos_type last_pos = ob.tellp();
 
 	// Possessions items
-	for (int16 slot_id = EQEmu::inventory::slotBegin; slot_id < EQEmu::legacy::TYPE_POSSESSIONS_SIZE; slot_id++) {
+	for (int16 slot_id = EQEmu::invslot::POSSESSIONS_BEGIN; slot_id <= EQEmu::invslot::POSSESSIONS_END; slot_id++) {
 		const EQEmu::ItemInstance* inst = m_inv[slot_id];
 		if (!inst)
 			continue;
@@ -821,21 +841,8 @@ void Client::BulkSendInventoryItems()
 		last_pos = ob.tellp();
 	}
 
-	// PowerSource item
-	if (ClientVersion() >= EQEmu::versions::ClientVersion::SoF) {
-		const EQEmu::ItemInstance* inst = m_inv[EQEmu::inventory::slotPowerSource];
-		if (inst) {
-			inst->Serialize(ob, EQEmu::inventory::slotPowerSource);
-
-			if (ob.tellp() == last_pos)
-				Log(Logs::General, Logs::Inventory, "Serialization failed on item slot %d during BulkSendInventoryItems.  Item skipped.", EQEmu::inventory::slotPowerSource);
-
-			last_pos = ob.tellp();
-		}
-	}
-
 	// Bank items
-	for (int16 slot_id = EQEmu::legacy::BANK_BEGIN; slot_id <= EQEmu::legacy::BANK_END; slot_id++) {
+	for (int16 slot_id = EQEmu::invslot::BANK_BEGIN; slot_id <= EQEmu::invslot::BANK_END; slot_id++) {
 		const EQEmu::ItemInstance* inst = m_inv[slot_id];
 		if (!inst)
 			continue;
@@ -849,7 +856,7 @@ void Client::BulkSendInventoryItems()
 	}
 
 	// SharedBank items
-	for (int16 slot_id = EQEmu::legacy::SHARED_BANK_BEGIN; slot_id <= EQEmu::legacy::SHARED_BANK_END; slot_id++) {
+	for (int16 slot_id = EQEmu::invslot::SHARED_BANK_BEGIN; slot_id <= EQEmu::invslot::SHARED_BANK_END; slot_id++) {
 		const EQEmu::ItemInstance* inst = m_inv[slot_id];
 		if (!inst)
 			continue;
@@ -892,7 +899,7 @@ void Client::BulkSendMerchantInventory(int merchant_id, int npcid) {
 	uint8 handychance = 0;
 	for (itr = merlist.begin(); itr != merlist.end() && i <= numItemSlots; ++itr) {
 		MerchantList ml = *itr;
-		if (merch->CastToNPC()->GetMerchantProbability() > ml.probability)
+		if (ml.probability != 100 && zone->random.Int(1, 100) > ml.probability)
 			continue;
 
 		if (GetLevel() < ml.level_required)
@@ -1068,7 +1075,8 @@ void Client::OPRezzAnswer(uint32 Action, uint32 SpellID, uint16 ZoneID, uint16 I
 			SetMana(0);
 			SetHP(GetMaxHP()/5);
 			int rez_eff = 756;
-			if (GetRace() == BARBARIAN || GetRace() == DWARF || GetRace() == TROLL || GetRace() == OGRE)
+			if (RuleB(Character, UseOldRaceRezEffects) &&
+				(GetRace() == BARBARIAN || GetRace() == DWARF || GetRace() == TROLL || GetRace() == OGRE))
 				rez_eff = 757;
 			SpellOnTarget(rez_eff, this); // Rezz effects
 		}
@@ -1138,7 +1146,7 @@ void Client::OPMemorizeSpell(const EQApplicationPacket* app)
 	switch(memspell->scribing)
 	{
 		case memSpellScribing:	{	// scribing spell to book
-			const EQEmu::ItemInstance* inst = m_inv[EQEmu::inventory::slotCursor];
+			const EQEmu::ItemInstance* inst = m_inv[EQEmu::invslot::slotCursor];
 
 			if (inst && inst->IsClassCommon())
 			{
@@ -1152,7 +1160,7 @@ void Client::OPMemorizeSpell(const EQApplicationPacket* app)
 				if(item && item->Scroll.Effect == (int32)(memspell->spell_id))
 				{
 					ScribeSpell(memspell->spell_id, memspell->slot);
-					DeleteItemInInventory(EQEmu::inventory::slotCursor, 1, true);
+					DeleteItemInInventory(EQEmu::invslot::slotCursor, 1, true);
 				}
 				else
 					Message(0,"Scribing spell: inst exists but item does not or spell ids do not match.");
@@ -2047,41 +2055,27 @@ void Client::DoTracking()
 
 	float RelativeHeading = GetHeading() - CalculateHeadingToTarget(m->GetX(), m->GetY());
 
-	if(RelativeHeading < 0)
-		RelativeHeading += 256;
+	if (RelativeHeading < 0)
+		RelativeHeading += 512;
 
-	if((RelativeHeading <= 16) || (RelativeHeading >= 240))
-	{
+	if (RelativeHeading > 480)
 		Message_StringID(MT_Skills, TRACK_STRAIGHT_AHEAD, m->GetCleanName());
-	}
-	else if((RelativeHeading > 16) && (RelativeHeading <= 48))
-	{
-		Message_StringID(MT_Skills, TRACK_AHEAD_AND_TO, m->GetCleanName(), "right");
-	}
-	else if((RelativeHeading > 48) && (RelativeHeading <= 80))
-	{
-		Message_StringID(MT_Skills, TRACK_TO_THE, m->GetCleanName(), "right");
-	}
-	else if((RelativeHeading > 80) && (RelativeHeading <= 112))
-	{
-		Message_StringID(MT_Skills, TRACK_BEHIND_AND_TO, m->GetCleanName(), "right");
-	}
-	else if((RelativeHeading > 112) && (RelativeHeading <= 144))
-	{
-		Message_StringID(MT_Skills, TRACK_BEHIND_YOU, m->GetCleanName());
-	}
-	else if((RelativeHeading > 144) && (RelativeHeading <= 176))
-	{
-		Message_StringID(MT_Skills, TRACK_BEHIND_AND_TO, m->GetCleanName(), "left");
-	}
-	else if((RelativeHeading > 176) && (RelativeHeading <= 208))
-	{
-		Message_StringID(MT_Skills, TRACK_TO_THE, m->GetCleanName(), "left");
-	}
-	else if((RelativeHeading > 208) && (RelativeHeading < 240))
-	{
+	else if (RelativeHeading > 416)
 		Message_StringID(MT_Skills, TRACK_AHEAD_AND_TO, m->GetCleanName(), "left");
-	}
+	else if (RelativeHeading > 352)
+		Message_StringID(MT_Skills, TRACK_TO_THE, m->GetCleanName(), "left");
+	else if (RelativeHeading > 288)
+		Message_StringID(MT_Skills, TRACK_BEHIND_AND_TO, m->GetCleanName(), "left");
+	else if (RelativeHeading > 224)
+		Message_StringID(MT_Skills, TRACK_BEHIND_YOU, m->GetCleanName());
+	else if (RelativeHeading > 160)
+		Message_StringID(MT_Skills, TRACK_BEHIND_AND_TO, m->GetCleanName(), "right");
+	else if (RelativeHeading > 96)
+		Message_StringID(MT_Skills, TRACK_TO_THE, m->GetCleanName(), "right");
+	else if (RelativeHeading > 32)
+		Message_StringID(MT_Skills, TRACK_AHEAD_AND_TO, m->GetCleanName(), "right");
+	else if (RelativeHeading >= 0)
+		Message_StringID(MT_Skills, TRACK_STRAIGHT_AHEAD, m->GetCleanName());
 }
 
 void Client::HandleRespawnFromHover(uint32 Option)

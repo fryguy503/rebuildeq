@@ -1411,10 +1411,10 @@ class Entity : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   bool has_position() const;
   void clear_position();
   static const int kPositionFieldNumber = 6;
-  const ::eqproto::Position& position() const;
-  ::eqproto::Position* release_position();
-  ::eqproto::Position* mutable_position();
-  void set_allocated_position(::eqproto::Position* position);
+  const ::pb::Position& position() const;
+  ::pb::Position* release_position();
+  ::pb::Position* mutable_position();
+  void set_allocated_position(::pb::Position* position);
 
   // int32 id = 1;
   void clear_id();
@@ -1457,7 +1457,7 @@ class Entity : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr name_;
-  ::eqproto::Position* position_;
+  ::pb::Position* position_;
   ::google::protobuf::int32 id_;
   ::google::protobuf::int32 type_;
   ::google::protobuf::int32 hp_;
@@ -1556,19 +1556,19 @@ class Entities : public ::google::protobuf::Message /* @@protoc_insertion_point(
   int entities_size() const;
   void clear_entities();
   static const int kEntitiesFieldNumber = 1;
-  const ::eqproto::Entity& entities(int index) const;
-  ::eqproto::Entity* mutable_entities(int index);
-  ::eqproto::Entity* add_entities();
-  ::google::protobuf::RepeatedPtrField< ::eqproto::Entity >*
+  const ::pb::Entity& entities(int index) const;
+  ::pb::Entity* mutable_entities(int index);
+  ::pb::Entity* add_entities();
+  ::google::protobuf::RepeatedPtrField< ::pb::Entity >*
       mutable_entities();
-  const ::google::protobuf::RepeatedPtrField< ::eqproto::Entity >&
+  const ::google::protobuf::RepeatedPtrField< ::pb::Entity >&
       entities() const;
 
   // @@protoc_insertion_point(class_scope:eqproto.Entities)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::RepeatedPtrField< ::eqproto::Entity > entities_;
+  ::google::protobuf::RepeatedPtrField< ::pb::Entity > entities_;
   mutable int _cached_size_;
   friend struct ::protobuf_message_2eproto::TableStruct;
   friend void ::protobuf_message_2eproto::InitDefaultsEntitiesImpl();
@@ -1781,96 +1781,96 @@ class TextureProfile : public ::google::protobuf::Message /* @@protoc_insertion_
   bool has_head() const;
   void clear_head();
   static const int kHeadFieldNumber = 1;
-  const ::eqproto::Texture& head() const;
-  ::eqproto::Texture* release_head();
-  ::eqproto::Texture* mutable_head();
-  void set_allocated_head(::eqproto::Texture* head);
+  const ::pb::Texture& head() const;
+  ::pb::Texture* release_head();
+  ::pb::Texture* mutable_head();
+  void set_allocated_head(::pb::Texture* head);
 
   // .eqproto.Texture Chest = 2;
   bool has_chest() const;
   void clear_chest();
   static const int kChestFieldNumber = 2;
-  const ::eqproto::Texture& chest() const;
-  ::eqproto::Texture* release_chest();
-  ::eqproto::Texture* mutable_chest();
-  void set_allocated_chest(::eqproto::Texture* chest);
+  const ::pb::Texture& chest() const;
+  ::pb::Texture* release_chest();
+  ::pb::Texture* mutable_chest();
+  void set_allocated_chest(::pb::Texture* chest);
 
   // .eqproto.Texture Arms = 3;
   bool has_arms() const;
   void clear_arms();
   static const int kArmsFieldNumber = 3;
-  const ::eqproto::Texture& arms() const;
-  ::eqproto::Texture* release_arms();
-  ::eqproto::Texture* mutable_arms();
-  void set_allocated_arms(::eqproto::Texture* arms);
+  const ::pb::Texture& arms() const;
+  ::pb::Texture* release_arms();
+  ::pb::Texture* mutable_arms();
+  void set_allocated_arms(::pb::Texture* arms);
 
   // .eqproto.Texture Wrist = 4;
   bool has_wrist() const;
   void clear_wrist();
   static const int kWristFieldNumber = 4;
-  const ::eqproto::Texture& wrist() const;
-  ::eqproto::Texture* release_wrist();
-  ::eqproto::Texture* mutable_wrist();
-  void set_allocated_wrist(::eqproto::Texture* wrist);
+  const ::pb::Texture& wrist() const;
+  ::pb::Texture* release_wrist();
+  ::pb::Texture* mutable_wrist();
+  void set_allocated_wrist(::pb::Texture* wrist);
 
   // .eqproto.Texture Hands = 5;
   bool has_hands() const;
   void clear_hands();
   static const int kHandsFieldNumber = 5;
-  const ::eqproto::Texture& hands() const;
-  ::eqproto::Texture* release_hands();
-  ::eqproto::Texture* mutable_hands();
-  void set_allocated_hands(::eqproto::Texture* hands);
+  const ::pb::Texture& hands() const;
+  ::pb::Texture* release_hands();
+  ::pb::Texture* mutable_hands();
+  void set_allocated_hands(::pb::Texture* hands);
 
   // .eqproto.Texture Legs = 6;
   bool has_legs() const;
   void clear_legs();
   static const int kLegsFieldNumber = 6;
-  const ::eqproto::Texture& legs() const;
-  ::eqproto::Texture* release_legs();
-  ::eqproto::Texture* mutable_legs();
-  void set_allocated_legs(::eqproto::Texture* legs);
+  const ::pb::Texture& legs() const;
+  ::pb::Texture* release_legs();
+  ::pb::Texture* mutable_legs();
+  void set_allocated_legs(::pb::Texture* legs);
 
   // .eqproto.Texture Feet = 7;
   bool has_feet() const;
   void clear_feet();
   static const int kFeetFieldNumber = 7;
-  const ::eqproto::Texture& feet() const;
-  ::eqproto::Texture* release_feet();
-  ::eqproto::Texture* mutable_feet();
-  void set_allocated_feet(::eqproto::Texture* feet);
+  const ::pb::Texture& feet() const;
+  ::pb::Texture* release_feet();
+  ::pb::Texture* mutable_feet();
+  void set_allocated_feet(::pb::Texture* feet);
 
   // .eqproto.Texture Primary = 8;
   bool has_primary() const;
   void clear_primary();
   static const int kPrimaryFieldNumber = 8;
-  const ::eqproto::Texture& primary() const;
-  ::eqproto::Texture* release_primary();
-  ::eqproto::Texture* mutable_primary();
-  void set_allocated_primary(::eqproto::Texture* primary);
+  const ::pb::Texture& primary() const;
+  ::pb::Texture* release_primary();
+  ::pb::Texture* mutable_primary();
+  void set_allocated_primary(::pb::Texture* primary);
 
   // .eqproto.Texture Secondary = 9;
   bool has_secondary() const;
   void clear_secondary();
   static const int kSecondaryFieldNumber = 9;
-  const ::eqproto::Texture& secondary() const;
-  ::eqproto::Texture* release_secondary();
-  ::eqproto::Texture* mutable_secondary();
-  void set_allocated_secondary(::eqproto::Texture* secondary);
+  const ::pb::Texture& secondary() const;
+  ::pb::Texture* release_secondary();
+  ::pb::Texture* mutable_secondary();
+  void set_allocated_secondary(::pb::Texture* secondary);
 
   // @@protoc_insertion_point(class_scope:eqproto.TextureProfile)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::eqproto::Texture* head_;
-  ::eqproto::Texture* chest_;
-  ::eqproto::Texture* arms_;
-  ::eqproto::Texture* wrist_;
-  ::eqproto::Texture* hands_;
-  ::eqproto::Texture* legs_;
-  ::eqproto::Texture* feet_;
-  ::eqproto::Texture* primary_;
-  ::eqproto::Texture* secondary_;
+  ::pb::Texture* head_;
+  ::pb::Texture* chest_;
+  ::pb::Texture* arms_;
+  ::pb::Texture* wrist_;
+  ::pb::Texture* hands_;
+  ::pb::Texture* legs_;
+  ::pb::Texture* feet_;
+  ::pb::Texture* primary_;
+  ::pb::Texture* secondary_;
   mutable int _cached_size_;
   friend struct ::protobuf_message_2eproto::TableStruct;
   friend void ::protobuf_message_2eproto::InitDefaultsTextureProfileImpl();
@@ -2090,96 +2090,96 @@ class TintProfile : public ::google::protobuf::Message /* @@protoc_insertion_poi
   bool has_head() const;
   void clear_head();
   static const int kHeadFieldNumber = 1;
-  const ::eqproto::Tint& head() const;
-  ::eqproto::Tint* release_head();
-  ::eqproto::Tint* mutable_head();
-  void set_allocated_head(::eqproto::Tint* head);
+  const ::pb::Tint& head() const;
+  ::pb::Tint* release_head();
+  ::pb::Tint* mutable_head();
+  void set_allocated_head(::pb::Tint* head);
 
   // .eqproto.Tint Chest = 2;
   bool has_chest() const;
   void clear_chest();
   static const int kChestFieldNumber = 2;
-  const ::eqproto::Tint& chest() const;
-  ::eqproto::Tint* release_chest();
-  ::eqproto::Tint* mutable_chest();
-  void set_allocated_chest(::eqproto::Tint* chest);
+  const ::pb::Tint& chest() const;
+  ::pb::Tint* release_chest();
+  ::pb::Tint* mutable_chest();
+  void set_allocated_chest(::pb::Tint* chest);
 
   // .eqproto.Tint Arms = 3;
   bool has_arms() const;
   void clear_arms();
   static const int kArmsFieldNumber = 3;
-  const ::eqproto::Tint& arms() const;
-  ::eqproto::Tint* release_arms();
-  ::eqproto::Tint* mutable_arms();
-  void set_allocated_arms(::eqproto::Tint* arms);
+  const ::pb::Tint& arms() const;
+  ::pb::Tint* release_arms();
+  ::pb::Tint* mutable_arms();
+  void set_allocated_arms(::pb::Tint* arms);
 
   // .eqproto.Tint Wrist = 4;
   bool has_wrist() const;
   void clear_wrist();
   static const int kWristFieldNumber = 4;
-  const ::eqproto::Tint& wrist() const;
-  ::eqproto::Tint* release_wrist();
-  ::eqproto::Tint* mutable_wrist();
-  void set_allocated_wrist(::eqproto::Tint* wrist);
+  const ::pb::Tint& wrist() const;
+  ::pb::Tint* release_wrist();
+  ::pb::Tint* mutable_wrist();
+  void set_allocated_wrist(::pb::Tint* wrist);
 
   // .eqproto.Tint Hands = 5;
   bool has_hands() const;
   void clear_hands();
   static const int kHandsFieldNumber = 5;
-  const ::eqproto::Tint& hands() const;
-  ::eqproto::Tint* release_hands();
-  ::eqproto::Tint* mutable_hands();
-  void set_allocated_hands(::eqproto::Tint* hands);
+  const ::pb::Tint& hands() const;
+  ::pb::Tint* release_hands();
+  ::pb::Tint* mutable_hands();
+  void set_allocated_hands(::pb::Tint* hands);
 
   // .eqproto.Tint Legs = 6;
   bool has_legs() const;
   void clear_legs();
   static const int kLegsFieldNumber = 6;
-  const ::eqproto::Tint& legs() const;
-  ::eqproto::Tint* release_legs();
-  ::eqproto::Tint* mutable_legs();
-  void set_allocated_legs(::eqproto::Tint* legs);
+  const ::pb::Tint& legs() const;
+  ::pb::Tint* release_legs();
+  ::pb::Tint* mutable_legs();
+  void set_allocated_legs(::pb::Tint* legs);
 
   // .eqproto.Tint Feet = 7;
   bool has_feet() const;
   void clear_feet();
   static const int kFeetFieldNumber = 7;
-  const ::eqproto::Tint& feet() const;
-  ::eqproto::Tint* release_feet();
-  ::eqproto::Tint* mutable_feet();
-  void set_allocated_feet(::eqproto::Tint* feet);
+  const ::pb::Tint& feet() const;
+  ::pb::Tint* release_feet();
+  ::pb::Tint* mutable_feet();
+  void set_allocated_feet(::pb::Tint* feet);
 
   // .eqproto.Tint Primary = 8;
   bool has_primary() const;
   void clear_primary();
   static const int kPrimaryFieldNumber = 8;
-  const ::eqproto::Tint& primary() const;
-  ::eqproto::Tint* release_primary();
-  ::eqproto::Tint* mutable_primary();
-  void set_allocated_primary(::eqproto::Tint* primary);
+  const ::pb::Tint& primary() const;
+  ::pb::Tint* release_primary();
+  ::pb::Tint* mutable_primary();
+  void set_allocated_primary(::pb::Tint* primary);
 
   // .eqproto.Tint Secondary = 9;
   bool has_secondary() const;
   void clear_secondary();
   static const int kSecondaryFieldNumber = 9;
-  const ::eqproto::Tint& secondary() const;
-  ::eqproto::Tint* release_secondary();
-  ::eqproto::Tint* mutable_secondary();
-  void set_allocated_secondary(::eqproto::Tint* secondary);
+  const ::pb::Tint& secondary() const;
+  ::pb::Tint* release_secondary();
+  ::pb::Tint* mutable_secondary();
+  void set_allocated_secondary(::pb::Tint* secondary);
 
   // @@protoc_insertion_point(class_scope:eqproto.TintProfile)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::eqproto::Tint* head_;
-  ::eqproto::Tint* chest_;
-  ::eqproto::Tint* arms_;
-  ::eqproto::Tint* wrist_;
-  ::eqproto::Tint* hands_;
-  ::eqproto::Tint* legs_;
-  ::eqproto::Tint* feet_;
-  ::eqproto::Tint* primary_;
-  ::eqproto::Tint* secondary_;
+  ::pb::Tint* head_;
+  ::pb::Tint* chest_;
+  ::pb::Tint* arms_;
+  ::pb::Tint* wrist_;
+  ::pb::Tint* hands_;
+  ::pb::Tint* legs_;
+  ::pb::Tint* feet_;
+  ::pb::Tint* primary_;
+  ::pb::Tint* secondary_;
   mutable int _cached_size_;
   friend struct ::protobuf_message_2eproto::TableStruct;
   friend void ::protobuf_message_2eproto::InitDefaultsTintProfileImpl();
@@ -2412,8 +2412,8 @@ class Event : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   // .eqproto.OpCode op = 1;
   void clear_op();
   static const int kOpFieldNumber = 1;
-  ::eqproto::OpCode op() const;
-  void set_op(::eqproto::OpCode value);
+  ::pb::OpCode op() const;
+  void set_op(::pb::OpCode value);
 
   // @@protoc_insertion_point(class_scope:eqproto.Event)
  private:
@@ -2693,17 +2693,17 @@ class DamageEvent : public ::google::protobuf::Message /* @@protoc_insertion_poi
   float force() const;
   void set_force(float value);
 
-  // float meleepush_xy = 7;
-  void clear_meleepush_xy();
-  static const int kMeleepushXyFieldNumber = 7;
-  float meleepush_xy() const;
-  void set_meleepush_xy(float value);
+  // float hit_heading = 7;
+  void clear_hit_heading();
+  static const int khit_headingFieldNumber = 7;
+  float hit_heading() const;
+  void set_hit_heading(float value);
 
-  // float meleepush_z = 8;
-  void clear_meleepush_z();
-  static const int kMeleepushZFieldNumber = 8;
-  float meleepush_z() const;
-  void set_meleepush_z(float value);
+  // float hit_pitch = 8;
+  void clear_hit_pitch();
+  static const int khit_pitchFieldNumber = 8;
+  float hit_pitch() const;
+  void set_hit_pitch(float value);
 
   // @@protoc_insertion_point(class_scope:eqproto.DamageEvent)
  private:
@@ -2715,8 +2715,8 @@ class DamageEvent : public ::google::protobuf::Message /* @@protoc_insertion_poi
   ::google::protobuf::uint32 spellid_;
   ::google::protobuf::uint32 damage_;
   float force_;
-  float meleepush_xy_;
-  float meleepush_z_;
+  float hit_heading_;
+  float hit_pitch_;
   mutable int _cached_size_;
   friend struct ::protobuf_message_2eproto::TableStruct;
   friend void ::protobuf_message_2eproto::InitDefaultsDamageEventImpl();
@@ -3080,10 +3080,10 @@ class WearChangeEvent : public ::google::protobuf::Message /* @@protoc_insertion
   bool has_color() const;
   void clear_color();
   static const int kColorFieldNumber = 7;
-  const ::eqproto::Tint& color() const;
-  ::eqproto::Tint* release_color();
-  ::eqproto::Tint* mutable_color();
-  void set_allocated_color(::eqproto::Tint* color);
+  const ::pb::Tint& color() const;
+  ::pb::Tint* release_color();
+  ::pb::Tint* mutable_color();
+  void set_allocated_color(::pb::Tint* color);
 
   // uint32 spawn_id = 1;
   void clear_spawn_id();
@@ -3131,7 +3131,7 @@ class WearChangeEvent : public ::google::protobuf::Message /* @@protoc_insertion
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::eqproto::Tint* color_;
+  ::pb::Tint* color_;
   ::google::protobuf::uint32 spawn_id_;
   ::google::protobuf::uint32 material_;
   ::google::protobuf::uint32 unknown06_;
@@ -3851,19 +3851,19 @@ class SpawnEvent : public ::google::protobuf::Message /* @@protoc_insertion_poin
   bool has_equipment() const;
   void clear_equipment();
   static const int kEquipmentFieldNumber = 52;
-  const ::eqproto::TextureProfile& equipment() const;
-  ::eqproto::TextureProfile* release_equipment();
-  ::eqproto::TextureProfile* mutable_equipment();
-  void set_allocated_equipment(::eqproto::TextureProfile* equipment);
+  const ::pb::TextureProfile& equipment() const;
+  ::pb::TextureProfile* release_equipment();
+  ::pb::TextureProfile* mutable_equipment();
+  void set_allocated_equipment(::pb::TextureProfile* equipment);
 
   // .eqproto.TintProfile equipment_tint = 78;
   bool has_equipment_tint() const;
   void clear_equipment_tint();
   static const int kEquipmentTintFieldNumber = 78;
-  const ::eqproto::TintProfile& equipment_tint() const;
-  ::eqproto::TintProfile* release_equipment_tint();
-  ::eqproto::TintProfile* mutable_equipment_tint();
-  void set_allocated_equipment_tint(::eqproto::TintProfile* equipment_tint);
+  const ::pb::TintProfile& equipment_tint() const;
+  ::pb::TintProfile* release_equipment_tint();
+  ::pb::TintProfile* mutable_equipment_tint();
+  void set_allocated_equipment_tint(::pb::TintProfile* equipment_tint);
 
   // uint32 unknown0000 = 1;
   void clear_unknown0000();
@@ -4285,11 +4285,11 @@ class SpawnEvent : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 spawnid() const;
   void set_spawnid(::google::protobuf::uint32 value);
 
-  // uint32 unknown0344 = 76;
-  void clear_unknown0344();
-  static const int kUnknown0344FieldNumber = 76;
-  ::google::protobuf::uint32 unknown0344() const;
-  void set_unknown0344(::google::protobuf::uint32 value);
+  // uint32 bounding_radius = 76;
+  void clear_bounding_radius();
+  static const int kbounding_radiusFieldNumber = 76;
+  float bounding_radius() const;
+  void set_bounding_radius(float value);
 
   // uint32 IsMercenary = 77;
   void clear_ismercenary();
@@ -4416,8 +4416,8 @@ class SpawnEvent : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::internal::ArenaStringPtr destructiblemodel_;
   ::google::protobuf::internal::ArenaStringPtr destructiblename2_;
   ::google::protobuf::internal::ArenaStringPtr destructiblestring_;
-  ::eqproto::TextureProfile* equipment_;
-  ::eqproto::TintProfile* equipment_tint_;
+  ::pb::TextureProfile* equipment_;
+  ::pb::TintProfile* equipment_tint_;
   ::google::protobuf::uint32 unknown0000_;
   ::google::protobuf::uint32 gm_;
   ::google::protobuf::uint32 unknown0003_;
@@ -4488,7 +4488,7 @@ class SpawnEvent : public ::google::protobuf::Message /* @@protoc_insertion_poin
   ::google::protobuf::uint32 equip_chest2_;
   ::google::protobuf::uint32 mount_color_;
   ::google::protobuf::uint32 spawnid_;
-  ::google::protobuf::uint32 unknown0344_;
+  float bounding_radius_;
   ::google::protobuf::uint32 ismercenary_;
   ::google::protobuf::uint32 lfg_;
   ::google::protobuf::uint32 destructibleappearance_;
@@ -5410,28 +5410,28 @@ inline void Entity::clear_position() {
   }
   position_ = NULL;
 }
-inline const ::eqproto::Position& Entity::position() const {
-  const ::eqproto::Position* p = position_;
+inline const ::pb::Position& Entity::position() const {
+  const ::pb::Position* p = position_;
   // @@protoc_insertion_point(field_get:eqproto.Entity.position)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Position*>(
-      &::eqproto::_Position_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Position*>(
+      &::pb::_Position_default_instance_);
 }
-inline ::eqproto::Position* Entity::release_position() {
+inline ::pb::Position* Entity::release_position() {
   // @@protoc_insertion_point(field_release:eqproto.Entity.position)
   
-  ::eqproto::Position* temp = position_;
+  ::pb::Position* temp = position_;
   position_ = NULL;
   return temp;
 }
-inline ::eqproto::Position* Entity::mutable_position() {
+inline ::pb::Position* Entity::mutable_position() {
   
   if (position_ == NULL) {
-    position_ = new ::eqproto::Position;
+    position_ = new ::pb::Position;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.Entity.position)
   return position_;
 }
-inline void Entity::set_allocated_position(::eqproto::Position* position) {
+inline void Entity::set_allocated_position(::pb::Position* position) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete position_;
@@ -5489,24 +5489,24 @@ inline int Entities::entities_size() const {
 inline void Entities::clear_entities() {
   entities_.Clear();
 }
-inline const ::eqproto::Entity& Entities::entities(int index) const {
+inline const ::pb::Entity& Entities::entities(int index) const {
   // @@protoc_insertion_point(field_get:eqproto.Entities.entities)
   return entities_.Get(index);
 }
-inline ::eqproto::Entity* Entities::mutable_entities(int index) {
+inline ::pb::Entity* Entities::mutable_entities(int index) {
   // @@protoc_insertion_point(field_mutable:eqproto.Entities.entities)
   return entities_.Mutable(index);
 }
-inline ::eqproto::Entity* Entities::add_entities() {
+inline ::pb::Entity* Entities::add_entities() {
   // @@protoc_insertion_point(field_add:eqproto.Entities.entities)
   return entities_.Add();
 }
-inline ::google::protobuf::RepeatedPtrField< ::eqproto::Entity >*
+inline ::google::protobuf::RepeatedPtrField< ::pb::Entity >*
 Entities::mutable_entities() {
   // @@protoc_insertion_point(field_mutable_list:eqproto.Entities.entities)
   return &entities_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::eqproto::Entity >&
+inline const ::google::protobuf::RepeatedPtrField< ::pb::Entity >&
 Entities::entities() const {
   // @@protoc_insertion_point(field_list:eqproto.Entities.entities)
   return entities_;
@@ -5586,28 +5586,28 @@ inline void TextureProfile::clear_head() {
   }
   head_ = NULL;
 }
-inline const ::eqproto::Texture& TextureProfile::head() const {
-  const ::eqproto::Texture* p = head_;
+inline const ::pb::Texture& TextureProfile::head() const {
+  const ::pb::Texture* p = head_;
   // @@protoc_insertion_point(field_get:eqproto.TextureProfile.Head)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Texture*>(
-      &::eqproto::_Texture_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Texture*>(
+      &::pb::_Texture_default_instance_);
 }
-inline ::eqproto::Texture* TextureProfile::release_head() {
+inline ::pb::Texture* TextureProfile::release_head() {
   // @@protoc_insertion_point(field_release:eqproto.TextureProfile.Head)
   
-  ::eqproto::Texture* temp = head_;
+  ::pb::Texture* temp = head_;
   head_ = NULL;
   return temp;
 }
-inline ::eqproto::Texture* TextureProfile::mutable_head() {
+inline ::pb::Texture* TextureProfile::mutable_head() {
   
   if (head_ == NULL) {
-    head_ = new ::eqproto::Texture;
+    head_ = new ::pb::Texture;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TextureProfile.Head)
   return head_;
 }
-inline void TextureProfile::set_allocated_head(::eqproto::Texture* head) {
+inline void TextureProfile::set_allocated_head(::pb::Texture* head) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete head_;
@@ -5636,28 +5636,28 @@ inline void TextureProfile::clear_chest() {
   }
   chest_ = NULL;
 }
-inline const ::eqproto::Texture& TextureProfile::chest() const {
-  const ::eqproto::Texture* p = chest_;
+inline const ::pb::Texture& TextureProfile::chest() const {
+  const ::pb::Texture* p = chest_;
   // @@protoc_insertion_point(field_get:eqproto.TextureProfile.Chest)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Texture*>(
-      &::eqproto::_Texture_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Texture*>(
+      &::pb::_Texture_default_instance_);
 }
-inline ::eqproto::Texture* TextureProfile::release_chest() {
+inline ::pb::Texture* TextureProfile::release_chest() {
   // @@protoc_insertion_point(field_release:eqproto.TextureProfile.Chest)
   
-  ::eqproto::Texture* temp = chest_;
+  ::pb::Texture* temp = chest_;
   chest_ = NULL;
   return temp;
 }
-inline ::eqproto::Texture* TextureProfile::mutable_chest() {
+inline ::pb::Texture* TextureProfile::mutable_chest() {
   
   if (chest_ == NULL) {
-    chest_ = new ::eqproto::Texture;
+    chest_ = new ::pb::Texture;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TextureProfile.Chest)
   return chest_;
 }
-inline void TextureProfile::set_allocated_chest(::eqproto::Texture* chest) {
+inline void TextureProfile::set_allocated_chest(::pb::Texture* chest) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete chest_;
@@ -5686,28 +5686,28 @@ inline void TextureProfile::clear_arms() {
   }
   arms_ = NULL;
 }
-inline const ::eqproto::Texture& TextureProfile::arms() const {
-  const ::eqproto::Texture* p = arms_;
+inline const ::pb::Texture& TextureProfile::arms() const {
+  const ::pb::Texture* p = arms_;
   // @@protoc_insertion_point(field_get:eqproto.TextureProfile.Arms)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Texture*>(
-      &::eqproto::_Texture_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Texture*>(
+      &::pb::_Texture_default_instance_);
 }
-inline ::eqproto::Texture* TextureProfile::release_arms() {
+inline ::pb::Texture* TextureProfile::release_arms() {
   // @@protoc_insertion_point(field_release:eqproto.TextureProfile.Arms)
   
-  ::eqproto::Texture* temp = arms_;
+  ::pb::Texture* temp = arms_;
   arms_ = NULL;
   return temp;
 }
-inline ::eqproto::Texture* TextureProfile::mutable_arms() {
+inline ::pb::Texture* TextureProfile::mutable_arms() {
   
   if (arms_ == NULL) {
-    arms_ = new ::eqproto::Texture;
+    arms_ = new ::pb::Texture;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TextureProfile.Arms)
   return arms_;
 }
-inline void TextureProfile::set_allocated_arms(::eqproto::Texture* arms) {
+inline void TextureProfile::set_allocated_arms(::pb::Texture* arms) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete arms_;
@@ -5736,28 +5736,28 @@ inline void TextureProfile::clear_wrist() {
   }
   wrist_ = NULL;
 }
-inline const ::eqproto::Texture& TextureProfile::wrist() const {
-  const ::eqproto::Texture* p = wrist_;
+inline const ::pb::Texture& TextureProfile::wrist() const {
+  const ::pb::Texture* p = wrist_;
   // @@protoc_insertion_point(field_get:eqproto.TextureProfile.Wrist)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Texture*>(
-      &::eqproto::_Texture_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Texture*>(
+      &::pb::_Texture_default_instance_);
 }
-inline ::eqproto::Texture* TextureProfile::release_wrist() {
+inline ::pb::Texture* TextureProfile::release_wrist() {
   // @@protoc_insertion_point(field_release:eqproto.TextureProfile.Wrist)
   
-  ::eqproto::Texture* temp = wrist_;
+  ::pb::Texture* temp = wrist_;
   wrist_ = NULL;
   return temp;
 }
-inline ::eqproto::Texture* TextureProfile::mutable_wrist() {
+inline ::pb::Texture* TextureProfile::mutable_wrist() {
   
   if (wrist_ == NULL) {
-    wrist_ = new ::eqproto::Texture;
+    wrist_ = new ::pb::Texture;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TextureProfile.Wrist)
   return wrist_;
 }
-inline void TextureProfile::set_allocated_wrist(::eqproto::Texture* wrist) {
+inline void TextureProfile::set_allocated_wrist(::pb::Texture* wrist) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete wrist_;
@@ -5786,28 +5786,28 @@ inline void TextureProfile::clear_hands() {
   }
   hands_ = NULL;
 }
-inline const ::eqproto::Texture& TextureProfile::hands() const {
-  const ::eqproto::Texture* p = hands_;
+inline const ::pb::Texture& TextureProfile::hands() const {
+  const ::pb::Texture* p = hands_;
   // @@protoc_insertion_point(field_get:eqproto.TextureProfile.Hands)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Texture*>(
-      &::eqproto::_Texture_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Texture*>(
+      &::pb::_Texture_default_instance_);
 }
-inline ::eqproto::Texture* TextureProfile::release_hands() {
+inline ::pb::Texture* TextureProfile::release_hands() {
   // @@protoc_insertion_point(field_release:eqproto.TextureProfile.Hands)
   
-  ::eqproto::Texture* temp = hands_;
+  ::pb::Texture* temp = hands_;
   hands_ = NULL;
   return temp;
 }
-inline ::eqproto::Texture* TextureProfile::mutable_hands() {
+inline ::pb::Texture* TextureProfile::mutable_hands() {
   
   if (hands_ == NULL) {
-    hands_ = new ::eqproto::Texture;
+    hands_ = new ::pb::Texture;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TextureProfile.Hands)
   return hands_;
 }
-inline void TextureProfile::set_allocated_hands(::eqproto::Texture* hands) {
+inline void TextureProfile::set_allocated_hands(::pb::Texture* hands) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete hands_;
@@ -5836,28 +5836,28 @@ inline void TextureProfile::clear_legs() {
   }
   legs_ = NULL;
 }
-inline const ::eqproto::Texture& TextureProfile::legs() const {
-  const ::eqproto::Texture* p = legs_;
+inline const ::pb::Texture& TextureProfile::legs() const {
+  const ::pb::Texture* p = legs_;
   // @@protoc_insertion_point(field_get:eqproto.TextureProfile.Legs)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Texture*>(
-      &::eqproto::_Texture_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Texture*>(
+      &::pb::_Texture_default_instance_);
 }
-inline ::eqproto::Texture* TextureProfile::release_legs() {
+inline ::pb::Texture* TextureProfile::release_legs() {
   // @@protoc_insertion_point(field_release:eqproto.TextureProfile.Legs)
   
-  ::eqproto::Texture* temp = legs_;
+  ::pb::Texture* temp = legs_;
   legs_ = NULL;
   return temp;
 }
-inline ::eqproto::Texture* TextureProfile::mutable_legs() {
+inline ::pb::Texture* TextureProfile::mutable_legs() {
   
   if (legs_ == NULL) {
-    legs_ = new ::eqproto::Texture;
+    legs_ = new ::pb::Texture;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TextureProfile.Legs)
   return legs_;
 }
-inline void TextureProfile::set_allocated_legs(::eqproto::Texture* legs) {
+inline void TextureProfile::set_allocated_legs(::pb::Texture* legs) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete legs_;
@@ -5886,28 +5886,28 @@ inline void TextureProfile::clear_feet() {
   }
   feet_ = NULL;
 }
-inline const ::eqproto::Texture& TextureProfile::feet() const {
-  const ::eqproto::Texture* p = feet_;
+inline const ::pb::Texture& TextureProfile::feet() const {
+  const ::pb::Texture* p = feet_;
   // @@protoc_insertion_point(field_get:eqproto.TextureProfile.Feet)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Texture*>(
-      &::eqproto::_Texture_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Texture*>(
+      &::pb::_Texture_default_instance_);
 }
-inline ::eqproto::Texture* TextureProfile::release_feet() {
+inline ::pb::Texture* TextureProfile::release_feet() {
   // @@protoc_insertion_point(field_release:eqproto.TextureProfile.Feet)
   
-  ::eqproto::Texture* temp = feet_;
+  ::pb::Texture* temp = feet_;
   feet_ = NULL;
   return temp;
 }
-inline ::eqproto::Texture* TextureProfile::mutable_feet() {
+inline ::pb::Texture* TextureProfile::mutable_feet() {
   
   if (feet_ == NULL) {
-    feet_ = new ::eqproto::Texture;
+    feet_ = new ::pb::Texture;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TextureProfile.Feet)
   return feet_;
 }
-inline void TextureProfile::set_allocated_feet(::eqproto::Texture* feet) {
+inline void TextureProfile::set_allocated_feet(::pb::Texture* feet) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete feet_;
@@ -5936,28 +5936,28 @@ inline void TextureProfile::clear_primary() {
   }
   primary_ = NULL;
 }
-inline const ::eqproto::Texture& TextureProfile::primary() const {
-  const ::eqproto::Texture* p = primary_;
+inline const ::pb::Texture& TextureProfile::primary() const {
+  const ::pb::Texture* p = primary_;
   // @@protoc_insertion_point(field_get:eqproto.TextureProfile.Primary)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Texture*>(
-      &::eqproto::_Texture_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Texture*>(
+      &::pb::_Texture_default_instance_);
 }
-inline ::eqproto::Texture* TextureProfile::release_primary() {
+inline ::pb::Texture* TextureProfile::release_primary() {
   // @@protoc_insertion_point(field_release:eqproto.TextureProfile.Primary)
   
-  ::eqproto::Texture* temp = primary_;
+  ::pb::Texture* temp = primary_;
   primary_ = NULL;
   return temp;
 }
-inline ::eqproto::Texture* TextureProfile::mutable_primary() {
+inline ::pb::Texture* TextureProfile::mutable_primary() {
   
   if (primary_ == NULL) {
-    primary_ = new ::eqproto::Texture;
+    primary_ = new ::pb::Texture;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TextureProfile.Primary)
   return primary_;
 }
-inline void TextureProfile::set_allocated_primary(::eqproto::Texture* primary) {
+inline void TextureProfile::set_allocated_primary(::pb::Texture* primary) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete primary_;
@@ -5986,28 +5986,28 @@ inline void TextureProfile::clear_secondary() {
   }
   secondary_ = NULL;
 }
-inline const ::eqproto::Texture& TextureProfile::secondary() const {
-  const ::eqproto::Texture* p = secondary_;
+inline const ::pb::Texture& TextureProfile::secondary() const {
+  const ::pb::Texture* p = secondary_;
   // @@protoc_insertion_point(field_get:eqproto.TextureProfile.Secondary)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Texture*>(
-      &::eqproto::_Texture_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Texture*>(
+      &::pb::_Texture_default_instance_);
 }
-inline ::eqproto::Texture* TextureProfile::release_secondary() {
+inline ::pb::Texture* TextureProfile::release_secondary() {
   // @@protoc_insertion_point(field_release:eqproto.TextureProfile.Secondary)
   
-  ::eqproto::Texture* temp = secondary_;
+  ::pb::Texture* temp = secondary_;
   secondary_ = NULL;
   return temp;
 }
-inline ::eqproto::Texture* TextureProfile::mutable_secondary() {
+inline ::pb::Texture* TextureProfile::mutable_secondary() {
   
   if (secondary_ == NULL) {
-    secondary_ = new ::eqproto::Texture;
+    secondary_ = new ::pb::Texture;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TextureProfile.Secondary)
   return secondary_;
 }
-inline void TextureProfile::set_allocated_secondary(::eqproto::Texture* secondary) {
+inline void TextureProfile::set_allocated_secondary(::pb::Texture* secondary) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete secondary_;
@@ -6114,28 +6114,28 @@ inline void TintProfile::clear_head() {
   }
   head_ = NULL;
 }
-inline const ::eqproto::Tint& TintProfile::head() const {
-  const ::eqproto::Tint* p = head_;
+inline const ::pb::Tint& TintProfile::head() const {
+  const ::pb::Tint* p = head_;
   // @@protoc_insertion_point(field_get:eqproto.TintProfile.Head)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Tint*>(
-      &::eqproto::_Tint_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Tint*>(
+      &::pb::_Tint_default_instance_);
 }
-inline ::eqproto::Tint* TintProfile::release_head() {
+inline ::pb::Tint* TintProfile::release_head() {
   // @@protoc_insertion_point(field_release:eqproto.TintProfile.Head)
   
-  ::eqproto::Tint* temp = head_;
+  ::pb::Tint* temp = head_;
   head_ = NULL;
   return temp;
 }
-inline ::eqproto::Tint* TintProfile::mutable_head() {
+inline ::pb::Tint* TintProfile::mutable_head() {
   
   if (head_ == NULL) {
-    head_ = new ::eqproto::Tint;
+    head_ = new ::pb::Tint;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TintProfile.Head)
   return head_;
 }
-inline void TintProfile::set_allocated_head(::eqproto::Tint* head) {
+inline void TintProfile::set_allocated_head(::pb::Tint* head) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete head_;
@@ -6164,28 +6164,28 @@ inline void TintProfile::clear_chest() {
   }
   chest_ = NULL;
 }
-inline const ::eqproto::Tint& TintProfile::chest() const {
-  const ::eqproto::Tint* p = chest_;
+inline const ::pb::Tint& TintProfile::chest() const {
+  const ::pb::Tint* p = chest_;
   // @@protoc_insertion_point(field_get:eqproto.TintProfile.Chest)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Tint*>(
-      &::eqproto::_Tint_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Tint*>(
+      &::pb::_Tint_default_instance_);
 }
-inline ::eqproto::Tint* TintProfile::release_chest() {
+inline ::pb::Tint* TintProfile::release_chest() {
   // @@protoc_insertion_point(field_release:eqproto.TintProfile.Chest)
   
-  ::eqproto::Tint* temp = chest_;
+  ::pb::Tint* temp = chest_;
   chest_ = NULL;
   return temp;
 }
-inline ::eqproto::Tint* TintProfile::mutable_chest() {
+inline ::pb::Tint* TintProfile::mutable_chest() {
   
   if (chest_ == NULL) {
-    chest_ = new ::eqproto::Tint;
+    chest_ = new ::pb::Tint;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TintProfile.Chest)
   return chest_;
 }
-inline void TintProfile::set_allocated_chest(::eqproto::Tint* chest) {
+inline void TintProfile::set_allocated_chest(::pb::Tint* chest) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete chest_;
@@ -6214,28 +6214,28 @@ inline void TintProfile::clear_arms() {
   }
   arms_ = NULL;
 }
-inline const ::eqproto::Tint& TintProfile::arms() const {
-  const ::eqproto::Tint* p = arms_;
+inline const ::pb::Tint& TintProfile::arms() const {
+  const ::pb::Tint* p = arms_;
   // @@protoc_insertion_point(field_get:eqproto.TintProfile.Arms)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Tint*>(
-      &::eqproto::_Tint_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Tint*>(
+      &::pb::_Tint_default_instance_);
 }
-inline ::eqproto::Tint* TintProfile::release_arms() {
+inline ::pb::Tint* TintProfile::release_arms() {
   // @@protoc_insertion_point(field_release:eqproto.TintProfile.Arms)
   
-  ::eqproto::Tint* temp = arms_;
+  ::pb::Tint* temp = arms_;
   arms_ = NULL;
   return temp;
 }
-inline ::eqproto::Tint* TintProfile::mutable_arms() {
+inline ::pb::Tint* TintProfile::mutable_arms() {
   
   if (arms_ == NULL) {
-    arms_ = new ::eqproto::Tint;
+    arms_ = new ::pb::Tint;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TintProfile.Arms)
   return arms_;
 }
-inline void TintProfile::set_allocated_arms(::eqproto::Tint* arms) {
+inline void TintProfile::set_allocated_arms(::pb::Tint* arms) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete arms_;
@@ -6264,28 +6264,28 @@ inline void TintProfile::clear_wrist() {
   }
   wrist_ = NULL;
 }
-inline const ::eqproto::Tint& TintProfile::wrist() const {
-  const ::eqproto::Tint* p = wrist_;
+inline const ::pb::Tint& TintProfile::wrist() const {
+  const ::pb::Tint* p = wrist_;
   // @@protoc_insertion_point(field_get:eqproto.TintProfile.Wrist)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Tint*>(
-      &::eqproto::_Tint_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Tint*>(
+      &::pb::_Tint_default_instance_);
 }
-inline ::eqproto::Tint* TintProfile::release_wrist() {
+inline ::pb::Tint* TintProfile::release_wrist() {
   // @@protoc_insertion_point(field_release:eqproto.TintProfile.Wrist)
   
-  ::eqproto::Tint* temp = wrist_;
+  ::pb::Tint* temp = wrist_;
   wrist_ = NULL;
   return temp;
 }
-inline ::eqproto::Tint* TintProfile::mutable_wrist() {
+inline ::pb::Tint* TintProfile::mutable_wrist() {
   
   if (wrist_ == NULL) {
-    wrist_ = new ::eqproto::Tint;
+    wrist_ = new ::pb::Tint;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TintProfile.Wrist)
   return wrist_;
 }
-inline void TintProfile::set_allocated_wrist(::eqproto::Tint* wrist) {
+inline void TintProfile::set_allocated_wrist(::pb::Tint* wrist) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete wrist_;
@@ -6314,28 +6314,28 @@ inline void TintProfile::clear_hands() {
   }
   hands_ = NULL;
 }
-inline const ::eqproto::Tint& TintProfile::hands() const {
-  const ::eqproto::Tint* p = hands_;
+inline const ::pb::Tint& TintProfile::hands() const {
+  const ::pb::Tint* p = hands_;
   // @@protoc_insertion_point(field_get:eqproto.TintProfile.Hands)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Tint*>(
-      &::eqproto::_Tint_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Tint*>(
+      &::pb::_Tint_default_instance_);
 }
-inline ::eqproto::Tint* TintProfile::release_hands() {
+inline ::pb::Tint* TintProfile::release_hands() {
   // @@protoc_insertion_point(field_release:eqproto.TintProfile.Hands)
   
-  ::eqproto::Tint* temp = hands_;
+  ::pb::Tint* temp = hands_;
   hands_ = NULL;
   return temp;
 }
-inline ::eqproto::Tint* TintProfile::mutable_hands() {
+inline ::pb::Tint* TintProfile::mutable_hands() {
   
   if (hands_ == NULL) {
-    hands_ = new ::eqproto::Tint;
+    hands_ = new ::pb::Tint;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TintProfile.Hands)
   return hands_;
 }
-inline void TintProfile::set_allocated_hands(::eqproto::Tint* hands) {
+inline void TintProfile::set_allocated_hands(::pb::Tint* hands) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete hands_;
@@ -6364,28 +6364,28 @@ inline void TintProfile::clear_legs() {
   }
   legs_ = NULL;
 }
-inline const ::eqproto::Tint& TintProfile::legs() const {
-  const ::eqproto::Tint* p = legs_;
+inline const ::pb::Tint& TintProfile::legs() const {
+  const ::pb::Tint* p = legs_;
   // @@protoc_insertion_point(field_get:eqproto.TintProfile.Legs)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Tint*>(
-      &::eqproto::_Tint_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Tint*>(
+      &::pb::_Tint_default_instance_);
 }
-inline ::eqproto::Tint* TintProfile::release_legs() {
+inline ::pb::Tint* TintProfile::release_legs() {
   // @@protoc_insertion_point(field_release:eqproto.TintProfile.Legs)
   
-  ::eqproto::Tint* temp = legs_;
+  ::pb::Tint* temp = legs_;
   legs_ = NULL;
   return temp;
 }
-inline ::eqproto::Tint* TintProfile::mutable_legs() {
+inline ::pb::Tint* TintProfile::mutable_legs() {
   
   if (legs_ == NULL) {
-    legs_ = new ::eqproto::Tint;
+    legs_ = new ::pb::Tint;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TintProfile.Legs)
   return legs_;
 }
-inline void TintProfile::set_allocated_legs(::eqproto::Tint* legs) {
+inline void TintProfile::set_allocated_legs(::pb::Tint* legs) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete legs_;
@@ -6414,28 +6414,28 @@ inline void TintProfile::clear_feet() {
   }
   feet_ = NULL;
 }
-inline const ::eqproto::Tint& TintProfile::feet() const {
-  const ::eqproto::Tint* p = feet_;
+inline const ::pb::Tint& TintProfile::feet() const {
+  const ::pb::Tint* p = feet_;
   // @@protoc_insertion_point(field_get:eqproto.TintProfile.Feet)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Tint*>(
-      &::eqproto::_Tint_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Tint*>(
+      &::pb::_Tint_default_instance_);
 }
-inline ::eqproto::Tint* TintProfile::release_feet() {
+inline ::pb::Tint* TintProfile::release_feet() {
   // @@protoc_insertion_point(field_release:eqproto.TintProfile.Feet)
   
-  ::eqproto::Tint* temp = feet_;
+  ::pb::Tint* temp = feet_;
   feet_ = NULL;
   return temp;
 }
-inline ::eqproto::Tint* TintProfile::mutable_feet() {
+inline ::pb::Tint* TintProfile::mutable_feet() {
   
   if (feet_ == NULL) {
-    feet_ = new ::eqproto::Tint;
+    feet_ = new ::pb::Tint;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TintProfile.Feet)
   return feet_;
 }
-inline void TintProfile::set_allocated_feet(::eqproto::Tint* feet) {
+inline void TintProfile::set_allocated_feet(::pb::Tint* feet) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete feet_;
@@ -6464,28 +6464,28 @@ inline void TintProfile::clear_primary() {
   }
   primary_ = NULL;
 }
-inline const ::eqproto::Tint& TintProfile::primary() const {
-  const ::eqproto::Tint* p = primary_;
+inline const ::pb::Tint& TintProfile::primary() const {
+  const ::pb::Tint* p = primary_;
   // @@protoc_insertion_point(field_get:eqproto.TintProfile.Primary)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Tint*>(
-      &::eqproto::_Tint_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Tint*>(
+      &::pb::_Tint_default_instance_);
 }
-inline ::eqproto::Tint* TintProfile::release_primary() {
+inline ::pb::Tint* TintProfile::release_primary() {
   // @@protoc_insertion_point(field_release:eqproto.TintProfile.Primary)
   
-  ::eqproto::Tint* temp = primary_;
+  ::pb::Tint* temp = primary_;
   primary_ = NULL;
   return temp;
 }
-inline ::eqproto::Tint* TintProfile::mutable_primary() {
+inline ::pb::Tint* TintProfile::mutable_primary() {
   
   if (primary_ == NULL) {
-    primary_ = new ::eqproto::Tint;
+    primary_ = new ::pb::Tint;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TintProfile.Primary)
   return primary_;
 }
-inline void TintProfile::set_allocated_primary(::eqproto::Tint* primary) {
+inline void TintProfile::set_allocated_primary(::pb::Tint* primary) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete primary_;
@@ -6514,28 +6514,28 @@ inline void TintProfile::clear_secondary() {
   }
   secondary_ = NULL;
 }
-inline const ::eqproto::Tint& TintProfile::secondary() const {
-  const ::eqproto::Tint* p = secondary_;
+inline const ::pb::Tint& TintProfile::secondary() const {
+  const ::pb::Tint* p = secondary_;
   // @@protoc_insertion_point(field_get:eqproto.TintProfile.Secondary)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Tint*>(
-      &::eqproto::_Tint_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Tint*>(
+      &::pb::_Tint_default_instance_);
 }
-inline ::eqproto::Tint* TintProfile::release_secondary() {
+inline ::pb::Tint* TintProfile::release_secondary() {
   // @@protoc_insertion_point(field_release:eqproto.TintProfile.Secondary)
   
-  ::eqproto::Tint* temp = secondary_;
+  ::pb::Tint* temp = secondary_;
   secondary_ = NULL;
   return temp;
 }
-inline ::eqproto::Tint* TintProfile::mutable_secondary() {
+inline ::pb::Tint* TintProfile::mutable_secondary() {
   
   if (secondary_ == NULL) {
-    secondary_ = new ::eqproto::Tint;
+    secondary_ = new ::pb::Tint;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.TintProfile.Secondary)
   return secondary_;
 }
-inline void TintProfile::set_allocated_secondary(::eqproto::Tint* secondary) {
+inline void TintProfile::set_allocated_secondary(::pb::Tint* secondary) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete secondary_;
@@ -6636,11 +6636,11 @@ inline void Tint::set_color(::google::protobuf::uint32 value) {
 inline void Event::clear_op() {
   op_ = 0;
 }
-inline ::eqproto::OpCode Event::op() const {
+inline ::pb::OpCode Event::op() const {
   // @@protoc_insertion_point(field_get:eqproto.Event.op)
-  return static_cast< ::eqproto::OpCode >(op_);
+  return static_cast< ::pb::OpCode >(op_);
 }
-inline void Event::set_op(::eqproto::OpCode value) {
+inline void Event::set_op(::pb::OpCode value) {
   
   op_ = value;
   // @@protoc_insertion_point(field_set:eqproto.Event.op)
@@ -6903,32 +6903,32 @@ inline void DamageEvent::set_force(float value) {
   // @@protoc_insertion_point(field_set:eqproto.DamageEvent.force)
 }
 
-// float meleepush_xy = 7;
-inline void DamageEvent::clear_meleepush_xy() {
-  meleepush_xy_ = 0;
+// float hit_heading = 7;
+inline void DamageEvent::clear_hit_heading() {
+    hit_heading_ = 0;
 }
-inline float DamageEvent::meleepush_xy() const {
-  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.meleepush_xy)
-  return meleepush_xy_;
+inline float DamageEvent::hit_heading() const {
+  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.hit_heading)
+  return hit_heading_;
 }
-inline void DamageEvent::set_meleepush_xy(float value) {
-  
-  meleepush_xy_ = value;
-  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.meleepush_xy)
+inline void DamageEvent::set_hit_heading(float value) {
+
+  hit_heading_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.hit_heading)
 }
 
-// float meleepush_z = 8;
-inline void DamageEvent::clear_meleepush_z() {
-  meleepush_z_ = 0;
+// float hit_pitch = 8;
+inline void DamageEvent::clear_hit_pitch() {
+    hit_pitch_ = 0;
 }
-inline float DamageEvent::meleepush_z() const {
-  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.meleepush_z)
-  return meleepush_z_;
+inline float DamageEvent::hit_pitch() const {
+  // @@protoc_insertion_point(field_get:eqproto.DamageEvent.hit_pitch)
+  return hit_pitch_;
 }
-inline void DamageEvent::set_meleepush_z(float value) {
-  
-  meleepush_z_ = value;
-  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.meleepush_z)
+inline void DamageEvent::set_hit_pitch(float value) {
+
+  hit_pitch_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.DamageEvent.hit_pitch)
 }
 
 // -------------------------------------------------------------------
@@ -7280,28 +7280,28 @@ inline void WearChangeEvent::clear_color() {
   }
   color_ = NULL;
 }
-inline const ::eqproto::Tint& WearChangeEvent::color() const {
-  const ::eqproto::Tint* p = color_;
+inline const ::pb::Tint& WearChangeEvent::color() const {
+  const ::pb::Tint* p = color_;
   // @@protoc_insertion_point(field_get:eqproto.WearChangeEvent.color)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::Tint*>(
-      &::eqproto::_Tint_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::Tint*>(
+      &::pb::_Tint_default_instance_);
 }
-inline ::eqproto::Tint* WearChangeEvent::release_color() {
+inline ::pb::Tint* WearChangeEvent::release_color() {
   // @@protoc_insertion_point(field_release:eqproto.WearChangeEvent.color)
   
-  ::eqproto::Tint* temp = color_;
+  ::pb::Tint* temp = color_;
   color_ = NULL;
   return temp;
 }
-inline ::eqproto::Tint* WearChangeEvent::mutable_color() {
+inline ::pb::Tint* WearChangeEvent::mutable_color() {
   
   if (color_ == NULL) {
-    color_ = new ::eqproto::Tint;
+    color_ = new ::pb::Tint;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.WearChangeEvent.color)
   return color_;
 }
-inline void WearChangeEvent::set_allocated_color(::eqproto::Tint* color) {
+inline void WearChangeEvent::set_allocated_color(::pb::Tint* color) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete color_;
@@ -8464,28 +8464,28 @@ inline void SpawnEvent::clear_equipment() {
   }
   equipment_ = NULL;
 }
-inline const ::eqproto::TextureProfile& SpawnEvent::equipment() const {
-  const ::eqproto::TextureProfile* p = equipment_;
+inline const ::pb::TextureProfile& SpawnEvent::equipment() const {
+  const ::pb::TextureProfile* p = equipment_;
   // @@protoc_insertion_point(field_get:eqproto.SpawnEvent.equipment)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::TextureProfile*>(
-      &::eqproto::_TextureProfile_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::TextureProfile*>(
+      &::pb::_TextureProfile_default_instance_);
 }
-inline ::eqproto::TextureProfile* SpawnEvent::release_equipment() {
+inline ::pb::TextureProfile* SpawnEvent::release_equipment() {
   // @@protoc_insertion_point(field_release:eqproto.SpawnEvent.equipment)
   
-  ::eqproto::TextureProfile* temp = equipment_;
+  ::pb::TextureProfile* temp = equipment_;
   equipment_ = NULL;
   return temp;
 }
-inline ::eqproto::TextureProfile* SpawnEvent::mutable_equipment() {
+inline ::pb::TextureProfile* SpawnEvent::mutable_equipment() {
   
   if (equipment_ == NULL) {
-    equipment_ = new ::eqproto::TextureProfile;
+    equipment_ = new ::pb::TextureProfile;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.SpawnEvent.equipment)
   return equipment_;
 }
-inline void SpawnEvent::set_allocated_equipment(::eqproto::TextureProfile* equipment) {
+inline void SpawnEvent::set_allocated_equipment(::pb::TextureProfile* equipment) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete equipment_;
@@ -8904,18 +8904,18 @@ inline void SpawnEvent::set_spawnid(::google::protobuf::uint32 value) {
   // @@protoc_insertion_point(field_set:eqproto.SpawnEvent.spawnId)
 }
 
-// uint32 unknown0344 = 76;
-inline void SpawnEvent::clear_unknown0344() {
-  unknown0344_ = 0u;
+// uint32 bounding_radius = 76;
+inline void SpawnEvent::clear_bounding_radius() {
+      bounding_radius_ = 0u;
 }
-inline ::google::protobuf::uint32 SpawnEvent::unknown0344() const {
-  // @@protoc_insertion_point(field_get:eqproto.SpawnEvent.unknown0344)
-  return unknown0344_;
+inline float SpawnEvent::bounding_radius() const {
+  // @@protoc_insertion_point(field_get:eqproto.SpawnEvent.bounding_radius)
+  return bounding_radius_;
 }
-inline void SpawnEvent::set_unknown0344(::google::protobuf::uint32 value) {
-  
-  unknown0344_ = value;
-  // @@protoc_insertion_point(field_set:eqproto.SpawnEvent.unknown0344)
+inline void SpawnEvent::set_bounding_radius(float value) {
+
+  bounding_radius_ = value;
+  // @@protoc_insertion_point(field_set:eqproto.SpawnEvent.bounding_radius)
 }
 
 // uint32 IsMercenary = 77;
@@ -8942,28 +8942,28 @@ inline void SpawnEvent::clear_equipment_tint() {
   }
   equipment_tint_ = NULL;
 }
-inline const ::eqproto::TintProfile& SpawnEvent::equipment_tint() const {
-  const ::eqproto::TintProfile* p = equipment_tint_;
+inline const ::pb::TintProfile& SpawnEvent::equipment_tint() const {
+  const ::pb::TintProfile* p = equipment_tint_;
   // @@protoc_insertion_point(field_get:eqproto.SpawnEvent.equipment_tint)
-  return p != NULL ? *p : *reinterpret_cast<const ::eqproto::TintProfile*>(
-      &::eqproto::_TintProfile_default_instance_);
+  return p != NULL ? *p : *reinterpret_cast<const ::pb::TintProfile*>(
+      &::pb::_TintProfile_default_instance_);
 }
-inline ::eqproto::TintProfile* SpawnEvent::release_equipment_tint() {
+inline ::pb::TintProfile* SpawnEvent::release_equipment_tint() {
   // @@protoc_insertion_point(field_release:eqproto.SpawnEvent.equipment_tint)
   
-  ::eqproto::TintProfile* temp = equipment_tint_;
+  ::pb::TintProfile* temp = equipment_tint_;
   equipment_tint_ = NULL;
   return temp;
 }
-inline ::eqproto::TintProfile* SpawnEvent::mutable_equipment_tint() {
+inline ::pb::TintProfile* SpawnEvent::mutable_equipment_tint() {
   
   if (equipment_tint_ == NULL) {
-    equipment_tint_ = new ::eqproto::TintProfile;
+    equipment_tint_ = new ::pb::TintProfile;
   }
   // @@protoc_insertion_point(field_mutable:eqproto.SpawnEvent.equipment_tint)
   return equipment_tint_;
 }
-inline void SpawnEvent::set_allocated_equipment_tint(::eqproto::TintProfile* equipment_tint) {
+inline void SpawnEvent::set_allocated_equipment_tint(::pb::TintProfile* equipment_tint) {
   ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
   if (message_arena == NULL) {
     delete equipment_tint_;
@@ -9444,10 +9444,10 @@ inline void SpawnEvent::set_show_name(bool value) {
 namespace google {
 namespace protobuf {
 
-template <> struct is_proto_enum< ::eqproto::OpCode> : ::google::protobuf::internal::true_type {};
+template <> struct is_proto_enum< ::pb::OpCode> : ::google::protobuf::internal::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::eqproto::OpCode>() {
-  return ::eqproto::OpCode_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::pb::OpCode>() {
+  return ::pb::OpCode_descriptor();
 }
 
 }  // namespace protobuf

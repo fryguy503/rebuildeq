@@ -1,4 +1,0 @@
-!*.dll
-eqemu_server.pl
-!*.so
-database_dumper.pl

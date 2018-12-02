@@ -120,6 +120,7 @@
 #define FAIL_DISARM_DETECTED_TRAP	370		//You fail to disarm the detected trap.
 #define LOOT_LORE_ERROR				371		//You cannot loot this Lore Item. You already have one.
 #define PICK_LORE					379		//You cannot pick up a lore item you already possess.
+#define POISON_TOO_HIGH				382		// This poison is too high level for you to apply.
 #define CONSENT_DENIED				390		//You do not have consent to summon that corpse.
 #define DISCIPLINE_RDY				393		//You are ready to use a new discipline now.
 #define CONSENT_INVALID_NAME		397		//Not a valid consent name.
@@ -300,6 +301,7 @@
 #define CORPSEDRAG_STOPALL			4065	//You stop dragging the corpses.
 #define CORPSEDRAG_STOP				4066	//You stop dragging the corpse.
 #define SOS_KEEPS_HIDDEN			4086	//Your Shroud of Stealth keeps you hidden from watchful eyes.␣␣
+#define DISARM_NO_TARGET            4583    //You can't use disarm on that.
 #define	TARGET_TOO_CLOSE			4602	//You are too close to your target. Get farther away.
 #define WHOALL_NO_RESULTS			5029	//There are no players in EverQuest that match those who filters.
 #define TELL_QUEUED_MESSAGE			5045	//You told %1 '%T2. %3'
@@ -321,6 +323,7 @@
 #define FAILED_TAUNT				5811	//You have failed to taunt your target.
 #define PHYSICAL_RESIST_FAIL		5817	//Your target avoided your %1 ability.
 #define AA_NO_TARGET				5825	//You must first select a target for this ability!
+#define MAX_ACTIVE_TASKS			6010	//Sorry %3, you already have the maximum number of active tasks.
 #define FORAGE_MASTERY				6012	//Your forage mastery has enabled you to find something else!
 #define GUILD_BANK_CANNOT_DEPOSIT	6097	// Cannot deposit this item. Containers must be empty, and only one of each LORE and no NO TRADE or TEMPORARY items may be deposited.
 #define GUILD_BANK_FULL				6098	// There is no more room in the Guild Bank.
@@ -415,6 +418,7 @@
 #define NO_LONGER_HIDDEN			12337   //You are no longer hidden.
 #define STOP_SNEAKING				12338	//You stop sneaking
 #define NOT_IN_CONTROL				12368	//You do not have control of yourself right now.
+#define STAND_TO_CAST				12441	//You must be standing to cast a spell.
 #define ALREADY_CASTING				12442	//You are already casting a spell!
 #define SHIMMERS_BRIEFLY			12444	//Your %1 shimmers briefly.
 #define SENSE_CORPSE_NOT_NAME		12446	//You don't sense any corpses of that name.
@@ -444,6 +448,9 @@
 #define TRY_ATTACKING_SOMEONE		12696	//Try attacking someone other than yourself, it's more productive
 #define RANGED_TOO_CLOSE			12698	//Your target is too close to use a ranged weapon!
 #define BACKSTAB_WEAPON				12874	//You need a piercing weapon as your primary weapon in order to backstab
+#define DISARMED                    12889   //You have been disarmed!
+#define DISARM_SUCCESS              12890   //You disarmed %1!
+#define DISARM_FAILED               12891   //Your attempt to disarm failed.
 #define MORE_SKILLED_THAN_I			12931	//%1 tells you, 'You are more skilled than I! What could I possibly teach you?'
 #define SURNAME_EXISTS				12939	//You already have a surname. Operation failed.
 #define SURNAME_LEVEL				12940	//You can only submit a surname upon reaching the 20th level. Operation failed.
@@ -519,8 +526,6 @@
 #define TIER_9 509
 #define TIER_10 510
 
-
-//Build Skills
 #define RB_BRD_ELEMENTALHARMONY 0
 #define RB_BRD_HEALINGTREBLE 2
 #define RB_BRD_PSALMOFNORRATH 4
@@ -722,6 +727,31 @@
 #define RB_PAL_FRAIL 49
 #define RB_PAL_SLAYER 52
 
+#define RB_RNG_NOTAVAILABLE0 0
+#define RB_RNG_NOTAVAILABLE2 2
+#define RB_RNG_NOTAVAILABLE4 4
+#define RB_RNG_NOTAVAILABLE6 6
+#define RB_RNG_NOTAVAILABLE8 8
+#define RB_RNG_NOTAVAILABLE10 10
+#define RB_RNG_NOTAVAILABLE13 13
+#define RB_RNG_NOTAVAILABLE16 16
+#define RB_RNG_NOTAVAILABLE18 18
+#define RB_RNG_NOTAVAILABLE20 20
+#define RB_RNG_NOTAVAILABLE22 22
+#define RB_RNG_NOTAVAILABLE24 24
+#define RB_RNG_NOTAVAILABLE26 26
+#define RB_RNG_NOTAVAILABLE28 28
+#define RB_RNG_NOTAVAILABLE31 31
+#define RB_RNG_NOTAVAILABLE34 34
+#define RB_RNG_NOTAVAILABLE36 36
+#define RB_RNG_NOTAVAILABLE38 38
+#define RB_RNG_NOTAVAILABLE40 40
+#define RB_RNG_NOTAVAILABLE42 42
+#define RB_RNG_NOTAVAILABLE44 44
+#define RB_RNG_NOTAVAILABLE46 46
+#define RB_RNG_NOTAVAILABLE49 49
+#define RB_RNG_NOTAVAILABLE52 52
+
 #define RB_ROG_APPRAISAL 0
 #define RB_ROG_KILLINGSPREE 2
 #define RB_ROG_THIEFSEYES 4
@@ -796,6 +826,56 @@
 #define RB_SHM_MARKOFSLOTH 46
 #define RB_SHM_FERALSWIPE 49
 #define RB_SHM_PARAGONOFSPIRIT 52
+
+#define RB_WAR_NOTAVAILABLE0 0
+#define RB_WAR_NOTAVAILABLE2 2
+#define RB_WAR_NOTAVAILABLE4 4
+#define RB_WAR_NOTAVAILABLE6 6
+#define RB_WAR_NOTAVAILABLE8 8
+#define RB_WAR_NOTAVAILABLE10 10
+#define RB_WAR_NOTAVAILABLE13 13
+#define RB_WAR_NOTAVAILABLE16 16
+#define RB_WAR_NOTAVAILABLE18 18
+#define RB_WAR_NOTAVAILABLE20 20
+#define RB_WAR_NOTAVAILABLE22 22
+#define RB_WAR_NOTAVAILABLE24 24
+#define RB_WAR_NOTAVAILABLE26 26
+#define RB_WAR_NOTAVAILABLE28 28
+#define RB_WAR_NOTAVAILABLE31 31
+#define RB_WAR_NOTAVAILABLE34 34
+#define RB_WAR_NOTAVAILABLE36 36
+#define RB_WAR_NOTAVAILABLE38 38
+#define RB_WAR_NOTAVAILABLE40 40
+#define RB_WAR_NOTAVAILABLE42 42
+#define RB_WAR_NOTAVAILABLE44 44
+#define RB_WAR_NOTAVAILABLE46 46
+#define RB_WAR_NOTAVAILABLE49 49
+#define RB_WAR_NOTAVAILABLE52 52
+
+#define RB_WIZ_NOTAVAILABLE0 0
+#define RB_WIZ_NOTAVAILABLE2 2
+#define RB_WIZ_NOTAVAILABLE4 4
+#define RB_WIZ_NOTAVAILABLE6 6
+#define RB_WIZ_NOTAVAILABLE8 8
+#define RB_WIZ_NOTAVAILABLE10 10
+#define RB_WIZ_NOTAVAILABLE13 13
+#define RB_WIZ_NOTAVAILABLE16 16
+#define RB_WIZ_NOTAVAILABLE18 18
+#define RB_WIZ_NOTAVAILABLE20 20
+#define RB_WIZ_NOTAVAILABLE22 22
+#define RB_WIZ_NOTAVAILABLE24 24
+#define RB_WIZ_NOTAVAILABLE26 26
+#define RB_WIZ_NOTAVAILABLE28 28
+#define RB_WIZ_NOTAVAILABLE31 31
+#define RB_WIZ_NOTAVAILABLE34 34
+#define RB_WIZ_NOTAVAILABLE36 36
+#define RB_WIZ_NOTAVAILABLE38 38
+#define RB_WIZ_NOTAVAILABLE40 40
+#define RB_WIZ_NOTAVAILABLE42 42
+#define RB_WIZ_NOTAVAILABLE44 44
+#define RB_WIZ_NOTAVAILABLE46 46
+#define RB_WIZ_NOTAVAILABLE49 49
+#define RB_WIZ_NOTAVAILABLE52 52
 
 #endif
 

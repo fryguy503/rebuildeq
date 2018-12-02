@@ -1,1 +1,0 @@
-UPDATE `rebuildeq`.`activities` SET `step`='1', `goalcount`='1' WHERE `taskid`='501' and`activityid`='5';

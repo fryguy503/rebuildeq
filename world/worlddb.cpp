@@ -37,41 +37,41 @@ void WorldDatabase::GetCharSelectInfo(uint32 accountID, EQApplicationPacket **ou
 	/* Set Character Creation Limit */
 	EQEmu::versions::ClientVersion client_version = EQEmu::versions::ConvertClientVersionBitToClientVersion(clientVersionBit);
 	size_t character_limit = EQEmu::constants::Lookup(client_version)->CharacterCreationLimit;
-	
+
 	// Validate against absolute server max
-	if (character_limit > EQEmu::constants::CharacterCreationMax)
-		character_limit = EQEmu::constants::CharacterCreationMax;
+	if (character_limit > EQEmu::constants::CHARACTER_CREATION_LIMIT)
+		character_limit = EQEmu::constants::CHARACTER_CREATION_LIMIT;
 
 	// Force Titanium clients to use '8'
 	if (client_version == EQEmu::versions::ClientVersion::Titanium)
 		character_limit = 8;
-	
+
 	/* Get Character Info */
 	std::string cquery = StringFormat(
-		"SELECT                     "
-		"`id`,                      "  // 0
-		"name,                      "  // 1
-		"gender,                    "  // 2
-		"race,                      "  // 3
-		"class,                     "  // 4
-		"`level`,                   "  // 5
-		"deity,                     "  // 6
-		"last_login,                "  // 7
-		"time_played,               "  // 8
-		"hair_color,                "  // 9
-		"beard_color,               "  // 10
-		"eye_color_1,               "  // 11
-		"eye_color_2,               "  // 12
-		"hair_style,                "  // 13
-		"beard,                     "  // 14
-		"face,                      "  // 15
-		"drakkin_heritage,          "  // 16
-		"drakkin_tattoo,            "  // 17
-		"drakkin_details,           "  // 18
-		"zone_id		            "  // 19
-		"FROM                       "
-		"character_data             "
-		"WHERE `account_id` = %i ORDER BY `name` LIMIT %u", accountID, character_limit);
+			"SELECT                     "
+			"`id`,                      "  // 0
+			"name,                      "  // 1
+			"gender,                    "  // 2
+			"race,                      "  // 3
+			"class,                     "  // 4
+			"`level`,                   "  // 5
+			"deity,                     "  // 6
+			"last_login,                "  // 7
+			"time_played,               "  // 8
+			"hair_color,                "  // 9
+			"beard_color,               "  // 10
+			"eye_color_1,               "  // 11
+			"eye_color_2,               "  // 12
+			"hair_style,                "  // 13
+			"beard,                     "  // 14
+			"face,                      "  // 15
+			"drakkin_heritage,          "  // 16
+			"drakkin_tattoo,            "  // 17
+			"drakkin_details,           "  // 18
+			"zone_id		            "  // 19
+			"FROM                       "
+			"character_data             "
+			"WHERE `account_id` = %i ORDER BY `name` LIMIT %u", accountID, character_limit);
 	auto results = database.QueryDatabase(cquery);
 
 	size_t character_count = results.RowCount();
@@ -97,12 +97,13 @@ void WorldDatabase::GetCharSelectInfo(uint32 accountID, EQApplicationPacket **ou
 		CharacterSelectEntry_Struct *cse = (CharacterSelectEntry_Struct *)buff_ptr;
 		PlayerProfile_Struct pp;
 		EQEmu::InventoryProfile inv;
+		inv.SetInventoryVersion(client_version);
 		uint32 character_id = (uint32)atoi(row[0]);
 		uint8 has_home = 0;
 		uint8 has_bind = 0;
 
 		memset(&pp, 0, sizeof(PlayerProfile_Struct));
-		
+
 		/* Fill CharacterSelectEntry_Struct */
 		memset(cse->Name, 0, sizeof(cse->Name));
 		strcpy(cse->Name, row[1]);
@@ -123,7 +124,7 @@ void WorldDatabase::GetCharSelectInfo(uint32 accountID, EQApplicationPacket **ou
 			cse->Equip[matslot].HerosForgeModel = 0;
 			cse->Equip[matslot].Unknown2 = 0;
 			cse->Equip[matslot].Color = 0;
-		}						
+		}
 
 		cse->Unknown15 = 0xFF;
 		cse->Unknown19 = 0xFF;
@@ -179,7 +180,7 @@ void WorldDatabase::GetCharSelectInfo(uint32 accountID, EQApplicationPacket **ou
 
 		if (has_home == 0 || has_bind == 0) {
 			cquery = StringFormat("SELECT `zone_id`, `bind_id`, `x`, `y`, `z` FROM `start_zones` WHERE `player_class` = %i AND `player_deity` = %i AND `player_race` = %i",
-				cse->Class, cse->Deity, cse->Race);
+								  cse->Class, cse->Deity, cse->Race);
 			auto results_bind = database.QueryDatabase(cquery);
 			for (auto row_d = results_bind.begin(); row_d != results_bind.end(); ++row_d) {
 				/* If a bind_id is specified, make them start there */
@@ -187,7 +188,7 @@ void WorldDatabase::GetCharSelectInfo(uint32 accountID, EQApplicationPacket **ou
 					pp.binds[4].zoneId = (uint32)atoi(row_d[1]);
 					GetSafePoints(pp.binds[4].zoneId, 0, &pp.binds[4].x, &pp.binds[4].y, &pp.binds[4].z);
 				}
-				/* Otherwise, use the zone and coordinates given */
+					/* Otherwise, use the zone and coordinates given */
 				else {
 					pp.binds[4].zoneId = (uint32)atoi(row_d[0]);
 					float x = atof(row_d[2]);
@@ -201,15 +202,15 @@ void WorldDatabase::GetCharSelectInfo(uint32 accountID, EQApplicationPacket **ou
 			/* If no home bind set, set it */
 			if (has_home == 0) {
 				std::string query = StringFormat("REPLACE INTO `character_bind` (id, zone_id, instance_id, x, y, z, heading, slot)"
-					" VALUES (%u, %u, %u, %f, %f, %f, %f, %i)",
-					character_id, pp.binds[4].zoneId, 0, pp.binds[4].x, pp.binds[4].y, pp.binds[4].z, pp.binds[4].heading, 4);
+												 " VALUES (%u, %u, %u, %f, %f, %f, %f, %i)",
+												 character_id, pp.binds[4].zoneId, 0, pp.binds[4].x, pp.binds[4].y, pp.binds[4].z, pp.binds[4].heading, 4);
 				auto results_bset = QueryDatabase(query);
 			}
 			/* If no regular bind set, set it */
 			if (has_bind == 0) {
 				std::string query = StringFormat("REPLACE INTO `character_bind` (id, zone_id, instance_id, x, y, z, heading, slot)"
-					" VALUES (%u, %u, %u, %f, %f, %f, %f, %i)",
-					character_id, pp.binds[0].zoneId, 0, pp.binds[0].x, pp.binds[0].y, pp.binds[0].z, pp.binds[0].heading, 0);
+												 " VALUES (%u, %u, %u, %f, %f, %f, %f, %i)",
+												 character_id, pp.binds[0].zoneId, 0, pp.binds[0].x, pp.binds[0].y, pp.binds[0].z, pp.binds[0].heading, 0);
 				auto results_bset = QueryDatabase(query);
 			}
 		}
@@ -222,8 +223,8 @@ void WorldDatabase::GetCharSelectInfo(uint32 accountID, EQApplicationPacket **ou
 					continue;
 
 				std::string query = StringFormat("REPLACE INTO `character_bind` (id, zone_id, instance_id, x, y, z, heading, slot)"
-					" VALUES (%u, %u, %u, %f, %f, %f, %f, %i)",
-					character_id, pp.binds[4].zoneId, 0, pp.binds[4].x, pp.binds[4].y, pp.binds[4].z, pp.binds[4].heading, i);
+												 " VALUES (%u, %u, %u, %f, %f, %f, %f, %i)",
+												 character_id, pp.binds[4].zoneId, 0, pp.binds[4].x, pp.binds[4].y, pp.binds[4].z, pp.binds[4].heading, i);
 				auto results_bset = QueryDatabase(query);
 			}
 		}
@@ -243,7 +244,7 @@ void WorldDatabase::GetCharSelectInfo(uint32 accountID, EQApplicationPacket **ou
 
 		/* Load Inventory */
 		// If we ensure that the material data is updated appropriately, we can do away with inventory loads
-		if (GetInventory(accountID, cse->Name, &inv)) {
+		if (GetCharSelInventory(accountID, cse->Name, &inv)) {
 			const EQEmu::ItemData* item = nullptr;
 			const EQEmu::ItemInstance* inst = nullptr;
 			int16 invslot = 0;
@@ -327,7 +328,7 @@ int WorldDatabase::MoveCharacterToBind(int CharID, uint8 bindnum)
 		heading = atof(row[5]);
 	}
 
-	query = StringFormat("UPDATE character_data SET zone_id = '%d', zone_instance = '%d', x = '%f', y = '%f', z = '%f', heading = '%f' WHERE id = %u", 
+	query = StringFormat("UPDATE character_data SET zone_id = '%d', zone_instance = '%d', x = '%f', y = '%f', z = '%f', heading = '%f' WHERE id = %u",
 						 zone_id, instance_id, x, y, z, heading, CharID);
 
 	results = database.QueryDatabase(query);
@@ -354,20 +355,20 @@ bool WorldDatabase::GetStartZone(PlayerProfile_Struct* in_pp, CharCreate_Struct*
 	in_pp->binds[0].x = in_pp->binds[0].y = in_pp->binds[0].z = in_pp->binds[0].zoneId = in_pp->binds[0].instance_id = 0;
 	// see if we have an entry for start_zone. We can support both titanium & SOF+ by having two entries per class/race/deity combo with different zone_ids
 	std::string query = StringFormat("SELECT x, y, z, heading, start_zone, bind_id, bind_x, bind_y, bind_z FROM start_zones WHERE zone_id = %i "
-		"AND player_class = %i AND player_deity = %i AND player_race = %i",
-		in_cc->start_zone, in_cc->class_, in_cc->deity, in_cc->race);
-    auto results = QueryDatabase(query);
+									 "AND player_class = %i AND player_deity = %i AND player_race = %i",
+									 in_cc->start_zone, in_cc->class_, in_cc->deity, in_cc->race);
+	auto results = QueryDatabase(query);
 	if(!results.Success()) {
 		return false;
 	}
 
 	Log(Logs::General, Logs::Status, "SoF Start zone query: %s\n", query.c_str());
 
-    if (results.RowCount() == 0) {
-        printf("No start_zones entry in database, using defaults\n");
+	if (results.RowCount() == 0) {
+		printf("No start_zones entry in database, using defaults\n");
 		isTitanium ? SetTitaniumDefaultStartZone(in_pp, in_cc) : SetSoFDefaultStartZone(in_pp, in_cc);
-    }
-    else {
+	}
+	else {
 		Log(Logs::General, Logs::Status, "Found starting location in start_zones");
 		auto row = results.begin();
 		in_pp->x = atof(row[0]);
@@ -393,7 +394,7 @@ bool WorldDatabase::GetStartZone(PlayerProfile_Struct* in_pp, CharCreate_Struct*
 void WorldDatabase::SetSoFDefaultStartZone(PlayerProfile_Struct* in_pp, CharCreate_Struct* in_cc){
 	if (in_cc->start_zone == RuleI(World, TutorialZoneID)) {
 		in_pp->zone_id = in_cc->start_zone;
-	} 
+	}
 	else {
 		in_pp->x = in_pp->binds[0].x = -51;
 		in_pp->y = in_pp->binds[0].y = -20;
@@ -504,32 +505,15 @@ void WorldDatabase::SetTitaniumDefaultStartZone(PlayerProfile_Struct* in_pp, Cha
 void WorldDatabase::GetLauncherList(std::vector<std::string> &rl) {
 	rl.clear();
 
-    const std::string query = "SELECT name FROM launcher";
-    auto results = QueryDatabase(query);
-    if (!results.Success()) {
-        Log(Logs::General, Logs::Error, "WorldDatabase::GetLauncherList: %s", results.ErrorMessage().c_str());
-        return;
-    }
+	const std::string query = "SELECT name FROM launcher";
+	auto results = QueryDatabase(query);
+	if (!results.Success()) {
+		Log(Logs::General, Logs::Error, "WorldDatabase::GetLauncherList: %s", results.ErrorMessage().c_str());
+		return;
+	}
 
-    for (auto row = results.begin(); row != results.end(); ++row)
-        rl.push_back(row[0]);
-
-}
-
-void WorldDatabase::SetMailKey(int CharID, int IPAddress, int MailKey)
-{
-	char MailKeyString[17];
-
-	if(RuleB(Chat, EnableMailKeyIPVerification) == true)
-		sprintf(MailKeyString, "%08X%08X", IPAddress, MailKey);
-	else
-		sprintf(MailKeyString, "%08X", MailKey);
-
-    std::string query = StringFormat("UPDATE character_data SET mailkey = '%s' WHERE id = '%i'",
-                                    MailKeyString, CharID);
-    auto results = QueryDatabase(query);
-	if (!results.Success())
-		Log(Logs::General, Logs::Error, "WorldDatabase::SetMailKey(%i, %s) : %s", CharID, MailKeyString, results.ErrorMessage().c_str());
+	for (auto row = results.begin(); row != results.end(); ++row)
+		rl.push_back(row[0]);
 
 }
 
@@ -538,17 +522,17 @@ bool WorldDatabase::GetCharacterLevel(const char *name, int &level)
 	std::string query = StringFormat("SELECT level FROM character_data WHERE name = '%s'", name);
 	auto results = QueryDatabase(query);
 	if (!results.Success()) {
-        Log(Logs::General, Logs::Error, "WorldDatabase::GetCharacterLevel: %s", results.ErrorMessage().c_str());
-        return false;
+		Log(Logs::General, Logs::Error, "WorldDatabase::GetCharacterLevel: %s", results.ErrorMessage().c_str());
+		return false;
 	}
 
 	if (results.RowCount() == 0)
-        return false;
+		return false;
 
-    auto row = results.begin();
-    level = atoi(row[0]);
+	auto row = results.begin();
+	level = atoi(row[0]);
 
-    return true;
+	return true;
 }
 
 bool WorldDatabase::LoadCharacterCreateAllocations()
@@ -558,10 +542,10 @@ bool WorldDatabase::LoadCharacterCreateAllocations()
 	std::string query = "SELECT * FROM char_create_point_allocations ORDER BY id";
 	auto results = QueryDatabase(query);
 	if (!results.Success())
-        return false;
+		return false;
 
-    for (auto row = results.begin(); row != results.end(); ++row) {
-        RaceClassAllocation allocate;
+	for (auto row = results.begin(); row != results.end(); ++row) {
+		RaceClassAllocation allocate;
 		allocate.Index = atoi(row[0]);
 		allocate.BaseStats[0] = atoi(row[1]);
 		allocate.BaseStats[3] = atoi(row[2]);
@@ -579,7 +563,7 @@ bool WorldDatabase::LoadCharacterCreateAllocations()
 		allocate.DefaultPointAllocation[6] = atoi(row[14]);
 
 		character_create_allocations.push_back(allocate);
-    }
+	}
 
 	return true;
 }
@@ -591,7 +575,7 @@ bool WorldDatabase::LoadCharacterCreateCombos()
 	std::string query = "SELECT * FROM char_create_combinations ORDER BY race, class, deity, start_zone";
 	auto results = QueryDatabase(query);
 	if (!results.Success())
-        return false;
+		return false;
 
 	for (auto row = results.begin(); row != results.end(); ++row) {
 		RaceClassCombos combo;
@@ -603,6 +587,146 @@ bool WorldDatabase::LoadCharacterCreateCombos()
 		combo.ExpansionRequired = atoi(row[5]);
 
 		character_create_race_class_combos.push_back(combo);
+	}
+
+	return true;
+}
+
+// this is a slightly modified version of SharedDatabase::GetInventory(...) for character select use-only
+bool WorldDatabase::GetCharSelInventory(uint32 account_id, char *name, EQEmu::InventoryProfile *inv)
+{
+	if (!account_id || !name || !inv)
+		return false;
+
+	std::string query = StringFormat(
+			"SELECT"
+			" slotid,"
+			" itemid,"
+			" charges,"
+			" color,"
+			" augslot1,"
+			" augslot2,"
+			" augslot3,"
+			" augslot4,"
+			" augslot5,"
+			" augslot6,"
+			" instnodrop,"
+			" custom_data,"
+			" ornamenticon,"
+			" ornamentidfile,"
+			" ornament_hero_model "
+			"FROM"
+			" inventory "
+			"INNER JOIN"
+			" character_data ch "
+			"ON"
+			" ch.id = charid "
+			"WHERE"
+			" ch.name = '%s' "
+			"AND"
+			" ch.account_id = %i "
+			"AND"
+			" slotid >= %i "
+			"AND"
+			" slotid <= %i",
+			name,
+			account_id,
+			EQEmu::invslot::slotHead,
+			EQEmu::invslot::slotFeet
+	);
+	auto results = QueryDatabase(query);
+	if (!results.Success())
+		return false;
+
+	for (auto row = results.begin(); row != results.end(); ++row) {
+		int16 slot_id = atoi(row[0]);
+
+		switch (slot_id) {
+			case EQEmu::invslot::slotFace:
+			case EQEmu::invslot::slotEar2:
+			case EQEmu::invslot::slotNeck:
+			case EQEmu::invslot::slotShoulders:
+			case EQEmu::invslot::slotBack:
+			case EQEmu::invslot::slotFinger1:
+			case EQEmu::invslot::slotFinger2:
+				continue;
+			default:
+				break;
+		}
+
+		uint32 item_id = atoi(row[1]);
+		int8 charges = atoi(row[2]);
+		uint32 color = atoul(row[3]);
+
+		uint32 aug[EQEmu::invaug::SOCKET_COUNT];
+		aug[0] = (uint32)atoi(row[4]);
+		aug[1] = (uint32)atoi(row[5]);
+		aug[2] = (uint32)atoi(row[6]);
+		aug[3] = (uint32)atoi(row[7]);
+		aug[4] = (uint32)atoi(row[8]);
+		aug[5] = (uint32)atoi(row[9]);
+
+		bool instnodrop = ((row[10] && (uint16)atoi(row[10])) ? true : false);
+		uint32 ornament_icon = (uint32)atoul(row[12]);
+		uint32 ornament_idfile = (uint32)atoul(row[13]);
+		uint32 ornament_hero_model = (uint32)atoul(row[14]);
+
+		const EQEmu::ItemData *item = GetItem(item_id);
+		if (!item)
+			continue;
+
+		EQEmu::ItemInstance *inst = CreateBaseItem(item, charges);
+
+		if (inst == nullptr)
+			continue;
+
+		inst->SetAttuned(instnodrop);
+
+		if (row[11]) {
+			std::string data_str(row[11]);
+			std::string idAsString;
+			std::string value;
+			bool use_id = true;
+
+			for (int i = 0; i < data_str.length(); ++i) {
+				if (data_str[i] == '^') {
+					if (!use_id) {
+						inst->SetCustomData(idAsString, value);
+						idAsString.clear();
+						value.clear();
+					}
+
+					use_id = !use_id;
+					continue;
+				}
+
+				char v = data_str[i];
+				if (use_id)
+					idAsString.push_back(v);
+				else
+					value.push_back(v);
+			}
+		}
+
+		inst->SetOrnamentIcon(ornament_icon);
+		inst->SetOrnamentationIDFile(ornament_idfile);
+		inst->SetOrnamentHeroModel(item->HerosForgeModel);
+
+		if (color > 0)
+			inst->SetColor(color);
+
+		inst->SetCharges(charges);
+
+		if (item->IsClassCommon()) {
+			for (int i = EQEmu::invaug::SOCKET_BEGIN; i <= EQEmu::invaug::SOCKET_END; i++) {
+				if (aug[i])
+					inst->PutAugment(this, i, aug[i]);
+			}
+		}
+
+		inv->PutItem(slot_id, *inst);
+
+		safe_delete(inst);
 	}
 
 	return true;

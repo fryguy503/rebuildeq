@@ -32,6 +32,7 @@
 
 class Bot;
 struct BotsAvailableList;
+class Client;
 
 namespace EQEmu
 {
@@ -143,6 +144,10 @@ public:
 	bool CreateCloneBot(const uint32 owner_id, const uint32 bot_id, const std::string& clone_name, uint32& clone_id);
 	bool CreateCloneBotInventory(const uint32 owner_id, const uint32 bot_id, const uint32 clone_id);
 
+	bool SaveStopMeleeLevel(const uint32 owner_id, const uint32 bot_id, const uint8 sml_value);
+
+	bool LoadOwnerOptions(Client *owner);
+	bool SaveOwnerOptionDeathMarquee(const uint32 owner_id, const bool flag);
 
 	/* Bot bot-group functions   */
 	bool QueryBotGroupExistence(const std::string& botgroup_name, bool& extant_flag);
@@ -253,6 +258,7 @@ public:
 		static const char* SaveAllFollowDistances();
 		static const char* CreateCloneBot();
 		static const char* CreateCloneBotInventory();
+		static const char* SaveStopMeleeLevel();
 
 		/* fail::Bot bot-group functions   */
 		static const char* QueryBotGroupExistence();

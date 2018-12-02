@@ -1,1 +1,0 @@
-natsprototest is a testing grounds for nats and protobuf communication. It's purely a snippet.

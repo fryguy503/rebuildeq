@@ -26,31 +26,26 @@ void UCSConnection::SetConnection(std::shared_ptr<EQ::Net::ServertalkServerConne
 	}
 }
 
-void UCSConnection::ProcessPacket(uint16 opcode, EQ::Net::Packet &p)
-{
+void UCSConnection::ProcessPacket(uint16 opcode, EQ::Net::Packet &p) {
 	if (!Stream)
 		return;
 
 	ServerPacket tpack(opcode, p);
 	ServerPacket *pack = &tpack;
 
-	switch (opcode)
-	{
+	switch (opcode) {
 		case 0:
 			break;
 
-		case ServerOP_KeepAlive:
-		{
+		case ServerOP_KeepAlive: {
 			// ignore this
 			break;
 		}
-		case ServerOP_ZAAuth:
-		{
+		case ServerOP_ZAAuth: {
 			Log(Logs::Detail, Logs::UCS_Server, "Got authentication from UCS when they are already authenticated.");
 			break;
 		}
-		default:
-		{
+		default: {
 			Log(Logs::Detail, Logs::UCS_Server, "Unknown ServerOPcode from UCS 0x%04x, size %d", opcode, pack->size);
 			DumpPacket(pack->pBuffer, pack->size);
 			break;
